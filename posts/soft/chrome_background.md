@@ -1,6 +1,6 @@
 Title: chrome护眼设置--把背景设置为绿豆沙
 Slug: chrome-background
-Tags: tips, google,外观
+Tags: tips, google,appearance
 Date: 2012-02-23
 
 

@@ -1,7 +1,7 @@
 Title: 自定义nautilus的菜单栏
 Date: 2012-03-08
 Slug: nautilus-menu
-Tags: 外观
+Tags: appearance
 
 Nautilus是gnome的默认文件浏览器, 那次更新安装了elementory主题的Nautilus之后, 发现菜单栏少了些很常用的功能: 比如上一层,主页, 刷新等...
 
