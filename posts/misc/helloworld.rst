@@ -8,7 +8,7 @@ Hello World!
 
 作为一个很菜的低端桌面(ubuntu, gnome)用户, 这个还是相当不容易啊~~
 
-最终选择了pelican生成静态页面, 这个工具很好用, 只是目前关注度不足啊~ 关于pelican的介绍可以参考
+本来考虑使用的是jekyll, 但是安装过程老是报错... 最终选择了pelican生成静态页面, 这个工具很好用, 只是目前关注度不足啊~ 关于pelican的介绍可以参考
 `这里 <http://farseerfc.github.com/try-pelican.html>`_
 , jekyll我折腾了N久没有搞定, 而pelican很快就装好了~ 非常感谢
 `farseerfc <http://farseerfc.github.com/index.html>`_
