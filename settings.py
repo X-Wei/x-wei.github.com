@@ -21,7 +21,8 @@ GITHUB_URL = 'https://github.com/X-Wei'
 SITEURL = 'http://x-wei.github.com'
 #~ GOOGLE_ANALYTICS = 'UA-29540705-1'
 TAG_FEED  = 'feeds/%s.atom.xml'
-
+#DEFAULT_ORPHANS=3
+DEFAULT_PAGINATION = 4
 
 SOCIAL = (
           ('github', 'https://github.com/x-wei'),
