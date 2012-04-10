@@ -16,7 +16,7 @@ DEFAULT_LANG = 'zhs'
 SITENAME = "X. Wei's Blog"
 AUTHOR = 'X.Wei'
 
-DISQUS_SITENAME = 'farseerfcgithub'
+DISQUS_SITENAME = 'xwsblog'
 GITHUB_URL = 'https://github.com/X-Wei'
 SITEURL = 'http://x-wei.github.com'
 #~ GOOGLE_ANALYTICS = 'UA-29540705-1'
