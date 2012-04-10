@@ -4,7 +4,9 @@ Hello World!
 :date: 2012-04-09 20:39
 
 
-建立起了我的github博客~! 作为一个很菜的低端桌面(ubuntu, gnome)用户, 这个还是相当不容易啊~~
+建立起了我的github博客~! 
+
+作为一个很菜的低端桌面(ubuntu, gnome)用户, 这个还是相当不容易啊~~
 
 最终选择了pelican生成静态页面, 这个工具很好用, 只是目前关注度不足啊~ 关于pelican的介绍可以参考
 `这里 <http://farseerfc.github.com/try-pelican.html>`_
