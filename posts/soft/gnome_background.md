@@ -1,9 +1,9 @@
 Date: 2012-02-23
 Title: gnome护眼设置--窗口背景设置为绿豆沙
 Slug: gnome-background
-Tags: tips, appearance
+Tags: tips, 外观
 
-
+				
 我就说win能做到ubuntu也能~
 
 主题-->自定义-->颜色

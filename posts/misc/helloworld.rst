@@ -2,6 +2,7 @@ Hello World!
 ##############
 
 :date: 2012-04-09 20:39
+:tags: pelican
 
 
 建立起了我的github博客~! 
