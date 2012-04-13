@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{xeCJK}  %必须加xeCJK包
+\setCJKmainfont{WenQuanYi Micro Hei}
+
+\begin{document}
+\lstset{numbers=left,
+numberstyle=\tiny,
+keywordstyle=\color{blue!70}, commentstyle=\color{red!50!green!50!blue!50},
+frame=shadowbox,
+rulesepcolor=\color{red!20!green!20!blue!20},
+breaklines=true,
+extendedchars=true
+}
+
+\title{latex插入源代码实例}
+\author{mx}
+\maketitle
+
+\begin{lstlisting}[language={Python}]
+#! /usr/bin/python 
+# -*- coding: utf-8 -*- 
+import sys, os, string, re, urllib, urllib2, cookielib, socket
+
+def ppp_download(url):
+    content=session.open(url).read().decode('gb2312').encode('UTF-8')
+    content=re.findall(r'<tr><td>(.*)',content)[0]
+    sp=content.split('<tr><td>')
+    socket.setdefaulttimeout(2)
+    for ln in sp:
+        try:
+            num=re.findall(r'(.*)<td>.?<td>',ln)[0]
+            ln=re.findall(r'bbstcon(.*)html',ln)
+            if len(ln)==1:
+                url='https://bbs.sjtu.edu.cn/'+'bbstcon'+ln[0]+'html'
+                postsession=session.open(url)
+                postctnt=postsession.read().decode('gb2312').encode('UTF-8')#the encoding problem is solved!!!
+                post_title=num+'_'+re.findall(r'<title>(.*)-',postctnt)[0]
+                print post_title
+                if not os.path.isdir(download_dir+'/'+post_title):
+                    os.mkdir(download_dir+'/'+post_title)
+                picurls=re.findall(r'IMG SRC=\"(.*)\" onload',postctnt)
+                for pu in picurls:#pu=picurl
+                    pu=pu if 'http' in pu else 'https://bbs.sjtu.edu.cn/'+pu
+                    pn=pu.split('/')[-1]
+                    if os.path.exists(download_dir+'/'+post_title+'/'+pn): print pn, 'already exists!'
+                    else:
+                        path=download_dir+'/'+post_title+'/'+pn
+                        urllib.urlretrieve(pu,path)
+                        print pn,'saved!'
+                postsession.close()
+        except:
+            info=sys.exc_info()  
+            print info[0],":",info[1]  
+            continue
+    print 'DONE~'
+
+if __name__ == '__main__':
+    download_dir = 'yssy_ppp'
+    if not os.path.isdir(download_dir): os.mkdir(download_dir)
+    session = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
+    #~ ctnt=session.open('https://bbs.sjtu.edu.cn/bbstdoc,board,PPPerson.html').read().decode('gb2312').encode('UTF-8')
+    #~ num=filter(str.isdigit, re.findall(r'<a href=(.*)>上一页</a> <a',ctnt)[0])
+    #~ print num
+    ppp_download('https://bbs.sjtu.edu.cn/bbstdoc,board,PPPerson.html')
+    #for i in range(0,num+1):
+        #print i
+        #ppp_download('https://bbs.sjtu.edu.cn/bbstdoc,board,PPPerson,page,'+str(i)+'.html')
+		#print '\n\n'
+	#main('https://bbs.sjtu.edu.cn/bbstdoc,board,PPPerson,page,271.html')
+    os.system('''find yssy_ppp/ -type f | perl -ne 'chomp;unlink "$_" if -T $_' ''')
+    os.system('rmdir yssy_ppp/*')
+    print 'DONE FINALLY!!!'
+    raw_input('press any key to exit...')
+\end{lstlisting}
+\end{document}

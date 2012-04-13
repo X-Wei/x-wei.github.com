@@ -3,11 +3,11 @@ import sys
 
 TIMEZONE = 'Asia/Shanghai'
 
-DATE_FORMATS = {
-    'en' : u'%a, %d %b %Y',
-    'zh' : u'%Y-%m-%d',
-    'zhs': u'%Y-%m-%d',
-}
+#~ DATE_FORMATS = {
+    #~ 'en' : u'%a, %d %b %Y',
+    #~ 'zh' : u'%Y-%m-%d',
+    #~ 'zhs': u'%Y-%m-%d',
+#~ }
 # windows locale: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 #~ LOCALE = ['usa', 'cht', 'chs', 'jpn',        # windows
           #~ 'en_US', 'zh_CN', 'ja_JP']  # Unix/Linux
