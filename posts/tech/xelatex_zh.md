@@ -11,7 +11,7 @@ Tags: tex, geany, 中文乱码
 
 要进行的操作:
 
-    `sudo apt-get install texlive-xetex latex-cjk-xcjk texlive-latex-recommended`
+    sudo apt-get install texlive-xetex latex-cjk-xcjk texlive-latex-recommended
 
 其实好像这样之后就可以用中文了(按博客里的意思), 可惜我用的geany开始使用latex编译的, 老是报错...
 
