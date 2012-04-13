@@ -52,6 +52,7 @@ THEME='notmyidea'
 DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
 PATH = 'posts'
-
+LINKS = (('dofine', 'http://www.dofine.me'),
+         ('farseerfc', "http://farseerfc.github.com/"),)
 #PDF_GENERATOR = True
 
