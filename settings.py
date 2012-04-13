@@ -24,6 +24,15 @@ TAG_FEED  = 'feeds/%s.atom.xml'
 #DEFAULT_ORPHANS=3
 DEFAULT_PAGINATION = 4
 
+DEFAULT_CATEGORY ='MISC'
+OUTPUT_PATH = '.'
+PATH = 'posts'
+#~ THEME_STATIC_PATHS=['posts/attachment']
+
+LINKS = (('dofine', 'http://www.dofine.me'),
+         ('farseerfc', "http://farseerfc.github.com/"),
+         )
+
 SOCIAL = (
           ('github', 'https://github.com/x-wei'),
           )
@@ -46,13 +55,8 @@ SOCIAL = (
 #~ GOOGLE_CUSTOM_SEARCH_NAVBAR = "001578481551708017171:hxkva69brmg"
 
 #THEME='bootstrap2'
-THEME='notmyidea'
-#CSS_FILE = "wide.css"
+#~ THEME='notmyidea'
+#~ CSS_FILE = "bootstrap-responsive.css"
 
-DEFAULT_CATEGORY ='MISC'
-OUTPUT_PATH = '.'
-PATH = 'posts'
-LINKS = (('dofine', 'http://www.dofine.me'),
-         ('farseerfc', "http://farseerfc.github.com/"),)
-#PDF_GENERATOR = True
+#~ PDF_GENERATOR = True
 
