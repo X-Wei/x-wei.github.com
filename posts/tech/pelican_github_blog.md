@@ -161,7 +161,8 @@ farseerfc给了一个[settings.py](https://github.com/farseerfc/farseerfc.github
     DEFAULT_PAGINATION = 4#默认每一页有多少篇文章
 
     DEFAULT_CATEGORY ='misc'
-    OUTPUT_PATH = '.'#需要把输出路径从默认的'output'改成根目录(your_id.github.com目录), 因为githubpage需要把vaindex.html上传到repo的master分支的根目录才可以!
+    OUTPUT_PATH = '.'
+    #需要把输出路径从默认的'output'改成根目录(your_id.github.com目录), 因为githubpage需要把index.html上传到repo的master分支的根目录才可以!
     PATH = 'posts'#这个是指定放置.md/.rst文件的目录
 
     LINKS = (('dofine', '<http://www.dofine.me>'),
