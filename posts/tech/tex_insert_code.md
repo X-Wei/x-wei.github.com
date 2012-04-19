@@ -7,14 +7,13 @@ Tags: tex
 
 但是显然应该先搜一下吧... 果然, 早就有人解决了(其实是tex的常用命令里就有的), 比如[这里](http://hi.baidu.com/xuelicheng/blog/item/194c844a22d2452a09f7ef8a.html)...
 
-
-    ``\usepackage{listings}
+    \usepackage{listings}
     \lstset{language=C++}%这条命令可以让LaTeX排版时将C++键字突出显示
     \lstset{breaklines}%这条命令可以让LaTeX自动将长的代码行换行排版
     \lstset{extendedchars=false}%这一条命令可以解决代码跨页时，章节标题，页眉等汉字不显示的问题
     \begin{lstlisting}
     %paste your C++ code here
-    \end{lstlisting}``
+    \end{lstlisting}
 
 
 很简单的... 不过比较长的代码换行显示不是很爽(貌似不换行也不是办法啊)... 另外没有颜色高亮哎...
@@ -27,7 +26,7 @@ Tags: tex
 总结一下, 这样比较好:
 
 
-    ``\documentclass{article}
+    \documentclass{article}
     \usepackage{listings}
     \usepackage{xcolor}
     \usepackage{xeCJK}  %必须加xeCJK包
@@ -44,7 +43,7 @@ Tags: tex
     \begin{lstlisting}[language={Python}]
     %这里插入代码~
     \end{lstlisting}
-    \end{document}``
+    \end{document}
 
 
 附件: 我做的一个简单实例
