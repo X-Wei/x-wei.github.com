@@ -3,13 +3,14 @@ Date: 2012-04-18
 Slug: google_host
 Tags: google, host
 
-google的服务(mail, doc, site, code, project...)很多都实在很方便(个人感觉QQ, 网易什么的和它绝对不是一个档次). 但是比较悲剧的是, google服务在国内不很稳定, 时不时上不去...
+google的服务(mail, doc, site, code, project...)很多都实在很方便(个人感觉QQ, 网易什么的和它绝对不是一个档次). 但是比较悲剧的是, google服务在国内不很稳定, 时不时上不去(比如gmail), 而有的服务(比如site)居然完全上不去...
 
 自己的经验, 使用修改host的方式可以比较好的解决这个问题(而youtube啊, facebook啊什么的修改了不一定好使...) 这里贴一下..
 
 其实就是修改一个文件...linux用户修改`/ect/hosts`, windows用户修改`c:/windows/system32/drivers/etc/hosts`.
 
-关于google的host, 网上到处都是, 比如[这里,](http://www.douban.com/note/161139377/) 不过我没有试过这里的host可不可以(应该可以吧...), 还是把我的host贴出来吧. 这里说一下, 我同时还加了去优酷广告(这里修改完了还要再处理一下, 有时间再写), 上youtube(貌似有点问题)
+关于google的host, 网上到处都是, 比如[这里](http://www.douban.com/note/161139377/), 不过我没有试过这里的host可不可以(应该可以吧...), 还是把我的host贴出来吧. 这里说一下, 我同时还加了去优酷广告(这里修改完了还要再处理一下, 有时间再写), 上youtube(貌似有点问题). 把这些东西粘贴进hosts文件, 即可访问google的服务, gmail也不会抽风了~~
+
     
     #优酷屏蔽广告规则如下：
     127.0.0.1       stat.youku.com
@@ -1350,4 +1351,3 @@ google的服务(mail, doc, site, code, project...)很多都实在很方便(个�
     125.56.199.9 photos-g.ak.fbcdn.net
     125.56.199.9 photos-h.ak.fbcdn.net
 
-把这些东西粘贴进hosts文件, 即可访问google的服务, gmail也不会抽风了~~
