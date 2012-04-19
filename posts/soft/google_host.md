@@ -10,7 +10,7 @@ google的服务(mail, doc, site, code, project...)很多都实在很方便(个�
 其实就是修改一个文件...linux用户修改`/ect/hosts`, windows用户修改`c:/windows/system32/drivers/etc/hosts`.
 
 关于google的host, 网上到处都是, 比如[这里](http://www.douban.com/note/161139377/), 不过我没有试过这里的host可不可以(应该可以吧...), 还是把我的host贴出来吧. 这里说一下, 我同时还加了去优酷广告(这里修改完了还要再处理一下, 有时间再写), 上youtube(貌似有点问题). 把这些东西粘贴进hosts文件, 即可访问google的服务, gmail也不会抽风了~~
-
+(要是嫌复制粘贴麻烦, 直接[下载hosts文件](./google_host/hosts))
     
     #优酷屏蔽广告规则如下：
     127.0.0.1       stat.youku.com
