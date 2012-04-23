@@ -41,7 +41,7 @@ SOCIAL = (
           #~ ('weibo', 'http://weibo.com/farseerfc'),
           #~ ('renren', 'http://www.renren.com/farseer'),
           
-          
+GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~          
 
 #~ TWITTER_USERNAME = 'farseerfc'
 #~ SIDEBAR_CUSTOM = r"""
@@ -51,7 +51,6 @@ SOCIAL = (
 #~ </iframe>
 #~ """
 
-#~ GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#为什么不好使!!!
 #~ GOOGLE_CUSTOM_SEARCH_NAVBAR = "001578481551708017171:hxkva69brmg"
 
 #THEME='bootstrap2'
