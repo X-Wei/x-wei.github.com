@@ -27,7 +27,9 @@ DEFAULT_PAGINATION = 4
 DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
 PATH = 'posts'
-#~ THEME_STATIC_PATHS=['posts/attachment']
+#~ THEME_STATIC_PATHS=['pelican-themes']
+THEME='./pelican-themes/bs4'
+#~ CSS_FILE = "font-awesome.css"
 
 LINKS = (('dofine', 'http://www.dofine.me'),
          ('farseerfc', "http://farseerfc.github.com/"),
@@ -53,9 +55,9 @@ GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被goog
 
 #~ GOOGLE_CUSTOM_SEARCH_NAVBAR = "001578481551708017171:hxkva69brmg"
 
-#THEME='bootstrap2'
+
 #~ THEME='notmyidea'
-#~ CSS_FILE = "bootstrap-responsive.css"
+
 
 #~ PDF_GENERATOR = True
 
