@@ -124,10 +124,12 @@ markdown和rst都是非常优秀的轻量级标记语言, 可以很方便的写�
 --------------------
 以前没用过git, 所以这个让我困惑了很长时间... 
 
-首先, 应该在your_id.github.com页面下有一个.git文件夹(大概是git init生成的吧), 然后, 把生成好了的那些文件(比如上一步的output文件夹里的东西)放在这个目录下, 依次运行一下三个命令:
+首先, 应该在your_id.github.com页面下有一个.git文件夹(大概是git init生成的吧), 然后, 把生成好了的那些文件(比如上一步的output文件夹里的东西)放在这个目录下, 依次运行以下三个命令:
+
     $git add .
     $git commit -am "your commit message"
     $git push
+
 额 是的, 需要三条命令才能完成上传... 另外, 貌似这样会覆盖掉原先的那些文件, 不必担心, github有history功能(我的理解 可能跟快照有点类似吧), 原先的东西应该可以找回来...
 
 push完成后, 你的注册邮箱会收到邮件"page built successful", 如果是第一次生成的话, 最多等10分钟, 你就可以访问your_id.github.com看到效果啦~~
