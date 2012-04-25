@@ -9,7 +9,7 @@ Tags: google
 
 ![](./chrome_flashblock/pasted_image.png)
 
- cbl教我把chrome设置成插件点击播放, 个人感觉这样挺有用的~
+cbl教我把chrome设置成插件点击播放, 个人感觉这样挺有用的~
 大概是两步:
 
 **第一步**, 扳手菜单-->首选项-->高级选项-->隐私设置-->内容设置
@@ -18,6 +18,7 @@ Tags: google
 
 然后找到"插件"这一项, 选择"点后运行"
 ![](./chrome_flashblock/pasted_image002.png)
+
 这样设置之后, chrome就不会自动播放flash, 然后再设置点击运行flash.
 
 **第二步**, 在地址栏输入: <chrome://flags/>, 找到"点后运行"一行, 选择"启用".
