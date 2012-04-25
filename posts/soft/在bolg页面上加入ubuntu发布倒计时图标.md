@@ -26,5 +26,9 @@ Slug: 在bolg页面上加入ubuntu发布倒计时图标
 
 那么怎么添加多个小工具呢? 很简单, 只要在字符串SIDEBAR_CUSTOM里面罗列copy来的代码就可以啦!~(比如, 还可以[添加gtalk](http://www.google.com/talk/service/badge/New)的小工具.) 所以, google自定义搜索引擎其实也可以这样添加的~
 
+**BTW**
+今天才知道原来pelican是支持中文文件名的啊啊啊啊啊... 以后没必要取那些dt的英文文件名了...
+另外今天又自己修改了一点bootstrap2主题(把存档页面换成了bootstrap主题的...), 越来越喜欢pelican这个工具了~
+
 
 
