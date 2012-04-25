@@ -44,7 +44,10 @@ SOCIAL = (
           #~ ('renren', 'http://www.renren.com/farseer'),
           
 GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~          
-
+#把各种网页小工具(比如倒计时, 微博展示......)的html代码放在这里~ 不过要使用farseerfc同学制作的bootsrtap2主题(太赞啦!!)
+SIDEBAR_CUSTOM=r"""
+<a href="http://www.ubuntu.com/"><img src="http://www.ubuntu.com/countdown/banner1.png" border="0" width="180" height="150" alt="The next version of Ubuntu is coming soon"></a>
+"""
 #~ TWITTER_USERNAME = 'farseerfc'
 #~ SIDEBAR_CUSTOM = r"""
 #~ <li class="nav-header"><h4><i class="icon-list-alt"></i>Weibo</h4></li>
