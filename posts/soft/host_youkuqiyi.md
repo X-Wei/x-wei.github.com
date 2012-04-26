@@ -18,7 +18,12 @@ Tags: host
 找到: `~/.macromedia/Flash_Player/#SharedObjects/某某名字文件夹/` 这里, 可能会有两个文件夹: `www.iqiyi.com`以及`static.youku.com`, 删除之, 然后新建两个空白文件, 名字就取这两个文件夹的名字(要是没有这俩文件夹, 则直接新建这两个空白文件).
 
 #windows用户
-和linux用户一样, 只是那个文件夹在: `C:\Documents and Settings\Administrator\Application Data\Macromedia\Flash Player\#SharedObjects\某某名字文件夹`(呵呵, 略长略长...). 注意啊, 新建的空白文件就是叫`www.iqiyi.com`和`static.youku.com`, 我的意思是...别加上.txt的后缀之类的...
+和linux用户一样, 只是那个文件夹在: 
+
+    (xp) C:\Documents and Settings\Administrator\Application Data\Macromedia\Flash Player\#SharedObjects\某某名字文件夹 (呵呵, 略长略长...)
+    (win7) C:\Users\用户名\AppData\Roaming\Macromedia\Flash Player\#SharedObjects\某某名字文件夹
+
+ 注意啊, 新建的空白文件就是叫`www.iqiyi.com`和`static.youku.com`, 我的意思是...别加上.txt的后缀之类的...
 
 这样做好之后, 看优酷奇艺的视频就没有广告了, enjoy~
 
