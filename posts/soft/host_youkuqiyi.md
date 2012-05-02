@@ -10,14 +10,16 @@ Tags: host
 
 后来, 看了[奶牛的博客](http://www.nenew.net/youku-qiyi-hosts-windows-win7-windows7-vista-ubuntu-linux-archlinux-firefox-chrome.html), 终于找到了解决办法, 至少到目前还是好使的~
 
-首先, 关于host的修改, 直接参考[这篇博客](http://x-wei.github.com/google_host.html), 把里面host的全部内容粘贴进对应的文件中.
+#第一步
+首先, 添加屏蔽广告的host. 关于host的修改, 直接参考[这篇博客](http://x-wei.github.com/google_host.html), 把里面host的全部内容粘贴进对应的文件中.
 
+#第二步
 然后, 按照奶牛的办法:
 
-#linux用户
+##linux用户
 找到: `~/.macromedia/Flash_Player/#SharedObjects/某某名字文件夹/` 这里, 可能会有两个文件夹: `www.iqiyi.com`以及`static.youku.com`, 删除之, 然后新建两个空白文件, 名字就取这两个文件夹的名字(要是没有这俩文件夹, 则直接新建这两个空白文件).
 
-#windows用户
+##windows用户
 和linux用户一样, 只是那个文件夹在: 
 
     (xp) C:\Documents and Settings\Administrator\Application Data\Macromedia\Flash Player\#SharedObjects\某某名字文件夹 (呵呵, 略长略长...)
