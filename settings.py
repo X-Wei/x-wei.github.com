@@ -22,7 +22,7 @@ SITEURL = 'http://x-wei.github.com'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED  = 'feeds/%s.atom.xml'
 #DEFAULT_ORPHANS=3
-DEFAULT_PAGINATION = 4
+DEFAULT_PAGINATION = 6
 
 DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
@@ -49,8 +49,8 @@ SIDEBAR_CUSTOM=ur"""
 <a href="http://www.ubuntu.com/"><img src="http://www.ubuntu.com/countdown/banner1.png" border="0" width="180" height="150" alt="The next version of Ubuntu is coming soon"></a>
 
 </li><li class="widget-container widget_text"><h3 class="widget-title">About me</h3>
-<div class="textwidget">上海交通大学学生, 非计算机专业, 懂一点点C, java和python.<br />
-linux桌面用户(也就是很菜), 认为linux可以配置出适合普通人使用的, 简单友好的界面.<br />
+<div class="textwidget">上海交通大学电院学生, 非计算机专业. <br />
+linux桌面低端用户, 懂一点点C, java和python.<br />
 </div></li>
 """
 #gtalk
