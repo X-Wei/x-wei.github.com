@@ -50,7 +50,7 @@ SIDEBAR_CUSTOM=ur"""
 
 </li><li class="widget-container widget_text"><h3 class="widget-title">About me</h3>
 <div class="textwidget">上海交通大学电院学生, 非计算机专业. <br />
-linux桌面低端用户, 懂一点点C, java和python.<br />
+Linux桌面低端用户, 懂一点点C, java和python.<br />
 </div></li>
 """
 #gtalk
