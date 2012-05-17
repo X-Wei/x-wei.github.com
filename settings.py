@@ -59,6 +59,7 @@ Linux桌面低端用户, 懂一点点C, java和python.<br/>
 <li class="widget-container widget_text">
 <h3 class="widget-title">推荐文章</h3>
 <div class="textwidget">
+<a href="http://x-wei.github.com/chrome-background.html">chrome护眼设置--把背景设置为绿豆沙</a><br>
 <a href="http://x-wei.github.com/xelatex_zh.html">xelatex--linux下tex中文的完全解决!</a><br>
 <a href="http://x-wei.github.com/google_doc_form.html">使用google doc建立在线调查表!~</a><br>
 <a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
