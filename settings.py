@@ -21,6 +21,7 @@ GITHUB_URL = 'https://github.com/X-Wei'
 SITEURL = 'http://x-wei.github.com'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED  = 'feeds/%s.atom.xml'
+FEED_RSS = 'feeds/all.rss.xml'
 #DEFAULT_ORPHANS=3
 DEFAULT_PAGINATION = 6
 
@@ -48,9 +49,20 @@ GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被goog
 SIDEBAR_CUSTOM=ur"""
 <a href="http://www.ubuntu.com/"><img src="http://www.ubuntu.com/countdown/banner1.png" border="0" width="180" height="150" alt="The next version of Ubuntu is coming soon"></a>
 
-</li><li class="widget-container widget_text"><h3 class="widget-title">About me</h3>
-<div class="textwidget">上海交通大学电院学生, 非计算机专业. <br />
-Linux桌面低端用户, 懂一点点C, java和python.<br />
+</li><li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海交通大学电院学生, 非计算机专业. <br/>
+Linux桌面低端用户, 懂一点点C, java和python.<br/>
+</div></li>
+
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+<a href="http://x-wei.github.com/xelatex_zh.html">xelatex--linux下tex中文的完全解决!</a><br>
+<a href="http://x-wei.github.com/google_doc_form.html">使用google doc建立在线调查表!~</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+<a href="http://x-wei.github.com/host_youkuqiyi.html">修改host去除优酷奇艺网站广告</a><br>
 </div></li>
 """
 #gtalk
