@@ -1,4 +1,4 @@
-Title: cmus: 很棒的终端音乐播放器
+Title: cmus--很棒的终端音乐播放器
 Date: 2012-01-23
 Slug: cmus: 很棒的终端音乐播放器
 
