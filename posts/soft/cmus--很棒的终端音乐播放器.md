@@ -1,6 +1,6 @@
 Title: cmus--很棒的终端音乐播放器
 Date: 2012-01-23
-Slug: cmus: 很棒的终端音乐播放器
+Slug: cmus-很棒的终端音乐播放器
 
 最近发现一个终端下超好用的音乐播放器: [CMUS](http://en.wikipedia.org/wiki/Cmus). 界面简洁, vi的按键绑定, 由于最近越来越感觉键盘和快捷键的方便, 对这个迷你的播放器爱不释手.
 
