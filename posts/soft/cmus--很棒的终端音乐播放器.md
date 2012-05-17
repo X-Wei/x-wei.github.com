@@ -17,8 +17,8 @@ man cmus-tutorial
 1. 1~7共7种view, 用数字键就可以切换;
 2. 使用命令要想vi一样加':', 常见命令有:
 
-:cd xx_dir
-:add xx_dir
+    :cd xx_dir  
+    :add xx_dir
 
 3. c--暂停, hl/<>--快进快退, x--播放, v--停止
 4. 右下角显示播放模式: R表示重复, S随机, C连续(播完一曲后不停)
