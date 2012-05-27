@@ -29,7 +29,7 @@ DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
 PATH = 'posts'
 #~ THEME_STATIC_PATHS=['pelican-themes']
-THEME='./pelican-themes/bs4'
+THEME='./pelican-themes/bs5'
 #~ CSS_FILE = "font-awesome.css"
 
 LINKS = (('dofine', 'http://www.dofine.me'),
