@@ -29,7 +29,7 @@ DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
 PATH = 'posts'
 #~ THEME_STATIC_PATHS=['pelican-themes']
-THEME='./pelican-themes/bs5'
+THEME='./pelican-themes/bs6'
 #~ CSS_FILE = "font-awesome.css"
 
 LINKS = (('dofine', 'http://www.dofine.me'),
@@ -69,6 +69,7 @@ Linux桌面低端用户, 懂一点点C, java和python.<br/>
 <a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
 <a href="http://x-wei.github.com/host_youkuqiyi.html">修改host去除优酷奇艺网站广告</a><br>
 </div></li>
+
 """
 #gtalk
 #<iframe src="http://www.google.com/talk/service/badge/Show?tk=z01q6amlq8n8dcqb7mphiivq299uh917bh2sph4lo7rip701jaltqve59eica9opvmhfq5h7hm6i7jkdql1kqntt3h8mnto6ns9lt5960d4dhrvdo3963kv040g9344v6q2nslh6sgqnjp5l2oqspe7p29858omr5qthnm8lc&amp;w=200&amp;h=60" frameborder="0" allowtransparency="true" width="200" height="60"></iframe>
