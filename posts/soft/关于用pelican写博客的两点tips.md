@@ -9,7 +9,9 @@ Tags: pelican
 效果就像校内网日志那样, 可以内嵌的视频.
 
 其实很简单, 只需要把html代码放进markdown源文件就行了! 而视频的html代码在视频网站上一般都会提供:
+
 ![](./关于用pelican写博客的两点tips/pasted_image.png)
+
 复制下来放进源文件即可
 
 
