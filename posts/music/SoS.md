@@ -172,6 +172,7 @@ And whisper’d in the sounds of silence.
 这个版本我没有查到到底是谁唱的(原文件里没有这个信息?), 当时妈从单位上一个人那里拷来一些英语歌, 这首就在里面. 也许是先入为主吧, 总是觉得这首才最好听, 把那种迷茫的诡异的感觉演绎得淋漓尽致. `And the people bowed and prayed, to the neon god they made.`简直就是一种宗教的仪式...
 
 (优酷上这个视频的配乐刚好就是"那个"版本, 就拿来了)
+
 <embed src="http://player.youku.com/player.php/sid/XMjc0NDgxOTM2/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
 3. Yao Shi Ting版
