@@ -6,7 +6,9 @@ Date: 2012-06-05
 所有事都完成, 开始写歌评.
 
 ##intro引子
-本来我是计划从老鹰的一首歌开始写的, 昨天甚至计划好了第一首就写Hotel California. BUT SOMEHOW, 决定第一首写它, 寂静之声(SoS).
+本来我是计划从老鹰的一首歌开始写的, 昨天甚至计划好了第一首就写Hotel California. 
+
+BUT SOMEHOW, 决定第一首写它, 寂静之声(SoS).
 
 ![](./TheSoundofSilence/SnG.jpg)
 
@@ -200,4 +202,4 @@ SoS是演唱会快结束是才唱到的, 西蒙的吉他响起, 全场顿时一�
 <embed src="http://player.youku.com/player.php/sid/XMjQ0NjU5MTE2/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
 ---
-第一篇... 终于写完了, 写得好累啊, 以后可能不能每首都写那么多了, 我觉得有可说的就说, 不想说的就不写那么多, 不能让写这些东西变成一中负担...
+第一篇... 终于写完了, 写得好累啊, 以后可能不能每首都写那么多了, 我觉得有可说的就说, 不想说的就不写那么多, 不能让写这些东西变成一种负担...
