@@ -161,13 +161,13 @@ And whisper’d in the sounds of silence.
 
 关于SoS, 版本实在太多了, 包括各种翻唱以及他们早年的表演, 我就只写几个让我印象深刻的吧...
 
-1. 电影原声配音
++ 电影原声配音
 
 这个是把整个电影剪辑一下, 配上的电影原声. 剪辑的很好, 但是我不觉得西蒙与加芬科这一版唱的很好...
 
 <embed src="http://player.youku.com/player.php/sid/XMTY0MTg3MDg0/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
-2. "那个"版本的寂静之声
++ "那个"版本的寂静之声
 
 这个版本我没有查到到底是谁唱的(原文件里没有这个信息?), 当时妈从单位上一个人那里拷来一些英语歌, 这首就在里面. 也许是先入为主吧, 总是觉得这首才最好听, 把那种迷茫的诡异的感觉演绎得淋漓尽致. `And the people bowed and prayed, to the neon god they made.`简直就是一种宗教的仪式...
 
@@ -175,13 +175,13 @@ And whisper’d in the sounds of silence.
 
 <embed src="http://player.youku.com/player.php/sid/XMjc0NDgxOTM2/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
-3. Yao Shi Ting版
++ Yao Shi Ting版
 
 一个中国人的翻唱版, 总觉得这个版本和其他的翻唱版有点区别, 姚斯婷的声音很空灵, 别有一番滋味.
 
 <embed src="http://player.youku.com/player.php/sid/XODE1MTM4NTI=/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
 
-4. concert in central park
++ concert in central park
 
 ![](./TheSoundofSilence/CiCP.jpg)
 
