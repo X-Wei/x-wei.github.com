@@ -1,7 +1,7 @@
 Title: xelatex--linux下tex中文的完全解决!
 Date: 2012-02-27
 Slug: xelatex_zh
-Tags: tex, geany, 中文乱码
+Tags: tex, 中文乱码
 
 前几天校内上看见了这个[latex中文指南](http://page.renren.com/601024697/note/806581340?ref=share), 想试一试...
 

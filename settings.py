@@ -30,7 +30,7 @@ OUTPUT_PATH = '.'
 PATH = 'posts'
 #~ THEME_STATIC_PATHS=['pelican-themes']
 THEME='./pelican-themes/bs6'
-#~ CSS_FILE = "font-awesome.css"
+
 
 LINKS = (('dofine', 'http://www.dofine.me'),
          ('farseerfc', "http://farseerfc.github.com/"),
