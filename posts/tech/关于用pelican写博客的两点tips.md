@@ -1,7 +1,7 @@
 Title: 关于用pelican写博客的三点tips
 Date: 2012-05-27
 Slug: 关于用pelican写博客的三点tips
-Tags: pelican, markdown
+Tags: pelican, markdown	
 
 
 #1.插入视频

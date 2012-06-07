@@ -58,3 +58,15 @@ markdown虽然写起来方便, 但是要预览的话还要用ReText打开, 而�
                             --ignore-args                                   
       -v                    --version                                       
       -h                    --help       
+
+真是more than I've expected! markdown/rst/html/latex之间可以互转!
+
+使用pandoc命令就可以在随便转换了, 示例, 把demo.md输出成demo.html:
+
+`$pandoc -f markdown -t html -o demo.html demo.md`
+
+或者直接:
+
+`$pandoc -f markdown -t html -o demo.html demo.md`
+
+我觉得这个实在是很有用的一条命令~
