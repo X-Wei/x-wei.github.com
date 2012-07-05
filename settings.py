@@ -32,7 +32,7 @@ PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
 
-LINKS = (('dofine', 'http://www.dofine.me'),
+LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
          )
 
@@ -51,10 +51,10 @@ SIDEBAR_CUSTOM=ur"""
 <Script Language="JavaScript"> 
 var timedate= new Date("June 22,2012"); 
 var now = new Date(); 
-var date = timedate.getTime() - now.getTime(); 
-var time = Math.floor(date / (1000 * 60 * 60 * 24))+1; 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
 if (time >= 0) ;
-document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>until GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
 </Script>
 
 <br>
