@@ -21,6 +21,7 @@ GITHUB_URL = 'https://github.com/X-Wei'
 SITEURL = 'http://x-wei.github.com'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED  = 'feeds/%s.atom.xml'
+TAG_CLOUD_STEPS = 4
 FEED_RSS = 'feeds/all.rss.xml'
 #DEFAULT_ORPHANS=3
 DEFAULT_PAGINATION = 10
