@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-TIMEZONE = 'Asia/Shanghai'
+TIMEZONE = 'Europe/Paris'
 
 #~ DATE_FORMATS = {
     #~ 'en' : u'%a, %d %b %Y',
