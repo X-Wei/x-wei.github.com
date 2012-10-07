@@ -68,8 +68,7 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 <li class="widget-container widget_text">
 <h3 class="widget-title">About me</h3>
 <div class="textwidget">
-上海西南某高校电院学生, 非计算机专业. <br/>
-Linux桌面低端用户, 懂一点点C, java和python.<br/>
+上海西南某高校电院学生, Linux桌面低端用户.<br/>
 </div></li>
 
 <br>
