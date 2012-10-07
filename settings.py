@@ -75,13 +75,13 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 <li class="widget-container widget_text">
 <h3 class="widget-title">推荐文章</h3>
 <div class="textwidget">
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
 <a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/google_youku_host_20120706.html">[更新]访问google服务和优酷去广告功能的host列表</a><br>
 <a href="http://x-wei.github.com/chrome-background.html">chrome护眼设置--把背景设置为绿豆沙</a><br>
 <a href="http://x-wei.github.com/xelatex_zh.html">xelatex--linux下tex中文的完全解决!</a><br>
 <a href="http://x-wei.github.com/google_doc_form.html">使用google doc建立在线调查表!~</a><br>
 <a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
-<a href="http://x-wei.github.com/host_youkuqiyi.html">修改host去除优酷奇艺网站广告</a><br>
-<a href="http://x-wei.github.com/google_youku_host_20120706.html">[更新]访问google服务和优酷去广告功能的host列表</a><br>
 </div></li>
 
 """
