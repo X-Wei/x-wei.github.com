@@ -35,6 +35,7 @@ THEME='./pelican-themes/bs6'
 
 LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
+         ('H.Y.', "http://hyhx2008.github.com/"),
          )
 
 SOCIAL = (
