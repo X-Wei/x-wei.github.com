@@ -28,6 +28,9 @@ DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
+#ARTICLE_SAVE_AS = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
+ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{slug}'
+#OUTPUT_PATH = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}.html'
 PATH = 'posts'
 #~ THEME_STATIC_PATHS=['pelican-themes']
 THEME='./pelican-themes/bs6'
