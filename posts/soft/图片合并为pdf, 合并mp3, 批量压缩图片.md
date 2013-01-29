@@ -41,11 +41,14 @@ Slug: 图片合并为pdf, 合并mp3, 批量压缩图片
 使用convert命令, 好像是在ImageMagick里面.
 参考[这里](http://www.360doc.com/content/11/0704/16/2104556_131439876.shtml):
 
-    #/bin/sh
-    for img in `ls nini-pic/*`
+    #!/bin/bash
+    images=`ls *.JPG`
+    echo "resize images begining..."
+    for image in $images
     do
-    mkdir sm-nini-pic
-    convert -rotate 270 -resize 30%x30% $img sm-$img
+    convert $image -resize 50% $image;
+    echo "resize $image to %50";
     done
+    exit
 
 然后就OK了... 顺便吐槽下gmail的附件大小限制!!...
