@@ -24,7 +24,7 @@ Tags: git
 
 然后好象就好了...... 不过push的时候要指定用户名和https的地址, 根据提示输入github密码才能使用.
 
-    $ git push <https://x-wei@github.com/X-Wei/x-wei.github.com/>
+    $ git push https://x-wei@github.com/X-Wei/x-wei.github.com/
     Password: 
     Counting objects: 234, done.
     Delta compression using up to 4 threads.
