@@ -1,5 +1,5 @@
 Title: ssh远程登录学校机房电脑
-Date: 2012-07-02
+Date: 2013-07-02
 Tags: shell
 Slug: ssh远程登录学校机房电脑
 
