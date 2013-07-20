@@ -7,7 +7,7 @@ Slug: ssh远程登录学校机房电脑
 X[机房的电脑](http://www.enseignement.polytechnique.fr/profs/informatique/Philippe.Chassignet/MOYENS/stations.html)配置还是很高的, 所以...
 
 远程登录的命令是: 
-    ssh -X xing.wei@truite.polytechnique.fr
+    ssh -X nom.prenom@truite.polytechnique.fr
 
 (-X命令表示允许使用X程序.)
 
