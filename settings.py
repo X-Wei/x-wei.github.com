@@ -18,7 +18,8 @@ FEED_RSS = 'feeds/all.rss.xml'
 DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
-#~ OUTPUT_PATH = 'output'
+OUTPUT_PATH = '.'
+STATIC_PATHS = ["static", ]
 PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
