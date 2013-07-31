@@ -3,14 +3,6 @@ import sys
 
 TIMEZONE = 'Europe/Paris'
 
-#~ DATE_FORMATS = {
-    #~ 'en' : u'%a, %d %b %Y',
-    #~ 'zh' : u'%Y-%m-%d',
-    #~ 'zhs': u'%Y-%m-%d',
-#~ }
-# windows locale: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
-#~ LOCALE = ['usa', 'cht', 'chs', 'jpn',        # windows
-          #~ 'en_US', 'zh_CN', 'ja_JP']  # Unix/Linux
 DEFAULT_LANG = 'zhs'
 
 SITENAME = "mx's Blog"
@@ -23,20 +15,11 @@ GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED_ATOM  = 'feeds/%s.atom.xml'
 TAG_CLOUD_STEPS = 4
 FEED_RSS = 'feeds/all.rss.xml'
-#DEFAULT_ORPHANS=3
 DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
-OUTPUT_PATH = '.'
-# RELATIVE_URLS="true"
-# STATIC_PATHS=["images",]
-#~ ARTICLE_URL ="{slug}.html"
-#~ NEWEST_FIRST_ARCHIVES='true'
-#ARTICLE_SAVE_AS = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
-#~ ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{slug}'
-#OUTPUT_PATH = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}.html'
+#~ OUTPUT_PATH = 'output'
 PATH = 'posts'
-#~ THEME_STATIC_PATHS=['pelican-themes']
 THEME='./pelican-themes/bs6'
 
 
