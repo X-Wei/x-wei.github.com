@@ -27,9 +27,9 @@ FEED_RSS = 'feeds/all.rss.xml'
 DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
-OUTPUT_PATH = './output/'
-RELATIVE_URLS="true"
-STATIC_PATHS=["images",]
+OUTPUT_PATH = '.'
+# RELATIVE_URLS="true"
+# STATIC_PATHS=["images",]
 #~ ARTICLE_URL ="{slug}.html"
 #~ NEWEST_FIRST_ARCHIVES='true'
 #ARTICLE_SAVE_AS = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
