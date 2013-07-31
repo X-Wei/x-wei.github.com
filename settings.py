@@ -13,23 +13,27 @@ TIMEZONE = 'Europe/Paris'
           #~ 'en_US', 'zh_CN', 'ja_JP']  # Unix/Linux
 DEFAULT_LANG = 'zhs'
 
-SITENAME = "X. Wei's Blog"
-AUTHOR = 'X.Wei'
+SITENAME = "mx's Blog"
+AUTHOR = 'mx'
 
 DISQUS_SITENAME = 'xweisblog'
 GITHUB_URL = 'https://github.com/X-Wei'
 SITEURL = 'http://x-wei.github.com'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
-TAG_FEED  = 'feeds/%s.atom.xml'
+TAG_FEED_ATOM  = 'feeds/%s.atom.xml'
 TAG_CLOUD_STEPS = 4
 FEED_RSS = 'feeds/all.rss.xml'
 #DEFAULT_ORPHANS=3
 DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
-OUTPUT_PATH = '.'
+OUTPUT_PATH = './output/'
+RELATIVE_URLS="true"
+STATIC_PATHS=["images",]
+#~ ARTICLE_URL ="{slug}.html"
+#~ NEWEST_FIRST_ARCHIVES='true'
 #ARTICLE_SAVE_AS = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
-ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{slug}'
+#~ ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{slug}'
 #OUTPUT_PATH = 'out/{date:%Y}/{date:%b}/{date:%d}/{slug}.html'
 PATH = 'posts'
 #~ THEME_STATIC_PATHS=['pelican-themes']
@@ -55,7 +59,7 @@ SIDEBAR_CUSTOM=ur"""
 <br>
 <Script Language="JavaScript"> 
 var timedate= new Date("June 22,2012"); 
-var now = new Date(); 
+var now = new ate(); 
 var date = now.getTime() - timedate.getTime(); 
 var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
 if (time >= 0) ;
