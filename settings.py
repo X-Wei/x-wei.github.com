@@ -10,7 +10,7 @@ AUTHOR = 'mx'
 
 DISQUS_SITENAME = 'xweisblog'
 GITHUB_URL = 'https://github.com/X-Wei'
-SITEURL = 'http://x-wei.github.com'
+#~ SITEURL = 'http://x-wei.github.com'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED_ATOM  = 'feeds/%s.atom.xml'
 TAG_CLOUD_STEPS = 4
@@ -19,10 +19,13 @@ DEFAULT_PAGINATION = 10
 
 DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
+#~ RELATIVE_PATH='true'
+RELATIVE_URLS=1
 STATIC_PATHS = ["static", ]
 PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
+#~ REVERSE_ARCHIVE_ORDER=0
 
 LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
@@ -42,7 +45,7 @@ GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被goog
 SIDEBAR_CUSTOM=ur"""
 <br>
 <Script Language="JavaScript"> 
-var timedate= new Date("June 22,2012"); 
+var timedate= new Date("June 22,2013"); 
 var now = new ate(); 
 var date = now.getTime() - timedate.getTime(); 
 var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
