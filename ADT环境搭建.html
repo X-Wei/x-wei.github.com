@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>cmus--很棒的终端音乐播放器</title>
+    <title>ADT环境搭建</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -99,13 +99,13 @@
 					</a>
                   </li>
               
-                  <li class="active">
+                  <li >
                     <a href="./category/soft.html">
 						<i class="icon-folder-open icon-large"></i>soft
 					</a>
                   </li>
               
-                  <li >
+                  <li class="active">
                     <a href="./category/tech.html">
 						<i class="icon-folder-open icon-large"></i>tech
 					</a>
@@ -133,8 +133,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to cmus--很棒的终端音乐播放器">
-					cmus--很棒的终端音乐播放器 
+					title="Permalink to ADT环境搭建">
+					ADT环境搭建 
 				</a>
 				 
 			</h1> 
@@ -143,48 +143,71 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2012-01-23T00:00:00">
-	<i class="icon-calendar"></i>lun. 23 janvier 2012
+<abbr class="published" title="2013-11-08T00:00:00">
+	<i class="icon-calendar"></i>ven. 08 novembre 2013
 </abbr>
 
 <span class="label">By</span>
 <a href="./"><i class="icon-user"></i>mx</a>
 
 <span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>soft</a>. 
+<a href="./"><i class="icon-folder-open"></i>tech</a>. 
 
 
 	
 
+<span class="label">Tags</span> 
+
+	<a href="./tag/android.html"><i class="icon-tag"></i>android</a>
+
+	<a href="./tag/inf422.html"><i class="icon-tag"></i>inf422</a>
+
+
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>最近发现一个终端下超好用的音乐播放器: <a href="http://en.wikipedia.org/wiki/Cmus">CMUS</a>. 界面简洁, vi的按键绑定, 由于最近越来越感觉键盘和快捷键的方便, 对这个迷你的播放器爱不释手.</p>
-<p>关于它的用法可以参考<a href="http://www.tuxarena.com/static/cmus_guide.php">这里</a>, 另外<a href="http://roylez.heroku.com/2010/01/26/replay-gain.html">这里</a>还介绍了怎么设置replay gain(大概是不同音乐播放的音量相同), 但我没有设置.</p>
-<p>网站上的文档不多, 我觉得最好的教程还是man:
-man cmus
-man cmus-tutorial
-把tutorial看完就基本上会用了~</p>
-<p>这里列一下我觉得常用的几点吧:</p>
+		<p>这学期INF422, 第一节课就是android安装调试环境的搭建(居然要一节课?), 这里总结一下.</p>
+<h3>第一步: 下载bundle</h3>
+<p>下载<a href="http://developer.android.com/sdk/index.html">ADT-Bundle</a>
+解压缩以后啥都有了, 包含一个eclipse...</p>
+<h3>第二步: 修改环境变量</h3>
+<p>linux下的环境变量放在<code>.bashrc文件</code>, 加入下面一行: </p>
+<p><code>PATH=$PATH:&lt;dir&gt;/sdk/tools/:&lt;dir&gt;/sdk/platform-tools/:</code></p>
+<p>其中<code>&lt;dir&gt;</code>是放置SDK的目录地址.</p>
+<p>测试一下好不好使, 在终端中输入<code>android</code>, 看是否会弹出SDK manager</p>
+<h3>第三步: 新建一个virtual machine</h3>
+<p>可以用eclipse的AVDmanager做, 也可以用命令行做. </p>
+<p>输入:</p>
+<p><code>android list targets</code></p>
+<p>找到想要的target(我们要4.1.2)的那个id(一个数字), 然后, 运行命令: </p>
+<p><code>android create avd -t &lt;target_id&gt; -n inf422 --abi armeabi-v7a</code></p>
+<p>这样就生成了一个名叫"inf422"的虚拟机</p>
+<h3>第四步: 关联到自定义的镜像</h3>
+<p>inf422这门课提供了一个修改过的android镜像, 在<a href="http://www.enseignement.polytechnique.fr/informatique/INF422/ramdisk.img">这里</a>和<a href="http://www.enseignement.polytechnique.fr/informatique/INF422/kernel-qemu">这里</a>下载, 下载到本地的目录上了以后, 运行: </p>
+<p><code>emulator @inf422 -ramdisk &lt;IMAGES&gt;/ramdisk.img -kernel &lt;IMAGES&gt;/kernel-qemu</code></p>
+<p>其中<IMAGES>是刚刚存放那俩镜像文件的目录. </p>
+<h3>第五步: telnet连接虚拟机</h3>
+<p>课程里用的emulator使用telnet服务器, 且是在虚拟机的23端口接收信息. 先重定向一下端口, 定向到localhost的4444端口:</p>
+<p><code>adb forward tcp:4444 tcp:23</code></p>
+<p>这样, 以后要登录模拟器emulator的时候, 只需要输入: </p>
+<p><code>telnet localhost 4444</code></p>
+<p>(用户名是root, 不要密码)</p>
+<h2>第六步: 用两种方法进入虚拟机</h2>
+<p>刚才的4444端口是进入emulator用的, 而打开虚拟机的时候, 窗口标题是一个数字再加虚拟机的名字(我的显示的是"5554:inf422"), 这个5554是另外一个端口, 用于用shell方式登陆, 登陆后可以使用shell命令查看文件或者进行一些操作. </p>
+<p>而与之对应, 从4444端口登陆, 则是进入emulator的控制console</p>
+<p><em>两种方法和AVD交流:</em></p>
 <ol>
-<li>1~7共7种view, 用数字键就可以切换;</li>
-<li>
-<p>使用命令要想vi一样加':', 常见命令有:</p>
-<p>:cd xx_dir<br />
-:add xx_dir</p>
-</li>
-<li>
-<p>c--暂停, hl/&lt;&gt;--快进快退, x--播放, v--停止</p>
-</li>
-<li>右下角显示播放模式: R表示重复, S随机, C连续(播完一曲后不停)</li>
+<li>console: linux命令, 命令行</li>
+<li>emulator: 发送命令产生一些事件(电话, 短信, GPS等)</li>
 </ol>
+<p>第二种方式可以模拟一些手机事件, 很有用... 使用help命令查看emulator怎么使用</p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "cmus-很棒的终端音乐播放器.html";
+			   var disqus_identifier = "ADT环境搭建.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;

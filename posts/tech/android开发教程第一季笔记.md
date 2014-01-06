@@ -54,6 +54,7 @@ S01E05: activity初步
 ==================
 
 #### Activity启动基本流程
+
 ![](./android开发教程第一季笔记/pasted_image006.png)
 
 * AndroidManifest.xml里面指定, 程序运行后执行MainActivity.java
@@ -62,6 +63,7 @@ S01E05: activity初步
 
 #### Activity与布局文件
 一一对应 (eclipse编辑器里有图形化预览界面)
+
 ![](./android开发教程第一季笔记/pasted_image007.png)
 
 #### 在Activity当中获取代表控件对象
@@ -95,6 +97,7 @@ S01E06: View
 
 #### View的基本概念
 View是一个控件?...
+
 ![](./android开发教程第一季笔记/pasted_image008.png)
 
 #### 为一个View绑定监听器
@@ -102,37 +105,37 @@ View是一个控件?...
 
 1. java程序里获取控件代表的对象: findViewById()方法
 
-    bt = (Button) findViewById(R.id.button1);
+        bt = (Button) findViewById(R.id.button1);
 
 2. 定义一个**内部类** 实现监听器接口:
 
-    // **使用一个内部类定义监听器**
-    // Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的
-    class ButtonListener implements OnClickListener {
-    @Override
-    // 实现该接口的抽象方法onClick
-    public void onClick(View v) {
-    //do something......
-    }
-    }// end 内部类ButtonListener
-
+        // **使用一个内部类定义监听器**
+        // Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的
+        class ButtonListener implements OnClickListener {
+        @Override
+        // 实现该接口的抽象方法onClick
+        public void onClick(View v) {
+        //do something......
+        }
+        }// end 内部类ButtonListener
+    
 3. onCreate()里生成一个监听器对象, 并为控件绑定该监听器
     
-    ButtonListener bl = new ButtonListener();// 生成一个监听器对象
-    bt.setOnClickListener(bl);// **这句话把监听器和事件联系在一起了** 点击这个按钮 就会执行它的onclick方法
+        ButtonListener bl = new ButtonListener();// 生成一个监听器对象
+        bt.setOnClickListener(bl);// **这句话把监听器和事件联系在一起了** 点击这个按钮 就会执行它的onclick方法
 
 
 * 一个监听器可以绑定给多个控件
-* ****另法****
+* **另法**
 
 可以直接写在setOnClickListener参数里, 不用给内部类起名字: 
-
-    bt.setOnClickListener(new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-    //do something......
-    }
-    });
+    
+        bt.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+        //do something......
+        }
+        });
     
 
 
@@ -141,7 +144,7 @@ S01E07: 布局
 
 
 * 所谓的控件布局方法,就是指控制控件在Activity当中的位置、大小、颜色以及其他控件样式属性的方法。
-* 布局可以用xml布局文件(ex. [/res/layout/activity_main.xml),](file:///res/layout/activity_main.xml)%2C) 也可以在java文件里完成控件布局
+* 布局可以用xml布局文件(ex. /res/layout/activity_main.xml) 也可以在java文件里完成控件布局
 * 最常用: 线性布局LinearLayout, 相对布局RelativeLayout
 * 先暂时用线性布局LinearLayout, 最简单
 
@@ -162,13 +165,16 @@ S01E08: 距离单位; 边距
 
 * **dp**=dip(Device Independent pixels) 是设备无关的像素单位
 
-换算公式px = dp * (dpi / 160)
-在320*480的屏幕上, dp与px相等
+换算公式`px = dp * (dpi / 160)` 
+
+在320*480的屏幕上, dp与px相等 
+
 **总之一般指定控件大小就用dp**
 
 * **sp**=scaled pixels 可改变大小的像素单位
 
 当用户修改手机显示字体时,sp会随之改变
+
 **sp单位通常用于指定字体的大小**
 
 #### 内外边距: margin, padding
@@ -198,8 +204,8 @@ S01E09: CheckBox多选框
 * 可以几个CheckBox绑定上同一个监听器
 * OnClickListener接口的方法: public void onClick(View v) 有一个**参数View v**, 指的是是哪个控件被点击了, 
 
-在onClick()中要处理这个控件时, 使用:
-CheckBox cb = (CheckBox) v; 得到这个控件对象, 或者通过其id: v.getId()也可以
+在onClick()中要处理这个控件时, 使用:`CheckBox cb = (CheckBox) v; `
+得到这个控件对象, 或者通过其`id: v.getId()`也可以
 
 
 
@@ -207,36 +213,41 @@ S01E10: 单选框RadioButton
 ----------------------
 
 效果: 
+
 ![](./android开发教程第一季笔记/pasted_image013.png)
 
 #### RadioGroup
 单选按钮RadioButton需要放在一个RadioGroup中
+
 xml代码:
+
      <RadioGroup
-                android:id="@+id/radioGroupId"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical" 
-                android:layout_weight="1">
-    
-                <RadioButton
-                    android:id="@+id/radioButton_h"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="homme" />
-    
-                <RadioButton
-                    android:id="@+id/radioButton_f"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="femmee" />
-            </RadioGroup>
-            <!-- 像RadioGroup这样写的xml标签可以拥有子标签, 而像RadioButton这种则不能 →
+        android:id="@+id/radioGroupId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical" 
+        android:layout_weight="1">
+
+        <RadioButton
+            android:id="@+id/radioButton_h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="homme" />
+
+        <RadioButton
+            android:id="@+id/radioButton_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="femmee" />
+    </RadioGroup>
+    <!-- 像RadioGroup这样写的xml标签可以拥有子标签, 而像RadioButton这种则不能 →
 
 #### RadioGroup的OnCheckedChangeListener
 有俩参数... (RadioGroup group, int checkedId)
+
 直接上代码吧: 
+
     class RadioGroupListener implements
     android.widget.RadioGroup.OnCheckedChangeListener {
     
@@ -265,11 +276,11 @@ S01E11: 显示图片ImageView
 #### 插图的方法
 
 * 把图片放在./res/drawable 里面(有好几个分辨率的drawable, 随便一个...), ex. 放在了./res/drawable-hdpi/pic.jpg
-* → 会在R.java里生成其id: pic
+* → 会在R.java里生成其`id: pic`
 * 在xml中使用<ImageView/>标签
 
 引用放好的图: 
-android:src="@drawable/pic"
+`android:src="@drawable/pic"`
 
 #### ScaleType
 ScaleType属性控制图片缩放的尺寸, 有几个可选: 
@@ -283,15 +294,16 @@ ScaleType属性控制图片缩放的尺寸, 有几个可选:
 
 
 **代码片段: **
+
     <ImageView
-                android:id="@+id/imageView1Id"
-                android:layout_width="60dp"
-                android:layout_height="70dp"
-                android:background="#FF0000"
-                android:scaleType="fitCenter"
-                android:layout_weight="1"
-                android:src="@drawable/pic" />
-            <!-- "@drawable/pic"是对应于R.drawable.pic, 实际上图片也可以放在assets文件夹 或者网络上 或者SD卡上 都可以, 不过以后再用 -->
+        android:id="@+id/imageView1Id"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:background="#FF0000"
+        android:scaleType="fitCenter"
+        android:layout_weight="1"
+        android:src="@drawable/pic" />
+    <!-- "@drawable/pic"是对应于R.drawable.pic, 实际上图片也可以放在assets文件夹 或者网络上 或者SD卡上 都可以, 不过以后再用 -->
 
 
 S01E12: 线性布局深入
@@ -333,7 +345,7 @@ S01E13: 相对布局-I
 #### 实现方法
 
 * android:layout_below/layout_above等等等等... 放置在其左(右)边; 属性的值都是其他控件的id
-* android:id="@+id/tvv1"是创建一个新id(__+__id); android:layout_toRightOf="@id/tvv1"则是引用已有的id(没有加号)
+* android:id="@+id/tvv1"是创建一个新id; android:layout_toRightOf="@id/tvv1"则是引用已有的id(没有加号)
 * android:layout_alignLeft/Right等等等等..... 左(右)对齐; 属性的值都是其他控件的id  
 
 
@@ -347,12 +359,14 @@ S01E14: 相对布局II
 * 基准线:为了保证印刷字母的整齐而划定的线 
 
 ![](./android开发教程第一季笔记/pasted_image.png)
+
 第三条线就是所谓的基准线(baseline)
 
 * ex. 两个TextView__的基准线__相互对齐
 * 作用: 当俩TextView的字体大小不相同时...
 
 看图:
+
 ![](./android开发教程第一季笔记/pasted_image001.png)
 
 #### 和父控件对齐
@@ -376,6 +390,7 @@ S01E15: 相对布局III
 ![](./android开发教程第一季笔记/pasted_image014.png)
 
 **代码片段:** 
+
      <RelativeLayout
                 android:id="@+id/RL0"
                 android:layout_width="fill_parent"
@@ -436,10 +451,7 @@ S01E16: 时间和日期 TimePicker/DatePicker
 
 * <TimePicker/> <DatePicker/>标签
 * 文档: android.widget.TimePicker/android.widget.DatePicker
-* OnTimeChangedListener的onTimeChanged函数
-
-public void onTimeChanged(TimePicker view, int hourOfDay, int minute) 仨参数
-
+* OnTimeChangedListener的onTimeChanged函数: public void onTimeChanged(TimePicker view, int hourOfDay, int minute) 仨参数
 * getCurrentHour(); getCurrentMinute(); getMonth(); getDayOfMonth()等函数, 同理有set函数......
 * 注意月份是从零算起!!
 * setIs24HourView() 切换24小时显示
@@ -451,7 +463,9 @@ S01E17: 进度条ProgressBar
 ======================
 
 #### 各种进度条
+
 ![](./android开发教程第一季笔记/pasted_image015.png)
+
 ![](./android开发教程第一季笔记/pasted_image016.png)
 
 
@@ -469,49 +483,51 @@ S01E18: SeekBar和RatingBar
 =========================
 
 #### SeekBar
+
 ![](./android开发教程第一季笔记/pasted_image017.png)
 
 * 属性: max/progress/
 * 监听器接口OnSeekBarChangeListener有三个函数要重写: 
 
-    class SeekBarListener implements OnSeekBarChangeListener{
-    
-    /**
-    
-    * seekBar 该对象指的是触发了监听器的SeekBar对象
-    * progress 指的是当前SeekBar的进度
-    * fromUser 指是不是用户手动改变的进度
-    
-     */
-    @Override
-    public void onProgressChanged(SeekBar SeekBar, int progress, boolean fromUser) {
-    System.out.println("progress:" + progress + ",fromUser:" + fromUser);
-    }
-    
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    System.out.println("onStart");
-    }
-    
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-    System.out.println("onStop");
-    }
-    		
-    }
+        class SeekBarListener implements OnSeekBarChangeListener{
+        
+        /**
+        
+        * seekBar 该对象指的是触发了监听器的SeekBar对象
+        * progress 指的是当前SeekBar的进度
+        * fromUser 指是不是用户手动改变的进度
+        
+         */
+        @Override
+        public void onProgressChanged(SeekBar SeekBar, int progress, boolean fromUser) {
+        System.out.println("progress:" + progress + ",fromUser:" + fromUser);
+        }
+        
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        System.out.println("onStart");
+        }
+        
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+        System.out.println("onStop");
+        }
+        		
+        }
     
 
 #### RatingBar
+
 ![](./android开发教程第一季笔记/pasted_image018.png)
 
 * 属性: numStars(星星个数), progress, stepSize(步进)
 * 监听器代码:
 
-    class RatingBarListener implements OnRatingBarChangeListener{
-    
-    @Override
-    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-    System.out.println("rating:" + rating + ",fromUser:" + fromUser);
-    }
+        class RatingBarListener implements OnRatingBarChangeListener{
+        
+        @Override
+        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        System.out.println("rating:" + rating + ",fromUser:" + fromUser);
+        }
     		
  

@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="../." rel="alternate"></link><link href=".././feeds/tech.atom.xml" rel="self"></link><id>../.</id><updated>2013-07-31T00:00:00+02:00</updated><entry><title>android开发视频教程(重制版) 第一季 课程笔记</title><link href=".././android%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B%E7%AC%AC%E4%B8%80%E5%AD%A3%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2013-07-31T00:00:00+02:00</updated><author><name>mx</name></author><id>.././android开发教程第一季笔记.html</id><summary type="html">&lt;h1&gt;S01E02: 开发环境搭建&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="../." rel="alternate"></link><link href=".././feeds/tech.atom.xml" rel="self"></link><id>../.</id><updated>2013-11-08T00:00:00+01:00</updated><entry><title>ADT环境搭建</title><link href=".././ADT%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate"></link><updated>2013-11-08T00:00:00+01:00</updated><author><name>mx</name></author><id>.././ADT环境搭建.html</id><summary type="html">&lt;p&gt;这学期INF422, 第一节课就是android安装调试环境的搭建(居然要一节课?), 这里总结一下.&lt;/p&gt;
+&lt;h3&gt;第一步: 下载bundle&lt;/h3&gt;
+&lt;p&gt;下载&lt;a href="http://developer.android.com/sdk/index.html"&gt;ADT-Bundle&lt;/a&gt;
+解压缩以后啥都有了, 包含一个eclipse...&lt;/p&gt;
+&lt;h3&gt;第二步: 修改环境变量&lt;/h3&gt;
+&lt;p&gt;linux下的环境变量放在&lt;code&gt;.bashrc文件&lt;/code&gt;, 加入下面一行: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PATH=$PATH:&amp;lt;dir&amp;gt;/sdk/tools/:&amp;lt;dir&amp;gt;/sdk/platform-tools/:&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;其中&lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt;是放置SDK的目录地址.&lt;/p&gt;
+&lt;p&gt;测试一下好不好使, 在终端中输入&lt;code&gt;android&lt;/code&gt;, 看是否会弹出SDK manager&lt;/p&gt;
+&lt;h3&gt;第三步: 新建一个virtual machine&lt;/h3&gt;
+&lt;p&gt;可以用eclipse的AVDmanager做, 也可以用命令行做. &lt;/p&gt;
+&lt;p&gt;输入:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;android list targets&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;找到想要的target(我们要4.1.2)的那个id(一个数字), 然后, 运行命令: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;android create avd -t &amp;lt;target_id&amp;gt; -n inf422 --abi armeabi-v7a&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这样就生成了一个名叫"inf422"的虚拟机&lt;/p&gt;
+&lt;h3&gt;第四步: 关联到自定义的镜像&lt;/h3&gt;
+&lt;p&gt;inf422这门课提供了一个修改过的android镜像, 在&lt;a href="http://www.enseignement.polytechnique.fr/informatique/INF422/ramdisk.img"&gt;这里&lt;/a&gt;和&lt;a href="http://www.enseignement.polytechnique.fr/informatique/INF422/kernel-qemu"&gt;这里&lt;/a&gt;下载, 下载到本地的目录上了以后, 运行: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;emulator @inf422 -ramdisk &amp;lt;IMAGES&amp;gt;/ramdisk.img -kernel &amp;lt;IMAGES&amp;gt;/kernel-qemu&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;其中&lt;IMAGES&gt;是刚刚存放那俩镜像文件的目录. &lt;/p&gt;
+&lt;h3&gt;第五步: telnet连接虚拟机&lt;/h3&gt;
+&lt;p&gt;课程里用的emulator使用telnet服务器, 且是在虚拟机的23端口接收信息. 先重定向一下端口, 定向到localhost的4444端口:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;adb forward tcp:4444 tcp:23&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这样, 以后要登录模拟器emulator的时候, 只需要输入: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;telnet localhost 4444&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;(用户名是root, 不要密码)&lt;/p&gt;
+&lt;h2&gt;第六步: 用两种方法进入虚拟机&lt;/h2&gt;
+&lt;p&gt;刚才的4444端口是进入emulator用的, 而打开虚拟机的时候, 窗口标题是一个数字再加虚拟机的名字(我的显示的是"5554:inf422"), 这个5554是另外一个端口, 用于用shell方式登陆, 登陆后可以使用shell命令查看文件或者进行一些操作. &lt;/p&gt;
+&lt;p&gt;而与之对应, 从4444端口登陆, 则是进入emulator的控制console&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;两种方法和AVD交流:&lt;/em&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;console: linux命令, 命令行&lt;/li&gt;
+&lt;li&gt;emulator: 发送命令产生一些事件(电话, 短信, GPS等)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;第二种方式可以模拟一些手机事件, 很有用... 使用help命令查看emulator怎么使用&lt;/p&gt;</summary><category term="android"></category><category term="inf422"></category></entry><entry><title>android开发视频教程(重制版) 第一季 课程笔记</title><link href=".././android%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B%E7%AC%AC%E4%B8%80%E5%AD%A3%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2013-07-31T00:00:00+02:00</updated><author><name>mx</name></author><id>.././android开发教程第一季笔记.html</id><summary type="html">&lt;h1&gt;S01E02: 开发环境搭建&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;直接去 developer.android.com/sdk/ 下载bundle解压即可, 里面包含eclipse&lt;/li&gt;
 &lt;li&gt;新建一个模拟器: 内部存储一般64MB足矣:&lt;/li&gt;
@@ -39,8 +73,8 @@
 &lt;li&gt;MainActivity.java的onCreate()函数里setContentView(R.layout.activity_main); 读取activity_main.xml文件并显示&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;Activity与布局文件&lt;/h4&gt;
-&lt;p&gt;一一对应 (eclipse编辑器里有图形化预览界面)
-&lt;img alt="" src="./android开发教程第一季笔记/pasted_image007.png" /&gt;&lt;/p&gt;
+&lt;p&gt;一一对应 (eclipse编辑器里有图形化预览界面)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image007.png" /&gt;&lt;/p&gt;
 &lt;h4&gt;在Activity当中获取代表控件对象&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -69,51 +103,60 @@
 &lt;/ul&gt;
 &lt;h1&gt;S01E06: View&lt;/h1&gt;
 &lt;h4&gt;View的基本概念&lt;/h4&gt;
-&lt;p&gt;View是一个控件?...
-&lt;img alt="" src="./android开发教程第一季笔记/pasted_image008.png" /&gt;&lt;/p&gt;
+&lt;p&gt;View是一个控件?...&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image008.png" /&gt;&lt;/p&gt;
 &lt;h4&gt;为一个View绑定监听器&lt;/h4&gt;
 &lt;p&gt;(我就认为View是一个控件了)&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;java程序里获取控件代表的对象: findViewById()方法&lt;/p&gt;
-&lt;p&gt;bt = (Button) findViewById(R.id.button1);&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;bt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Button&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;findViewById&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;R&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;button1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;定义一个&lt;strong&gt;内部类&lt;/strong&gt; 实现监听器接口:&lt;/p&gt;
-&lt;p&gt;// &lt;strong&gt;使用一个内部类定义监听器&lt;/strong&gt;
-// Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的
-class ButtonListener implements OnClickListener {
-@Override
-// 实现该接口的抽象方法onClick
-public void onClick(View v) {
-//do something......
-}
-}// end 内部类ButtonListener&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// **使用一个内部类定义监听器**&lt;/span&gt;
+&lt;span class="c1"&gt;// Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ButtonListener&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;OnClickListener&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;span class="c1"&gt;// 实现该接口的抽象方法onClick&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onClick&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;View&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="c1"&gt;//do something......&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="c1"&gt;// end 内部类ButtonListener&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;onCreate()里生成一个监听器对象, 并为控件绑定该监听器&lt;/p&gt;
-&lt;p&gt;ButtonListener bl = new ButtonListener();// 生成一个监听器对象
-bt.setOnClickListener(bl);// &lt;strong&gt;这句话把监听器和事件联系在一起了&lt;/strong&gt; 点击这个按钮 就会执行它的onclick方法&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;ButtonListener&lt;/span&gt; &lt;span class="n"&gt;bl&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ButtonListener&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;// 生成一个监听器对象&lt;/span&gt;
+&lt;span class="n"&gt;bt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setOnClickListener&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bl&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;// **这句话把监听器和事件联系在一起了** 点击这个按钮 就会执行它的onclick方法&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;一个监听器可以绑定给多个控件&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;em&gt;*另法&lt;/em&gt;&lt;/strong&gt;*&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;另法&lt;/strong&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;可以直接写在setOnClickListener参数里, 不用给内部类起名字: &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;bt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setOnClickListener&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;OnClickListener&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
-&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onClick&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;View&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;span class="c1"&gt;//do something......&lt;/span&gt;
-&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="n"&gt;bt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setOnClickListener&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;OnClickListener&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onClick&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;View&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;//do something......&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h1&gt;S01E07: 布局&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;所谓的控件布局方法,就是指控制控件在Activity当中的位置、大小、颜色以及其他控件样式属性的方法。&lt;/li&gt;
-&lt;li&gt;布局可以用xml布局文件(ex. &lt;a href="file:///res/layout/activity_main.xml"&gt;/res/layout/activity_main.xml),&lt;/a&gt;%2C) 也可以在java文件里完成控件布局&lt;/li&gt;
+&lt;li&gt;布局可以用xml布局文件(ex. /res/layout/activity_main.xml) 也可以在java文件里完成控件布局&lt;/li&gt;
 &lt;li&gt;最常用: 线性布局LinearLayout, 相对布局RelativeLayout&lt;/li&gt;
 &lt;li&gt;先暂时用线性布局LinearLayout, 最简单&lt;/li&gt;
 &lt;/ul&gt;
@@ -130,14 +173,14 @@ bt.setOnClickListener(bl);// &lt;strong&gt;这句话把监听器和事件联系�
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;dp&lt;/strong&gt;=dip(Device Independent pixels) 是设备无关的像素单位&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;换算公式px = dp * (dpi / 160)
-在320*480的屏幕上, dp与px相等
-&lt;strong&gt;总之一般指定控件大小就用dp&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;换算公式&lt;code&gt;px = dp * (dpi / 160)&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;在320*480的屏幕上, dp与px相等 &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;总之一般指定控件大小就用dp&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;sp&lt;/strong&gt;=scaled pixels 可改变大小的像素单位&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;当用户修改手机显示字体时,sp会随之改变
-&lt;strong&gt;sp单位通常用于指定字体的大小&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当用户修改手机显示字体时,sp会随之改变&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;sp单位通常用于指定字体的大小&lt;/strong&gt;&lt;/p&gt;
 &lt;h4&gt;内外边距: margin, padding&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;margin: 控件离其他控件的距离&lt;/li&gt;
@@ -161,43 +204,45 @@ padding, paddingTop, ...&lt;/p&gt;
 &lt;li&gt;可以几个CheckBox绑定上同一个监听器&lt;/li&gt;
 &lt;li&gt;OnClickListener接口的方法: public void onClick(View v) 有一个&lt;strong&gt;参数View v&lt;/strong&gt;, 指的是是哪个控件被点击了, &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;在onClick()中要处理这个控件时, 使用:
-CheckBox cb = (CheckBox) v; 得到这个控件对象, 或者通过其id: v.getId()也可以&lt;/p&gt;
+&lt;p&gt;在onClick()中要处理这个控件时, 使用:&lt;code&gt;CheckBox cb = (CheckBox) v;&lt;/code&gt;
+得到这个控件对象, 或者通过其&lt;code&gt;id: v.getId()&lt;/code&gt;也可以&lt;/p&gt;
 &lt;h2&gt;S01E10: 单选框RadioButton&lt;/h2&gt;
-&lt;p&gt;效果: 
-&lt;img alt="" src="./android开发教程第一季笔记/pasted_image013.png" /&gt;&lt;/p&gt;
+&lt;p&gt;效果: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image013.png" /&gt;&lt;/p&gt;
 &lt;h4&gt;RadioGroup&lt;/h4&gt;
-&lt;p&gt;单选按钮RadioButton需要放在一个RadioGroup中
-xml代码:
-     &lt;RadioGroup
-                android:id="@+id/radioGroupId"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical" 
-                android:layout_weight="1"&gt;&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;            &lt;span class="nt"&gt;&amp;lt;RadioButton&lt;/span&gt;
-                &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/radioButton_h&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:text=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;homme&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;p&gt;单选按钮RadioButton需要放在一个RadioGroup中&lt;/p&gt;
+&lt;p&gt;xml代码:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt; &lt;span class="nt"&gt;&amp;lt;RadioGroup&lt;/span&gt;
+    &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/radioGroupId&amp;quot;&lt;/span&gt;
+    &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;0dp&amp;quot;&lt;/span&gt;
+    &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+    &lt;span class="na"&gt;android:layout_gravity=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;center&amp;quot;&lt;/span&gt;
+    &lt;span class="na"&gt;android:orientation=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;vertical&amp;quot;&lt;/span&gt; 
+    &lt;span class="na"&gt;android:layout_weight=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
 
-            &lt;span class="nt"&gt;&amp;lt;RadioButton&lt;/span&gt;
-                &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/radioButton_f&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
-                &lt;span class="na"&gt;android:text=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;femmee&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;/RadioGroup&amp;gt;&lt;/span&gt;
-        &lt;span class="c"&gt;&amp;lt;!-- 像RadioGroup这样写的xml标签可以拥有子标签, 而像RadioButton这种则不能 →&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;RadioButton&lt;/span&gt;
+        &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/radioButton_h&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:text=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;homme&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span class="nt"&gt;&amp;lt;RadioButton&lt;/span&gt;
+        &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/radioButton_f&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
+        &lt;span class="na"&gt;android:text=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;femmee&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/RadioGroup&amp;gt;&lt;/span&gt;
+&lt;span class="c"&gt;&amp;lt;!-- 像RadioGroup这样写的xml标签可以拥有子标签, 而像RadioButton这种则不能 →&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h4&gt;RadioGroup的OnCheckedChangeListener&lt;/h4&gt;
-&lt;p&gt;有俩参数... (RadioGroup group, int checkedId)
-直接上代码吧: 
-    class RadioGroupListener implements
-    android.widget.RadioGroup.OnCheckedChangeListener {&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;p&gt;有俩参数... (RadioGroup group, int checkedId)&lt;/p&gt;
+&lt;p&gt;直接上代码吧: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;RadioGroupListener&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt;
+&lt;span class="n"&gt;android&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;widget&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;RadioGroup&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;OnCheckedChangeListener&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
 &lt;span class="c1"&gt;// 注意看这俩参数!&lt;/span&gt;
 &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onCheckedChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;RadioGroup&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;checkedId&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="c1"&gt;// checkedId是被选择的哪个RadioButton的Id (而不是什么序号)&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;checkedId&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;R&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;radioButton_h&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="c1"&gt;// 用两种方法得到想要的id: 1. 使用R中定义的&lt;/span&gt;
@@ -220,11 +265,11 @@ xml代码:
 &lt;h4&gt;插图的方法&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;把图片放在./res/drawable 里面(有好几个分辨率的drawable, 随便一个...), ex. 放在了./res/drawable-hdpi/pic.jpg&lt;/li&gt;
-&lt;li&gt;→ 会在R.java里生成其id: pic&lt;/li&gt;
+&lt;li&gt;→ 会在R.java里生成其&lt;code&gt;id: pic&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;在xml中使用&lt;ImageView/&gt;标签&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;引用放好的图: 
-android:src="@drawable/pic"&lt;/p&gt;
+&lt;code&gt;android:src="@drawable/pic"&lt;/code&gt;&lt;/p&gt;
 &lt;h4&gt;ScaleType&lt;/h4&gt;
 &lt;p&gt;ScaleType属性控制图片缩放的尺寸, 有几个可选: &lt;/p&gt;
 &lt;ul&gt;
@@ -235,16 +280,19 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;li&gt;centerInside 要是图片大就缩放放进去, 图片小就不缩放直接放进去&lt;/li&gt;
 &lt;li&gt;Fit_XY缩放成和ImageView一样大&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;代码片段: &lt;/strong&gt;
-    &lt;ImageView
-                android:id="@+id/imageView1Id"
-                android:layout_width="60dp"
-                android:layout_height="70dp"
-                android:background="#FF0000"
-                android:scaleType="fitCenter"
-                android:layout_weight="1"
-                android:src="@drawable/pic" /&gt;
-            &lt;!-- "@drawable/pic"是对应于R.drawable.pic, 实际上图片也可以放在assets文件夹 或者网络上 或者SD卡上 都可以, 不过以后再用 --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;代码片段: &lt;/strong&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;ImageView&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/imageView1Id&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;layout_width&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;60dp&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;layout_height&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;70dp&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;background&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;#FF0000&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;scaleType&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;fitCenter&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;layout_weight&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;
+    &lt;span class="nl"&gt;android:&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@drawable/pic&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;!--&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;@drawable/pic&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;是对应于&lt;/span&gt;&lt;span class="n"&gt;R&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;drawable&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pic&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;实际上图片也可以放在&lt;/span&gt;&lt;span class="n"&gt;assets&lt;/span&gt;&lt;span class="err"&gt;文件夹&lt;/span&gt; &lt;span class="err"&gt;或者网络上&lt;/span&gt; &lt;span class="err"&gt;或者&lt;/span&gt;&lt;span class="n"&gt;SD&lt;/span&gt;&lt;span class="err"&gt;卡上&lt;/span&gt; &lt;span class="err"&gt;都可以&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;不过以后再用&lt;/span&gt; &lt;span class="o"&gt;--&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h1&gt;S01E12: 线性布局深入&lt;/h1&gt;
 &lt;h4&gt;线性布局嵌套&lt;/h4&gt;
 &lt;ul&gt;
@@ -274,7 +322,7 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;h4&gt;实现方法&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;android:layout_below/layout_above等等等等... 放置在其左(右)边; 属性的值都是其他控件的id&lt;/li&gt;
-&lt;li&gt;android:id="@+id/tvv1"是创建一个新id(__+__id); android:layout_toRightOf="@id/tvv1"则是引用已有的id(没有加号)&lt;/li&gt;
+&lt;li&gt;android:id="@+id/tvv1"是创建一个新id; android:layout_toRightOf="@id/tvv1"则是引用已有的id(没有加号)&lt;/li&gt;
 &lt;li&gt;android:layout_alignLeft/Right等等等等..... 左(右)对齐; 属性的值都是其他控件的id  &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1&gt;S01E14: 相对布局II&lt;/h1&gt;
@@ -282,14 +330,14 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;基准线:为了保证印刷字母的整齐而划定的线 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image.png" /&gt;
-第三条线就是所谓的基准线(baseline)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;p&gt;第三条线就是所谓的基准线(baseline)&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ex. 两个TextView__的基准线__相互对齐&lt;/li&gt;
 &lt;li&gt;作用: 当俩TextView的字体大小不相同时...&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;看图:
-&lt;img alt="" src="./android开发教程第一季笔记/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;p&gt;看图:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image001.png" /&gt;&lt;/p&gt;
 &lt;h4&gt;和父控件对齐&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;android:layout_alignParentLeft/Right等等... 属性的值为true/false(因为只有一个直接父控件)&lt;/li&gt;
@@ -303,12 +351,13 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h4&gt;相对布局小练习&lt;/h4&gt;
 &lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image014.png" /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;代码片段:&lt;/strong&gt; 
-     &lt;RelativeLayout
-                android:id="@+id/RL0"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" &gt;&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;            &lt;span class="nt"&gt;&amp;lt;TextView&lt;/span&gt;
+&lt;p&gt;&lt;strong&gt;代码片段:&lt;/strong&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt; &lt;span class="nt"&gt;&amp;lt;RelativeLayout&lt;/span&gt;
+            &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/RL0&amp;quot;&lt;/span&gt;
+            &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;fill_parent&amp;quot;&lt;/span&gt;
+            &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;fill_parent&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+            &lt;span class="nt"&gt;&amp;lt;TextView&lt;/span&gt;
                 &lt;span class="na"&gt;android:id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;@+id/tv1&amp;quot;&lt;/span&gt;
                 &lt;span class="na"&gt;android:layout_width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
                 &lt;span class="na"&gt;android:layout_height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;wrap_content&amp;quot;&lt;/span&gt;
@@ -362,18 +411,15 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;TimePicker/&gt; &lt;DatePicker/&gt;标签&lt;/li&gt;
 &lt;li&gt;文档: android.widget.TimePicker/android.widget.DatePicker&lt;/li&gt;
-&lt;li&gt;OnTimeChangedListener的onTimeChanged函数&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;public void onTimeChanged(TimePicker view, int hourOfDay, int minute) 仨参数&lt;/p&gt;
-&lt;ul&gt;
+&lt;li&gt;OnTimeChangedListener的onTimeChanged函数: public void onTimeChanged(TimePicker view, int hourOfDay, int minute) 仨参数&lt;/li&gt;
 &lt;li&gt;getCurrentHour(); getCurrentMinute(); getMonth(); getDayOfMonth()等函数, 同理有set函数......&lt;/li&gt;
 &lt;li&gt;注意月份是从零算起!!&lt;/li&gt;
 &lt;li&gt;setIs24HourView() 切换24小时显示&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1&gt;S01E17: 进度条ProgressBar&lt;/h1&gt;
 &lt;h4&gt;各种进度条&lt;/h4&gt;
-&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image015.png" /&gt;
-&lt;img alt="" src="./android开发教程第一季笔记/pasted_image016.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image015.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./android开发教程第一季笔记/pasted_image016.png" /&gt;&lt;/p&gt;
 &lt;h4&gt;进度条的属性&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;风格Style: 转圈圈: 垂直风格(默认); 一条线的进度条: Horizontal&lt;/li&gt;
@@ -389,27 +435,34 @@ android:src="@drawable/pic"&lt;/p&gt;
 &lt;li&gt;属性: max/progress/&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;监听器接口OnSeekBarChangeListener有三个函数要重写: &lt;/p&gt;
-&lt;p&gt;class SeekBarListener implements OnSeekBarChangeListener{&lt;/p&gt;
-&lt;p&gt;/**&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;seekBar 该对象指的是触发了监听器的SeekBar对象&lt;/li&gt;
-&lt;li&gt;progress 指的是当前SeekBar的进度&lt;/li&gt;
-&lt;li&gt;fromUser 指是不是用户手动改变的进度&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;*/
-@Override
-public void onProgressChanged(SeekBar SeekBar, int progress, boolean fromUser) {
-System.out.println("progress:" + progress + ",fromUser:" + fromUser);
-}&lt;/p&gt;
-&lt;p&gt;@Override
-public void onStartTrackingTouch(SeekBar seekBar) {
-System.out.println("onStart");
-}&lt;/p&gt;
-&lt;p&gt;@Override
-public void onStopTrackingTouch(SeekBar seekBar) {
-System.out.println("onStop");
-}&lt;/p&gt;
-&lt;p&gt;}&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;SeekBarListener&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;OnSeekBarChangeListener&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+
+&lt;span class="cm"&gt;/**&lt;/span&gt;
+
+&lt;span class="cm"&gt;* seekBar 该对象指的是触发了监听器的SeekBar对象&lt;/span&gt;
+&lt;span class="cm"&gt;* progress 指的是当前SeekBar的进度&lt;/span&gt;
+&lt;span class="cm"&gt;* fromUser 指是不是用户手动改变的进度&lt;/span&gt;
+
+&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onProgressChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SeekBar&lt;/span&gt; &lt;span class="n"&gt;SeekBar&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;progress&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;fromUser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;progress:&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;progress&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;,fromUser:&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;fromUser&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onStartTrackingTouch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SeekBar&lt;/span&gt; &lt;span class="n"&gt;seekBar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;onStart&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onStopTrackingTouch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;SeekBar&lt;/span&gt; &lt;span class="n"&gt;seekBar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;onStop&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4&gt;RatingBar&lt;/h4&gt;
@@ -418,11 +471,15 @@ System.out.println("onStop");
 &lt;li&gt;属性: numStars(星星个数), progress, stepSize(步进)&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;监听器代码:&lt;/p&gt;
-&lt;p&gt;class RatingBarListener implements OnRatingBarChangeListener{&lt;/p&gt;
-&lt;p&gt;@Override
-public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-System.out.println("rating:" + rating + ",fromUser:" + fromUser);
-}&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;RatingBarListener&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;OnRatingBarChangeListener&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;Override&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;onRatingChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;RatingBar&lt;/span&gt; &lt;span class="n"&gt;ratingBar&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="n"&gt;rating&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;fromUser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;rating:&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;rating&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;,fromUser:&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;fromUser&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;/ul&gt;</summary><category term="android"></category></entry><entry><title>ssh远程登录学校机房电脑</title><link href=".././ssh%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E5%AD%A6%E6%A0%A1%E6%9C%BA%E6%88%BF%E7%94%B5%E8%84%91.html" rel="alternate"></link><updated>2013-07-02T00:00:00+02:00</updated><author><name>mx</name></author><id>.././ssh远程登录学校机房电脑.html</id><summary type="html">&lt;p&gt;X&lt;a href="http://www.enseignement.polytechnique.fr/profs/informatique/Philippe.Chassignet/MOYENS/stations.html"&gt;机房的电脑&lt;/a&gt;配置还是很高的, 所以...&lt;/p&gt;
 &lt;p&gt;远程登录的命令是: 
