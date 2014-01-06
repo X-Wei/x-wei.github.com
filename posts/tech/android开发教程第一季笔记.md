@@ -70,13 +70,13 @@ S01E05: activity初步
 
 * 首先在activity_main.xml里定义控件时, 为其指定一个id: 
 
-    android:id="@+id/textView1"  ("+id"表示新建一个id)
+        android:id="@+id/textView1"  ("+id"表示新建一个id)
 
 * → 自动在R.java里生成一个id:
 
-    public static final class id {
-            public static final int textView1=0x7f080003;
-        }
+        public static final class id {
+                public static final int textView1=0x7f080003;
+            }
 
 
 * → 之后在MainActivity.java里, 先声明成员变量:
@@ -85,7 +85,7 @@ private TextView tv
 
 * → 在onCreate()中, 通过id获得这个控件对象:
 
-    tv = (TextView) findViewById(R.id.textView1);//有向下转型: TextView是View的子类
+        tv = (TextView) findViewById(R.id.textView1);//有向下转型: TextView是View的子类
 
 * → 之后就可以调用tv的各种方法了,具体见SDK里的文档i(android.widget.TextView), 从而实现再java程序里动态修改控件属性.
 

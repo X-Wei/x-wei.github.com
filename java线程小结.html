@@ -174,26 +174,31 @@
 <ul>
 <li>
 <p>写法1: 定义一个继承自Thread的内部类--</p>
-<p>class 
-<code>[类名] extends Thread{</code>
-<code>方法1;</code>
-<code>方法2；</code>
-<code>…</code>
-public void run(){
-// …
-}
-属性1；
-属性2；
-…
-}</p>
+<div class="codehilite"><pre><span class="n">class</span> <span class="p">[</span><span class="err">类名</span><span class="p">]</span> <span class="n">extends</span> <span class="n">Thread</span><span class="p">{</span>
+<span class="err">方法</span><span class="mi">1</span><span class="p">;</span>
+<span class="err">方法</span><span class="mi">2</span><span class="err">；</span>
+<span class="err">…</span>
+<span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">(){</span>
+<span class="c1">// …</span>
+<span class="p">}</span>
+<span class="err">属性</span><span class="mi">1</span><span class="err">；</span>
+<span class="err">属性</span><span class="mi">2</span><span class="err">；</span>
+<span class="err">…</span>
+<span class="p">}</span>
+</pre></div>
+
+
 </li>
 <li>
 <p>或者用下面种<strong>内联(inline)</strong>的写法, 不用给这个类起名字了(不过还要给这个实例取名字): </p>
-<p>private Thread [实例名] = new Thread () {
-    public void run() {
-    // ...
-    }
-} ;</p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Thread</span> <span class="p">[</span><span class="err">实例名</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Thread</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="p">;</span>
+</pre></div>
+
+
 </li>
 </ul>
 <p>然后让进程开始, 就是: 
@@ -203,31 +208,39 @@ public void run(){
 <ul>
 <li>
 <p>方法1, 代码: </p>
-<p>class [类名] implements Runnable{
-方法1;
-方法2；
-…
-public void run(){
-    // other code…
-}
-属性1；
-属性2；
-…
-}</p>
+<div class="codehilite"><pre><span class="n">class</span> <span class="p">[</span><span class="err">类名</span><span class="p">]</span> <span class="n">implements</span> <span class="n">Runnable</span><span class="p">{</span>
+<span class="err">方法</span><span class="mi">1</span><span class="p">;</span>
+<span class="err">方法</span><span class="mi">2</span><span class="err">；</span>
+<span class="err">…</span>
+<span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">(){</span>
+    <span class="c1">// other code…</span>
+<span class="p">}</span>
+<span class="err">属性</span><span class="mi">1</span><span class="err">；</span>
+<span class="err">属性</span><span class="mi">2</span><span class="err">；</span>
+<span class="err">…</span>
+<span class="p">}</span>
+</pre></div>
+
+
 </li>
 <li>
 <p>方法2, 内联写法:</p>
-<p>private Runnable 
-<code>[实例名] = new Runnable() {</code>
-public void run() {
-         //...
- }
-};
-android上需要注意的一点</p>
-<hr />
-<p>"Android modifies the user interface and handles input events from <strong>one single</strong> user interface thread. This thread is also called <strong>the main thread</strong>."</p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Runnable</span> <span class="p">[</span><span class="err">实例名</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//...</span>
+ <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
 </li>
 </ul>
+<h2>android上需要注意的一点</h2>
+<blockquote>
+<blockquote>
+<p>"Android modifies the user interface and handles input events from <strong>one single</strong> user interface thread. This thread is also called <strong>the main thread</strong>."</p>
+</blockquote>
+</blockquote>
 <p>Android collects all events in a queue and processed an instance of the Looper class.
 <img alt="" src="static/java线程小结/pasted_image.png" /></p>
 <p><em>所以注意要修改用户交互的组件(View, Toast, ect.)的时候, 需要在main Thread里面操作, 否则运行时会出错!!</em> </p>
@@ -263,21 +276,27 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 <ol>
 <li>
 <p>写一个用于修改屏幕显示的Runnable r(也声明成一个属性了):</p>
-<p>private Runnable r = new Runnable() {
-public void run() {
-//code to update graphic display...
-}
-};</p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Runnable</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+<span class="c1">//code to update graphic display...</span>
+<span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
 </li>
 <li>
 <p>再写一个进行计算的Thread t, 在计算结束后, 用handler.post(r)实现刷新显示的效果: </p>
-<p>private final Thread t = new Thread() {
-    public void run() {
-//...code for calculating...
-//结束计算以后, 刷新屏幕:
-handler.post(r);
-    }
-};</p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">final</span> <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">public</span> <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+<span class="c1">//...code for calculating...</span>
+<span class="c1">//结束计算以后, 刷新屏幕:</span>
+<span class="n">handler</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+
 </li>
 <li>
 <p>然后在onCreate()函数里, 让Thread t 启动起来: </p>
@@ -288,16 +307,15 @@ handler.post(r);
 <li>需要让t一直循环(监视某个flag), 当flag变为true的时候, 进行计算.</li>
 </ol>
 <p>为了达到这个效果, Thread t里面的run()方法需要这样写:
-    public void run() {
-    while(true) {
-        if(flag){
-        //
-<code>...do the calculation...</code>
-<code>handler.post(r);</code>
-<code>flag=false;</code>
-<code>}</code>
-<code>}</code>
-    }</p>
+        public void run() {
+            while(true) {
+                if(flag){
+                //
+                ...do the calculation...
+                handler.post(r);<code>flag=false;</code>
+                }
+            } <br />
+        }</p>
 <h2>Process, Thread和Runnable的区别?</h2>
 <p>线程(Thread)是指进程(Process)中的一个执行流程，一个进程中可以运行多个线程。比如java.exe进程中可以运行很多线程。线程总是属于某个进程，进程中的多个线程共享进程的内存。</p>
 <p>参考链接: 
@@ -379,8 +397,8 @@ handler.post(r);
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -390,82 +408,7 @@ handler.post(r);
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-0">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -475,12 +418,17 @@ handler.post(r);
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/python.html">python</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/android.html">android</a> 
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -490,12 +438,82 @@ handler.post(r);
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-0">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
