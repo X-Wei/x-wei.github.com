@@ -144,13 +144,13 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 5. 需要让t一直循环(监视某个flag), 当flag变为true的时候, 进行计算.
 
 为了达到这个效果, Thread t里面的run()方法需要这样写:
+
         public void run() {
             while(true) {
                 if(flag){
-                //
-                ...do the calculation...
-                handler.post(r);``
-                flag=false;``
+                //...do the calculation...
+                handler.post(r);
+                flag=false;
                 }
             }	
         }
