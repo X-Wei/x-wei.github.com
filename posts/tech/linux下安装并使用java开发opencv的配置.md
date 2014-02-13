@@ -4,7 +4,7 @@ Tags: eclipse, java, opencv
 Slug: linux下安装并使用java开发opencv的配置
 
 
-今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 窃听我慢慢讲... 
+今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... 
 
 linux编译安装opencv
 ------------------
@@ -14,16 +14,20 @@ linux编译安装opencv
 大致有以下几个步骤:
 
 1) 安装gcc一起cmake等等乱七八糟的软件(不过ubuntu下默认差不多都有了吧...)
-``sudo apt-get install build-essential``
+
+    sudo apt-get install build-essential
+    
 
 2) 下载opencv-2.4.8.zip并解压缩
 
 3) 新建一个build文件夹
+
 	cd ~/opencv
 	mkdir build
 	cd build
 
 4) 在终端里输入: 
+
 	cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
 	make
 	sudo make install
@@ -42,7 +46,8 @@ make命令会花费几十分钟时间...
 <http://docs.opencv.org/doc/tutorials/introduction/desktop_java/java_dev_intro.html>
 
 1) 首先, 需要安装ant: 
-``sudo apt-get install ant``
+
+    sudo apt-get install ant
 
 2) 其次 需要运行cmake, 关键是cmake的参数, 官网给的是这样的: 
 
