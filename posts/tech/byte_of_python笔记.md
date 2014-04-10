@@ -375,10 +375,10 @@ methods:
 * deleting: ``del dic[key] ``*(KeyError if key doesn't exist!)*
 * ``dic.items() ``*返回一个list of tuples*:
 
-	dic.items()
-	[(k1,v1), (k2,v2)]
-	for k,v in dic.items:
-	    print k, v
+    dic.items()
+    [(k1,v1), (k2,v2)]
+    for k,v in dic.items:
+        print k, v
 
 
 * ``dic.keys() ``*返回keys的list*
@@ -434,14 +434,14 @@ ch10. Problem Solving - Writing a Python Script
 * Run the command using the ``os.system`` function which runs the command as if it was run from the system i.e. in the shell - it returns 0 if the command was successfully, else it returns an error number.
 
 
-	source = ['/home/swaroop/byte', '/home/swaroop/bin']
-	target_dir = '/mnt/e/backup/'
-	target = target_dir + time.strftime('%Y%m%d%H%M%S') + '.zip'
-	zip_command = "zip -qr '%s' %s" % (target, ' '.join(source))
-	if os.system(zip_command) == 0:
-	print 'Successful backup to', target
-	else:
-	print 'Backup FAILED'
+    source = ['/home/swaroop/byte', '/home/swaroop/bin']
+    target_dir = '/mnt/e/backup/'
+    target = target_dir + time.strftime('%Y%m%d%H%M%S') + '.zip'
+    zip_command = "zip -qr '%s' %s" % (target, ' '.join(source))
+    if os.system(zip_command) == 0:
+        print 'Successful backup to', target
+    else:
+        print 'Backup FAILED'
 
 2nd version
 -----------
@@ -449,10 +449,10 @@ ch10. Problem Solving - Writing a Python Script
 * using the time as the name of the file within a directory with the current date as a directory within the main backup directory.
 
 
-	if not os.path.exists(today):
-	os.mkdir(today) # make directory
-	...
-	target = today + os.sep + now + '.zip'
+    if not os.path.exists(today):
+        os.mkdir(today) # make directory
+    ...
+    target = today + os.sep + now + '.zip'
 
 * ``os.sep`` variable - this gives the directory separator according to your operating system i.e. it will be '/' in Linux, Unix, it will be '\\' in Windows and ':' in Mac OS.
 
@@ -463,12 +463,12 @@ ch10. Problem Solving - Writing a Python Script
 * attaching a user-supplied comment to the name of the zip archive.
 
 
-	comment = raw_input('Enter a comment --> ')
-	if len(comment) == 0: # check if a comment was entered
-	target = today + os.sep + now + '.zip'
-	else:
-	target = today + os.sep + now + '_' + \
-	comment.replace(' ', '_') + '.zip'
+    comment = raw_input('Enter a comment --> ')
+    if len(comment) == 0: # check if a comment was entered
+        target = today + os.sep + now + '.zip'
+    else:
+        target = today + os.sep + now + '_' + \
+        comment.replace(' ', '_') + '.zip'
 
 More Refinements
 ----------------
@@ -520,12 +520,12 @@ Inheritance
 
 * ex:
 
-	class Teacher(SchoolMember)://
-	'''Represents a teacher.'''
-	def __init__(self, name, age, salary):
-	SchoolMember.__init__(self, name, age)
-	self.salary = salary
-	print '(Initialized Teacher: %s)' % self.name
+    class Teacher(SchoolMember)://
+        '''Represents a teacher.'''
+        def __init__(self, name, age, salary):
+            SchoolMember.__init__(self, name, age)
+            self.salary = salary
+            print '(Initialized Teacher: %s)' % self.name
 
 * To use inheritance, we specify the base class names in a **tuple** following the class name in the class definition. --*multiple inheritance.*
 * the ``__init__`` method of the base class is explicitly called using the ``self`` variable so that we can initialize the base class part of the object. This is very important to remember - *Python does not automatically call the constructor of the base class, you have to explicitly call it yourself.*
@@ -540,16 +540,16 @@ Files
 * open and use files for reading or writing by creating an object of the ``file`` class and using its ``read``, ``readline`` or ``write`` methods appropriately to read from or write to the file. Then finally, when you are finished with the file, you call the ``close`` method to tell Python that we are done using the file.
 
 
-	f = file('poem.txt', 'w') # open for 'w'riting
-	f.write(poem) # write text to file
-	f.close() # close the file
-	f = file('poem.txt') # if no mode is specified, 'r'ead mode is assumed by default
-	while True:
-	line = f.readline()# This method returns a complete line including the newline character at the end of the line.
-	if len(line) == 0: # Zero length indicates EOF
-	break
-	print line, # Notice comma to avoid automatic newline added by Python
-	f.close() # close the file
+    f = file('poem.txt', 'w') # open for 'w'riting
+    f.write(poem) # write text to file
+    f.close() # close the file
+    f = file('poem.txt') # if no mode is specified, 'r'ead mode is assumed by default
+    while True:
+        line = f.readline()# This method returns a complete line including the newline character at the end of the line.
+        if len(line) == 0: # Zero length indicates EOF
+        break
+        print line, # Notice comma to avoid automatic newline added by Python
+    f.close() # close the file
 
 Pickle
 ------
@@ -559,13 +559,13 @@ Pickle
 * pickling & unpickling:
 
 
-	import cPickle as p
-	f = file(shoplistfile, 'w')
-	p.dump(shoplist, f)
-	f.close()
-	f = file(shoplistfile)
-	storedlist = p.load(f)
-	print storedlist
+    import cPickle as p
+    f = file(shoplistfile, 'w')
+    p.dump(shoplist, f)
+    f.close()
+    f = file(shoplistfile)
+    storedlist = p.load(f)
+    print storedlist
 
 
 * To store an object in a file, first we open a file object in write mode and store the object into the open file by calling the ``dump`` function of the pickle module. This process is called *pickling*.
@@ -586,16 +586,16 @@ Try..Except
 * ex
 
 
-	import sys
-	try:
-	s = raw_input('Enter something --> ')
-	except EOFError:
-	print '\nWhy did you do an EOF on me?'
-	sys.exit() # exit the program
-	except:
-	print '\nSome error/exception occurred.'
-	# here, we are not exiting the program
-	print 'Done'
+    import sys
+    try:
+        s = raw_input('Enter something --> ')
+    except EOFError:
+        print '\nWhy did you do an EOF on me?'
+        sys.exit() # exit the program
+    except:
+        print '\nSome error/exception occurred.'
+        # here, we are not exiting the program
+    print 'Done'
 
 * The ``except`` clause can handle a single specified error or exception, or a parenthesized list of errors/exceptions. If no names of errors or exceptions are supplied, it will handle all errors and exceptions.
 * If any error or exception is not handled, then the default Python handler is called which just stops the execution of the program and prints a message.
@@ -611,25 +611,25 @@ Raising Exceptions
 * ex.
 
 
-	class ShortInputException(Exception):
-	'''A user-defined exception class.'''
-	def __init__(self, length, atleast):
-	Exception.__init__(self)
-	self.length = length
-	self.atleast = atleast
-	
-	try:
-	s = raw_input('Enter something --> ')
-	if len(s) < 3:
-	raise ShortInputException(len(s), 3)#  specify the name of the error/exception and the exception object that is to be thrown 
-	
-	except EOFError:
-	print '\nWhy did you do an EOF on me?'
-	except ShortInputException, x:
-	print 'ShortInputException: The input was of length %d, \
-	was expecting at least %d' % (x.length, x.atleast)
-	else:
-	print 'No exception was raised.'
+class ShortInputException(Exception):
+    '''A user-defined exception class.'''
+    def __init__(self, length, atleast):
+        Exception.__init__(self)
+        self.length = length
+        self.atleast = atleast
+
+try:
+s = raw_input('Enter something --> ')
+if len(s) < 3:
+    raise ShortInputException(len(s), 3)#  specify the name of the error/exception and the exception object that is to be thrown 
+
+except EOFError:
+    print '\nWhy did you do an EOF on me?'
+except ShortInputException, x:
+    print 'ShortInputException: The input was of length %d, \
+                was expecting at least %d' % (x.length, x.atleast)
+else:
+    print 'No exception was raised.'
 
 Try..Finally
 ------------
@@ -699,8 +699,8 @@ List Comprehension
 * ex
 
 
-	listone = [2, 3, 4]
-	listtwo = [2*i for i in listone if i > 2]
+    listone = [2, 3, 4]
+    listtwo = [2*i for i in listone if i > 2]
 
 
 * Here, we derive a new list by specifying the manipulation to be done (2*i) when some condition is satisfied (if i > 2).
@@ -723,15 +723,17 @@ Lambda Forms
 * A ``lambda`` statement is used to create new function objects and then return them *at runtime*.
 * ex. 
 
-	def make_repeater(n):
-	return lambda s: s * n
-	twice = make_repeater(2)
-	print twice('word')
-	print twice(5)
+    def make_repeater(n):
+        return lambda s: s * n
+    twice = make_repeater(2)
+    print twice('word')
+    print twice(5)
+
 output:
-	$ python lambda.py
-	wordword
-	10
+
+    $ python lambda.py
+    wordword
+    10
 
 
 * A ``lambda`` statement is used to create *the function object*.
