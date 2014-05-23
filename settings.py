@@ -41,7 +41,7 @@ SOCIAL = (
           #~ ('renren', 'http://www.renren.com/farseer'),
           
 GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~          
-#把各种网页小工具(比如倒计时, 微博展示......)的html代码放在这里~ 不过要使用farseerfc同学制作的bootsrtap2主题(太赞啦!!)
+#把各种网页小工具(比如倒计时, 微博展示......)的html代码放在这里 不过要使用farseerfc同学制作的bootsrtap2主题(太赞啦!!)
 SIDEBAR_CUSTOM=ur"""
 <br>
 <Script Language="JavaScript"> 
@@ -77,6 +77,13 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 <a href="http://x-wei.github.com/xelatex_zh.html">xelatex--linux下tex中文的完全解决!</a><br>
 <a href="http://x-wei.github.com/google_doc_form.html">使用google doc建立在线调查表!~</a><br>
 <a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
 </div></li>
 
 """
