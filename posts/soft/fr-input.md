@@ -7,6 +7,8 @@ Well, to be brief...
 -----------------
 I made a french input method, if you got annoyed by the freaking french keyboard when typing accented words (i.e.  **é, û, ü, î,...** ), or you are using a QWERTY keyboard, this will be quite useful !
 
+In fact, I used [XiaoxiaoInput](http://yong.dgod.net/) and [Fcitx](https://fcitx-im.org/wiki/Fcitx), which are 2 excellent Chinese input methods, I just made a french word table, and added it to the program...
+
 screenshot:
 -----------
 **linux version:** 
@@ -46,15 +48,21 @@ dowload links
 -------------
 **windows** 
 
+(adapted from Xiaoxiao Input)
+
 [link1](https://sourceforge.net/projects/frinput/files/latest/download?source=files)
 
 [link2](http://filemarkets.com/fs/djd4dyamxb20371/)
 
 **linux** .
 
+(adapted from Fcitx)
+
 see [here](https://github.com/X-Wei/fcitx-table-french) 
 
+
 **mac** 
+
 I haven't made the mac version yet...
 
 
