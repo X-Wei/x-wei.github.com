@@ -34,6 +34,9 @@ how to use
 ![] (./fr-input/pasted_image.png)
 
 - you can type french with the input method now,  **enjoy** !
+- choose the words by pressing the corresponding number button, or press space key to choose the first candidate
+- sometimes there are >9 candidates, to see more candidates, use ``-/=`` to flip pages forward and backward
+- if you want to input what you type instead of the candidates in the list, just press Enter button
 - if you want to change to normal keyboard, you can press Left-Shift, and you can see that the icon in the panel become a icon of a keyboard:
 
 ![] (./fr-input/pasted_image004.png)
