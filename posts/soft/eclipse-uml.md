@@ -1,5 +1,4 @@
 title: 使用Eclipse的UML插件生成类图
-Title: A French Input Method
 Date: 2014-05-31
 Slug: 使用Eclipse的UML插件生成类图
 Tags: java, eclipse
