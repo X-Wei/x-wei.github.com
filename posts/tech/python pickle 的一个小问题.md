@@ -13,9 +13,10 @@ python的pickle/unpickle机制可以非常方便的保存一些计算的中间�
 
 按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误:
 
+```python
 	airport_info = pk.load(file('airport_info.dict', 'rb')) 
 	>>AttributeError: 'module' object has no attribute 'Airport'
-
+```
 
 其中``Airport``是我定义的一个类, 本来在main.py里面, 后来被我移动到了util.py里面...
 

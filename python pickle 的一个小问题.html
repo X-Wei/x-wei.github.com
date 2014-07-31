@@ -51,8 +51,10 @@
     <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
 
-    <link href="./" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
     <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
 
   </head>
 
@@ -79,27 +81,36 @@
           <a class="brand" href="./index.html">mx's Blog </a>
           <div class="nav-collapse">
             <ul class="nav">
+              
+              
+              
 			  <li class="divider-vertical"></li>
+              
+              
                   <li >
                     <a href="./category/misc.html">
 						<i class="icon-folder-open icon-large"></i>misc
 					</a>
                   </li>
+              
                   <li >
                     <a href="./category/music.html">
 						<i class="icon-folder-open icon-large"></i>music
 					</a>
                   </li>
+              
                   <li >
                     <a href="./category/soft.html">
 						<i class="icon-folder-open icon-large"></i>soft
 					</a>
                   </li>
+              
                   <li class="active">
                     <a href="./category/tech.html">
 						<i class="icon-folder-open icon-large"></i>tech
 					</a>
                   </li>
+              
 			  
 			  <ul class="nav pull-right">
 				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
@@ -115,6 +126,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="span9" id="content">
+            
 <section id="content">    
 	<article>
 		<header>
@@ -124,32 +136,41 @@
 					title="Permalink to python pickle 的一个小问题">
 					python pickle 的一个小问题 
 				</a>
- 
+				 
 			</h1> 
 		</header>
 		<div class="entry-content">
 		<div class="well">
-<footer class="post-info">
+			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2014-07-15T00:00:00">
 	<i class="icon-calendar"></i>mar. 15 juillet 2014
 </abbr>
+
 <span class="label">By</span>
-<a href="./author/mx.html"><i class="icon-user"></i>mx</a>
+<a href="./"><i class="icon-user"></i>mx</a>
+
 <span class="label">Category</span>
-<a href="./category/tech.html"><i class="icon-folder-open"></i>tech</a>. 
+<a href="./"><i class="icon-folder-open"></i>tech</a>. 
+
 
 	
+
 <span class="label">Tags</span> 
+
 	<a href="./tag/python.html"><i class="icon-tag"></i>python</a>
-</footer><!-- /.post-info -->		</div>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
 		<p>python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...</p>
 <p>不过今天在使用pickle的时候遇到了一个很奇怪的问题. </p>
 <p>是这样的, 原本写了一个程序<code>main.py</code>, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个<code>util.py</code>文件里. 并且在main.py的第一行写上: </p>
 <p><code>from util import *</code></p>
 <p>按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误:</p>
-<div class="highlight"><pre><span class="n">airport_info</span> <span class="o">=</span> <span class="n">pk</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">(</span><span class="err">&#39;</span><span class="n">airport_info</span><span class="p">.</span><span class="n">dict</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">rb</span><span class="err">&#39;</span><span class="p">))</span> 
-<span class="o">&gt;&gt;</span><span class="n">AttributeError</span><span class="o">:</span> <span class="err">&#39;</span><span class="n">module</span><span class="err">&#39;</span> <span class="n">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="err">&#39;</span><span class="n">Airport</span><span class="err">&#39;</span>
+<div class="codehilite"><pre>    <span class="n">airport_info</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">(</span><span class="s">&#39;airport_info.dict&#39;</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">))</span> 
+    <span class="o">&gt;&gt;</span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s">&#39;module&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s">&#39;Airport&#39;</span>
 </pre></div>
 
 
@@ -164,6 +185,7 @@
 <p>解决办法也不难, 只需要在<code>util.py</code>里面再生成一下那些要load的数据文件, 之后再次unpickle的时候就会去<code>util.py</code>而不是<code>main.py</code>里找class的定义, 也就没有问题了!</p>
 <p>今天碰到的这个问题不是那么evident, 所以特地记一下.</p>
 		</div><!-- /.entry-content -->
+		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
@@ -178,154 +200,203 @@
 			  })();
 			</script>
 		</div>
+		
 	</article>
 </section>
+
         </div><!--/span-->
       
 		<div class="span3 well sidebar-nav" id="sidebar">
-<ul class="nav nav-list">
+            <ul class="nav nav-list">
+
 <li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
     <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
     <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
     <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+
+
 <li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
-<li><a href="./" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
 <li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
     <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
 
+
+
 <li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
 <li>
 <a href="./category/misc.html">
     <i class="icon-folder-open icon-large"></i>misc
 </a>
 </li>
+
 <li>
 <a href="./category/music.html">
     <i class="icon-folder-open icon-large"></i>music
 </a>
 </li>
+
 <li>
 <a href="./category/soft.html">
     <i class="icon-folder-open icon-large"></i>soft
 </a>
 </li>
+
 <li>
 <a href="./category/tech.html">
     <i class="icon-folder-open icon-large"></i>tech
 </a>
 </li>
 
+
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-1">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-0">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-1">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-1">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-1">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/java.html">java</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-1">
     <a href="./tag/pelican.html">pelican</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-0">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <br>
 <br>
+
+
 
 <li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
 <div id="cse" style="width: 100%;">Loading</div>
@@ -340,6 +411,8 @@
   }, true);
 </script>
 <link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
 
     
 <br>
@@ -386,7 +459,9 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 </div></li>
 
 
-</ul>        </div><!--/.well -->
+
+</ul>
+        </div><!--/.well -->
 
       </div><!--/row-->
 
@@ -405,6 +480,7 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
     </div><!--/.fluid-container-->
 
 
+    
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -414,6 +490,9 @@ try {
 	var pageTracker = _gat._getTracker("UA-30756331-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
+
+    
+    
 <script type="text/javascript">
     var disqus_shortname = 'xweisblog';
     (function () {
