@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>正则表达式入门简介</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&img=6&pos=right" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+            var bds_config = {"bdTop":289};
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+    </script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to 正则表达式入门简介">
+					正则表达式入门简介 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2014-08-01T00:00:00">
+	<i class="icon-calendar"></i>ven. 01 août 2014
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>tech</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/regex.html"><i class="icon-tag"></i>regex</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>以前虽然也用过正则表达式(比如那个饮水思源的<a href="http://x-wei.github.io/%E6%B0%B4%E6%BA%90PPP%E6%9D%BF%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8.html">PPP版图片下载器</a>...)但是那时候基本上是网上到处搜 然后把代码拿过来改, 没有系统的学过这个东西. 前一段实习一开始的时候要处理很大量的文本, 从文本里提取出需要的信息, 所以用到了不少的正则表达式, 也好好的学了一下, 现在回来进行一下总结. </p>
+<h2>什么是正则表达式</h2>
+<p>很多时候,我们需要在文本里寻找满足一种<strong>模式</strong>(<em>pattern</em>)的一段子字符串(substring), 注意是一种模式而不是某一个具体的字符串. 举个例子, 在一段文本里寻找这里面出现的所有的网址, 那么对应的模式就是: </p>
+<blockquote>
+<p>"以<code>www.</code>开头, 中间有一些东西(可以是字母也可以是数字等), 最后以 <code>.com/.org/.edu...</code> 结尾的所有的字符串"</p>
+</blockquote>
+<p>再比如, 要查找文本中出现的电话号码, 电话号码的格式是区号加横线再加号码, 那么模式就应该是:</p>
+<blockquote>
+<p>"以3个或4个数字开头, 三个或四个数字之后跟一个横线, 横线后再跟7个或8个数字"</p>
+</blockquote>
+<p>再再比如, 要查找出现的电子邮件地址, 那么模式大概是:</p>
+<blockquote>
+<p>"以字母或数字或下划线开头, 之后跟着一个@符号, @符号以后一些用点分隔的字母或数字, 最后应该以.com/.org/.edu等结束"</p>
+</blockquote>
+<p>可以想象实际应用中会有描述起来更加罗嗦的模式, 而<strong>正则表达式就是用来描述这种"模式"的语法</strong>, 使用正则表达式, 可以用很简短的代码表达很复杂的模式. 有人给正则表达式起了个别名叫"<em>字符串模板</em>", 其实更贴切... </p>
+<p>还有, 后面总是会提到"某个正则表达式<em>exp</em>匹配(match)了某个字符串<em>str</em>", 这里说<strong>"匹配"</strong>的意思其实是<em>"字符串str满足了正则表达式exp描述的那种模式"</em>.</p>
+<p>关于正则表达式, <a href="http://deerchao.net/tutorials/regex/regex.htm">这篇博客</a>可以说是经典之作, 搜索"正则表达式"这篇文章几乎都是第一个被找到的. 每次我有问题都要再翻出来看一下这篇, 讲的非常好. </p>
+<p>另外强烈推荐一个非常赞的在线测试正则表达式的网站: <a href="http://regex101.com/">http://regex101.com/</a> 做得超级棒(具体怎么棒见后文).</p>
+<h2>匹配单个字符</h2>
+<ul>
+<li>匹配某个<em>特定的</em>字符:</li>
+</ul>
+<p>只需要写出来就好了, 类似于记事本的查找功能. 
+ex. 查找"abc"这个字符串, 正则表达式就是: <code>abc</code></p>
+<ul>
+<li>匹配<em>某一类</em>字符:</li>
+</ul>
+<p>比如匹配数字, 只需要把候选的字符放进<strong>中括号</strong>, 而且可以用横线表示一系列的字符:</p>
+<p>ex. 匹配一个数字: <code>[0-9]</code>
+ex. 匹配大写的一个字母: <code>[A-Z]</code>
+ex. 匹配一个数字或字母(大小写都可以): <code>[A-Za-z0-9]</code>
+ex. 匹配一个元音字母(aeiou中的一个): [aeiou]</p>
+<ul>
+<li>匹配某一类以外的字符:</li>
+</ul>
+<p>在这一类字符前面加上<code>^</code>, 起到的作用就是取这些字符的补集(<strong>"反义"</strong>).
+ex. 匹配一个不是数字的字符: <code>[^0-9]</code>
+ex. 匹配任意一个不是元音字母的字符: <code>[^aeiou]</code>
+ex. 匹配以b开头, 以d结尾的三个字母长的单词: <code>b[a-z]d</code>, "bed", "bad"都满足这个条件</p>
+<ul>
+<li>匹配正则表达式中用到的的特殊字符</li>
+</ul>
+<p>比如要匹配'^'这个字符, 由于这个字符是正则表达式里使用的有特殊含义的字符, 需要在前面加<strong>反斜杠转义</strong>: <code>\^</code>
+类似的特殊字符还有不少:  <code>&amp;</code>, <code>.</code>, <code>*</code>, <code>?</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>,......</p>
+<h2>匹配任意字符</h2>
+<p>用的最多的是这一个:</p>
+<ul>
+<li>匹配除了换行符以外的任意字符: <code>.</code></li>
+</ul>
+<p>(在开启"单行模式"的时候, 可以连换行符一起匹配, 见后文.)</p>
+<p>然后, 在反斜杠后面加某些字母的时候有特殊含义(<strong>"元字符"</strong>): </p>
+<ul>
+<li>匹配字母或数字或下划线或汉字: <code>\w</code>(用前面的<code>[A-Za-z0-9]</code>之类的方法也可以做到)</li>
+<li>匹配任意空白字符(空格或TAB): <code>\s</code></li>
+<li>匹配任意数字: <code>\d</code>(用前面的<code>[0-9]</code>也可以做到)</li>
+</ul>
+<p>把上面这些反斜杠加小写字母变成反斜杠加<em>大写字母</em>的话, 成了取补集(类似前面那个<code>^</code>的作用)</p>
+<ul>
+<li>匹配任意不是字母，数字，下划线，汉字的字符: <code>\W</code></li>
+<li>匹配任意不是空白符的字符: <code>\S</code></li>
+<li>匹配任意非数字的字符: <code>\D</code></li>
+</ul>
+<p>所以如果要匹配, 包括换行符的话, 只需要把<code>\s \S</code>一起用:</p>
+<ul>
+<li>匹配所有字符, 包括换行符: <code>[\s\S]</code> <a href="http://bbs.csdn.net/topics/300041987">http://bbs.csdn.net/topics/300041987</a></li>
+</ul>
+<h2>匹配位置</h2>
+<p>有时候还要指定某些位置, 比如说: 要匹配网址, 网址要以"www."开头, 所以如果有个网址是: "www.abcwww.com" 的话, 有可能匹配成了中间那个"www.", 那么就有问题了. 所以要指定"www."要在一个字符的开头出现, 而不能是在中间(前面不能有字符). </p>
+<p>这种情况下我们就不是要匹配某个具体的字符串, 而是<strong>匹配一个位置</strong>.</p>
+<ul>
+<li>匹配单词的开始或结束(<em>word boundary</em>): <code>\b</code></li>
+</ul>
+<p>这就是我们前面说的情况, 只需要加上\b, 就不会匹配在某个单词中间出现的"www."了.
+ex. 匹配网址开头的"www.": <code>\bwww\.</code> <a href="http://regex101.com/r/oZ6aK1/1">例子链接</a> ⇐ 可以把最开始那个<code>\b</code>去掉, 看看结果有什么区别. </p>
+<p>注意这个<code>\b</code>可以是单词的开始, 也可以是单词的结束. 还是网址的例子, 如果一个网址是:"www.abcwww.qwert.coming.com"的话, 我们说"匹配以.com"结尾的字符串, 就有可能是匹配到了<strong>qwert.com</strong>ing, 也会有问题, 所以我们应该在"com"后面加上一个<code>\b</code>.</p>
+<p>ex. 匹配网址结束处的".com": <code>\.com\b</code><a href="http://regex101.com/r/oZ6aK1/2">例子链接</a> ⇐ 同理可以看看去掉<code>\b</code>以后有什么不同.</p>
+<ul>
+<li>
+<p>然后这个元字符<code>\b</code>变成大写以后也是反义, <code>\B</code>匹配所有不是单词开头或结束的位置.</p>
+</li>
+<li>
+<p>匹配整个字符串的开头: <code>^</code></p>
+</li>
+</ul>
+<p>注意是整个字符串的开头, 而不是指每一行的开头! (但是在"多行模式"时可以代表每一行的开头, 见后面冠以正则表达式选项的讨论)</p>
+<ul>
+<li>匹配字符串的结束: <code>$</code></li>
+</ul>
+<p>同样是指整个字符串的结束. </p>
+<h2>重复次数</h2>
+<p>这个和前面介绍的匹配字符配合起来(指定要匹配的字符, 再指定字符重复的次数), 就可以完成大部分的工作了.</p>
+<ul>
+<li>字符重复<em>(exactly)n次</em></li>
+</ul>
+<p>只需要把数字n放进<strong>大括号</strong>里就可以了. 
+ex. 找一个六位的数字, 那么就是0-9的数字重复6次: <code>[0-9]{6}</code></p>
+<ul>
+<li>重复<em>m到n次</em></li>
+</ul>
+<p>只需要在大括号里把m和n用逗号进行分隔.
+ex. 找一个6到8位的数字: <code>[0-9]{6,8}</code></p>
+<p>但是要重复m<strong>或</strong>n次的话, 我没有找到好的写法, 可以用后面介绍的分支条件实现, 不过比较繁琐...</p>
+<ul>
+<li>重复<em>大于等于n次</em></li>
+</ul>
+<p>(重复小于等于n次等价于0到m次)
+大括号里面n后面加一个逗号:
+ex. 找6位以上的数字: [0-9]{6,}</p>
+<p>平时用到的比较多的是要求<em>"重复大于等于1次"</em>或者<em>"重复大于等于0次"</em>, 由于上面这样的写法有的时候比较罗嗦, 所以有了下面的简写:</p>
+<ul>
+<li>重复<em>大于等于1次</em>: <code>+</code></li>
+</ul>
+<p>等价于 <code>{1,}</code>
+ex. <code>goo+gle</code>, 可以匹配"google", "gooogle", "goooogle"等, 因为第二个o可以出现大于等于1次. 
+(当然上面这个例子也可以在前后加上单词边界<code>\b</code>, 以防止匹配到某个长单词的中间)</p>
+<ul>
+<li>重复<em>大于等于0次</em>: <code>*</code></li>
+</ul>
+<p>等价于 <code>{0,}</code>
+ex. 匹配以a开头以t结尾的单词: <code>a[a-z]*t</code> , "at", "attachment", "act"等都符合条件</p>
+<ul>
+<li>重复一次或0次: <code>?</code></li>
+</ul>
+<p>等价于 <code>{0,1}</code>
+ex. 匹配"color"或者"colour": <code>colou?r</code></p>
+<h2>贪婪(greedy)模式/懒惰(lazy)模式</h2>
+<p>前面介绍的那些指定重复次数的部分, 由于有时是指定一个重复次数的范围, 而经常匹配到的重复的次数也是一个范围, 所以有"贪婪"和"懒惰"的区别.</p>
+<p>好像上一句话没有说清楚... 举个例子, 要匹配大于六位的数字, 我们的正则表达式是<code>[0-9]{6,}</code>, 意思是要有六个或更多的重复次数. 那么对于一个字符串: "123456789", 一共有9位, 它既可以看作重复6次(取前6位), 也可以看作重复7次, 8次, 9次... 那么岂不是含义上出现歧义(ambiguous)了??</p>
+<p>而实际上, 我们写的表达式<code>[0-9]{6,}</code>在这个例子里最终会匹配所有的9位, 这是因为我们写的这个表达式默认上是<strong>贪婪模式</strong>的, 意思是匹配重复&gt;=6次的的重复, 但是会<em>尽可能多重复</em>. </p>
+<p>与之相反, <strong>懒惰模式</strong>的意思是<em>尽可能少重复</em>. <strong>正则表达式默认是贪婪模式</strong>, 要开启懒惰模式只需要在重复次数的后面加上一个问号"<code>?</code>".</p>
+<ul>
+<li><code>+?</code> : 重复&gt;=1次, 但是尽量少重复</li>
+<li><code>*?</code> : 重复&gt;=0次, 但是尽量少重复</li>
+<li><code>??</code> : 重复0或1次, 但是尽量少重复</li>
+<li><code>{n,}?</code>: 重复&gt;=n次, 但是尽量少重复</li>
+<li><code>{m,n}?</code>: 重复m到n次, 但是尽量少重复</li>
+</ul>
+<p>再插一句, 这个"贪婪模式的开启标志"<code>?</code> 和"重复次数的符号"<code>?</code> 虽然都是问号, 但是由于放的位置不一样, 所以不会造成歧义, 因为"重复次数的符号"的问号是出现在"匹配字符"(比如<code>\w</code>, <code>[0-9]</code>, <code>.</code>)的后面的, 而"贪婪模式的开启标志"的问号是出现在"重复次数"(如<code>{m,n}</code>, <code>+</code>, <code>*</code>)的后面的...</p>
+<h2>分支条件(alternative)</h2>
+<p>意思就是可以匹配两种模式的任意一种, 看例子:</p>
+<ul>
+<li>ex1. </li>
+</ul>
+<p>中国的电话号码有的城市是三位区号加横线加八位号码(比如"021-54749110" ⇐ 这是上海一所学校的保卫处号码), 有的是四位区号加横线加七位或八位号码的(比如"0635-8238080" ⇐ 这是山东一所大学的保卫处, 以及"0531-88881234" ⇐ 这是山东台小么哥的号码==...). 要匹配这样的号码, 如果这样写:
+<code>\d{3,4}-\d{7,8}</code>
+(别忘了<code>\d</code>等价于<code>[0-9]</code>)
+那么其实是不对的, 因为我们不允许出现3位区号后面跟7位号码的情况出现, 所以这里其实是两种模式, 所以我们是要<strong>匹配这两种模式其中的任意一种</strong>. </p>
+<p>这种情况下, 只需要把两种情况分别写出来, 中间用<code>|</code>分割即可:
+<code>\d{3}-\d{8}|\d{4}-\d{7,8}</code>
+不过看起来有点乱了... 可以加上小括号这样显得更清楚一些: 
+<code>(\d{3}-\d{8})|(\d{4}-\d{7,8})</code></p>
+<p>不过小括号在正则表达式里面除了让正则表达式(稍微)更容易读以外, 还有一个作用是后面提到的"分组"或者"捕获", 这个后面再说...</p>
+<ul>
+<li>ex2.</li>
+</ul>
+<p>前面说到过怎么匹配重复m<strong>或</strong>n次的数字, 我没有找到更方便的方法, 只好用分支条件实现了:
+<code>\d{m}|\d{n}</code>
+但是要注意, 这个时候会有和前面贪婪/懒惰类似的问题: 如果一串数字有9位长, 我要匹配6位或9位的数字, 那么应该匹配到哪里呢? </p>
+<p>其实这个时候取决于我们是写<code>\d{9}|\d{6}</code>还是<code>\d{6}|\d{9}</code>, 正则表达式有类似于编程语言里的"<strong>条件短路</strong>"(shortcut)性质, 一旦第一个模式满足了, 就不会去寻找竖线后面的第二个模式了...</p>
+<h2>小括号: 对结果进行分组(group), "捕获"</h2>
+<p>先说一句别的, 前面介绍重复次数的部分, 介绍了怎么指定某个类型的<em>单个字符</em>重复的次数, 要是想寻找某个特定字符组合的重复次数该怎么办呢? 只需要把要重复的部分用小括号括起来, 然后后面指定重复的次数就可以了...</p>
+<p>ex. 寻找好几个"bla"连着的字符串: <code>(bla)+</code>, 这样"blablabla"之类的字符串就可以被匹配了. </p>
+<p>所以小括号的这种作用类似于小括号在一般编程语言的作用, 就是把一部分内容放在一起. 但是与此同时, 每一个小括号其实还"<strong>捕获</strong>"了一个"<strong>分组</strong>"(group). 意思就是在匹配到的字符串里(叫做一个"match"), 我们还可以得到它的一个子字符串. </p>
+<p>还是举电话号码的例子, 前面的方法我们可以得到一个类似"021-54749110"这样的匹配结果, 但是如果我们想<em>把区号和区号后的号码分别保存</em>的话, 还需要再<em>在程序里</em>对这个字符串做个处理: 比如把字符串的前三个截取出来保存为区号, 把第五个字符到最后的子字符串截取出来保存为号码... 这样会有问题, 因为我们也可能得到"0531-8881234"这样的结果... 于是我们只能先在得到的字符串里寻找"-", 然后再从"-出现的位置那里把字符串截成两段...... 总之这样的话在程序里还要进行很麻烦的后期处理, 非常不爽(c'est trop lourd!)......</p>
+<p>幸好我们可以使用正则表达式的分组功能, 在得到结果的字符串的同时, 还在不同的分组里放了对应的的子字符串,<em>这样在程序里只要得到每一个分组就可以了</em>. </p>
+<p>而给字符串分组的方法也很简单, 就是简单的<em>给要分组的地方加上小括号括起来就好了</em>. (当然, 可能你只是为了看得清楚才给表达式加小括号, 但是在正则表达式匹配字符串的时候也会帮你把它捕获到一个分组里.) 所以没加一对小括号就会在结果中增加一个分组, 分组的顺序是按照小括号出现的顺序排列的. </p>
+<p>所以在电话号码这个例子里, 我们可以写:
+<code>(\d{3})-(\d{8})|(\d{4})-(\d{7,8})</code>
+<a href="http://regex101.com/r/bS1uP4/3">例子链接</a>
+我喜欢reg101这个网站的原因就是它可以显示非常丰富的信息. 
+在网站的右上角,有关于表达式的解释:</p>
+<p><img alt="" src="static/正则表达式入门简介/pasted_image.png" /></p>
+<p>在右下角会显示捕获到的分组(groups):</p>
+<p><img alt="" src="static/正则表达式入门简介/pasted_image001.png" /></p>
+<p>(这里的分组编号可能有点问题, 后两个分组的编号应该是1和2的... 这是由于我们使用了分支条件造成的, 不知是bug还是feature...)</p>
+<p>然后关于怎么在程序里获得正则表达式的分组, 可以去看每一种编程语言的相关文档...... </p>
+<h2>正则表达式选项("模式")</h2>
+<p>使用正则表达式的时候, 还可以指定一些"模式"选项, 比如在reg101网站上, 表达式右边有一个选项窗口:</p>
+<p><img alt="" src="static/正则表达式入门简介/pasted_image002.png" /></p>
+<p>当开启某些"模式"的时候, 正则表达式的匹配行为稍有不同. 其实上面的截图已经讲的很清楚了, 下面捡比较常用的说一下:</p>
+<ul>
+<li>全局模式global, "g": 就是不止匹配第一个, 而是把所有的匹配都显示出来.</li>
+<li>扩展模式(或者"注释模式")extended, "x": 使用后正则表达式也可以换行, 可以随便加空格(将被忽略), 也可以使用注释(使用<code>#</code>开始注释)</li>
+</ul>
+<p>这个是我经常用的选项, 有时候表达式写的很长很乱, 如果不能换行或者加注释的话, 下次看得时候就不知道是怎么回事了...
+比如刚才那个电话的例子, 我们在开启了扩展模式以后, 可以写成这样:</p>
+<div class="codehilite"><pre><span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">3</span><span class="p">})</span> <span class="o">-</span> <span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">8</span><span class="p">})</span> <span class="err">#</span><span class="n">region</span> <span class="n">code</span><span class="p">,</span> <span class="o">-</span><span class="p">,</span> <span class="n">phone</span> <span class="n">number</span>
+<span class="o">|</span> <span class="err">#</span><span class="n">alternative</span>
+<span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">4</span><span class="p">})</span> <span class="o">-</span> <span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">})</span><span class="err">#</span><span class="n">region</span> <span class="n">code</span><span class="p">,</span> <span class="o">-</span><span class="p">,</span> <span class="n">phone</span> <span class="n">number</span>
+</pre></div>
+
+
+<p><a href="http://regex101.com/r/bS1uP4/4">例子链接</a></p>
+<ul>
+<li>多行模式multiline, "m": 前面"匹配位置"那一节提到了, 就是改变<code>^</code>和<code>$</code>的意思, 不让它们匹配整个字符串的开始和结束, 而是每一行的开始和结束.</li>
+<li>单行模式singleline, "s": 前面也提到了, 作用是让<code>.</code>也匹配换行符...</li>
+</ul>
+<p>(所以可见, <em>单行模式和多行模式根本不是相互排斥的关系</em>....... 这名字起的不好...)</p>
+<p>关于怎么开启这些选项, 还是要看不同语言的文档... 
+比如在python里, 只要在<code>re.compile()</code>函数使用加入<code>re.X</code>等参数, 见<a href="https://docs.python.org/2/library/re.html#module-contents">文档</a>...</p>
+<h2>其他内容</h2>
+<p>这里我只写了我用到的一些东西, 关于正则表达式还有很多没有提到的内容(所谓的"高级议题"?), 比如"零宽断言"以及"平衡组"等内容, 这些都在deerchao的那篇<a href="http://deerchao.net/tutorials/regex/regex.htm">经典博客</a>里提到了...</p>
+<h2>实际例子</h2>
+<ul>
+<li>例子1</li>
+</ul>
+<p>要分析很长的文本, 文本的一部分包含了一趟航班的信息, 比如出发和到达的时间, 出发和到达的机场, 以及航班号等... 这些信息中间都包含在一长串字符中间. </p>
+<p>我们用正则表达式处理, 并且把不同的信息放在不同的分组里, 这样就方便了程序的处理. <a href="http://regex101.com/r/bS1uP4/5">这里</a>是我写的正则表达式.</p>
+<ul>
+<li>例子2</li>
+</ul>
+<p>再举个例子, 我想要现在<a href="http://www.cs.waikato.ac.nz/ml/weka/mooc/dataminingwithweka/">这个页面</a>的所有的东西, 可是用鼠标一个一个点击实在是太麻烦了, 所以可以写一个程序把这些链接都提取出来, 然后自动进行下载. </p>
+<p>所以需要分析这个页面的html文件, 右键 → 显示网页源代码就可以看到了, 虽然我不懂html的语法, 但是可以发现, 下载的链接都是这样的片段:</p>
+<blockquote>
+<p><a class="download_link" href="https://drive.google.com/uc?export=download&amp;id=0B-f7ZbfsS9-xUjhLaURQbWsxbjg" target="_blank">en</a></td></p>
+</blockquote>
+<p>就是说在<code>class="download_link"</code>之后, <code>href=</code>后面的用引号引起来的内容就是我们想要的下载链接了, 于是可以很快用正则表达式来提取它, 我写的表达式见<a href="http://regex101.com/r/hN1lH1/1">这里</a>.</p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "正则表达式入门简介.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-0">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+<br>
+<a href="http://www.linuxdeepin.com/" target="_blank"><img src="http://www.linuxdeepin.com/img/logo_s.png" alt="DeepinLinux" width="160" height="38" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/google_youku_host_20120706.html">[更新]访问google服务和优酷去广告功能的host列表</a><br>
+<a href="http://x-wei.github.com/chrome-background.html">chrome护眼设置--把背景设置为绿豆沙</a><br>
+<a href="http://x-wei.github.com/xelatex_zh.html">xelatex--linux下tex中文的完全解决!</a><br>
+<a href="http://x-wei.github.com/google_doc_form.html">使用google doc建立在线调查表!~</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
