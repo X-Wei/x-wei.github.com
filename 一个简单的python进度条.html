@@ -164,29 +164,25 @@
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>在处理大量数的时候, 如果输出类似 "process i out of n files..." 这样的内容来只是进度的话, 虽然可以显示目前的进度(用来安慰等待的心情...)但有个问题是, 如果输出了太多行(比如一万行...), 就看不到前面的内容了... </p>
+		<p>在处理大量数的时候, 如果输出类似 "process i out of n files..." 这样的内容来指示进度的话, 虽然可以显示目前的进度(用来安慰等待的心情...)但有个问题是, 如果输出了太多行(比如一万行...), 就看不到前面的内容了... </p>
 <p>所以想找一个命令行下面的进度条, 其实python已经有了(不止一个)进度条的包了, 比如<a href="https://pypi.python.org/pypi/progressbar/2.3-dev">progressbar</a>, 但是不知为什么这个包在windows下面没有能做到刷新显示 -- 就是刷新进度的时候, 没有把原先那一行去掉, 而是在下面再输出了一行... (不过后来在linux下面使用这个包是没问题的, 好奇怪...)</p>
 <p>所以想办法自己写了一个, 发现要实现一个简单的进度条还是很简单的, 关键就是使用<code>\r</code>, 这样会把光标移动到当前行的开头: 这样下次输出的时候就会把原先的内容冲掉了. </p>
 <p>代码只有不到二十行: </p>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">time</span>
+<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">class</span> <span class="nc">SimpleProgressBar</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="s">&#39;`x`: progress in percent (0~100)&#39;</span>
-        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">100</span>
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">))</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="c"># not necessary to update display</span>
-            <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">))</span>
-        <span class="n">pg</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%d%%</span><span class="s"> [</span><span class="si">%s</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s">&#39;#&#39;</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">+</span> <span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span><span class="p">))</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pg</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">100</span> <span class="c"># `x`: progress in percent ( between 0 and 100)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_x</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">pointer</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s">&#39;</span><span class="se">\r</span><span class="si">%d%%</span><span class="s"> [</span><span class="si">%s</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s">&#39;#&#39;</span> <span class="o">*</span> <span class="n">pointer</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">pointer</span><span class="p">)))</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\r</span><span class="s">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span>  <span class="c"># if finished, print a new line</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span> <span class="k">print</span> <span class="s">&#39;&#39;</span>
 </pre></div>
 
 
@@ -200,6 +196,15 @@
 
 
 <p>再吐槽一下windows, 不仅那个progressbar的包不好使, multiprocessing的包也不好使, 郁闷... </p>
+<p><strong>[08-15补充]</strong></p>
+<p>后来想到, 既然用<code>\r</code>就可以实现刷新当前行, 还要用毛的进度条啊.... 直接这样写就好了:</p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">301</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;processing </span><span class="si">%d</span><span class="s"> out od </span><span class="si">%d</span><span class="s"> items...&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">301</span><span class="p">),</span> <span class="s">&#39;</span><span class="se">\r</span><span class="s">&#39;</span><span class="p">,</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+
+
+<p>注意print最后要加逗号 否则就换行了...</p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
@@ -274,38 +279,23 @@
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/出国.html">出国</a> 
+<span class="tag-0">
+    <a href="./tag/python.html">python</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/android.html">android</a> 
+<span class="tag-1">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -315,22 +305,12 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
+    <a href="./tag/GRE.html">GRE</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-0">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -339,13 +319,8 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-1">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/linux.html">linux</a> 
+<span class="tag-0">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -354,18 +329,28 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
-    <a href="./tag/host.html">host</a> 
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
+<span class="tag-4">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -379,8 +364,18 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-0">
-    <a href="./tag/google.html">google</a> 
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -390,17 +385,17 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/fr.html">fr</a> 
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/外观.html">外观</a> 
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -411,6 +406,16 @@
 
 <span class="tag-2">
     <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
