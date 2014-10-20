@@ -13,9 +13,9 @@ linux编译安装opencv
 
 大致有以下几个步骤:
 
-1) 安装gcc一起cmake等等乱七八糟的软件(不过ubuntu下默认差不多都有了吧...)
+1) 安装gcc以及cmake等等乱七八糟的软件(不过ubuntu下默认差不多都有了吧...)
 
-    sudo apt-get install build-essential
+    sudo apt-get install build-essential python-dev cmake
     
 
 2) 下载opencv-2.4.8.zip并解压缩
@@ -59,7 +59,7 @@ make命令会花费几十分钟时间...
 
 最坑爹的地方来了, 以这样的参数运行cmake以后, 运行``make -j8``总是不成功, 说有错误.....
 
-![](file:///home/wx/Dropbox/zimNotes/tech/linux%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E4%BD%BF%E7%94%A8java%E5%BC%80%E5%8F%91opencv%E7%9A%84%E9%85%8D%E7%BD%AE/pasted_image.png)
+![](./linux下安装并使用java开发opencv的配置/pasted_image.png)
 
 查了半天, 发现这是一个BUG:
 <http://code.opencv.org/issues/2859>
@@ -85,7 +85,7 @@ make命令会花费几十分钟时间...
 
 以上操作结束后, 看看build文件夹, bin目录下是不是有一个``opencv-248.jar``文件:
 
-![](file:///home/wx/Dropbox/zimNotes/tech/linux%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E4%BD%BF%E7%94%A8java%E5%BC%80%E5%8F%91opencv%E7%9A%84%E9%85%8D%E7%BD%AE/pasted_image001.png)
+![](./linux下安装并使用java开发opencv的配置/pasted_image001.png)
 
 如果有的话 就说明成功安装了opencv的java组件... 
 
