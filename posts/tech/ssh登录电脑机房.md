@@ -24,6 +24,8 @@ X[机房的电脑](http://www.enseignement.polytechnique.fr/profs/informatique/P
 
 然后可以在终端输入命令来启动程序, 比如``eclipse &, ``就会在你这边的电脑显示出来eclipse的窗口 (加"&"是可以使多个程序同时启动).
 
+另外, 远程拷贝到本地:
+	scp xing.wei@france.polytechnique.fr:/users/eleves-b/x2012/xing.wei/  /home/wx
 几个常用的程序: 
 
     eclipse &
