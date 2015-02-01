@@ -10,7 +10,7 @@ AUTHOR = 'mx'
 
 DISQUS_SITENAME = 'xweisblog'
 GITHUB_URL = 'https://github.com/X-Wei'
-#~ SITEURL = 'http://x-wei.github.com'
+SITEURL = 'http://x-wei.github.io'
 GOOGLE_ANALYTICS = 'UA-30756331-1'
 TAG_FEED_ATOM  = 'feeds/%s.atom.xml'
 TAG_CLOUD_STEPS = 4
