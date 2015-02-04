@@ -1,5 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="../." rel="alternate"></link><link href=".././feeds/tech.atom.xml" rel="self"></link><id>../.</id><updated>2014-08-14T00:00:00+02:00</updated><entry><title>一个简单的python进度条</title><link href=".././%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84python%E8%BF%9B%E5%BA%A6%E6%9D%A1.html" rel="alternate"></link><updated>2014-08-14T00:00:00+02:00</updated><author><name>mx</name></author><id>.././一个简单的python进度条.html</id><summary type="html">&lt;p&gt;在处理大量数的时候, 如果输出类似 "process i out of n files..." 这样的内容来指示进度的话, 虽然可以显示目前的进度(用来安慰等待的心情...)但有个问题是, 如果输出了太多行(比如一万行...), 就看不到前面的内容了... &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-02-02T00:00:00+01:00</updated><entry><title>运筹的力量: 用线性规划解决Google 2014 HashCode问题</title><link href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html" rel="alternate"></link><updated>2015-02-02T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/运筹的力量: 用线性规划解决Google 2014 HashCode问题.html</id><summary type="html">&lt;p&gt;INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. &lt;/p&gt;
+&lt;p&gt;这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记.&lt;/p&gt;
+&lt;h1&gt;问题描述&lt;/h1&gt;
+&lt;p&gt;谷歌那次比赛的题目在这里(我们做的是Main Round的题目): &lt;a href="https://sites.google.com/site/hashcode2014/tasks"&gt;https://sites.google.com/site/hashcode2014/tasks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;简单来说, 就是已知巴黎的道路信息, 设法用八辆车(每辆车的行驶时间有限)从巴黎谷歌出发, 尽可能多的走遍巴黎的所有街道, 参赛者给出这些车的路线, 他们的分数就是这八辆车走过的街道的长度之和(重复走的街道不算分). &lt;/p&gt;
+&lt;p&gt;去年四月份我们也参加了这个比赛, 不过当时纠结于如何设计每辆车的路线, 最后只是用了贪心算法, 再加上一点点的随机, 得到的结果并不好... 当时ENS的人包揽了前三名, 而且比赛后进一步把分数刷到了满分: 他们的路线可以把所有街道都跑遍. &lt;/p&gt;
+&lt;p&gt;这学期学了INF580以后, 手里有了&lt;strong&gt;JaCoP&lt;/strong&gt;以及&lt;strong&gt;AMPL&lt;/strong&gt;等"重型武器", 我们经过一番努力也得到了满分, 而且用了几乎最少的时间. 代码放在了: &lt;a href="https://github.com/X-Wei/INF580_HashCode2014"&gt;https://github.com/X-Wei/INF580_HashCode2014&lt;/a&gt; (里面还有个pdf的报告, 比这篇博客里说的精炼).&lt;/p&gt;
+&lt;h1&gt;I. 初步建模&lt;/h1&gt;
+&lt;h2&gt;线性规划(LP)模型&lt;/h2&gt;
+&lt;p&gt;站在一个更高的角度上考虑这个问题, 从一个线性规划的角度看, 给定一个图&lt;code&gt;G(V,E)&lt;/code&gt;, 目标是最大化走过的街道长度, 如果用对每条街道&lt;code&gt;e&lt;/code&gt;, 定义一个&lt;code&gt;x_e&lt;/code&gt;,: 当一条街被经过的时候使它为1, 否则为0, 那么目标函数就是一个x的线性组合(系数就是对应街道的长度). &lt;/p&gt;
+&lt;p&gt;但是如果一条街被经过了大于一次, &lt;code&gt;x_e&lt;/code&gt;也只能是1, 所以再引入一个变量&lt;code&gt;y_e&lt;/code&gt;: 用来表示一条街被经过的&lt;strong&gt;次数&lt;/strong&gt;. 所以&lt;code&gt;x_e&lt;/code&gt;可以看成是&lt;code&gt;y_e&lt;/code&gt;的indicatrice函数: &lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/equation.png" /&gt;, 这一点可以通过增加线性约束: &lt;code&gt;x_e&amp;lt;=y_e&lt;/code&gt; 即可实现, 因为&lt;code&gt;x_e&lt;/code&gt;的取值范围是{0,1}. &lt;/p&gt;
+&lt;p&gt;不过一条街可能从两个方向被经过(&lt;code&gt;G&lt;/code&gt;里面的边是有向的), 如果&lt;code&gt;e&lt;/code&gt;'代表反方向的&lt;code&gt;e&lt;/code&gt;, 那么还应该增加约束:  &lt;code&gt;x_e+x_e'&amp;lt;=1&lt;/code&gt; 就好了. &lt;/p&gt;
+&lt;p&gt;接下来&lt;code&gt;y&lt;/code&gt;要满足的就是所有的&lt;code&gt;y&lt;/code&gt;要组成一个&lt;em&gt;路径(path)&lt;/em&gt;, 对于既不是起点又不是终点的一个节点&lt;code&gt;v&lt;/code&gt;, 还是很好写的, 类似flot: &lt;code&gt;sum(进入v的y_e) = sum(从v流出的y_e)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;对于起点&lt;code&gt;v_start&lt;/code&gt;来说, 其实也不难: &lt;code&gt;sum(进入v_start的y_e) = sum(从v-start流出的y_e)+1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;但是对于终点的话, 有个问题是我们不知道车会停在哪里! Manu太聪明了, 对每一个节点&lt;code&gt;v&lt;/code&gt;引入了另一个变量&lt;code&gt;f_v&lt;/code&gt;,取值范围也是{0,1}, 如果在节点&lt;code&gt;v&lt;/code&gt;停下来, 那么&lt;code&gt;f_v&lt;/code&gt;等于1, 否则就是0. 所以上面的约束可以写成: &lt;code&gt;sum(进入v的y) = sum(从v流出的y_e)+f_v&lt;/code&gt;. 另外别忘了只能停在一个节点, 所以再加约束: &lt;code&gt;sum(所有的f_v)=1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;以上的目标函数以及约束, 虽然数目庞大, 但是都是线性的, 所以是一个整数线性规划问题, 写成数学形式就是: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;h2&gt;从solution得到路径&lt;/h2&gt;
+&lt;p&gt;一旦上面那个线性规划问题解决了, 我们得到的将会是那些变量&lt;code&gt;x&lt;/code&gt;,&lt;code&gt;y&lt;/code&gt;,以及&lt;code&gt;f&lt;/code&gt;, 但是需要从中提取一条路径最后才能作为solution!! &lt;/p&gt;
+&lt;p&gt;这个问题实际上可以归结为: 给定一个一笔画的曲线(其实就是那些&lt;code&gt;y&lt;/code&gt;: 可以想象把每条边都复制&lt;code&gt;y&lt;/code&gt;次, 得到的就是这么一个曲线了), 找出一个可以将其一笔画出来的路径(这条路径也叫"欧拉路径", 没"汉密尔顿路径"有名). 聪明的Manu很快想出来一个算法(我们叫它"Orsini算法"): 大意是当走到底没有走完的时候, 把那些错过的路径夹在原路径的中间就好了. &lt;/p&gt;
+&lt;p&gt;算法描述如下: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;i) 从起点开始出发走, 把走过的边涂上颜色(以后不能再走), 只要还可以继续走(还有没有着色的边可走)就一直走下去, 一直到无路可走. (应该会停在&lt;code&gt;f=1&lt;/code&gt;的地方), 得到路径&lt;code&gt;p0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;ii)  如果所有边已经被走过了: &lt;strong&gt;over&lt;/strong&gt;. 如果没有: 找一个没有走过的边与&lt;code&gt;p0&lt;/code&gt;的交叉点: &lt;code&gt;v&lt;/code&gt;(如果找不到的话说明有问题: 后面就遇到这个问题了), 然后执行(iii)&lt;/p&gt;
+&lt;p&gt;iii) 从&lt;code&gt;v&lt;/code&gt;出发, 在进行类似(i)的操作得到一条路径(应该是一个环), 然后把&lt;code&gt;p0&lt;/code&gt;从&lt;code&gt;v&lt;/code&gt;那里劈开, 把这个环塞到中间组成新的&lt;code&gt;p0&lt;/code&gt;, 然后再执行(ii).  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这样就可以得到对应的路径了. &lt;/p&gt;
+&lt;h2&gt;一开始的想法&lt;/h2&gt;
+&lt;p&gt;以上的建模是针对一辆车的, 我们一开始的想法是: 对一辆车进行这个操作, 得到结果以后更新一下&lt;code&gt;G&lt;/code&gt;(把那些已经走过的街道的长度设为0, 然后再走下一辆车... 这样跑8次就能得到最优解了. &lt;/p&gt;
+&lt;p&gt;一切看起来&lt;em&gt;似乎&lt;/em&gt;都非常完美......&lt;/p&gt;
+&lt;h1&gt;II.遇到的问题&lt;/h1&gt;
+&lt;h2&gt;计算能力问题&lt;/h2&gt;
+&lt;p&gt;写好了AMPL的程序以后, 我们遇到的第一个问题是: 这么大的问题, 一般电脑算不出来(曾经用glpk让电脑跑了一夜, 还是没有得到结果). &lt;/p&gt;
+&lt;p&gt;后来问老师, 老师说glpk并不是非常高效的求解器, 然后推荐给了我们一个非常给力的网站: &lt;a href="http://neos-server.org/neos/"&gt;NEOS&lt;/a&gt; ! 这个网站可以让人上传AMPL程序, 然后用它们的服务器跑, 而且使用的求解器也是商用的, 比开源求解器快的不是一个数量级(我们发现最快的求解器是&lt;em&gt;Gurobi&lt;/em&gt;, 十分给力). &lt;/p&gt;
+&lt;p&gt;这样一来计算的问题就解决了, 但是我们很快发现一个更严重的问题, 是我们的建模里的一个严重缺陷...&lt;/p&gt;
+&lt;h2&gt;subtour问题&lt;/h2&gt;
+&lt;p&gt;我们兴冲冲的拿NEOS的结果跑Orsini算法的时候, 发现总是报错: 也就是在第二步, 程序无法找到一个和&lt;code&gt;p0&lt;/code&gt;有交叉点的边: &lt;em&gt;也就意味着我们的模型得到的路径并不是只有一个connected component!!! &lt;/em&gt;也就是说, 我们得到的解其实是一条从起点到某个终点的路径, 外加很多和这个路径没有交点的圈圈(subtour)!&lt;/p&gt;
+&lt;p&gt;是啊, 这个问题很类似旅行商问题(TSP), 而TSP的困难之一 就是要解决subtour的话需要加入2^n个新的约束.... 2^10000个约束? impossible...&lt;/p&gt;
+&lt;h1&gt;III. subtour问题的"解决"&lt;/h1&gt;
+&lt;h2&gt;各种纠结&lt;/h2&gt;
+&lt;p&gt;在一次PC上有一道题目介绍了TSP subtour问题的一种建模方式, "potentiel"建模, 可以防止加入2^n个约束: 为每个节点&lt;code&gt;v&lt;/code&gt;引入新的变量&lt;code&gt;u_v&lt;/code&gt;,&lt;code&gt;u_v&lt;/code&gt;代表了节点&lt;code&gt;v&lt;/code&gt;被访问的顺序, 约束做的非常巧妙, 是这样的: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;p&gt;这样, 当&lt;code&gt;x_ij&lt;/code&gt;是1的时候, 就保证&lt;code&gt;u_j&lt;/code&gt;比&lt;code&gt;u_i&lt;/code&gt;大1, 而当&lt;code&gt;x_ij&lt;/code&gt;是0的时候, 这个约束则非常松弛, 几乎相当于没有. &lt;/p&gt;
+&lt;p&gt;不过这个方法套到我们这个projet的话也有问题: 那就是每个节点只能有一个&lt;code&gt;u_v&lt;/code&gt;, 所以每个节点只能最多访问一次.... 不过我们很快想到了办法: 把所有节点复制一个(复制"一层"), 然后每条边的话也进行复制, 同时加上那些连接各层的边. &lt;/p&gt;
+&lt;p&gt;举个例子, 原来的一条边是: &lt;code&gt;(u, v)&lt;/code&gt;, 我们复制了一层, 这些新节点叫它们&lt;code&gt;u',v&lt;/code&gt;',... 那么在这个两层的图里, 我们要把原来的这条边变成4条: &lt;code&gt;(u, v)&lt;/code&gt;, &lt;code&gt;(u, v')&lt;/code&gt;, &lt;code&gt;(u', v)&lt;/code&gt; 和 &lt;code&gt;(u', v')&lt;/code&gt;. 这样就可以保证路径可以经过一个点两次了, 如果想要保证可以经过一个点K次, 只要做K层就好了(每条边变成K^2条). &lt;/p&gt;
+&lt;p&gt;然后, &lt;code&gt;x&lt;/code&gt;也不需要了, 因为每条边的&lt;code&gt;y&lt;/code&gt;最大就是1. 但是还有一个问题是目标函数, 由于一条边变成了四条, 如果走四遍的话就多算了四次这条边的长度... 有两种解决办法: 一是类似前面的方法, 给每条边指定定一个indicatrice, 这样就不会重复了, 还有一种更简单的办法是, 在四条边里, 只取一条边的长度保持不变, 其他长度都设成0, 算法自然会优先走那条长度不是0的边(这个没有仔细证明, 不过貌似是这样的). 我们采用了第二个办法.... &lt;/p&gt;
+&lt;p&gt;就这样废了好大功夫, 写好了两层节点的程序, 送去NEOS一跑.... 超时了(超过8h后NEOS会自动停止求解过程)... 后来我们发现即使是不多加新一层的程序, 也会超时. 那节PC里也说, 这种建模方法实际上计算效率比加入2^N个约束的建模还要差... &lt;/p&gt;
+&lt;p&gt;所以总结一下就是: 问题还是没有解决...&lt;/p&gt;
+&lt;h2&gt;绕过subtour问题&lt;/h2&gt;
+&lt;p&gt;就在一筹莫展之际, Manu提议把搜索的范围缩小: 不用整个巴黎的数据, 只取起点附近的区域, 这样的话, 说不定我们原先的模型得到的结果会少一点connected components... 试了一下, 果然! 虽然没有强制要求路径的连通性, 得到的结果确实(几乎)只有一个联通分支! &lt;/p&gt;
+&lt;p&gt;后来就想到了一个很聪明的办法: 用八倍的T作为时间限制, 让一辆车去跑, 由于时间很充分, 我们得到的解应该不太会出现多个联通分支, 然后一旦得到了这个路径(后来我们叫它"big path"), 只需要把它分成8段, 每辆车先从起点(巴黎谷歌)跑到每一段的开头, 然后沿着这条路跑就好了啊!! 虽然从巴黎谷歌跑到每一段的起点会稍微浪费一些时间, 但是这点损失其实微不足道!! 而且也不用跑8次LP这么麻烦了 -- 要是早点想到这个就好了!!&lt;/p&gt;
+&lt;p&gt;而且很神奇的是, 把时间变成了8T以后, 我们的Lp模型计算的更快了: 原先要计算30分钟左右, 现在只要差不多3分钟就出结果了!! 这一点没太想明白, 可能是搜索的空间变小了??&lt;/p&gt;
+&lt;p&gt;说写就写, 最短路径用Dijkstra算法就能得到了, 不一会就写出了这个把一条big path变成8条small path的程序. 然后我们一举得到了1957596分(离满分还差了两千米左右)!!&lt;/p&gt;
+&lt;h1&gt;IV. 进一步优化&lt;/h1&gt;
+&lt;p&gt;优化的话有两个方向: 第一个方向是修改那个程序代码, 使得每次走到big path某段起点的时候可以少走些路, 不过这个方向应该没什么前途: 程序写起来麻烦不说, 可以改进的空间也很有限, 因为big path一共也没有剩多少时间, 所以八辆车是不可能把big path走完的. 第二个方向则是设法优化big path的时间使用, 使得它在得到最长路径的同时使用尽量少的时间. &lt;/p&gt;
+&lt;h2&gt;引入时间正则项&lt;/h2&gt;
+&lt;p&gt;其实8T作为时间来说非常充裕, 但是我们的解里面, big path还是把时间用的差不多了: 因为时间根本没有出现在目标函数里. 所以, 可以把时间也作为目标函数加上去, 不过要注意最优先要优化的还是路径长度, 所以时间项前面要乘以一个非常小的数(比如0.000001), 类似做regularization. &lt;/p&gt;
+&lt;p&gt;所以新的目标函数是: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;p&gt;这样一运行, 我们的big path居然剩下了六千多秒的时间!!! 这些时间足够八辆车跑到各段的起点了!! 我们这样, 八辆车走完了big path所有的路程得到的结果离满分只差了7米, 而最后一辆车还有两千多秒没有走! &lt;/p&gt;
+&lt;p&gt;检查了一下, 发现有一个7米长的路是唯一剩下没走过的路: 于是只要再让最后一辆车去走一下就好了(因为时间够用), 最终我们的方案走完了整个巴黎:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;p&gt;等一下, 这里有点奇怪: 为什么优化得到的结果并不是最优的(没有走完所有的路程)? 我们通过后来手动走那条剩下的路都没有超时, 所以说其实肯定可以在8T的时间走遍所有街道的! 后来查了一下才发现, 原来Gurobi并不是返回最优解, 而是当当前可行解与最优解足够接近的时候就直接停止, 这个参数的名字叫mipgap, 更多参数可以参考这里: &lt;a href="http://www.gurobi.com/documentation/6.0/ampl-gurobi-guide/parameters"&gt;http://www.gurobi.com/documentation/6.0/ampl-gurobi-guide/parameters&lt;/a&gt; .&lt;/p&gt;
+&lt;p&gt;这也就解释了为什么NEOS得到的解不是最优的, 不过还好, 通过最后手动添加那条没走的边, 还是走完了所有的街道. &lt;/p&gt;
+&lt;p&gt;............&lt;/p&gt;
+&lt;p&gt;只是作为强迫症的话觉得还是有点......不够完美.&lt;/p&gt;
+&lt;h2&gt;直接优化时间&lt;/h2&gt;
+&lt;p&gt;今晚, 机智的Manu想到了解决办法: 既然知道所有的街道都会被走遍, 直接不把它看成目标, 而是直接作为约束好了, 然后约束直接改成优化时间! &lt;/p&gt;
+&lt;p&gt;要就经过所有街道的约束很简单, 那就是对任何街道&lt;code&gt;e&lt;/code&gt;, 都有: &lt;code&gt;y_e+y_e'&amp;gt;=1&lt;/code&gt;. 另外肯定所有街道都会经过, &lt;code&gt;x&lt;/code&gt;就没有必要存在了. &lt;/p&gt;
+&lt;p&gt;LP模型表达为: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image004.png" /&gt;&lt;/p&gt;
+&lt;p&gt;用这样的模型, 我们的big path 省下了一万两千多秒, 所以我们的最终结果里, 最后的一辆车跑完以后还有9596秒没有用!!&lt;/p&gt;
+&lt;p&gt;到这一步, 真的可以算是完美解决这个问题了, 而且强迫症也得救了. &lt;/p&gt;
+&lt;p&gt;Yeah!  : )&lt;/p&gt;</summary><category term="LP"></category><category term="算法"></category></entry><entry><title>一个简单的python进度条</title><link href="http://x-wei.github.io/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84python%E8%BF%9B%E5%BA%A6%E6%9D%A1.html" rel="alternate"></link><updated>2014-08-14T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/一个简单的python进度条.html</id><summary type="html">&lt;p&gt;在处理大量数的时候, 如果输出类似 "process i out of n files..." 这样的内容来指示进度的话, 虽然可以显示目前的进度(用来安慰等待的心情...)但有个问题是, 如果输出了太多行(比如一万行...), 就看不到前面的内容了... &lt;/p&gt;
 &lt;p&gt;所以想找一个命令行下面的进度条, 其实python已经有了(不止一个)进度条的包了, 比如&lt;a href="https://pypi.python.org/pypi/progressbar/2.3-dev"&gt;progressbar&lt;/a&gt;, 但是不知为什么这个包在windows下面没有能做到刷新显示 -- 就是刷新进度的时候, 没有把原先那一行去掉, 而是在下面再输出了一行... (不过后来在linux下面使用这个包是没问题的, 好奇怪...)&lt;/p&gt;
 &lt;p&gt;所以想办法自己写了一个, 发现要实现一个简单的进度条还是很简单的, 关键就是使用&lt;code&gt;\r&lt;/code&gt;, 这样会把光标移动到当前行的开头: 这样下次输出的时候就会把原先的内容冲掉了. &lt;/p&gt;
 &lt;p&gt;代码只有不到二十行: &lt;/p&gt;
@@ -39,7 +112,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;注意print最后要加逗号 否则就换行了...&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>正则表达式入门简介</title><link href=".././%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html" rel="alternate"></link><updated>2014-08-01T00:00:00+02:00</updated><author><name>mx</name></author><id>.././正则表达式入门简介.html</id><summary type="html">&lt;p&gt;以前虽然也用过正则表达式(比如那个饮水思源的&lt;a href="http://x-wei.github.io/%E6%B0%B4%E6%BA%90PPP%E6%9D%BF%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8.html"&gt;PPP版图片下载器&lt;/a&gt;...)但是那时候基本上是网上到处搜 然后把代码拿过来改, 没有系统的学过这个东西. 前一段实习一开始的时候要处理很大量的文本, 从文本里提取出需要的信息, 所以用到了不少的正则表达式, 也好好的学了一下, 现在回来进行一下总结. &lt;/p&gt;
+&lt;p&gt;注意print最后要加逗号 否则就换行了...&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>正则表达式入门简介</title><link href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html" rel="alternate"></link><updated>2014-08-01T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/正则表达式入门简介.html</id><summary type="html">&lt;p&gt;以前虽然也用过正则表达式(比如那个饮水思源的&lt;a href="http://x-wei.github.io/%E6%B0%B4%E6%BA%90PPP%E6%9D%BF%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8.html"&gt;PPP版图片下载器&lt;/a&gt;...)但是那时候基本上是网上到处搜 然后把代码拿过来改, 没有系统的学过这个东西. 前一段实习一开始的时候要处理很大量的文本, 从文本里提取出需要的信息, 所以用到了不少的正则表达式, 也好好的学了一下, 现在回来进行一下总结. &lt;/p&gt;
 &lt;h2&gt;什么是正则表达式&lt;/h2&gt;
 &lt;p&gt;很多时候,我们需要在文本里寻找满足一种&lt;strong&gt;模式&lt;/strong&gt;(&lt;em&gt;pattern&lt;/em&gt;)的一段子字符串(substring), 注意是一种模式而不是某一个具体的字符串. 举个例子, 在一段文本里寻找这里面出现的所有的网址, 那么对应的模式就是: &lt;/p&gt;
 &lt;blockquote&gt;
@@ -255,7 +328,7 @@ ex. 匹配"color"或者"colour": &lt;code&gt;colou?r&lt;/code&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;a class="download_link" href="https://drive.google.com/uc?export=download&amp;amp;id=0B-f7ZbfsS9-xUjhLaURQbWsxbjg" target="_blank"&gt;en&lt;/a&gt;&lt;/td&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;就是说在&lt;code&gt;class="download_link"&lt;/code&gt;之后, &lt;code&gt;href=&lt;/code&gt;后面的用引号引起来的内容就是我们想要的下载链接了, 于是可以很快用正则表达式来提取它, 我写的表达式见&lt;a href="http://regex101.com/r/hN1lH1/1"&gt;这里&lt;/a&gt;.&lt;/p&gt;</summary><category term="regex"></category></entry><entry><title>pandas学习笔记</title><link href=".././pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2014-07-22T00:00:00+02:00</updated><author><name>mx</name></author><id>.././pandas学习笔记.html</id><summary type="html">&lt;p&gt;首先, 导入pandas
+&lt;p&gt;就是说在&lt;code&gt;class="download_link"&lt;/code&gt;之后, &lt;code&gt;href=&lt;/code&gt;后面的用引号引起来的内容就是我们想要的下载链接了, 于是可以很快用正则表达式来提取它, 我写的表达式见&lt;a href="http://regex101.com/r/hN1lH1/1"&gt;这里&lt;/a&gt;.&lt;/p&gt;</summary><category term="regex"></category></entry><entry><title>pandas学习笔记</title><link href="http://x-wei.github.io/pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2014-07-22T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/pandas学习笔记.html</id><summary type="html">&lt;p&gt;首先, 导入pandas
 &lt;code&gt;import pandas as pd&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;以及开启pylab: IPython里输入&lt;code&gt;%pylab&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://www.bearrelroll.com/2013/05/python-pandas-tutorial/"&gt;http://www.bearrelroll.com/2013/05/python-pandas-tutorial/&lt;/a&gt;&lt;/p&gt;
@@ -455,7 +528,7 @@ hist.plot(kind='bar')&lt;/p&gt;
 用pcolormesh
 &lt;a href="http://www.physicsforums.com/showthread.php?t=653864"&gt;http://www.physicsforums.com/showthread.php?t=653864&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;貌似要转置!!
-&lt;a href="http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y"&gt;http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y&lt;/a&gt;&lt;/p&gt;</summary><category term="pandas"></category><category term="python"></category></entry><entry><title>python pickle 的一个小问题</title><link href=".././python%20pickle%20%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98.html" rel="alternate"></link><updated>2014-07-15T00:00:00+02:00</updated><author><name>mx</name></author><id>.././python pickle 的一个小问题.html</id><summary type="html">&lt;p&gt;python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...&lt;/p&gt;
+&lt;a href="http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y"&gt;http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y&lt;/a&gt;&lt;/p&gt;</summary><category term="pandas"></category><category term="python"></category></entry><entry><title>python pickle 的一个小问题</title><link href="http://x-wei.github.io/python%20pickle%20%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E9%97%AE%E9%A2%98.html" rel="alternate"></link><updated>2014-07-15T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/python pickle 的一个小问题.html</id><summary type="html">&lt;p&gt;python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...&lt;/p&gt;
 &lt;p&gt;不过今天在使用pickle的时候遇到了一个很奇怪的问题. &lt;/p&gt;
 &lt;p&gt;是这样的, 原本写了一个程序&lt;code&gt;main.py&lt;/code&gt;, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个&lt;code&gt;util.py&lt;/code&gt;文件里. 并且在main.py的第一行写上: &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;from util import *&lt;/code&gt;&lt;/p&gt;
@@ -474,7 +547,7 @@ hist.plot(kind='bar')&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;所以问题出在这里(我的理解): 原先我把数据pickle进文件的时候, &lt;code&gt;Airport这个class是定义在了main.py里面, 所以当我在util.py里面load数据的时候, pickle发现原来的main.py里面已经没有了 Airport这个class, 于是就出现了Error...&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;解决办法也不难, 只需要在&lt;code&gt;util.py&lt;/code&gt;里面再生成一下那些要load的数据文件, 之后再次unpickle的时候就会去&lt;code&gt;util.py&lt;/code&gt;而不是&lt;code&gt;main.py&lt;/code&gt;里找class的定义, 也就没有问题了!&lt;/p&gt;
-&lt;p&gt;今天碰到的这个问题不是那么evident, 所以特地记一下.&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>A byte of Python 笔记</title><link href=".././byte_of_python%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2014-04-10T00:00:00+02:00</updated><author><name>mx</name></author><id>.././byte_of_python笔记.html</id><summary type="html">&lt;p&gt;据说这本书是最好的入门读物, 况且只有100来页 (减掉前面后面那些扯淡的 不到100页...)&lt;/p&gt;
+&lt;p&gt;今天碰到的这个问题不是那么evident, 所以特地记一下.&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>A byte of Python 笔记</title><link href="http://x-wei.github.io/byte_of_python%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2014-04-10T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/byte_of_python笔记.html</id><summary type="html">&lt;p&gt;据说这本书是最好的入门读物, 况且只有100来页 (减掉前面后面那些扯淡的 不到100页...)&lt;/p&gt;
 &lt;p&gt;那就用这本书过一下py的基本知识点吧! 看完以后收获不少, 把py涉及的很大一部分都讲到了. 这本书已经是够压缩的了, 不过我还是边看边自己再压缩了一遍(写在zim笔记里). &lt;/p&gt;
 &lt;p&gt;我看的是1.20版本, 2004年的, 因为这个版本针对的是py2.x, 作者主页上现在的版本针对的是py3. 另外感觉没必要看中文翻译版, 因为这里用的英语比较简单, 而且有的时候中文翻译反而不如原文表达的恰当.&lt;/p&gt;
 &lt;h1&gt;preface+ch1+ch2&lt;/h1&gt;
@@ -1125,7 +1198,7 @@ or even the &lt;code&gt;has_key&lt;/code&gt; method of the dict class: &lt;code&
 &lt;li&gt;you will have &lt;code&gt;eval(repr(object)) == object&lt;/code&gt; most of the time.&lt;/li&gt;
 &lt;li&gt;Basically, the repr function or the backticks are used to obtain a printable representation of the object.&lt;/li&gt;
 &lt;li&gt;can control what your objects return for the repr function by defining the __&lt;code&gt;repr__&lt;/code&gt; method in your class.&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category></entry><entry><title>linux下安装并使用java开发opencv的配置</title><link href=".././linux%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E4%BD%BF%E7%94%A8java%E5%BC%80%E5%8F%91opencv%E7%9A%84%E9%85%8D%E7%BD%AE.html" rel="alternate"></link><updated>2014-02-10T00:00:00+01:00</updated><author><name>mx</name></author><id>.././linux下安装并使用java开发opencv的配置.html</id><summary type="html">&lt;p&gt;今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... &lt;/p&gt;
+&lt;/ul&gt;</summary><category term="python"></category></entry><entry><title>linux下安装并使用java开发opencv的配置</title><link href="http://x-wei.github.io/linux%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E4%BD%BF%E7%94%A8java%E5%BC%80%E5%8F%91opencv%E7%9A%84%E9%85%8D%E7%BD%AE.html" rel="alternate"></link><updated>2014-02-10T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/linux下安装并使用java开发opencv的配置.html</id><summary type="html">&lt;p&gt;今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... &lt;/p&gt;
 &lt;h2&gt;linux编译安装opencv&lt;/h2&gt;
 &lt;p&gt;首先, linux下安装opencv其实不麻烦的, 参考文档即可完成:
 &lt;a href="http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html"&gt;http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html&lt;/a&gt;&lt;/p&gt;
@@ -1192,7 +1265,7 @@ or even the &lt;code&gt;has_key&lt;/code&gt; method of the dict class: &lt;code&
 &lt;h2&gt;Eclipse下的配置&lt;/h2&gt;
 &lt;p&gt;这里有一篇非常好的帖子, 写的非常到位, 我就不重复了, 链接:&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/"&gt;http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;这个帖子虽然很好, 但是没有介绍编译的那一部分, 由于安装java组件时的编译过程和官网给的不一样, 所以才导致我废了半天的时间啊!......&lt;/p&gt;</summary><category term="eclipse"></category><category term="java"></category><category term="opencv"></category></entry><entry><title>java线程小结</title><link href=".././java%E7%BA%BF%E7%A8%8B%E5%B0%8F%E7%BB%93.html" rel="alternate"></link><updated>2013-11-29T00:00:00+01:00</updated><author><name>mx</name></author><id>.././java线程小结.html</id><summary type="html">&lt;p&gt;INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. &lt;/p&gt;
+&lt;p&gt;这个帖子虽然很好, 但是没有介绍编译的那一部分, 由于安装java组件时的编译过程和官网给的不一样, 所以才导致我废了半天的时间啊!......&lt;/p&gt;</summary><category term="eclipse"></category><category term="java"></category><category term="opencv"></category></entry><entry><title>java线程小结</title><link href="http://x-wei.github.io/java%E7%BA%BF%E7%A8%8B%E5%B0%8F%E7%BB%93.html" rel="alternate"></link><updated>2013-11-29T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/java线程小结.html</id><summary type="html">&lt;p&gt;INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. &lt;/p&gt;
 &lt;h2&gt;创建进程&lt;/h2&gt;
 &lt;p&gt;为了实现多线程, 需要定义一个新的class, 有两种方法: 
 &lt;strong&gt;或者继承自&lt;/strong&gt;&lt;code&gt;Thread&lt;/code&gt;&lt;strong&gt;类, 或者实现&lt;/strong&gt;&lt;code&gt;Runnable&lt;/code&gt;&lt;strong&gt;接口&lt;/strong&gt;(关键是重载run()方法). &lt;/p&gt;
@@ -1351,7 +1424,7 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 &lt;a href="http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html"&gt;http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html&lt;/a&gt;
 &lt;a href="http://www.cnblogs.com/rollenholt/archive/2011/08/28/2156357.html"&gt;http://www.cnblogs.com/rollenholt/archive/2011/08/28/2156357.html&lt;/a&gt;
 &lt;a href="http://developer.android.com/reference/android/os/Handler.html"&gt;http://developer.android.com/reference/android/os/Handler.html&lt;/a&gt;
-&lt;a href="http://lavasoft.blog.51cto.com/62575/99150"&gt;http://lavasoft.blog.51cto.com/62575/99150&lt;/a&gt;&lt;/p&gt;</summary><category term="android"></category><category term="java"></category></entry><entry><title>ADT环境搭建</title><link href=".././ADT%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate"></link><updated>2013-11-08T00:00:00+01:00</updated><author><name>mx</name></author><id>.././ADT环境搭建.html</id><summary type="html">&lt;p&gt;这学期INF422, 第一节课就是android安装调试环境的搭建(居然要一节课?), 这里总结一下.&lt;/p&gt;
+&lt;a href="http://lavasoft.blog.51cto.com/62575/99150"&gt;http://lavasoft.blog.51cto.com/62575/99150&lt;/a&gt;&lt;/p&gt;</summary><category term="android"></category><category term="java"></category></entry><entry><title>ADT环境搭建</title><link href="http://x-wei.github.io/ADT%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate"></link><updated>2013-11-08T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/ADT环境搭建.html</id><summary type="html">&lt;p&gt;这学期INF422, 第一节课就是android安装调试环境的搭建(居然要一节课?), 这里总结一下.&lt;/p&gt;
 &lt;h3&gt;第一步: 下载bundle&lt;/h3&gt;
 &lt;p&gt;下载&lt;a href="http://developer.android.com/sdk/index.html"&gt;ADT-Bundle&lt;/a&gt;
 解压缩以后啥都有了, 包含一个eclipse...&lt;/p&gt;
@@ -1385,7 +1458,7 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 &lt;li&gt;console: linux命令, 命令行&lt;/li&gt;
 &lt;li&gt;emulator: 发送命令产生一些事件(电话, 短信, GPS等)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;第二种方式可以模拟一些手机事件, 很有用... 使用help命令查看emulator怎么使用&lt;/p&gt;</summary><category term="android"></category><category term="inf422"></category></entry><entry><title>android开发视频教程(重制版) 第一季 课程笔记</title><link href=".././android%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B%E7%AC%AC%E4%B8%80%E5%AD%A3%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2013-07-31T00:00:00+02:00</updated><author><name>mx</name></author><id>.././android开发教程第一季笔记.html</id><summary type="html">&lt;h1&gt;S01E02: 开发环境搭建&lt;/h1&gt;
+&lt;p&gt;第二种方式可以模拟一些手机事件, 很有用... 使用help命令查看emulator怎么使用&lt;/p&gt;</summary><category term="android"></category><category term="inf422"></category></entry><entry><title>android开发视频教程(重制版) 第一季 课程笔记</title><link href="http://x-wei.github.io/android%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B%E7%AC%AC%E4%B8%80%E5%AD%A3%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2013-07-31T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/android开发教程第一季笔记.html</id><summary type="html">&lt;h1&gt;S01E02: 开发环境搭建&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;直接去 developer.android.com/sdk/ 下载bundle解压即可, 里面包含eclipse&lt;/li&gt;
 &lt;li&gt;新建一个模拟器: 内部存储一般64MB足矣:&lt;/li&gt;
@@ -1838,7 +1911,7 @@ padding, paddingTop, ...&lt;/p&gt;
 
 
 &lt;/li&gt;
-&lt;/ul&gt;</summary><category term="android"></category></entry><entry><title>ssh远程登录学校机房电脑</title><link href=".././ssh%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E5%AD%A6%E6%A0%A1%E6%9C%BA%E6%88%BF%E7%94%B5%E8%84%91.html" rel="alternate"></link><updated>2013-07-02T00:00:00+02:00</updated><author><name>mx</name></author><id>.././ssh远程登录学校机房电脑.html</id><summary type="html">&lt;p&gt;X&lt;a href="http://www.enseignement.polytechnique.fr/profs/informatique/Philippe.Chassignet/MOYENS/stations.html"&gt;机房的电脑&lt;/a&gt;配置还是很高的, 所以...&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="android"></category></entry><entry><title>ssh远程登录学校机房电脑</title><link href="http://x-wei.github.io/ssh%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E5%AD%A6%E6%A0%A1%E6%9C%BA%E6%88%BF%E7%94%B5%E8%84%91.html" rel="alternate"></link><updated>2013-07-02T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/ssh远程登录学校机房电脑.html</id><summary type="html">&lt;p&gt;X&lt;a href="http://www.enseignement.polytechnique.fr/profs/informatique/Philippe.Chassignet/MOYENS/stations.html"&gt;机房的电脑&lt;/a&gt;配置还是很高的, 所以...&lt;/p&gt;
 &lt;p&gt;远程登录的命令是: 
     ssh -X nom.prenom@truite.polytechnique.fr&lt;/p&gt;
 &lt;p&gt;(-X命令表示允许使用X程序.)&lt;/p&gt;
@@ -1863,7 +1936,7 @@ padding, paddingTop, ...&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;可惜不知道咋能显示远程的桌面, 不过这也差不多够了, 以后用eclipse或者scilab这类比较"大"的程序, 直接用机房的工作站做好了...&lt;/p&gt;</summary><category term="shell"></category></entry><entry><title>网页图片自动适应浏览器宽度</title><link href=".././%E7%BD%91%E9%A1%B5%E5%9B%BE%E7%89%87%E8%87%AA%E5%8A%A8%E9%80%82%E5%BA%94%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%BD%E5%BA%A6.html" rel="alternate"></link><updated>2013-03-28T20:36:00+01:00</updated><author><name>mx</name></author><id>.././网页图片自动适应浏览器宽度.html</id><summary type="html">&lt;p&gt;眼看三月又要结束了, blog还没有更新, 拿来以前写在zim里的一条笔记充数... &lt;/p&gt;
+&lt;p&gt;可惜不知道咋能显示远程的桌面, 不过这也差不多够了, 以后用eclipse或者scilab这类比较"大"的程序, 直接用机房的工作站做好了...&lt;/p&gt;</summary><category term="shell"></category></entry><entry><title>网页图片自动适应浏览器宽度</title><link href="http://x-wei.github.io/%E7%BD%91%E9%A1%B5%E5%9B%BE%E7%89%87%E8%87%AA%E5%8A%A8%E9%80%82%E5%BA%94%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%BD%E5%BA%A6.html" rel="alternate"></link><updated>2013-03-28T20:36:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/网页图片自动适应浏览器宽度.html</id><summary type="html">&lt;p&gt;眼看三月又要结束了, blog还没有更新, 拿来以前写在zim里的一条笔记充数... &lt;/p&gt;
 &lt;p&gt;有了zim以后, 几乎不再用office了, 常用它编辑一些富文本, 比如加粗, 下划线, 斜体什么的, 有快捷键操作, 很方便, 插图也很简单. zim是我认为的神器(神器=小巧+强大)之一. &lt;/p&gt;
 &lt;p&gt;有时候用zim写好的笔记给别人看时, 直接按"ctrl+p"就可以打印成网页的格式了, 非常方便(而且得承认, 单论富文本的显示效果, 网页格式 &amp;gt; pdf格式 &amp;gt; doc格式). 只是有一点不太好, 就是有时插入的照片很大, 在浏览器里查看的时候显示的还是原尺寸图像, 非常方便...&lt;/p&gt;
 &lt;p&gt;查了一下, 其实只要在html文件关于插入图片那一行加入&lt;code&gt;width="100%" height="100%" style="z-index:-100"&lt;/code&gt;就可以了.&lt;/p&gt;
@@ -1880,7 +1953,7 @@ padding, paddingTop, ...&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;" alt="" width="100%" height="100%" style="z-index:-100"&lt;/code&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;这个我倒是时常用到, 比如给家人发最近活动的照片时 , 可以用zim写上一些文字作为照片的注释, 然后生成网页文件然后打包发掉...&lt;/p&gt;
-&lt;p&gt;OK, 水文结束...&lt;/p&gt;</summary></entry><entry><title>水源PPP板图片下载器</title><link href=".././%E6%B0%B4%E6%BA%90PPP%E6%9D%BF%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8.html" rel="alternate"></link><updated>2012-06-07T20:14:00+02:00</updated><author><name>mx</name></author><id>.././水源PPP板图片下载器.html</id><summary type="html">&lt;p&gt;这个其实是三月份的时候做的, 当时刚刚学会用urllib和正则表达式做一些爬虫, 于是结合人民群众的需要, 写了个小脚本(福利~) &lt;/p&gt;
+&lt;p&gt;OK, 水文结束...&lt;/p&gt;</summary></entry><entry><title>水源PPP板图片下载器</title><link href="http://x-wei.github.io/%E6%B0%B4%E6%BA%90PPP%E6%9D%BF%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8.html" rel="alternate"></link><updated>2012-06-07T20:14:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/水源PPP板图片下载器.html</id><summary type="html">&lt;p&gt;这个其实是三月份的时候做的, 当时刚刚学会用urllib和正则表达式做一些爬虫, 于是结合人民群众的需要, 写了个小脚本(福利~) &lt;/p&gt;
 &lt;p&gt;不过现在我还只是会照葫芦画瓢那样用urllib, 没什么长进...&lt;/p&gt;
 &lt;p&gt;github地址: &lt;a href="https://github.com/X-Wei/yssy_ppp_pic_downloader"&gt;https://github.com/X-Wei/yssy_ppp_pic_downloader&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;1.&lt;/p&gt;
@@ -1899,7 +1972,7 @@ padding, paddingTop, ...&lt;/p&gt;
     os.system('rmdir yssy_ppp/*')&lt;/p&gt;
 &lt;p&gt;虽然终端里运行时最后会因为那个&lt;code&gt;rmdir&lt;/code&gt;命令出一堆警告, 但是既然功能实现了就懒得改了...&lt;/p&gt;
 &lt;p&gt;3.&lt;/p&gt;
-&lt;p&gt;还写(改写)过一个人人相册下载的脚本, 不过需要改进, 不知毕业前能不能搞定......&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="shell"></category></entry><entry><title>用pandoc自由转换markdown与html格式</title><link href=".././%E7%94%A8pandoc%E8%87%AA%E7%94%B1%E8%BD%AC%E6%8D%A2markdown%E4%B8%8Ehtml%E6%A0%BC%E5%BC%8F.html" rel="alternate"></link><updated>2012-06-07T00:00:00+02:00</updated><author><name>mx</name></author><id>.././用pandoc自由转换markdown与html格式.html</id><summary type="html">&lt;p&gt;markdown虽然写起来方便, 但是要预览的话还要用ReText打开, 而且ReText好像是Qt程序, 打开文件时不如别的编辑器那么流畅. 所以想找一个可以把markdown文件变成html格式的工具.&lt;/p&gt;
+&lt;p&gt;还写(改写)过一个人人相册下载的脚本, 不过需要改进, 不知毕业前能不能搞定......&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="shell"></category></entry><entry><title>用pandoc自由转换markdown与html格式</title><link href="http://x-wei.github.io/%E7%94%A8pandoc%E8%87%AA%E7%94%B1%E8%BD%AC%E6%8D%A2markdown%E4%B8%8Ehtml%E6%A0%BC%E5%BC%8F.html" rel="alternate"></link><updated>2012-06-07T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/用pandoc自由转换markdown与html格式.html</id><summary type="html">&lt;p&gt;markdown虽然写起来方便, 但是要预览的话还要用ReText打开, 而且ReText好像是Qt程序, 打开文件时不如别的编辑器那么流畅. 所以想找一个可以把markdown文件变成html格式的工具.&lt;/p&gt;
 &lt;p&gt;我甚至搜了很久"markdown2html"(github上居然可以搜到好几个项目...) 而没有注意到, 在终端输入"html2markdown"时显示的警告:&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;html2markdown&lt;/span&gt;
 &lt;span class="err"&gt;程序“&lt;/span&gt;&lt;span class="n"&gt;html2markdown&lt;/span&gt;&lt;span class="err"&gt;”尚未安装。&lt;/span&gt;  &lt;span class="err"&gt;您可以使用以下命令安装：&lt;/span&gt;
@@ -1961,7 +2034,7 @@ padding, paddingTop, ...&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$pandoc -f markdown -t html -o demo.html demo.md&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;或者直接:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$pandoc -f markdown -t html -o demo.html demo.md&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;我觉得这个实在是很有用的一条命令~&lt;/p&gt;</summary><category term="markdown"></category></entry><entry><title>交大beamer模板</title><link href=".././beamer_template.html" rel="alternate"></link><updated>2012-06-02T00:00:00+02:00</updated><author><name>mx</name></author><id>.././beamer_template.html</id><summary type="html">&lt;p&gt;毕设完了, 把答辩时用的beamer模板拿出来分享下.&lt;/p&gt;
+&lt;p&gt;我觉得这个实在是很有用的一条命令~&lt;/p&gt;</summary><category term="markdown"></category></entry><entry><title>交大beamer模板</title><link href="http://x-wei.github.io/beamer_template.html" rel="alternate"></link><updated>2012-06-02T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/beamer_template.html</id><summary type="html">&lt;p&gt;毕设完了, 把答辩时用的beamer模板拿出来分享下.&lt;/p&gt;
 &lt;p&gt;github项目地址:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/X-Wei/aBeamerTemplate4SJTU"&gt;https://github.com/X-Wei/aBeamerTemplate4SJTU&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;我是tex菜鸟, 基本是遇见什么问题然后上网搜一通找到解决方案... 这个模板自然也是参考的别人的了...&lt;/p&gt;
@@ -1982,7 +2055,7 @@ padding, paddingTop, ...&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;个人一点感觉: 用tex写ppt有时也会因为少些括号或者什么地方没注意老编译不过, 所以用tex写也不一定能比用powerpoint方便, 不论啥工具, 只要能&lt;strong&gt;get things done&lt;/strong&gt;,就是好工具~&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</summary><category term="tex"></category><category term="git"></category></entry><entry><title>关于用pelican写博客的三点tips</title><link href=".././%E5%85%B3%E4%BA%8E%E7%94%A8pelican%E5%86%99%E5%8D%9A%E5%AE%A2%E7%9A%84%E4%B8%89%E7%82%B9tips.html" rel="alternate"></link><updated>2012-05-27T00:00:00+02:00</updated><author><name>mx</name></author><id>.././关于用pelican写博客的三点tips.html</id><summary type="html">&lt;h1&gt;1.插入视频&lt;/h1&gt;
+&lt;/ol&gt;</summary><category term="tex"></category><category term="git"></category></entry><entry><title>关于用pelican写博客的三点tips</title><link href="http://x-wei.github.io/%E5%85%B3%E4%BA%8E%E7%94%A8pelican%E5%86%99%E5%8D%9A%E5%AE%A2%E7%9A%84%E4%B8%89%E7%82%B9tips.html" rel="alternate"></link><updated>2012-05-27T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/关于用pelican写博客的三点tips.html</id><summary type="html">&lt;h1&gt;1.插入视频&lt;/h1&gt;
 &lt;p&gt;效果就像校内网日志那样, 可以内嵌的视频.&lt;/p&gt;
 &lt;p&gt;其实很简单, 只需要把html代码放进markdown源文件就行了! 而视频的html代码在视频网站上一般都会提供:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./关于用pelican写博客的两点tips/pasted_image.png" /&gt;&lt;/p&gt;
@@ -2015,7 +2088,7 @@ or
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;网页就变成了现在的样子, 嗯, 现在就比较满意了...&lt;/p&gt;</summary><category term="pelican"></category><category term="markdown"></category></entry><entry><title>打乱文本的行</title><link href=".././%E6%89%93%E4%B9%B1%E6%96%87%E6%9C%AC%E7%9A%84%E8%A1%8C.html" rel="alternate"></link><updated>2012-05-01T00:00:00+02:00</updated><author><name>mx</name></author><id>.././打乱文本的行.html</id><summary type="html">&lt;p&gt;今天cbl问了我一个问题: 怎样打乱一个文本文件的所有行??&lt;/p&gt;
+&lt;p&gt;网页就变成了现在的样子, 嗯, 现在就比较满意了...&lt;/p&gt;</summary><category term="pelican"></category><category term="markdown"></category></entry><entry><title>打乱文本的行</title><link href="http://x-wei.github.io/%E6%89%93%E4%B9%B1%E6%96%87%E6%9C%AC%E7%9A%84%E8%A1%8C.html" rel="alternate"></link><updated>2012-05-01T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/打乱文本的行.html</id><summary type="html">&lt;p&gt;今天cbl问了我一个问题: 怎样打乱一个文本文件的所有行??&lt;/p&gt;
 &lt;p&gt;仔细一想, 确实有难度... 因为那个文本文件居然有1G, 用python读进内存再打乱的思路估计不行啊... 那么awk, shell什么的有没有解决方法? 搜到了一些帖子, 但是稍微复杂一点的shell脚本我也看不懂(弱爆了)...&lt;/p&gt;
 &lt;p&gt;我甚至想大概vim会提供这个功能吧, 没想到在搜的时候居然搜到了一个现成的shell命令: &lt;strong&gt;shuf&lt;/strong&gt;!!&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;shuf&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;
@@ -2047,7 +2120,7 @@ or
 &lt;code&gt;shuf [filename]&lt;/code&gt;
 另外, 加上-o参数, 可以指定输出到一个新文件(估计用shell的输出重定向方法也可以吧):
 &lt;code&gt;shuf [filename] -o [output_filename]&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;对了, 我搜到的网址是&lt;a href="http://os.51cto.com/art/201103/246525.htm"&gt;这里&lt;/a&gt;, 介绍了一些非主流的命令. 比如另一条命令: &lt;code&gt;tac&lt;/code&gt;(&lt;code&gt;cat&lt;/code&gt;的反转), 作用是先输出文件的末端, 也很有意思.&lt;/p&gt;</summary><category term="shell"></category></entry><entry><title>用pelican在github上创建自己的博客!</title><link href=".././pelican_github_blog.html" rel="alternate"></link><updated>2012-04-13T00:00:00+02:00</updated><author><name>mx</name></author><id>.././pelican_github_blog.html</id><summary type="html">&lt;p&gt;折腾了许久, 终于把&lt;a href="http://x-wei.github.com"&gt;我的博客&lt;/a&gt;搞得差不多了, 在此写一个总结, 以免自己以后忘了, 并且给和我一样菜的人提供一点参考....&lt;/p&gt;
+&lt;p&gt;对了, 我搜到的网址是&lt;a href="http://os.51cto.com/art/201103/246525.htm"&gt;这里&lt;/a&gt;, 介绍了一些非主流的命令. 比如另一条命令: &lt;code&gt;tac&lt;/code&gt;(&lt;code&gt;cat&lt;/code&gt;的反转), 作用是先输出文件的末端, 也很有意思.&lt;/p&gt;</summary><category term="shell"></category></entry><entry><title>用pelican在github上创建自己的博客!</title><link href="http://x-wei.github.io/pelican_github_blog.html" rel="alternate"></link><updated>2012-04-13T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/pelican_github_blog.html</id><summary type="html">&lt;p&gt;折腾了许久, 终于把&lt;a href="http://x-wei.github.com"&gt;我的博客&lt;/a&gt;搞得差不多了, 在此写一个总结, 以免自己以后忘了, 并且给和我一样菜的人提供一点参考....&lt;/p&gt;
 &lt;h2&gt;先扯点别的&lt;/h2&gt;
 &lt;p&gt;其实啊, 很早就想要建立自己的博客, 把值得分享的东西拿出来放到网上, 但是又不屑于使用网易, 百度等提供的现成服务, 技术又很菜... 于是一直拖着. zim的出现让我很欣喜--zim可以写类似于博客的东西(不过是给自己看的~), 记录有价值的内容. 但是怎么把我的一些总结放到网上?? 我先后考虑了这些东西:&lt;/p&gt;
 &lt;p&gt;googlesite--&amp;gt;wordpress--&amp;gt;jekyll+github--&amp;gt;pelican+github&lt;/p&gt;
@@ -2239,7 +2312,7 @@ or
 &lt;/ul&gt;
 &lt;p&gt;这个我没解决, 无所谓, 起一个英文文件名(.md文件以及Slug最好都用英文吧)好了, 毕竟博客标题(Title)是可以用中文的~&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OK, 就写这些吧... (累死了...)&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;(我发现几乎所有文章都是从zim里搬来的, so, 以后就不在文章最后标注"imported from zim"了...)&lt;/p&gt;</summary><category term="pelican"></category><category term="git"></category></entry><entry><title>tex插入程序代码--so easy~</title><link href=".././tex_insert_code.html" rel="alternate"></link><updated>2012-03-03T00:00:00+01:00</updated><author><name>mx</name></author><id>.././tex_insert_code.html</id><summary type="html">&lt;p&gt;这个问题... 我本来想用python解决的...&lt;/p&gt;
+&lt;p&gt;(我发现几乎所有文章都是从zim里搬来的, so, 以后就不在文章最后标注"imported from zim"了...)&lt;/p&gt;</summary><category term="pelican"></category><category term="git"></category></entry><entry><title>tex插入程序代码--so easy~</title><link href="http://x-wei.github.io/tex_insert_code.html" rel="alternate"></link><updated>2012-03-03T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/tex_insert_code.html</id><summary type="html">&lt;p&gt;这个问题... 我本来想用python解决的...&lt;/p&gt;
 &lt;p&gt;但是显然应该先搜一下吧... 果然, 早就有人解决了(其实是tex的常用命令里就有的), 比如&lt;a href="http://hi.baidu.com/xuelicheng/blog/item/194c844a22d2452a09f7ef8a.html"&gt;这里&lt;/a&gt;...&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="n"&gt;usepackage&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;listings&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="err"&gt;\&lt;/span&gt;&lt;span class="n"&gt;lstset&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;language&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="err"&gt;这条命令可以让&lt;/span&gt;&lt;span class="n"&gt;LaTeX&lt;/span&gt;&lt;span class="err"&gt;排版时将&lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="err"&gt;键字突出显示&lt;/span&gt;
@@ -2279,7 +2352,7 @@ extendedchars=true
 
 &lt;p&gt;附件: 我做的一个简单实例
 &lt;a href="./tex_insert_code/insertcode2.tex"&gt;./insertcode2.tex&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tex"></category></entry><entry><title>xelatex--linux下tex中文的完全解决!</title><link href=".././xelatex_zh.html" rel="alternate"></link><updated>2012-02-27T00:00:00+01:00</updated><author><name>mx</name></author><id>.././xelatex_zh.html</id><summary type="html">&lt;p&gt;前几天校内上看见了这个&lt;a href="http://page.renren.com/601024697/note/806581340?ref=share"&gt;latex中文指南&lt;/a&gt;, 想试一试...&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tex"></category></entry><entry><title>xelatex--linux下tex中文的完全解决!</title><link href="http://x-wei.github.io/xelatex_zh.html" rel="alternate"></link><updated>2012-02-27T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/xelatex_zh.html</id><summary type="html">&lt;p&gt;前几天校内上看见了这个&lt;a href="http://page.renren.com/601024697/note/806581340?ref=share"&gt;latex中文指南&lt;/a&gt;, 想试一试...&lt;/p&gt;
 &lt;p&gt;可是貌似不给力(or我没做对)安装了texlive之后还是不能编译它的测试源文件...&lt;/p&gt;
 &lt;p&gt;搜索发现了&lt;a href="http://blog.sina.com.cn/s/blog_4c20fe7b0100vjbj.html"&gt;这样一篇&lt;/a&gt;非常强大的文章... 这货直接把他的源文件放上去了... 不过这样的话他的文章可读性就不好了...&lt;/p&gt;
 &lt;p&gt;要进行的操作:&lt;/p&gt;
@@ -2298,7 +2371,7 @@ extendedchars=true
 &lt;p&gt;最后把源文件生成好的pdf也放进来吧...
 &lt;a href="./xelatex_zh/xelatex_test.tex"&gt;./xelatex_test.tex&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="./xelatex_zh/xelatex%20%E5%8F%8A%E4%B8%AD%E6%96%87%20Gummi%20%E5%9C%A8%20ubuntu%20%E4%B8%8A%E7%9A%84%E9%85%8D%E7%BD%AE.pdf"&gt;./xelatex 及中文 Gummi 在 ubuntu 上的配置.pdf&lt;/a&gt; &lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt; &lt;/p&gt;</summary><category term="tex"></category><category term="中文乱码"></category></entry><entry><title>用du命令查看各目录大小</title><link href=".././use_du_shell.html" rel="alternate"></link><updated>2012-02-14T00:00:00+01:00</updated><author><name>mx</name></author><id>.././use_du_shell.html</id><summary type="html">&lt;p&gt;du用来计算目录的磁盘用量. 具体的参数可以用man或者--help, 这里不贴了(其实我也没仔细看...). 今天看见水源上有人说 用 -sh这个参数比较好:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt; &lt;/p&gt;</summary><category term="tex"></category><category term="中文乱码"></category></entry><entry><title>用du命令查看各目录大小</title><link href="http://x-wei.github.io/use_du_shell.html" rel="alternate"></link><updated>2012-02-14T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/use_du_shell.html</id><summary type="html">&lt;p&gt;du用来计算目录的磁盘用量. 具体的参数可以用man或者--help, 这里不贴了(其实我也没仔细看...). 今天看见水源上有人说 用 -sh这个参数比较好:&lt;/p&gt;
 &lt;p&gt;-s: 只计算各个目录的总用量(就是说不要递归操作) 后面跟着&lt;em&gt;或者.&lt;/em&gt;就可以查看各个目录的大小了.
 -h: 易于查看的方式&lt;/p&gt;
 &lt;p&gt;比如~/目录经常不知道为什么空间在减少, 那就运行:&lt;/p&gt;
