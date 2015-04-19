@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>putty使用备忘</title>
+    <title>Scrapy 上手笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -99,13 +99,13 @@
 					</a>
                   </li>
               
-                  <li class="active">
+                  <li >
                     <a href="./category/soft.html">
 						<i class="icon-folder-open icon-large"></i>soft
 					</a>
                   </li>
               
-                  <li >
+                  <li class="active">
                     <a href="./category/tech.html">
 						<i class="icon-folder-open icon-large"></i>tech
 					</a>
@@ -133,8 +133,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to putty使用备忘">
-					putty使用备忘 
+					title="Permalink to Scrapy 上手笔记">
+					Scrapy 上手笔记 
 				</a>
 				 
 			</h1> 
@@ -143,46 +143,173 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2014-07-28T00:00:00">
-	<i class="icon-calendar"></i>一 28 七月 2014
+<abbr class="published" title="2015-04-19T00:00:00">
+	<i class="icon-calendar"></i>日 19 四月 2015
 </abbr>
 
 <span class="label">By</span>
 <a href="./"><i class="icon-user"></i>mx</a>
 
 <span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>soft</a>. 
+<a href="./"><i class="icon-folder-open"></i>tech</a>. 
 
 
 	
 
 <span class="label">Tags</span> 
 
-	<a href="./tag/ssh.html"><i class="icon-tag"></i>ssh</a>
+	<a href="./tag/python.html"><i class="icon-tag"></i>python</a>
+
+	<a href="./tag/scrapy.html"><i class="icon-tag"></i>scrapy</a>
 
 
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>最近要用SSH连接服务器, Windows下面当然就是用putty了, 遇到的问题总结一下. </p>
-<h2>保存session</h2>
-<p>打开putty.exe以后, 输入服务器ip, 之后先别点击登录, 先保存一下session下一次就不用再输入了: </p>
-<p><img alt="" src="static/putty使用备忘/pasted_image.png" /></p>
-<p>之后点击登录就好了. </p>
-<h2>本地和服务器之间传输文件</h2>
-<p>传输的时候貌似不能用linux里的scp命令, 而需要使用另一个putty的工具: <code>psftp</code></p>
-<p>下载的时候那个putty.zip压缩包里有一个<code>psftp.exe</code>, 点击它就打开了. psftp也是一个命令行的工具, 和ssh类似, 用<code>pwd/ls/cd</code>等在<strong>服务器的</strong>文件系统里进行移动. </p>
-<p>而在<strong>本地的</strong>文件系统里移动的话, 用<code>lpwd/lcd/lls.</code></p>
-<p>移动到了想要传输文件的目录以后(本地和服务器都移动好了以后), 使用<code>put filename</code>上传本地文件到服务器, 使用 <code>get filename</code> 下载服务器文件到本地. </p>
-<p><a href="http://www.lellansin.com/putty%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6.html">http://www.lellansin.com/putty%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6.html</a></p>
-<p>然后这个put和get的命令在文件传输比较慢的时候也没有什么进度提示, 不过可以再开一个putty登录进服务器, 然后用 <code>ls -lh</code> 看看已经传输了多少了...</p>
+		<p>Scrapy是用来爬取数据的很流行的包, 这里小记一下. 以前几天做的<a href="https://github.com/X-Wei/OneArticleCrawler">一个爬虫</a>为例子, 这个爬虫把韩寒一个app的前九百多期的文章抓了下来. </p>
+<h2>I. installation</h2>
+<p>scrapy的安装参考: <a href="http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html">http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html</a></p>
+<p>(直接pip安装的好像缺少什么包)</p>
+<h2>II. prerequisite</h2>
+<h3>XPath</h3>
+<p>需要学习scrapy首先需要会XPath, 这是一种方便与在html/xml文档里查找所需元素的语句. 这个还是很好学的, 其实只需要花一刻钟时间看看w3school的<a href="http://www.w3school.com.cn/xpath/">教程</a>, 就可以掌握够用的知识进行下一步了. </p>
+<p>这里总结一下我觉得会用到的语句(不全, 不过经常用到): </p>
+<ul>
+<li><code>//book</code>    选取所有名字叫做book的元素</li>
+<li><code>bookstore/book</code> 选取bookstore的子元素中所有叫book的元素</li>
+<li><code>//title[@lang='eng']</code> 选取lang属性为"eng"的所有title元素</li>
+<li><code>//titile/text()</code> 选取title元素的文字内容</li>
+<li><code>descendant-or-self::text()</code>: 选取自己或者所有后代节点的文字内容</li>
+</ul>
+<p>另外还有个在线测试XPath语句的网站, 可以用这个测试XPath语句: </p>
+<p><a href="http://xpath.online-toolz.com/tools/xpath-editor.php">http://xpath.online-toolz.com/tools/xpath-editor.php</a></p>
+<h3>审查元素</h3>
+<p>再一个就是要用chrome的"审查元素"功能, 用这个功能可以看到想查找的网页内容对应在html文件的位置, 甚至可以直接右键复制想要的元素的XPath......(不过有时候并不是最合理的, 所以刚才XPath也不是白学...)</p>
+<h2>III. scrapy shell</h2>
+<p>网上的教程一般是从一个<a href="http://doc.scrapy.org/en/latest/intro/tutorial.html">tutorial</a>开始的, 介绍了一个小项目, 但是我觉得从scrapy shell开始应该更合理, 有时候甚至没必要建立一个工程, 在这个shell里就可以抓到想要的数据. </p>
+<p>启动的办法很简单: </p>
+<div class="codehilite"><pre><span class="err">$</span><span class="n">scrapy</span> <span class="n">shell</span> <span class="err">&#39;</span><span class="n">url</span><span class="err">&#39;</span>
+</pre></div>
+
+
+<p>其中<code>url</code>就写想要爬取的一个网址. </p>
+<p>这个shell简单说来, 就是一个测试爬虫的交互环境, 除了<em>多了一些特殊变量和函数</em>, 就是一个普通的(i)python shell. </p>
+<p>先说两个scrapy shell多出来的变量: </p>
+<ul>
+<li><code>response</code>: 把启动的<code>url</code>抓取后得到的<code>Response</code>对象, 比如 <code>response.body</code>就包含了抓取来的html内容</li>
+<li><code>sel</code>: 用刚刚抓取的内容建立的一个<code>Selector</code>对象, 简单理解, Selector对象可以让我们执行XPath语句提取想要的内容</li>
+</ul>
+<p>经常的用法就是用<code>response</code>对象查看爬取的情况(<code>response.status</code>), 用<code>sel</code>对象测试XPath的正确:
+<code>sel.xpath("xpath_statement").extract()</code> 会在获取的response.body里用xpath查找并提取内容. </p>
+<p>再说两个scrapy shell添加的函数:</p>
+<ul>
+<li><code>fetch(request_or_url)</code>: 修改请求或者网址, 这样scrapy shell会从新用这个request/url抓取数据, 相应的sel和response等对象也会自动更新. </li>
+<li><code>view(response)</code>: 在浏览器里查看刚刚抓取的内容.</li>
+</ul>
+<p>这里举个例子, 抓取一个的文章标题: </p>
+<div class="codehilite"><pre>    <span class="err">$</span> <span class="nx">scrapy</span> <span class="nx">shell</span> <span class="s1">&#39;http://wufazhuce.com/one/vol.921#articulo&#39;</span>
+    <span class="nx">......</span>
+    <span class="k">In</span> <span class="err">[</span><span class="mi">1</span><span class="cp">]</span>: response.status
+    Out<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>: 200
+    In <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>: sel.xpath(&#39;//*<span class="cp">[</span><span class="p">@</span><span class="n">id</span><span class="o">=</span><span class="s2">&quot;tab-articulo&quot;</span><span class="cp">]</span>/div/h2/text()&#39;).extract()
+    <span class="nt">&lt;string&gt;</span>:1: ScrapyDeprecationWarning: &quot;sel&quot; shortcut is deprecated. Use &quot;response.xpath()&quot;, &quot;response.css()&quot; or &quot;response.selector&quot; instead
+    Out<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>: <span class="cp">[</span><span class="nx">u</span><span class="s1">&#39;</span><span class="se">\n\t\t\t\t\t\t\u78b0\u4e0d\u5f97\u7684\u4eba\t\t\t</span><span class="s1">  </span><span class="se">\t\t</span><span class="s1">&#39;</span><span class="cp">]</span>
+    In <span class="cp">[</span><span class="mi">3</span><span class="cp">]</span>: print sel.xpath(&#39;//*<span class="cp">[</span><span class="p">@</span><span class="n">id</span><span class="o">=</span><span class="s2">&quot;tab-articulo&quot;</span><span class="cp">]</span>/div/h2/text()&#39;).extract()<span class="cp">[</span><span class="mi">0</span><span class="cp">]</span>
+
+                            碰不得的人
+</pre></div>
+
+
+<p>scrapy shell的完整文档在: 
+<a href="http://doc.scrapy.org/en/latest/topics/shell.html">http://doc.scrapy.org/en/latest/topics/shell.html</a></p>
+<h2>IV. scrapy project</h2>
+<p>接下来说建立scrapy工程, 这个按照tutorial走就好了. 
+建立工程: 
+<code>scrapy startproject my_proj</code></p>
+<p>会新建一个my_proj文件夹, 里面的结构是: </p>
+<div class="codehilite"><pre><span class="err">$</span> <span class="n">tree</span> 
+<span class="p">.</span>
+<span class="err">└──</span> <span class="n">my_proj</span>
+    <span class="err">├──</span> <span class="n">scrapy</span><span class="p">.</span><span class="n">cfg</span>
+    <span class="err">└──</span> <span class="n">my_proj</span>
+        <span class="err">├──</span> <span class="n">__init__</span><span class="p">.</span><span class="n">py</span>
+        <span class="err">├──</span> <span class="n">items</span><span class="p">.</span><span class="n">py</span>
+        <span class="err">├──</span> <span class="n">pipelines</span><span class="p">.</span><span class="n">py</span>
+        <span class="err">├──</span> <span class="n">settings</span><span class="p">.</span><span class="n">py</span>
+        <span class="err">└──</span> <span class="n">spiders</span>
+            <span class="err">└──</span> <span class="n">__init__</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<p>要修改的文件主要有两个: </p>
+<ul>
+<li><code>items.py</code> 定义要抓取的数据</li>
+<li><code>spiders/xxx.py</code> 定义自己的爬虫</li>
+</ul>
+<h3>1. 自定义爬虫</h3>
+<p>先定义爬虫, 在spiders文件夹里面, 新建一个python文件, 这里定义一个<code>scrapy.spider.Spider</code>的子类: </p>
+<div class="codehilite"><pre><span class="k">class</span> <span class="nc">OneSpider</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">spider</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;one_spider&quot;</span>
+    <span class="n">start_urls</span> <span class="o">=</span> <span class="p">[</span> <span class="s">&quot;http://wufazhuce.com/one/vol.</span><span class="si">%d</span><span class="s">#articulo&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">924</span><span class="p">)</span> <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">title_path</span> <span class="o">=</span> <span class="s">&#39;//*[@id=&quot;tab-articulo&quot;]/div/h2/text()&#39;</span> 
+        <span class="n">title</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">title_path</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">print</span> <span class="n">title</span>
+</pre></div>
+
+
+<p>这里, Spider子类一定需要定义三个东西: </p>
+<ol>
+<li><code>name</code>：　 是爬虫的名字, 一会爬取的时候需要</li>
+<li><code>start_urls</code>:　启动时进行爬取的url列表</li>
+<li><code>parse()</code> 方法</li>
+</ol>
+<p>爬虫启动的时候会把每一个start_urls里的网址下载, 生成的<code>Response</code>对象会传入这个<code>parse()</code>方法, 这个方法负责解析返回的<code>Response</code>对象, 提取数据(生成item)以及生成需要进一步处理的URL的 Request 对象等...</p>
+<h3>2. 保存抓取的信息到item</h3>
+<p>刚才只是做到了抓取需要的信息, 还没有能够保存到文件里, 下面要将抓取的信息做成一个<code>Item</code>保存.
+<strong>首先定义要保存的信息:</strong> 
+修改items.py文件, 里面定义一个<code>scrapy.Item</code>的子类:</p>
+<div class="codehilite"><pre><span class="k">class</span> <span class="nc">OnearticleItem</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Item</span><span class="p">):</span>
+    <span class="c"># define the fields for your item here like:</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Field</span><span class="p">()</span>
+</pre></div>
+
+
+<p>这个文件很简单, 只是说明一下要抓取的信息, 他们都是<code>scrapy.Field()</code>, 这个东西类似一个字典.</p>
+<p><strong>然后在爬虫里保存item:</strong>
+为了保存抓取的内容, 在parse()方法里, 得到需要的数据以后, 新建一个<code>OnearticleItem</code>, 把抓到的内容放进这个item里, 然后返回这个item即可. </p>
+<div class="codehilite"><pre><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;\d+&#39;</span><span class="p">,</span><span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">title_path</span> <span class="o">=</span> <span class="s">&#39;//*[@id=&quot;tab-articulo&quot;]/div/h2/text()&#39;</span> 
+    <span class="n">author_path</span> <span class="o">=</span> <span class="s">&#39;//*[@id=&quot;tab-articulo&quot;]/div/p/text()&#39;</span> 
+    <span class="n">content_path</span> <span class="o">=</span> <span class="s">&#39;//div[@class=&quot;articulo-contenido&quot;]/descendant-or-self::text()&#39;</span> 
+    <span class="n">title</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">title_path</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">author_path</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>  <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="n">content_path</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>   <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">nb</span><span class="p">,</span><span class="n">title</span><span class="p">,</span><span class="n">author</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">OnearticleItem</span><span class="p">()</span>
+    <span class="n">item</span><span class="p">[</span><span class="s">&#39;vol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb</span>
+    <span class="n">item</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+    <span class="n">item</span><span class="p">[</span><span class="s">&#39;author&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">author</span>
+    <span class="n">item</span><span class="p">[</span><span class="s">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content</span>
+    <span class="k">return</span> <span class="n">item</span>
+</pre></div>
+
+
+<h3>3. 运行爬虫</h3>
+<p>以上的文件修改好了以后, 只需<em>在命令行里</em>启动爬虫即可, 这时候就用到了刚才定义的spider的<code>name</code>属性:</p>
+<p><code>$scrapy crawl one_spider -o one.csv</code></p>
+<p>大约几分钟功夫, 九百多篇文章就放到了one.csv文件里~</p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "putty使用备忘.html";
+			   var disqus_identifier = "Scrapy 上手笔记.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;

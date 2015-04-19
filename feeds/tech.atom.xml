@@ -1,5 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-02-02T00:00:00+01:00</updated><entry><title>运筹的力量: 用线性规划解决Google 2014 HashCode问题</title><link href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html" rel="alternate"></link><updated>2015-02-02T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/运筹的力量: 用线性规划解决Google 2014 HashCode问题.html</id><summary type="html">&lt;p&gt;INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tech.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-04-19T00:00:00+02:00</updated><entry><title>Scrapy 上手笔记</title><link href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2015-04-19T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Scrapy 上手笔记.html</id><summary type="html">&lt;p&gt;Scrapy是用来爬取数据的很流行的包, 这里小记一下. 以前几天做的&lt;a href="https://github.com/X-Wei/OneArticleCrawler"&gt;一个爬虫&lt;/a&gt;为例子, 这个爬虫把韩寒一个app的前九百多期的文章抓了下来. &lt;/p&gt;
+&lt;h2&gt;I. installation&lt;/h2&gt;
+&lt;p&gt;scrapy的安装参考: &lt;a href="http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html"&gt;http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;(直接pip安装的好像缺少什么包)&lt;/p&gt;
+&lt;h2&gt;II. prerequisite&lt;/h2&gt;
+&lt;h3&gt;XPath&lt;/h3&gt;
+&lt;p&gt;需要学习scrapy首先需要会XPath, 这是一种方便与在html/xml文档里查找所需元素的语句. 这个还是很好学的, 其实只需要花一刻钟时间看看w3school的&lt;a href="http://www.w3school.com.cn/xpath/"&gt;教程&lt;/a&gt;, 就可以掌握够用的知识进行下一步了. &lt;/p&gt;
+&lt;p&gt;这里总结一下我觉得会用到的语句(不全, 不过经常用到): &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;//book&lt;/code&gt;    选取所有名字叫做book的元素&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bookstore/book&lt;/code&gt; 选取bookstore的子元素中所有叫book的元素&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;//title[@lang='eng']&lt;/code&gt; 选取lang属性为"eng"的所有title元素&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;//titile/text()&lt;/code&gt; 选取title元素的文字内容&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;descendant-or-self::text()&lt;/code&gt;: 选取自己或者所有后代节点的文字内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外还有个在线测试XPath语句的网站, 可以用这个测试XPath语句: &lt;/p&gt;
+&lt;p&gt;&lt;a href="http://xpath.online-toolz.com/tools/xpath-editor.php"&gt;http://xpath.online-toolz.com/tools/xpath-editor.php&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;审查元素&lt;/h3&gt;
+&lt;p&gt;再一个就是要用chrome的"审查元素"功能, 用这个功能可以看到想查找的网页内容对应在html文件的位置, 甚至可以直接右键复制想要的元素的XPath......(不过有时候并不是最合理的, 所以刚才XPath也不是白学...)&lt;/p&gt;
+&lt;h2&gt;III. scrapy shell&lt;/h2&gt;
+&lt;p&gt;网上的教程一般是从一个&lt;a href="http://doc.scrapy.org/en/latest/intro/tutorial.html"&gt;tutorial&lt;/a&gt;开始的, 介绍了一个小项目, 但是我觉得从scrapy shell开始应该更合理, 有时候甚至没必要建立一个工程, 在这个shell里就可以抓到想要的数据. &lt;/p&gt;
+&lt;p&gt;启动的办法很简单: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;scrapy&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt; &lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;其中&lt;code&gt;url&lt;/code&gt;就写想要爬取的一个网址. &lt;/p&gt;
+&lt;p&gt;这个shell简单说来, 就是一个测试爬虫的交互环境, 除了&lt;em&gt;多了一些特殊变量和函数&lt;/em&gt;, 就是一个普通的(i)python shell. &lt;/p&gt;
+&lt;p&gt;先说两个scrapy shell多出来的变量: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;response&lt;/code&gt;: 把启动的&lt;code&gt;url&lt;/code&gt;抓取后得到的&lt;code&gt;Response&lt;/code&gt;对象, 比如 &lt;code&gt;response.body&lt;/code&gt;就包含了抓取来的html内容&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sel&lt;/code&gt;: 用刚刚抓取的内容建立的一个&lt;code&gt;Selector&lt;/code&gt;对象, 简单理解, Selector对象可以让我们执行XPath语句提取想要的内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;经常的用法就是用&lt;code&gt;response&lt;/code&gt;对象查看爬取的情况(&lt;code&gt;response.status&lt;/code&gt;), 用&lt;code&gt;sel&lt;/code&gt;对象测试XPath的正确:
+&lt;code&gt;sel.xpath("xpath_statement").extract()&lt;/code&gt; 会在获取的response.body里用xpath查找并提取内容. &lt;/p&gt;
+&lt;p&gt;再说两个scrapy shell添加的函数:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fetch(request_or_url)&lt;/code&gt;: 修改请求或者网址, 这样scrapy shell会从新用这个request/url抓取数据, 相应的sel和response等对象也会自动更新. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;view(response)&lt;/code&gt;: 在浏览器里查看刚刚抓取的内容.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里举个例子, 抓取一个的文章标题: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="nx"&gt;scrapy&lt;/span&gt; &lt;span class="nx"&gt;shell&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;http://wufazhuce.com/one/vol.921#articulo&amp;#39;&lt;/span&gt;
+    &lt;span class="nx"&gt;......&lt;/span&gt;
+    &lt;span class="k"&gt;In&lt;/span&gt; &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;: response.status
+    Out&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;: 200
+    In &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;: sel.xpath(&amp;#39;//*&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tab-articulo&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;/div/h2/text()&amp;#39;).extract()
+    &lt;span class="nt"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;:1: ScrapyDeprecationWarning: &amp;quot;sel&amp;quot; shortcut is deprecated. Use &amp;quot;response.xpath()&amp;quot;, &amp;quot;response.css()&amp;quot; or &amp;quot;response.selector&amp;quot; instead
+    Out&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;: &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n\t\t\t\t\t\t\u78b0\u4e0d\u5f97\u7684\u4eba\t\t\t&lt;/span&gt;&lt;span class="s1"&gt;  &lt;/span&gt;&lt;span class="se"&gt;\t\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+    In &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;: print sel.xpath(&amp;#39;//*&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tab-articulo&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;/div/h2/text()&amp;#39;).extract()&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+
+                            碰不得的人
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;scrapy shell的完整文档在: 
+&lt;a href="http://doc.scrapy.org/en/latest/topics/shell.html"&gt;http://doc.scrapy.org/en/latest/topics/shell.html&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;IV. scrapy project&lt;/h2&gt;
+&lt;p&gt;接下来说建立scrapy工程, 这个按照tutorial走就好了. 
+建立工程: 
+&lt;code&gt;scrapy startproject my_proj&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;会新建一个my_proj文件夹, 里面的结构是: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;tree&lt;/span&gt; 
+&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;my_proj&lt;/span&gt;
+    &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg&lt;/span&gt;
+    &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;my_proj&lt;/span&gt;
+        &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+        &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+        &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;pipelines&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+        &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+        &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;spiders&lt;/span&gt;
+            &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;要修改的文件主要有两个: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;items.py&lt;/code&gt; 定义要抓取的数据&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;spiders/xxx.py&lt;/code&gt; 定义自己的爬虫&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;1. 自定义爬虫&lt;/h3&gt;
+&lt;p&gt;先定义爬虫, 在spiders文件夹里面, 新建一个python文件, 这里定义一个&lt;code&gt;scrapy.spider.Spider&lt;/code&gt;的子类: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;OneSpider&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spider&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Spider&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;one_spider&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;start_urls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://wufazhuce.com/one/vol.&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s"&gt;#articulo&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;924&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;title_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;//*[@id=&amp;quot;tab-articulo&amp;quot;]/div/h2/text()&amp;#39;&lt;/span&gt; 
+        &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这里, Spider子类一定需要定义三个东西: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;name&lt;/code&gt;：　 是爬虫的名字, 一会爬取的时候需要&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;start_urls&lt;/code&gt;:　启动时进行爬取的url列表&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;parse()&lt;/code&gt; 方法&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;爬虫启动的时候会把每一个start_urls里的网址下载, 生成的&lt;code&gt;Response&lt;/code&gt;对象会传入这个&lt;code&gt;parse()&lt;/code&gt;方法, 这个方法负责解析返回的&lt;code&gt;Response&lt;/code&gt;对象, 提取数据(生成item)以及生成需要进一步处理的URL的 Request 对象等...&lt;/p&gt;
+&lt;h3&gt;2. 保存抓取的信息到item&lt;/h3&gt;
+&lt;p&gt;刚才只是做到了抓取需要的信息, 还没有能够保存到文件里, 下面要将抓取的信息做成一个&lt;code&gt;Item&lt;/code&gt;保存.
+&lt;strong&gt;首先定义要保存的信息:&lt;/strong&gt; 
+修改items.py文件, 里面定义一个&lt;code&gt;scrapy.Item&lt;/code&gt;的子类:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;OnearticleItem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c"&gt;# define the fields for your item here like:&lt;/span&gt;
+    &lt;span class="n"&gt;vol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Field&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Field&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Field&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Field&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这个文件很简单, 只是说明一下要抓取的信息, 他们都是&lt;code&gt;scrapy.Field()&lt;/code&gt;, 这个东西类似一个字典.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;然后在爬虫里保存item:&lt;/strong&gt;
+为了保存抓取的内容, 在parse()方法里, 得到需要的数据以后, 新建一个&lt;code&gt;OnearticleItem&lt;/code&gt;, 把抓到的内容放进这个item里, 然后返回这个item即可. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;\d+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;title_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;//*[@id=&amp;quot;tab-articulo&amp;quot;]/div/h2/text()&amp;#39;&lt;/span&gt; 
+    &lt;span class="n"&gt;author_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;//*[@id=&amp;quot;tab-articulo&amp;quot;]/div/p/text()&amp;#39;&lt;/span&gt; 
+    &lt;span class="n"&gt;content_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;//div[@class=&amp;quot;articulo-contenido&amp;quot;]/descendant-or-self::text()&amp;#39;&lt;/span&gt; 
+    &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;author_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;  &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xpath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;content_path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extract&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;   &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;author&lt;/span&gt;
+    &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;OnearticleItem&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;vol&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;
+    &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt;
+    &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;author&lt;/span&gt;
+    &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;content&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;3. 运行爬虫&lt;/h3&gt;
+&lt;p&gt;以上的文件修改好了以后, 只需&lt;em&gt;在命令行里&lt;/em&gt;启动爬虫即可, 这时候就用到了刚才定义的spider的&lt;code&gt;name&lt;/code&gt;属性:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$scrapy crawl one_spider -o one.csv&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;大约几分钟功夫, 九百多篇文章就放到了one.csv文件里~&lt;/p&gt;</summary><category term="python"></category><category term="scrapy"></category></entry><entry><title>运筹的力量: 用线性规划解决Google 2014 HashCode问题</title><link href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html" rel="alternate"></link><updated>2015-02-02T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/运筹的力量: 用线性规划解决Google 2014 HashCode问题.html</id><summary type="html">&lt;p&gt;INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. &lt;/p&gt;
 &lt;p&gt;这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记.&lt;/p&gt;
 &lt;h1&gt;问题描述&lt;/h1&gt;
 &lt;p&gt;谷歌那次比赛的题目在这里(我们做的是Main Round的题目): &lt;a href="https://sites.google.com/site/hashcode2014/tasks"&gt;https://sites.google.com/site/hashcode2014/tasks&lt;/a&gt;&lt;/p&gt;
