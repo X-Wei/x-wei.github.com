@@ -99,9 +99,9 @@
 &lt;/ol&gt;
 &lt;p&gt;爬虫启动的时候会把每一个start_urls里的网址下载, 生成的&lt;code&gt;Response&lt;/code&gt;对象会传入这个&lt;code&gt;parse()&lt;/code&gt;方法, 这个方法负责解析返回的&lt;code&gt;Response&lt;/code&gt;对象, 提取数据(生成item)以及生成需要进一步处理的URL的 Request 对象等...&lt;/p&gt;
 &lt;h3&gt;2. 保存抓取的信息到item&lt;/h3&gt;
-&lt;p&gt;刚才只是做到了抓取需要的信息, 还没有能够保存到文件里, 下面要将抓取的信息做成一个&lt;code&gt;Item&lt;/code&gt;保存.
-&lt;strong&gt;首先定义要保存的信息:&lt;/strong&gt; 
-修改items.py文件, 里面定义一个&lt;code&gt;scrapy.Item&lt;/code&gt;的子类:&lt;/p&gt;
+&lt;p&gt;刚才只是做到了抓取需要的信息, 还没有能够保存到文件里, 下面要将抓取的信息做成一个&lt;code&gt;Item&lt;/code&gt;保存.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;首先定义要保存的信息:&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;修改items.py文件, 里面定义一个&lt;code&gt;scrapy.Item&lt;/code&gt;的子类:&lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;OnearticleItem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="c"&gt;# define the fields for your item here like:&lt;/span&gt;
     &lt;span class="n"&gt;vol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;scrapy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Field&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -112,8 +112,8 @@
 
 
 &lt;p&gt;这个文件很简单, 只是说明一下要抓取的信息, 他们都是&lt;code&gt;scrapy.Field()&lt;/code&gt;, 这个东西类似一个字典.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;然后在爬虫里保存item:&lt;/strong&gt;
-为了保存抓取的内容, 在parse()方法里, 得到需要的数据以后, 新建一个&lt;code&gt;OnearticleItem&lt;/code&gt;, 把抓到的内容放进这个item里, 然后返回这个item即可. &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;然后在爬虫里保存item:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;为了保存抓取的内容, 在parse()方法里, 得到需要的数据以后, 新建一个&lt;code&gt;OnearticleItem&lt;/code&gt;, 把抓到的内容放进这个item里, 然后返回这个item即可. &lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;findall&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;\d+&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;title_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;//*[@id=&amp;quot;tab-articulo&amp;quot;]/div/h2/text()&amp;#39;&lt;/span&gt; 

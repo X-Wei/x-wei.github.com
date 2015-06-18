@@ -125,7 +125,9 @@ class OneSpider(scrapy.spider.Spider):
 
 ### 2. 保存抓取的信息到item
 刚才只是做到了抓取需要的信息, 还没有能够保存到文件里, 下面要将抓取的信息做成一个``Item``保存.
+
 **首先定义要保存的信息:** 
+
 修改items.py文件, 里面定义一个``scrapy.Item``的子类:
 ``` python
 class OnearticleItem(scrapy.Item):
@@ -139,6 +141,7 @@ class OnearticleItem(scrapy.Item):
 这个文件很简单, 只是说明一下要抓取的信息, 他们都是``scrapy.Field()``, 这个东西类似一个字典.
 
 **然后在爬虫里保存item:**
+
 为了保存抓取的内容, 在parse()方法里, 得到需要的数据以后, 新建一个``OnearticleItem``, 把抓到的内容放进这个item里, 然后返回这个item即可. 
 ``` python
 def parse(self, response):
