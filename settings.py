@@ -53,18 +53,8 @@ if (time >= 0) ;
 document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
 </Script>
 
-<br>
-<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
 
-<br>
-<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
 
-<br>
-<li class="widget-container widget_text">
-<h3 class="widget-title">About me</h3>
-<div class="textwidget">
-上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
-</div></li>
 
 <br>
 <li class="widget-container widget_text">
@@ -81,6 +71,20 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 
 <br>
 <li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
 <h3 class="widget-title">Who are Visiting</h3>
 <div class="textwidget">
 <script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
@@ -90,6 +94,8 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 <a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
 <img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
 </a><br/>
+
+
 
 """
 
