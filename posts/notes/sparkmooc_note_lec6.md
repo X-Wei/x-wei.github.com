@@ -1,5 +1,5 @@
 Title: [Spark MOOC note] Lec6. Structured Data
-Date: 2015-06-17
+Date: 2015-06-18
 Slug: sparkmooc_note_lec6
 Tags: spark
 

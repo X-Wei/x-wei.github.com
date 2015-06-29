@@ -1,4 +1,4 @@
-Title: [Spark MOOC note] Lec8. Exploratory Data Anakysis and Machine Learning
+Title: [Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning
 Date: 2015-06-23
 Slug: sparkmooc_note_lec8
 Tags: spark
