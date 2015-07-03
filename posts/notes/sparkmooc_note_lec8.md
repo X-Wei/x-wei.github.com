@@ -17,7 +17,7 @@ ex. *t-testing — inferences beyond the data*
 techniques leveraged for machine learning and prediction
 
 supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
- → UL often used in a larger SL pb (ex. *auto-encoder*)
+ → UL often used in a larger SL pb (ex. *auto-encoder*)  
 ![](sparkmooc_note_lec8/pasted_image.png)
 
 EXPLORATORY DATA ANALYSIS
@@ -35,7 +35,7 @@ The five-number summary is a descriptive statistic that provides information abo
 
 ![](sparkmooc_note_lec8/pasted_image001.png)
 
-→ box plot: 
+→ box plot:   
 ![](sparkmooc_note_lec8/pasted_image004.png)
 
 
@@ -63,17 +63,17 @@ SPARK'S MACHINE LEARNING TOOLKIT
 --------------------------------
 mllib: scalable, distributed ML library, *sklearn-like* ML toolkit
 <https://spark.apache.org/docs/latest/mllib-guide.html>
-lab: *collaborative filtering — *matrix factorisation
-![](sparkmooc_note_lec8/pasted_image005.png)
-⇒ *alternating* least square(ALS): 
+lab: *collaborative filtering — *matrix factorisation  
+![](sparkmooc_note_lec8/pasted_image005.png)  
+⇒ *alternating* least square(ALS):    
 ![](sparkmooc_note_lec8/pasted_image006.png)
 
 
 **trouble with summary stats**: *Anscombe's Quartet*
-→ have same statistics property
-![](sparkmooc_note_lec8/pasted_image002.png)
-→ quite different in fact: 
-![](sparkmooc_note_lec8/pasted_image003.png)
+→ have same statistics property  
+![](sparkmooc_note_lec8/pasted_image002.png)  
+→ quite different in fact:   
+![](sparkmooc_note_lec8/pasted_image003.png)  
 **Takeaways**:	
 *•  Important to look at data graphically before analyzing it	*
 *•  Basic statistics properties often fail to capture real-world complexities*	

@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-06-23T00:00:00+02:00</updated><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="http://x-wei.github.io/sparkmooc_note_lec8.html" rel="alternate"></link><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-06-30T00:00:00+02:00</updated><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="http://x-wei.github.io/sparkmooc_notelab4.html" rel="alternate"></link><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_notelab4.html</id><summary type="html">&lt;h1&gt;Part 0: Preliminaries&lt;/h1&gt;
+&lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as:
+&lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt;
+Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as:
+&lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;487650 ratings and 3883 movies&lt;/p&gt;
+&lt;p&gt;⇒ Since the key is an integer and the value is a unicode string, we can use a function to combine them into a single unicode string (e.g., &lt;code&gt;unicode('%.3f' % key) + ' ' + value&lt;/code&gt;) before sorting the RDD using &lt;code&gt;sortBy()&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Part 1: Basic Recommendations&lt;/h1&gt;
+&lt;p&gt;naive method: &lt;em&gt;always recommend the movies with the highest average rating...&lt;/em&gt;
+⇒ 20 movies with the highest average rating and more than 500 reviews&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;movieNameWithAvgRatingsRDD&lt;/em&gt;: &lt;code&gt;(avgRating, Title, nbRatings)&lt;/code&gt;&lt;/p&gt;
+&lt;h1&gt;Part 2: Collaborative Filtering&lt;/h1&gt;
+&lt;p&gt;MLlib: &lt;a href="https://spark.apache.org/mllib/"&gt;https://spark.apache.org/mllib/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Collaborative filtering&lt;/em&gt; is a method of making automatic predictions (filtering) about the interests of a user by collecting preferences or taste information from many users (collaborating). The underlying assumption of the collaborative filtering approach is that if a person A has the same opinion as a person B on an issue, A is more likely to have B's opinion on a different issue x than to have the opinion on x of a person chosen randomly. &lt;/p&gt;
+&lt;p&gt;一图胜千言: &lt;br /&gt;
+&lt;img alt="" src="sparkmooc_note_lab4/Collaborative_filtering.gif" /&gt;&lt;/p&gt;
+&lt;h3&gt;Matrix Factorization&lt;/h3&gt;
+&lt;p&gt;CF问题实际上是矩阵分解的问题: 
+We have a matrix whose entries are movie ratings by users (shown in red in the diagram below). Each column represents a user (shown in green) and each row represents a particular movie (shown in blue).&lt;/p&gt;
+&lt;p&gt;其中&lt;em&gt;rating矩阵&lt;/em&gt;(用户/电影矩阵)只有一些项的值存在(即用户打分的那些项), 所以要用分解后的两个矩阵之乘积来估计rating矩阵中的缺失项.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;With collaborative filtering, the idea is to approximate the ratings matrix by factorizing it as the product of two matrices: one that describes properties of each user (shown in green), and one that describes properties of each movie (shown in blue).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="sparkmooc_note_lab4/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;p&gt;若N个用户, M个电影 ⇒ 把rating矩阵(N&lt;em&gt;M)分解为 一个N&lt;/em&gt;d矩阵(&lt;em&gt;user矩阵&lt;/em&gt;)与一个d&lt;em&gt;M(&lt;/em&gt;movie矩阵*)矩阵之积. &lt;/p&gt;
+&lt;p&gt;其中d个维度可以有(隐含的)意义: 比如f[j]第一个维度代表了电影j中动作片的成分, f[i]的第一个维度表示用户i对动作片的喜爱程度, 以此类推... 所以f[i]与f[j]的内积就可以是用户i对电影j的评分的一个不错的预测. &lt;/p&gt;
+&lt;p&gt;假设&lt;em&gt;f[j]已知&lt;/em&gt;, 那么f[i]要满足: 对那些用户i已经打过分的电影(即r_ij存在)上的估计偏差最小:   &lt;br /&gt;
+&lt;img alt="" src="sparkmooc_note_lab4/pasted_image.png" /&gt;    &lt;br /&gt;
+(后面加上的那一项是正则项: 不希望f[i]的模过大)&lt;/p&gt;
+&lt;p&gt;不过前面的假设, "f[j]已知"这个条件其实并不成立 ⇒ &lt;strong&gt;Alternating Least Squares algorithm&lt;/strong&gt;: 交替优化f[i]和f[j]的取值, 每次固定一个, 而优化另一个, 交替进行, 直到收敛(好像Kmeans也是利用的这种方法). &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;first randomly filling the users matrix with values and then optimizing the value of the movies such that the error is minimized. Then, it holds the movies matrix constrant and optimizes the value of the user's matrix.&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;train-test-validation split&lt;/h3&gt;
+&lt;p&gt;⇒ break up the ratingsRDD dataset into three pieces:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A training set (RDD), which we will use to train models&lt;/li&gt;
+&lt;li&gt;A validation set (RDD), which we will use to choose the best model&lt;/li&gt;
+&lt;li&gt;A test set (RDD), which we will use for our experiments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;trainingRDD, validationRDD, testRDD = ratingsRDD.randomSplit([6, 2, 2], seed=0L)&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;Root Mean Square Error (RMSE)&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="sparkmooc_note_lab4/pasted_image003.png" /&gt;  &lt;br /&gt;
+compute the sum of squared error given predictedRDD and actualRDD RDDs. 
+Both RDDs consist of tuples of the form (UserID, MovieID, Rating)&lt;/p&gt;
+&lt;h3&gt;alternating least square of MLllib&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS"&gt;https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS&lt;/a&gt;
+ALS takes a training dataset (RDD) and several parameters that control the model creation process.&lt;/p&gt;
+&lt;p&gt;The most important parameter to ALS.train() is the &lt;em&gt;rank&lt;/em&gt;, which is the number of rows in the Users matrix (green in the diagram above) or the number of columns in the Movies matrix (blue in the diagram above). (In general, a lower rank will mean higher error on the training dataset, but a high rank may lead to overfitting.)&lt;/p&gt;
+&lt;p&gt;貌似ALS接受一个(userid, itemid, rating)的RDD作为输入, 预测时接受一个(userid, itemid)的RDD作为输入, 返回一个(userid, itemid, rating)的RDD.  (也就是说, 前面的notation在这里继续被使用了).&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ALS&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;train&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;trainingRDD&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                      &lt;span class="n"&gt;lambda_&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;regularizationParameter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;predictedRatingsRDD&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predictAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;validationForPredictRDD&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;可以在这里查看job详情: &lt;a href="http://localhost:4040/jobs/"&gt;http://localhost:4040/jobs/&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;compare model&lt;/h3&gt;
+&lt;p&gt;Looking at the RMSE for the results predicted by the model versus the values in the test set is one way to evalute the quality of our model. &lt;em&gt;Another way to evaluate the model is to evaluate the error from a test set where every rating is the average rating for the training set.&lt;/em&gt;
+⇒ 这里没有太理解, 难道是说test set 的平均rating预测结果和training set的平均rating应该比较接近么?? 
+⇒ 终于明白了: "&lt;em&gt;Your model more accurately predicts the ratings than using just the average rating, as the model's RMSE is significantly lower than the RMSE when using the average rating.&lt;/em&gt;"&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;求一个tuple rdd最后一列的和的时候, 需要先map成最后一列再reduce: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;trainingRDD.map(lambda x:x[-1]).reduce(lambda x,y:x+y)&lt;/code&gt;&lt;br /&gt;
+直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="http://x-wei.github.io/sparkmooc_note_lec8.html" rel="alternate"></link><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
 &lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;descriptive statistics&lt;/li&gt;
@@ -11,7 +72,7 @@
 &lt;p&gt;ex. &lt;em&gt;t-testing — inferences beyond the data&lt;/em&gt;
 techniques leveraged for machine learning and prediction&lt;/p&gt;
 &lt;p&gt;supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
- → UL often used in a larger SL pb (ex. &lt;em&gt;auto-encoder&lt;/em&gt;)
+ → UL often used in a larger SL pb (ex. &lt;em&gt;auto-encoder&lt;/em&gt;)&lt;br /&gt;
 &lt;img alt="" src="sparkmooc_note_lec8/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;h2&gt;EXPLORATORY DATA ANALYSIS&lt;/h2&gt;
 &lt;p&gt;5-number summary:&lt;/p&gt;
@@ -24,7 +85,7 @@ techniques leveraged for machine learning and prediction&lt;/p&gt;
 &lt;li&gt;The sample maximum (largest observation)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img alt="" src="sparkmooc_note_lec8/pasted_image001.png" /&gt;&lt;/p&gt;
-&lt;p&gt;→ box plot: 
+&lt;p&gt;→ box plot: &lt;br /&gt;
 &lt;img alt="" src="sparkmooc_note_lec8/pasted_image004.png" /&gt;&lt;/p&gt;
 &lt;h2&gt;THE R LANGUAGE AND NORMAL DISTRIBUTIONS&lt;/h2&gt;
 &lt;p&gt;R: intractive exploration and visulization of data + statistical models and distributions + CRAN&lt;/p&gt;
@@ -41,15 +102,15 @@ many statistical test assume data to be normally distributed&lt;/p&gt;
 &lt;h2&gt;SPARK'S MACHINE LEARNING TOOLKIT&lt;/h2&gt;
 &lt;p&gt;mllib: scalable, distributed ML library, &lt;em&gt;sklearn-like&lt;/em&gt; ML toolkit
 &lt;a href="https://spark.apache.org/docs/latest/mllib-guide.html"&gt;https://spark.apache.org/docs/latest/mllib-guide.html&lt;/a&gt;
-lab: &lt;em&gt;collaborative filtering — &lt;/em&gt;matrix factorisation
-&lt;img alt="" src="sparkmooc_note_lec8/pasted_image005.png" /&gt;
-⇒ &lt;em&gt;alternating&lt;/em&gt; least square(ALS): 
+lab: &lt;em&gt;collaborative filtering — &lt;/em&gt;matrix factorisation&lt;br /&gt;
+&lt;img alt="" src="sparkmooc_note_lec8/pasted_image005.png" /&gt;&lt;br /&gt;
+⇒ &lt;em&gt;alternating&lt;/em&gt; least square(ALS):  &lt;br /&gt;
 &lt;img alt="" src="sparkmooc_note_lec8/pasted_image006.png" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;trouble with summary stats&lt;/strong&gt;: &lt;em&gt;Anscombe's Quartet&lt;/em&gt;
-→ have same statistics property
-&lt;img alt="" src="sparkmooc_note_lec8/pasted_image002.png" /&gt;
-→ quite different in fact: 
-&lt;img alt="" src="sparkmooc_note_lec8/pasted_image003.png" /&gt;
+→ have same statistics property&lt;br /&gt;
+&lt;img alt="" src="sparkmooc_note_lec8/pasted_image002.png" /&gt;&lt;br /&gt;
+→ quite different in fact: &lt;br /&gt;
+&lt;img alt="" src="sparkmooc_note_lec8/pasted_image003.png" /&gt;&lt;br /&gt;
 &lt;strong&gt;Takeaways&lt;/strong&gt;:&lt;br /&gt;
 &lt;em&gt;•  Important to look at data graphically before analyzing it   &lt;/em&gt;
 &lt;em&gt;•  Basic statistics properties often fail to capture real-world complexities&lt;/em&gt;  &lt;/p&gt;
