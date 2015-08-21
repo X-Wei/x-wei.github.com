@@ -21,7 +21,7 @@ DEFAULT_CATEGORY ='MISC'
 OUTPUT_PATH = '.'
 #~ RELATIVE_PATH='true'
 RELATIVE_URLS=1
-STATIC_PATHS = ["static", ]
+STATIC_PATHS = ["static"]
 PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
@@ -30,6 +30,7 @@ THEME='./pelican-themes/bs6'
 LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
          ('H.Y.', "http://hyhx2008.github.com/"),
+         ('reginald1787', 'http://reginald1787.github.io/')
          )
 
 SOCIAL = (

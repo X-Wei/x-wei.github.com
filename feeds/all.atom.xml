@@ -1,9 +1,913 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-06-30T00:00:00+02:00</updated><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="http://x-wei.github.io/sparkmooc_notelab4.html" rel="alternate"></link><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_notelab4.html</id><summary type="html">&lt;h1&gt;Part 0: Preliminaries&lt;/h1&gt;
-&lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as:
-&lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt;
-Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as:
-&lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-08-18T00:00:00+02:00</updated><entry><title>[Algorithms I] Week 2-2 Elementary Sorts</title><link href="http://x-wei.github.io/algoI_week2_2.html" rel="alternate"></link><updated>2015-08-18T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_2.html</id><summary type="html">&lt;h1&gt;1. Introduction&lt;/h1&gt;
+&lt;p&gt;rearanging array of size N into ascending order &lt;br /&gt;
+test client code: &lt;code&gt;Insertion.sort(a);&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;sort &lt;em&gt;any&lt;/em&gt; datatype &lt;/p&gt;
+&lt;h3&gt;callback&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;callback = reference to executable code&lt;/em&gt; &lt;br /&gt;
+i.e. passing functions as argument to sort() method&lt;br /&gt;
+sort() function calls object's &lt;code&gt;compareTo()&lt;/code&gt; method  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image.png" /&gt; &lt;br /&gt;
+→ implement the &lt;code&gt;Comparable&lt;/code&gt; interface:    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;XX&lt;/span&gt; &lt;span class="nx"&gt;implements&lt;/span&gt; &lt;span class="nx"&gt;Comparable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;XX&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;...&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;the interface: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;interface&lt;/span&gt; &lt;span class="nx"&gt;Comparable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;compareTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt; &lt;span class="nx"&gt;that&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;compareTo():&lt;br /&gt;
+return -1 (if this&amp;lt;that)/+1/0; 
+needs a &lt;em&gt;total order.&lt;/em&gt; 
+→ in the sort() implementation:&lt;br /&gt;
+has not dependencies on type of data.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;compareTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)...&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;helper functions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;less&lt;/p&gt;
+&lt;p&gt;private static boolean less(Comparable v, Comparable u){
+returnv.compareTo(u)&amp;lt;0;
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;exch&lt;/p&gt;
+&lt;p&gt;private void exch(Comparable[] a, int i, int j) {
+        Comparable swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;isSorted&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;test if sorted
+if algo passes the test using only less ant swap, then it's correct. &lt;/p&gt;
+&lt;h1&gt;2. Selection Sort&lt;/h1&gt;
+&lt;p&gt;Idea: each time&lt;em&gt;: find the minimum from the remaining items.&lt;/em&gt; 
+&lt;strong&gt;a[min] is the smallest element to right of a[i] ⇒ swap a[i] and a[min]&lt;/strong&gt; (elements to left of i are sorted) &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image002.png" /&gt;    &lt;/p&gt;
+&lt;h2&gt;invariants&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;entries to the left of i are in sorted order, and are fixed (&lt;em&gt;in final position&lt;/em&gt;) ever since&lt;/li&gt;
+&lt;li&gt;no entry to the right of i is smaller than any entry to the left of i&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;SelectionSort&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractSorting&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="c1"&gt;//...&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt; 
+                &lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;proposition:&lt;/strong&gt;
+selection sort uses &lt;em&gt;N-1 + N-2 + ... + 1 = ~N^2/2&lt;/em&gt; compares, and &lt;em&gt;N&lt;/em&gt; exchanges. 
+→ quadratic time&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_2/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;insensitive&lt;/strong&gt; to input: quadratic time &lt;em&gt;even if input is already sorted.&lt;/em&gt; &lt;/li&gt;
+&lt;li&gt;data movement is &lt;em&gt;minimum&lt;/em&gt;: linear time of exchanges (every exchange puts an item to its final position)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;3. Insertion sort&lt;/h1&gt;
+&lt;p&gt;quite different performance characteritics than selection sort. &lt;/p&gt;
+&lt;p&gt;Idea: &lt;strong&gt;In iteration i: move all entries larger than a[i] to its left.&lt;/strong&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image004.png" /&gt;   &lt;/p&gt;
+&lt;h2&gt;invariants&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;entries to the left of i are in ascending order (but &lt;em&gt;not&lt;/em&gt; in final position)&lt;/li&gt;
+&lt;li&gt;entries to the right of i are not yet been seen   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_2/pasted_image005.png" /&gt;   &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;publc&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;InsertionSorting&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractSorting&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt;
+                    &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+                &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;//...&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;proposition &lt;/strong&gt;(average case): &lt;br /&gt;
+(the performance &lt;em&gt;on average&lt;/em&gt; — &lt;em&gt;for randomly sorted array&lt;/em&gt; ) &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image007.png" /&gt; &lt;br /&gt;
+&lt;em&gt;proof:&lt;/em&gt;
+&lt;em&gt;expect each entry to move halfway back&lt;/em&gt; &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image008.png" /&gt;   &lt;/p&gt;
+&lt;h3&gt;best case and worst case&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;best case&lt;/strong&gt;
+if array already sorted min ascending order: 
+&lt;em&gt;N-1 compares, 0 exchanges.&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;worst case&lt;/strong&gt;
+if array sorted in descending order: 
+every element goes all the way back → 1/2&lt;em&gt;N^2 compares,  1/2&lt;/em&gt;N^2 exchanges&lt;/p&gt;
+&lt;h3&gt;partially  sorted arrays&lt;/h3&gt;
+&lt;p&gt;def.&lt;strong&gt;" inversion"&lt;/strong&gt;
+an inversion is a pair of entries that are out of order. &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;"partially sorted"&lt;/strong&gt;&lt;br /&gt;
+An array is called partially sorted if the &lt;em&gt;number of inversions is &amp;lt;= c&lt;/em&gt;N. *&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;proposition. &lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;Insertion sort runs in linear time for partially sorted array.&lt;/strong&gt; 
+&lt;em&gt;proof.&lt;/em&gt; 
+&lt;em&gt;number of exchanges = number of inversions. &lt;/em&gt;
+&lt;em&gt;number of compares = number of exchanges + N-1&lt;/em&gt;&lt;/p&gt;
+&lt;h1&gt;4. Shell Sort&lt;/h1&gt;
+&lt;p&gt;First non-trival sorting methode: an improvement of insertion sort. &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;"h-sorted array"&lt;/strong&gt;&lt;br /&gt;
+an array is h-sorted if every h-interleaved subarray is sorted. (h=1: just a sorted array)  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image009.png" /&gt;     &lt;/p&gt;
+&lt;p&gt;Idea: move entries &amp;gt;1 position at a time by &lt;em&gt;h-sorting&lt;/em&gt; the array, then decrease h.   &lt;/p&gt;
+&lt;p&gt;use decreasing sequences of value h:  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image010.png" /&gt;     &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;How to h -sort  &lt;/strong&gt;&lt;br /&gt;
+simply insertion sort with &lt;em&gt;stride length=h&lt;/em&gt;.&lt;br /&gt;
+why insertion sort: &lt;br /&gt;
+for big h: small subarray &lt;br /&gt;
+for small h: nearly in order   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;proposition&lt;/strong&gt;&lt;br /&gt;
+A g-sorted array &lt;em&gt;remains g-sorted&lt;/em&gt; after h-sorting it.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image011.png" /&gt;  &lt;br /&gt;
+(subtle to prove...)  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;which sequence of h to use&lt;/strong&gt;
+&lt;code&gt;3x+1&lt;/code&gt; sequence proposed by Knuth. &lt;em&gt;1,4,13,40....&lt;/em&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ShellSort&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractSort&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="c1"&gt;//find the beginning h (N&amp;gt;h&amp;gt;N/3)&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="c1"&gt;//performs h-sort&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;+=&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-=&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+                        &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;break&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="c1"&gt;//...&lt;/span&gt;
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;isHsorted&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;false&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;每次hsort, 外围的循环是&lt;code&gt;for(int i= h;i&amp;lt;N;i+=h)&lt;/code&gt;, 需要理解一下: i移动一次以后, 进行的是另一个subarray 的插入排序, 当移动到N-1的时候所有subarray的插入排序才结束. (也就是说不是先完成一个subarray的插入排序再完成另一个, 这些是插入排序是同步进行的)&lt;/p&gt;
+&lt;h2&gt;analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;proposition (for worst case   )&lt;/strong&gt;&lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image012.png" /&gt;   &lt;br /&gt;
+→ better than quadratic time !     &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;property  (found in practice)&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;of compares &amp;lt; Cte * N * (# of &lt;em&gt;h&lt;/em&gt; used )&lt;/h1&gt;
+&lt;p&gt;→ #compares &amp;lt; NlgN * Cte &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image013.png" /&gt; &lt;br /&gt;
+*accurate model has not been discovered  *&lt;/p&gt;
+&lt;p&gt;(所以shellsort在实际使用中几乎和快速排序一样快! — 尽管没有数学证明来保证)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;why we are interested in shell sort&lt;/strong&gt;
+useful in practice: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;fast for medium sized arrays (beat even the classical sophistiated algorithms)  &lt;/li&gt;
+&lt;li&gt;tiny code volumn (used in embeded systems)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;lead to interesting questions for 50 years: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;asymptotic growth rate ?&lt;/li&gt;
+&lt;li&gt;best sequence of h ?&lt;/li&gt;
+&lt;li&gt;average case performance ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;5. shuffling&lt;/h1&gt;
+&lt;h2&gt;shuffle array using sort&lt;/h2&gt;
+&lt;p&gt;one way to shuffle an array: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;for each array entry, generate a random real number&lt;/li&gt;
+&lt;li&gt;sort the array of real numbers&lt;/li&gt;
+&lt;li&gt;⇒ the original array is shuffled !&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;proposition  &lt;/strong&gt;&lt;br /&gt;
+this shuffle sort produces a uniformly random permutation of input array &lt;br /&gt;
+&lt;em&gt;drawback:  cost for sorting...&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Goal: get uniformly random permutation in &lt;em&gt;linear time&lt;/em&gt;.   &lt;/p&gt;
+&lt;h2&gt;Knuth shuffle&lt;/h2&gt;
+&lt;p&gt;algo:  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;for i = [0,N):&lt;br /&gt;
+    - r = rand( [0~i&lt;strong&gt;]&lt;/strong&gt; ) or rand( &lt;strong&gt;[&lt;/strong&gt;i, N-1] ) &lt;br /&gt;
+    - swap a[r] and a[i]   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_2/pasted_image014.png" /&gt;&lt;/p&gt;
+&lt;p&gt;implementation: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shuffle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Object&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StdRandom&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;uniform&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;proposition&lt;/strong&gt;&lt;br /&gt;
+Knuth algo produces an uniformly random permutation of input array. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;proof.&lt;/em&gt;&lt;br /&gt;
+Sufficient to prove that, for card i and position j, the proba(card i comes to position j) = 1/N. &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;if i&amp;lt;=j, P = 1/j * j/(j+1) * (j+1)/(j+2) * ... * (N-1)/N&lt;/li&gt;
+&lt;li&gt;if j&amp;lt;i, P = 1/i * i/(i+1) * (i+1)/(i+2) * ... * (N-1)/N&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;CQFD.&lt;/p&gt;
+&lt;h2&gt;example: online poker&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.cigital.com/papers/download/developer_gambling.php"&gt;https://www.cigital.com/papers/download/developer_gambling.php&lt;/a&gt;  ←那个扑克网站已经被黑出翔了...  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image015.png" /&gt;  &lt;br /&gt;
+bugs: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;r never get 52 (52th card never moved)&lt;/li&gt;
+&lt;li&gt;r = rand(N) instead of rand(0~i), → shuffle not uniform&lt;/li&gt;
+&lt;li&gt;random() uses 32bit seed: only 2^32 possible shuffles, &lt;em&gt;2^32&amp;lt;52!&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;seed = millisec from midnight, ~86*10^6 suffles&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;6. Convex Hull&lt;/h1&gt;
+&lt;p&gt;application of sorting for the field of computational geometry.  &lt;/p&gt;
+&lt;h2&gt;convex hull&lt;/h2&gt;
+&lt;p&gt;smallest polygoneenclosing all N points. &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image017.png" /&gt;      &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;input: N points&lt;/li&gt;
+&lt;li&gt;output: sequence of &lt;em&gt;vertices&lt;/em&gt; in counterclockwise (&lt;em&gt;ccw&lt;/em&gt;) order. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;application: robot motion planning; farest pair.   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;geometric properties&lt;/strong&gt;:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;can traverse convex hull by making only ccw turns&lt;/li&gt;
+&lt;li&gt;let p be the point with lowest y-coord, wrt p, vertices appear in increasing order of polar angle.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_2/pasted_image018.png" /&gt;   &lt;/p&gt;
+&lt;h2&gt;Algo&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Graham scan algorithm:&lt;/strong&gt;&lt;br /&gt;
+    * choose p with smallest y coord &lt;br /&gt;
+    * &lt;em&gt;sort points by polar angle&lt;/em&gt; with p &lt;br /&gt;
+    * consider points in order (stack is used), &lt;em&gt;discard unless creates a ccw turn&lt;/em&gt;.   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_2/pasted_image019.png" /&gt;   &lt;img alt="" src="algoI_week2_2/pasted_image020.png" /&gt;    &lt;img alt="" src="algoI_week2_2/pasted_image021.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CCW&lt;/strong&gt; &lt;br /&gt;
+given three points a b c, returns if a→b→c is a CCW turn.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image023.png" /&gt;    &lt;br /&gt;
+(assumption: no 3 points on a line)&lt;br /&gt;
+ ⇒ calculate &lt;em&gt;cross product of ab and bc ⇒ determinants!&lt;/em&gt; &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_2/pasted_image024.png" /&gt;   &lt;br /&gt;
+area&amp;gt;0 ⇔ CCW   &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Point2D&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;ccw&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Point2D&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;Point2D&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;Point2D&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;area2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;area2&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;convex hull:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;static&lt;/span&gt; &lt;span class="nb"&gt;Stack&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Point2D&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;GrahamScan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Point2D&lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; p){
+    //* assumes that points are sorted by polar angle in p&lt;span class="cp"&gt;[]&lt;/span&gt;
+    Stack&lt;span class="nt"&gt;&amp;lt;Point2D&amp;gt;&lt;/span&gt; hull = new Stack&lt;span class="nt"&gt;&amp;lt;Point2D&amp;gt;&lt;/span&gt;();
+    hull.push(p&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;);
+    hull.push(p&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;);
+    for(int i=2;i&lt;span class="nt"&gt;&amp;lt;p&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;length&lt;/span&gt;&lt;span class="err"&gt;;&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;++){&lt;/span&gt;
+        &lt;span class="na"&gt;Point2D&lt;/span&gt; &lt;span class="na"&gt;b =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;hull.pop(),&lt;/span&gt; &lt;span class="na"&gt;a =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;hull.peek(),&lt;/span&gt; &lt;span class="na"&gt;c =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;p&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="s"&gt;;&lt;/span&gt;
+        &lt;span class="na"&gt;while&lt;/span&gt;&lt;span class="err"&gt;(!&lt;/span&gt;&lt;span class="na"&gt;Point2D&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;ccw&lt;/span&gt;&lt;span class="err"&gt;(&lt;/span&gt;&lt;span class="na"&gt;a&lt;/span&gt;&lt;span class="err"&gt;,&lt;/span&gt;&lt;span class="na"&gt;b&lt;/span&gt;&lt;span class="err"&gt;,&lt;/span&gt;&lt;span class="na"&gt;c&lt;/span&gt;&lt;span class="err"&gt;)){&lt;/span&gt;
+            &lt;span class="na"&gt;b =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;hull.pop();&lt;/span&gt;
+            &lt;span class="na"&gt;a =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;hull.peek();&lt;/span&gt;
+        &lt;span class="err"&gt;}&lt;/span&gt;
+        &lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="na"&gt;now&lt;/span&gt; &lt;span class="na"&gt;a&lt;/span&gt;&lt;span class="err"&gt;,&lt;/span&gt;&lt;span class="na"&gt;b&lt;/span&gt;&lt;span class="err"&gt;,&lt;/span&gt;&lt;span class="na"&gt;c&lt;/span&gt; &lt;span class="na"&gt;makes&lt;/span&gt; &lt;span class="na"&gt;a&lt;/span&gt; &lt;span class="na"&gt;ccw&lt;/span&gt; &lt;span class="na"&gt;turn:&lt;/span&gt;
+        &lt;span class="na"&gt;hull&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;push&lt;/span&gt;&lt;span class="err"&gt;(&lt;/span&gt;&lt;span class="na"&gt;b&lt;/span&gt;&lt;span class="err"&gt;);&lt;/span&gt;
+        &lt;span class="na"&gt;hull&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;push&lt;/span&gt;&lt;span class="err"&gt;(&lt;/span&gt;&lt;span class="na"&gt;c&lt;/span&gt;&lt;span class="err"&gt;);&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;running time: &lt;em&gt;NlgN for sorting and linear for the rest.&lt;/em&gt; &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week 2-1 Stacks ans Queues</title><link href="http://x-wei.github.io/algoI_week2_1.html" rel="alternate"></link><updated>2015-07-09T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_1.html</id><summary type="html">&lt;p&gt;fundamental data types: stacks and queues
+operations: 
+&lt;strong&gt;insert, remove, test empy, iterate,&lt;/strong&gt;...  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;module programming: seperate interface and implementation&lt;/p&gt;
+&lt;h1&gt;1. Stacks&lt;/h1&gt;
+&lt;p&gt;ex. a stack of strings&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;API: &lt;/p&gt;
+&lt;p&gt;public interface StackoOfStrings{
+    void push(String item);
+    String pop();
+    boolean isEmpty();
+    //int size();
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;implementation 1: using a linkedlist&lt;/h3&gt;
+&lt;p&gt;insert/remove from the top of the linkedlist&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;inner class&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ListNode&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;ListNode&lt;/span&gt; &lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;implementation  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;LinkedStackOfStrings&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;StackoOfStrings&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ListNode&lt;/span&gt; &lt;span class="n"&gt;nxt&lt;/span&gt;&lt;span class="p"&gt;){...}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;LinkedStackOfStrings&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+        &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+        &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;complexity: const time for every operation&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;array implementation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;use array (of length N) to store items → defect: stack has limited capacity&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;keep a pointer *top: &lt;strong&gt;*pointing to the next empty space to push &lt;/strong&gt;(top 的定义很重要)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;problems of the array implementation: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;underflow: pop from an empty stack  &lt;/li&gt;
+&lt;li&gt;overflow: size larger than capacity ⇒ resizing  &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;loitering&lt;/strong&gt;: holding a ref to an obj which is no longer needed:
+ex. &lt;code&gt;return s[top--]&lt;/code&gt;
+java system will not know that s[top] is no longer needed ⇒ have to clear it explicitely
+⇒   &lt;/p&gt;
+&lt;p&gt;String item = s[top--]; 
+s[top]=null; 
+return item&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;implementation (containg resizing array operations)  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ArrayStackOfStrings&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;StackOfStrings&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;ArrayStackOfStrings&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;&lt;span class="c1"&gt;// to be tuned&lt;/span&gt;
+            &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;&lt;span class="c1"&gt;//initial capacity=1&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;vois&lt;/span&gt; &lt;span class="nf"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;capacity&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="c1"&gt;//helper functoin&lt;/span&gt;
+            &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;capacity&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;s2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="c1"&gt;//doubling size &lt;/span&gt;
+                &lt;span class="n"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lenth&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;&lt;span class="c1"&gt;//NOT top--!&lt;/span&gt;
+            &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;top&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;//top&amp;gt;0 is necessary&lt;/span&gt;
+                &lt;span class="n"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;2. Resizing Arrays&lt;/h1&gt;
+&lt;p&gt;resolving the overflow pb: grow and shrink the array
+→ need to copy all items when changing array size
+⇒ pb: &lt;em&gt;ensure that sizing happens infrequently&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;resizing strategy&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;repeated doubling:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(initial capacity=1) when array is full, double the size&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;amortized&lt;/em&gt; complexity for inserting N:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;N+(2+4+8+...+N) ~3N&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;shrinking array&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ shrink the array by half when array is &lt;strong&gt;1/4 full&lt;/strong&gt;
+not half full → &lt;em&gt;thrashing&lt;/em&gt; will happen if push-pop-push-pop when array is full &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image001.png" /&gt;      &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;[invariant]&lt;/strong&gt;: array always 20%~100% full&lt;/li&gt;
+&lt;li&gt;complexity:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;in an amortized sense&lt;/em&gt;, will be constant &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image002.png" /&gt;  &lt;br /&gt;
+&lt;strong&gt;proposition&lt;/strong&gt;: from empty stack, M operations of push/pop taked time propotional to M&lt;/p&gt;
+&lt;h3&gt;comparison: resizable array vs linkedlist&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;linkedlist implementation: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;operations takes const time even in worst time
+extra time and space for dealing with linkes &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;resizing array implementation:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;operation taked const &lt;em&gt;amortized&lt;/em&gt; time
+but in worst case takes linear time (ex. to be evited for critical systems)
+less wasted space&lt;/p&gt;
+&lt;h2&gt;3. Queues&lt;/h2&gt;
+&lt;p&gt;FIFO data structure
+API&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;interface&lt;/span&gt; &lt;span class="n"&gt;QueueOfStrings&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;enqueue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;dequeue&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="c1"&gt;//int size();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;linked list implementation&lt;/h3&gt;
+&lt;p&gt;maintain &lt;code&gt;first&lt;/code&gt; and &lt;code&gt;last&lt;/code&gt; node pointers: 
+pointing to 2 points of queue (&lt;code&gt;first&lt;/code&gt; for dequeue, &lt;code&gt;last&lt;/code&gt; for enqueue ) &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image003.png" /&gt;   &lt;br /&gt;
+→ &lt;em&gt;take care of corner cases&lt;/em&gt;: 
+- empty queue: first is null (and last is also null) 
+- just one item in queue: first and last &lt;em&gt;point to the same node&lt;/em&gt;
+(总之first和last的定义很重要)&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;LinkedQueueOfStrings&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;QueueOfStrings&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="p"&gt;{...&lt;/span&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;LinkedQueueOfStrings&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;enqueue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="c1"&gt;//same as push&lt;/span&gt;
+            &lt;span class="n"&gt;Node&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Node&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;()){&lt;/span&gt;
+                &lt;span class="n"&gt;last&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;next&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+                &lt;span class="n"&gt;last&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nd&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;dequeue&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;&lt;span class="c1"&gt;//same as pop in stack&lt;/span&gt;
+            &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+                &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;resizing array implementation&lt;/h3&gt;
+&lt;p&gt;maintain &lt;code&gt;head&lt;/code&gt; and &lt;code&gt;tail&lt;/code&gt;: 
+&lt;code&gt;head&lt;/code&gt; is the queue head, &lt;code&gt;tail&lt;/code&gt; is the &lt;em&gt;next empty position&lt;/em&gt; for the next element to enqueue
+→ trick: head and tail should take &lt;em&gt;mod capacity + &lt;/em&gt;resizing array &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image004.png" /&gt; &lt;br /&gt;
+不知道写的对不对: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ArrayQueueOfStrings&lt;/span&gt; &lt;span class="n"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;QueueOfStrings&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;LinkedQueueOfStrings&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;&lt;span class="c1"&gt;//init capacity&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;newsz&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="n"&gt;q2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;newsz&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+                &lt;span class="n"&gt;q2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+                &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;enqueue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="nf"&gt;dequeue&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+            &lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+            &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sz&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sz&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;sz&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;resize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;firstItem&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;4. Generics&lt;/h1&gt;
+&lt;p&gt;queues/stacks for other types of data ⇒ &lt;em&gt;generics 泛型&lt;/em&gt;(java 1.5 才引进泛型机制...)
+use &lt;em&gt;type paramater&lt;/em&gt;→ avoid casting, and discover type mismatch errors &lt;em&gt;at compile time&lt;/em&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;interface&lt;/span&gt; &lt;span class="nb"&gt;Stack&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;void&lt;/span&gt; &lt;span class="nb"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt; &lt;span class="nb"&gt;item&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;Item&lt;/span&gt; &lt;span class="nb"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;boolean&lt;/span&gt; &lt;span class="nb"&gt;isEmpty&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;a pb with array implementation&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;java不支持创立泛型数组&lt;/strong&gt;
+generic array creation is not allowed. 不可以new 一个泛型数组!
+&lt;code&gt;s = new Item[capacity];&lt;/code&gt;会报错 &lt;br /&gt;
+⇒ use an ugly &lt;em&gt;cast&lt;/em&gt;:
+&lt;code&gt;s = (Item[]) new Object[capacity];&lt;/code&gt;
+(will get warning: "unchecked cast" → java被黑了... )&lt;/p&gt;
+&lt;h3&gt;autoboxing for primitive types&lt;/h3&gt;
+&lt;p&gt;each primitive type has a &lt;em&gt;wrapper class&lt;/em&gt;
+ex. int ↔ Integer
+autoboxing: automatic cast between a primitive type and its wrapper class. &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image005.png" /&gt; &lt;br /&gt;
+(syntactic sugar 语法糖 i.e. 对语言功能没有影响只是方便使用)&lt;br /&gt;
+btw: &lt;a href="https://zh.wikipedia.org/wiki/%E8%AF%AD%E6%B3%95%E7%B3%96"&gt;https://zh.wikipedia.org/wiki/%E8%AF%AD%E6%B3%95%E7%B3%96&lt;/a&gt; (居然还有语法盐和语法糖精......)&lt;/p&gt;
+&lt;h1&gt;5. Iterators&lt;/h1&gt;
+&lt;h3&gt;Interface&lt;/h3&gt;
+&lt;p&gt;support iteration over stacks and queues, &lt;em&gt;without revealing the internal representation&lt;/em&gt; of stack/queue
+⇒ implement the &lt;code&gt;Iterable&lt;/code&gt; interface&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Iterable&lt;/code&gt; interface: can return an *Iterator *&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;interface&lt;/span&gt; &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;Iterator&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;iterator&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Iterator interface: hasNext() and next() interface&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;interface&lt;/span&gt; &lt;span class="nb"&gt;Iterator&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;boolean&lt;/span&gt; &lt;span class="nx"&gt;hasNext&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="nb"&gt;Item&lt;/span&gt; &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="bp"&gt;void&lt;/span&gt; &lt;span class="nb"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;//optional, bad practice to use it&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;to make a data structure Interable → elegant client code   &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_1/pasted_image006.png" /&gt; &lt;br /&gt;
+&lt;strong&gt;how-to:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;implement &lt;code&gt;Iterable&lt;/code&gt; interface&lt;/li&gt;
+&lt;li&gt;write a &lt;em&gt;private inner class&lt;/em&gt; XXIterator that implment the &lt;code&gt;Iterator&lt;/code&gt; interface.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;ex. &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image007.png" /&gt;   &lt;/p&gt;
+&lt;h3&gt;Bag data structure&lt;/h3&gt;
+&lt;p&gt;Supports adding and iterating through without caring about the order.&lt;br /&gt;
+API: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;    &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;class&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;Bag&lt;/span&gt; &lt;span class="nx"&gt;implements&lt;/span&gt; &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;void&lt;/span&gt; &lt;span class="nb"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Item&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nb"&gt;size&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; 
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;can be implemented by stack or queue(without pop/dequeue)&lt;/p&gt;
+&lt;h1&gt;6. Applications&lt;/h1&gt;
+&lt;h3&gt;Java collections library&lt;/h3&gt;
+&lt;p&gt;List interface: &lt;code&gt;java.util.List&lt;/code&gt; &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image008.png" /&gt;   &lt;br /&gt;
+implementations: &lt;code&gt;ArrayList&lt;/code&gt;, &lt;code&gt;LinkedList&lt;/code&gt;. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pb with the java's implementation of stacks and queues:  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;Stack&lt;/code&gt; class also implements List interface (&lt;code&gt;get()&lt;/code&gt;, &lt;code&gt;remove()&lt;/code&gt;, &lt;code&gt;contains()&lt;/code&gt; are implemented);&lt;br /&gt;
+&lt;code&gt;Queue&lt;/code&gt; is an interface rather than a class...&lt;br /&gt;
+⇒ &lt;strong&gt;poorly designed API  &lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;Stacks applications&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;function calls: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week2_1/pasted_image009.png" /&gt;  &lt;br /&gt;
+recursion: can always use an explicit stack to remove recursion&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;arithemic evaluation (Dijkstra)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;四种类型: 左括号, 右括号, 数字, 算子  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image010.png" /&gt;&lt;br /&gt;
+最后一行应该是value stack.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week2_1/pasted_image011.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;⇒ 后缀表达式, 逆波兰式......&lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week1-Lab: Percolation</title><link href="http://x-wei.github.io/algoI_week1_lab.html" rel="alternate"></link><updated>2015-07-07T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week1_lab.html</id><summary type="html">&lt;h1&gt;model &amp;amp; problem&lt;/h1&gt;
+&lt;p&gt;(原文描述太啰嗦了)
+A system using an N-by-N grid of sites. 
+→ Each site is either open or blocked. 
+→ A &lt;strong&gt;full&lt;/strong&gt; site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)
+→ We say the system &lt;strong&gt;percolates&lt;/strong&gt; if there is a path of connected open sites form the top row to the bottom row. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;⇒ pb: if sites are independently set to be open with probability &lt;strong&gt;p&lt;/strong&gt;, what is the probability that the system percolates? &lt;br /&gt;
+&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png" /&gt; &lt;br /&gt;
+→ When N is sufficiently large, there is a threshold value **p&lt;strong&gt;&lt;em&gt; such that when p &amp;lt; p&lt;/em&gt; a random N-by-N grid almost never percolates, and when p &amp;gt; p&lt;em&gt;, a random N-by-N grid almost always percolates. 
+→ No mathematical solution for determining the percolation threshold p&lt;/em&gt; has yet been derived. 
+⇒ Your task is to *write a computer program to estimate p&lt;/strong&gt;.&lt;/p&gt;
+&lt;h1&gt;Method&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;API:&lt;/p&gt;
+&lt;p&gt;public class Percolation {
+   public Percolation(int N)               // create N-by-N grid, with all sites blocked
+   public void open(int i, int j)          // open site (row i, column j) if it is not open already
+   public boolean isOpen(int i, int j)     // is site (row i, column j) open?
+   public boolean isFull(int i, int j)     // is site (row i, column j) full?
+   public boolean percolates()             // does the system percolate?
+   public static void main(String[] args   // test client (optional)
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Corner cases: the row and column indices i and j are integers between 1 and N. &lt;strong&gt;1≤i,j≤N&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;if i/j out of range: &lt;code&gt;java.lang.IndexOutOfBoundsException&lt;/code&gt;
+if N&amp;lt;=0 in constructor: &lt;code&gt;java.lang.IllegalArgumentException&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Performance requirements: N2 for constructor, const for other operations&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Monte Carlo simulation&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;all sites init to be closed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;→ randomly choose a blocked site (i,j) and open it 
+→ &lt;em&gt;repeat until percolates&lt;/em&gt; ⇒ the fraction of opened sites is an estimation of p*&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ex. 20*20 grid, when percolated: &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image002.png" /&gt; &lt;br /&gt;
+⇒ estimated p* = 204/400=0.51&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;repeat the estimation for T times, get T estimations &lt;/p&gt;
+&lt;p&gt;→ get mean and std:  &lt;br /&gt;
+&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image003.png" /&gt; &lt;br /&gt;
+→ 95% 置信区间: &lt;br /&gt;
+&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image004.png" /&gt; &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;create API for this simulation: &lt;/p&gt;
+&lt;p&gt;public class PercolationStats {
+   public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid
+   public double mean()                      // sample mean of percolation threshold
+   public double stddev()                    // sample standard deviation of percolation threshold
+   public double confidenceLo()              // low  endpoint of 95% confidence interval
+   public double confidenceHi()              // high endpoint of 95% confidence interval
+   public static void main(String[] args)    // test client (described below)
+}&lt;/p&gt;
+&lt;p&gt;-if  N ≤ 0 or T ≤ 0: &lt;code&gt;java.lang.IllegalArgumentException&lt;/code&gt;&lt;br /&gt;
+-&lt;code&gt;main()&lt;/code&gt; : takes two command-line arguments N and T&lt;br /&gt;
+⇒ performs T independent computational experiments on an N-by-N grid, and prints out the mean, standard deviation, and the 95% confidence interval for p*. &lt;br /&gt;
+(Use &lt;a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdRandom.html"&gt;standard random&lt;/a&gt; from our standard libraries to generate random numbers; use &lt;a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdStats.html"&gt;standard statistics&lt;/a&gt; to compute the sample mean and standard deviation. &lt;br /&gt;
+Here is the algo API: &lt;a href="http://algs4.cs.princeton.edu/code/index.php"&gt;http://algs4.cs.princeton.edu/code/index.php&lt;/a&gt;)  &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Code&lt;/h1&gt;
+&lt;p&gt;注意一定要用它们提供的那些库, 否则自己写的话代码就长了.... &lt;br /&gt;
+shuffle, mean, stddev什么的直接用他们的函数库就可以做到. &lt;br /&gt;
+&lt;a href="http://algs4.cs.princeton.edu/code/index.php"&gt;http://algs4.cs.princeton.edu/code/index.php&lt;/a&gt; &lt;br /&gt;
+另外UF也是用他们写好的, WeightedQuickUnionUF.   &lt;/p&gt;
+&lt;p&gt;按照提示, 除了格子的N^2个节点以外再增加两个节点: 顶部和底部的虚拟节点. 这里写的时候注意一开始也是不恩能够把它们与第一行/最后一行相连的 — 要在一个格子open以后再相连. &lt;/p&gt;
+&lt;h3&gt;backwash问题&lt;/h3&gt;
+&lt;p&gt;这次题目有一点比较困难就是, 需要实现isFull()函数, 这个函数判断一个格子(i,j)是否和顶部相连. 这里如果直接用UF的connected()判断是否和顶部虚拟节点相连的话是有问题的, 如下图: &lt;br /&gt;
+&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image005.png" /&gt; &lt;br /&gt;
+白色格子表示格子是open的, 蓝色格子表示格子是open并且是&lt;em&gt;full&lt;/em&gt;的(i.e. 和顶部相连的), 左边图片里的状态是对的, 右边图片里底下部分的格子状态则不对: 如左下角的格子, 其实是没有和顶部联通的, 如果我们用两个虚拟节点的话, 由于底部虚拟节点和顶部虚拟节点相连, 所以和底部虚拟节点相连的左下角部分就被判断成了full的. &lt;/p&gt;
+&lt;p&gt;这个问题一开始我以为可以很简单解决, 后来发现没那么容易... (注意题目还要求isFull()也要在常数时间给出结果).&lt;br /&gt;
+一个不优雅的办法是, 建立两个UF, 一个用来判断percolation, 另一个UF里没有底部虚拟节点所以可以专门用来判断isFull(). &lt;/p&gt;
+&lt;p&gt;这样解决的话使可以通过测试, 不过非常不好看, 另外一个UF的内存占用是8N^2(内部有size[]和id[]两个int数组), 比较大. &lt;/p&gt;
+&lt;p&gt;在论坛上找了半天, 看了一些人的分享终于想到了这个非常妙的办法: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;UF只建立顶部虚拟节点, 不建立底部虚拟节点. &lt;/li&gt;
+&lt;li&gt;判断isFull只需要用UF的connected()一下就好了&lt;/li&gt;
+&lt;li&gt;问题是怎么判断percolation: &lt;br /&gt;
+    a. 建立一个数组 &lt;code&gt;boolean connectedToBottom[]&lt;/code&gt;, 指示某一点是否和底部相连 &lt;br /&gt;
+    b. trick在这里: 不必修改一个联通分支的所有点的&lt;code&gt;connectedToBottom&lt;/code&gt;的值, &lt;strong&gt;只需要修改联通分支的root(UF的find)即可&lt;/strong&gt;. 在进行union的时候先查看两个component的root是不是连到底部, 然后有一个连到底部的话, 在union以后把合并后的联通分支的&lt;code&gt;connectedToBottom&lt;/code&gt;状态改为true即可 &lt;br /&gt;
+    c. 然后判断percolate: 先找到顶部虚拟节点锁在component的root, 然后看这个root是否连到底部即可!   &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这样用一个boolean数组(N^2内存)代替了一个新的UF(8N^2内存), 而且实现也更加优雅.  &lt;br /&gt;
+非常有意思的练习...&lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week 1-2 Analysis of Algorithms</title><link href="http://x-wei.github.io/algoI_week1_2.html" rel="alternate"></link><updated>2015-07-02T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week1_2.html</id><summary type="html">&lt;h1&gt;1. Introduction&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_2/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;2. Observations&lt;/h1&gt;
+&lt;p&gt;ex. &lt;strong&gt;3-SUM pb&lt;/strong&gt;&lt;br /&gt;
+&lt;em&gt;given N distinct numbers, how many triples sum up to 0? (pb related to computatioal geogtry)&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;brute force method:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;mesuring running time:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;stdlib.jar里面提供了一个&lt;code&gt;Stopwatch&lt;/code&gt;类用于记录运行时间.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;log-log plot&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;T(N) = running time for input of size N&lt;br /&gt;
+log(N)-log(T(N)) plot:&lt;br /&gt;
+often get a straight line — power law  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;doubling ratio&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(for checking the power law relationship, checking the power order)&lt;br /&gt;
+each time double the size of input, then take log of the time ratio of 2 runs: log( T(2N)/T(N) )  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image003.png" /&gt;  &lt;/p&gt;
+&lt;h1&gt;3.Mathematical Models&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;total running time: sum of cost*frequency of operations &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;cost of some basic operations:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;array allocation: c*N (because all array entries have to be set to 0/false/null)&lt;/li&gt;
+&lt;li&gt;string concatenation: c*N (proportional to the length  of string !)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;simplification&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;crude analysis&lt;br /&gt;
+ignore lower terms &lt;strong&gt;tilde notation&lt;/strong&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image005.png" /&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image004.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;estimating discrete sum by relaxation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Replace the sum with an integral, and use calculus — 很机智...   &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;4. Order of Growth Classification&lt;/h1&gt;
+&lt;p&gt;(discard the leading coefficient when considering the growth order)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;only a small set of growth functions: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;1, logN, N, NlogN, N^2, N^3, 2^N&lt;/code&gt; &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image007.png" /&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;exemples:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;binary search ⇒ logN&lt;br /&gt;
+divide and conquer ⇒ NlogN&lt;br /&gt;
+exhaustive search ⇒ 2^N &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image008.png" /&gt;&lt;/p&gt;
+&lt;p&gt;practical performance: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image009.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;ex. &lt;strong&gt;binary search&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;public int binearch(int arr[], int key){//arr[] already sorted
+    int lo=0,hi=arr.length;
+    while(i&amp;lt;j){
+        int m = (lo+hi)/2;
+        if(arr[m]==key) return m;
+        else if(arr[m]&amp;lt;key) lo=m+1;
+        else hi=m-1;
+    }
+    return -1;
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(→ Bug in Java's Arrays.binarySearch() discovered in 2006......) &lt;br /&gt;
+→ invariant: if key in arr, arr[lo]&amp;lt;=key&amp;lt;=arr[hi] &lt;br /&gt;
+&lt;strong&gt;proposition. &lt;/strong&gt;binary search uses at most logN+1 compares to search a sorted array of size N.
+&lt;strong&gt;pf. &lt;/strong&gt;
+denote &lt;em&gt;T(N)&lt;/em&gt; := nb of compares for array with size &amp;lt;=N&lt;br /&gt;
+→ T(1)=1&lt;br /&gt;
+→ recurrence relation: T(N)&amp;lt;=T(N/2)+1&lt;br /&gt;
+⇒ T(N)=logN  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;a faster 3-SUM&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;→ first sort the array &lt;em&gt;(~NlogN)&lt;/em&gt;&lt;br /&gt;
+→ for any pair a[i] and a[j], do binary search for -(a[i]+a[j])   &lt;em&gt;~(N2LogN)&lt;/em&gt;&lt;br /&gt;
+⇒ reduce from N3 to N2logN ! (for 8k numbers, running time goes from 51s to 0.96s)  &lt;/p&gt;
+&lt;h1&gt;5. Theory of Algorithms&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;types of analysis&lt;/p&gt;
+&lt;p&gt;-best case
+-worst case
+-average case(random input, "expected cost")&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;notations&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;big Theta/big O/big Omega&lt;/strong&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image010.png" /&gt;   &lt;br /&gt;
+    - big O: &lt;em&gt;upper bound  → * once a specific algo is found, find an upper bound&lt;br /&gt;
+    - big Omega: &lt;/em&gt;lower bound   &lt;em&gt;→ proove that no algo can do better&lt;br /&gt;
+    - big Theta: symptotic growth (same order, optimal algo)  → lower and upper bound &lt;/em&gt;match* &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image011.png" /&gt;   &lt;br /&gt;
+⇒ in this course: use tilde notation: contain leading constants for highest order term&lt;/p&gt;
+&lt;h1&gt;6. Memory&lt;/h1&gt;
+&lt;p&gt;KB: 2^10 bytes&lt;br /&gt;
+MB: 2^20 bytes (1 million) 
+GB: 2^30 bytes (1 billion) 
+64-bit machines: &lt;em&gt;8 byte pointers&lt;/em&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;typical memory usage:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;for primary types: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image012.png" /&gt;&lt;br /&gt;
+for arrays  (with &lt;em&gt;array overhead=24bytes&lt;/em&gt;) :  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image013.png" /&gt; &lt;br /&gt;
+&lt;em&gt;Obj overhead: 16 bytes&lt;/em&gt; (obj的大小=16+obj内部filed的大小)&lt;br /&gt;
+&lt;em&gt;references&lt;/em&gt;: 8 bytes (ex. inner class has a ref to encolsing class)&lt;br /&gt;
+&lt;em&gt;padding&lt;/em&gt;: each obj uses a multiply of 8 bytes (obj大小=8 bytes的整数倍)    &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image014.png" /&gt;   &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_2/pasted_image015.png" /&gt;     &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="http://x-wei.github.io/sparkmooc_notelab4.html" rel="alternate"></link><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_notelab4.html</id><summary type="html">&lt;h1&gt;Part 0: Preliminaries&lt;/h1&gt;
+&lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as: &lt;br /&gt;
+&lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;br /&gt;
+Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as: &lt;br /&gt;
+&lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt;    &lt;/p&gt;
 &lt;p&gt;487650 ratings and 3883 movies&lt;/p&gt;
 &lt;p&gt;⇒ Since the key is an integer and the value is a unicode string, we can use a function to combine them into a single unicode string (e.g., &lt;code&gt;unicode('%.3f' % key) + ' ' + value&lt;/code&gt;) before sorting the RDD using &lt;code&gt;sortBy()&lt;/code&gt;.&lt;/p&gt;
 &lt;h1&gt;Part 1: Basic Recommendations&lt;/h1&gt;
@@ -60,7 +964,254 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 &lt;li&gt;求一个tuple rdd最后一列的和的时候, 需要先map成最后一列再reduce: &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;trainingRDD.map(lambda x:x[-1]).reduce(lambda x,y:x+y)&lt;/code&gt;&lt;br /&gt;
-直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="http://x-wei.github.io/sparkmooc_note_lec8.html" rel="alternate"></link><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Algorithms I] Week 1-1 Union-Find</title><link href="http://x-wei.github.io/algoI_week1_1.html" rel="alternate"></link><updated>2015-06-27T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week1_1.html</id><summary type="html">&lt;h1&gt;1. Dynamic Connectivity pb&lt;/h1&gt;
+&lt;h3&gt;pb statement&lt;/h3&gt;
+&lt;p&gt;a set of N obj, &lt;em&gt;indexed by 0,1,...,N-1&lt;/em&gt;
+⇒ 
+&lt;em&gt; UNION: connect objects &lt;code&gt;void union(int p, int q)&lt;/code&gt;
+&lt;/em&gt; FIND: is there a path connecting 2 obj?  &lt;code&gt;boolean connected(int p, int q)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;ex: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;connect components&lt;/strong&gt;(联通分支): max set of obj that are mutually connected. &lt;/p&gt;
+&lt;h3&gt;UF API&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;union(p,q): connect 2 obj&lt;/li&gt;
+&lt;li&gt;connected(p,q): test if p and q are connected &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;find(p)&lt;/strong&gt;: find the &lt;em&gt;component id&lt;/em&gt; of p&lt;/li&gt;
+&lt;li&gt;count(): nb of components&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注意:
+命名不是很好, 这里的&lt;code&gt;find()&lt;/code&gt;函数不对应FIND query, &lt;code&gt;connected()&lt;/code&gt;函数才是真正的FIND query, find()函数是为了connected()函数而做的一个辅助函数(find(p): return the root of the node p )
+在connected里就可以调用find: &lt;code&gt;return find(p)==find(q)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;应该是interface更好一些... &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;interface&lt;/span&gt; &lt;span class="n"&gt;UF&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="k"&gt;union&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;connected&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="c1"&gt;//int find(int p);&lt;/span&gt;
+&lt;span class="c1"&gt;//int count();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;测试client: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;2. Quick Find&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;"eager approach"&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;data structure&lt;/h3&gt;
+&lt;p&gt;⇒ an int array &lt;code&gt;id[]&lt;/code&gt;
+initialized to &lt;em&gt;id[p]=p for all p&lt;/em&gt;
+interpretation: &lt;em&gt;id[p] = &lt;strong&gt;&lt;em&gt;component id of obj p&lt;/em&gt;&lt;/strong&gt;
+⇒ p and q are connected &lt;/em&gt;iff* id[p]==id[q] (ie. find very fast)
+没有用find()函数  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image002.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;UF operations&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;FIND:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;connected(p,q):&lt;/code&gt; very fast, just check id[p] and id[q]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;UNION:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;when merging 2 components :
+&lt;code&gt;union(p,q)&lt;/code&gt;: &lt;code&gt;id[p]=id[q]&lt;/code&gt;(总是让第一个参数p的id变为第二个参数q的id), &lt;br /&gt;
+⇒ then have to modify &lt;em&gt;all entries&lt;/em&gt; with id equal to &lt;code&gt;id[p]&lt;/code&gt; !&lt;br /&gt;
+⇒ too many entries to change  &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;(class  QuickFindUF implements UF)&lt;/em&gt;&lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image004.png" /&gt;&lt;/p&gt;
+&lt;p&gt;complexity: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;FIND: cte&lt;/li&gt;
+&lt;li&gt;UNION: lin...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;if N obj + N unions ⇒ &lt;em&gt;quad time !&lt;/em&gt;&lt;br /&gt;
+btw, 程序运行速度: &lt;strong&gt;~10^9/s&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;3. Quick Union&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;"lazy approach"&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;data structure&lt;/h3&gt;
+&lt;p&gt;⇒ also an int array &lt;code&gt;id[]&lt;/code&gt;
+considering a set of &lt;em&gt;trees, &lt;/em&gt;此时每个联通分支都是一个tree&lt;br /&gt;
+interpretation: &lt;em&gt;id[p] = &lt;em&gt;&lt;strong&gt;parent index of obj p &lt;/strong&gt;(觉得这个数组叫做father更好....)&lt;br /&gt;
+⇒ p is a root node &lt;/em&gt;iff&lt;/em&gt; id[p]==p&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;UF operations&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;FIND:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;connected(p,q):&lt;/code&gt;check if &lt;em&gt;root of p == root of q&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;UNION: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;union(p,q):&lt;/code&gt;just set p's root to be &lt;em&gt;child&lt;/em&gt; of q's root (把第一个参数p的那棵树放入第二个参数q的树的根节点作为子树)&lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;root():&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;前两个的操作都需要一个函数查找一个节点的root,  需要写一个函数实现, 也很简单, 一路找parent即可:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;root&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image007.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;complexity&lt;/h3&gt;
+&lt;p&gt;in the worst case (all elements is in a list form), root() is ~N, so:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;FIND: lin&lt;/li&gt;
+&lt;li&gt;UNION: lin&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;quick find和quick union的问题: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image009.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;4. Quick Union Improvements&lt;/h1&gt;
+&lt;h2&gt;improvement1: weighting&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;keep track of tree size&lt;/em&gt; ⇒ balance by taking the small tree be a child of the large tree  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image010.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image011.png" /&gt;&lt;/p&gt;
+&lt;p&gt;⇒ add an extra array: &lt;code&gt;sz[]&lt;/code&gt; sz[i] is the size of the tree with root i&lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;(数组&lt;code&gt;int  sz[]&lt;/code&gt; 初始全部为1)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;依然需要&lt;code&gt;root()&lt;/code&gt;函数.&lt;/p&gt;
+&lt;p&gt;private int root(int p){
+    while(p!=id[p]) p=id[p];
+    return p;
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;FIND &lt;/p&gt;
+&lt;p&gt;public boolean connected(int p, int q){
+    return root(p)==root(q);
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;UNION&lt;/p&gt;
+&lt;p&gt;public void  union(int p, int q){
+    int rp = root(p), rq=root(q);
+    if(rp==rq) return; // 
+    if (sz[rp]&amp;lt;sz[rq]){
+        id[rp]=rq;
+        sz[rq]+=sz[rp];
+    }
+    else{...}
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;complexity&lt;/h3&gt;
+&lt;p&gt;FIND: proportional to &lt;em&gt;depth of p and&lt;/em&gt; q in their tree
+UNION: const if p and q are root&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;proposition&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;the max depth of weightedQuickUnion is &lt;strong&gt;lgN&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;[pf] considering a node &lt;code&gt;x&lt;/code&gt;, in tree &lt;code&gt;T1&lt;/code&gt;, &lt;code&gt;dep(x)&lt;/code&gt; is x's depth in its tree.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image012.png" /&gt; &lt;br /&gt;
+→   &lt;code&gt;dep(x)&lt;/code&gt; will increase by 1, iff &lt;code&gt;T1&lt;/code&gt; is merged into another tree &lt;code&gt;T2&lt;/code&gt; (and by the algo, shoud have |T1|&amp;lt;=|T2| )&lt;br /&gt;
+→   x's tree's size become |T1|+|T2| &amp;gt;= 2&lt;em&gt;|T1| 
+⇒   everytime dep(x) increased by 1, x's tree's size will &lt;/em&gt;at least double*&lt;br /&gt;
+at first dep(x)=1, if dep(x) increases lgN times, the size of the tree will be &amp;gt;=  N &lt;br /&gt;
+CQFD.&lt;/p&gt;
+&lt;p&gt;so the &lt;code&gt;root()&lt;/code&gt; function takes only lgN time. 
+&lt;strong&gt;conclusion&lt;/strong&gt;: both UNION and FIND will be in &lt;strong&gt;lgN &lt;/strong&gt;time. &lt;/p&gt;
+&lt;h2&gt;improvement 2: path compression&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;imporve the root() function: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;when looking for root of a node ⇒ link &lt;em&gt;all nodes in the path &lt;/em&gt;up to the root. &lt;br /&gt;
+⇒ just a constant extra time compared to old implementation. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;2 pass implementation: &lt;/p&gt;
+&lt;p&gt;private int root(int p){
+    int r = p;
+    while(r!=id[r]) r=id[r];
+    while(p!=r){
+        int t = p;
+        p=id[p];
+        id[t]=r;
+    }
+    return r;
+}&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;flatens the tree greatly. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;single pass implementation: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;just make all other node &lt;em&gt;point to its grandparent&lt;/em&gt; (halving the path length)
+⇒ not as flatening as before, but in practice will almost be the same. 
+just one extra line of code: 
+    private int root(int p){
+        while(p!=id[p]){ 
+            id[p] = id[ id[p] ];
+            p=id[p];  &lt;br /&gt;
+        }
+        return p;
+    }&lt;/p&gt;
+&lt;h3&gt;complexity&lt;/h3&gt;
+&lt;p&gt;(for weighet quick union with path compression — &lt;em&gt;WQUPC&lt;/em&gt;)&lt;br /&gt;
+very very small: &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image013.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;lg*()&lt;/strong&gt; function: "&lt;em&gt;iterated log function&lt;/em&gt;", lg&lt;em&gt;(N) = the number of time to take log to get to 1
+lg&lt;/em&gt;()几乎可以看成常数了:  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image014.png" /&gt; &lt;br /&gt;
+ex. &lt;em&gt;lg&lt;/em&gt;(65536) = 4* (x^16=65536)&lt;br /&gt;
+because: lg(65536)=16 ; lg(16) = 4; lg(4)=2; lg(2)=1. &lt;br /&gt;
+&lt;strong&gt;⇒ N obj, M unions will take (almost) linear time&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image015.png" /&gt; &lt;br /&gt;
+(有人证明了不存在&lt;em&gt;理论上&lt;/em&gt;linear的算法. )&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;conclusion&lt;/strong&gt;: both UNION and FIND will be in &lt;strong&gt;constant time&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;summery&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image017.png" /&gt; &lt;br /&gt;
+上面这个表格好像quick union的部分有问题? 最坏情况下应该是N+MN吧??&lt;br /&gt;
+书上是这么写的:  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image016.png" /&gt;&lt;/p&gt;
+&lt;p&gt;WQUCF reduce 30 years to 6 seconds. &lt;/p&gt;
+&lt;h1&gt;5. Union Find Application&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image018.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;percolation&lt;/li&gt;
+&lt;li&gt;dynamic connectivity&lt;/li&gt;
+&lt;li&gt;Kruskal MST algo&lt;/li&gt;
+&lt;li&gt;Games (GO)&lt;/li&gt;
+&lt;li&gt;.......&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;percolation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;model: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;N&lt;em&gt;N grid of sites&lt;br /&gt;
+⇒ each site is open with proba=&lt;/em&gt;p*&lt;br /&gt;
+⇒ sys &lt;strong&gt;percolate&lt;/strong&gt; iff bottom and top are connected by open sites.  &lt;br /&gt;
+&lt;img alt="" src="algoI_week1_1/pasted_image019.png" /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;question: the &lt;em&gt;percolation probability&lt;/em&gt; as a function of &lt;em&gt;p &lt;/em&gt;(&lt;strong&gt;phase transition&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image020.png" /&gt; &lt;br /&gt;
+nobody knows how to get the threshold mathematically&lt;br /&gt;
+⇒ run &lt;em&gt;simulations&lt;/em&gt; to find out the phase transition &lt;em&gt;threshold&lt;/em&gt;.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Monte Carlo simulation   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;→ all sites initilized to be &lt;em&gt;closed&lt;/em&gt;&lt;br /&gt;
+→ randomly open sites &lt;em&gt;one by one&lt;/em&gt; &lt;br /&gt;
+→ when the sys percolates, the &lt;em&gt;vacancy percentage&lt;/em&gt; is an estimate of &lt;em&gt;p&lt;/em&gt; &lt;br /&gt;
+*(run above simulation for millions of times)   &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;N^2 sites, named 0 to N^2-1  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image022.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;add 2 more vertual sites: one on top, one on bottom   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week1_1/pasted_image021.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;openning a site: union to adjcent open sites (at most 4 unions)&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="algorithm"></category></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="http://x-wei.github.io/sparkmooc_note_lec8.html" rel="alternate"></link><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
 &lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;descriptive statistics&lt;/li&gt;
