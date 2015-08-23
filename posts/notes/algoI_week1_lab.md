@@ -5,19 +5,19 @@ Tags: algorithm
 
 model & problem
 ===============
-(原文描述太啰嗦了)
-A system using an N-by-N grid of sites. 
-→ Each site is either open or blocked. 
-→ A **full** site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)
-→ We say the system **percolates** if there is a path of connected open sites form the top row to the bottom row. 
+(原文描述太啰嗦了)  
+A system using an N-by-N grid of sites.   
+→ Each site is either open or blocked.   
+→ A **full** site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)  
+→ We say the system **percolates** if there is a path of connected open sites form the top row to the bottom row.   
 
 ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png)   
 
 ⇒ pb: if sites are independently set to be open with probability **p**, what is the probability that the system percolates?   
 ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png)   
-→ When N is sufficiently large, there is a threshold value **p*** such that when p < p* a random N-by-N grid almost never percolates, and when p > p*, a random N-by-N grid almost always percolates. 
-→ No mathematical solution for determining the percolation threshold p* has yet been derived. 
-⇒ Your task is to *write a computer program to estimate p**.
+→ When N is sufficiently large, there is a threshold value **p*** such that when p < p* a random N-by-N grid almost never percolates, and when p > p*, a random N-by-N grid almost always percolates.   
+→ No mathematical solution for determining the percolation threshold p* has yet been derived.   
+⇒ Your task is to *write a computer program to estimate p**.   
 
 
 Method
@@ -26,14 +26,14 @@ Method
 
 * API:
 
-    public class Percolation {
-       public Percolation(int N)               // create N-by-N grid, with all sites blocked
-       public void open(int i, int j)          // open site (row i, column j) if it is not open already
-       public boolean isOpen(int i, int j)     // is site (row i, column j) open?
-       public boolean isFull(int i, int j)     // is site (row i, column j) full?
-       public boolean percolates()             // does the system percolate?
-       public static void main(String[] args   // test client (optional)
-    }
+        public class Percolation {
+           public Percolation(int N)               // create N-by-N grid, with all sites blocked
+           public void open(int i, int j)          // open site (row i, column j) if it is not open already
+           public boolean isOpen(int i, int j)     // is site (row i, column j) open?
+           public boolean isFull(int i, int j)     // is site (row i, column j) full?
+           public boolean percolates()             // does the system percolate?
+           public static void main(String[] args   // test client (optional)
+        }
 
 
 * Corner cases: the row and column indices i and j are integers between 1 and N. **1≤i,j≤N**
@@ -68,14 +68,14 @@ if N<=0 in constructor: ``java.lang.IllegalArgumentException``
 
 * create API for this simulation: 
 
-    public class PercolationStats {
-       public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid
-       public double mean()                      // sample mean of percolation threshold
-       public double stddev()                    // sample standard deviation of percolation threshold
-       public double confidenceLo()              // low  endpoint of 95% confidence interval
-       public double confidenceHi()              // high endpoint of 95% confidence interval
-       public static void main(String[] args)    // test client (described below)
-    }
+        public class PercolationStats {
+           public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid
+           public double mean()                      // sample mean of percolation threshold
+           public double stddev()                    // sample standard deviation of percolation threshold
+           public double confidenceLo()              // low  endpoint of 95% confidence interval
+           public double confidenceHi()              // high endpoint of 95% confidence interval
+           public static void main(String[] args)    // test client (described below)
+        }
     
 
     -if  N ≤ 0 or T ≤ 0: ``java.lang.IllegalArgumentException``  

@@ -1,5 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-08-18T00:00:00+02:00</updated><entry><title>[Algorithms I] Week 2-2 Elementary Sorts</title><link href="http://x-wei.github.io/algoI_week2_2.html" rel="alternate"></link><updated>2015-08-18T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_2.html</id><summary type="html">&lt;h1&gt;1. Introduction&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-08-21T00:00:00+02:00</updated><entry><title>[Algorithms I] Week 3-1 Mergesort</title><link href="http://x-wei.github.io/algoI_week3_1.html" rel="alternate"></link><updated>2015-08-21T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week3_1.html</id><summary type="html">&lt;p&gt;Two classical sorting algorithms: mergesort, quicksort.    &lt;/p&gt;
+&lt;h1&gt;1. Mergesort&lt;/h1&gt;
+&lt;p&gt;Divide and conquer: top 10 algorithms of the 20th century, invented by von Neumann.     &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Idea&lt;/strong&gt;:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;divide array into 2 halves   &lt;/li&gt;
+&lt;li&gt;recursively sort each half   &lt;/li&gt;
+&lt;li&gt;merge two sorted halves   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Merge&lt;/strong&gt;:  &lt;br /&gt;
+Goal: a[lo] to a[mid] and a[mid+1] to a[hi] are sorted ⇒ get a[lo] to a[hi] sorted.  &lt;br /&gt;
+→&lt;em&gt;use an auxiliary array to copy data&lt;/em&gt;: using 3 indices i,j,k.     &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image.png" /&gt;      &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;lo&lt;/span&gt; &lt;span class="p"&gt;){&lt;/span&gt;   
+&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;note: we use &lt;code&gt;if(less(aux[j],aux[i]))&lt;/code&gt;instead of&lt;code&gt;if(less(aux[j],aux[i]))&lt;/code&gt;, because less(a,b) == true iff a&amp;lt;b (strict), and we want to make mergesort &lt;strong&gt;stable&lt;/strong&gt;. See section (5) below.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Assertion&lt;/strong&gt; &lt;br /&gt;
+We can also add &lt;em&gt;assertions&lt;/em&gt;: &lt;code&gt;assert isSorted(a, lo, mid); assert isSorted(a,mid+1, hi);&lt;/code&gt;    &lt;br /&gt;
+Enable/disable assertion at runtime:  &lt;br /&gt;
+&lt;code&gt;java -ea MyProgram&lt;/code&gt; //enable assertion &lt;br /&gt;
+&lt;code&gt;java -da MyProgram&lt;/code&gt; //disable assertion: &lt;strong&gt;default&lt;/strong&gt; &lt;br /&gt;
+Best practice:  &lt;br /&gt;
+use assertions to check interval invariants; &lt;br /&gt;
+do NOT use assert for external argument checking !    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mergesort   &lt;/strong&gt; &lt;br /&gt;
+为了mergesort需要写两个辅助函数: merge和sort(recursive):   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;MergeSort&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;AbstractSort&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+        &lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+        &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="p"&gt;}&lt;/span&gt;   
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+        &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;    
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;    
+        &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+        &lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+        &lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt;   
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Comparable&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;lo&lt;/span&gt; &lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="c1"&gt;// as before...   &lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;有几点注意的:    &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;注意递归终止条件是&lt;code&gt;hi&amp;lt;=lo&lt;/code&gt;, 不是&lt;code&gt;==&lt;/code&gt;.    &lt;/li&gt;
+&lt;li&gt;实现的代码不难, 但是定义好辅助函数的参数并不简单... 比如在merge里使用了mid作为参数.    &lt;/li&gt;
+&lt;li&gt;aux的数组直接写在了函数参数里面, 好处是可以防止反复声明数组带来的开销.   &lt;/li&gt;
+&lt;li&gt;发现他们写的时候mid都是写成: &lt;code&gt;mid = lo+(hi-lo)/2&lt;/code&gt;, &lt;a href="http://stackoverflow.com/questions/25571359/why-we-write-lohi-lo-2-in-binary-search"&gt;查了一下&lt;/a&gt;发现这样的原因是为了防止hi+lo整数溢出...嗯有道理.    &lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;proposition (time)&lt;/strong&gt; &lt;br /&gt;
+Mergesort takes at most NlgN compares and 6NlgN array access.  &lt;br /&gt;
+&lt;em&gt;Proof.&lt;/em&gt; &lt;br /&gt;
+def: C(N)=#compares for N elements, A(N)=#array access for N elements, the recurrence eq:  &lt;br /&gt;
+C(N) &amp;lt;= 2&lt;em&gt;C(N/2) + N; C(1) = 0  (最多N次比较: 每个a[]的数都由比较得到)    &lt;br /&gt;
+A(N) &amp;lt;= 2&lt;/em&gt;A(N/2) + 6N; A(1) = 0 (~~这里不太理解为什么是6N, 怎么数都是4N或者5N啊?......~~2N复制到aux, 2N复制回去, 2N比较)    &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image001.png" /&gt;    &lt;br /&gt;
+(上图蓝色的一列是extra cost)      &lt;br /&gt;
+或者用递推公式, 发现D(N)/N的递推关系:     &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image002.png" /&gt;        &lt;br /&gt;
+或者用数学归纳法:    &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image003.png" /&gt;      &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Proposition(memory)&lt;/strong&gt;    &lt;br /&gt;
+Mergesort takes N extra memory. &lt;br /&gt;
+⇒ mergesort is NOT &lt;em&gt;in-place&lt;/em&gt; sorting method.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;def&lt;/strong&gt;. &lt;em&gt;"in-place"&lt;/em&gt; &lt;br /&gt;
+A sorting algo is in-place if it uses &amp;lt;C*lgN extra memory.  &lt;br /&gt;
+ex. insertion sort, shellsort, selection sort...   &lt;/p&gt;
+&lt;h2&gt;Practical improvements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;use insertion sort for small arrays:     &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;cutoff to insertion sort for &amp;lt;7 items.    &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image004.png" /&gt;    &lt;br /&gt;
+⇒ lead to 20% improvement!     &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;stop if alread sorted: *a[mid]&amp;lt;a[mid+1]!   *   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week3_1/pasted_image005.png" /&gt;      &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;switch the role of &lt;code&gt;a[]&lt;/code&gt; and &lt;code&gt;aux[]&lt;/code&gt;   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week3_1/pasted_image006.png" /&gt;       &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image007.png" /&gt;      &lt;/p&gt;
+&lt;h1&gt;2. Bottom-up Mergesort&lt;/h1&gt;
+&lt;p&gt;bottom-up version of mergesort &lt;em&gt;without recursion&lt;/em&gt;.  &lt;br /&gt;
+Idea:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pass and merge subarrays of size 1 in pairs      &lt;/li&gt;
+&lt;li&gt;repeat for subarrays of size 2,4,8,....      &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week3_1/pasted_image008.png" /&gt;      &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;p&gt;看着上面那个图好写一点... 就是每次用更大的size来两两merge一遍数组   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static void sort&lt;span class="p"&gt;(&lt;/span&gt;Comparable&lt;span class="p"&gt;[]&lt;/span&gt; a&lt;span class="p"&gt;){&lt;/span&gt;   
+    Comparable&lt;span class="p"&gt;[]&lt;/span&gt; aux &lt;span class="o"&gt;=&lt;/span&gt; new Comparable&lt;span class="p"&gt;[&lt;/span&gt;a.length&lt;span class="p"&gt;];&lt;/span&gt;   
+    &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;int sz&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;sz&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;a.length&lt;span class="p"&gt;;&lt;/span&gt;sz&lt;span class="o"&gt;*=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+        &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;int i&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;i&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;a.length&lt;span class="o"&gt;-&lt;/span&gt;sz&lt;span class="p"&gt;;&lt;/span&gt;i&lt;span class="o"&gt;+=&lt;/span&gt;sz&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;   
+            merge&lt;span class="p"&gt;(&lt;/span&gt; a&lt;span class="p"&gt;,&lt;/span&gt;aux&lt;span class="p"&gt;,&lt;/span&gt;i&lt;span class="p"&gt;,&lt;/span&gt;i&lt;span class="o"&gt;+&lt;/span&gt;sz&lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;Math.min&lt;span class="p"&gt;(&lt;/span&gt;i&lt;span class="o"&gt;+&lt;/span&gt;sz&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="m"&gt;2-1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="o"&gt;//&amp;lt;-&lt;/span&gt;注意mid和hi的计算方法   
+    &lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;3. Sorting Complexity&lt;/h1&gt;
+&lt;p&gt;some items:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;computational model: allowed operations, (ex. &lt;em&gt;decision tree for compare based sorting&lt;/em&gt;).     &lt;/li&gt;
+&lt;li&gt;cost model: operation counts.    &lt;/li&gt;
+&lt;li&gt;upper bound: cost guarantee (ex. NlgN for mergesort). .    &lt;/li&gt;
+&lt;li&gt;lower bound: limit on cost guarantee for all algorithms (no algorithm can do better).    &lt;/li&gt;
+&lt;li&gt;Optimal algorithm: algo with best cost guarantee. (upper bound=lower bound)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;证明lower bound 的方法很有意思:    &lt;/p&gt;
+&lt;h2&gt;lower bound for sorting&lt;/h2&gt;
+&lt;p&gt;(binary) decision tree for the case of 3 distinct items:      &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image009.png" /&gt;         &lt;/p&gt;
+&lt;p&gt;each possible ordering is a leaf of the decision tree → there are N! possible orderings → tree height should be lg(N!) = NlgN (cf. &lt;a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation"&gt;https://en.wikipedia.org/wiki/Stirling%27s_approximation&lt;/a&gt;)    &lt;br /&gt;
+&lt;strong&gt;proposition.  &lt;/strong&gt; &lt;br /&gt;
+Any compare-based sorting algorithm must have at least lg(N!)~NlgN compares in the worst case. (for N distinct keys)        &lt;br /&gt;
+&lt;em&gt;proof.&lt;/em&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;binary tree of height h has at most 2^h leaves     &lt;/li&gt;
+&lt;li&gt;N! possible orderings → at least N! leaves     &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week3_1/pasted_image010.png" /&gt;     &lt;br /&gt;
+ So, lower bound for sorting = ~NlgN ⇒ &lt;em&gt;mergesort &lt;strong&gt;&lt;em&gt;is&lt;/em&gt;&lt;/strong&gt; an asymptotical optimal algorithm&lt;/em&gt;. (In terms of time complexity, the shortcoming of mergesort is always the extra space usage)   &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image011.png" /&gt;       &lt;br /&gt;
+ 但是并不是说NlgN是&lt;em&gt;所有&lt;/em&gt;排序问题的下界:   &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image012.png" /&gt;      &lt;/p&gt;
+&lt;h1&gt;4. Comparators&lt;/h1&gt;
+&lt;p&gt;Java mechenism for comparing same data on different ways.    &lt;/p&gt;
+&lt;h2&gt;Comparable interface&lt;/h2&gt;
+&lt;p&gt;→Sorting using &lt;em&gt;natural order&lt;/em&gt; for a data type. &lt;br /&gt;
+    public class Data implements Comparable&lt;Date&gt;{ &lt;br /&gt;
+    public int compareTo(Date that){ &lt;br /&gt;
+    //...} &lt;br /&gt;
+    }   &lt;/p&gt;
+&lt;h2&gt;Comparator interface&lt;/h2&gt;
+&lt;p&gt;→Sorting using  an &lt;em&gt;alternative order&lt;/em&gt;. (total order property is required...)   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;interface&lt;/span&gt; &lt;span class="nx"&gt;Comparator&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;Key&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nb"&gt;compare&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;Key&lt;/span&gt; &lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Key&lt;/span&gt; &lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Comparator can be passed as arguments in java system sort:   &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image013.png" /&gt;      &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Using Comparators in our sorting algos   &lt;/strong&gt; &lt;br /&gt;
+Use another signature:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;change Comparable to Object   &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;add Comparator in arguments   &lt;/p&gt;
+&lt;p&gt;public static void sort(Object[] a, Comparator comparator); &lt;br /&gt;
+public static boolean less(Comparator c, Object v, Object w);    &lt;/p&gt;
+&lt;p&gt;public static void exch(Object[] a, int i, int j);   &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Implementing a comparator    &lt;/strong&gt; &lt;br /&gt;
+Add static comparator to a class:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the declaration of a class, define an inner class that implements the Comparator interface,    &lt;/li&gt;
+&lt;li&gt;Then declare an instance of this inner class as a static final variable...   &lt;/li&gt;
+&lt;li&gt;note: the inner class should be &lt;strong&gt;static&lt;/strong&gt; also.      &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoI_week3_1/pasted_image014.png" /&gt;    &lt;br /&gt;
+以上的方法目的是为某个类提供预先定义好的comparator(比如&lt;code&gt;String.CASE_INSENSITIVE_ORDER&lt;/code&gt;), 另外也可以直接再声明一个类作为comparator, 然后实例化这个类传进去, 就像之前做过的那样.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Application: Graham scan algo for convex hull  &lt;/strong&gt; &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image015.png" /&gt;    &lt;br /&gt;
+We can get the result of compare by calling &lt;code&gt;ccw(a,b,c)&lt;/code&gt; : &lt;br /&gt;
+*ccw(p,q1,q2)=true ⇔ q2&amp;gt;q1 in terms of polar angle wrt p. (别忘了p是y坐标最小的点, 否则还要讨论角坐标为负数的情况, 见下图).    * &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image016.png" /&gt;         &lt;/p&gt;
+&lt;h1&gt;5. Stability&lt;/h1&gt;
+&lt;p&gt;Typical application: first sort by student name then by section.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;def. :stable"&lt;/strong&gt; &lt;br /&gt;
+&lt;em&gt;A stable sort preserves the relative order for items with equal keys.&lt;/em&gt;    &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Insertion sort and mergesort are stable, whereas selection sort and shell sort are not.&lt;/em&gt; (And always need to carefully check code: "less than" vs. "less than or equal to").   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;insertion sort:&lt;/strong&gt;    &lt;br /&gt;
+stable &lt;br /&gt;
+proof: we never move equal items pass each other: &lt;code&gt;if(less(a[j], a[j-1])) exch(...)&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;selection sort:  &lt;/strong&gt; &lt;br /&gt;
+not stable   &lt;br /&gt;
+counter example:  &lt;br /&gt;
+when exchanging A1 and B1, we move B1 behind B2    &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image017.png" /&gt;        &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;shell sort:  &lt;/strong&gt; &lt;br /&gt;
+counter example: long-dist exchanges   &lt;br /&gt;
+&lt;img alt="" src="algoI_week3_1/pasted_image018.png" /&gt;      &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;merge sort:   &lt;/strong&gt; &lt;br /&gt;
+stable &lt;br /&gt;
+proof: suffices to verify that merge operation is stable, if keys are equal, always take element from left subarray.    &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week 2-2 Elementary Sorts</title><link href="http://x-wei.github.io/algoI_week2_2.html" rel="alternate"></link><updated>2015-08-18T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_2.html</id><summary type="html">&lt;h1&gt;1. Introduction&lt;/h1&gt;
 &lt;p&gt;rearanging array of size N into ascending order &lt;br /&gt;
 test client code: &lt;code&gt;Insertion.sort(a);&lt;/code&gt;   &lt;/p&gt;
 &lt;p&gt;sort &lt;em&gt;any&lt;/em&gt; datatype &lt;/p&gt;
@@ -316,7 +523,7 @@ area&amp;gt;0 ⇔ CCW   &lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;running time: &lt;em&gt;NlgN for sorting and linear for the rest.&lt;/em&gt; &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week 2-1 Stacks ans Queues</title><link href="http://x-wei.github.io/algoI_week2_1.html" rel="alternate"></link><updated>2015-07-09T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_1.html</id><summary type="html">&lt;p&gt;fundamental data types: stacks and queues
+&lt;p&gt;running time: &lt;em&gt;NlgN for sorting and linear for the rest.&lt;/em&gt; &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week 2-1 Stacks and Queues</title><link href="http://x-wei.github.io/algoI_week2_1.html" rel="alternate"></link><updated>2015-07-09T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week2_1.html</id><summary type="html">&lt;p&gt;fundamental data types: stacks and queues
 operations: 
 &lt;strong&gt;insert, remove, test empy, iterate,&lt;/strong&gt;...  &lt;br /&gt;
 &lt;img alt="" src="algoI_week2_1/pasted_image.png" /&gt;  &lt;/p&gt;
@@ -669,29 +876,32 @@ recursion: can always use an explicit stack to remove recursion&lt;/p&gt;
 最后一行应该是value stack.  &lt;br /&gt;
 &lt;img alt="" src="algoI_week2_1/pasted_image011.png" /&gt;   &lt;/p&gt;
 &lt;p&gt;⇒ 后缀表达式, 逆波兰式......&lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms I] Week1-Lab: Percolation</title><link href="http://x-wei.github.io/algoI_week1_lab.html" rel="alternate"></link><updated>2015-07-07T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoI_week1_lab.html</id><summary type="html">&lt;h1&gt;model &amp;amp; problem&lt;/h1&gt;
-&lt;p&gt;(原文描述太啰嗦了)
-A system using an N-by-N grid of sites. 
-→ Each site is either open or blocked. 
-→ A &lt;strong&gt;full&lt;/strong&gt; site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)
-→ We say the system &lt;strong&gt;percolates&lt;/strong&gt; if there is a path of connected open sites form the top row to the bottom row. &lt;/p&gt;
+&lt;p&gt;(原文描述太啰嗦了)&lt;br /&gt;
+A system using an N-by-N grid of sites. &lt;br /&gt;
+→ Each site is either open or blocked. &lt;br /&gt;
+→ A &lt;strong&gt;full&lt;/strong&gt; site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)&lt;br /&gt;
+→ We say the system &lt;strong&gt;percolates&lt;/strong&gt; if there is a path of connected open sites form the top row to the bottom row.   &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png" /&gt;   &lt;/p&gt;
 &lt;p&gt;⇒ pb: if sites are independently set to be open with probability &lt;strong&gt;p&lt;/strong&gt;, what is the probability that the system percolates? &lt;br /&gt;
 &lt;img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png" /&gt; &lt;br /&gt;
-→ When N is sufficiently large, there is a threshold value **p&lt;strong&gt;&lt;em&gt; such that when p &amp;lt; p&lt;/em&gt; a random N-by-N grid almost never percolates, and when p &amp;gt; p&lt;em&gt;, a random N-by-N grid almost always percolates. 
-→ No mathematical solution for determining the percolation threshold p&lt;/em&gt; has yet been derived. 
-⇒ Your task is to *write a computer program to estimate p&lt;/strong&gt;.&lt;/p&gt;
+→ When N is sufficiently large, there is a threshold value **p&lt;strong&gt;&lt;em&gt; such that when p &amp;lt; p&lt;/em&gt; a random N-by-N grid almost never percolates, and when p &amp;gt; p&lt;em&gt;, a random N-by-N grid almost always percolates. &lt;br /&gt;
+→ No mathematical solution for determining the percolation threshold p&lt;/em&gt; has yet been derived. &lt;br /&gt;
+⇒ Your task is to *write a computer program to estimate p&lt;/strong&gt;.   &lt;/p&gt;
 &lt;h1&gt;Method&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;API:&lt;/p&gt;
-&lt;p&gt;public class Percolation {
-   public Percolation(int N)               // create N-by-N grid, with all sites blocked
-   public void open(int i, int j)          // open site (row i, column j) if it is not open already
-   public boolean isOpen(int i, int j)     // is site (row i, column j) open?
-   public boolean isFull(int i, int j)     // is site (row i, column j) full?
-   public boolean percolates()             // does the system percolate?
-   public static void main(String[] args   // test client (optional)
-}&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Percolation&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Percolation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;               &lt;span class="c1"&gt;// create N-by-N grid, with all sites blocked&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;          &lt;span class="c1"&gt;// open site (row i, column j) if it is not open already&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;isOpen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;     &lt;span class="c1"&gt;// is site (row i, column j) open?&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;isFull&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;     &lt;span class="c1"&gt;// is site (row i, column j) full?&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;percolates&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;             &lt;span class="c1"&gt;// does the system percolate?&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;   &lt;span class="c1"&gt;// test client (optional)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Corner cases: the row and column indices i and j are integers between 1 and N. &lt;strong&gt;1≤i,j≤N&lt;/strong&gt;&lt;/p&gt;
@@ -727,14 +937,17 @@ if N&amp;lt;=0 in constructor: &lt;code&gt;java.lang.IllegalArgumentException&lt
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;create API for this simulation: &lt;/p&gt;
-&lt;p&gt;public class PercolationStats {
-   public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid
-   public double mean()                      // sample mean of percolation threshold
-   public double stddev()                    // sample standard deviation of percolation threshold
-   public double confidenceLo()              // low  endpoint of 95% confidence interval
-   public double confidenceHi()              // high endpoint of 95% confidence interval
-   public static void main(String[] args)    // test client (described below)
-}&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;PercolationStats&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;PercolationStats&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;     &lt;span class="c1"&gt;// perform T independent experiments on an N-by-N grid&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;                      &lt;span class="c1"&gt;// sample mean of percolation threshold&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;stddev&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;                    &lt;span class="c1"&gt;// sample standard deviation of percolation threshold&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;confidenceLo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;              &lt;span class="c1"&gt;// low  endpoint of 95% confidence interval&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;double&lt;/span&gt; &lt;span class="n"&gt;confidenceHi&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;              &lt;span class="c1"&gt;// high endpoint of 95% confidence interval&lt;/span&gt;
+   &lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;    &lt;span class="c1"&gt;// test client (described below)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;-if  N ≤ 0 or T ≤ 0: &lt;code&gt;java.lang.IllegalArgumentException&lt;/code&gt;&lt;br /&gt;
 -&lt;code&gt;main()&lt;/code&gt; : takes two command-line arguments N and T&lt;br /&gt;
 ⇒ performs T independent computational experiments on an N-by-N grid, and prints out the mean, standard deviation, and the 95% confidence interval for p*. &lt;br /&gt;

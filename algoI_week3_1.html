@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[Algorithms I] Week 3-1 Mergesort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&img=6&pos=right" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+            var bds_config = {"bdTop":289};
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+    </script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Algorithms I] Week 3-1 Mergesort">
+					[Algorithms I] Week 3-1 Mergesort 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-08-21T00:00:00">
+	<i class="icon-calendar"></i>五 21 八月 2015
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>Two classical sorting algorithms: mergesort, quicksort.    </p>
+<h1>1. Mergesort</h1>
+<p>Divide and conquer: top 10 algorithms of the 20th century, invented by von Neumann.     </p>
+<p><strong>Idea</strong>:    </p>
+<ul>
+<li>divide array into 2 halves   </li>
+<li>recursively sort each half   </li>
+<li>merge two sorted halves   </li>
+</ul>
+<h2>Implementation</h2>
+<p><strong>Merge</strong>:  <br />
+Goal: a[lo] to a[mid] and a[mid+1] to a[hi] are sorted ⇒ get a[lo] to a[hi] sorted.  <br />
+→<em>use an auxiliary array to copy data</em>: using 3 indices i,j,k.     <br />
+<img alt="" src="static/algoI_week3_1/pasted_image.png" />      </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">merge</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span><span class="n">a</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">[]</span> <span class="n">aux</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span> <span class="p">){</span>   
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="n">aux</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>   
+<span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span>   
+<span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">less</span><span class="p">(</span><span class="n">aux</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">aux</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>   
+    <span class="k">else</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>   
+<span class="p">}</span>   
+<span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">mid</span><span class="p">)</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>   
+<span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">)</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>note: we use <code>if(less(aux[j],aux[i]))</code>instead of<code>if(less(aux[j],aux[i]))</code>, because less(a,b) == true iff a&lt;b (strict), and we want to make mergesort <strong>stable</strong>. See section (5) below.    </p>
+<p><strong>Assertion</strong> <br />
+We can also add <em>assertions</em>: <code>assert isSorted(a, lo, mid); assert isSorted(a,mid+1, hi);</code>    <br />
+Enable/disable assertion at runtime:  <br />
+<code>java -ea MyProgram</code> //enable assertion <br />
+<code>java -da MyProgram</code> //disable assertion: <strong>default</strong> <br />
+Best practice:  <br />
+use assertions to check interval invariants; <br />
+do NOT use assert for external argument checking !    </p>
+<p><strong>Mergesort   </strong> <br />
+为了mergesort需要写两个辅助函数: merge和sort(recursive):   </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">MergeSort</span> <span class="n">extends</span> <span class="n">AbstractSort</span><span class="p">{</span>   
+    <span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">){</span>   
+        <span class="n">Comparable</span><span class="p">[]</span> <span class="n">aux</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Comparable</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">];</span>   
+        <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">aux</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>   
+    <span class="p">}</span>   
+    <span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">[]</span> <span class="n">aux</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">){</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>    
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">hi</span><span class="o">+</span><span class="n">lo</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>    
+        <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">aux</span><span class="p">,</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">hi</span><span class="p">);</span>   
+        <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">aux</span><span class="p">,</span><span class="n">lo</span><span class="p">,</span><span class="n">mid</span><span class="p">);</span>   
+        <span class="n">merge</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">aux</span><span class="p">,</span><span class="n">hi</span><span class="p">,</span><span class="n">mid</span><span class="p">,</span><span class="n">lo</span><span class="p">);</span>
+
+    <span class="p">}</span>   
+    <span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="n">merge</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span><span class="n">a</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">[]</span> <span class="n">aux</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span> <span class="p">){</span>   
+    <span class="c1">// as before...   </span>
+    <span class="p">}</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>有几点注意的:    </p>
+<ol>
+<li>注意递归终止条件是<code>hi&lt;=lo</code>, 不是<code>==</code>.    </li>
+<li>实现的代码不难, 但是定义好辅助函数的参数并不简单... 比如在merge里使用了mid作为参数.    </li>
+<li>aux的数组直接写在了函数参数里面, 好处是可以防止反复声明数组带来的开销.   </li>
+<li>发现他们写的时候mid都是写成: <code>mid = lo+(hi-lo)/2</code>, <a href="http://stackoverflow.com/questions/25571359/why-we-write-lohi-lo-2-in-binary-search">查了一下</a>发现这样的原因是为了防止hi+lo整数溢出...嗯有道理.    </li>
+</ol>
+<h2>Analysis</h2>
+<p><strong>proposition (time)</strong> <br />
+Mergesort takes at most NlgN compares and 6NlgN array access.  <br />
+<em>Proof.</em> <br />
+def: C(N)=#compares for N elements, A(N)=#array access for N elements, the recurrence eq:  <br />
+C(N) &lt;= 2<em>C(N/2) + N; C(1) = 0  (最多N次比较: 每个a[]的数都由比较得到)    <br />
+A(N) &lt;= 2</em>A(N/2) + 6N; A(1) = 0 (~~这里不太理解为什么是6N, 怎么数都是4N或者5N啊?......~~2N复制到aux, 2N复制回去, 2N比较)    <br />
+<img alt="" src="static/algoI_week3_1/pasted_image001.png" />    <br />
+(上图蓝色的一列是extra cost)      <br />
+或者用递推公式, 发现D(N)/N的递推关系:     <br />
+<img alt="" src="static/algoI_week3_1/pasted_image002.png" />        <br />
+或者用数学归纳法:    <br />
+<img alt="" src="static/algoI_week3_1/pasted_image003.png" />      </p>
+<p><strong>Proposition(memory)</strong>    <br />
+Mergesort takes N extra memory. <br />
+⇒ mergesort is NOT <em>in-place</em> sorting method.    </p>
+<p><strong>def</strong>. <em>"in-place"</em> <br />
+A sorting algo is in-place if it uses &lt;C*lgN extra memory.  <br />
+ex. insertion sort, shellsort, selection sort...   </p>
+<h2>Practical improvements</h2>
+<ul>
+<li>use insertion sort for small arrays:     </li>
+</ul>
+<p>cutoff to insertion sort for &lt;7 items.    <br />
+<img alt="" src="static/algoI_week3_1/pasted_image004.png" />    <br />
+⇒ lead to 20% improvement!     </p>
+<ul>
+<li>stop if alread sorted: *a[mid]&lt;a[mid+1]!   *   </li>
+</ul>
+<p><img alt="" src="static/algoI_week3_1/pasted_image005.png" />      </p>
+<ul>
+<li>switch the role of <code>a[]</code> and <code>aux[]</code>   </li>
+</ul>
+<p><img alt="" src="static/algoI_week3_1/pasted_image006.png" />       <br />
+<img alt="" src="static/algoI_week3_1/pasted_image007.png" />      </p>
+<h1>2. Bottom-up Mergesort</h1>
+<p>bottom-up version of mergesort <em>without recursion</em>.  <br />
+Idea:    </p>
+<ul>
+<li>pass and merge subarrays of size 1 in pairs      </li>
+<li>repeat for subarrays of size 2,4,8,....      </li>
+</ul>
+<p><img alt="" src="static/algoI_week3_1/pasted_image008.png" />      </p>
+<h2>implementation</h2>
+<p>看着上面那个图好写一点... 就是每次用更大的size来两两merge一遍数组   </p>
+<div class="codehilite"><pre>public static void sort<span class="p">(</span>Comparable<span class="p">[]</span> a<span class="p">){</span>   
+    Comparable<span class="p">[]</span> aux <span class="o">=</span> new Comparable<span class="p">[</span>a.length<span class="p">];</span>   
+    <span class="kr">for</span><span class="p">(</span>int sz<span class="o">=</span><span class="m">1</span><span class="p">;</span>sz<span class="o">&lt;</span>a.length<span class="p">;</span>sz<span class="o">*=</span><span class="m">2</span><span class="p">){</span>   
+        <span class="kr">for</span><span class="p">(</span>int i<span class="o">=</span><span class="m">0</span><span class="p">;</span>i<span class="o">&lt;</span>a.length<span class="o">-</span>sz<span class="p">;</span>i<span class="o">+=</span>sz<span class="o">*</span><span class="m">2</span><span class="p">)</span>   
+            merge<span class="p">(</span> a<span class="p">,</span>aux<span class="p">,</span>i<span class="p">,</span>i<span class="o">+</span>sz<span class="m">-1</span><span class="p">,</span>Math.min<span class="p">(</span>i<span class="o">+</span>sz<span class="o">*</span><span class="m">2-1</span><span class="p">)</span> <span class="p">);</span><span class="o">//&lt;-</span>注意mid和hi的计算方法   
+    <span class="p">}</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<h1>3. Sorting Complexity</h1>
+<p>some items:    </p>
+<ul>
+<li>computational model: allowed operations, (ex. <em>decision tree for compare based sorting</em>).     </li>
+<li>cost model: operation counts.    </li>
+<li>upper bound: cost guarantee (ex. NlgN for mergesort). .    </li>
+<li>lower bound: limit on cost guarantee for all algorithms (no algorithm can do better).    </li>
+<li>Optimal algorithm: algo with best cost guarantee. (upper bound=lower bound)   </li>
+</ul>
+<p>证明lower bound 的方法很有意思:    </p>
+<h2>lower bound for sorting</h2>
+<p>(binary) decision tree for the case of 3 distinct items:      <br />
+<img alt="" src="static/algoI_week3_1/pasted_image009.png" />         </p>
+<p>each possible ordering is a leaf of the decision tree → there are N! possible orderings → tree height should be lg(N!) = NlgN (cf. <a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">https://en.wikipedia.org/wiki/Stirling%27s_approximation</a>)    <br />
+<strong>proposition.  </strong> <br />
+Any compare-based sorting algorithm must have at least lg(N!)~NlgN compares in the worst case. (for N distinct keys)        <br />
+<em>proof.</em>   </p>
+<ul>
+<li>binary tree of height h has at most 2^h leaves     </li>
+<li>N! possible orderings → at least N! leaves     </li>
+</ul>
+<p><img alt="" src="static/algoI_week3_1/pasted_image010.png" />     <br />
+ So, lower bound for sorting = ~NlgN ⇒ <em>mergesort <strong><em>is</em></strong> an asymptotical optimal algorithm</em>. (In terms of time complexity, the shortcoming of mergesort is always the extra space usage)   <br />
+<img alt="" src="static/algoI_week3_1/pasted_image011.png" />       <br />
+ 但是并不是说NlgN是<em>所有</em>排序问题的下界:   <br />
+<img alt="" src="static/algoI_week3_1/pasted_image012.png" />      </p>
+<h1>4. Comparators</h1>
+<p>Java mechenism for comparing same data on different ways.    </p>
+<h2>Comparable interface</h2>
+<p>→Sorting using <em>natural order</em> for a data type. <br />
+    public class Data implements Comparable<Date>{ <br />
+    public int compareTo(Date that){ <br />
+    //...} <br />
+    }   </p>
+<h2>Comparator interface</h2>
+<p>→Sorting using  an <em>alternative order</em>. (total order property is required...)   </p>
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">interface</span> <span class="nx">Comparator</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span><span class="p">{</span>   
+    <span class="nx">int</span> <span class="nb">compare</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">v</span><span class="p">,</span> <span class="nb">Key</span> <span class="nx">w</span><span class="p">);</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Comparator can be passed as arguments in java system sort:   <br />
+<img alt="" src="static/algoI_week3_1/pasted_image013.png" />      </p>
+<p><strong>Using Comparators in our sorting algos   </strong> <br />
+Use another signature:    </p>
+<ul>
+<li>change Comparable to Object   </li>
+<li>
+<p>add Comparator in arguments   </p>
+<p>public static void sort(Object[] a, Comparator comparator); <br />
+public static boolean less(Comparator c, Object v, Object w);    </p>
+<p>public static void exch(Object[] a, int i, int j);   </p>
+</li>
+</ul>
+<p><strong>Implementing a comparator    </strong> <br />
+Add static comparator to a class:    </p>
+<ul>
+<li>In the declaration of a class, define an inner class that implements the Comparator interface,    </li>
+<li>Then declare an instance of this inner class as a static final variable...   </li>
+<li>note: the inner class should be <strong>static</strong> also.      </li>
+</ul>
+<p><img alt="" src="static/algoI_week3_1/pasted_image014.png" />    <br />
+以上的方法目的是为某个类提供预先定义好的comparator(比如<code>String.CASE_INSENSITIVE_ORDER</code>), 另外也可以直接再声明一个类作为comparator, 然后实例化这个类传进去, 就像之前做过的那样.    </p>
+<p><strong>Application: Graham scan algo for convex hull  </strong> <br />
+<img alt="" src="static/algoI_week3_1/pasted_image015.png" />    <br />
+We can get the result of compare by calling <code>ccw(a,b,c)</code> : <br />
+*ccw(p,q1,q2)=true ⇔ q2&gt;q1 in terms of polar angle wrt p. (别忘了p是y坐标最小的点, 否则还要讨论角坐标为负数的情况, 见下图).    * <br />
+<img alt="" src="static/algoI_week3_1/pasted_image016.png" />         </p>
+<h1>5. Stability</h1>
+<p>Typical application: first sort by student name then by section.    </p>
+<p><strong>def. :stable"</strong> <br />
+<em>A stable sort preserves the relative order for items with equal keys.</em>    </p>
+<p><em>Insertion sort and mergesort are stable, whereas selection sort and shell sort are not.</em> (And always need to carefully check code: "less than" vs. "less than or equal to").   </p>
+<p><strong>insertion sort:</strong>    <br />
+stable <br />
+proof: we never move equal items pass each other: <code>if(less(a[j], a[j-1])) exch(...)</code>   </p>
+<p><strong>selection sort:  </strong> <br />
+not stable   <br />
+counter example:  <br />
+when exchanging A1 and B1, we move B1 behind B2    <br />
+<img alt="" src="static/algoI_week3_1/pasted_image017.png" />        </p>
+<p><strong>shell sort:  </strong> <br />
+counter example: long-dist exchanges   <br />
+<img alt="" src="static/algoI_week3_1/pasted_image018.png" />      </p>
+<p><strong>merge sort:   </strong> <br />
+stable <br />
+proof: suffices to verify that merge operation is stable, if keys are equal, always take element from left subarray.    </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "algoI_week3_1.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
