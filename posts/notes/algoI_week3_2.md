@@ -88,7 +88,7 @@ if the array is already in order, *each partition will have one subarray of leng
    
 **Average case  **   
 >**proposition  **   
-On average, for array with N distinct keys, the #compares =  ~2NlgN, #exchanges = ~1/2*NlgN.      
+On average, for array with N distinct keys, the #compares =  ~2NlnN, #exchanges = ~1/2*NlnN.      
 *Proof.*      
 C(N) := # compares for N entries     
 pivot 在N个数离的排名是uniform的      
@@ -97,6 +97,7 @@ pivot 在N个数离的排名是uniform的
 ![](algoI_week3_2/pasted_image004.png)        
 ![](algoI_week3_2/pasted_image006.png)         
    
+(上面最后一行写错了... 是2NlnN...orz)
 random shuffle: probalistic guarantee against worst case.    
    
 **Pitfalls    **   

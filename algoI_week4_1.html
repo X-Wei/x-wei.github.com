@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[Algorithms I] Week 4-1 Priority Queue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&img=6&pos=right" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+            var bds_config = {"bdTop":289};
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+    </script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Algorithms I] Week 4-1 Priority Queue">
+					[Algorithms I] Week 4-1 Priority Queue 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-08-24T00:00:00">
+	<i class="icon-calendar"></i>一 24 八月 2015
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h1>1. API and elementary implementations</h1>
+<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br />
+Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </p>
+<p>API:    </p>
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="k">Max</span><span class="o">&lt;</span><span class="nx">Kye</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   
+    <span class="k">public</span> <span class="nf">MaxPQ</span><span class="p">();</span>    
+    <span class="k">public</span> <span class="nf">void</span> <span class="nb">insert</span><span class="p">(</span><span class="na">Key</span> <span class="nx">k</span><span class="p">);</span>   
+    <span class="k">public</span> <span class="nf">Key</span> <span class="nx">delMax</span><span class="p">();</span>    
+    <span class="k">public</span> <span class="nf">boolean</span> <span class="nb">isEmpty</span><span class="p">();</span>     
+    <span class="k">public</span> <span class="nf">Key</span> <span class="k">max</span><span class="p">();</span>   
+    <span class="nx">int</span> <span class="nb">size</span><span class="p">();</span>
+
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>PQ client example</h2>
+<p>find <em>M largest</em> elements from N items. (N is too huge to store) <br />
+⇒ 思路: 用 <strong>Min</strong><em>PQ</em>, 当size&gt;M时删掉最小元素 — 最后剩下的就是最大的M个元素了.  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image.png" />   </p>
+<h2>elementary(naive) implementations</h2>
+<p><strong>unordered array implementation</strong> <br />
+insert ~1,  <br />
+remove ~N   </p>
+<p><strong>ordered array implementation</strong> <br />
+insert ~N — ~ insertion sort, <br />
+remove ~1   </p>
+<p><strong>goal</strong>:  <br />
+insert O(lgN) &amp; remove max O(lgN)   </p>
+<h1>2. Binary Heaps</h1>
+<p>binary heap: a special kind of <em>complete binary tree</em>.    </p>
+<p>def. "<strong>complete binary tree"</strong> <br />
+All level except the last level are full, all nodes in the last level are as far left as possible.   <br />
+完全二叉树大概长这个样子:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image001.png" />   </p>
+<p>property: a complete binary tree with N items has height = lgN.    </p>
+<p>def. <strong>binary heap</strong> <br />
+Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of its 2 children</em> ("heap ordering").    </p>
+<p>property of binary heap:    </p>
+<ul>
+<li>max element is root   </li>
+<li>height is lgN   </li>
+<li><em>each node still makes a heap</em> (use this property to construct heap from bottom up)   </li>
+</ul>
+<h2>Array representation of binary heap</h2>
+<p>Use an array <code>a[]</code> to represent a complete binary tree: very easy to get children and parent.    </p>
+<ul>
+<li><strong>index starting from 1</strong> (root = a[1], do not use a[0])    </li>
+<li>for node at index <code>i</code>, its children are: <code>i*2</code> and <code>i*2+1</code>   </li>
+<li>for node at index <code>i</code> (i&gt;1), its parent is: <code>i/2</code>   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image002.png" />   </p>
+<h2>Implementation</h2>
+<p>简言之就是:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image003.png" />   </p>
+<p>内部成员变量:    </p>
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">MaxPQ</span><span class="o">&lt;</span><span class="nb">Key</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   
+    <span class="k">private</span> <span class="nf">Key</span><span class="err">[</span><span class="cp">]</span> a;   
+    private int N;   
+}
+</pre></div>
+
+
+<p><strong>siftup (swim)</strong> <br />
+if a node is larger than its parent: <em>exchange with parent until heap ordering is restored.</em>    </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">swim</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">]){</span>   
+        <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>   
+        <span class="n">k</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>⇒ <strong>use siftup for inserting elements</strong> <br />
+when inserting an element, first append it to the end of the array, then siftup the element to its right position.    </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>    
+<span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">x</span><span class="p">;</span>   
+<span class="n">swim</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>siftdown (sink)</strong> <br />
+if a node is smaller than its children: <em>exchange it with the bigger child.</em> 用公司高层变动来类比很形象...    </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">sink</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="n">N</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">maxIndex</span> <span class="o">=</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="p">])</span><span class="o">?</span> <span class="n">k</span><span class="o">*</span><span class="mi">2</span> <span class="o">:</span> <span class="n">k</span><span class="p">;</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">maxIndex</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="n">maxIndex</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">maxIndex</span><span class="o">==</span><span class="n">k</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>   
+        <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">maxIndex</span><span class="p">);</span>   
+        <span class="n">k</span> <span class="o">=</span> <span class="n">maxIndex</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>⇒ use siftdown for deleting max operation</strong> <br />
+First put a[N] to the position of root, then sink. (注意要防止loitering)   </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">Key</span> <span class="nf">delMax</span><span class="p">(){</span>   
+    <span class="n">Key</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>   
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>   
+    <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span> <span class="c1">// avoid loitering   </span>
+    <span class="n">sink</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>   
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Analysis</h2>
+<p>insert: ~lgN <br />
+remove max: ~lgN   </p>
+<p>improvements:    </p>
+<ul>
+<li>use a <strong>d-way heap</strong> instead of a 2-way heap (for ex. 3-way heap, the children of i are i<em>3, i</em>3+1, i*3+2, the parent of i is i/3)   </li>
+<li>Fibonacci heap: insert is <em>~1</em>, remove max still ~lgN, (but too complicated to use in practice).    </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image004.png" />   </p>
+<p>considerations:    </p>
+<ul>
+<li>use immutable keys to avoid client from changing the keys (<code>final</code> keyword in java)   </li>
+<li>underflow/overflow: throw exceptions for delMax() when empty, use resizing array for implementation.   </li>
+<li>expand the API with other operations: remove an arbitrary item, change the prority of an item (like handling an array)...   </li>
+</ul>
+<h1>3. Heapsort</h1>
+<p>Basic idea:    </p>
+<ul>
+<li>create a max heap with all N entries <strong>("heap-construction")</strong>   </li>
+<li>then repeatedly remove all N items <strong>("sortdown")</strong>   </li>
+</ul>
+<h2>Implementation</h2>
+<p><strong>heap construction</strong>  <br />
+Construct the heap using a <strong>bottom-up</strong> method: build the heaps with small size first.    </p>
+<ul>
+<li>one-node heaps (jus leaf node of heap): need not consider   </li>
+<li>larger heaps: children(subtrees) are already heap-order → just perform sink operation for root   </li>
+</ul>
+<p>⇒ <em>sink elements at indices from N/2 to 1</em>   </p>
+<div class="codehilite"><pre><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span> <span class="n">k</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>   
+<span class="n">sink</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+</pre></div>
+
+
+<p>→ complexity is <strong>linear</strong>, see analysis below.    </p>
+<p><strong>heap destruction </strong> <br />
+now that we have a max-heap, to get the sorted array <em>in-place,</em> simply do:    </p>
+<div class="codehilite"><pre><span class="k">while</span><span class="p">(</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">){</span>   
+<span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">--</span><span class="p">);</span>   
+<span class="n">sink</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Analysis</h2>
+<p><strong>proposition</strong> <br />
+Heap construction uses <strong>&lt;2N</strong> compares and exchanges.  <br />
+<em>proof</em> <br />
+一个有h层的heap, 高度为k的subtree有 2^(h-k)个, 每个subtree最多可以交换k次(从root交换到最底层)  <br />
+→ 每一层最多有 k*2^(h-k) 次交换  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image007.png" />   <br />
+(第一个等式可以用数学归纳法证...)  <br />
+<a href="static">详细证明见http://algs4.cs.princeton.edu/24pq/</a>  (Q20答案)   </p>
+<p><strong>proposition</strong> <br />
+Heapsort use &lt; 2NlgN compares and exchanges.    </p>
+<p>Heapsort is the first <em>in-place</em> sorting algorithm with NlgN <em>worst-case</em> performance.  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image005.png" />   </p>
+<p>⇒ heapsort is <em>optimal for time and space</em>, but:   </p>
+<ul>
+<li>inner loop is longer than quicksort   </li>
+<li>poor use of cache memory (too many references to cache — look far away from the array entry when going down through the tree)   </li>
+<li>not stable: because it does long-distance exchanges   </li>
+</ul>
+<p>Summary:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image006.png" />   </p>
+<h1>4. Event-driven simulation</h1>
+<p>Goal: simulating the motion of N particles in elastic collision (using a priority queue).  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image008.png" />   </p>
+<h2>model</h2>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image009.png" /> <br />
+bouncing balls (without collision) <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image010.png" />    </p>
+<p>Ball class:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image011.png" />   </p>
+<p>challenge: which objects to check? How to do it efficently ?   </p>
+<p><strong>Time driven simulation</strong>   </p>
+<ul>
+<li>upate the position of balls every <code>dt</code> seconds   </li>
+<li>if overlap detected: figure how the velocity change and continue the simulation.    </li>
+</ul>
+<p>problem with time-driven simulation:    </p>
+<ul>
+<li>1/2*N^2 overlap check per time unit   </li>
+<li>if dt small: too much calculation   </li>
+<li>if dt too large: might miss collisions   </li>
+</ul>
+<h2>Event driven simulation</h2>
+<p>change state only when something happens   </p>
+<ul>
+<li>particles move in straight line before collision   </li>
+<li>→ collision time can be <em>predicted</em>   </li>
+<li>maintain PQ for collisions, key=collision time    </li>
+</ul>
+<p><strong>collision prediction</strong> <br />
+input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, velocity <code>(vx, vy)</code>. <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image013.png" /> <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image014.png" />  <br />
+(美国高中物理这么凶残?...)   </p>
+<h2>Implementation</h2>
+<p>anyway, 这个是封装好的类: <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image015.png" /> <br />
+注意, 使用了count记录一个particle到目前为止的碰撞次数.    </p>
+<p>initialization: <strong>quadratic</strong>   </p>
+<ul>
+<li>Fill PQ with all <em>potential</em>  particle-particle collisions   </li>
+<li>Fill (the same) PQ with all <em>potential</em>  particle-wall collisions   </li>
+</ul>
+<p><strong>Main loop </strong>   </p>
+<ul>
+<li>get next event from PQ, event time = t   </li>
+<li>ignore if the event is <em>invalidated</em>   </li>
+<li>advance all particles to time t   </li>
+<li>update velocities   </li>
+<li>predict future collisions and insert to PQ   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image018.png" /> <br />
+判断invalidate:  <br />
+一个event构造(predict)时记录粒子构造时刻的碰撞次数(countA, countB), <br />
+然后在调用invalidate的时候, 如果粒子的碰撞次数发生了改变, 则返回false.  <br />
+(详见他们的代码: <a href="http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html">http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html</a>)   </p>
+<p>Event class:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image016.png" /> <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image017.png" />   </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "algoI_week4_1.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
