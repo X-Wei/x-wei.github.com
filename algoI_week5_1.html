@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[Algorithms I] Week 5-1 Balanced Search Trees</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&img=6&pos=right" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+            var bds_config = {"bdTop":289};
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+    </script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Algorithms I] Week 5-1 Balanced Search Trees">
+					[Algorithms I] Week 5-1 Balanced Search Trees 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-08-26T16:00:00">
+	<i class="icon-calendar"></i>三 26 八月 2015
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>goal: lgN for insert/search/delete operations (not necessarily <em>binary</em> trees..) <br />
+3 algo: 2-3 tree, (left leaning) red-black tree, B-tree   </p>
+<h1>1. 2-3 Search Trees</h1>
+<p>def. <strong>2-3 tree</strong>   </p>
+<ul>
+<li>allow 1 or 2 keys per node, &amp; 2 or 3 children per node:    <ul>
+<li>2-node: one key, 2 children (ordinary BST node)   </li>
+<li>3-node: 2 keys, 3 children (3 children: <em>less, between, more</em>)   </li>
+</ul>
+</li>
+<li><strong>perfect balance</strong>: every path from root to null link has the same length (2-3 tree的一个超好的性质, <em>类似于一个满二叉树</em>!)   </li>
+<li>symmetric order: inorder traversal gives ascending order (和BST类似)   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image.png" /> <br />
+<strong>search</strong> <br />
+Just follow the correct link... Natural generalization of search in BST...    </p>
+<p><strong>insert</strong>   </p>
+<ul>
+<li>case 1: insert into a 2-node at bottom   </li>
+</ul>
+<p>just convert a 2-node into a 3-node   </p>
+<ul>
+<li>case 2: insert into a 3-node at bottom   <ul>
+<li>create a temporary 4-node (three keys)   </li>
+<li>move middle key in 4-node into parent, split the rest two keys into two 2-nodes   </li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image001.png" />   <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image002.png" />    <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image003.png" />   </p>
+<ul>
+<li>if parent becom a 3-node → continue the process   </li>
+<li>if arrived at the root (root is a 4-node with three keys): split it into three 2-nodes   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image004.png" /> <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image005.png" />   </p>
+<p><strong>splitting a 4-node</strong>: can be done in constant time (<em>local transformation</em>).  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image006.png" />   </p>
+<h2>Analysis</h2>
+<p>Invariant: maintains symmetric order and perfect balance.  <br />
+<em>proof.</em>  <br />
+each transformation maintains the order and the balance, all possible transformations:  <br />
+这个图很好, 3-node的插入一共有三种情况: 自身是root/父亲是2-node/父亲是3-node <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image007.png" />   </p>
+<p><strong>performance</strong> <br />
+every path from root to null link has the same length.  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image008.png" />   </p>
+<h2>Implementation</h2>
+<ul>
+<li>direct implementation is complicated:    </li>
+<li>bottom line: <em>Could do it, but there's a better way.</em>   </li>
+</ul>
+<h1>2. Red-Black BST</h1>
+<p>LLRB tree: left-leaning red-black tree.    </p>
+<blockquote>
+<p><em>BST representation of the 2-3 trees</em> <br />
+<strong>use internal left-leaning links for 3 nodes</strong>   </p>
+</blockquote>
+<p>红色link即为internal left leaning link (红黑树就是这么来的), 用红色link连接起来的组成一个(虚拟的)3-node 或4-node.    </p>
+<ul>
+<li>3-node用一个red link表示:    </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image009.png" />   </p>
+<ul>
+<li>4-node用两个red link表示:    </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image030.png" /> ⇒ <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image029.png" /> or <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image027.png" /> or <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image028.png" />   </p>
+<p>example:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image010.png" />   </p>
+<h2>properties</h2>
+<ul>
+<li>no node has two red links (不可以一个节点连两个red link)   </li>
+<li>every path from path to null link has the same number of <em>black</em> links (想象所有red link都变为horizontal)   </li>
+<li>all red links lean left   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image011.png" />   </p>
+<h2>representation</h2>
+<p>Each node has only one link from parent  <br />
+⇒ add a boolean to encode color of links (the color of the link <em>from parent</em>).  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image012.png" />   </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="n">Key</span> <span class="n">key</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="n">Value</span> <span class="n">val</span><span class="p">;</span>   
+    <span class="n">Node</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>   
+    <span class="n">boolean</span> <span class="n">color</span><span class="p">;</span><span class="c1">//true means red     </span>
+<span class="p">}</span>    
+<span class="n">private</span> <span class="n">boolean</span> <span class="n">isRed</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">){</span>   
+    <span class="k">if</span> <span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>   
+    <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">color</span><span class="p">;</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>insert to parent 操作: 只需把color变为RED即表示该节点 被变成了和父节点一起的一个(虚拟)节点.    </p>
+<h2>elementary operations</h2>
+<p><strong>left-rotation</strong> <br />
+(def: <em>convert a right-learning red link to left.</em> ) <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image013.png" />   <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image014.png" /> <br />
+(symmetric ordering and perfect black balance are maintained)    </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Node</span> <span class="nf">rotateLeft</span><span class="p">(</span><span class="n">Node</span> <span class="n">h</span><span class="p">){</span>    
+    <span class="n">Node</span> <span class="n">s</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>   
+    <span class="n">h</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">left</span><span class="p">;</span>   
+    <span class="n">s</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">h</span><span class="p">;</span>   
+    <span class="n">s</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="n">color</span><span class="p">;</span>   <span class="c1">// not = BLACK   </span>
+    <span class="n">h</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">RED</span><span class="p">;</span>   
+    <span class="k">return</span> <span class="n">s</span><span class="p">;</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>right-rotation</strong> <br />
+(temporarily turn a left-leaning red link to right) <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image015.png" /> <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image016.png" />   </p>
+<p><code>private Node rotateRight(Node h){...}</code>   </p>
+<p>right rotation 是为了应对这种情况:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image024.png" /> rotateRight(c) ⇒ <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image023.png" />   </p>
+<p><strong>color-flip</strong> <br />
+(split a 4-node, with three kyes — two red links) <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image017.png" />  <img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image018.png" />   </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">filpColor</span><span class="p">(</span><span class="n">Node</span> <span class="n">h</span><span class="p">){</span>   
+    <span class="n">h</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">RED</span><span class="p">;</span>   
+    <span class="n">h</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span><span class="p">;</span>   
+    <span class="n">h</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span><span class="p">;</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Implementation</h2>
+<p><strong>Basic strategy</strong> <br />
+Maintain <em>one-to-one correspondence</em> with 2-3 tree by applying elementary operations.    </p>
+<ul>
+<li><strong>search</strong>   </li>
+</ul>
+<p><em>Exactly</em> the same as elementary BST. ( ⇒ The same code for floor and ceiling)   </p>
+<ul>
+<li><strong>insert</strong>   </li>
+</ul>
+<p><strong>Each insert will generate a red link</strong> (then should rotate to make it legal)   </p>
+<p>插入的时候有两种可能:    </p>
+<ol>
+<li>insert into a 2-node at the bottom   </li>
+</ol>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image025.png" />   </p>
+<ul>
+<li>standart BST insert   </li>
+<li>if have red right link: rotateLeft   </li>
+</ul>
+<p>ex:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image021.png" />   </p>
+<ol>
+<li>insert into a 3-node    </li>
+</ol>
+<p>有三种可能: insert into left/middle/right, right最简单, left捎复杂, middle最复杂, 见下图:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image026.png" />   </p>
+<ul>
+<li>standard BST insert and color nodes   </li>
+<li>if necessary, rotate to balance 4-node, 比如:    </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image031.png" />   </p>
+<ul>
+<li>flip colors to pass red link to upper level   </li>
+<li>if necessary, rotate to make all links left-leaning    </li>
+</ul>
+<p>ex: <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image032.png" /> <br />
+ex2: <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image033.png" />    </p>
+<p>视频最后一段的demo太帅了! 叹为观止!!   </p>
+<h2>Code</h2>
+<p>原来<strong>只有4种(其实是3种)情况要调整</strong>:    </p>
+<ol>
+<li><em>left = black, right = red</em>   </li>
+</ol>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image034.png" />  ⇒ rotateLeft(a)   </p>
+<ol>
+<li><em>left =red, left.right = red [这个不会出现, 因为这对于下一层来说是case 1..]</em>   </li>
+</ol>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image039.png" />  ⇒ rotateLeft(e) ⇒ 变为case 3    </p>
+<ol>
+<li><em>left = red, left.left = red</em>   </li>
+</ol>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image035.png" />  ⇒ rotateRight(s) ⇒ 变为case 4   </p>
+<ol>
+<li><em>left = red. right = red</em>   </li>
+</ol>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image036.png" />      ⇒ flipColor(r)   </p>
+<p>几个状态之间的转化:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image038.png" />   </p>
+<p><strong>只要三行代码即可处理LLRB tree !! 老爷子牛逼...... </strong> <br />
+(这个也是在2007年algo第四版的时候才刚刚弄出来的, 以前的代码要复杂)   </p>
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Node</span> <span class="nf">put</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">RED</span><span class="p">);</span>   
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// 这里不急着返回 -- same trick as for BSTs..   </span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>   
+    <span class="k">else</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>   
+    <span class="c1">// modifications to maintain LLRB tree property:    </span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span> <span class="p">)</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">rotateLeft</span><span class="p">(</span><span class="n">nd</span><span class="p">);</span><span class="c1">//case 1   </span>
+    <span class="c1">//if( isRed(nd.left) &amp;&amp; isRed(nd.left.right) ) nd.left = rotateLeft(nd.left);// case 2 -- never happen...   </span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">right</span><span class="p">)</span> <span class="p">)</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">rotateRight</span><span class="p">(</span><span class="n">nd</span><span class="p">);</span><span class="c1">// case 3   </span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isRed</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">)</span> <span class="p">)</span> <span class="n">flipColor</span><span class="p">(</span><span class="n">nd</span><span class="p">);</span><span class="c1">//case 4   </span>
+    <span class="k">return</span> <span class="n">nd</span><span class="p">;</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p>这三行代码越看越精妙......    </p>
+<h2>Analysis</h2>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image041.png" />   </p>
+<p><strong>worst case</strong>: the left path is <em>alternating red and black</em>. <br />
+⇒ longest path &lt;= 2 * shortest path  (height&lt;= 2lgN)   </p>
+<p>practical applications: height ~ 1.0 lgN   </p>
+<p>summery:  <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image042.png" />   </p>
+<h1>3. B-trees</h1>
+<p>setting: data access in file system.  <br />
+<em>Probe is much expensive than accessing data within a page.</em>    </p>
+<p>Goal: access data using a minimum number of probes.   </p>
+<h2>B-tree</h2>
+<p><strong>def.</strong> <br />
+external nodes: contain just keys, not links <br />
+internal nodes: contain key-link pairs   </p>
+<p><strong>def. B-tree</strong> <br />
+Generalize 2-3 trees by allowing up to M-1 keys per node:   </p>
+<ul>
+<li>
+<blockquote>
+<p>= 2 keys in root   </p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>= M/2 keys in other nodes   </p>
+</blockquote>
+</li>
+<li>external nodes contain client keys   </li>
+<li>internal nodes contain copies of keys to guide search   </li>
+</ul>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image043.png" />   </p>
+<h2>Searching</h2>
+<p>similar to BST/2-3tree <br />
+ex. <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image044.png" />   </p>
+<p>(Choose M as large as possible so that M links fit into a page)   </p>
+<h2>Insertion</h2>
+<p>similar to 2-3 tree <br />
+<img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image045.png" />   </p>
+<h2>Analysis</h2>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image046.png" />   </p>
+<h2>System implementations</h2>
+<p>system implementations of RBtree. <br />
+java:  <br />
+<code>java.util.TreeMap</code>, <code>java.util.TreeSet</code>.   </p>
+<p>八卦1: </p>
+<p><img alt="" src="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image047.png" />     </p>
+<p>八卦2: 
+Sedgewick 的朋友, <a href="https://fr.wikipedia.org/wiki/Philippe_Flajolet">Philippe Flajolet</a>, 是一个X!    </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "algoI_week5_1.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
