@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[Algorithms I] Week 5-2 Geometric Applications of BSTs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&img=6&pos=right" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+            var bds_config = {"bdTop":289};
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours();
+    </script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Algorithms I] Week 5-2 Geometric Applications of BSTs">
+					[Algorithms I] Week 5-2 Geometric Applications of BSTs 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-08-29T00:00:00">
+	<i class="icon-calendar"></i>六 29 八月 2015
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h1>1. 1d Range Search</h1>
+<p>Goal: <em>intersections</em> of geometric objects.  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image.png" /> <br />
+Solution: <strong>BST</strong>   </p>
+<h2>1d range search</h2>
+<p>operations required:    </p>
+<ul>
+<li>insert   </li>
+<li>search   </li>
+<li>delete   </li>
+<li><em>range search</em>: all keys between k1 and k2   </li>
+<li><em>range count</em>: how many keys are between k1 and k2   </li>
+</ul>
+<p>→ find points on an interval  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image001.png" />   </p>
+<h2>implementation by BST</h2>
+<p><strong>range count</strong> <br />
+using the <code>rank()</code> function for the BST (or use the size of a tree) <br />
+<img alt="" src="static/algoI_week5_2/pasted_image002.png" /> <br />
+注意什么时候要加1...   </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="p">(</span><span class="n">Key</span> <span class="n">hi</span><span class="p">,</span> <span class="n">Key</span> <span class="n">lo</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">contains</span><span class="p">(</span><span class="n">hi</span><span class="p">))</span> <span class="k">return</span> <span class="n">rank</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span><span class="o">-</span><span class="n">rank</span><span class="p">(</span><span class="n">lo</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>   
+    <span class="k">else</span> <span class="k">return</span> <span class="n">rank</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">-</span> <span class="n">rank</span><span class="p">(</span><span class="n">lo</span><span class="p">);</span>   
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>range search</strong> <br />
+类似inorder traversal的方式:    </p>
+<ul>
+<li>find in left subtree (if could fall into range)   </li>
+<li>check current node   </li>
+<li>find in right subtree   </li>
+</ul>
+<p><img alt="" src="static/algoI_week5_2/pasted_image003.png" /> <br />
+running time: R+lgN (R=nb of nodes in range)   </p>
+<h1>2. Line Segment Intersection</h1>
+<blockquote>
+<p><em>Orthognal line segment intersection search</em>:  <br />
+find all intersections given N horizontal/vertical lines <br />
+<img alt="" src="static/algoI_week5_2/pasted_image005.png" />   </p>
+</blockquote>
+<p>Non-degeneracy assumption: all x-coord and y-coord are distinct.    </p>
+<p>naive algo: check all pairs...   </p>
+<h2>Sweep-line algorithm</h2>
+<p><img alt="" src="static/algoI_week5_2/pasted_image006.png" /> <br />
+<img alt="" src="static/algoI_week5_2/pasted_image007.png" />   </p>
+<ul>
+<li>sweep a vertical line from left to right.    <ul>
+<li>when hit the left end of horizontal-segment (h-seg) → insert into a BST   </li>
+<li>when hit the right end of a h-seg → delete from BST   </li>
+<li>when hit a vertical-seg: ⇒ 1d range search !    </li>
+</ul>
+</li>
+</ul>
+<p><strong>关于怎么sweep的:</strong> <br />
+没有仔细讲, 不过我觉得就是把所有的x坐标排好序, 有个<a href="https://leetcode.com/problems/the-skyline-problem/">skyline问题</a>也是涉及如何sweep的.   </p>
+<p><strong>proposition</strong> <br />
+running time is NlgN+R (R=nb of intersections).  <br />
+<em>proof.</em>   </p>
+<ul>
+<li>Sort by x-coord (or use PQ) → NlgN   </li>
+<li>insert/delete y-coord to BST → NlgN   </li>
+<li>range search → NlgN + R   </li>
+</ul>
+<h1>3. Kd-trees</h1>
+<p>An extension of BST: <em>2d-keys</em>.    </p>
+<ul>
+<li>insert: insert 2d points   </li>
+<li>search   </li>
+<li>range search: <em>find all keys lying in a 2d rectangle (h-v rectangle)</em>   </li>
+<li>range count   </li>
+</ul>
+<h2>gird implementation</h2>
+<p>divide space into a M-by-M grid (uniform squares). <br />
+space: N + M^2 <br />
+time: 1 + N/M^2  <br />
+→ choose square to balance space and time.  <br />
+problem: points are not uniformly distributed.  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image008.png" />   </p>
+<h2>2d tree</h2>
+<p>Use a tree to represent the subdivision of the space.    </p>
+<p><strong>2d tree</strong>: recursively divide the space into 2 halfplanes <br />
+<img alt="" src="static/algoI_week5_2/pasted_image009.png" />   </p>
+<p>construct the 2d tree by adding points: <em>alternating between horizontal and vertical partitioning for each level of tree</em>.  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image010.png" />   </p>
+<p>Data structure: BST alternating x and y-coords as key.  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image011.png" />   </p>
+<h2>Range search for 2d tree</h2>
+<p>find all points lying in a rectangle.  <br />
+依然类似tree traversal算法:   </p>
+<ul>
+<li>check point in node   </li>
+<li>find in left subtree (if could be in range — the rectangle <em>intersects</em> the splitting line)   </li>
+<li>find in right subtree   </li>
+</ul>
+<p><img alt="" src="static/algoI_week5_2/pasted_image012.png" />   </p>
+<p><strong>analysis</strong> <br />
+Typical case: R + lgN <br />
+worst case: R+ sqrt(N) (even if tree is balanced) <br />
+(proof is hard)   </p>
+<h2>Nearest Neighbour seach</h2>
+<p>find closest point to a query point.    </p>
+<ul>
+<li>check dist from query point to node   </li>
+<li>check in left tree (<em>if could contain a closer point — 和两点连线与splitting line的角度有关系</em>)   </li>
+<li>check in right tree   </li>
+</ul>
+<p><strong>analysis</strong> <br />
+typical case: lgN <br />
+worst case: N   </p>
+<p><strong>Flocking boids</strong> <br />
+3 simple rules to get a simulation of flocking.  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image013.png" />   </p>
+<h2>Kd tree</h2>
+<p>partition the k-dim space into 2 halfspaces.  <br />
+cycle through k dimensions. <br />
+<img alt="" src="static/algoI_week5_2/pasted_image014.png" /> <br />
+(居然时一个本科生发现的!)   </p>
+<p>Nbody simulation: <br />
+treat clusters as an aggregated node   </p>
+<h1>4. Interval search tree</h1>
+<p>1d interval search:　data are intervals   </p>
+<ul>
+<li>insert interval    </li>
+<li>search interval   </li>
+<li>delete interval   </li>
+<li>intersection query: find all intervals that intersects (lo,hi)   </li>
+</ul>
+<p><img alt="" src="static/algoI_week5_2/pasted_image015.png" /> <br />
+Nondegeneracy assumption: all left endpoint of intervals are distinct.    </p>
+<p>API:   </p>
+<div class="codehilite"><pre><span class="nx">put</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">lo</span><span class="p">,</span> <span class="nb">Key</span> <span class="nx">hi</span><span class="p">,</span> <span class="nb">Value</span> <span class="nx">val</span><span class="p">)</span>   
+<span class="nb">get</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">lo</span><span class="p">,</span> <span class="nb">Key</span> <span class="nx">hi</span><span class="p">)</span>   
+<span class="nb">delete</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">lo</span><span class="p">,</span> <span class="nb">Key</span> <span class="nx">hi</span><span class="p">)</span>   
+<span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="nx">intersects</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">lo</span><span class="p">,</span> <span class="nb">Key</span> <span class="nx">hi</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Interval search tree:</h2>
+<ul>
+<li>BST using left endpoint as key   </li>
+<li>in each node: store the <em>max right endpoint of the subtree</em>   </li>
+</ul>
+<p><img alt="" src="static/algoI_week5_2/pasted_image016.png" />   </p>
+<p><strong>insert</strong> <br />
+类似BST, 加上维护一下maxendpoint即可.   </p>
+<p><strong>search</strong> <br />
+search <em>any one</em> interval that intersects (lo,hi)   </p>
+<ul>
+<li>if node intersects, return   </li>
+<li>if left.maxendpoint &lt; lo: go right   </li>
+<li>else: go left   </li>
+</ul>
+<p>*proof. * <br />
+主要证明一点: if no intersection to left ⇒ then no intersection to the right <br />
+<img alt="" src="static/algoI_week5_2/pasted_image018.png" />   </p>
+<h1>5. Rectangle intersection</h1>
+<p>Goal:  find all intersection among N rectangles.  <br />
+(non degeneracy assumption: all x and y are distinct)    </p>
+<p>bottom line: linearithmic algo.    </p>
+<p><strong>sweep-line algorithm:</strong> <br />
+sweep vertical line from left to right.    </p>
+<ul>
+<li>when hit left part of a rect ⇒ put into an interval search tree   </li>
+<li>when hit right part of a rect ⇒ remove interval   </li>
+<li>every time befor adding ⇒ check intersection   </li>
+</ul>
+<p><em>reduces the 2d rect intersection pb to 1d interval search pb.</em>    </p>
+<p>complexity:  <br />
+NlgN+RlgN   </p>
+<p>summery:  <br />
+<img alt="" src="static/algoI_week5_2/pasted_image019.png" />   </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "algoI_week5_2.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

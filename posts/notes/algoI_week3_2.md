@@ -216,11 +216,11 @@ Dijkstra's 3-way partition algo:
 * repeat until i and gt cross (i>gt)   
    
    
-**invariance***:  *   
+***invariance***:    
    
-* ``[lo, lt)``* all < v  *   
-* ``[lt, i)``* all == v  *   
-* ``(gt, hi]``* all > v*     
+* ``[lo, lt)`` ***all < v***
+* ``[lt, i)`` ***all == v***
+* ``(gt, hi]`` ***all >v***
    
 ![](algoI_week3_2/pasted_image012.png)      
    
