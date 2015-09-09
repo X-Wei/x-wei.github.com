@@ -17,7 +17,7 @@ def. **2-3 tree**
 * **perfect balance**: every path from root to null link has the same length (2-3 tree的一个超好的性质, *类似于一个满二叉树*!)   
 * symmetric order: inorder traversal gives ascending order (和BST类似)   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image.png)   
+![](algoI_week5_1/pasted_image.png)   
 **search**   
 Just follow the correct link... Natural generalization of search in BST...    
    
@@ -31,15 +31,15 @@ just convert a 2-node into a 3-node
 	* create a temporary 4-node (three keys)   
 	* move middle key in 4-node into parent, split the rest two keys into two 2-nodes   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image001.png)   ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image002.png)    ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image003.png)   
+![](algoI_week5_1/pasted_image001.png)   ![](algoI_week5_1/pasted_image002.png)    ![](algoI_week5_1/pasted_image003.png)   
    
 * if parent becom a 3-node → continue the process   
 * if arrived at the root (root is a 4-node with three keys): split it into three 2-nodes   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image004.png) ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image005.png)   
+![](algoI_week5_1/pasted_image004.png) ![](algoI_week5_1/pasted_image005.png)   
    
 **splitting a 4-node**: can be done in constant time (*local transformation*).    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image006.png)   
+![](algoI_week5_1/pasted_image006.png)   
    
 Analysis   
 --------   
@@ -47,11 +47,11 @@ Invariant: maintains symmetric order and perfect balance.
 *proof.*    
 each transformation maintains the order and the balance, all possible transformations:    
 这个图很好, 3-node的插入一共有三种情况: 自身是root/父亲是2-node/父亲是3-node   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image007.png)   
+![](algoI_week5_1/pasted_image007.png)   
    
 **performance**   
 every path from root to null link has the same length.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image008.png)   
+![](algoI_week5_1/pasted_image008.png)   
    
 Implementation   
 --------------   
@@ -71,14 +71,14 @@ LLRB tree: left-leaning red-black tree.
    
 * 3-node用一个red link表示:    
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image009.png)   
+![](algoI_week5_1/pasted_image009.png)   
    
 * 4-node用两个red link表示:    
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image030.png) ⇒ ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image029.png) or ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image027.png) or ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image028.png)   
+![](algoI_week5_1/pasted_image030.png) ⇒ ![](algoI_week5_1/pasted_image029.png) or ![](algoI_week5_1/pasted_image027.png) or ![](algoI_week5_1/pasted_image028.png)   
    
 example:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image010.png)   
+![](algoI_week5_1/pasted_image010.png)   
    
 properties   
 ----------   
@@ -87,14 +87,14 @@ properties
 * every path from path to null link has the same number of *black* links (想象所有red link都变为horizontal)   
 * all red links lean left   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image011.png)   
+![](algoI_week5_1/pasted_image011.png)   
    
    
 representation   
 --------------   
 Each node has only one link from parent    
 ⇒ add a boolean to encode color of links (the color of the link *from parent*).    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image012.png)   
+![](algoI_week5_1/pasted_image012.png)   
    
 	private class Node{   
 		private Key key;   
@@ -114,7 +114,7 @@ elementary operations
 ---------------------   
 **left-rotation**   
 (def: *convert a right-learning red link to left.* )   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image013.png)   ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image014.png)   
+![](algoI_week5_1/pasted_image013.png)   ![](algoI_week5_1/pasted_image014.png)   
 (symmetric ordering and perfect black balance are maintained)    
    
 	private Node rotateLeft(Node h){    
@@ -129,16 +129,16 @@ elementary operations
    
 **right-rotation**   
 (temporarily turn a left-leaning red link to right)   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image015.png) ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image016.png)   
+![](algoI_week5_1/pasted_image015.png) ![](algoI_week5_1/pasted_image016.png)   
    
 ``private Node rotateRight(Node h){...}``   
    
 right rotation 是为了应对这种情况:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image024.png) rotateRight(c) ⇒ ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image023.png)   
+![](algoI_week5_1/pasted_image024.png) rotateRight(c) ⇒ ![](algoI_week5_1/pasted_image023.png)   
    
 **color-flip**   
 (split a 4-node, with three kyes — two red links)   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image017.png)  ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image018.png)   
+![](algoI_week5_1/pasted_image017.png)  ![](algoI_week5_1/pasted_image018.png)   
 
 	private void filpColor(Node h){   
 		h.color = RED;   
@@ -165,31 +165,31 @@ Maintain *one-to-one correspondence* with 2-3 tree by applying elementary operat
    
 1. insert into a 2-node at the bottom   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image025.png)   
+![](algoI_week5_1/pasted_image025.png)   
    
 * standart BST insert   
 * if have red right link: rotateLeft   
    
 ex:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image021.png)   
+![](algoI_week5_1/pasted_image021.png)   
    
 2. insert into a 3-node    
    
 有三种可能: insert into left/middle/right, right最简单, left捎复杂, middle最复杂, 见下图:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image026.png)   
+![](algoI_week5_1/pasted_image026.png)   
    
 * standard BST insert and color nodes   
 * if necessary, rotate to balance 4-node, 比如:    
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image031.png)   
+![](algoI_week5_1/pasted_image031.png)   
    
 * flip colors to pass red link to upper level   
 * if necessary, rotate to make all links left-leaning    
    
 ex:   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image032.png)   
+![](algoI_week5_1/pasted_image032.png)   
 ex2:   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image033.png)    
+![](algoI_week5_1/pasted_image033.png)    
    
 视频最后一段的demo太帅了! 叹为观止!!   
    
@@ -199,23 +199,23 @@ Code
    
 1. *left = black, right = red*   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image034.png)	⇒ rotateLeft(a)   
+![](algoI_week5_1/pasted_image034.png)	⇒ rotateLeft(a)   
    
 2. *left =red, left.right = red [这个不会出现, 因为这对于下一层来说是case 1..]*   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image039.png) 	⇒ rotateLeft(e) ⇒ 变为case 3    
+![](algoI_week5_1/pasted_image039.png) 	⇒ rotateLeft(e) ⇒ 变为case 3    
    
 3. *left = red, left.left = red*   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image035.png)	⇒ rotateRight(s) ⇒ 变为case 4   
+![](algoI_week5_1/pasted_image035.png)	⇒ rotateRight(s) ⇒ 变为case 4   
 	   
    
 4. *left = red. right = red*   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image036.png)		⇒ flipColor(r)   
+![](algoI_week5_1/pasted_image036.png)		⇒ flipColor(r)   
    
 几个状态之间的转化:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image038.png)   
+![](algoI_week5_1/pasted_image038.png)   
    
 **只要三行代码即可处理LLRB tree !! 老爷子牛逼...... **   
 (这个也是在2007年algo第四版的时候才刚刚弄出来的, 以前的代码要复杂)   
@@ -240,7 +240,7 @@ Code
 Analysis   
 --------   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image041.png)   
+![](algoI_week5_1/pasted_image041.png)   
    
 **worst case**: the left path is *alternating red and black*.   
 ⇒ longest path <= 2 * shortest path  (height<= 2lgN)   
@@ -248,7 +248,7 @@ Analysis
 practical applications: height ~ 1.0 lgN   
    
 summery:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image042.png)   
+![](algoI_week5_1/pasted_image042.png)   
    
 3. B-trees   
 ==========   
@@ -271,24 +271,24 @@ Generalize 2-3 trees by allowing up to M-1 keys per node:
 * external nodes contain client keys   
 * internal nodes contain copies of keys to guide search   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image043.png)   
+![](algoI_week5_1/pasted_image043.png)   
    
 Searching   
 ---------   
 similar to BST/2-3tree   
 ex.   
- ![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image044.png)   
+ ![](algoI_week5_1/pasted_image044.png)   
    
 (Choose M as large as possible so that M links fit into a page)   
    
 Insertion   
 ---------   
 similar to 2-3 tree   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image045.png)   
+![](algoI_week5_1/pasted_image045.png)   
    
 Analysis   
 --------   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image046.png)   
+![](algoI_week5_1/pasted_image046.png)   
    
 System implementations   
 ----------------------   
@@ -298,7 +298,7 @@ java:
    
 八卦1: 
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_5-1_Balanced_Search_Trees/pasted_image047.png)     
+![](algoI_week5_1/pasted_image047.png)     
   
 八卦2: 
 Sedgewick 的朋友, [Philippe Flajolet](https://fr.wikipedia.org/wiki/Philippe_Flajolet), 是一个X!    

@@ -11,7 +11,7 @@ Tags: algorithm
 def. **BST**   
 A binary tree where each node has a key:    
 for every node, the key is larger than *all nodes in left* subtree, smaller than *all nodes in right* subtree.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image.png)   
+![](algoI_week4_2b/pasted_image.png)   
 Fields: key, val, left, right   
    
 Implementation   
@@ -105,13 +105,13 @@ Analysis
 complexity: depth of the BST.    
    
 shape of BST: depends on how the keys come in (order of insertion).    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image001.png)   
+![](algoI_week4_2b/pasted_image001.png)   
 if keys come in *random* order: could be pretty well balanced.    
    
 **BST and quick-sort partitionning**   
 *The root of BST is just the pivot in quick sort partitioning  *   
 if all keys are distinct ⇒ one-to-one correspondence between quick sort and BST.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image002.png)    
+![](algoI_week4_2b/pasted_image002.png)    
 ⇒ **proposition**   
 if all keys are distinct and come in randome order, the average number of compares for a search/insert is ~2lnN (or 1.39lgN).    
 *proof.*   
@@ -140,7 +140,7 @@ min/max
 easy   
 min: left-most   
 max: right-most   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image003.png)   
+![](algoI_week4_2b/pasted_image003.png)   
    
 floor/ceiling   
 -------------   
@@ -171,7 +171,7 @@ the floor *must* be in the left subtree
    
    
 他提供的版本和我写的不一样: 递归函数floor返回的也是一个Node:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image004.png)   
+![](algoI_week4_2b/pasted_image004.png)   
    
    
 rank/select   
@@ -240,7 +240,7 @@ iteration
 		inorder(nd.right);   
 	}   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image005.png)   
+![](algoI_week4_2b/pasted_image005.png)   
    
 **property**   
 inorder-traversal gives the keys *in ascending order*.    
@@ -280,18 +280,18 @@ first find node with the key to delete, 3 cases:
 * 0 children:    
    
 simply set parent link to null   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image006.png)   
+![](algoI_week4_2b/pasted_image006.png)   
    
 * 1 child:    
    
 replace parent link with the child   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image007.png)   
+![](algoI_week4_2b/pasted_image007.png)   
    
 * **2 children (most subtle)**   
 	* first replace node key with smallest key in right subtree   
 	* remove the smallest key in right subtree   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image008.png)   
+![](algoI_week4_2b/pasted_image008.png)   
    
 **code of Hibbard deletion**   
 Again (for the 3rd time) use the *return-nd trick*...   
@@ -326,7 +326,7 @@ If random insert and delete for a while ⇒ tree become much less balanced ! Tre
    
 **summery**   
 BST is much better in average case, but not guaranteed for worst case.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-2b_Binary_Search_Trees/pasted_image009.png)   
+![](algoI_week4_2b/pasted_image009.png)   
    
    
    

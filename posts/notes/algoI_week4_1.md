@@ -26,7 +26,7 @@ PQ client example
 -----------------   
 find *M largest* elements from N items. (N is too huge to store)   
 ⇒ 思路: 用 **Min***PQ*, 当size>M时删掉最小元素 — 最后剩下的就是最大的M个元素了.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image.png)   
+![](algoI_week4_1/pasted_image.png)   
    
    
 elementary(naive) implementations   
@@ -49,7 +49,7 @@ binary heap: a special kind of *complete binary tree*.
 def. "**complete binary tree"**   
 All level except the last level are full, all nodes in the last level are as far left as possible.     
 完全二叉树大概长这个样子:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image001.png)   
+![](algoI_week4_1/pasted_image001.png)   
    
 property: a complete binary tree with N items has height = lgN.    
    
@@ -72,12 +72,12 @@ Use an array ``a[]`` to represent a complete binary tree: very easy to get child
 * for node at index ``i`` (i>1), its parent is: ``i/2``   
    
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image002.png)   
+![](algoI_week4_1/pasted_image002.png)   
    
 Implementation   
 --------------   
 简言之就是:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image003.png)   
+![](algoI_week4_1/pasted_image003.png)   
    
 内部成员变量:    
    
@@ -141,7 +141,7 @@ improvements:
 * use a **d-way heap** instead of a 2-way heap (for ex. 3-way heap, the children of i are i*3, i*3+1, i*3+2, the parent of i is i/3)   
 * Fibonacci heap: insert is *~1*, remove max still ~lgN, (but too complicated to use in practice).    
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image004.png)   
+![](algoI_week4_1/pasted_image004.png)   
    
 considerations:    
    
@@ -191,7 +191,7 @@ Heap construction uses **<2N** compares and exchanges.
 *proof*   
 一个有h层的heap, 高度为k的subtree有 2^(h-k)个, 每个subtree最多可以交换k次(从root交换到最底层)    
 → 每一层最多有 k*2^(h-k) 次交换    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image007.png)     
+![](algoI_week4_1/pasted_image007.png)     
 (第一个等式可以用数学归纳法证...)    
 [详细证明见http://algs4.cs.princeton.edu/24pq/]()  (Q20答案)   
    
@@ -199,7 +199,7 @@ Heap construction uses **<2N** compares and exchanges.
 Heapsort use < 2NlgN compares and exchanges.    
    
 Heapsort is the first *in-place* sorting algorithm with NlgN *worst-case* performance.    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image005.png)   
+![](algoI_week4_1/pasted_image005.png)   
    
    
 ⇒ heapsort is *optimal for time and space*, but:   
@@ -210,22 +210,22 @@ Heapsort is the first *in-place* sorting algorithm with NlgN *worst-case* perfor
    
    
 Summary:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image006.png)   
+![](algoI_week4_1/pasted_image006.png)   
    
    
 4. Event-driven simulation   
 ==========================   
 Goal: simulating the motion of N particles in elastic collision (using a priority queue).    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image008.png)   
+![](algoI_week4_1/pasted_image008.png)   
    
 model   
 -----   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image009.png)   
+![](algoI_week4_1/pasted_image009.png)   
 bouncing balls (without collision)   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image010.png)    
+![](algoI_week4_1/pasted_image010.png)    
    
 Ball class:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image011.png)   
+![](algoI_week4_1/pasted_image011.png)   
    
 challenge: which objects to check? How to do it efficently ?   
    
@@ -253,14 +253,14 @@ change state only when something happens
    
 **collision prediction**   
 input: each particle has radius ``s``, position ``(rx, ry)``, velocity ``(vx, vy)``.   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image013.png)   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image014.png)    
+![](algoI_week4_1/pasted_image013.png)   
+![](algoI_week4_1/pasted_image014.png)    
 (美国高中物理这么凶残?...)   
    
 Implementation   
 --------------   
 anyway, 这个是封装好的类:   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image015.png)   
+![](algoI_week4_1/pasted_image015.png)   
 注意, 使用了count记录一个particle到目前为止的碰撞次数.    
    
 initialization: **quadratic**   
@@ -277,7 +277,7 @@ initialization: **quadratic**
 * update velocities   
 * predict future collisions and insert to PQ   
    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image018.png)   
+![](algoI_week4_1/pasted_image018.png)   
 判断invalidate:    
 一个event构造(predict)时记录粒子构造时刻的碰撞次数(countA, countB),   
 然后在调用invalidate的时候, 如果粒子的碰撞次数发生了改变, 则返回false.    
@@ -285,7 +285,7 @@ initialization: **quadratic**
    
    
 Event class:    
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image016.png)   
-![](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week_4-1_Priority_Queue/pasted_image017.png)   
+![](algoI_week4_1/pasted_image016.png)   
+![](algoI_week4_1/pasted_image017.png)   
    
    
