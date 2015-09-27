@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/soft.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2014-10-29T00:00:00+01:00</updated><entry><title>Linux下pdf文件的压缩与合并</title><link href="http://x-wei.github.io/Linux%E4%B8%8Bpdf%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%90%88%E5%B9%B6.html" rel="alternate"></link><updated>2014-10-29T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Linux下pdf文件的压缩与合并.html</id><summary type="html">&lt;h2&gt;压缩pdf&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/soft.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-09-27T00:00:00+02:00</updated><entry><title>linux系统添加swap分区&amp;调整swapness</title><link href="http://x-wei.github.io/linux-swap.html" rel="alternate"></link><updated>2015-09-27T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/linux-swap.html</id><summary type="html">&lt;p&gt;当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   &lt;/p&gt;
+&lt;p&gt;然后就看到chrome这几年来吃内存越来越严重, 导致我开多几个标签页再开eclipse的话电脑就很有可能直接卡死... 郁闷啊 ! 于是决定给系统增加一个swap分区. 之前给&lt;a href="http://thealternative.ch/index.php?view=linuxdays"&gt;thealternative&lt;/a&gt;写邮件询问这件事, Sandro Kalbermatter同学热情回复了我告诉我怎么做, 按照他说的果然成功了, 特此一记.    &lt;/p&gt;
+&lt;h2&gt;step1. 建立swap分区&lt;/h2&gt;
+&lt;p&gt;首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    &lt;/p&gt;
+&lt;p&gt;关于swap分区应该多大, 根据&lt;a href="http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space"&gt;这个帖子&lt;/a&gt;, 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   &lt;/p&gt;
+&lt;p&gt;我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  &lt;br /&gt;
+&lt;img alt="" src="linux-swap/pasted_image.png" /&gt;   &lt;/p&gt;
+&lt;h2&gt;step2. 编辑fstab&lt;/h2&gt;
+&lt;p&gt;建立好了swap分区以后, 打开终端, 输入&lt;code&gt;sudo blkid&lt;/code&gt;查看所有的磁盘分区.    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;blkid&lt;/span&gt;   
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;LABEL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;FILES&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ext2&amp;quot;&lt;/span&gt;    
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;952b70b9-c7ee-4adf-9ceb-ac631ed8d7eb&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;swap&amp;quot;&lt;/span&gt;    
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sdb1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;LABEL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;WIN7&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;D268862068860407&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ntfs&amp;quot;&lt;/span&gt;    
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sdb5&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;0ee51625-2fe3-49c8-b388-53076bce7955&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ext4&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后看到了swap分区的UUID以后, 将其复制, 然后编辑fstab文件: &lt;code&gt;sudo leafpad /etc/fstab&lt;/code&gt;:   &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;UUID=put-the-uud-here       none            swap            defaults  0 0&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;然后重启, 就可以看到swap分区了!  &lt;br /&gt;
+&lt;img alt="" src="linux-swap/pasted_image001.png" /&gt;   &lt;/p&gt;
+&lt;h2&gt;step3. 调整swapness&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://askubuntu.com/questions/103915/how-do-i-configure-swappiness"&gt;swapness&lt;/a&gt;是一个在0到100之间的数, 当系统的内存剩余不到百分之swapness的时候, 开始使用swap分区. 默认的系统swapness是60, 就是内存占用超过40%的时候就开始使用swap分区了.    &lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;cat /proc/sys/vm/swappiness&lt;/code&gt;可以查看当前的swapness.    &lt;/p&gt;
+&lt;p&gt;由于内存读写要比swap分区快很多, 在内存足够的情况下完全没有必要使用swap, 于是修改swapness为20:    &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo leafpaf /etc/sysctl.conf&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;在文件里加入一行: &lt;code&gt;vm.swappiness = 10&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;重启即可...   &lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>Linux下pdf文件的压缩与合并</title><link href="http://x-wei.github.io/Linux%E4%B8%8Bpdf%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%90%88%E5%B9%B6.html" rel="alternate"></link><updated>2014-10-29T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Linux下pdf文件的压缩与合并.html</id><summary type="html">&lt;h2&gt;压缩pdf&lt;/h2&gt;
 &lt;p&gt;用&lt;code&gt;convert&lt;/code&gt; 只简单指定resize好像不太好使: &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;convert -resize 50% input.pdf out.pdf&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;用&lt;code&gt;gs&lt;/code&gt;(&lt;a href="http://blog.sciencenet.cn/blog-467089-773990.html"&gt;http://blog.sciencenet.cn/blog-467089-773990.html&lt;/a&gt;):&lt;/p&gt;
