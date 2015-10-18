@@ -21,7 +21,7 @@ BFS for trees/graphs
 图的遍历需要注意不走重复节点, 所以需要一个HashSet(名字叫visited)来保存哪些节点已经访问过了. 需要注意的是, *在把一个节点放进队列queue的时刻就要把它放进visited*, 而不是在队列里取出来的时刻再放.    
    
 	public void BFS(GraphNode start){   
-		LinkedList<GraphNode> q = new LinkedList<Tree>();   
+		LinkedList<GraphNode> q = new LinkedList<GraphNode>();   
 		HasheSet<GraphNode> visited = new HasheSet<GraphNode>();   
 		q.push(start);   
 		visited.add(start);   

@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     <meta charset="utf-8">
-    <title>numpy: list, array, matrix小结</title>
+    <title>最短路径三剑客: Floyd, Dijkstra, Bellman</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -139,8 +139,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to numpy: list, array, matrix小结">
-					numpy: list, array, matrix小结 
+					title="Permalink to 最短路径三剑客: Floyd, Dijkstra, Bellman">
+					最短路径三剑客: Floyd, Dijkstra, Bellman 
 				</a>
 				 
 			</h1> 
@@ -149,8 +149,8 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2015-09-09T00:00:00">
-	<i class="icon-calendar"></i>三 09 九月 2015
+<abbr class="published" title="2015-10-18T17:00:00">
+	<i class="icon-calendar"></i>日 18 十月 2015
 </abbr>
 
 <span class="label">By</span>
@@ -164,49 +164,113 @@
 
 <span class="label">Tags</span> 
 
-	<a href="./tag/python.html"><i class="icon-tag"></i>python</a>
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
 
 
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>python科学计算包的基础是numpy, 里面的array类型经常遇到. 一开始可能把这个array和python内建的列表(list)混淆, 这里简单总结一下列表(list), 多维数组(np.ndarray)和矩阵(np.matrix)的区别.    </p>
-<h2>list列表</h2>
-<p>列表属于python的三种基本集合类型之一, 其他两种是元组(tuple)和字典(dict). tuple和list区别主要在于是不是mutable的.    </p>
-<p>list和java里的数组不同之处在于, python的list可以包含任意类型的对象, 一个list里可以包含int, string或者其他任何对象, 另外list是可变长度的(list有<code>append</code>, <code>extend</code>和<code>pop</code>等方法).   </p>
-<p>所以, python内建的所谓"列表"其实是功能很强大的数组, 类比一下可以说它对应于java里面的<code>ArrayList&lt;Object&gt;</code> .    </p>
-<h2>ndarray多维数组</h2>
-<p>ndarray是numpy的基石, 其实它更像一个java里面的标准数组: 所有元素有一个相同数据类型(dtype), 不过大小不是固定的.    </p>
-<p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_)</code>).    </p>
+		<p>weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    </p>
+<p>简单起见(这回只写伪代码好了), 对于图的定义如下:   </p>
 <ul>
-<li>
-<p>ndarray带有一些非常实用的<a href="http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html">函数</a>, 列举几个常用的: <code>sum, cumsum, argmax, reshape, T, ...</code>   </p>
-</li>
-<li>
-<p>ndarray有<a href="http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#arrays-indexing">fancy indexing</a>, 非常实用, 比如: <code>a[a&gt;3]</code> 返回数组里大于3的元素   </p>
-</li>
-<li>
-<p>ndarray之间的乘法: 如果用乘法运算符<code>*</code>的话, 返回的是每个位置元素相乘(类似matlab里面的<code>.*</code>), 想要矩阵相乘需要用<code>dot()</code>.   </p>
-</li>
-<li>
-<p>常见矩阵的生成: <code>ones, zeros, eye, diag, ...</code>   </p>
+<li>node index = <code>{1,2,...,n}</code>   </li>
+<li><code>e[u,v]</code> = distance of edge(u,v); if (u,v) is not an edge, <code>e[u,v]=INF</code>   </li>
+<li>令N=点的数量, M=边的数量   </li>
+</ul>
+<h1>任意两点最短路径: Floyd-Warshall</h1>
+<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source)和<code>t</code>(target), 求s到达t的最短路径.    </p>
+<p>Floyd算法的思想是动态规划:    </p>
+<blockquote>
+<ul>
+<li>定义<code>d(i,j,k)</code>为点i到点j之间, <strong>只允许借道节点1...k的最短路径</strong>   </li>
+<li>初始化: <code>d(i,j,0)=e[i,j]</code>(即i到j之间不经由其他任何中转节点的最短路径)   </li>
+<li>更新dij的公式就是: <code>d(i,j,k)=min( d(i,j,k-1), d(i,k-1,k-1)+e[k,j])</code>   </li>
+<li>更新n次   </li>
+</ul>
+</blockquote>
+<p>每次更新dij的意思就是: 现在从i到j可以经过节点k了, 那么看一下ij之间从k这个点经过的话(i → k → j 这条路)能不能缩短dij.    </p>
+<p>i到j最短路径最终就是: <code>d(i,j,n)</code> 即i到j的路程可以经过1~n中的任何中转节点.    </p>
+<p>伪代码特别短(其实真代码也一样短....):    </p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="n">all</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">:</span> <span class="c1">// initialize   </span>
+    <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>    
+<span class="k">for</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">~</span> <span class="n">n</span><span class="o">:</span> <span class="c1">// relax for k times:    </span>
+    <span class="k">for</span> <span class="n">all</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">:</span>   
+        <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">e</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+</pre></div>
+
+
+<p>核心代码只有最后三行... 运行结束后<code>d[i,j]</code>就保存着任意i和j之间的最短路径长度.  <br />
+程序主循环n次, 每次要处理遍历所有的ij组合, 所以复杂度是<strong>O(N^3)</strong>.    </p>
+<h1>单源最短路径: Dijkstra</h1>
+<p>Dijkstra算法解决的问题是: 没有负权边的情况下, 从<strong>源节点</strong><code>s</code>到其他任意节点<code>t</code>的路径长度.    </p>
+<ul>
+<li>维护一个dist数组, dist[i]就表示(目前为止)s到i的最短距离.    </li>
+<li>对于每个元素, <strong>标记</strong>是否其dist是否已经确定不再更改(或者说维护两个集合: 一个集合的dist确定, 另一个未确定).    </li>
+</ul>
+<p>Dijkstra算法是一种贪心策略: 每次在未确定最短路径的节点里挑选距离s最近的那个点, 把这个点标记为已经确定dist, 然后对从这个点出发的边进行松弛.    </p>
+<p>为了标记每个点, 这里用一个bool数组表示: <code>determined[i]</code>为true表示i的dist已经是最短路程, 为false表示还不确定.    </p>
+<p>算法如下:    </p>
+<blockquote>
+<ul>
+<li>初始化<code>dist[i] = e[s,i]</code>, <code>determined[i]</code>全为false   </li>
+<li>在dist未确定的元素里(<code>determined[i]==false</code>)寻找一个dist最小的节点<code>u:</code>   <ul>
+<li>标记<code>u</code>的dist已经确定<code>determined[i]=true</code>   </li>
+<li>用u的所有出边进行松弛: s到i如果经过(u,i)这条边会不会变近? <code>dist[i] = min(dist[i], dist[u]+e[u,i])</code>    </li>
+<li>重复循环直到所有的点都确定dist(or 重复N遍即可: <em>每次只会确定一个新的节点的距离</em>)   </li>
+</ul>
 </li>
 </ul>
-<h2>matrix矩阵</h2>
-<p><em>matrix是ndarray的子类</em>, 所以前面ndarray那些优点都保留了.    </p>
-<p>同时, matrix全部都是二维的, 并且加入了一些更符合直觉的函数, 比如对于matrix对象而言, 乘号运算符得到的是矩阵乘法的结果. 另外<code>mat.I</code>就是逆矩阵...   </p>
-<p>不过应用最多的还是ndarray类型.    </p>
-<p>参考资料:  <br />
-<a href="http://docs.scipy.org/doc/numpy/reference/index.html">http://docs.scipy.org/doc/numpy/reference/index.html</a> <br />
-<a href="http://math.mad.free.fr/depot/numpy/base.html">http://math.mad.free.fr/depot/numpy/base.html</a> <br />
-<a href="http://stackoverflow.com/questions/4151128/what-are-the-differences-between-numpy-arrays-and-matrices-which-one-should-i-u">http://stackoverflow.com/questions/4151128/what-are-the-differences-between-numpy-arrays-and-matrices-which-one-should-i-u</a>   </p>
+</blockquote>
+<p>伪代码:    </p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">~</span><span class="n">n</span><span class="o">:</span>   
+    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>   
+    <span class="n">determined</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span>   
+<span class="n">loop</span> <span class="n">N</span> <span class="n">times</span><span class="o">:</span>    
+    <span class="n">u</span> <span class="o">=</span> <span class="n">argmin</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="n">among</span> <span class="n">all</span> <span class="n">i</span> <span class="n">that</span> <span class="n">determined</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="nb">false</span>   
+    <span class="n">determined</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span> <span class="c1">// determine one node at each loop     </span>
+    <span class="k">for</span> <span class="n">v</span> <span class="n">such</span> <span class="n">that</span> <span class="n">e</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">]</span><span class="o">&lt;</span><span class="n">INF</span><span class="o">:</span>   
+        <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>以上代码的复杂度为O(N^2), 不过如果用堆来优化寻找最近的u的距离, 复杂度可以变得更低.    </p>
+<h1>有负权边的单源最短路径: Bellman-Ford</h1>
+<p>Dijkstra算法的缺点在于不能处理边长为负数的情况, 而这就是Bellman-Ford算法解决的.    </p>
+<p>Bellman算法也是一种动态规划(动态规划这个东西就是Bellman提出来的):    </p>
+<blockquote>
+<ul>
+<li>定义<code>d(i,k)</code>为源点s到i<strong>最多经过k条边的</strong>最短距离   </li>
+<li>初始化: <code>d(i,1)=e[s,i]</code>   </li>
+<li>每次更新di的公式: <code>for all (u,v): d(v,k)=min( d(v,k-1), d(u,k-1)+e[u,v] )</code>   </li>
+<li>更新n-1次   </li>
+</ul>
+</blockquote>
+<p>为什么是更新n-1次? 因为s到i的最短路径至多只有n-1条边(即s到i的路径经过了所有n个点).  <br />
+注意每次更新, 需要把<strong>所有的边</strong>试一遍: 看看用每条边(u,v)能不能松弛dv.    </p>
+<p>伪代码:    </p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">~</span><span class="n">n</span><span class="o">:</span>   
+    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>   
+<span class="n">loop</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="n">times</span><span class="o">:</span>    
+    <span class="k">for</span> <span class="n">all</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="n">such</span> <span class="n">that</span> <span class="n">e</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">]</span><span class="o">&lt;</span><span class="n">INF</span><span class="o">:</span>   
+        <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>核心代码也是最后三行... 太tm精妙了!!    </p>
+<p>外层循环N-1次, 内层循环M次, 所以代码的复杂度是O(NM).   </p>
+<h1>More</h1>
+<p>以下问题有空再写...   </p>
+<ul>
+<li>negative cycle   </li>
+<li>A*   </li>
+</ul>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "list_array_matrix.html";
+			   var disqus_identifier = "shortest-path-summary.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;
