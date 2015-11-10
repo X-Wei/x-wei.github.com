@@ -74,7 +74,7 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 <li class="widget-container widget_text">
 <h3 class="widget-title">About me</h3>
 <div class="textwidget">
-上海西南某高校电院学生, X2012, Linux桌面低端用户.<br/>
+上海西南某高校电院毕业生, X2012.<br/>
 </div></li>
 
 <br>

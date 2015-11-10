@@ -113,8 +113,8 @@ interpretation: *id[p] = ***parent index of obj p **(觉得这个数组叫做fat
 前两个的操作都需要一个函数查找一个节点的root,  需要写一个函数实现, 也很简单, 一路找parent即可:   
 
 	private int root(int p){
-	while (p!=id[p]) p=id[p];
-	return p;
+        while (p!=id[p]) p=id[p];
+        return p;
 	}
 
 

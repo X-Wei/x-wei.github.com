@@ -1,5 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 18 Oct 2015 17:00:00 +0200</lastBuildDate><item><title>最短路径三剑客: Floyd, Dijkstra, Bellman</title><link>http://x-wei.github.io/shortest-path-summary.html</link><description>&lt;p&gt;weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    &lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 09 Nov 2015 00:00:00 +0100</lastBuildDate><item><title>[Algorithms II] Week 1-2 Directed Graphs</title><link>http://x-wei.github.io/algoII_week1_2.html</link><description>&lt;h1&gt;1. Intro to digraphs&lt;/h1&gt;
+&lt;p&gt;Has profound differences wrt undirected graphs.    &lt;/p&gt;
+&lt;p&gt;def: digraph &lt;br /&gt;
+&lt;em&gt; edges: have directions &lt;br /&gt;
+&lt;/em&gt; vertex: distinguish indeg and outdeg   &lt;/p&gt;
+&lt;p&gt;digraph pbs:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;path/shortest path   &lt;/li&gt;
+&lt;li&gt;topological sort: Can you draw a digraph so that all edges point upwards?   &lt;/li&gt;
+&lt;li&gt;strong connectivity: Is there a directed path between all pairs of vertices?   &lt;/li&gt;
+&lt;li&gt;transit closure   &lt;/li&gt;
+&lt;li&gt;PageRank   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;2. Digraph API&lt;/h1&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class Digraph&lt;span class="p"&gt;{&lt;/span&gt;   
+    Digraph&lt;span class="p"&gt;(&lt;/span&gt;int V&lt;span class="p"&gt;);&lt;/span&gt;   
+    void addEdge&lt;span class="p"&gt;(&lt;/span&gt;int v&lt;span class="p"&gt;,&lt;/span&gt; int w&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; edge is directed   
+    Iterable&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;Interger&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; adj&lt;span class="p"&gt;(&lt;/span&gt;int v&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; vertices reached by outgoing edges   
+    int V&lt;span class="p"&gt;();&lt;/span&gt;   
+    Digraph reverse&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt;new methode wrt undirected graph   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;representation: adj-list, ie. an array of bags.  &lt;br /&gt;
+&lt;code&gt;Bag&amp;lt;Integer&amp;gt;[] adj;// prec vertices&lt;/code&gt;   &lt;/p&gt;
+&lt;h1&gt;3. Digraph Search&lt;/h1&gt;
+&lt;p&gt;BFS and DFS can be applied to digraphs.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;reachability   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;find all vertices reachable from vertex-s.  &lt;br /&gt;
+use the same DFS as for undirected graphs.  &lt;br /&gt;
+→ application: programme control-flow analyse, garbage collection.    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;DFS is the basis for a lot of digraph pbs&lt;/em&gt;: 2-satisfiability, Euler path, strongly connected component.    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;multiple source shortest path:    &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week1_2/pasted_image.png" /&gt; &lt;br /&gt;
+⇒ use DFS but &lt;em&gt;enque all vertices in the set&lt;/em&gt;.  &lt;br /&gt;
+→ application: web crawler(DFS not suitable for crawling)   &lt;/p&gt;
+&lt;h1&gt;4. Topological Sort&lt;/h1&gt;
+&lt;p&gt;application. precedence schedule, java compiler (cycled inheritance), ...   &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;topo-order&lt;/strong&gt; &lt;br /&gt;
+is a permutation of vertices, where for each vertice v→w, w is behind v in the permutation.    &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;DAG&lt;/strong&gt; &lt;br /&gt;
+directed acyclic graph. &lt;br /&gt;
+&lt;strong&gt;prop. &lt;/strong&gt;for a digraph, topological order exists &lt;em&gt;iff&lt;/em&gt; graph is a DAG.    &lt;/p&gt;
+&lt;p&gt;algo: ⇒ use DFS~  &lt;br /&gt;
+&lt;em&gt;reverse DFS postorder&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;def.    &lt;strong&gt;postorder&lt;/strong&gt; &lt;br /&gt;
+is the order of the vertices that we have &lt;em&gt;finished&lt;/em&gt; (ie. we have visited all reachable vertices from this vertex).   &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;这个以前的blog写过...    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="nf"&gt;boolean&lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; visited;   
+private Stack&lt;span class="nt"&gt;&amp;lt;Integer&amp;gt;&lt;/span&gt; revPostorder;// stores the vertices in reverse post order   
+private void dfs(Digraph G, int v){   
+    visited&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; = true;   
+    for(int w: G.adj(v))   
+        if(!visited&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;)   
+            dfs(G, w);   
+    //** now we know the vertex v is &amp;quot;finished&amp;quot; **   
+    revPostorder.push(v);   
+}   
+public Iterable&lt;span class="nt"&gt;&amp;lt;Integer&amp;gt;&lt;/span&gt; topoOrder(Digraph G){   
+    for(int v=0;v&lt;span class="nt"&gt;&amp;lt;G&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;V&lt;/span&gt;&lt;span class="err"&gt;();&lt;/span&gt;&lt;span class="na"&gt;v&lt;/span&gt;&lt;span class="err"&gt;++)&lt;/span&gt;   
+        &lt;span class="na"&gt;if&lt;/span&gt;&lt;span class="err"&gt;(!&lt;/span&gt;&lt;span class="na"&gt;visited&lt;/span&gt;&lt;span class="err"&gt;(&lt;/span&gt;&lt;span class="na"&gt;v&lt;/span&gt;&lt;span class="err"&gt;))&lt;/span&gt; &lt;span class="na"&gt;dfs&lt;/span&gt;&lt;span class="err"&gt;(&lt;/span&gt;&lt;span class="na"&gt;G&lt;/span&gt;&lt;span class="err"&gt;,&lt;/span&gt;&lt;span class="na"&gt;v&lt;/span&gt;&lt;span class="err"&gt;);//&lt;/span&gt; &lt;span class="na"&gt;visit&lt;/span&gt; &lt;span class="na"&gt;all&lt;/span&gt; &lt;span class="na"&gt;cc&lt;/span&gt;   
+    &lt;span class="na"&gt;return&lt;/span&gt; &lt;span class="na"&gt;revPostorder&lt;/span&gt;&lt;span class="err"&gt;;&lt;/span&gt;   
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;proof&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;prop. &lt;/strong&gt;reverse post-order of a DAG is in topological order.  &lt;br /&gt;
+(这个证明蛮精彩) &lt;br /&gt;
+&lt;strong&gt;pf.&lt;/strong&gt; &lt;br /&gt;
+for any edge &lt;strong&gt;v→w&lt;/strong&gt;, when &lt;code&gt;dfs(v)&lt;/code&gt; is called:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;case 1: &lt;code&gt;dfs(w)&lt;/code&gt; is called and returned, so w is done before v in post-order;   &lt;/li&gt;
+&lt;li&gt;case 2: &lt;code&gt;dfs(w)&lt;/code&gt; is not called, it will be (in)directly get called by &lt;code&gt;dfs(v)&lt;/code&gt;, so &lt;code&gt;dfs(w)&lt;/code&gt; finishes before &lt;code&gt;dfs(v)&lt;/code&gt;;   &lt;/li&gt;
+&lt;li&gt;case 3: &lt;code&gt;dfs(w)&lt;/code&gt; is called but NOT returned (ie, w not &lt;em&gt;finished&lt;/em&gt;) → exist path from w to v ⇒ graph is not a DAG! (cycle detection)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;5. Strong Components&lt;/h1&gt;
+&lt;p&gt;For undirected graphs: connected components can be solved with dfs or UF.    &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;Strongly-connected&lt;/strong&gt; &lt;br /&gt;
+v and w are strongly-connected if exist path from v to w and w to v.  &lt;br /&gt;
+→ is an equivalent relation.    &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;Strong Component&lt;/strong&gt; &lt;br /&gt;
+subset of  V where each pair are strongly-connected.    &lt;/p&gt;
+&lt;p&gt;Goal: compute all strong components(&lt;em&gt;scc&lt;/em&gt;) in a digraph.    &lt;/p&gt;
+&lt;h2&gt;linear time DFS solution: Tarjan (1972)&lt;/h2&gt;
+&lt;p&gt;(developed version: a two-pass linear-time algorithm)   &lt;/p&gt;
+&lt;p&gt;Intuition: &lt;em&gt;scc for G is the same for G.reverse().&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Kernel DAG&lt;/strong&gt;: contract each scc into a single vertex.  &lt;br /&gt;
+&lt;img alt="" src="algoII_week1_2/pasted_image001.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;Idea:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;compute topological-order in the kernel DAG.   &lt;/li&gt;
+&lt;li&gt;run DFS, consider vertices in reverse-topo-order    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;[Algo]&lt;/strong&gt; &lt;br /&gt;
+1. compute topo-order in &lt;code&gt;G.reverse&lt;/code&gt; (just a DFS in the reversed graph) &lt;br /&gt;
+2. run DFS in original  &lt;code&gt;G&lt;/code&gt;, &lt;em&gt;visit unmarked vertices in topo-order of G.reverse&lt;/em&gt;. (instead of visiting vertices by their index)   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;⇒ &lt;strong&gt;each time we finish a dfs from a vertex, we get a scc!&lt;/strong&gt;   &lt;br /&gt;
+太精彩了!!! &lt;br /&gt;
+&lt;img alt="" src="algoII_week1_2/pasted_image002.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;proof: tricky, cf book...(貌似Werner课上讲过..)   &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private int&lt;span class="p"&gt;[]&lt;/span&gt; scc &lt;span class="o"&gt;=&lt;/span&gt; new int&lt;span class="p"&gt;[&lt;/span&gt;V&lt;span class="p"&gt;];&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; scc&lt;span class="p"&gt;[&lt;/span&gt;v&lt;span class="p"&gt;]&lt;/span&gt; is the index of the SCC that v belongs to   
+private int sccCount &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+private boolean&lt;span class="p"&gt;[]&lt;/span&gt; visited &lt;span class="o"&gt;=&lt;/span&gt; new boolean&lt;span class="p"&gt;[&lt;/span&gt;V&lt;span class="p"&gt;];&lt;/span&gt;   
+public getSCC&lt;span class="p"&gt;(&lt;/span&gt;Digraph G&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;. get topo&lt;span class="o"&gt;-&lt;/span&gt;order &lt;span class="kr"&gt;in&lt;/span&gt; reverse graph   
+    Iterable&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;Integer&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; topoOrderGR &lt;span class="o"&gt;=&lt;/span&gt; topoOrder&lt;span class="p"&gt;(&lt;/span&gt;G.reverse&lt;span class="p"&gt;());&lt;/span&gt;   
+    &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;. run dfs &lt;span class="kr"&gt;in&lt;/span&gt; original graph&lt;span class="p"&gt;,&lt;/span&gt; run on vertices using the above topo&lt;span class="o"&gt;-&lt;/span&gt;order    
+    &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;int v&lt;span class="o"&gt;:&lt;/span&gt;topoOrderGR&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; only difference from the standard topo&lt;span class="o"&gt;-&lt;/span&gt;order algo   
+        &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;visited&lt;span class="p"&gt;[&lt;/span&gt;v&lt;span class="p"&gt;])&lt;/span&gt;   
+            dfs&lt;span class="p"&gt;(&lt;/span&gt;G&lt;span class="p"&gt;,&lt;/span&gt; v&lt;span class="p"&gt;,&lt;/span&gt; sccCount&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;increment sccCount everytime we done a component   
+&lt;span class="p"&gt;}&lt;/span&gt;   
+private dfs&lt;span class="p"&gt;(&lt;/span&gt;Digraph G&lt;span class="p"&gt;,&lt;/span&gt; int v&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="o"&gt;//&lt;/span&gt; run dfs from v&lt;span class="p"&gt;,&lt;/span&gt; and all touched vertices are marked &lt;span class="kr"&gt;in&lt;/span&gt; sccId&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="err"&gt;s SCC   &lt;/span&gt;
+    visited&lt;span class="p"&gt;[&lt;/span&gt;v&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; true&lt;span class="p"&gt;;&lt;/span&gt;   
+    scc&lt;span class="p"&gt;[&lt;/span&gt;v&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; sccCount&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;int w&lt;span class="o"&gt;:&lt;/span&gt;G.adj&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;))&lt;/span&gt;   
+        &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;visited&lt;span class="p"&gt;[&lt;/span&gt;w&lt;span class="p"&gt;]){&lt;/span&gt;   
+            scc&lt;span class="p"&gt;[&lt;/span&gt;w&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; sccCount&lt;span class="p"&gt;;&lt;/span&gt;   
+            dfs&lt;span class="p"&gt;(&lt;/span&gt;G&lt;span class="p"&gt;,&lt;/span&gt;w&lt;span class="p"&gt;);&lt;/span&gt;   
+        &lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Mon, 09 Nov 2015 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/algoII_week1_2.html</guid><category>algorithm</category></item><item><title>[Algorithms II] Week 1-1 Undirected Graphs</title><link>http://x-wei.github.io/algoII_week1_1.html</link><description>&lt;h1&gt;1. Intro to graphs&lt;/h1&gt;
+&lt;p&gt;Graph: vertices connected by edges.    &lt;/p&gt;
+&lt;p&gt;terminology:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;path&lt;/strong&gt;:  sequence of vertices connected by edges   &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cycle&lt;/strong&gt;: path with same starting and ending vertex   &lt;/li&gt;
+&lt;li&gt;two vertices are &lt;strong&gt;connected&lt;/strong&gt;: if there is a path between     &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex of graph problems:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;path: or connectivity   &lt;/li&gt;
+&lt;li&gt;shortest path   &lt;/li&gt;
+&lt;li&gt;cycle   &lt;/li&gt;
+&lt;li&gt;Euler tour (ouii..)   &lt;/li&gt;
+&lt;li&gt;Hamilton tour   &lt;/li&gt;
+&lt;li&gt;MST   &lt;/li&gt;
+&lt;li&gt;bi-connectivity: is there a vertex whose removal disconnects the graph?   &lt;/li&gt;
+&lt;li&gt;planarity   &lt;/li&gt;
+&lt;li&gt;isomorphism   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;2. Graph API&lt;/h1&gt;
+&lt;h2&gt;graph representation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;vertex representation:  use integers &lt;em&gt;between 0 and V-1&lt;/em&gt;   &lt;/li&gt;
+&lt;li&gt;anormalies: self-loop and multiple edges are &lt;em&gt;possible&lt;/em&gt;    &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Graph&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="nx"&gt;Graph&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;V&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="bp"&gt;void&lt;/span&gt; &lt;span class="nx"&gt;addEdge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;adj&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;V&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;// nb of vertices   &lt;/span&gt;
+    &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;E&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;// nb of edges   &lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;print all edges:  &lt;br /&gt;
+&lt;img alt="" src="algoII_week1_1/pasted_image.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;basic functions:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;degree&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Graph&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;deg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;adj&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="n"&gt;deg&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;deg&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;nbOfSelfloops&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Graph&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;cnt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;V&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;   
+        &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;adj&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;    
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;cnt&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;cnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;edge representation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;set-of-edge implementation: a list of all edges ⇒ can lead to inefficient implementation   &lt;/li&gt;
+&lt;li&gt;adj-matrix implementation: maintain a 2d (V*V) boolean array ⇒ space complexity too heavy   &lt;/li&gt;
+&lt;li&gt;adj-list implementation: vertex-indexed array, each array entry is a &lt;code&gt;Bag&lt;/code&gt; (类似桶bucket) ⇒ sutable for sparse graphs   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week1_1/pasted_image001.png" /&gt; &lt;br /&gt;
+adj-list implementation:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="nf"&gt;final&lt;/span&gt; &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;V&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="nf"&gt;Bag&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; adj;   
+public Graph(int V){   
+    this.V = V;   
+    this.adj = (Bag&lt;span class="nt"&gt;&amp;lt;Integer&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;[]&lt;/span&gt;) new Bag&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;V&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;;// java cannot create generic array   
+    for(int v = 0; v&lt;span class="nt"&gt;&amp;lt;V&lt;/span&gt;&lt;span class="err"&gt;;&lt;/span&gt; &lt;span class="na"&gt;v&lt;/span&gt;&lt;span class="err"&gt;++)&lt;/span&gt; &lt;span class="na"&gt;adj&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="na"&gt; =&lt;/span&gt;&lt;span class="err"&gt; &lt;/span&gt;&lt;span class="s"&gt;new&lt;/span&gt; &lt;span class="na"&gt;Bag&lt;/span&gt;&lt;span class="err"&gt;&amp;lt;&lt;/span&gt;&lt;span class="na"&gt;Integer&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;();   
+}   
+public addEdge(int v, int w){   
+    adj&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;.add(w);   
+    adj&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;.add(v);// if undirected graph   
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="algoII_week1_1/pasted_image002.png" /&gt;   &lt;/p&gt;
+&lt;h1&gt;3. Depth-First Search&lt;/h1&gt;
+&lt;p&gt;Tremaux maze exploration: trace back when no unvisited vertices availiable.  &lt;br /&gt;
+动画好看... &lt;br /&gt;
+DFS goal: systematically search through a graph.  &lt;br /&gt;
+&lt;strong&gt;design pattern&lt;/strong&gt;: &lt;em&gt;decouple&lt;/em&gt; graph data and graph processing.    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Paths&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="nb"&gt;Path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Graph&lt;/span&gt; &lt;span class="nx"&gt;G&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nb"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;// graph G and source s   &lt;/span&gt;
+    &lt;span class="nb"&gt;boolean&lt;/span&gt; &lt;span class="nx"&gt;hasPathTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;pathTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nx"&gt;v&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;algo:  &lt;br /&gt;
+&lt;img alt="" src="algoII_week1_1/pasted_image003.png" /&gt; &lt;br /&gt;
+注意每次访问节点以前就将其mark.    &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;用一个boolean数组&lt;code&gt;visited[]&lt;/code&gt;作为标记   &lt;/li&gt;
+&lt;li&gt;为了找到一条具体的路径(ie, 一系列节点), 维护一个&lt;code&gt;prev[]&lt;/code&gt;数组, 存放当前节点是从哪个节点走过来的.    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week1_1/pasted_image004.png" /&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="c1"&gt;//public class DFSpaths extends Paths...   &lt;/span&gt;
+&lt;span class="n"&gt;boolean&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;visited&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;boolean&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;V&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="k"&gt;int&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;prev&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="k"&gt;int&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;V&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="n"&gt;dfs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="n"&gt;visited&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="nl"&gt;w:&lt;/span&gt; &lt;span class="no"&gt;G&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;adj&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;   
+        &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;visited&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;   
+            &lt;span class="n"&gt;prev&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+            &lt;span class="n"&gt;dfs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+        &lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;   
+&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;pathTo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="n"&gt;Stack&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Stack&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Integer&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;   
+    &lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;int&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;prev&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;    
+        &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;properties&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;prop&lt;/strong&gt;. &lt;br /&gt;
+DFS visite all edges in time propotional to the sum of their degrees(ie. nb of edges).    &lt;/p&gt;
+&lt;h1&gt;4. Breadth-First Search&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;not&lt;/strong&gt; recursive algo. &lt;br /&gt;
+&lt;em&gt;maintain a queue, add to queue for all vertices not-marked.&lt;/em&gt;    &lt;/p&gt;
+&lt;h2&gt;implementation&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;use &lt;code&gt;visited[]&lt;/code&gt; to mark vertices   &lt;/li&gt;
+&lt;li&gt;use a &lt;code&gt;prev[]&lt;/code&gt; array to get explicit path   &lt;/li&gt;
+&lt;li&gt;use a &lt;code&gt;dist[]&lt;/code&gt; array to record the shortest dist from v to source (can use &lt;code&gt;dist&lt;/code&gt; to replace &lt;code&gt;visited&lt;/code&gt;)   &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;void&lt;/span&gt; &lt;span class="nx"&gt;bfs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Graph&lt;/span&gt; &lt;span class="nx"&gt;G&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;int&lt;/span&gt; &lt;span class="nb"&gt;s&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;   
+    &lt;span class="nb"&gt;boolean&lt;/span&gt; &lt;span class="nx"&gt;visited&lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; = new boolean&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;G.V&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;;   
+    int prev&lt;span class="cp"&gt;[]&lt;/span&gt; = new int&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;G.V&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;;   
+    int dist&lt;span class="cp"&gt;[]&lt;/span&gt; = new int&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;G.V&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;;   
+    Queue&lt;span class="nt"&gt;&amp;lt;Integer&amp;gt;&lt;/span&gt; q = new Queue&lt;span class="nt"&gt;&amp;lt;Integer&amp;gt;&lt;/span&gt;();   
+    visited&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; = true;   
+    q.push(s);   
+    while(!q.isEmpty()){   
+        int v = q.dequeue();   
+        for(int w:G.adj(v))   
+            if(!visited&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;) {   
+                prev&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; = v;   
+                visited&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;w&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; = true;   
+                q.enqueue(w);   
+            }      
+    }   
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;property&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;prop.&lt;/strong&gt; &lt;br /&gt;
+BFS computes the shortest path from s to all vertices using time propotional to E+V.    &lt;/p&gt;
+&lt;p&gt;intuition: BFS examines nodes by increasing distance    &lt;/p&gt;
+&lt;h1&gt;5. Connected Components&lt;/h1&gt;
+&lt;p&gt;dealing with connectivity(equivalence) queries ⇒ answer in constant time (with &lt;em&gt;preprocessing&lt;/em&gt;).    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;public&lt;/span&gt; &lt;span class="n"&gt;class&lt;/span&gt; &lt;span class="n"&gt;CC&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;   
+    &lt;span class="n"&gt;boolean&lt;/span&gt; &lt;span class="n"&gt;connected&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;   
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="c1"&gt;// nb of CCs   &lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="c1"&gt;//id for a CC   &lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ Union-Find ? ⇒ &lt;em&gt;Use DFS!!&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;def. &lt;em&gt;connected component&lt;/em&gt; is a maximal set of connected vertices.    &lt;/p&gt;
+&lt;p&gt;algo: for each unmarked vertex, run dfs(with increasing cc id)... &lt;br /&gt;
+after the preprocessing, we can get the array &lt;code&gt;id[]&lt;/code&gt; and cc count &lt;code&gt;cnt&lt;/code&gt;...   &lt;/p&gt;
+&lt;h1&gt;6. Graph Challenges&lt;/h1&gt;
+&lt;p&gt;some typical pbs &lt;br /&gt;
+&lt;strong&gt;pb1. bipartite graph&lt;/strong&gt;   &lt;/p&gt;
+&lt;p&gt;Can we  divide vertices into 2 subsets, where all edge go from one subset to other.  &lt;br /&gt;
+⇒ can be done with dfs. &lt;em&gt;cf. booksite&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pb2. cycle detection&lt;/strong&gt; &lt;br /&gt;
+⇒ simple using dfs.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pb3. Euler cycle&lt;/strong&gt; &lt;br /&gt;
+Find a cycle that uses all edges exactely once.  &lt;br /&gt;
+[Euler] a graph is Eulerian &lt;strong&gt;iff&lt;/strong&gt; all vertices have even degree.  &lt;br /&gt;
+⇒ typical diligent algo students can do. &lt;em&gt;cf. booksite&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pb4. Hamilton cycle&lt;/strong&gt; &lt;br /&gt;
+Find cycle that visits each vertex exactly once.  &lt;br /&gt;
+⇒ intractable (typical NP-complete pb)   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pb5. isomorphism of graphs&lt;/strong&gt; &lt;br /&gt;
+Are two graphs identical except for vertex names? &lt;br /&gt;
+⇒ no one knows...    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pb6. planary graph&lt;/strong&gt; &lt;br /&gt;
+Lay out a graph in the plane without crossing edges? &lt;br /&gt;
+⇒ expert level. exists linear time algo based on DFS by Tarjan, but too complicated.    &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Sun, 08 Nov 2015 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/algoII_week1_1.html</guid><category>algorithm</category></item><item><title>最短路径三剑客: Floyd, Dijkstra, Bellman</title><link>http://x-wei.github.io/shortest-path-summary.html</link><description>&lt;p&gt;weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    &lt;/p&gt;
 &lt;p&gt;简单起见(这回只写伪代码好了), 对于图的定义如下:   &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;node index = &lt;code&gt;{1,2,...,n}&lt;/code&gt;   &lt;/li&gt;
@@ -312,9 +635,10 @@
 由于这样的话每次不必在队首poll出元素(而是依次处理所有queue的元素), 所以可以改用ArrayList. 此时while循环里的不变量是: 所有q里面的节点距离start的距离都相同.    &lt;/p&gt;
 &lt;h2&gt;complexity&lt;/h2&gt;
 &lt;p&gt;假设一个图有N个节点和M条边, BFS会走遍所有节点, 时间是O(N), 然后由于每个节点会检查所有的出边, 最终所有的边都会被检查过, 时间是O(M), 所以BFS的时间复杂度是&lt;strong&gt;O(N+M)&lt;/strong&gt;.    &lt;/p&gt;
-&lt;p&gt;队列里面最多可能存放所有节点, 空间复杂度为&lt;strong&gt;O(N)&lt;/strong&gt;.    &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Thu, 08 Oct 2015 00:00:00 +0200</pubDate><guid>http://x-wei.github.io/bfs-summary.html</guid><category>algorithm</category></item><item><title>Mindmap of algorithms &amp; data structures</title><link>http://x-wei.github.io/algo-ds-mindmap.html</link><description>&lt;p&gt;Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms. This mindmap is drawn using &lt;a href="http://www.xmind.net/"&gt;xmind&lt;/a&gt;.   &lt;/p&gt;
+&lt;p&gt;队列里面最多可能存放所有节点, 空间复杂度为&lt;strong&gt;O(N)&lt;/strong&gt;.    &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Thu, 08 Oct 2015 00:00:00 +0200</pubDate><guid>http://x-wei.github.io/bfs-summary.html</guid><category>algorithm</category></item><item><title>Mindmap of algorithms &amp; data structures</title><link>http://x-wei.github.io/algo-ds-mindmap.html</link><description>&lt;p&gt;Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="algo-ds-mindmap/Algo%20%26%20DS.png" /&gt;   &lt;/p&gt;
-&lt;p&gt;I shell update its content later on. And maybe write some blog entries on some of the items.   &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Mon, 05 Oct 2015 00:00:00 +0200</pubDate><guid>http://x-wei.github.io/algo-ds-mindmap.html</guid><category>algorithm</category></item><item><title>minHash: 一种快速approximate retrieval方法</title><link>http://x-wei.github.io/minhash.html</link><description>&lt;p&gt;&lt;strong&gt;approximate retrieval&lt;/strong&gt;(相似搜索)这个问题之前实习的时候就经常遇到: 如何快速在大量数据中如何找出相近的数据.    &lt;/p&gt;
+&lt;p&gt;I shall update its content later on. And maybe write some blog entries on some of the items.   &lt;/p&gt;
+&lt;p&gt;This mindmap is drawn using &lt;a href="http://www.xmind.net/"&gt;xmind&lt;/a&gt;.   &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Mon, 05 Oct 2015 00:00:00 +0200</pubDate><guid>http://x-wei.github.io/algo-ds-mindmap.html</guid><category>algorithm</category></item><item><title>minHash: 一种快速approximate retrieval方法</title><link>http://x-wei.github.io/minhash.html</link><description>&lt;p&gt;&lt;strong&gt;approximate retrieval&lt;/strong&gt;(相似搜索)这个问题之前实习的时候就经常遇到: 如何快速在大量数据中如何找出相近的数据.    &lt;/p&gt;
 &lt;p&gt;问题描述: 假设有N个数据, 并且对于他们有一个相似度(或距离)的度量函数&lt;code&gt;sim(i,j)&lt;/code&gt;, 我们的问题就是如何快速找出所有N个点中相似度较大的i和j组合.    &lt;/p&gt;
 &lt;p&gt;乍一看这个问题必须要对所有的(i,j)计算相似度, 但是N^2的复杂度在N太大的情况下是不能够忍受的.    &lt;/p&gt;
 &lt;h2&gt;kdtree&lt;/h2&gt;
@@ -3156,8 +3480,8 @@ interpretation: &lt;em&gt;id[p] = &lt;em&gt;&lt;strong&gt;parent index of obj p 
 &lt;/ul&gt;
 &lt;p&gt;前两个的操作都需要一个函数查找一个节点的root,  需要写一个函数实现, 也很简单, 一路找parent即可:   &lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;root&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;!=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 

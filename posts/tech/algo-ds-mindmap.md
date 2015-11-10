@@ -3,9 +3,10 @@ date: 2015-10-05
 Slug: algo-ds-mindmap
 Tags: algorithm
 
-Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms. This mindmap is drawn using [xmind](http://www.xmind.net/).   
-
+Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    
 
 ![](algo-ds-mindmap/Algo%20%26%20DS.png)   
 
-I shell update its content later on. And maybe write some blog entries on some of the items.   
+I shall update its content later on. And maybe write some blog entries on some of the items.   
+
+This mindmap is drawn using [xmind](http://www.xmind.net/).   
