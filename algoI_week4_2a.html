@@ -150,7 +150,7 @@
 			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2015-08-25T00:00:00">
-	<i class="icon-calendar"></i>二 25 八月 2015
+	<i class="icon-calendar"></i>Tue, 25 Aug 2015
 </abbr>
 
 <span class="label">By</span>
@@ -178,15 +178,15 @@
 </ul>
 <h2>Association array abstraction</h2>
 <p>Associate a value to a key — generalized array: <em>a[key]=val</em>.    </p>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">ST</span><span class="o">&lt;</span><span class="nb">Key</span><span class="p">,</span> <span class="nb">Value</span><span class="o">&gt;</span><span class="p">{</span>   
-    <span class="bp">void</span> <span class="nx">put</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">,</span> <span class="nb">Value</span> <span class="nx">v</span><span class="p">);</span><span class="c1">//remove key if value=null   </span>
-    <span class="nb">Value</span> <span class="nb">get</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">);</span><span class="c1">//return null if key is absent   </span>
-    <span class="bp">void</span> <span class="nb">delete</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">);</span>   
-    <span class="nb">boolean</span> <span class="nb">contains</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">);</span>   
-    <span class="nb">boolean</span> <span class="nb">isEmpty</span><span class="p">();</span>   
-    <span class="nx">int</span> <span class="nb">size</span><span class="p">();</span>   
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="nb">keys</span><span class="p">();</span><span class="c1">//better to return an ordered sequence of keys   </span>
-<span class="p">}</span>
+<div class="codehilite"><pre>public class ST&lt;Key, Value&gt;{   
+    void put(Key k, Value v);//remove key if value=null   
+    Value get(Key k);//return null if key is absent   
+    void delete(Key k);   
+    boolean contains(Key k);   
+    boolean isEmpty();   
+    int size();   
+    Iterable&lt;Key&gt; keys();//better to return an ordered sequence of keys   
+}
 </pre></div>
 
 
@@ -220,26 +220,26 @@ Be careful when implementing the equals method: 坑不少...  <br />
 <p><strong>search operation</strong> <br />
 write a function rank() that returns the number of keys &lt; k searched.  <br />
 找不到的时候: <em>比k小的元素个数=lo (lo&gt;hi, 可以想想当hi=lo以后是怎么移动的)</em>   </p>
-<div class="codehilite"><pre><span class="n">private</span> <span class="kt">int</span> <span class="nf">rank</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
-    <span class="kt">int</span> <span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hi</span><span class="o">=</span><span class="n">keys</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>   
-    <span class="k">while</span><span class="p">(</span><span class="n">hi</span><span class="o">&gt;=</span><span class="n">lo</span><span class="p">){</span>   
-        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="p">(</span><span class="n">hi</span><span class="o">-</span><span class="n">lo</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>   
-        <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">mid</span><span class="p">].</span><span class="n">compareTo</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>   
-        <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">mid</span><span class="p">;</span>   
-        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>   
-        <span class="k">else</span> <span class="n">lo</span> <span class="o">=</span> <span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>   
-    <span class="p">}</span>   
-    <span class="k">return</span> <span class="n">lo</span><span class="p">;</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>private int rank(Key k){   
+    int lo=0, hi=keys.length-1;   
+    while(hi&gt;=lo){   
+        int mid = lo + (hi-lo)/2;   
+        int cmp = keys[mid].compareTo(keys[k]);   
+        if(cmp==0) return mid;   
+        else if(cmp&gt;0) hi = mid-1;   
+        else lo = mid+1;   
+    }   
+    return lo;   
+}
 </pre></div>
 
 
 <p>Using rank() to implement the get() method:    </p>
-<div class="codehilite"><pre><span class="n">public</span> <span class="n">Value</span> <span class="nf">get</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
-    <span class="kt">int</span> <span class="n">rk</span> <span class="o">=</span> <span class="n">rank</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>   
-    <span class="k">if</span><span class="p">(</span><span class="n">rk</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">keys</span><span class="p">[</span><span class="n">rk</span><span class="p">].</span><span class="n">compareTo</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">vals</span><span class="p">[</span><span class="n">rk</span><span class="p">];</span>   
-    <span class="k">return</span> <span class="n">null</span><span class="p">;</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>public Value get(Key k){   
+    int rk = rank(k);   
+    if(rk&lt;N &amp;&amp; keys[rk].compareTo(k)==0) return vals[rk];   
+    return null;   
+}
 </pre></div>
 
 
@@ -342,138 +342,18 @@ for example:    </p>
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/算法.html">算法</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-1">
     <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -483,7 +363,107 @@ for example:    </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -492,8 +472,13 @@ for example:    </p>
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -503,17 +488,32 @@ for example:    </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

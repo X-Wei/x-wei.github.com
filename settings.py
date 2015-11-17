@@ -5,6 +5,11 @@ TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = 'zhs'
 
+DATE_FORMATS = {
+    'zhs': ((u'en_US', 'utf8'), u'%a, %d %b %Y',),
+    #~ 'zhs': ((u'zh_CN', 'utf8'), u'%Y年%m月%d日(周%a)',),
+}
+
 SITENAME = "mx's Blog"
 AUTHOR = 'mx'
 
@@ -25,7 +30,7 @@ STATIC_PATHS = ["static"]
 PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
-#~ REVERSE_ARCHIVE_ORDER=0
+REVERSE_ARCHIVE_ORDER=1
 
 LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
@@ -41,7 +46,8 @@ SOCIAL = (
           #~ ('weibo', 'http://weibo.com/farseerfc'),
           #~ ('renren', 'http://www.renren.com/farseer'),
           
-GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~          
+GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~   
+       
 #把各种网页小工具(比如倒计时, 微博展示......)的html代码放在这里 不过要使用farseerfc同学制作的bootsrtap2主题(太赞啦!!)
 SIDEBAR_CUSTOM=ur"""
 <br>
@@ -100,16 +106,4 @@ document.write("<p style='text-align: center'><strong><font style='color:black;f
 
 """
 
-#~ <br>
-#~ <object type="application/x-shockwave-flash" style="outline:none;" data="http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.swf?" width="300" height="225"><param name="movie" value="http://hosting.gmodules.com/ig/gadgets/file/112581010116074801021/hamster.swf?"></param><param name="AllowScriptAccess" value="always"></param><param name="wmode" value="opaque"></param></object>
-#~ <br>
-
-#~ <br>
-#~ <a href="http://www.ubuntu.com/"><img src="http://www.ubuntu.com/countdown/banner1.png" border="0" width="180" height="150" alt="The next version of Ubuntu is coming soon"></a><br/>
-
-#gtalk
-#<iframe src="http://www.google.com/talk/service/badge/Show?tk=z01q6amlq8n8dcqb7mphiivq299uh917bh2sph4lo7rip701jaltqve59eica9opvmhfq5h7hm6i7jkdql1kqntt3h8mnto6ns9lt5960d4dhrvdo3963kv040g9344v6q2nslh6sgqnjp5l2oqspe7p29858omr5qthnm8lc&amp;w=200&amp;h=60" frameborder="0" allowtransparency="true" width="200" height="60"></iframe>
-#~ TWITTER_USERNAME = 'farseerfc'
-
-#~ PDF_GENERATOR = True
 

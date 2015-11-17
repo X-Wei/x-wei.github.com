@@ -150,7 +150,7 @@
 			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2015-10-18T00:00:00">
-	<i class="icon-calendar"></i>日 18 十月 2015
+	<i class="icon-calendar"></i>Sun, 18 Oct 2015
 </abbr>
 
 <span class="label">By</span>
@@ -172,10 +172,10 @@
 		</div>
 		<p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
 <p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">GraphNode</span><span class="p">{</span>      
-    <span class="nx">int</span> <span class="nx">val</span><span class="p">;</span>      
-    <span class="nb">List</span><span class="o">&lt;</span><span class="nx">GraphNode</span><span class="o">&gt;</span> <span class="nx">neighbors</span><span class="p">;</span>      
-<span class="p">}</span>
+<div class="codehilite"><pre>public class GraphNode{      
+    int val;      
+    List&lt;GraphNode&gt; neighbors;      
+}
 </pre></div>
 
 
@@ -184,35 +184,35 @@
 <h2>Recursive DFS</h2>
 <p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
 <p>递归的DFS代码非常简洁:    </p>
-<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">nd</span><span class="p">){</span>      
-    <span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>    
-    <span class="n">visited</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">nd</span><span class="p">);</span>   
-    <span class="k">for</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">next</span><span class="o">:</span> <span class="n">nd</span><span class="p">.</span><span class="n">neighbors</span><span class="p">){</span>   
-        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">visited</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">)</span>   
-            <span class="n">DFS</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>   
-    <span class="p">}</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>public void DFS(GraphNode nd){      
+    System.out.println(nd.val);    
+    visited.add(nd);   
+    for(GraphNode next: nd.neighbors){   
+        if( !visited.contains(next) )   
+            DFS(next);   
+    }   
+}
 </pre></div>
 
 
 <p>虽然这个算法很短, 但是它非常重要, 回溯算法(backtracking)其实就相当于在问题的求解域做一个dfs. 另外拓扑排序也是基于递归dfs进行一点点修改.    </p>
 <h2>Non-recursive DFS</h2>
 <p>非递归版本的dfs同样很重要, 因为毕竟非递归的版本效率高一些, 另外这个算法和bfs非常相似, 只不过把队列queue换成了栈stack而已:    </p>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">void</span> <span class="nx">DFS</span><span class="p">(</span><span class="nx">GraphNode</span> <span class="nb">start</span><span class="p">){</span>      
-    <span class="nb">Stack</span><span class="o">&lt;</span><span class="nx">GraphNode</span><span class="o">&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="nb">new</span> <span class="nb">Stack</span><span class="o">&lt;</span><span class="nx">GraphNode</span><span class="o">&gt;</span><span class="p">();</span>   
-    <span class="nx">q.push</span><span class="p">(</span><span class="nb">start</span><span class="p">);</span>      
-    <span class="nx">visited.add</span><span class="p">(</span><span class="nb">start</span><span class="p">);</span>      
-    <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="nx">s.empty</span><span class="p">()){</span>      
-        <span class="nx">GraphNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="nx">s.pop</span><span class="p">();</span>      
-        <span class="nx">System.out.println</span><span class="p">(</span><span class="nx">cur.val</span><span class="p">);</span>      
-        <span class="nb">for</span><span class="p">(</span><span class="nx">GraphNode</span> <span class="nb">next</span><span class="p">:</span> <span class="nx">cur.children</span><span class="p">){</span>       
-            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">visited.contains</span><span class="p">(</span><span class="nb">next</span><span class="p">)){</span>      
-                <span class="nx">s.push</span><span class="p">(</span><span class="nb">next</span><span class="p">);</span>      
-                <span class="nx">visited.add</span><span class="p">(</span><span class="nb">next</span><span class="p">);</span> <span class="c1">// mark node as visited when adding to stack!       </span>
-            <span class="p">}</span>      
-        <span class="p">}</span>      
-    <span class="p">}</span><span class="c1">//while      </span>
-<span class="p">}</span>
+<div class="codehilite"><pre>public void DFS(GraphNode start){      
+    Stack&lt;GraphNode&gt; s = new Stack&lt;GraphNode&gt;();   
+    q.push(start);      
+    visited.add(start);      
+    while(!s.empty()){      
+        GraphNode cur = s.pop();      
+        System.out.println(cur.val);      
+        for(GraphNode next: cur.children){       
+            if(!visited.contains(next)){      
+                s.push(next);      
+                visited.add(next); // mark node as visited when adding to stack!       
+            }      
+        }      
+    }//while      
+}
 </pre></div>
 
 
@@ -238,16 +238,16 @@
 <code>HasheMap&lt;GraphNode, Boolean&gt; visited = new HasheMap&lt;GraphNode, Boolean&gt;();</code>    </p>
 <p>节点不在visited表示还未访问过, 节点对应为false表示正在访问, 节点对应为true表示已经访问该节点以及所有可以从它到达的节点.    </p>
 <p>写一下代码:    </p>
-<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">nd</span><span class="p">){</span>      
-    <span class="n">visited</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span> <span class="c1">// mark as status-1   </span>
-    <span class="k">for</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">next</span><span class="o">:</span> <span class="n">nd</span><span class="p">.</span><span class="n">neighbors</span><span class="p">){</span>   
-        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">visited</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">)</span>   
-            <span class="n">DFS</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>   
-        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">visited</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">next</span><span class="p">)</span><span class="o">==</span><span class="nb">false</span><span class="p">)</span> <span class="c1">// found cycle   </span>
-            <span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Cycle detected!!!&quot;</span><span class="p">);</span>   
-    <span class="p">}</span><span class="c1">// now all touchable nodes from nd are visited   </span>
-    <span class="n">visited</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span> <span class="c1">// mark as status-2   </span>
-<span class="p">}</span>
+<div class="codehilite"><pre>public void DFS(GraphNode nd){      
+    visited.put(nd, false); // mark as status-1   
+    for(GraphNode next: nd.neighbors){   
+        if( !visited.contains(next) )   
+            DFS(next);   
+        else if(visited.get(next)==false) // found cycle   
+            System.out.println(&quot;Cycle detected!!!&quot;);   
+    }// now all touchable nodes from nd are visited   
+    visited.put(nd, true); // mark as status-2   
+}
 </pre></div>
 
 
@@ -268,13 +268,13 @@
 <p>简单修改一下递归的dfs就可以处理拓扑排序: 维护一个计数器<code>K</code>(初始化为n=所有节点数), 每当一个点已经遍历完毕(所有通过这个点可以到达的点都已经被走过)以后, 就把这个点的顺序设为K, 同时减少K.    </p>
 <p>就用一个HashMap来为每个节点关联一个序号好了:  <br />
 <code>HasheMap&lt;GraphNode, Integer&gt; order = new HasheMap&lt;GraphNode, Integer&gt;();</code>    </p>
-<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">nd</span><span class="p">){</span>      
-    <span class="k">for</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">next</span><span class="o">:</span> <span class="n">nd</span><span class="p">.</span><span class="n">neighbors</span><span class="p">){</span>   
-        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">visited</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">next</span><span class="p">)</span> <span class="p">)</span>   
-            <span class="n">DFS</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>   
-    <span class="p">}</span><span class="c1">// all touchable nodes from nd are visited   </span>
-    <span class="n">order</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">K</span><span class="o">--</span><span class="p">);</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>public void DFS(GraphNode nd){      
+    for(GraphNode next: nd.neighbors){   
+        if( !visited.contains(next) )   
+            DFS(next);   
+    }// all touchable nodes from nd are visited   
+    order.put(nd, K--);   
+}
 </pre></div>
 
 
@@ -362,138 +362,18 @@
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/算法.html">算法</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-1">
     <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -503,7 +383,107 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -512,8 +492,13 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -523,17 +508,32 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

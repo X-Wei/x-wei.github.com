@@ -150,7 +150,7 @@
 			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2013-07-31T00:00:00">
-	<i class="icon-calendar"></i>三 31 七月 2013
+	<i class="icon-calendar"></i>Wed, 31 Jul 2013
 </abbr>
 
 <span class="label">By</span>
@@ -223,9 +223,9 @@
 </li>
 <li>
 <p>→ 自动在R.java里生成一个id:</p>
-<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="n">final</span> <span class="n">class</span> <span class="n">id</span> <span class="p">{</span>
-        <span class="n">public</span> <span class="k">static</span> <span class="n">final</span> <span class="kt">int</span> <span class="n">textView1</span><span class="o">=</span><span class="mh">0x7f080003</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="codehilite"><pre>public static final class id {
+        public static final int textView1=0x7f080003;
+    }
 </pre></div>
 
 
@@ -238,7 +238,7 @@
 <ul>
 <li>
 <p>→ 在onCreate()中, 通过id获得这个控件对象:</p>
-<div class="codehilite"><pre><span class="n">tv</span> <span class="o">=</span> <span class="p">(</span><span class="n">TextView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">textView1</span><span class="p">);</span><span class="c1">//有向下转型: TextView是View的子类</span>
+<div class="codehilite"><pre>tv = (TextView) findViewById(R.id.textView1);//有向下转型: TextView是View的子类
 </pre></div>
 
 
@@ -256,30 +256,30 @@
 <ol>
 <li>
 <p>java程序里获取控件代表的对象: findViewById()方法</p>
-<div class="codehilite"><pre><span class="n">bt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Button</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button1</span><span class="p">);</span>
+<div class="codehilite"><pre>bt = (Button) findViewById(R.id.button1);
 </pre></div>
 
 
 </li>
 <li>
 <p>定义一个<strong>内部类</strong> 实现监听器接口:</p>
-<div class="codehilite"><pre><span class="c1">// **使用一个内部类定义监听器**</span>
-<span class="c1">// Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的</span>
-<span class="k">class</span> <span class="n">ButtonListener</span> <span class="n">implements</span> <span class="n">OnClickListener</span> <span class="p">{</span>
-<span class="p">@</span><span class="n">Override</span>
-<span class="c1">// 实现该接口的抽象方法onClick</span>
-<span class="n">public</span> <span class="k">void</span> <span class="n">onClick</span><span class="p">(</span><span class="n">View</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-<span class="c1">//do something......</span>
-<span class="p">}</span>
-<span class="p">}</span><span class="c1">// end 内部类ButtonListener</span>
+<div class="codehilite"><pre>// **使用一个内部类定义监听器**
+// Button的监听器 实现OnClickListener接口, OnClickListener接口是处理点击事件的
+class ButtonListener implements OnClickListener {
+@Override
+// 实现该接口的抽象方法onClick
+public void onClick(View v) {
+//do something......
+}
+}// end 内部类ButtonListener
 </pre></div>
 
 
 </li>
 <li>
 <p>onCreate()里生成一个监听器对象, 并为控件绑定该监听器</p>
-<div class="codehilite"><pre><span class="n">ButtonListener</span> <span class="n">bl</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ButtonListener</span><span class="p">();</span><span class="c1">// 生成一个监听器对象</span>
-<span class="n">bt</span><span class="p">.</span><span class="n">setOnClickListener</span><span class="p">(</span><span class="n">bl</span><span class="p">);</span><span class="c1">// **这句话把监听器和事件联系在一起了** 点击这个按钮 就会执行它的onclick方法</span>
+<div class="codehilite"><pre>ButtonListener bl = new ButtonListener();// 生成一个监听器对象
+bt.setOnClickListener(bl);// **这句话把监听器和事件联系在一起了** 点击这个按钮 就会执行它的onclick方法
 </pre></div>
 
 
@@ -290,12 +290,12 @@
 <li><strong>另法</strong></li>
 </ol>
 <p>可以直接写在setOnClickListener参数里, 不用给内部类起名字: </p>
-<div class="codehilite"><pre>    <span class="n">bt</span><span class="p">.</span><span class="n">setOnClickListener</span><span class="p">(</span><span class="n">new</span> <span class="n">OnClickListener</span><span class="p">()</span> <span class="p">{</span>
-    <span class="err">@</span><span class="n">Override</span>
-    <span class="n">public</span> <span class="kt">void</span> <span class="n">onClick</span><span class="p">(</span><span class="n">View</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//do something......</span>
-    <span class="p">}</span>
-    <span class="p">});</span>
+<div class="codehilite"><pre>    bt.setOnClickListener(new OnClickListener() {
+    @Override
+    public void onClick(View v) {
+    //do something......
+    }
+    });
 </pre></div>
 
 
@@ -385,25 +385,25 @@ padding, paddingTop, ...</p>
 <h4>RadioGroup的OnCheckedChangeListener</h4>
 <p>有俩参数... (RadioGroup group, int checkedId)</p>
 <p>直接上代码吧: </p>
-<div class="codehilite"><pre><span class="n">class</span> <span class="n">RadioGroupListener</span> <span class="n">implements</span>
-<span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">RadioGroup</span><span class="p">.</span><span class="n">OnCheckedChangeListener</span> <span class="p">{</span>
+<div class="codehilite"><pre><span class="k">class</span> <span class="n">RadioGroupListener</span> <span class="n">implements</span>
+<span class="n">android</span>.<span class="n">widget</span>.<span class="n">RadioGroup</span>.<span class="n">OnCheckedChangeListener</span> {
 
-<span class="err">@</span><span class="n">Override</span>
-<span class="c1">// 注意看这俩参数!</span>
-<span class="n">public</span> <span class="kt">void</span> <span class="n">onCheckedChanged</span><span class="p">(</span><span class="n">RadioGroup</span> <span class="n">group</span><span class="p">,</span> <span class="kt">int</span> <span class="n">checkedId</span><span class="p">)</span> <span class="p">{</span><span class="c1">// checkedId是被选择的哪个RadioButton的Id (而不是什么序号)</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">checkedId</span> <span class="o">==</span> <span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">radioButton_h</span><span class="p">)</span><span class="c1">// 用两种方法得到想要的id: 1. 使用R中定义的</span>
-<span class="p">{</span>
-<span class="n">tv3</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="s">&quot;Homme!&quot;</span><span class="p">);</span>
-<span class="n">rb_h2</span><span class="p">.</span><span class="n">setChecked</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">checkedId</span> <span class="o">==</span> <span class="n">rb_f</span><span class="p">.</span><span class="n">getId</span><span class="p">())</span><span class="c1">// 2. 使用getid()方法</span>
-<span class="p">{</span>
-<span class="n">tv3</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="s">&quot;Femme!&quot;</span><span class="p">);</span>
-<span class="n">rb_f2</span><span class="p">.</span><span class="n">setChecked</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="nv">@Override</span>
+// <span class="n">注意看这俩参数</span>!
+<span class="n">public</span> <span class="nb">void</span> <span class="n">onCheckedChanged</span>(<span class="n">RadioGroup</span> <span class="n">group</span>, <span class="nb">int</span> <span class="n">checkedId</span>) {// <span class="n">checkedId是被选择的哪个RadioButton的Id</span> (<span class="n">而不是什么序号</span>)
+<span class="k">if</span> (<span class="n">checkedId</span> == <span class="n">R</span>.<span class="n">id</span>.<span class="n">radioButton_h</span>)// <span class="n">用两种方法得到想要的id:</span> <span class="mi">1</span>. <span class="n">使用R中定义的</span>
+{
+<span class="n">tv3</span>.<span class="n">setText</span>(<span class="s">&quot;Homme!&quot;</span>);
+<span class="n">rb_h2</span>.<span class="n">setChecked</span>(<span class="nb">true</span>);
+} <span class="k">else</span> <span class="k">if</span> (<span class="n">checkedId</span> == <span class="n">rb_f</span>.<span class="n">getId</span>())// <span class="mi">2</span>. <span class="n">使用getid</span>()<span class="n">方法</span>
+{
+<span class="n">tv3</span>.<span class="n">setText</span>(<span class="s">&quot;Femme!&quot;</span>);
+<span class="n">rb_f2</span>.<span class="n">setChecked</span>(<span class="nb">true</span>);
+}
 
-<span class="p">}</span>
+}
 
-<span class="p">}</span>
+}
 </pre></div>
 
 
@@ -427,15 +427,15 @@ padding, paddingTop, ...</p>
 <li>Fit_XY缩放成和ImageView一样大</li>
 </ul>
 <p><strong>代码片段: </strong></p>
-<div class="codehilite"><pre><span class="o">&lt;</span><span class="n">ImageView</span>
-    <span class="nl">android:</span><span class="n">id</span><span class="o">=</span><span class="s">&quot;@+id/imageView1Id&quot;</span>
-    <span class="nl">android:</span><span class="n">layout_width</span><span class="o">=</span><span class="s">&quot;60dp&quot;</span>
-    <span class="nl">android:</span><span class="n">layout_height</span><span class="o">=</span><span class="s">&quot;70dp&quot;</span>
-    <span class="nl">android:</span><span class="n">background</span><span class="o">=</span><span class="s">&quot;#FF0000&quot;</span>
-    <span class="nl">android:</span><span class="n">scaleType</span><span class="o">=</span><span class="s">&quot;fitCenter&quot;</span>
-    <span class="nl">android:</span><span class="n">layout_weight</span><span class="o">=</span><span class="s">&quot;1&quot;</span>
-    <span class="nl">android:</span><span class="n">src</span><span class="o">=</span><span class="s">&quot;@drawable/pic&quot;</span> <span class="o">/&gt;</span>
-<span class="o">&lt;!--</span> <span class="s">&quot;@drawable/pic&quot;</span><span class="err">是对应于</span><span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">pic</span><span class="p">,</span> <span class="err">实际上图片也可以放在</span><span class="n">assets</span><span class="err">文件夹</span> <span class="err">或者网络上</span> <span class="err">或者</span><span class="n">SD</span><span class="err">卡上</span> <span class="err">都可以</span><span class="p">,</span> <span class="err">不过以后再用</span> <span class="o">--&gt;</span>
+<div class="codehilite"><pre>&lt;ImageView
+    android:id=&quot;@+id/imageView1Id&quot;
+    android:layout_width=&quot;60dp&quot;
+    android:layout_height=&quot;70dp&quot;
+    android:background=&quot;#FF0000&quot;
+    android:scaleType=&quot;fitCenter&quot;
+    android:layout_weight=&quot;1&quot;
+    android:src=&quot;@drawable/pic&quot; /&gt;
+&lt;!-- &quot;@drawable/pic&quot;是对应于R.drawable.pic, 实际上图片也可以放在assets文件夹 或者网络上 或者SD卡上 都可以, 不过以后再用 --&gt;
 </pre></div>
 
 
@@ -548,8 +548,8 @@ padding, paddingTop, ...</p>
                 <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
                 <span class="na">android:layout_below=</span><span class="s">&quot;@+id/editText2&quot;</span>
                 <span class="na">android:layout_toLeftOf=</span><span class="s">&quot;@+id/button1&quot;</span>
-                <span class="na">android:text=</span><span class="s">&quot;cancel&quot;</span> <span class="cp">[</span><span class="o">/&gt;</span><span class="cp">]</span><span class="err">(file:///%3E)</span>
- <span class="err">&lt;/RelativeLayout</span><span class="nt">&gt;</span>
+                <span class="na">android:text=</span><span class="s">&quot;cancel&quot;</span> <span class="err">[</span><span class="nt">/&gt;</span>](file:///%3E)
+ <span class="nt">&lt;/RelativeLayout&gt;</span>
 </pre></div>
 
 
@@ -579,31 +579,31 @@ padding, paddingTop, ...</p>
 <p><img alt="" src="static/android开发教程第一季笔记/pasted_image017.png" /></p>
 <ul>
 <li>属性: max/progress/</li>
-<li>监听器接口OnSeekBarChangeListener有三个函数要重写: <div class="codehilite"><pre><span class="n">class</span> <span class="n">SeekBarListener</span> <span class="n">implements</span> <span class="n">OnSeekBarChangeListener</span><span class="p">{</span>
+<li>监听器接口OnSeekBarChangeListener有三个函数要重写: <div class="codehilite"><pre><span class="nt">class</span> <span class="nt">SeekBarListener</span> <span class="nt">implements</span> <span class="nt">OnSeekBarChangeListener</span><span class="p">{</span>
 
-<span class="cm">/**</span>
+<span class="c">/**</span>
 
-<span class="cm">* seekBar 该对象指的是触发了监听器的SeekBar对象</span>
-<span class="cm">* progress 指的是当前SeekBar的进度</span>
-<span class="cm">* fromUser 指是不是用户手动改变的进度</span>
+<span class="c">* seekBar 该对象指的是触发了监听器的SeekBar对象</span>
+<span class="c">* progress 指的是当前SeekBar的进度</span>
+<span class="c">* fromUser 指是不是用户手动改变的进度</span>
 
-<span class="cm"> */</span>
-<span class="err">@</span><span class="n">Override</span>
-<span class="n">public</span> <span class="kt">void</span> <span class="n">onProgressChanged</span><span class="p">(</span><span class="n">SeekBar</span> <span class="n">SeekBar</span><span class="p">,</span> <span class="kt">int</span> <span class="n">progress</span><span class="p">,</span> <span class="n">boolean</span> <span class="n">fromUser</span><span class="p">)</span> <span class="p">{</span>
-<span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;progress:&quot;</span> <span class="o">+</span> <span class="n">progress</span> <span class="o">+</span> <span class="s">&quot;,fromUser:&quot;</span> <span class="o">+</span> <span class="n">fromUser</span><span class="p">);</span>
+<span class="c"> */</span>
+<span class="cp">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">onProgressChanged</span><span class="p">(</span><span class="n">SeekBar</span> <span class="n">SeekBar</span><span class="o">,</span> <span class="n">int</span> <span class="n">progress</span><span class="o">,</span> <span class="n">boolean</span> <span class="n">fromUser</span><span class="p">)</span> <span class="err">{</span>
+<span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;progress:&quot;</span> <span class="o">+</span> <span class="n">progress</span> <span class="o">+</span> <span class="s2">&quot;,fromUser:&quot;</span> <span class="o">+</span> <span class="n">fromUser</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="err">@</span><span class="n">Override</span>
-<span class="n">public</span> <span class="kt">void</span> <span class="n">onStartTrackingTouch</span><span class="p">(</span><span class="n">SeekBar</span> <span class="n">seekBar</span><span class="p">)</span> <span class="p">{</span>
-<span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;onStart&quot;</span><span class="p">);</span>
+<span class="k">@Override</span>
+<span class="nt">public</span> <span class="nt">void</span> <span class="nt">onStartTrackingTouch</span><span class="o">(</span><span class="nt">SeekBar</span> <span class="nt">seekBar</span><span class="o">)</span> <span class="p">{</span>
+<span class="nt">System</span><span class="nc">.out.println</span><span class="o">(</span><span class="s2">&quot;onStart&quot;</span><span class="o">);</span>
 <span class="p">}</span>
 
-<span class="err">@</span><span class="n">Override</span>
-<span class="n">public</span> <span class="kt">void</span> <span class="n">onStopTrackingTouch</span><span class="p">(</span><span class="n">SeekBar</span> <span class="n">seekBar</span><span class="p">)</span> <span class="p">{</span>
-<span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;onStop&quot;</span><span class="p">);</span>
+<span class="k">@Override</span>
+<span class="nt">public</span> <span class="nt">void</span> <span class="nt">onStopTrackingTouch</span><span class="o">(</span><span class="nt">SeekBar</span> <span class="nt">seekBar</span><span class="o">)</span> <span class="p">{</span>
+<span class="nt">System</span><span class="nc">.out.println</span><span class="o">(</span><span class="s2">&quot;onStop&quot;</span><span class="o">);</span>
 <span class="p">}</span>
 
-<span class="p">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -613,11 +613,11 @@ padding, paddingTop, ...</p>
 <p><img alt="" src="static/android开发教程第一季笔记/pasted_image018.png" /></p>
 <ul>
 <li>属性: numStars(星星个数), progress, stepSize(步进)</li>
-<li>监听器代码:<div class="codehilite"><pre><span class="n">class</span> <span class="n">RatingBarListener</span> <span class="n">implements</span> <span class="n">OnRatingBarChangeListener</span><span class="p">{</span>
+<li>监听器代码:<div class="codehilite"><pre><span class="nt">class</span> <span class="nt">RatingBarListener</span> <span class="nt">implements</span> <span class="nt">OnRatingBarChangeListener</span><span class="p">{</span>
 
-<span class="err">@</span><span class="n">Override</span>
-<span class="n">public</span> <span class="kt">void</span> <span class="n">onRatingChanged</span><span class="p">(</span><span class="n">RatingBar</span> <span class="n">ratingBar</span><span class="p">,</span> <span class="kt">float</span> <span class="n">rating</span><span class="p">,</span> <span class="n">boolean</span> <span class="n">fromUser</span><span class="p">)</span> <span class="p">{</span>
-<span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;rating:&quot;</span> <span class="o">+</span> <span class="n">rating</span> <span class="o">+</span> <span class="s">&quot;,fromUser:&quot;</span> <span class="o">+</span> <span class="n">fromUser</span><span class="p">);</span>
+<span class="cp">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">onRatingChanged</span><span class="p">(</span><span class="n">RatingBar</span> <span class="n">ratingBar</span><span class="o">,</span> <span class="k">float</span> <span class="n">rating</span><span class="o">,</span> <span class="n">boolean</span> <span class="n">fromUser</span><span class="p">)</span> <span class="err">{</span>
+<span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;rating:&quot;</span> <span class="o">+</span> <span class="n">rating</span> <span class="o">+</span> <span class="s2">&quot;,fromUser:&quot;</span> <span class="o">+</span> <span class="n">fromUser</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -706,138 +706,18 @@ padding, paddingTop, ...</p>
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/算法.html">算法</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-1">
     <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -847,7 +727,107 @@ padding, paddingTop, ...</p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -856,8 +836,13 @@ padding, paddingTop, ...</p>
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -867,17 +852,32 @@ padding, paddingTop, ...</p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

@@ -150,7 +150,7 @@
 			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2015-11-11T00:00:00">
-	<i class="icon-calendar"></i>三 11 十一月 2015
+	<i class="icon-calendar"></i>Wed, 11 Nov 2015
 </abbr>
 
 <span class="label">By</span>
@@ -223,47 +223,47 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <h1>3. Edge-Weighted Graph API</h1>
 <h2>Edge API</h2>
 <p>→ <em>Edge abstraction</em>: make Edge comparable.   </p>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">Edge</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span><span class="p">{</span>   
-    <span class="nx">Edge</span><span class="p">(</span><span class="nx">int</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">int</span> <span class="nx">w</span><span class="p">,</span> <span class="nx">double</span> <span class="nx">weight</span><span class="p">);</span>   
-    <span class="nx">int</span> <span class="nx">either</span><span class="p">();</span><span class="c1">// get one of the endpoint of edge (as we are in undirected graph contex here)   </span>
-    <span class="nx">int</span> <span class="nx">other</span><span class="p">(</span><span class="nx">int</span> <span class="nx">v</span><span class="p">);</span><span class="c1">// get the other endpoint    </span>
-    <span class="nx">int</span> <span class="nx">compareTo</span><span class="p">(</span><span class="nx">Edge</span> <span class="nx">that</span><span class="p">);</span><span class="c1">// compare by edge weight   </span>
-    <span class="nx">double</span> <span class="nx">weight</span><span class="p">();</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>public class Edge implements Comparable&lt;Edge&gt;{   
+    Edge(int v, int w, double weight);   
+    int either();// get one of the endpoint of edge (as we are in undirected graph contex here)   
+    int other(int v);// get the other endpoint    
+    int compareTo(Edge that);// compare by edge weight   
+    double weight();   
+}
 </pre></div>
 
 
 <p><img alt="" src="static/algoII_week2_1/pasted_image.png" />   </p>
 <h2>Edge-weighted Graph API</h2>
 <p>adj-list implementation: <code>Bag&lt;Edge&gt;[] adj;</code>(for undirected graph, each edge appears twice in adj)   </p>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">EdgeWeightedGraph</span><span class="p">{</span>   
-    <span class="k">private</span> <span class="nf">final</span> <span class="nx">int</span> <span class="nx">V</span><span class="p">;</span>   
-    <span class="k">private</span> <span class="nf">final</span> <span class="nx">Bag</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span><span class="err">[</span><span class="cp">]</span> adj;   
+<div class="codehilite"><pre>public class EdgeWeightedGraph{   
+    private final int V;   
+    private final Bag&lt;Edge&gt;[] adj;   
     EdgeWeightedGraph(int V){   
         this.V = V;   
-        this.adj = (Bag<span class="nt">&lt;Edge&gt;</span>)new Bag<span class="cp">[</span><span class="nx">V</span><span class="cp">]</span>;   
-        for(int v=0;v<span class="nt">&lt;V</span><span class="err">;</span><span class="na">v</span><span class="err">++)</span> <span class="na">adj</span><span class="cp">[</span><span class="nx">v</span><span class="cp">]</span><span class="na"> =</span><span class="err"> </span><span class="s">new</span> <span class="na">Bag</span><span class="err">&lt;</span><span class="na">Edge</span><span class="nt">&gt;</span>();   
+        this.adj = (Bag&lt;Edge&gt;)new Bag[V];   
+        for(int v=0;v&lt;V;v++) adj[v] = new Bag&lt;Edge&gt;();   
     }   
     void addEdge(Edge e){// use the Edge class instead of directly v and w   
         int v = e.either(), w = e.other();   
-        adj<span class="cp">[</span><span class="nx">v</span><span class="cp">]</span>.add(e);   
-        adj<span class="cp">[</span><span class="nx">w</span><span class="cp">]</span>.add(e);   
+        adj[v].add(e);   
+        adj[w].add(e);   
     }   
-    Iterable<span class="nt">&lt;Edge&gt;</span> adj(int v){//get Edges incident to v   
-        return adj<span class="cp">[</span><span class="nx">v</span><span class="cp">]</span>;   
+    Iterable&lt;Edge&gt; adj(int v){//get Edges incident to v   
+        return adj[v];   
     }   
-    Iterable<span class="nt">&lt;Edge&gt;</span> edges();// get all Edges   
+    Iterable&lt;Edge&gt; edges();// get all Edges   
 }
 </pre></div>
 
 
 <p>(allow self-loops and parallel edges)   </p>
 <h2>MST API</h2>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">MST</span><span class="p">{</span>   
-    <span class="nx">MST</span><span class="p">(</span><span class="nx">EdgeWeightedGraph</span> <span class="nx">G</span><span class="p">);</span><span class="c1">//compute the MST   </span>
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span> <span class="nx">edges</span><span class="p">();</span><span class="c1">// selected edges in the MST   </span>
-    <span class="nx">double</span> <span class="nx">weight</span><span class="p">();</span><span class="c1">// sum of all edge weights in MST   </span>
-<span class="p">}</span>
+<div class="codehilite"><pre>public class MST{   
+    MST(EdgeWeightedGraph G);//compute the MST   
+    Iterable&lt;Edge&gt; edges();// selected edges in the MST   
+    double weight();// sum of all edge weights in MST   
+}
 </pre></div>
 
 
@@ -292,25 +292,25 @@ suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br />
 ⇒ <strong>Union-Find</strong> !  O(lg*V) ☺ (almost constant time)   </p>
 <p>if <code>find(v)==find(w)</code>, then we know adding e will create a cycle.    </p>
 <ul>
-<li>considering edges in order? → use a prority queue.    <div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">KruskalMST</span> <span class="nx">extends</span> <span class="nx">MST</span><span class="p">{</span>   
-    <span class="k">private</span> <span class="nf">Bag</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span> <span class="n">mst</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">Bag</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span><span class="p">();</span>   
-    <span class="k">public</span> <span class="nf">KruskalMST</span><span class="p">(</span><span class="na">EdgeWeightedGraph</span> <span class="nx">G</span><span class="p">){</span>   
-        <span class="nx">MinPQ</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span> <span class="n">pq</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">MinPQ</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span><span class="p">();</span>   
-        <span class="c1">// build pq --&gt; can be optimized to O(n) if build bottom-up   </span>
-        <span class="nb">for</span><span class="p">(</span><span class="nx">Edge</span> <span class="nx">e</span><span class="p">:</span> <span class="nx">G.edges</span><span class="p">())</span> <span class="nx">pq.insert</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>   
-        <span class="nx">UF</span> <span class="n">uf</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">UF</span><span class="p">(</span><span class="nx">G.V</span><span class="p">());</span><span class="c1">// build a UF of V elements   </span>
-        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="nx">pq.isEmpty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">mst.size</span><span class="p">()</span><span class="o">&lt;</span><span class="nx">G.V</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>   
-            <span class="nx">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="nx">pq.delMin</span><span class="p">();</span>   
-            <span class="nx">int</span> <span class="n">v</span> <span class="o">=</span> <span class="nx">e.either</span><span class="p">(),</span><span class="n">w</span><span class="o">=</span><span class="nx">e.other</span><span class="p">(</span><span class="nx">v</span><span class="p">);</span>   
-            <span class="k">if</span><span class="p">(</span> <span class="nx">uf.connecte</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span><span class="nx">w</span><span class="p">)</span> <span class="p">)</span> <span class="nb">continue</span><span class="p">;</span>   
-            <span class="nx">uf.union</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span><span class="nx">w</span><span class="p">);</span>   
-            <span class="nx">this.mst.add</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>           
+<li>considering edges in order? → use a prority queue.    <div class="codehilite"><pre><span class="nt">public</span> <span class="nt">class</span> <span class="nt">KruskalMST</span> <span class="nt">extends</span> <span class="nt">MST</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">mst</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   
+    <span class="n">public</span> <span class="n">KruskalMST</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="n">G</span><span class="p">)</span><span class="err">{</span>   
+        <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">pq</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   
+        <span class="o">//</span> <span class="n">build</span> <span class="n">pq</span> <span class="o">--&gt;</span> <span class="n">can</span> <span class="n">be</span> <span class="n">optimized</span> <span class="n">to</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="n">if</span> <span class="n">build</span> <span class="k">bottom</span><span class="o">-</span><span class="n">up</span>   
+        <span class="n">for</span><span class="p">(</span><span class="n">Edge</span> <span class="n">e</span><span class="o">:</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="n">pq</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   
+        <span class="n">UF</span> <span class="n">uf</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UF</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">());</span><span class="o">//</span> <span class="n">build</span> <span class="n">a</span> <span class="n">UF</span> <span class="n">of</span> <span class="n">V</span> <span class="n">elements</span>   
+        <span class="n">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">mst</span><span class="o">.</span><span class="k">size</span><span class="p">()</span><span class="o">&lt;</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">()</span><span class="m">-1</span><span class="p">)</span><span class="err">{</span>   
+            <span class="n">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">delMin</span><span class="p">();</span>   
+            <span class="n">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">either</span><span class="p">()</span><span class="o">,</span><span class="n">w</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">other</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   
+            <span class="n">if</span><span class="p">(</span> <span class="n">uf</span><span class="o">.</span><span class="n">connecte</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">)</span> <span class="p">)</span> <span class="n">continue</span><span class="p">;</span>   
+            <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">);</span>   
+            <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>           
         <span class="p">}</span>   
+    <span class="err">}</span>   
+    <span class="nt">public</span> <span class="nt">Iterable</span><span class="o">&lt;</span><span class="nt">Edge</span><span class="o">&gt;</span> <span class="nt">edges</span><span class="o">()</span><span class="p">{</span>   
+        <span class="n">return</span> <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="p">;</span>   
     <span class="p">}</span>   
-    <span class="k">public</span> <span class="nf">Iterable</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span> <span class="nx">edges</span><span class="p">(){</span>   
-        <span class="k">return</span> <span class="nx">this.mst</span><span class="p">;</span>   
-    <span class="p">}</span>   
-<span class="p">}</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -349,28 +349,28 @@ suppose edge e is the min-weighted edge connect a vertex in T with a vertex out 
 <li>to maintain the pq: add all incident edges(with other endpoint not in T) of the newly added vertex to pq   </li>
 </ul>
 </blockquote>
-<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">LazyPrimMST</span><span class="p">{</span>   
-    <span class="k">private</span> <span class="nf">Bag</span><span class="o">&lt;</span><span class="nx">Edge</span><span class="o">&gt;</span> <span class="nx">mst</span><span class="p">;</span>   
-    <span class="nx">LazyPrimMST</span><span class="p">(</span><span class="nx">EdgeWeightedGraph</span> <span class="nx">G</span><span class="p">){</span>   
-        <span class="nb">boolean</span><span class="err">[</span><span class="cp">]</span> marked = new boolean<span class="cp">[</span><span class="nx">G.V</span><span class="p">()</span><span class="cp">]</span>; // vertices in T   
-        MinPQ<span class="nt">&lt;Edge&gt;</span> pq = new MinPQ<span class="nt">&lt;Edge&gt;</span>();    
-        this.mst = new Bag<span class="nt">&lt;Edge&gt;</span>();   
-        marked<span class="cp">[</span><span class="mi">0</span><span class="cp">]</span> = 0; // add vertex 0 to T   
+<div class="codehilite"><pre>public class LazyPrimMST{   
+    private Bag&lt;Edge&gt; mst;   
+    LazyPrimMST(EdgeWeightedGraph G){   
+        boolean[] marked = new boolean[G.V()]; // vertices in T   
+        MinPQ&lt;Edge&gt; pq = new MinPQ&lt;Edge&gt;();    
+        this.mst = new Bag&lt;Edge&gt;();   
+        marked[0] = 0; // add vertex 0 to T   
         for(Edge e:G.adj(0))    
             pq.insert(e);// add edges to pq   
-        while(!pq.isEmpty() <span class="err">&amp;&amp;</span> this.mst.size()<span class="nt">&lt;G</span><span class="err">.</span><span class="na">V</span><span class="err">()</span><span class="na">-1</span><span class="err">){</span>   
-            <span class="na">e =</span><span class="err"> </span><span class="s">pq.delMin();</span>   
-            <span class="na">int</span> <span class="na">v =</span><span class="err"> </span><span class="s">e.either(),</span> <span class="na">w =</span><span class="err"> </span><span class="s">e.other(v);</span>   
-            <span class="na">if</span><span class="err">(</span><span class="na">marked</span><span class="cp">[</span><span class="nx">v</span><span class="cp">]</span> <span class="err">&amp;&amp;</span> <span class="na">marked</span><span class="cp">[</span><span class="nx">w</span><span class="cp">]</span><span class="err">)</span> <span class="na">continue</span><span class="err">;//</span><span class="na">ignore</span> <span class="na">obsolete</span> <span class="na">edges</span>   
-            <span class="na">v =</span><span class="err"> </span><span class="s">marked</span><span class="cp">[</span><span class="nx">v</span><span class="cp">]</span> <span class="err">?</span> <span class="na">w</span> <span class="na">:</span> <span class="na">v</span><span class="err">;//</span> <span class="na">v</span> <span class="na">is</span> <span class="na">the</span> <span class="na">newly</span> <span class="na">added</span> <span class="na">vertex</span>   
-            <span class="na">marked</span><span class="cp">[</span><span class="nx">v</span><span class="cp">]</span><span class="na"> =</span><span class="err"> </span><span class="s">true;</span>   
-            <span class="na">for</span><span class="err">(</span><span class="na">Edge</span> <span class="na">e:G</span><span class="err">.</span><span class="na">adj</span><span class="err">(</span><span class="na">v</span><span class="err">)){</span>   
-                <span class="na">if</span><span class="err">(!</span><span class="na">marked</span><span class="cp">[</span><span class="nx">e.other</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="cp">]</span><span class="err">)</span>   
-                    <span class="na">pq</span><span class="err">.</span><span class="na">insert</span><span class="err">(</span><span class="na">e</span><span class="err">);</span>   
-            <span class="err">}</span>   
-        <span class="err">}</span>   
-    <span class="err">}</span>   
-<span class="err">}</span>
+        while(!pq.isEmpty() &amp;&amp; this.mst.size()&lt;G.V()-1){   
+            e = pq.delMin();   
+            int v = e.either(), w = e.other(v);   
+            if(marked[v] &amp;&amp; marked[w]) continue;//ignore obsolete edges   
+            v = marked[v] ? w : v;// v is the newly added vertex   
+            marked[v] = true;   
+            for(Edge e:G.adj(v)){   
+                if(!marked[e.other(v)])   
+                    pq.insert(e);   
+            }   
+        }   
+    }   
+}
 </pre></div>
 
 
@@ -400,13 +400,13 @@ Update pq -- consider <code>v</code>'s incident edge <code>e=v-w:</code>   <ul>
 </blockquote>
 <p><img alt="" src="static/algoII_week2_1/pasted_image003.png" />   </p>
 <p>key implementation component: a <a href="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_part_II/MinPQ.txt">MinPQ</a> that supports priority(key) update.    </p>
-<div class="codehilite"><pre><span class="nb">class</span> <span class="nx">IndexMinPQ</span><span class="o">&lt;</span><span class="nb">Key</span> <span class="nx">extends</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   
-    <span class="nx">IndexMinPQ</span><span class="p">(</span><span class="nx">int</span> <span class="nb">N</span><span class="p">);</span><span class="c1">// indices of elements: 0...N-1   </span>
-    <span class="bp">void</span> <span class="nb">insert</span><span class="p">(</span><span class="nx">int</span> <span class="nx">i</span><span class="p">,</span> <span class="nb">Key</span> <span class="nb">key</span><span class="p">);</span>   
-    <span class="bp">void</span> <span class="nx">decreaseKey</span><span class="p">(</span><span class="nx">int</span> <span class="nx">i</span><span class="p">,</span> <span class="nb">Key</span> <span class="nb">key</span><span class="p">);</span><span class="c1">// update the key(priority) of element-i   </span>
-    <span class="nx">int</span> <span class="nx">delMin</span><span class="p">();</span>   
-    <span class="nx">int</span> <span class="nb">size</span><span class="p">();</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre><span class="k">class</span> <span class="n">IndexMinPQ</span><span class="s">&lt;Key extends Comparable&lt;Key&gt;</span>&gt;{   
+    <span class="n">IndexMinPQ</span>(<span class="nb">int</span> <span class="n">N</span>);// <span class="n">indices</span> <span class="k">of</span> <span class="n">elements:</span> <span class="mi">0</span>...<span class="n">N-1</span>   
+    <span class="nb">void</span> <span class="n">insert</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);   
+    <span class="nb">void</span> <span class="n">decreaseKey</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);// <span class="n">update</span> <span class="n">the</span> <span class="nb">key</span>(<span class="n">priority</span>) <span class="k">of</span> <span class="n">element-i</span>   
+    <span class="nb">int</span> <span class="n">delMin</span>();   
+    <span class="nb">int</span> <span class="n">size</span>();   
+}
 </pre></div>
 
 
@@ -526,138 +526,18 @@ single-link clustering (def. dist of clusters = dist of 2 closest elements in ea
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/算法.html">算法</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-1">
     <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -667,7 +547,107 @@ single-link clustering (def. dist of clusters = dist of 2 closest elements in ea
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -676,8 +656,13 @@ single-link clustering (def. dist of clusters = dist of 2 closest elements in ea
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -687,17 +672,32 @@ single-link clustering (def. dist of clusters = dist of 2 closest elements in ea
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

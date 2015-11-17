@@ -150,7 +150,7 @@
 			<footer class="post-info">
 <span class="label">Date</span>
 <abbr class="published" title="2015-08-22T00:00:00">
-	<i class="icon-calendar"></i>六 22 八月 2015
+	<i class="icon-calendar"></i>Sat, 22 Aug 2015
 </abbr>
 
 <span class="label">By</span>
@@ -193,16 +193,16 @@ Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :    <br />
 → Scan until i and j cross (ie. j&lt;=i)    <br />
 ⇒ finally exchange lo with <strong>j</strong> <br />
 函数的签名定义的好: 把lo到hi部分的数组分成两部分, 并返回分割点的index.   </p>
-<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">){</span>   
-    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">hi</span><span class="p">;</span>   
-    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">){</span>   
-        <span class="k">while</span><span class="p">(</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">hi</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">lo</span><span class="p">])</span> <span class="p">)</span> <span class="n">i</span><span class="o">++</span><span class="p">;</span> <span class="c1">//a[i]&gt;=a[lo]   </span>
-        <span class="k">while</span><span class="p">(</span> <span class="n">j</span><span class="o">&gt;=</span><span class="n">lo</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">lo</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">)</span> <span class="n">j</span><span class="o">--</span><span class="p">;</span> <span class="c1">//a[j]&lt;=a[lo]   </span>
-        <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">j</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="n">j</span><span class="o">--</span><span class="p">);</span>   
-    <span class="p">}</span>   
-    <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lo</span><span class="p">,</span><span class="n">j</span><span class="p">);</span> <span class="c1">//exchange pivot with j   </span>
-    <span class="k">return</span> <span class="n">j</span><span class="p">;</span> <span class="c1">//j in its final position   </span>
-<span class="p">}</span>
+<div class="codehilite"><pre>private static int partition(Comparable[] a, int lo, int hi){   
+    int i=lo+1, j=hi;   
+    while(i&lt;j){   
+        while( i&lt;=hi &amp;&amp; less(a[i],a[lo]) ) i++; //a[i]&gt;=a[lo]   
+        while( j&gt;=lo &amp;&amp; less(a[lo],a[j]) ) j--; //a[j]&lt;=a[lo]   
+        if(i&lt;j) exch(a,i++,j--);   
+    }   
+    exch(a,lo,j); //exchange pivot with j   
+    return j; //j in its final position   
+}
 </pre></div>
 
 
@@ -216,17 +216,17 @@ Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :    <br />
 <img alt="" src="static/algoI_week3_2/pasted_image002.png" />      </p>
 <p><strong>Quicksort:   </strong> <br />
 使用partition函数和辅助sort函数(recursive).  注意在整个流程开始以前先shuffle一下.     </p>
-<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">){</span>   
-    <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>   
-    <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">);</span>   
-    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lo</span><span class="p">,</span><span class="n">pivot</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>   
-    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">pivot</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">hi</span><span class="p">);</span>   
-    <span class="k">return</span><span class="p">;</span>
-<span class="p">}</span>   
-<span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">){</span>   
-    <span class="n">StdRandom</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">a</span><span class="p">);</span> <span class="c1">// don&#39;t forget to shuffle the array   </span>
-    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>   
-<span class="p">}</span>
+<div class="codehilite"><pre>private static void sort(Comparable[] a, int lo, int hi){   
+    if(hi&lt;=lo) return;   
+    int pivot = partition(a, lo, hi);   
+    sort(a,lo,pivot-1);   
+    sort(a,pivot+1,hi);   
+    return;
+}   
+public static void sort(Comparable[] a){   
+    StdRandom.shuffle(a); // don&#39;t forget to shuffle the array   
+    sort(a,0,a.length-1);   
+}
 </pre></div>
 
 
@@ -292,20 +292,20 @@ Or we can leave the small subarrays unsorted and sort them at last using inserti
 <p>类似于二分查找的过程....  <br />
 注意这里<strong>是不用递归的</strong>! 因为partition函数返回的直接就是pivot<em>在整个数组里的</em>位置!    </p>
 <h2>Implementation</h2>
-<div class="codehilite"><pre><span class="n">privater</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">){...}</span>
+<div class="codehilite"><pre>privater static int partition(Comparable[] a, int lo, int hi){...}
 
-<span class="n">public</span> <span class="k">static</span> <span class="n">Comparable</span> <span class="nf">select</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">){</span>   
-    <span class="n">StdRandom</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>   
-    <span class="kt">int</span> <span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">hi</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>   
-    <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>   
-        <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lo</span><span class="p">,</span><span class="n">hi</span><span class="p">);</span>   
-        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">k</span><span class="p">)</span> <span class="n">lo</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>   
-        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">k</span><span class="p">)</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>   
-        <span class="k">else</span> <span class="n">hi</span><span class="o">=</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>   
-        <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>   
-    <span class="p">}</span>   
-    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">];</span><span class="c1">//这里不太理解为什么会在hi&lt;lo的时候直接返回a[k]   </span>
-<span class="p">}</span>
+public static Comparable select(Comparable[] a, int k){   
+    StdRandom.shuffle(a);   
+    int lo=0,hi=a.length-1;   
+    while(true){   
+        int j = partition(a,lo,hi);   
+        if(j&lt;k) lo=j+1;   
+        if(j==k) return a[j];   
+        else hi=j-1;   
+        if(hi&lt;=lo) break;   
+    }   
+    return a[k];//这里不太理解为什么会在hi&lt;lo的时候直接返回a[k]   
+}
 </pre></div>
 
 
@@ -357,21 +357,21 @@ partition the array into 3 parts:     <br />
 <h2>Implementation: 3-way quick sort</h2>
 <p>不必再写partition函数, 直接在sort递归函数里面.     <br />
 <img alt="" src="static/algoI_week3_2/pasted_image014.png" />        </p>
-<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">){</span>   
-    <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="c1">// 递归函数别忘了先写终止条件...   </span>
-    <span class="kt">int</span> <span class="n">lt</span><span class="o">=</span><span class="n">lo</span><span class="p">,</span> <span class="n">gt</span> <span class="o">=</span> <span class="n">hi</span><span class="p">;</span>   
-    <span class="n">Comparable</span> <span class="n">v</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">lo</span><span class="p">];</span>   
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">gt</span><span class="p">;){</span> <span class="c1">//不能写 i++   </span>
-        <span class="k">if</span><span class="p">(</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">v</span><span class="p">)</span> <span class="p">)</span>   
-            <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">lt</span><span class="o">++</span><span class="p">);</span>   
-        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">less</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>   
-            <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">gt</span><span class="o">--</span><span class="p">);</span>   
-        <span class="k">else</span> <span class="c1">// v==a[i]   </span>
-            <span class="n">i</span><span class="o">++</span><span class="p">;</span>   
-    <span class="p">}</span>   
-    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">lt</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>   
-    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">gt</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">hi</span><span class="p">);</span>  
-<span class="p">}</span>
+<div class="codehilite"><pre>private static void sort(Comparable[] a, int lo, int hi){   
+    if(hi&lt;=lo) return; // 递归函数别忘了先写终止条件...   
+    int lt=lo, gt = hi;   
+    Comparable v = a[lo];   
+    for(int i=lo;i&lt;=gt;){ //不能写 i++   
+        if( less(a[i],v) )   
+            exch(a, i++, lt++);   
+        else if ( less(v,a[i]) )   
+            exch(a,i,gt--);   
+        else // v==a[i]   
+            i++;   
+    }   
+    sort(a, lo, lt-1);   
+    sort(a, gt+1, hi);  
+}
 </pre></div>
 
 
@@ -472,138 +472,18 @@ quicksort for primitive arrays, mergesort for objects: java设计者认为如果
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-2">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/算法.html">算法</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-1">
     <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -613,7 +493,107 @@ quicksort for primitive arrays, mergesort for objects: java设计者认为如果
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/快捷键.html">快捷键</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -622,8 +602,13 @@ quicksort for primitive arrays, mergesort for objects: java设计者认为如果
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -633,17 +618,32 @@ quicksort for primitive arrays, mergesort for objects: java设计者认为如果
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
+    <a href="./tag/shell.html">shell</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
