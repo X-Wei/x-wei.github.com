@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     <meta charset="utf-8">
-    <title>TODO list--忙完这一段之后要做的事情</title>
+    <title>[Algorithms II] Week 3-1 Maximum Flow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -87,7 +87,7 @@
 			  <li class="divider-vertical"></li>
               
               
-                  <li class="active">
+                  <li >
                     <a href="./category/misc.html">
 						<i class="icon-folder-open icon-large"></i>misc
 					</a>
@@ -99,7 +99,7 @@
 					</a>
                   </li>
               
-                  <li >
+                  <li class="active">
                     <a href="./category/notes.html">
 						<i class="icon-folder-open icon-large"></i>notes
 					</a>
@@ -139,8 +139,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to TODO list--忙完这一段之后要做的事情">
-					TODO list--忙完这一段之后要做的事情 
+					title="Permalink to [Algorithms II] Week 3-1 Maximum Flow">
+					[Algorithms II] Week 3-1 Maximum Flow 
 				</a>
 				 
 			</h1> 
@@ -149,45 +149,330 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2012-05-11T00:00:00">
-	<i class="icon-calendar"></i>Fri, 11 May 2012
+<abbr class="published" title="2015-11-17T00:00:00">
+	<i class="icon-calendar"></i>Tue, 17 Nov 2015
 </abbr>
 
 <span class="label">By</span>
 <a href="./"><i class="icon-user"></i>mx</a>
 
 <span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>misc</a>. 
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
 
 
 	
 
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>好吧最近太废了... 主观原因是心不静, 懒惰拖延, 客观原因(理由)是毕设和法语...</p>
-<p>仔细分析一下, 貌似目前还是要专心把毕设跟法语搞定. 但是我还是想在毕业前多做一点事情, 列一个清单, 等忙完这一阵就开始做一下这些事情: </p>
+		<h1>1. Introduction to Maxflow</h1>
+<h3>Min-cut pb</h3>
 <ul>
-<li><strong>写歌评</strong></li>
+<li>input: edge-weighted digraph G, each edge <code>e</code> has weight(<em>"capacity"</em>) <code>c[e]</code>&gt;=0, a <em>source vertex</em> <code>s</code>, a <em>target vertex</em> <code>t</code>.    </li>
+<li><strong>def</strong>. an <strong>st-cut </strong><code>(A,B)</code> is a partition of vertices into 2 disjoint sets A and B, with <code>s</code> in set <code>A</code> and <code>t</code> in set <code>B</code>.    </li>
+<li><strong>def</strong>. the <strong>capacity</strong> of a cut <code>(A,B)</code> is sum of capacities of edges going <em>from A to B</em> <em>(not considering B to A)</em>.    </li>
 </ul>
-<p>Eagles, Simon&amp;Garfunkel, Brothers Four, 主要是这三个乐队的, 大概会有20首吧... 可能毕业前写不完, 但是一定要开始写, 我觉得关于某些歌我会有很多要写的.</p>
+<p><img alt="" src="static/algoII_week3_1/pasted_image.png" /> <br />
+⇒ min-cut pb: find the cut <strong>(A,B)</strong> with min-capacity.    </p>
+<h3>Max-flow pb</h3>
 <ul>
-<li><strong>写写我的毕设</strong> </li>
+<li>same input: graph G, source s, target t   </li>
+<li><strong>def.</strong> an <strong>st-flow</strong> is an assignment of values to edges <code>f: e→f[e]</code> such that:    <ul>
+<li>capacity constraint: <code>0&lt;=f[e]&lt;=c[e]</code> for any e;   </li>
+<li>local equilibrium: for any vertex v (other than s or t), <em>inflow=outflow</em>;   </li>
 </ul>
-<p>可能我做的毕设没什么意思, 但是至少可以写写那些学到的matlab技巧.</p>
+</li>
+<li><strong>def.</strong> the <strong>value</strong> of a flow <code>f</code> is the inflow at <code>t</code>. (assume no ingoing edge to s or outgoing edge to t)   </li>
+</ul>
+<p><img alt="" src="static/algoII_week3_1/pasted_image001.png" /> <br />
+⇒ max-flow pb: find <code>f</code> with max value.    </p>
+<p>remark: max-flow and min-cut are dual problems.    </p>
+<h1>2. Ford-Fulkerson Algorithm</h1>
+<p><strong>def.</strong> given a flow <code>f</code> for a graph, an <strong>"augment path"</strong> is an <strong>undirected</strong> path form <code>s</code> to <code>t</code>, if there exist <code>df&gt;0</code> (<em>"bottleneck capacity"</em>) such that:   </p>
 <ul>
-<li><strong>写(所谓的)总结贴</strong></li>
+<li>for forward edges e: can augment flow by <code>df</code> (not full: <code>f[e]+df&lt;=c[e]</code>)   </li>
+<li>for backward edges: can decrease flow by <code>df</code> (not empty: <code>f[e]-df&gt;=0</code>)   </li>
 </ul>
-<p>一个是GT的一些经验总结, 一个是PT申请的一些经验总结. 这两件事大概就是我的2011的主线. 唉, 要是前者在2011年7月写掉, 后者在2011年12月写掉该多好!......</p>
-<hr />
-<p>行了, 还是好好对付法语考试以及毕设论文去吧...</p>
+<p><img alt="" src="static/algoII_week3_1/pasted_image002.png" />   </p>
+<ul>
+<li>def. <strong>residual capacity</strong>   <ul>
+<li>for forward edge e, <em>residual-cap = c[e]-f[e]</em>   </li>
+<li>for backward edge e, <em>residual-cap = f[e]</em>   </li>
+</ul>
+</li>
+</ul>
+<p>⇒ an aug-path is a path where <em>each edge has residual capacity &gt;0</em>.    </p>
+<p><strong>blocking edges</strong>: <em>full forward edge</em> or <em>empty backward edge.</em>   </p>
+<p>→ idea: increase flow along augment paths. <br />
+<strong>[algo]</strong>   </p>
+<blockquote>
+<ul>
+<li>start: 0 flow: <code>f[e]=0</code> for all e.    </li>
+<li>find an augment path (and the corresponding <code>df</code>) in graph, and change the flows along the path by <code>+/-df</code>.   </li>
+<li>loop until no augment path exists. (ie. all path s→t are blocked either by a <em>full forward edge</em> or an <em>empty backward edge, </em>ie. by an edge with 0 residual capacity)   </li>
+</ul>
+</blockquote>
+<p><img alt="" src="static/algoII_week3_1/pasted_image003.png" />   </p>
+<p>FF is a gernel algorithm:  <br />
+<img alt="" src="static/algoII_week3_1/pasted_image004.png" />   </p>
+<h1>3. Maxflow-Mincut Theorem</h1>
+<p><strong>def</strong>. for a cut (A,B), the <strong>net flow</strong> across the cut (<em>netflow(A,B)</em>) is the sum of flows from A to B minus flows from B to A.    </p>
+<blockquote>
+<p><strong>[flow-value Lemma]</strong>  <br />
+For any flow <code>f</code> and any cut <code>(A,B)</code>⇒  <em>netflow(A,B) = value(f).</em>  <br />
+<em>pf.</em>  <br />
+induction on the size of set B. <br />
+<em> base case, when B={t}, by def we have </em>netflow(A,B) = value(f)<em> <br />
+</em> when moving any vertex v from A to B: <br />
+    * netflow(A, B) augment by <em>flow(A→v)+flow(B→v)=inflow(v)</em>,  <br />
+    * netflow(A, B) decrease by <em>flow(v→A)+flow(v→B)=outflow(v)</em>,  <br />
+    * by equilibrium of flow, <em>netflow(A',B')=netflow(A,B)=value(f)</em>   </p>
+</blockquote>
+<p>ex. (A: gray vertices, B: white vertices) <br />
+<img alt="" src="static/algoII_week3_1/pasted_image005.png" />   </p>
+<p>[cor] <em>outflow(s)=inflow(t)=value(f)</em>   </p>
+<blockquote>
+<p><strong>[weak duality]</strong> <br />
+For <em>any</em> flow <code>f</code> and <em>any</em> cut <code>(A,B)</code>, ⇒ <em>value(f) &lt;= capacity(A,B).</em>   </p>
+<p><strong>[Augmenting path Th]</strong>  <br />
+A flow <code>f</code> is maxflow <em>iff</em> there is no augment path.   </p>
+<p><strong>[maxflow-mincut Th]</strong> <br />
+<strong>value(maxflow) = capacity(mincut).</strong>   </p>
+</blockquote>
+<p><em>pf.</em> <br />
+for any flow <code>f</code>, prove the equivalence of the 3 following statements: <br />
+i. there exists a cut st: <em>capacity(cut) = value(f).</em> <br />
+ii. <code>f</code> is a maxflow. <br />
+iii. there is no augmenting path wrt <code>f</code>.   </p>
+<ul>
+<li>[i⇒ii]   </li>
+</ul>
+<p>suppose cut(A,B) st: <em>capacity(A,B)=value(f)</em> <br />
+⇒ by weak duality, for any other flow f', <em>vlaue(f')&lt;=capacity(A,B)=value(f)</em>   </p>
+<ul>
+<li>[ii⇒iii] (eqv to prove ~iii⇒~ii)   </li>
+</ul>
+<p>suppose there is an aug-path from s to t, of bottleneck capacity=df, <br />
+⇒ by improving f with df, we get a f' &gt; f   </p>
+<ul>
+<li>[iii⇒i]   </li>
+</ul>
+<p>suppose there is no aug-path, ie, <em>all path from s to t are blocked by some full-forward edge or empty backward edge.</em> <br />
+⇒ let A:=vertices connected with s by a path with no blocking edges, and B := the rest <br />
+(<em>so</em> <em>once we get a maxflow, we can <strong><em>compute the mincut</em></strong> in this way</em>) <br />
+<img alt="" src="static/algoII_week3_1/pasted_image006.png" /> <br />
+→ for all edges across A and B, all forward edges are full, all backward edges are empty <br />
+⇒ capacity(A,B) = netflow(A,B) = value(f) by flow-value lemma <br />
+CQFD... 过瘾...   </p>
+<h1>4. Running Time Analysis</h1>
+<p><img alt="" src="static/algoII_week3_1/pasted_image007.png" />   </p>
+<ul>
+<li>getting a mincut form maxflow? → easy (as discussed in the pf above)   </li>
+<li>computing an aug-path? → <strong>BFS</strong>   </li>
+<li>does FF algo always terminate? how many augmentations? → ...   </li>
+</ul>
+<h3>integer capacity graphs</h3>
+<p><em>special case of FF algo</em>: edge capacities are <em>integers</em> between 1 and U.    </p>
+<p>invariant: flow is always integer all along FF algo.   </p>
+<p>[prop] nb of augmentations &lt;= value of maxflow. <br />
+pf. each augmentation will add flow by &gt;=1.    </p>
+<p>[integrality Th] There exist an integer-valued maxflow.    </p>
+<h3>Bad case for FF</h3>
+<p>nb of augmentation == value of maxflow <br />
+(each time, the path through the middle edge is chosen as aug-path) <br />
+<img alt="" src="static/algoII_week3_1/pasted_image008.png" /> <br />
+<strong>can be easily avoided</strong>⇒  by using shortest(nb of edges)/fastest(biggest df) path  <br />
+<img alt="" src="static/algoII_week3_1/pasted_image010.png" />   </p>
+<p>Performance of FF depends on the algo for choosing aug-path: <br />
+<img alt="" src="static/algoII_week3_1/pasted_image009.png" />   </p>
+<h1>5. Java Implementation</h1>
+<h3>representation of flow graph</h3>
+<ul>
+<li>flow edge:   </li>
+</ul>
+<p>each e= v→w, have flow f[e] and capacity c[e].   </p>
+<ul>
+<li>flow graph:   </li>
+</ul>
+<p>put e in both v and w's adj-list.    </p>
+<ul>
+<li>flow augmentation (by delta)   <ul>
+<li>for forward edge e, f[e] += delta   </li>
+<li>for backward edge e, f[e] -= delta   </li>
+</ul>
+</li>
+</ul>
+<h3>Residual graph Gr</h3>
+<p><strong>def</strong>. For a flow <code>f</code> and a graph <code>G</code>,  the <strong>residual graph</strong> <code>Gr</code> is obtained by:   </p>
+<blockquote>
+<p>for each edge <code>e=v→w</code>, (with <code>c[e]</code> and <code>f[e]</code>) in <code>G</code>, put in <code>Gr</code>: <br />
+<em> <code>e1=v→w</code>, with weight=<code>c[e]-f[e]</code> <br />
+</em> <code>e2=w→v</code>, with weight=<code>f[e]</code> (即两个方向上的weight都为residual capacity)   </p>
+</blockquote>
+<p>(rmq: <code>Gr</code> is just a weighted digraph, not a flow graph)   </p>
+<p>[prop] <strong>Augment path in </strong><code>G</code><strong> is equivalent to a path in </strong><code>Gr</code> (<code>df</code> of aug-path in <code>G</code> = min edge weight in <code>Gr</code>)<strong>.</strong> <br />
+(但是实现的时候其实不用显式构造Gr, 只需BFS的时候修改一下即可) <br />
+<img alt="" src="static/algoII_week3_1/pasted_image011.png" />   </p>
+<h3>APIs</h3>
+<p>这里的API设计的非常合理... 导致每一部分的代码量都不大... NB   </p>
+<ul>
+<li>
+<p>flow-edge:  <br />
+rmq. both calculate residual-cap and augmentation need to specify a <em>direction</em>, so we need a index v as parameter for these 2 functions.    </p>
+<div class="codehilite"><pre>public class FlowEdge{   
+    private final int v, w;   
+    private final double capacity;   
+    private double flow=0.0;   
+    FlowEdge(int v, int w, double cap);   
+    int from();   
+    int to();   
+    int other(int v);   
+    double capacity();   
+    double flow();   
+    double residualCapTo(int v);// residual capacity   
+    void addFlowTo(int v, double delta);// augment residual flow   
+}
+</pre></div>
+
+
+</li>
+<li>
+<p>flow graph:  </p>
+<div class="codehilite"><pre>public class FlowNetwork{   
+    private Bag&lt;FlowEdge&gt;[] adj;//use adj-list representation for flow graph   
+    FlowNetwork(int V);   
+    void addEdge(FlowEdge e);   
+    Iterable&lt;FlowEdge&gt; adj(int v);// both incoming and outgoing edges   
+    ...   
+}
+</pre></div>
+
+
+</li>
+<li>
+<p>FF algo:    </p>
+<ul>
+<li>use a function <code>hasAugPath()</code> to test termination   </li>
+<li>use a function <code>bottleNeck()</code> to get delta   </li>
+<li>if a augpath is found, use two arrays <code>reached[]</code> and <code>edgeTo[]</code> to get the augpath (find the path <em>backwards</em>).    </li>
+</ul>
+</li>
+</ul>
+<p>code:   </p>
+<div class="codehilite"><pre>public class FordFulkerson{   
+private boolean[] reached; //reached[v] indicates if a path s--&gt;v exists in Gr, used in DFS   
+private FlowEdge[] edgeTo;// edgeTo[v] = last edge on the path s--&gt;v   
+private double value=0.0;// value of flow   
+public FordFulkerson(FlowNetwork G, int s, int t){   
+    while(this.hasAugPath(G,s,t)){   
+        double delta = this.bottleNeck();   
+        for(int v=t; v!=s; v=edgeTo[v].other(v))   
+            edgeTo[v].addFlowTo(v, delta);   
+        this.value += delta;// each time the flow value augments by delta   
+    }   
+}   
+private double bottleNeck(){//bottleneck-cap = min residual flow on the aut-path   
+    double bottleneck = 9999999;   
+    assert(reached[t]);// the aug-path should exsit   
+    for(int v=t; v!=s; v = edgeTo[v].other(v))   
+        bottleneck = Math.min(bottleneck, edgeTo[v].);   
+    return bottleneck;   
+}   
+private boolean hasAugPath(FlowNetwork G, int s, int t){   
+    // perform a BFS    
+    Queue&lt;Integer&gt; q = new LinkedList&lt;Integer&gt;();   
+    this.reached = new boolean[G.V()];   
+    this.edgeTo = new FlowEdge[G.V()];   
+    q.add(s);   
+    while(!q.isEmpty()){   
+        int v = q.deque();   
+        for(FlowEdge e:G.adj(v)){   
+            int w = e.other(v);   
+            if(!reached[w] &amp;&amp; e.residualCapTo(w)&gt;0){// modified BFS: valid edges are those with  residualCap&gt;0   
+                edgeTo[w] = e;   
+                reached[w] = true;   
+                if(w==t) return true;// t is reached by BFS  
+                q.enqueue(w);   
+            }   
+        }   
+    }// BFS while loop    
+    return false;   
+}   
+}//class FF
+</pre></div>
+
+
+<h1>6. Maxflow Applications</h1>
+<p>关键是建模很巧妙... <br />
+<img alt="" src="static/algoII_week3_1/pasted_image012.png" />   </p>
+<h3>ex1. bipartite matching pb</h3>
+<p>二分图的最大匹配问题. (有点像marriage stable问题...但是不一样 因为没有preference order) <br />
+<img alt="" src="static/algoII_week3_1/pasted_image013.png" /> <br />
+⇒ is there a way to match all students to a job? <br />
+ie. <em>given a bipartite graph, find a perfect matching.</em>  <br />
+<img alt="" src="static/algoII_week3_1/pasted_image014.png" /> <br />
+<strong>modeling</strong>   </p>
+<blockquote>
+<ul>
+<li>add source <code>s</code> and target <code>t</code>   </li>
+<li>all edges from <code>s</code> to students: capacity=1   </li>
+<li>all edges from companies to <code>t</code>: capacity=1   </li>
+<li>all edges from student to company: capacity=INF   </li>
+</ul>
+</blockquote>
+<p>⇒ find maxflow in the graph <br />
+<img alt="" src="static/algoII_week3_1/pasted_image015.png" />   </p>
+<p><strong>when no perfect matching: mincut can explain why</strong>  <br />
+<img alt="" src="static/algoII_week3_1/pasted_image016.png" /> <br />
+in the above case, student 2,4,5 can only be matched to 7,10 <br />
+⇒ mincut can help us find such cases!   </p>
+<p><em>recall: how to get mincut from maxflow</em>   </p>
+<blockquote>
+<p>mincut = (A,B), where: <br />
+A:=vertices connected with s by a path with non blocking edges,  <br />
+B := the rest <br />
+(<em>blocking edges: full forward edge or empty backward edge on path</em>)   </p>
+</blockquote>
+<p>ex. <br />
+<img alt="" src="static/algoII_week3_1/pasted_image017.png" />   </p>
+<ul>
+<li>let S=students on s side of mincut (in above case, <em>S={2,4,5}</em>)   </li>
+<li>let T=companies on s side of mincut (in above case, T<em>={7,10}</em>)   </li>
+<li>|S|&gt;|T|, that's why no perfect matching!   </li>
+</ul>
+<h3>ex2. baseball elimination</h3>
+<p><img alt="" src="static/algoII_week3_1/pasted_image018.png" /> <br />
+(前三列是目前成绩, 后面四列是接下来赛程矩阵) <br />
+Montreal is mathematically eliminated → easy to see <br />
+→ Philly is mathematically eliminated also !   </p>
+<ul>
+<li>another case:   </li>
+</ul>
+<p><img alt="" src="static/algoII_week3_1/pasted_image019.png" /> <br />
+Detroit is mathematically eliminated ! <br />
+<img alt="" src="static/algoII_week3_1/pasted_image020.png" /> <br />
+whether team-4 still has a chance to win? <br />
+<strong>modelling</strong>   </p>
+<ul>
+<li>remaining games flow from s to t.    </li>
+<li>use team-pairs ans teams as vertices   </li>
+<li><em>carefully chosen capacities</em>(see below)   </li>
+</ul>
+<p><img alt="" src="static/algoII_week3_1/pasted_image021.png" /> <br />
+⇒ team 4 could win iff all flow from s are full (ie. all match points can be repartitioned over other teams <em>without depassing team 4's maximum wins</em>). <br />
+总之很巧妙....   </p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "TODOlist-20120511.html";
+			   var disqus_identifier = "algoII_week3_1.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;

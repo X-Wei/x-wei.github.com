@@ -1,5 +1,300 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-11-15T00:00:00+01:00</updated><entry><title>[Algorithms II] Week 2-2 Shortest Paths</title><link href="http://x-wei.github.io/algoII_week2_2.html" rel="alternate"></link><updated>2015-11-15T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoII_week2_2.html</id><summary type="html">&lt;h1&gt;1. Shortest Paths APIs&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-11-17T00:00:00+01:00</updated><entry><title>[Algorithms II] Week 3-1 Maximum Flow</title><link href="http://x-wei.github.io/algoII_week3_1.html" rel="alternate"></link><updated>2015-11-17T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoII_week3_1.html</id><summary type="html">&lt;h1&gt;1. Introduction to Maxflow&lt;/h1&gt;
+&lt;h3&gt;Min-cut pb&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;input: edge-weighted digraph G, each edge &lt;code&gt;e&lt;/code&gt; has weight(&lt;em&gt;"capacity"&lt;/em&gt;) &lt;code&gt;c[e]&lt;/code&gt;&amp;gt;=0, a &lt;em&gt;source vertex&lt;/em&gt; &lt;code&gt;s&lt;/code&gt;, a &lt;em&gt;target vertex&lt;/em&gt; &lt;code&gt;t&lt;/code&gt;.    &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;def&lt;/strong&gt;. an &lt;strong&gt;st-cut &lt;/strong&gt;&lt;code&gt;(A,B)&lt;/code&gt; is a partition of vertices into 2 disjoint sets A and B, with &lt;code&gt;s&lt;/code&gt; in set &lt;code&gt;A&lt;/code&gt; and &lt;code&gt;t&lt;/code&gt; in set &lt;code&gt;B&lt;/code&gt;.    &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;def&lt;/strong&gt;. the &lt;strong&gt;capacity&lt;/strong&gt; of a cut &lt;code&gt;(A,B)&lt;/code&gt; is sum of capacities of edges going &lt;em&gt;from A to B&lt;/em&gt; &lt;em&gt;(not considering B to A)&lt;/em&gt;.    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image.png" /&gt; &lt;br /&gt;
+⇒ min-cut pb: find the cut &lt;strong&gt;(A,B)&lt;/strong&gt; with min-capacity.    &lt;/p&gt;
+&lt;h3&gt;Max-flow pb&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;same input: graph G, source s, target t   &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;def.&lt;/strong&gt; an &lt;strong&gt;st-flow&lt;/strong&gt; is an assignment of values to edges &lt;code&gt;f: e→f[e]&lt;/code&gt; such that:    &lt;ul&gt;
+&lt;li&gt;capacity constraint: &lt;code&gt;0&amp;lt;=f[e]&amp;lt;=c[e]&lt;/code&gt; for any e;   &lt;/li&gt;
+&lt;li&gt;local equilibrium: for any vertex v (other than s or t), &lt;em&gt;inflow=outflow&lt;/em&gt;;   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;def.&lt;/strong&gt; the &lt;strong&gt;value&lt;/strong&gt; of a flow &lt;code&gt;f&lt;/code&gt; is the inflow at &lt;code&gt;t&lt;/code&gt;. (assume no ingoing edge to s or outgoing edge to t)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image001.png" /&gt; &lt;br /&gt;
+⇒ max-flow pb: find &lt;code&gt;f&lt;/code&gt; with max value.    &lt;/p&gt;
+&lt;p&gt;remark: max-flow and min-cut are dual problems.    &lt;/p&gt;
+&lt;h1&gt;2. Ford-Fulkerson Algorithm&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;def.&lt;/strong&gt; given a flow &lt;code&gt;f&lt;/code&gt; for a graph, an &lt;strong&gt;"augment path"&lt;/strong&gt; is an &lt;strong&gt;undirected&lt;/strong&gt; path form &lt;code&gt;s&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt;, if there exist &lt;code&gt;df&amp;gt;0&lt;/code&gt; (&lt;em&gt;"bottleneck capacity"&lt;/em&gt;) such that:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;for forward edges e: can augment flow by &lt;code&gt;df&lt;/code&gt; (not full: &lt;code&gt;f[e]+df&amp;lt;=c[e]&lt;/code&gt;)   &lt;/li&gt;
+&lt;li&gt;for backward edges: can decrease flow by &lt;code&gt;df&lt;/code&gt; (not empty: &lt;code&gt;f[e]-df&amp;gt;=0&lt;/code&gt;)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image002.png" /&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;def. &lt;strong&gt;residual capacity&lt;/strong&gt;   &lt;ul&gt;
+&lt;li&gt;for forward edge e, &lt;em&gt;residual-cap = c[e]-f[e]&lt;/em&gt;   &lt;/li&gt;
+&lt;li&gt;for backward edge e, &lt;em&gt;residual-cap = f[e]&lt;/em&gt;   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ an aug-path is a path where &lt;em&gt;each edge has residual capacity &amp;gt;0&lt;/em&gt;.    &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;blocking edges&lt;/strong&gt;: &lt;em&gt;full forward edge&lt;/em&gt; or &lt;em&gt;empty backward edge.&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;→ idea: increase flow along augment paths. &lt;br /&gt;
+&lt;strong&gt;[algo]&lt;/strong&gt;   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;start: 0 flow: &lt;code&gt;f[e]=0&lt;/code&gt; for all e.    &lt;/li&gt;
+&lt;li&gt;find an augment path (and the corresponding &lt;code&gt;df&lt;/code&gt;) in graph, and change the flows along the path by &lt;code&gt;+/-df&lt;/code&gt;.   &lt;/li&gt;
+&lt;li&gt;loop until no augment path exists. (ie. all path s→t are blocked either by a &lt;em&gt;full forward edge&lt;/em&gt; or an &lt;em&gt;empty backward edge, &lt;/em&gt;ie. by an edge with 0 residual capacity)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image003.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;FF is a gernel algorithm:  &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image004.png" /&gt;   &lt;/p&gt;
+&lt;h1&gt;3. Maxflow-Mincut Theorem&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;def&lt;/strong&gt;. for a cut (A,B), the &lt;strong&gt;net flow&lt;/strong&gt; across the cut (&lt;em&gt;netflow(A,B)&lt;/em&gt;) is the sum of flows from A to B minus flows from B to A.    &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;[flow-value Lemma]&lt;/strong&gt;  &lt;br /&gt;
+For any flow &lt;code&gt;f&lt;/code&gt; and any cut &lt;code&gt;(A,B)&lt;/code&gt;⇒  &lt;em&gt;netflow(A,B) = value(f).&lt;/em&gt;  &lt;br /&gt;
+&lt;em&gt;pf.&lt;/em&gt;  &lt;br /&gt;
+induction on the size of set B. &lt;br /&gt;
+&lt;em&gt; base case, when B={t}, by def we have &lt;/em&gt;netflow(A,B) = value(f)&lt;em&gt; &lt;br /&gt;
+&lt;/em&gt; when moving any vertex v from A to B: &lt;br /&gt;
+    * netflow(A, B) augment by &lt;em&gt;flow(A→v)+flow(B→v)=inflow(v)&lt;/em&gt;,  &lt;br /&gt;
+    * netflow(A, B) decrease by &lt;em&gt;flow(v→A)+flow(v→B)=outflow(v)&lt;/em&gt;,  &lt;br /&gt;
+    * by equilibrium of flow, &lt;em&gt;netflow(A',B')=netflow(A,B)=value(f)&lt;/em&gt;   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;ex. (A: gray vertices, B: white vertices) &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image005.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;[cor] &lt;em&gt;outflow(s)=inflow(t)=value(f)&lt;/em&gt;   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;[weak duality]&lt;/strong&gt; &lt;br /&gt;
+For &lt;em&gt;any&lt;/em&gt; flow &lt;code&gt;f&lt;/code&gt; and &lt;em&gt;any&lt;/em&gt; cut &lt;code&gt;(A,B)&lt;/code&gt;, ⇒ &lt;em&gt;value(f) &amp;lt;= capacity(A,B).&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[Augmenting path Th]&lt;/strong&gt;  &lt;br /&gt;
+A flow &lt;code&gt;f&lt;/code&gt; is maxflow &lt;em&gt;iff&lt;/em&gt; there is no augment path.   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[maxflow-mincut Th]&lt;/strong&gt; &lt;br /&gt;
+&lt;strong&gt;value(maxflow) = capacity(mincut).&lt;/strong&gt;   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;pf.&lt;/em&gt; &lt;br /&gt;
+for any flow &lt;code&gt;f&lt;/code&gt;, prove the equivalence of the 3 following statements: &lt;br /&gt;
+i. there exists a cut st: &lt;em&gt;capacity(cut) = value(f).&lt;/em&gt; &lt;br /&gt;
+ii. &lt;code&gt;f&lt;/code&gt; is a maxflow. &lt;br /&gt;
+iii. there is no augmenting path wrt &lt;code&gt;f&lt;/code&gt;.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[i⇒ii]   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;suppose cut(A,B) st: &lt;em&gt;capacity(A,B)=value(f)&lt;/em&gt; &lt;br /&gt;
+⇒ by weak duality, for any other flow f', &lt;em&gt;vlaue(f')&amp;lt;=capacity(A,B)=value(f)&lt;/em&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[ii⇒iii] (eqv to prove ~iii⇒~ii)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;suppose there is an aug-path from s to t, of bottleneck capacity=df, &lt;br /&gt;
+⇒ by improving f with df, we get a f' &amp;gt; f   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[iii⇒i]   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;suppose there is no aug-path, ie, &lt;em&gt;all path from s to t are blocked by some full-forward edge or empty backward edge.&lt;/em&gt; &lt;br /&gt;
+⇒ let A:=vertices connected with s by a path with no blocking edges, and B := the rest &lt;br /&gt;
+(&lt;em&gt;so&lt;/em&gt; &lt;em&gt;once we get a maxflow, we can &lt;strong&gt;&lt;em&gt;compute the mincut&lt;/em&gt;&lt;/strong&gt; in this way&lt;/em&gt;) &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image006.png" /&gt; &lt;br /&gt;
+→ for all edges across A and B, all forward edges are full, all backward edges are empty &lt;br /&gt;
+⇒ capacity(A,B) = netflow(A,B) = value(f) by flow-value lemma &lt;br /&gt;
+CQFD... 过瘾...   &lt;/p&gt;
+&lt;h1&gt;4. Running Time Analysis&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image007.png" /&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;getting a mincut form maxflow? → easy (as discussed in the pf above)   &lt;/li&gt;
+&lt;li&gt;computing an aug-path? → &lt;strong&gt;BFS&lt;/strong&gt;   &lt;/li&gt;
+&lt;li&gt;does FF algo always terminate? how many augmentations? → ...   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;integer capacity graphs&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;special case of FF algo&lt;/em&gt;: edge capacities are &lt;em&gt;integers&lt;/em&gt; between 1 and U.    &lt;/p&gt;
+&lt;p&gt;invariant: flow is always integer all along FF algo.   &lt;/p&gt;
+&lt;p&gt;[prop] nb of augmentations &amp;lt;= value of maxflow. &lt;br /&gt;
+pf. each augmentation will add flow by &amp;gt;=1.    &lt;/p&gt;
+&lt;p&gt;[integrality Th] There exist an integer-valued maxflow.    &lt;/p&gt;
+&lt;h3&gt;Bad case for FF&lt;/h3&gt;
+&lt;p&gt;nb of augmentation == value of maxflow &lt;br /&gt;
+(each time, the path through the middle edge is chosen as aug-path) &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image008.png" /&gt; &lt;br /&gt;
+&lt;strong&gt;can be easily avoided&lt;/strong&gt;⇒  by using shortest(nb of edges)/fastest(biggest df) path  &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image010.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;Performance of FF depends on the algo for choosing aug-path: &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image009.png" /&gt;   &lt;/p&gt;
+&lt;h1&gt;5. Java Implementation&lt;/h1&gt;
+&lt;h3&gt;representation of flow graph&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;flow edge:   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;each e= v→w, have flow f[e] and capacity c[e].   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;flow graph:   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;put e in both v and w's adj-list.    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;flow augmentation (by delta)   &lt;ul&gt;
+&lt;li&gt;for forward edge e, f[e] += delta   &lt;/li&gt;
+&lt;li&gt;for backward edge e, f[e] -= delta   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Residual graph Gr&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;def&lt;/strong&gt;. For a flow &lt;code&gt;f&lt;/code&gt; and a graph &lt;code&gt;G&lt;/code&gt;,  the &lt;strong&gt;residual graph&lt;/strong&gt; &lt;code&gt;Gr&lt;/code&gt; is obtained by:   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;for each edge &lt;code&gt;e=v→w&lt;/code&gt;, (with &lt;code&gt;c[e]&lt;/code&gt; and &lt;code&gt;f[e]&lt;/code&gt;) in &lt;code&gt;G&lt;/code&gt;, put in &lt;code&gt;Gr&lt;/code&gt;: &lt;br /&gt;
+&lt;em&gt; &lt;code&gt;e1=v→w&lt;/code&gt;, with weight=&lt;code&gt;c[e]-f[e]&lt;/code&gt; &lt;br /&gt;
+&lt;/em&gt; &lt;code&gt;e2=w→v&lt;/code&gt;, with weight=&lt;code&gt;f[e]&lt;/code&gt; (即两个方向上的weight都为residual capacity)   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(rmq: &lt;code&gt;Gr&lt;/code&gt; is just a weighted digraph, not a flow graph)   &lt;/p&gt;
+&lt;p&gt;[prop] &lt;strong&gt;Augment path in &lt;/strong&gt;&lt;code&gt;G&lt;/code&gt;&lt;strong&gt; is equivalent to a path in &lt;/strong&gt;&lt;code&gt;Gr&lt;/code&gt; (&lt;code&gt;df&lt;/code&gt; of aug-path in &lt;code&gt;G&lt;/code&gt; = min edge weight in &lt;code&gt;Gr&lt;/code&gt;)&lt;strong&gt;.&lt;/strong&gt; &lt;br /&gt;
+(但是实现的时候其实不用显式构造Gr, 只需BFS的时候修改一下即可) &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image011.png" /&gt;   &lt;/p&gt;
+&lt;h3&gt;APIs&lt;/h3&gt;
+&lt;p&gt;这里的API设计的非常合理... 导致每一部分的代码量都不大... NB   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;flow-edge:  &lt;br /&gt;
+rmq. both calculate residual-cap and augmentation need to specify a &lt;em&gt;direction&lt;/em&gt;, so we need a index v as parameter for these 2 functions.    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class FlowEdge{   
+    private final int v, w;   
+    private final double capacity;   
+    private double flow=0.0;   
+    FlowEdge(int v, int w, double cap);   
+    int from();   
+    int to();   
+    int other(int v);   
+    double capacity();   
+    double flow();   
+    double residualCapTo(int v);// residual capacity   
+    void addFlowTo(int v, double delta);// augment residual flow   
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;flow graph:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class FlowNetwork{   
+    private Bag&amp;lt;FlowEdge&amp;gt;[] adj;//use adj-list representation for flow graph   
+    FlowNetwork(int V);   
+    void addEdge(FlowEdge e);   
+    Iterable&amp;lt;FlowEdge&amp;gt; adj(int v);// both incoming and outgoing edges   
+    ...   
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;FF algo:    &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;use a function &lt;code&gt;hasAugPath()&lt;/code&gt; to test termination   &lt;/li&gt;
+&lt;li&gt;use a function &lt;code&gt;bottleNeck()&lt;/code&gt; to get delta   &lt;/li&gt;
+&lt;li&gt;if a augpath is found, use two arrays &lt;code&gt;reached[]&lt;/code&gt; and &lt;code&gt;edgeTo[]&lt;/code&gt; to get the augpath (find the path &lt;em&gt;backwards&lt;/em&gt;).    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;code:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class FordFulkerson{   
+private boolean[] reached; //reached[v] indicates if a path s--&amp;gt;v exists in Gr, used in DFS   
+private FlowEdge[] edgeTo;// edgeTo[v] = last edge on the path s--&amp;gt;v   
+private double value=0.0;// value of flow   
+public FordFulkerson(FlowNetwork G, int s, int t){   
+    while(this.hasAugPath(G,s,t)){   
+        double delta = this.bottleNeck();   
+        for(int v=t; v!=s; v=edgeTo[v].other(v))   
+            edgeTo[v].addFlowTo(v, delta);   
+        this.value += delta;// each time the flow value augments by delta   
+    }   
+}   
+private double bottleNeck(){//bottleneck-cap = min residual flow on the aut-path   
+    double bottleneck = 9999999;   
+    assert(reached[t]);// the aug-path should exsit   
+    for(int v=t; v!=s; v = edgeTo[v].other(v))   
+        bottleneck = Math.min(bottleneck, edgeTo[v].);   
+    return bottleneck;   
+}   
+private boolean hasAugPath(FlowNetwork G, int s, int t){   
+    // perform a BFS    
+    Queue&amp;lt;Integer&amp;gt; q = new LinkedList&amp;lt;Integer&amp;gt;();   
+    this.reached = new boolean[G.V()];   
+    this.edgeTo = new FlowEdge[G.V()];   
+    q.add(s);   
+    while(!q.isEmpty()){   
+        int v = q.deque();   
+        for(FlowEdge e:G.adj(v)){   
+            int w = e.other(v);   
+            if(!reached[w] &amp;amp;&amp;amp; e.residualCapTo(w)&amp;gt;0){// modified BFS: valid edges are those with  residualCap&amp;gt;0   
+                edgeTo[w] = e;   
+                reached[w] = true;   
+                if(w==t) return true;// t is reached by BFS  
+                q.enqueue(w);   
+            }   
+        }   
+    }// BFS while loop    
+    return false;   
+}   
+}//class FF
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;6. Maxflow Applications&lt;/h1&gt;
+&lt;p&gt;关键是建模很巧妙... &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image012.png" /&gt;   &lt;/p&gt;
+&lt;h3&gt;ex1. bipartite matching pb&lt;/h3&gt;
+&lt;p&gt;二分图的最大匹配问题. (有点像marriage stable问题...但是不一样 因为没有preference order) &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image013.png" /&gt; &lt;br /&gt;
+⇒ is there a way to match all students to a job? &lt;br /&gt;
+ie. &lt;em&gt;given a bipartite graph, find a perfect matching.&lt;/em&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image014.png" /&gt; &lt;br /&gt;
+&lt;strong&gt;modeling&lt;/strong&gt;   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;add source &lt;code&gt;s&lt;/code&gt; and target &lt;code&gt;t&lt;/code&gt;   &lt;/li&gt;
+&lt;li&gt;all edges from &lt;code&gt;s&lt;/code&gt; to students: capacity=1   &lt;/li&gt;
+&lt;li&gt;all edges from companies to &lt;code&gt;t&lt;/code&gt;: capacity=1   &lt;/li&gt;
+&lt;li&gt;all edges from student to company: capacity=INF   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;⇒ find maxflow in the graph &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image015.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;when no perfect matching: mincut can explain why&lt;/strong&gt;  &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image016.png" /&gt; &lt;br /&gt;
+in the above case, student 2,4,5 can only be matched to 7,10 &lt;br /&gt;
+⇒ mincut can help us find such cases!   &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;recall: how to get mincut from maxflow&lt;/em&gt;   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;mincut = (A,B), where: &lt;br /&gt;
+A:=vertices connected with s by a path with non blocking edges,  &lt;br /&gt;
+B := the rest &lt;br /&gt;
+(&lt;em&gt;blocking edges: full forward edge or empty backward edge on path&lt;/em&gt;)   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;ex. &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image017.png" /&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;let S=students on s side of mincut (in above case, &lt;em&gt;S={2,4,5}&lt;/em&gt;)   &lt;/li&gt;
+&lt;li&gt;let T=companies on s side of mincut (in above case, T&lt;em&gt;={7,10}&lt;/em&gt;)   &lt;/li&gt;
+&lt;li&gt;|S|&amp;gt;|T|, that's why no perfect matching!   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;ex2. baseball elimination&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image018.png" /&gt; &lt;br /&gt;
+(前三列是目前成绩, 后面四列是接下来赛程矩阵) &lt;br /&gt;
+Montreal is mathematically eliminated → easy to see &lt;br /&gt;
+→ Philly is mathematically eliminated also !   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;another case:   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image019.png" /&gt; &lt;br /&gt;
+Detroit is mathematically eliminated ! &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_1/pasted_image020.png" /&gt; &lt;br /&gt;
+whether team-4 still has a chance to win? &lt;br /&gt;
+&lt;strong&gt;modelling&lt;/strong&gt;   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;remaining games flow from s to t.    &lt;/li&gt;
+&lt;li&gt;use team-pairs ans teams as vertices   &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;carefully chosen capacities&lt;/em&gt;(see below)   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_1/pasted_image021.png" /&gt; &lt;br /&gt;
+⇒ team 4 could win iff all flow from s are full (ie. all match points can be repartitioned over other teams &lt;em&gt;without depassing team 4's maximum wins&lt;/em&gt;). &lt;br /&gt;
+总之很巧妙....   &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms II] Week 2-2 Shortest Paths</title><link href="http://x-wei.github.io/algoII_week2_2.html" rel="alternate"></link><updated>2015-11-15T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoII_week2_2.html</id><summary type="html">&lt;h1&gt;1. Shortest Paths APIs&lt;/h1&gt;
 &lt;p&gt;context: &lt;em&gt;directe, weighted graphs&lt;/em&gt;.     &lt;/p&gt;
 &lt;h3&gt;shortest path variants&lt;/h3&gt;
 &lt;p&gt;in terms of vertices:    &lt;/p&gt;
@@ -194,14 +489,14 @@ simple algo:    &lt;/p&gt;
 &lt;h3&gt;correctness&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;prop&lt;/strong&gt;.   &lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;topo-sort algo computes SPT in any DAG (&lt;em&gt;even with negative weights&lt;/em&gt;) in time &lt;strong&gt;O(E+V) &lt;/strong&gt;&lt;em&gt;(linear time!)&lt;/em&gt;.  &lt;br /&gt;
-&lt;em&gt;pf.&lt;/em&gt; &lt;br /&gt;
+&lt;p&gt;topo-sort algo computes SPT in any DAG (&lt;em&gt;even with negative weights&lt;/em&gt;) in time &lt;strong&gt;O(E+V) &lt;/strong&gt;&lt;em&gt;(linear time!)&lt;/em&gt;.    &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;pf.&lt;/em&gt; &lt;br /&gt;
 &lt;em&gt; each edge is relaxed exactely once. distTo[w] &amp;lt;= distTo[v]+e.weight() after relaxing e &lt;br /&gt;
 &lt;/em&gt; ineq holds until the algo terminates because:  &lt;br /&gt;
     * distTo[w] decrease monotonely, &lt;br /&gt;
     * distTo[v] will not change because of topo-order, no edge pointing to v after v is relaxed.  &lt;br /&gt;
 * CQFD   &lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;h3&gt;implementation&lt;/h3&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;public class AsyclicSP{   
     AsyclicSP(EdgeWeightedDigraph G, int s){   
@@ -286,15 +581,13 @@ Iterable&amp;lt;DirectedEdge&amp;gt; negCycle();
 &lt;h3&gt;negative cycle application&lt;/h3&gt;
 &lt;p&gt;&lt;em&gt;arbitrage detection&lt;/em&gt; &lt;br /&gt;
 &lt;img alt="" src="algoII_week2_2/pasted_image018.png" /&gt; &lt;br /&gt;
-建模: &lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;graph of currencies, edge weight = exchange weight (complete graph). &lt;br /&gt;
+建模: 
+graph of currencies, edge weight = exchange weight (complete graph). &lt;br /&gt;
     ⇒ &lt;em&gt;find a cycle whose product of edge is &amp;gt;1.&lt;/em&gt;  &lt;br /&gt;
         ⇒ &lt;strong&gt;take logs&lt;/strong&gt; to make a shortest-path pb. &lt;br /&gt;
             ⇒ take minus log, then try to find a negative cycle.  &lt;br /&gt;
 &lt;img alt="" src="algoII_week2_2/pasted_image020.png" /&gt; &lt;br /&gt;
 NB!!   &lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;h1&gt;Summery&lt;/h1&gt;
 &lt;p&gt;&lt;img alt="" src="algoII_week2_2/pasted_image015.png" /&gt; &lt;br /&gt;
 &lt;img alt="" src="algoII_week2_2/pasted_image021.png" /&gt;   &lt;/p&gt;</summary><category term="algorithm"></category></entry><entry><title>[Algorithms II] Week 2-1 Minimum Spanning Trees</title><link href="http://x-wei.github.io/algoII_week2_1.html" rel="alternate"></link><updated>2015-11-11T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoII_week2_1.html</id><summary type="html">&lt;h1&gt;1. Introduction to MSTs&lt;/h1&gt;

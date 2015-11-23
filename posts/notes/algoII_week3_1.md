@@ -49,7 +49,6 @@ remark: max-flow and min-cut are dual problems.
 → idea: increase flow along augment paths.   
 **[algo]**   
 > * start: 0 flow: ``f[e]=0`` for all e.    
-   
 * find an augment path (and the corresponding ``df``) in graph, and change the flows along the path by ``+/-df``.   
 * loop until no augment path exists. (ie. all path s→t are blocked either by a *full forward edge* or an *empty backward edge, *ie. by an edge with 0 residual capacity)   
    
@@ -62,11 +61,10 @@ FF is a gernel algorithm:
 =========================   
 **def**. for a cut (A,B), the **net flow** across the cut (*netflow(A,B)*) is the sum of flows from A to B minus flows from B to A.    
    
-**[flow-value Lemma]**    
+>**[flow-value Lemma]**    
 For any flow ``f`` and any cut ``(A,B) ``⇒  *netflow(A,B) = value(f).*    
 *pf.*    
 induction on the size of set B.   
-   
 * base case, when B={t}, by def we have *netflow(A,B) = value(f)*   
 * when moving any vertex v from A to B:   
 	* netflow(A, B) augment by *flow(A→v)+flow(B→v)=inflow(v)*,    
@@ -79,20 +77,18 @@ ex. (A: gray vertices, B: white vertices)
    
 [cor] *outflow(s)=inflow(t)=value(f)*   
    
-**[weak duality]**   
+>**[weak duality]**   
 For *any* flow ``f`` and *any* cut ``(A,B)``, ⇒ *value(f) <= capacity(A,B).*   
    
-**[Augmenting path Th]**    
+>**[Augmenting path Th]**    
 A flow ``f`` is maxflow *iff* there is no augment path.   
    
-**[maxflow-mincut Th]**   
+>**[maxflow-mincut Th]**   
 **value(maxflow) = capacity(mincut).**   
    
 *pf.*   
->for any flow ``f``, prove the equivalence of the 3 following statements:   
-   
+for any flow ``f``, prove the equivalence of the 3 following statements:   
 i. there exists a cut st: *capacity(cut) = value(f).*   
-   
 ii. ``f`` is a maxflow.   
 iii. there is no augmenting path wrt ``f``.   
    
@@ -166,7 +162,6 @@ put e in both v and w's adj-list.
 ### Residual graph Gr   
 **def**. For a flow ``f`` and a graph ``G``,  the **residual graph** ``Gr`` is obtained by:   
 >for each edge ``e=v→w``, (with ``c[e]`` and ``f[e]``) in ``G``, put in ``Gr``:   
-   
 * ``e1=v→w``, with weight=``c[e]-f[e]``   
 * ``e2=w→v``, with weight=``f[e]`` (即两个方向上的weight都为residual capacity)   
    
@@ -181,82 +176,84 @@ put e in both v and w's adj-list.
 这里的API设计的非常合理... 导致每一部分的代码量都不大... NB   
    
 * flow-edge:    
-   
 rmq. both calculate residual-cap and augmentation need to specify a *direction*, so we need a index v as parameter for these 2 functions.    
-	public class FlowEdge{   
-		private final int v, w;   
-		private final double capacity;   
-		private double flow=0.0;   
-		FlowEdge(int v, int w, double cap);   
-		int from();   
-		int to();   
-		int other(int v);   
-		double capacity();   
-		double flow();   
-		double residualCapTo(int v);// residual capacity   
-		void addFlowTo(int v, double delta);// augment residual flow   
-	}   
+  
+        public class FlowEdge{   
+            private final int v, w;   
+            private final double capacity;   
+            private double flow=0.0;   
+            FlowEdge(int v, int w, double cap);   
+            int from();   
+            int to();   
+            int other(int v);   
+            double capacity();   
+            double flow();   
+            double residualCapTo(int v);// residual capacity   
+            void addFlowTo(int v, double delta);// augment residual flow   
+        }   
+
+
    
-   
-   
-* flow graph:    
-   
-	public class FlowNetwork{   
-		private Bag<FlowEdge>[] adj;//use adj-list representation for flow graph   
-		FlowNetwork(int V);   
-		void addEdge(FlowEdge e);   
-		Iterable<FlowEdge> adj(int v);// both incoming and outgoing edges   
-		...   
-	}   
-   
+* flow graph:  
+
+        public class FlowNetwork{   
+            private Bag<FlowEdge>[] adj;//use adj-list representation for flow graph   
+            FlowNetwork(int V);   
+            void addEdge(FlowEdge e);   
+            Iterable<FlowEdge> adj(int v);// both incoming and outgoing edges   
+            ...   
+        }   
+
    
 * FF algo:    
 	* use a function ``hasAugPath()`` to test termination   
 	* use a function ``bottleNeck()`` to get delta   
 	* if a augpath is found, use two arrays ``reached[]`` and ``edgeTo[]`` to get the augpath (find the path *backwards*).    
+
+code:   
    
-	public class FordFulkerson{   
-	private boolean[] reached; //reached[v] indicates if a path s-->v exists in Gr, used in DFS   
-	private FlowEdge[] edgeTo;// edgeTo[v] = last edge on the path s-->v   
-	private double value=0.0;// value of flow   
-	public FordFulkerson(FlowNetwork G, int s, int t){   
-		while(this.hasAugPath(G,s,t)){   
-			double delta = this.bottleNeck();   
-			for(int v=t; v!=s; v=edgeTo[v].other(v))   
-				edgeTo[v].addFlowTo(v, delta);   
-			this.value += delta;// each time the flow value augments by delta   
-		}   
-	}   
-	private double bottleNeck(){//bottleneck-cap = min residual flow on the aut-path   
-		double bottleneck = 9999999;   
-		assert(reached[t]);// the aug-path should exsit   
-		for(int v=t; v!=s; v = edgeTo[v].other(v))   
-			bottleneck = Math.min(bottleneck, edgeTo[v].);   
-		return bottleneck;   
-	}   
-	private boolean hasAugPath(FlowNetwork G, int s, int t){   
-		// perform a BFS    
-		Queue<Integer> q = new LinkedList<Integer>();   
-		this.reached = new boolean[G.V()];   
-		this.edgeTo = new FlowEdge[G.V()];   
-		q.add(s);   
-		while(!q.isEmpty()){   
-			int v = q.deque();   
-			for(FlowEdge e:G.adj(v)){   
-				int w = e.other(v);   
-				if(!reached[w] && e.residualCapTo(w)>0){// modified BFS: valid edges are those with  residualCap>0   
-					edgeTo[w] = e;   
-					reached[w] = true;   
-``if(w==t) return true;// t is reached by BFS``   
-					q.enqueue(w);   
-				}   
-			}   
-		}// BFS while loop    
-		return false;   
-	}   
-	}//class FF   
+    public class FordFulkerson{   
+    private boolean[] reached; //reached[v] indicates if a path s-->v exists in Gr, used in DFS   
+    private FlowEdge[] edgeTo;// edgeTo[v] = last edge on the path s-->v   
+    private double value=0.0;// value of flow   
+    public FordFulkerson(FlowNetwork G, int s, int t){   
+        while(this.hasAugPath(G,s,t)){   
+            double delta = this.bottleNeck();   
+            for(int v=t; v!=s; v=edgeTo[v].other(v))   
+                edgeTo[v].addFlowTo(v, delta);   
+            this.value += delta;// each time the flow value augments by delta   
+        }   
+    }   
+    private double bottleNeck(){//bottleneck-cap = min residual flow on the aut-path   
+        double bottleneck = 9999999;   
+        assert(reached[t]);// the aug-path should exsit   
+        for(int v=t; v!=s; v = edgeTo[v].other(v))   
+            bottleneck = Math.min(bottleneck, edgeTo[v].);   
+        return bottleneck;   
+    }   
+    private boolean hasAugPath(FlowNetwork G, int s, int t){   
+        // perform a BFS    
+        Queue<Integer> q = new LinkedList<Integer>();   
+        this.reached = new boolean[G.V()];   
+        this.edgeTo = new FlowEdge[G.V()];   
+        q.add(s);   
+        while(!q.isEmpty()){   
+            int v = q.deque();   
+            for(FlowEdge e:G.adj(v)){   
+                int w = e.other(v);   
+                if(!reached[w] && e.residualCapTo(w)>0){// modified BFS: valid edges are those with  residualCap>0   
+                    edgeTo[w] = e;   
+                    reached[w] = true;   
+                    if(w==t) return true;// t is reached by BFS  
+                    q.enqueue(w);   
+                }   
+            }   
+        }// BFS while loop    
+        return false;   
+    }   
+    }//class FF   
    
-   
+
 6. Maxflow Applications   
 =======================   
 关键是建模很巧妙...   
@@ -270,7 +267,6 @@ ie. *given a bipartite graph, find a perfect matching.*
 ![](algoII_week3_1/pasted_image014.png)   
 **modeling**   
 >* add source ``s`` and target ``t``   
-   
 * all edges from ``s`` to students: capacity=1   
 * all edges from companies to ``t``: capacity=1   
 * all edges from student to company: capacity=INF   
