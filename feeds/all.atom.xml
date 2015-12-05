@@ -1,12 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-11-22T00:00:00+01:00</updated><entry><title>学术文章写作利器: TeXmacs介绍</title><link href="http://x-wei.github.io/TeXmacs_intro.html" rel="alternate"></link><updated>2015-11-22T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/TeXmacs_intro.html</id><summary type="html">&lt;p&gt;今天介绍一个论文写作的神器: TeXmacs !   &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2015-11-23T00:00:00+01:00</updated><entry><title>[Algorithms II] Week 3-2 Radix Sorts</title><link href="http://x-wei.github.io/algoII_week3_2.html" rel="alternate"></link><updated>2015-11-23T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/algoII_week3_2.html</id><summary type="html">&lt;p&gt;This week: string sort.  &lt;/p&gt;
+&lt;h1&gt;1. Strings in Java&lt;/h1&gt;
+&lt;h3&gt;char data type&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;char in C&lt;/strong&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;8-bit integer, 256 characters, 7-bit ASCII code  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;char in Java&lt;/strong&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;16-bit Unicode&lt;/em&gt;    &lt;/p&gt;
+&lt;h3&gt;String data type&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;String&lt;/code&gt;: &lt;em&gt;immutable&lt;/em&gt; sequence of characters&lt;br /&gt;
+operations: lengthe, ith char, substring, concatenate  &lt;/p&gt;
+&lt;p&gt;implementation: using a &lt;code&gt;char[]&lt;/code&gt;, maintain a &lt;code&gt;length&lt;/code&gt; and an &lt;code&gt;offset.&lt;/code&gt; ⇒ substring methode is O(1) time.&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image.png" /&gt;&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image001.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;StringBuilder data type&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;StringBuilder&lt;/code&gt;: &lt;em&gt;mutable&lt;/em&gt; data type.&lt;br /&gt;
+implementation: using a resizing &lt;code&gt;char[]&lt;/code&gt; array (ArrayList). &lt;br /&gt;
+⇒ contat in (amortized) constant time, &lt;em&gt;substring in linear time&lt;/em&gt;!&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image002.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;ex.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;reverse a string: linear using StringBuilder, quad using String.   &lt;/li&gt;
+&lt;li&gt;form an array of suffixes: quad (time&amp;amp;space) using StringBuilder, linear (time&amp;amp;space) using String.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_2/pasted_image003.png" /&gt;&lt;br /&gt;
+&lt;strong&gt;Longest Common Prefix:&lt;/strong&gt;&lt;br /&gt;
+runs in linear/subinear time ⇒ &lt;code&gt;compareTo()&lt;/code&gt; for strings takes (sub)linear time!  &lt;/p&gt;
+&lt;h3&gt;Alphabet&lt;/h3&gt;
+&lt;p&gt;alphabet different for different type of string (ex. binary numbers, DNA, ...)&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image004.png" /&gt;&lt;br /&gt;
+def. &lt;strong&gt;Radix&lt;/strong&gt; &lt;code&gt;R&lt;/code&gt; is number of digits  in alphabet.   &lt;/p&gt;
+&lt;h1&gt;2. Key-Indexed Counting&lt;/h1&gt;
+&lt;p&gt;review of &lt;em&gt;compare-based&lt;/em&gt; sorting algorithms:&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image005.png" /&gt;&lt;br /&gt;
+lower-bound for compare-based algorithms: ~&lt;em&gt;NlgN&lt;/em&gt; (=Lg(N!))&lt;br /&gt;
+⇒ goal: do better by avoiding using compares.   &lt;/p&gt;
+&lt;h3&gt;Key-indexed counting&lt;/h3&gt;
+&lt;p&gt;is an algorithm to sort &lt;em&gt;by character(ex. sort array of string by their 1st character).&lt;/em&gt; &lt;br /&gt;
+Assumption: keys are integers between 0 and R-1 (&amp;lt;&amp;lt;N, small integer).&lt;br /&gt;
+⇒ use keys as array index, to sort an &lt;em&gt;array of N integers between 0 and R-1&lt;/em&gt;.   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[algo]&lt;/strong&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;count freq of each key index (of size &lt;em&gt;R+1&lt;/em&gt;)  &lt;/li&gt;
+&lt;li&gt;using count array, compute a &lt;em&gt;cumulated freq&lt;/em&gt; (cumsum of &lt;code&gt;count[]&lt;/code&gt;)  &lt;/li&gt;
+&lt;li&gt;the &lt;code&gt;cumsum[]&lt;/code&gt; array stores the &lt;strong&gt;index range&lt;/strong&gt; of each key index:   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;index range of key-i in sorted array is &lt;code&gt;[cumsum[i], cumsum[i+1]]&lt;/code&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;then get the sorted array by going through the array and using cumsum[] array  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_2/pasted_image007.png" /&gt;⇒ &lt;img alt="" src="algoII_week3_2/pasted_image006.png" /&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public void keyIndexCounting(int[] a, int R){// entries in a[] are in range [0,R-1]  
+    int N = a.length;  
+    int[] count = new int[R+1]; // count[i] = freq of key i-1, count[0] = 0  
+    for(int ai:a)   
+        count[ai+1]++;  
+    int[] cumsum = count; //cumsum = cumulated freq  
+    for(int i=0;i&amp;lt;R;i++)   
+        cumsum[i+1] += cumsum[i];  
+    // the ranges of key i in sorted array should be [cumsum[i], cumsum[i+1]]  
+    int[] aux = new int[N];  
+    for(int ai:a)  
+        aux[cumsum[ai]++] = ai;  
+    a = aux;      
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;running time: &lt;strong&gt;linear&lt;/strong&gt; in time and in space.   &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;stable&lt;/strong&gt; sorting: that's why we need the cumsum and aux array...  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;3. LSD Radix Sort&lt;/h1&gt;
+&lt;p&gt;LSD = least significant digit (for string sorting)&lt;br /&gt;
+(assume strings all of same length)&lt;br /&gt;
+idea:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;consider chars from right to left   &lt;/li&gt;
+&lt;li&gt;sort using dth character as key (using key-indexed counting)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;important: the key-indexed counting should be stable.&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image008.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;p&gt;time: W * N (W=length of string)  &lt;/p&gt;
+&lt;p&gt;correctness:&lt;br /&gt;
+&lt;strong&gt;prop&lt;/strong&gt;. LSD sorting works&lt;br /&gt;
+pf. by induction on i&lt;br /&gt;
+prove that: after pass i, strings are sorted by last i characters.   &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static LSDsort(String[] a, int W){//W=fixed width  
+    int R = 256;//for ASCII chars  
+    int N = a.length;  
+    String[] aux = new String[N];  
+    for(int d=W-1;d&amp;gt;=0;d--){//W passes  
+        //key-indexed counting at digit d  
+        int count = new int[R+1];  
+        for(String s:a)  
+            count[s.charAt[d]+1]++;  
+        for(int i=0;i&amp;lt;N;i++)  
+            count[i+1] += count[i];//count = cumsum(count), range of each key  
+        for(String s:a)  
+            aux[s.charAt[d]++]=s;//put each key in right place  
+        for(int i=0;i&amp;lt;n;i++)  
+            a[i]=aux[i];  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;if keys are binary numbers → break into bit characters then apply LSD.   &lt;/li&gt;
+&lt;li&gt;if not fixed length → some fix..  &lt;/li&gt;
+&lt;li&gt;sort 1 million 32-bit integers? (Google/Obama interview) ⇒ LSD string sort~   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;4. MSD Radix Sort&lt;/h1&gt;
+&lt;p&gt;most-significant-digit first (from left to right)&lt;br /&gt;
+Idea.  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;partition array into R pieces according to first character (the count[] array is the partition)  &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;recursively&lt;/em&gt; sort each subarrays  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;variable length: end-of-string are treated as before any char&lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image010.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private static void sort(String[] a, String[] aux, int lo, int hi, int d){  
+    if(hi&amp;lt;=lo) return;  
+    //sort by dth character  
+    int count = new int[R+2];// R+2 as we are taking account into the end-of-strings!!  
+    for(int i=lo;i&amp;lt;=hi;i++) count[ a[i].charAt(d)+2 ]++;//charAt(end-of-string)=-1  
+    for(int i=0;i&amp;lt;R;i++) count[i+1] += count[i]; //cumsum  
+    for(int i=lo;i&amp;lt;=hi;i++) aux[count[a[i].charAt(d)+1]++] = a[i];  
+    for(int i=lo;i&amp;lt;=hi;i++) a[i] = aux[i-lo];// attention: aux is filled from index 0 instead of lo  
+    //recursively sort each subarray (R subarrays in total, ranges stored in count[])  
+    for(int r=0;r&amp;lt;R;r++)  
+        sort(a, aux,lo+count[r], lo+count[r+1]-1, d+1);  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;can recycle &lt;code&gt;aux[]&lt;/code&gt;, but &lt;em&gt;not&lt;/em&gt; &lt;code&gt;count[]&lt;/code&gt;.   &lt;/li&gt;
+&lt;li&gt;too slow for small subarrays (if len(subarray)&amp;lt;&amp;lt;R)  &lt;/li&gt;
+&lt;li&gt;huge nb of subarrays because of recursion   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;improvement ⇒ cutoff to insertion sort...   &lt;/p&gt;
+&lt;p&gt;characteristics of MSD sort: &lt;br /&gt;
+examines &lt;strong&gt;just enough chars&lt;/strong&gt; to sort. &lt;br /&gt;
+→ can be sublinear in N. &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image011.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;MSD vs. quicksort&lt;/h3&gt;
+&lt;p&gt;disadvantages for MSD:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;random access of memory (cache inefficient)  &lt;/li&gt;
+&lt;li&gt;too many instructions in inner loop   &lt;/li&gt;
+&lt;li&gt;extra space for count[]  &lt;/li&gt;
+&lt;li&gt;extra space for aux[]  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;disadvantages for qsort:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NlgN nb of string compares  &lt;/li&gt;
+&lt;li&gt;has to rescan many chars for keys with &lt;em&gt;long prefix matches&lt;/em&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;5. 3-way Radix Quicksort&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;⇒ combine benefits of qsort and MSD.&lt;/em&gt; &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image015.png" /&gt;&lt;br /&gt;
+idea: do &lt;strong&gt;3-way partition by the dth character&lt;/strong&gt;. &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image013.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;less overhead than &lt;em&gt;R-way&lt;/em&gt; partitioning for MSD  &lt;/li&gt;
+&lt;li&gt;do not re-examine chars equal to the partitioning char  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_2/pasted_image014.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;Implementation&lt;/h3&gt;
+&lt;p&gt;modification of the 3-way qsort.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nt"&gt;private&lt;/span&gt; &lt;span class="nt"&gt;static&lt;/span&gt; &lt;span class="nt"&gt;sort&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;String&lt;/span&gt;&lt;span class="cp"&gt;[]&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;int&lt;/span&gt; &lt;span class="nt"&gt;lo&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;int&lt;/span&gt; &lt;span class="nt"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;int&lt;/span&gt; &lt;span class="nt"&gt;d&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;  
+    &lt;span class="n"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  
+    &lt;span class="n"&gt;int&lt;/span&gt; &lt;span class="n"&gt;lt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;lo&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;use&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt; &lt;span class="n"&gt;pointers&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;lt&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gt&lt;/span&gt;  
+    &lt;span class="n"&gt;char&lt;/span&gt; &lt;span class="n"&gt;pivot&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;lo&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;charAt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  
+    &lt;span class="n"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;invariant&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;lo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nb"&gt;lt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;pivot&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;gt&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;hi&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;pivot&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;lt&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;pivot&lt;/span&gt;  
+        &lt;span class="n"&gt;char&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;charAt&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;d&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  
+        &lt;span class="n"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;pivot&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;lt&lt;/span&gt;&lt;span class="o"&gt;++,&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  
+        &lt;span class="n"&gt;else&lt;/span&gt; &lt;span class="n"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;pivot&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;exch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;gt&lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  
+        &lt;span class="n"&gt;else&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  
+    &lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nt"&gt;3-way&lt;/span&gt; &lt;span class="nt"&gt;partition&lt;/span&gt;  
+    &lt;span class="nt"&gt;sort&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;lo&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;lt-1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;d&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;  
+    &lt;span class="nt"&gt;if&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;pivot&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="nt"&gt;0&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;sort&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;lt&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;gt&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;d&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);//&lt;/span&gt;&lt;span class="nt"&gt;pivot&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;0&lt;/span&gt; &lt;span class="nt"&gt;means&lt;/span&gt; &lt;span class="nt"&gt;end-of-string&lt;/span&gt;  
+    &lt;span class="nt"&gt;sort&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;gt&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;hi&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;d&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;  
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;wrt. qsort:&lt;/strong&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;from NlgN &lt;strong&gt;string&lt;/strong&gt; compares to NlgN &lt;strong&gt;char&lt;/strong&gt; compares.  &lt;/li&gt;
+&lt;li&gt;avoids re-comparing long common prefixes.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;wrt. MSD:&lt;/strong&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;short inner loop  &lt;/li&gt;
+&lt;li&gt;cache friendly  &lt;/li&gt;
+&lt;li&gt;in-place  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_2/pasted_image016.png" /&gt;  &lt;/p&gt;
+&lt;h1&gt;6. Suffix Arrays&lt;/h1&gt;
+&lt;p&gt;(&lt;em&gt;some applications of suffix array)&lt;/em&gt;  &lt;/p&gt;
+&lt;h3&gt;keyword-in-context search&lt;/h3&gt;
+&lt;p&gt;given N chars (N huge), &lt;em&gt;preprocess&lt;/em&gt; it to enable fast substring search. &lt;br /&gt;
+⇒ suffix sort  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;generate suffix array (linear time &amp;amp; space )  &lt;/li&gt;
+&lt;li&gt;sort on the suffix ⇒ brings repeated suffixes together  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week3_2/pasted_image017.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;longest repeated substring&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;brute force algorithm  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;try all i, j as starts of indices, then compute longest common prefix (LCP)&lt;br /&gt;
+→ O(D*N2) where D is length of longest repeated substring.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;⇒ use suffix array   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sorting suffix array will bring repeated substrings together&lt;br /&gt;
+java code:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;//int lcp(String s1, String s2) defined  
+public static lrs(String s){  
+    int N = s.length;  
+    String[] suffix = new String[N];  
+    for(int i=0;i&amp;lt;N;i++) suffix[i] = s.substring(i);//construct suffix array  
+    Arrays.sort(suffix);// sort suffix array ==&amp;gt; using 3-way radix sort   
+    // one pass to get longest repeated substring (bigest lcp)  
+    String lrs = &amp;quot;&amp;quot;;  
+    for(int i=0;i&amp;lt;N-1;i++){  
+        int lcp = lcp(suffix[i], suffix[i+1]);  
+        if(lcp&amp;gt;lrs.length) lrs = suffix[i].substring(0, lcp);  
+    }  
+    return lrs;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;lrs worst-case input&lt;/strong&gt;: &lt;em&gt;lrs very long&lt;/em&gt; (say N/2). &lt;br /&gt;
+⇒ &lt;em&gt;quadratic&lt;/em&gt; for lrs and for sorting. &lt;br /&gt;
+&lt;img alt="" src="algoII_week3_2/pasted_image018.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;→ &lt;em&gt;improvement of lrs for worst-case performance:&lt;/em&gt;&lt;br /&gt;
+&lt;strong&gt;Manber-Myers algo&lt;/strong&gt;&lt;br /&gt;
+sketch:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;phase 0: sort suffix[] on 1st char   &lt;/li&gt;
+&lt;li&gt;phase i: given suffix[] is sorted based on first 2^(i-1) chars → create suffix[] sorted on first 2^i chars.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;each phase: double the nb of chars sorted on. &lt;br /&gt;
+maintain an inverse[] array, to make comparisons constant time. &lt;br /&gt;
+performance: NlgN  &lt;/p&gt;
+&lt;h2&gt;String sorting summery&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;can have linear sort: use chars as array index  &lt;/li&gt;
+&lt;li&gt;sublinear sort: not all date need to be examined  &lt;/li&gt;
+&lt;li&gt;3-way radix qsort is &lt;em&gt;asymptotically optimal&lt;/em&gt;  &lt;/li&gt;
+&lt;/ul&gt;</summary><category term="algorithm"></category></entry><entry><title>学术文章写作利器: TeXmacs介绍</title><link href="http://x-wei.github.io/TeXmacs_intro.html" rel="alternate"></link><updated>2015-11-22T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/TeXmacs_intro.html</id><summary type="html">&lt;p&gt;今天介绍一个论文写作的神器: TeXmacs !   &lt;/p&gt;
 &lt;h1&gt;0. Why TeXmacs?&lt;/h1&gt;
 &lt;p&gt;一说到"论文写作神器"一般大家首先想到的就是LaTeX, 确实LaTeX写出来的数学公式和文章的排版非常漂亮. 但是作为一个几年来用过LaTeX写过几次报告的小白用户, 说句实话我从来都没有喜欢上过LaTeX. 根本的原因大概是: LaTeX的语法是一种标记语言(markup language), 本质上是给机器看而不是给人看的—就像html源代码是为了给浏览器看而不是直接给人看的.   &lt;/p&gt;
 &lt;h2&gt;0.0 LaTeX强迫症自测&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;矩阵A的转置, 你用tex会怎么写?  &lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;⇒ 如果你不能容忍直接写成&lt;code&gt;$A^T$&lt;/code&gt;, 而一定要写成类似&lt;code&gt;$\textbf{A}^\intercal$&lt;/code&gt;的话... 请直接忽略本文 &amp;amp; 继续用LaTe, 好走不送...... &lt;br /&gt;
+&lt;p&gt;⇒ 如果你不能容忍直接写成&lt;code&gt;$A^T$&lt;/code&gt;, 而一定要写成类似&lt;code&gt;$\textbf{A}^\intercal$&lt;/code&gt;的话... 请直接忽略本文 &amp;amp; 继续用LaTeX, 好走不送...... &lt;br /&gt;
 (另: 强迫症可以去这里看到底怎么打转置: &lt;a href="http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose"&gt;http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose&lt;/a&gt;)  &lt;/p&gt;
 &lt;p&gt;如果你认为这样的细节不重要, 好好描述数学问题本身才最重要的话, 请继续阅读.  &lt;/p&gt;
 &lt;h2&gt;0.1 TeXmacs是什么&lt;/h2&gt;

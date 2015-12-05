@@ -13,7 +13,7 @@ Tags: tex, TeXmacs
 ## 0.0 LaTeX强迫症自测  
 >矩阵A的转置, 你用tex会怎么写?  
   
-⇒ 如果你不能容忍直接写成``$A^T$``, 而一定要写成类似``$\textbf{A}^\intercal$``的话... 请直接忽略本文 & 继续用LaTe, 好走不送......   
+⇒ 如果你不能容忍直接写成``$A^T$``, 而一定要写成类似``$\textbf{A}^\intercal$``的话... 请直接忽略本文 & 继续用LaTeX, 好走不送......   
 (另: 强迫症可以去这里看到底怎么打转置: <http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose>)  
   
 如果你认为这样的细节不重要, 好好描述数学问题本身才最重要的话, 请继续阅读.  
