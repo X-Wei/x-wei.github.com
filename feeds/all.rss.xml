@@ -1,5 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 23 Nov 2015 00:00:00 +0100</lastBuildDate><item><title>[Algorithms II] Week 3-2 Radix Sorts</title><link>http://x-wei.github.io/algoII_week3_2.html</link><description>&lt;p&gt;This week: string sort.  &lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 05 Dec 2015 00:00:00 +0100</lastBuildDate><item><title>[Algorithms II] Week 4-1 Tries</title><link>http://x-wei.github.io/algoII_week4_1.html</link><description>&lt;p&gt;More efficient version of symbol-table where the keys are strings.   &lt;/p&gt;
+&lt;h1&gt;1. R-way Tries&lt;/h1&gt;
+&lt;p&gt;Two implementations of symbol tables that we've seen: &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image.png" /&gt;&lt;br /&gt;
+when keys are strings:&lt;br /&gt;
+(&lt;code&gt;L&lt;/code&gt;=string length, &lt;code&gt;N&lt;/code&gt;=number of strings, &lt;code&gt;R&lt;/code&gt;=radix)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image001.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;for string keys ⇒ do better by avoiding examing the entire key.  &lt;/p&gt;
+&lt;p&gt;goal: faster than hashtable, more flexible than BST !  &lt;/p&gt;
+&lt;h2&gt;String Symbol Table API&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class StringST&amp;lt;V&amp;gt;{// implements ST&amp;lt;String, V&amp;gt;  
+    public void put(String key, V val);  
+    public V get(String key);  
+    public void delete(String key);  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;R-way tries&lt;/h2&gt;
+&lt;p&gt;A trie is a tree where:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;except the root, each node store &lt;em&gt;characters&lt;/em&gt; (instead of string keys) — in fact the chars are stored in &lt;em&gt;links&lt;/em&gt;  &lt;/li&gt;
+&lt;li&gt;each node has R children  &lt;/li&gt;
+&lt;li&gt;store &lt;em&gt;value&lt;/em&gt; in node if the node corresponds to the&lt;em&gt; last char&lt;/em&gt; in key.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;example: (&lt;em&gt;a trie&lt;Integer&gt;)&lt;/em&gt;&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image002.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;search in a trie &lt;/strong&gt;&lt;code&gt;get()&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;hit&lt;/em&gt; if when search ends the node has a non-null value&lt;br /&gt;
+&lt;em&gt;miss&lt;/em&gt; if reach a null link or have null value when search ends.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;insertion in a trie&lt;/strong&gt; &lt;code&gt;put()&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;follow the links as the chars indicate in the key&lt;br /&gt;
+→ if meet null links: create new node&lt;br /&gt;
+→ when reach last char in key: set the value of the node  &lt;/p&gt;
+&lt;h2&gt;Java implementation&lt;/h2&gt;
+&lt;p&gt;trie node class:&lt;br /&gt;
+in each node use an array of size R to store links...  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private static class Node{  
+    private Object val;// because cannot create arries of generic type (array of Node)  
+    private Node[] next = new Node[R];// chars are implicitly defined by link index  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外关于为什么内部类Node声明为static, 参考这里: &lt;br /&gt;
+&lt;a href="http://www.geeksforgeeks.org/static-class-in-java/"&gt;http://www.geeksforgeeks.org/static-class-in-java/&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;implementation: use private recursive methods, 和BST的实现类似, 定义一个递归的private函数, 返回插入后的Node, 很有用.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class TrieST&amp;lt;Value&amp;gt; {  
+    pirvate final int R = 256; // ASCII chars  
+    private Node root = new Node();  
+    private static class Node{  
+        private Object val;// because cannot create arries of generic type (array of Node)  
+        private Node[] next = new Node[R];// chars are implicitly defined by link index  
+    }  
+    public void put(String key, Value val){  
+        this.put(root, key, val, 0);// use private recursive helper method  
+    }  
+    private Node put(Node x, String key, Value val, int d){  
+        // `d` is the index of char to put  
+        // returns the inserted node
+
+        if (x==null) x = new Node();  
+        if (key.length()==d) x.val = val;  
+        else{  
+            char c = key.charAt(d);
+
+            x.next[c] = put(x.next[c], key, val, d+1);  
+        }  
+        return x;  
+    }  
+    public boolean contains(String key){return get(key)!=null;}  
+    public Value get(String key){  
+        Node nd = this.get(root, key, 0);  
+        if(nd==null) return null;  
+        return (Value) x.val; // cast back  
+    }  
+    private Node get(Node x, String key, int d){  
+        // returns the node that contains val for key  
+        if(x==null) return null;  
+        if(d==key.length()) return x;  
+        char c = key.charAt(d);
+
+        else return get(x.next[c], key, d+1);  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;delete node in trie:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;find the node and set the val to null  &lt;/li&gt;
+&lt;li&gt;if a node has 0 links(leaf)  and val==null: delete it and recursivly go up.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_1/pasted_image003.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;analysis&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;time:&lt;/strong&gt;&lt;br /&gt;
+search hit —  L nodes examined. &lt;br /&gt;
+serach miss —  sublinear in L&lt;br /&gt;
+&lt;strong&gt;space:&lt;/strong&gt; &lt;br /&gt;
+each node has R links (possibly null) — &lt;em&gt;too much memory for large R&lt;/em&gt; !&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image004.png" /&gt;&lt;br /&gt;
+&lt;strong&gt;Application&lt;/strong&gt;&lt;br /&gt;
+interview question: data structure for spell checking.   &lt;/p&gt;
+&lt;h1&gt;2. Ternary Search Tries&lt;/h1&gt;
+&lt;p&gt;Solution to the memory issue of R-way tries —  much fewer null links. ternery=tuple of 3...&lt;br /&gt;
+TST:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;store chars (and vals) &lt;em&gt;explicitly&lt;/em&gt; in nodes  &lt;/li&gt;
+&lt;li&gt;each node has &lt;strong&gt;3&lt;/strong&gt; children:   &lt;ul&gt;
+&lt;li&gt;&lt;em&gt;smaller, larger: &lt;/em&gt;TST that starts with char smaller/bigger than its char c.   &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;equal: &lt;/em&gt;the TST with keys that &lt;strong&gt;starts with&lt;/strong&gt; this char c  &lt;/li&gt;
+&lt;li&gt;(所以除了用smaller/larger连接的节点在Rway trie里属于同一层  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_1/pasted_image005.png" /&gt;&lt;br /&gt;
+类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;searching&lt;/strong&gt; in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  &lt;/p&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;p&gt;Node class:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private class Node{  
+private Value val;  
+private char c;// store char explicitly  
+private Node left, mid, right;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;TST class (again use recursive helper functions)&lt;br /&gt;
+有一种写BST代码的感觉, 另外由于这次char是显式存在node里, 代码反而更好理解了...  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class TST&amp;lt;Value&amp;gt;{  
+    private class Node{...};  
+    private Node root;  
+    public void put(String key, Value val){  
+        this.put(root, key, val, 0);  
+    }  
+    private Node put(Node x, String key, Value val, int d){  
+        char c = key.charAt(d);// char to process  
+        if(x==null) x = new Node(c);  
+        if(c==x.c) {  
+            if(d==key.length()-1) x.val = val;  
+            else x.mid = put(x.mid, key, val, d+1);// d+1 means we go down one level  
+        }  
+        else if (c&amp;lt;x.c) x.left = put(x.left, key, val, d);// do not increment if the current char is not matchd  
+        else x.right = put(x.right, key, val, d);  
+        return x;  
+    }  
+    public Value get(String key){  
+        Node nd = this.get(root, key, 0);  
+        if(nd==null) return null;  
+        return nd.val;  
+    }  
+    private Node get(Node x, String key, int d){  
+        if(x==null) return null;  
+        char c = key.charAt(d);  
+        if(x.c==c) {  
+            if(d==key.length()-1) return x;  
+            else return get(x.mid, key, d+1);  
+        }  
+        else if(c&amp;lt;x.c) return get(x.left, key, d);  
+        else return get(x.right, d);  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Hybrid of TST and Rway trie&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;at root: do &lt;em&gt;R^2 branching&lt;/em&gt;  &lt;/li&gt;
+&lt;li&gt;other nodes are TSTs   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_1/pasted_image007.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;analysis&lt;/h2&gt;
+&lt;p&gt;space cost: linear in N.&lt;br /&gt;
+time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image008.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;Hashing vs. TST&lt;/h2&gt;
+&lt;p&gt;Hashing:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;need to check entire key no matter hit or miss  &lt;/li&gt;
+&lt;li&gt;performance relies on hash functions  &lt;/li&gt;
+&lt;li&gt;donot support ordered operations  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;TST:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;examines just enough chars  &lt;/li&gt;
+&lt;li&gt;support ordered operations  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;3. Character-Based Operations&lt;/h1&gt;
+&lt;p&gt;some very useful char-based operations:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;prefix match&lt;/strong&gt;  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;wildcard match&lt;/strong&gt;: use a dot to represent any char  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;longest prefix&lt;/strong&gt;: find the key that is the longest prefix of a string  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;API&lt;/h2&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="kr"&gt;public&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;TrieST&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;Value&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;  
+    &lt;span class="c1"&gt;// functions decalred before..  &lt;/span&gt;
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;keysWithPrefix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt; &lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;keysThatMatch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt; &lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  
+    &lt;span class="nx"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;longestPrefixOf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;String&lt;/span&gt; &lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;keys(): ordered iteration&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;keys()&lt;/code&gt;: just an inorder-traversal of the &lt;em&gt;Rway trie&lt;/em&gt; →dfs, + maintain the chars in the path (root to current node). &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image009.png" /&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public Iterable&amp;lt;String&amp;gt; keys(){  
+    Queue&amp;lt;String&amp;gt; q = new Queue&amp;lt;String&amp;gt;();  
+    collect(root, &amp;quot;&amp;quot;, q);// helper fcn  
+    return q;  
+}  
+private void collect(Node x, String pathstr, Queue q){  
+    if(x==null) return;  
+    if(x.val!=null)// if this is a key  
+        q.enqueue(pathstr);// pathstr is the string of chars from root to x  
+    for(char c=0;c&amp;lt;R;c++) // dfs  
+        collect(x.next[c], pathstr+c, q);  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;prefix match&lt;/h2&gt;
+&lt;p&gt;very useful: ex. autocomplete, search bar, ...&lt;br /&gt;
+implementation⇒ just find the end of that prefix, then call &lt;code&gt;keys()&lt;/code&gt; on the &lt;em&gt;subtrie&lt;/em&gt;.&lt;br /&gt;
+之前写的俩helper function这里发挥作用了:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public Iterable&amp;lt;String&amp;gt; keysWithPrefix(String prefix){  
+    Node subtrieRoot = get(root, prefix, 0);  
+    Queue&amp;lt;String&amp;gt; q = new Queue&amp;lt;String&amp;gt;();  
+    collect(subtrieRoot, prefix, q);  
+return q;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;longest prefix&lt;/h2&gt;
+&lt;p&gt;⇒ just do a search and keep track of the longest key that we encounterd.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public String longestPrefixOf(String s){  
+    int len = search(root, s, 0, 0);  
+    return s.substring(0, len);  
+}  
+private int search(Node x, String s, int d, int len){  
+    if(x==null) return len;  
+    if(x.val!=null) len=d;// this is the current longest prefix  
+    if(d==s.length()) return length;   
+    char c = s.charAt(d);  
+    return search(x.next[c], s, d+1, len);  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;application: T9 texting&lt;/h3&gt;
+&lt;p&gt;classique... G面试以及X的TP里都有涉及过...   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;first: generate all string combinations  &lt;/li&gt;
+&lt;li&gt;second: call get() on the trie of dictionaries.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Other Variants&lt;/h2&gt;
+&lt;h3&gt;Patricia trie&lt;/h3&gt;
+&lt;p&gt;improvement: remove the one-eay branching (put &amp;gt;1 chars in a node).&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_1/pasted_image010.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;suffix tree&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;patricia tree of the suffix  &lt;/li&gt;
+&lt;li&gt;linear time construction  &lt;/li&gt;
+&lt;li&gt;ongest repeated substring, longest common substring, longest palindromic substring, substring search, tandem repeats... 好有用!!...   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Summery&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_1/pasted_image011.png" /&gt;  &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Sat, 05 Dec 2015 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/algoII_week4_1.html</guid><category>algorithm</category></item><item><title>[Algorithms II] Week 3-2 Radix Sorts</title><link>http://x-wei.github.io/algoII_week3_2.html</link><description>&lt;p&gt;This week: string sort.  &lt;/p&gt;
 &lt;h1&gt;1. Strings in Java&lt;/h1&gt;
 &lt;h3&gt;char data type&lt;/h3&gt;
 &lt;ul&gt;
