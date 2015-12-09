@@ -1,5 +1,447 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 07 Dec 2015 00:00:00 +0100</lastBuildDate><item><title>quick sort and more: 快速排序算法总结</title><link>http://x-wei.github.io/quick-sort-and-more.html</link><description>&lt;p&gt;今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   &lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 09 Dec 2015 00:00:00 +0100</lastBuildDate><item><title>Priorty Queue/Heap (优先队列/堆)小结</title><link>http://x-wei.github.io/heap-summary.html</link><description>&lt;p&gt;=============================  &lt;/p&gt;
+&lt;p&gt;今天简单介绍一下优先队列(priorty queue, 以下简称PQ)这个数据结构的实现.  &lt;/p&gt;
+&lt;p&gt;PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   &lt;/p&gt;
+&lt;h1&gt;logical structure of PQ&lt;/h1&gt;
+&lt;p&gt;个人感觉"堆"这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种&lt;strong&gt;完全二叉树(complete binary tree)&lt;/strong&gt;: 没错, PQ是一种满足某些条件的完全二叉树.   &lt;/p&gt;
+&lt;p&gt;所谓的"完全二叉树", 要满足:  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;除了最后一层, 所有层都排满(没有非空节点)  &lt;/li&gt;
+&lt;li&gt;最后一层的所有非空节点都排在左边  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一张图可以直观说明, 完全二叉树其实就是长得像这样:&lt;br /&gt;
+&lt;img alt="" src="heap-summary/pasted_image.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;一个完全二叉树能被成为PQ的话, 要满足的条件就是:   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;对于任何一个节点, 它的优先级都大于左右子节点的优先级.   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;比如下图(圆圈里数字代表优先级):&lt;br /&gt;
+&lt;img alt="" src="heap-summary/pasted_image001.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;这样看上去的话, 确实像是"一堆"东西的形状(码的还挺整齐的), 而且我们知道在这一堆节点里, 优先级最高的就是最顶上的那个节点了.   &lt;/p&gt;
+&lt;p&gt;我很喜欢这个比喻: 一个heap就像是一个&lt;em&gt;公司的hirachy结构:&lt;/em&gt; 子节点就是下属, 父节点就是上司, 每一个上司的能力都比他的下属强(优先级比子节点搞). 能力最强(优先级最高)的人在最上面.  &lt;/p&gt;
+&lt;h1&gt;array representation of PQ&lt;/h1&gt;
+&lt;p&gt;对于一个完全二叉树, 没有必要用常规的树结构(使用指针)来表示, 因为如果从上到下走过每层(每层内从左到右)给所有节点编号(根节点的编号为1)的话, 完全二叉树有以下性质:   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;father(i) = i/2&lt;/code&gt; 其中father(i)表示编号为i的节点的父节点的下标   &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;leftchild(i) = i*2, rightchild(i) = i*2+1&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;既然用数组表示的时候, 任何节点的父亲节点和左右子节点都可以轻松得到, 就没有必要使用指针了. 所以只需要一个数组即可表示PQ ! 比如一个int的PQ在内部只要表示为: &lt;code&gt;int pq[]&lt;/code&gt;.   &lt;/p&gt;
+&lt;p&gt;另外注意, 上面的公式成立的前提是数组下标从1开始, 实现的时候我们把数组的第0个元素空出来即可.   &lt;/p&gt;
+&lt;p&gt;不难看出一个PQ有以下性质:   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;高度为lgN  &lt;/li&gt;
+&lt;li&gt;第k层有 2^k 个节点 (root是第0层)  &lt;/li&gt;
+&lt;li&gt;最后一层的节点对应的下标&amp;gt;=N/2  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;PQ implementation&lt;/h1&gt;
+&lt;p&gt;先写一下代码框架:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public class PQ{// maxPQ of integers  
+    int pq[];  
+    int MAX_CAPACITY=1000;// if we use ArrayList we do not need MAX_CAPACITY  
+    int size;// pq[size] is the index of last element (rightmost node in last level)   
+    public PQ(){  
+        pq = new int[MAX_CAPACITY+1];  
+        size = 0;  
+    }  
+    public boolean isEmpty(){  
+        return size==0;  
+    }  
+    public int top(){ // get top element  
+        assert !isEmpty();  
+        return pq[1];  
+    }  
+    public void add(int n); // insert element to PQ --&amp;gt; stay tuned  
+    public int poll(); // get and remove top element --&amp;gt; stay tuned  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;最关键的两个函数是&lt;code&gt;add&lt;/code&gt;和&lt;code&gt;poll&lt;/code&gt;, 实现这两个操作的关键在于两个基本操作: &lt;code&gt;siftup()&lt;/code&gt;和&lt;code&gt;siftdown()&lt;/code&gt;. 在PQ的性质被扰乱的时候, 使用这两个操作可以使PQ恢复性质(所谓的"调整").   &lt;/p&gt;
+&lt;h3&gt;siftup&lt;/h3&gt;
+&lt;p&gt;如果一个新元素到来, 首先将其放在最后(最底层最右边的节点), 如果新来节点的优先级比较高, 可以用siftup将其提升到一个合适的层次. 用公司结构来类比就是新入职的员工由于能力强被提高到了高层, 而提升的办法就是: 和上司交换岗位(也就是和父节点交换位置).   &lt;/p&gt;
+&lt;p&gt;所以这个操作只要不断把该元素与父节点交换, 直到遇到一个优先级大于该节点的父节点或者已经到了最高处停止. 代码很短:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private void siftup(){  
+    int i = size;// i is the index of the newly added element     
+    for(;i&amp;gt;1 &amp;amp;&amp;amp; pq[i/2]&amp;lt;pq[i]; i/=2)  
+        swap(pq, i/2, i);  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;siftdown&lt;/h3&gt;
+&lt;p&gt;siftdown的功能和siftup相反: 如果在最高处是一个优先级很低的元素, 需要将其"下放". 方法就是把它和子节点里面优先级较高的进行交换.   &lt;/p&gt;
+&lt;p&gt;代码也不长, 不过第一次写可能不太简洁:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private void siftdown(){  
+    if(isEmpty()) return;// nothing to sift when empty  
+    int i=1;// siftdown root node  
+    while(i*2&amp;lt;=size){ // while the node is not in last level  
+        int max=pq[i], j=i;// j is the element to swap  
+        if (pq[i*2]&amp;gt;max) // left child  
+            {j=i*2; max=pq[i*2];}  
+        if (i*2+1&amp;lt;=size &amp;amp;&amp;amp; pq[i*2+1]&amp;gt;max) // right node  
+            {j=i*2+1; max=pq[i*2+1];}  
+        if (j==i) return;// stop when node is bigger than both child  
+        swap(pq, i, j);  
+        i = j;  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;implementation of add and poll&lt;/h2&gt;
+&lt;p&gt;有了这两个sift的基本操作, add和poll的操作就简单了. &lt;br /&gt;
+&lt;strong&gt;add&lt;/strong&gt;&lt;br /&gt;
+加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public void add(int n){ // insert element to PQ  
+    assert size+1&amp;lt;MAX_CAPACITY;  
+    pq[++size] = n;  
+    siftup();  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;poll&lt;/strong&gt;&lt;br /&gt;
+堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public int poll(){ // get and remove top element  
+    assert !isEmpty();  
+    int top = pq[1];  
+    pq[1] = pq[size--];// put last element on the top  
+    siftdown();  
+    return top;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;PQ application&lt;/h1&gt;
+&lt;p&gt;接下来讲一下PQ的应用.   &lt;/p&gt;
+&lt;h3&gt;heapsort&lt;/h3&gt;
+&lt;p&gt;由于每次出队的都是在剩下元素里面最大(小)的, 所以只要把数组的元素放到一个pq里, 然后依次poll出来, 得到的序列就是排序好了的.   &lt;/p&gt;
+&lt;p&gt;不管是插入还是删除操作, 每次调整的复杂度为log(n) (堆的高度), 所以算法复杂度为 O(NlgN). 实际使用的时候效率比快速排序/合并排序略差, 以后专门写一篇关于排序算法的文章时再聊.   &lt;/p&gt;
+&lt;h3&gt;heapify&lt;/h3&gt;
+&lt;p&gt;首先前面的siftdown函数很明显可以修改一下加上一个参数变为&lt;code&gt;siftdown(int i)&lt;/code&gt;(i代表要向下调整的元素的下标).   &lt;/p&gt;
+&lt;p&gt;在heapsort里第一步是要建立一个PQ. 最naive的建堆操作就是新建一个空的heap然后不断向里面加入数组&lt;code&gt;a&lt;/code&gt;里的元素(空间复杂度N, 时间复杂度NlgN). 其实这个操作可以做的更好: 我们&lt;em&gt;先直接把数组a当作pq[]数组&lt;/em&gt;, 现在显然它不满足PQ性质, 只需要&lt;em&gt;多次使用siftdown&lt;/em&gt;进行调整即可.   &lt;/p&gt;
+&lt;p&gt;假设一共有h(=lgN)层, 由于最后一层的节点不必调用siftdown, 我们只要从倒数第二层开始调用siftdown即可, 结合前面提到的pq的性质(N/2以后的节点都在最后一层), 写法很简单(简单起见认为a也是把第0个元素空出来好了):   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static void heapify(int[] a){  
+    int N = a.length;  
+    for(int i=N/2;i&amp;lt;=1;i--){  
+        siftdown(a, i);  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这个操作的时间复杂度是O(N)的 ! 为什么呢?&lt;br /&gt;
+→ 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式: &lt;br /&gt;
+&lt;code&gt;Sigma( 2^k * (h-k) ) for k=0,...,h-1&lt;/code&gt;&lt;br /&gt;
+&lt;img alt="" src="heap-summary/pasted_image002.png" /&gt;&lt;br /&gt;
+(具体见 &lt;a href="http://algs4.cs.princeton.edu/24pq/"&gt;http://algs4.cs.princeton.edu/24pq/&lt;/a&gt; 里面Q20的答案)  &lt;/p&gt;
+&lt;h3&gt;top K elements of a stream&lt;/h3&gt;
+&lt;p&gt;问题描述: 一系列数字一个一个到达, 当所有数(假设有N个)都到达以后, 求最大的K个数字.   &lt;/p&gt;
+&lt;p&gt;这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:&lt;br /&gt;
+* if minPQ.size&lt;K → &lt;code&gt;minPQ.add(n)&lt;/code&gt;&lt;br /&gt;* if minPQ.size==K → 比较n和minPQ.top(): &lt;br /&gt;    * if n&gt;minPQ.top(): &lt;code&gt;minPQ.poll(); minPQ.add(n)&lt;/code&gt;&lt;br /&gt;
+    * else pass...  &lt;/p&gt;
+&lt;h3&gt;median of a stream&lt;/h3&gt;
+&lt;p&gt;问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?&lt;br /&gt;
+这个的解法是使用&lt;em&gt;两个PQ&lt;/em&gt;, 一个最大堆&lt;code&gt;maxpq&lt;/code&gt;一个最小堆&lt;code&gt;minpq&lt;/code&gt;, 然后&lt;em&gt;maxpq里存放较&lt;strong&gt;&lt;em&gt;小&lt;/em&gt;&lt;/strong&gt;的一半数字, minpq里存放较&lt;strong&gt;&lt;em&gt;大&lt;/em&gt;&lt;/strong&gt;的一半数字: &lt;/em&gt;&lt;code&gt;maxpq.top()&amp;lt;=minpq.top()&lt;/code&gt;. &lt;br /&gt;
+并且我们要求: &lt;code&gt;minpq.size &amp;lt;= maxpq.size &amp;lt;= minpq.size+1&lt;/code&gt;&lt;br /&gt;
+⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  &lt;/p&gt;
+&lt;p&gt;初始时两个pq都是空的, 每次数字n到来时:&lt;br /&gt;
+&lt;em&gt; 先把n放进maxpq里&lt;br /&gt;
+&lt;/em&gt; 如果&lt;code&gt;maxpq.size&amp;gt;minpq.size+1&lt;/code&gt;的话: &lt;code&gt;minpq.add(maxpq.poll())&lt;/code&gt;  &lt;/p&gt;
+&lt;h1&gt;more about heap&lt;/h1&gt;
+&lt;h3&gt;k-way heap&lt;/h3&gt;
+&lt;p&gt;这里介绍的PQ其实是binary heap, 即这棵树是一个完全&lt;strong&gt;二&lt;/strong&gt;叉树, 但是我们完全可以做成完全&lt;strong&gt;K&lt;/strong&gt;叉树, 就是所谓的K-way heap了.  &lt;/p&gt;
+&lt;p&gt;这样的好处是heap的高度会变得更小(从log2(N)变为logK(N)), 不过由于每个分叉变成了K个, 所以siftdown每次循环的操作复杂度也会增加(从2变为K).   &lt;/p&gt;
+&lt;h3&gt;more "flexible" heap&lt;/h3&gt;
+&lt;p&gt;在某些应用中(比如Dijkstra算法), 我们希望在插入后修改某个元素的优先级, 这时候需要对这个标准的heap做一些修改, 需要用一个数组把元素的"逻辑编号"和在pq数组里的"实际编号"相互转换.   &lt;/p&gt;
+&lt;p&gt;不过这个会比较subtle(其实我已经记不起来了...), 见: &lt;a href="http://x-wei.github.io/algoII_week2_2.html"&gt;http://x-wei.github.io/algoII_week2_2.html&lt;/a&gt; (IndexedPQ部分)&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Wed, 09 Dec 2015 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/heap-summary.html</guid><category>algorithm</category></item><item><title>[Algorithms II] Week 4-2 Substring Search</title><link>http://x-wei.github.io/algoII_week4_2.html</link><description>&lt;h1&gt;1. Introduction to substring search&lt;/h1&gt;
+&lt;p&gt;"most ingenious algorithm we've seen so far"&lt;br /&gt;
+&lt;strong&gt;pb. &lt;/strong&gt;having two strings, &lt;code&gt;pattern&lt;/code&gt; and &lt;code&gt;text&lt;/code&gt;, len(pattern)=M &amp;lt;&amp;lt; len(text)=N, try to find pattern in text.   &lt;/p&gt;
+&lt;p&gt;ex. &lt;code&gt;indexOf&lt;/code&gt; method of String in java.   &lt;/p&gt;
+&lt;h1&gt;2. Brute-Force Substring Search&lt;/h1&gt;
+&lt;p&gt;function signature: &lt;br /&gt;
+&lt;code&gt;public static int search(String pat, String txt);&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;brute-force algo: look for &lt;code&gt;pattern&lt;/code&gt; at every position of &lt;code&gt;text&lt;/code&gt;.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static int search(String pat, String txt){  
+    int N=txt.length(), M=pat.length();  
+    for(int i=0; i&amp;lt;=N-M; i++){  
+        int j;  
+        for(j=0; j&amp;lt;M &amp;amp;&amp;amp; pat.charAt(j)==txt.charAt(i+j); j++);  
+        if(j==M) return i;  
+    }  
+    return N;// not found  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;worst case: &lt;/strong&gt;when txt/pat are repetitive → MN compares. &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image.png" /&gt;&lt;br /&gt;
+problem with brute-force: always &lt;em&gt;backup&lt;/em&gt; when mismatch. &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image001.png" /&gt;&lt;br /&gt;
+&lt;strong&gt;brute-force alternative&lt;/strong&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;j := number of matched chars in pattern  &lt;/li&gt;
+&lt;li&gt;i := index of the end of matched char in text  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ do explicite backup when mismatch by &lt;code&gt;i -= j&lt;/code&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static int search(String pat, String txt){  
+    int N=txt.length(), M=pat.length(), i=0, j=0;  
+    while(i&amp;lt;N &amp;amp;&amp;amp; j&amp;lt;M){  
+        if(pat.charAt(j)==txt.charAt(i))   
+            {j=i++; j++;}  
+        else   
+            {i=i-j+1; j=0}// &amp;lt;==backup  
+    }  
+    return j==M ? i-M : N;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;challenge: want linear-time guarantee, and want to avoid backup.   &lt;/p&gt;
+&lt;h1&gt;3. Knuth-Morris-Pratt&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;"one of the coolest/trickiest algorithm covered in this course"&lt;/em&gt;  &lt;/p&gt;
+&lt;h3&gt;intuition&lt;/h3&gt;
+&lt;p&gt;suppose pattern = "BAAAAA", &lt;br /&gt;
+if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   &lt;/p&gt;
+&lt;p&gt;KMP algorithm: clever method that &lt;em&gt;always&lt;/em&gt; avoid backup !  &lt;/p&gt;
+&lt;h3&gt;Deterministic finite state automaton (DFA)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;finite states ,including start and halt state, indexed by j in the subtring pb  &lt;/li&gt;
+&lt;li&gt;for each state: exactly one transition for each char in alphabet  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex. &lt;br /&gt;
+states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;dfa[c][i]&lt;/code&gt; = the next state if we are currently in state-i and encoutered char-c.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_2/pasted_image002.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;interpretation of DFA for KMP algo&lt;/strong&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;in the DFA after reading &lt;code&gt;txt[i]&lt;/code&gt;, the index of state is the &lt;strong&gt;number of matched chars&lt;/strong&gt; in pattern, or length of *longest prefix of pat that is a suffix of txt[0:i]. *  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;need to precompute the &lt;code&gt;dfa[][]&lt;/code&gt; array from pattern  &lt;/li&gt;
+&lt;li&gt;the pointer i &lt;em&gt;never&lt;/em&gt; decrements (thus we can do it in a &lt;em&gt;streaming&lt;/em&gt; manner)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;→ &lt;em&gt;if&lt;/em&gt; &lt;code&gt;dfa[][]&lt;/code&gt; &lt;em&gt;is precomputed&lt;/em&gt;, java code is very very simple:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static int search(String pat, String txt, int[][] dfa){  
+    int N=txt.length(), M=pat.length(), i, j=0;  
+    for(i=0; i&amp;lt;N &amp;amp;&amp;amp; j&amp;lt;M; i++)  
+        j = dfa[txt.charAt(i)][j];  
+    return j==M ? i-M : N;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;running time: linear.&lt;br /&gt;
+→ key pb: &lt;em&gt;how to build dfa efficiently&lt;/em&gt; ?  &lt;/p&gt;
+&lt;h3&gt;DFA construction&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;match transition &lt;/strong&gt;(easy part)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;when at state j, for the char &lt;code&gt;c0==pat.charAt(j+1)&lt;/code&gt;, just go on matching: &lt;code&gt;dfa[c0][j] = j+1&lt;/code&gt;&lt;br /&gt;
+ex. (&lt;em&gt;pat="ABABAC"&lt;/em&gt;)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image003.png" /&gt;&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image004.png" /&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;mismatch transition&lt;/strong&gt; (hard part)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(for j==0, things are simple: &lt;code&gt;dfa[c][0]=0&lt;/code&gt; for all &lt;code&gt;c!=pat[0]&lt;/code&gt;)  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;at state &lt;/em&gt;&lt;code&gt;j&lt;/code&gt; (ie. j chars in pattern are matched)&lt;em&gt;, and for &lt;/em&gt;&lt;code&gt;c!=pat.charAt(j+1)&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;⇒ we are in state j: we know &lt;em&gt;the &lt;strong&gt;&lt;em&gt;last j chars in input&lt;/em&gt;&lt;/strong&gt; are &lt;/em&gt;&lt;code&gt;pat[0...j-1]&lt;/code&gt;, &lt;em&gt;and followed by char =&lt;/em&gt; &lt;code&gt;c&lt;/code&gt;, so the last j+1 chars of input string is: &lt;code&gt;pat[0...j-1]+c&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;⇒ to compute dfa[c][j]: we can &lt;strong&gt;simulate as if we backup&lt;/strong&gt;&lt;em&gt;, ie. &lt;/em&gt;&lt;code&gt;i=i-j+1, j=0&lt;/code&gt;.   &lt;/li&gt;
+&lt;li&gt;if we go back to set j=0, and set i = i-j+1, then i is pointing at &lt;code&gt;pat[1]&lt;/code&gt;, the text become &lt;code&gt;pat[1...j-1]+c&lt;/code&gt;. We then let this string go through our dfa, the state that it achieves is the value of &lt;code&gt;dfa[c][j]&lt;/code&gt;.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;here is&lt;/em&gt; &lt;em&gt;a concrete example:&lt;/em&gt; &lt;br /&gt;
+pattern = &lt;code&gt;"ABABAC"&lt;/code&gt;, state &lt;code&gt;j=5&lt;/code&gt;, char &lt;code&gt;c='B&lt;/code&gt;'  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;we know the last 6 chars of the input = &lt;code&gt;pat[0...j-1]+c="ABABA"+"B"="ABABAB"&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;if we backup, i will point to pat[1], the string is just &lt;code&gt;pat[1...j-1]+c="BABAB"&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;we use the string "BABAB" as input and go through the partially constructed dfa, and see that we will reach state 4  &lt;/li&gt;
+&lt;li&gt;so we know &lt;code&gt;dfa['B'][5]=4&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;similarly we can get &lt;code&gt;dfa['A'][5]=1&lt;/code&gt;, as indicated below: &lt;br /&gt;
+(&lt;em&gt;pat="ABABAC"&lt;/em&gt;)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image005.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;one concern: seems this simulation needs &lt;code&gt;j&lt;/code&gt; steps ?&lt;br /&gt;
+⇒ can be changed to be constant time if we maintain a &lt;strong&gt;state X := the state of simulating of input=pat[1...j-1]&lt;/strong&gt;&lt;br /&gt;
+we maintain this state &lt;code&gt;X&lt;/code&gt;, then for each &lt;em&gt;mismatched&lt;/em&gt; char c, we just need to look at &lt;code&gt;dfa[c][X]&lt;/code&gt;. &lt;br /&gt;
+(&lt;em&gt;pat="ABABAC"&lt;/em&gt;)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image006.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;[Algo]&lt;/strong&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;set all matched transitions &lt;code&gt;dfa[c0][j] = j+1&lt;/code&gt; for all &lt;code&gt;c0==pat[j]&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;fill first column (j==0): &lt;code&gt;dfa[c][0]=0&lt;/code&gt; for all &lt;code&gt;c!=pat[0]&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;initialize &lt;code&gt;X=0&lt;/code&gt; (state for empty input string)  &lt;/li&gt;
+&lt;li&gt;for j=1 to M:  &lt;ul&gt;
+&lt;li&gt;for all &lt;code&gt;c!=pat[0]&lt;/code&gt;: set &lt;code&gt;dfa[c][j] = dfa[c][X]&lt;/code&gt; (DP here...)  &lt;/li&gt;
+&lt;li&gt;update &lt;code&gt;X=dfa[c0][X]&lt;/code&gt; ⇒ 注意, 此时X并&lt;strong&gt;不等于&lt;/strong&gt;X+1(最开始&lt;code&gt;dfa[c0][j]=j+1&lt;/code&gt;不适用于此), 为什么? 因为&lt;code&gt;c0==pat[j]&lt;/code&gt; 而不&lt;code&gt;是pat[X]&lt;/code&gt;!! 比如说最开始, j=1的时候X是等于0的!!! (这个弯我饶了好几分钟...)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;java code (can be written to be more compate):   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public int[][] constructDFA(String pat){  
+    int R=256;//ASCII code    
+    int M=pat.length();  
+    int[][] dfa = new int[R][M];  
+    // 1. fill matched transitions: dfa[pat.charAt(j)][j] = j+1   
+    for(int j=0;j&amp;lt;M;j++)  
+        dfa[pat.charAt(j)][j] = j+1;  
+    // 2. fill 1st column --&amp;gt; can be ignored as java int default val=0  
+    // 3. fill mismatched transitions     
+    int X = 0;  
+    for(int j=1;j&amp;lt;M;j++){  
+        for(int c=0;c&amp;lt;R;c++)  
+            if(c!=pat.charAt(j))  
+                dfa[c][j] = dfa[c][X];  
+        X = dfa[pat.charAt(j)][X];  
+    }  
+    return dfa;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;running time and space: &lt;strong&gt;O(M*R)&lt;/strong&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;prop.&lt;/strong&gt; &lt;br /&gt;
+KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   &lt;/p&gt;
+&lt;p&gt;这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  &lt;/p&gt;
+&lt;p&gt;八卦时间: &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image007.png" /&gt;  &lt;/p&gt;
+&lt;h1&gt;4. Boyer-Moore&lt;/h1&gt;
+&lt;p&gt;Heuristic in practice.&lt;br /&gt;
+i does not necessarily go through all txt chars ⇒ i may &lt;em&gt;skip&lt;/em&gt; some chars.   &lt;/p&gt;
+&lt;h3&gt;intuition&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;for matching: scan chars &lt;em&gt;from right to left&lt;/em&gt; (j will decrease when checking)  &lt;/li&gt;
+&lt;li&gt;when encoutered a mismatch: we can skip &amp;lt;= M chars (if the char is not in pattern)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex. (pat="NEEDLE")&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image008.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;→ pb: how to skip?   &lt;/p&gt;
+&lt;h3&gt;mismatch character heuristic&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;note&lt;/em&gt;: the &lt;code&gt;i&lt;/code&gt; always points to the &lt;em&gt;beginning&lt;/em&gt; of the substring (&lt;code&gt;txt[i,...,i+M-1]&lt;/code&gt;) to be checked for match.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;case 1. mismatched char not in pattern&lt;/strong&gt;&lt;br /&gt;
+easy case → just move i to the right of this char. &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image009.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;case 2. mismatched char in pattern&lt;/strong&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;heuristic:&lt;/strong&gt; line up i with the &lt;strong&gt;rightmost&lt;/strong&gt;&lt;em&gt; char in pattern&lt;/em&gt;.&lt;br /&gt;
+&lt;code&gt;i += skip&lt;/code&gt;&lt;br /&gt;
+where &lt;em&gt;skip length = j - index of rightmost char in pattern&lt;/em&gt;  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_2/pasted_image010.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;note: this does not always help, in the example below, i even &lt;em&gt;backups&lt;/em&gt;: &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image011.png" /&gt;&lt;br /&gt;
+to avoid backup, in this case we just &lt;em&gt;increment i by 1&lt;/em&gt; (heuristic doesn't help in this case).  &lt;/p&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;use an array &lt;code&gt;right[]&lt;/code&gt; as &lt;em&gt;skip table&lt;/em&gt;, &lt;code&gt;right[c]&lt;/code&gt; is the index of rightmost occurrence of char c (-1 if c not in pat). &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image012.png" /&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;int[] right = new int[M];  
+for(int i=0;i&amp;lt;R;i++) right[i] = -1;//value for chars not in pattern  
+for(int j=0;j&amp;lt;M;j++){  
+    right[pat.charAt(j)]=j;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;using this table we can implemente the heuristic algorithm:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static int search(String pat, String txt, int[] right){  
+    int N=txt.length(), M=pat.length();  
+    int skip;  
+    for(int i=0;i&amp;lt;N-M;i+=skip){  
+        skip = 0;  
+        for(int j=M-1;j&amp;gt;=0;j++)  
+            if(pat.charAt(j)!=txt.charAt(i+j)){// when mismatch happens  
+                skip = Math.max(1,j - right[txt.charAt(i+j)]);// skip if we can, else just increment i by 1  
+                break;  
+            }  
+        if(skip==0)// if the above for loop finishes without changing skip --&amp;gt; we are done.    
+            return i;  
+    }  
+    return N;// pattern not found  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;property&lt;/strong&gt;. the Boyer-Moore heuristic (in practice) takes about &lt;strong&gt;N/M&lt;/strong&gt; (sublinear!) compares to search.   &lt;/p&gt;
+&lt;p&gt;好神奇, 比KMP还要简单的算法, 实际效率这么高...  &lt;/p&gt;
+&lt;p&gt;worst-case performance: &lt;strong&gt;N*M&lt;/strong&gt;... 这一点不如KMP. &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image013.png" /&gt;&lt;br /&gt;
+→ can be improved...   &lt;/p&gt;
+&lt;h1&gt;5. Rabin-Karp&lt;/h1&gt;
+&lt;p&gt;两个图灵奖的大神发明的算法..   &lt;/p&gt;
+&lt;h3&gt;intuition&lt;/h3&gt;
+&lt;p&gt;basic idea: &lt;strong&gt;modular hashing&lt;/strong&gt;&lt;br /&gt;
+ex. for strings of numbers   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;compute hash fcn (for number strings is easy: take the string and treat it as a number, then %Q where Q is a big prime number).   &lt;/li&gt;
+&lt;li&gt;for a pointer i →corresponds to the substring &lt;code&gt;txt[i, ..., i+M-1]&lt;/code&gt;  → check hash for match  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(below: text=3141592653589793, pattern=26535)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image014.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;computing the hash function efficiently&lt;/h3&gt;
+&lt;p&gt;let ti be the ith char in txt, the hashcode for substring &lt;code&gt;txt[i,...,i+M-1]&lt;/code&gt; is: &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image015.png" /&gt;&lt;br /&gt;
+⇒ just an M-digit base-R integer modulo Q ! &lt;code&gt;poly(M, R) % Q&lt;/code&gt;*. *  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Honor's method&lt;/strong&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;linear time algorithm for evaluating polynomial. &lt;br /&gt;
+recursive equation: &lt;code&gt;poly(i, R) = poly(i-1, R)*R+ti&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;ex. (R=10, M=5)&lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image016.png" /&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;private long hash(String key, int M){  
+    long h=0;  
+    for(int i=0;i&amp;lt;M;i++)  
+        h = ( h*R + key.charAt(i) ) % Q  
+    return h;  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;if we know x_i, the x_i+1 can be infered:   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_2/pasted_image017.png" /&gt;&lt;br /&gt;
+⇒ x_i+1 can be computed in constant time: &lt;br /&gt;
+&lt;img alt="" src="algoII_week4_2/pasted_image018.png" /&gt;&lt;br /&gt;
+⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;public static int search(String txt, String pat){  
+    int N=txt.length(), M=pat.length();  
+    long pathash = hash(pat, M);      
+    int RM = R^(M-1);// &amp;lt;-- pseudo code, store value of R^(M-1)  
+    long txthash = hash(txt, M);// txthash will be maintained  
+    for(int i=0;i&amp;lt;N-M;i++){  
+        if(txthash==pathash &amp;amp;&amp;amp; checkMatch(i,txt,pat))   
+            return i;  
+        txthash = ( (txthash - txt.charAt(i)*RM)*R + txt.charAt(i+M) ) % Q;  
+    }  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;更新txthash的地方可能会有modulo造成的问题... 不过先这样写吧..   &lt;/p&gt;
+&lt;p&gt;for collisions: &lt;em&gt;Monte Carlo&lt;/em&gt; vs. &lt;em&gt;Las Vegas&lt;/em&gt;  &lt;/p&gt;
+&lt;h3&gt;analysis&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Theory&lt;/strong&gt;: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. &lt;br /&gt;
+&lt;strong&gt;Practice&lt;/strong&gt;: choose Q to be sufficiently large, and collision probability is ~1/Q.   &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_2/pasted_image019.png" /&gt;  &lt;/p&gt;
+&lt;h1&gt;Summery&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="" src="algoII_week4_2/pasted_image020.png" /&gt;  &lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Mon, 07 Dec 2015 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/algoII_week4_2.html</guid><category>algorithm</category></item><item><title>quick sort and more: 快速排序算法总结</title><link>http://x-wei.github.io/quick-sort-and-more.html</link><description>&lt;p&gt;今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   &lt;/p&gt;
 &lt;p&gt;快速排序的算法可以用三句话描述:&lt;br /&gt;
 &lt;strong&gt;[Algo]&lt;/strong&gt;   &lt;/p&gt;
 &lt;blockquote&gt;

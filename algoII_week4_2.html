@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[Algorithms II] Week 4-2 Substring Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Algorithms II] Week 4-2 Substring Search">
+					[Algorithms II] Week 4-2 Substring Search 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-12-07T00:00:00">
+	<i class="icon-calendar"></i>Mon, 07 Dec 2015
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h1>1. Introduction to substring search</h1>
+<p>"most ingenious algorithm we've seen so far"<br />
+<strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </p>
+<p>ex. <code>indexOf</code> method of String in java.   </p>
+<h1>2. Brute-Force Substring Search</h1>
+<p>function signature: <br />
+<code>public static int search(String pat, String txt);</code>  </p>
+<p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
+<div class="codehilite"><pre>public static int search(String pat, String txt){  
+    int N=txt.length(), M=pat.length();  
+    for(int i=0; i&lt;=N-M; i++){  
+        int j;  
+        for(j=0; j&lt;M &amp;&amp; pat.charAt(j)==txt.charAt(i+j); j++);  
+        if(j==M) return i;  
+    }  
+    return N;// not found  
+}
+</pre></div>
+
+
+<p><strong>worst case: </strong>when txt/pat are repetitive → MN compares. <br />
+<img alt="" src="static/algoII_week4_2/pasted_image.png" /><br />
+problem with brute-force: always <em>backup</em> when mismatch. <br />
+<img alt="" src="static/algoII_week4_2/pasted_image001.png" /><br />
+<strong>brute-force alternative</strong>  </p>
+<ul>
+<li>j := number of matched chars in pattern  </li>
+<li>i := index of the end of matched char in text  </li>
+</ul>
+<p>⇒ do explicite backup when mismatch by <code>i -= j</code>  </p>
+<div class="codehilite"><pre>public static int search(String pat, String txt){  
+    int N=txt.length(), M=pat.length(), i=0, j=0;  
+    while(i&lt;N &amp;&amp; j&lt;M){  
+        if(pat.charAt(j)==txt.charAt(i))   
+            {j=i++; j++;}  
+        else   
+            {i=i-j+1; j=0}// &lt;==backup  
+    }  
+    return j==M ? i-M : N;  
+}
+</pre></div>
+
+
+<p>challenge: want linear-time guarantee, and want to avoid backup.   </p>
+<h1>3. Knuth-Morris-Pratt</h1>
+<p><em>"one of the coolest/trickiest algorithm covered in this course"</em>  </p>
+<h3>intuition</h3>
+<p>suppose pattern = "BAAAAA", <br />
+if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </p>
+<p>KMP algorithm: clever method that <em>always</em> avoid backup !  </p>
+<h3>Deterministic finite state automaton (DFA)</h3>
+<ul>
+<li>finite states ,including start and halt state, indexed by j in the subtring pb  </li>
+<li>for each state: exactly one transition for each char in alphabet  </li>
+</ul>
+<p>ex. <br />
+states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   </p>
+<blockquote>
+<p><code>dfa[c][i]</code> = the next state if we are currently in state-i and encoutered char-c.  </p>
+</blockquote>
+<p><img alt="" src="static/algoII_week4_2/pasted_image002.png" />  </p>
+<p><strong>interpretation of DFA for KMP algo</strong>  </p>
+<blockquote>
+<p>in the DFA after reading <code>txt[i]</code>, the index of state is the <strong>number of matched chars</strong> in pattern, or length of *longest prefix of pat that is a suffix of txt[0:i]. *  </p>
+</blockquote>
+<ul>
+<li>need to precompute the <code>dfa[][]</code> array from pattern  </li>
+<li>the pointer i <em>never</em> decrements (thus we can do it in a <em>streaming</em> manner)  </li>
+</ul>
+<p>→ <em>if</em> <code>dfa[][]</code> <em>is precomputed</em>, java code is very very simple:  </p>
+<div class="codehilite"><pre>public static int search(String pat, String txt, int[][] dfa){  
+    int N=txt.length(), M=pat.length(), i, j=0;  
+    for(i=0; i&lt;N &amp;&amp; j&lt;M; i++)  
+        j = dfa[txt.charAt(i)][j];  
+    return j==M ? i-M : N;  
+}
+</pre></div>
+
+
+<p>running time: linear.<br />
+→ key pb: <em>how to build dfa efficiently</em> ?  </p>
+<h3>DFA construction</h3>
+<ul>
+<li><strong>match transition </strong>(easy part)  </li>
+</ul>
+<p>when at state j, for the char <code>c0==pat.charAt(j+1)</code>, just go on matching: <code>dfa[c0][j] = j+1</code><br />
+ex. (<em>pat="ABABAC"</em>)<br />
+<img alt="" src="static/algoII_week4_2/pasted_image003.png" /><br />
+<img alt="" src="static/algoII_week4_2/pasted_image004.png" />  </p>
+<ul>
+<li><strong>mismatch transition</strong> (hard part)  </li>
+</ul>
+<p>(for j==0, things are simple: <code>dfa[c][0]=0</code> for all <code>c!=pat[0]</code>)  </p>
+<blockquote>
+<ul>
+<li><em>at state </em><code>j</code> (ie. j chars in pattern are matched)<em>, and for </em><code>c!=pat.charAt(j+1)</code>  </li>
+<li>⇒ we are in state j: we know <em>the <strong><em>last j chars in input</em></strong> are </em><code>pat[0...j-1]</code>, <em>and followed by char =</em> <code>c</code>, so the last j+1 chars of input string is: <code>pat[0...j-1]+c</code>  </li>
+<li>⇒ to compute dfa[c][j]: we can <strong>simulate as if we backup</strong><em>, ie. </em><code>i=i-j+1, j=0</code>.   </li>
+<li>if we go back to set j=0, and set i = i-j+1, then i is pointing at <code>pat[1]</code>, the text become <code>pat[1...j-1]+c</code>. We then let this string go through our dfa, the state that it achieves is the value of <code>dfa[c][j]</code>.   </li>
+</ul>
+</blockquote>
+<p><em>here is</em> <em>a concrete example:</em> <br />
+pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'  </p>
+<blockquote>
+<ul>
+<li>we know the last 6 chars of the input = <code>pat[0...j-1]+c="ABABA"+"B"="ABABAB"</code>  </li>
+<li>if we backup, i will point to pat[1], the string is just <code>pat[1...j-1]+c="BABAB"</code>  </li>
+<li>we use the string "BABAB" as input and go through the partially constructed dfa, and see that we will reach state 4  </li>
+<li>so we know <code>dfa['B'][5]=4</code>  </li>
+</ul>
+</blockquote>
+<p>similarly we can get <code>dfa['A'][5]=1</code>, as indicated below: <br />
+(<em>pat="ABABAC"</em>)<br />
+<img alt="" src="static/algoII_week4_2/pasted_image005.png" />  </p>
+<p>one concern: seems this simulation needs <code>j</code> steps ?<br />
+⇒ can be changed to be constant time if we maintain a <strong>state X := the state of simulating of input=pat[1...j-1]</strong><br />
+we maintain this state <code>X</code>, then for each <em>mismatched</em> char c, we just need to look at <code>dfa[c][X]</code>. <br />
+(<em>pat="ABABAC"</em>)<br />
+<img alt="" src="static/algoII_week4_2/pasted_image006.png" />  </p>
+<p><strong>[Algo]</strong>  </p>
+<blockquote>
+<ul>
+<li>set all matched transitions <code>dfa[c0][j] = j+1</code> for all <code>c0==pat[j]</code>  </li>
+<li>fill first column (j==0): <code>dfa[c][0]=0</code> for all <code>c!=pat[0]</code>  </li>
+<li>initialize <code>X=0</code> (state for empty input string)  </li>
+<li>for j=1 to M:  <ul>
+<li>for all <code>c!=pat[0]</code>: set <code>dfa[c][j] = dfa[c][X]</code> (DP here...)  </li>
+<li>update <code>X=dfa[c0][X]</code> ⇒ 注意, 此时X并<strong>不等于</strong>X+1(最开始<code>dfa[c0][j]=j+1</code>不适用于此), 为什么? 因为<code>c0==pat[j]</code> 而不<code>是pat[X]</code>!! 比如说最开始, j=1的时候X是等于0的!!! (这个弯我饶了好几分钟...)  </li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>java code (can be written to be more compate):   </p>
+<div class="codehilite"><pre>public int[][] constructDFA(String pat){  
+    int R=256;//ASCII code    
+    int M=pat.length();  
+    int[][] dfa = new int[R][M];  
+    // 1. fill matched transitions: dfa[pat.charAt(j)][j] = j+1   
+    for(int j=0;j&lt;M;j++)  
+        dfa[pat.charAt(j)][j] = j+1;  
+    // 2. fill 1st column --&gt; can be ignored as java int default val=0  
+    // 3. fill mismatched transitions     
+    int X = 0;  
+    for(int j=1;j&lt;M;j++){  
+        for(int c=0;c&lt;R;c++)  
+            if(c!=pat.charAt(j))  
+                dfa[c][j] = dfa[c][X];  
+        X = dfa[pat.charAt(j)][X];  
+    }  
+    return dfa;  
+}
+</pre></div>
+
+
+<p>running time and space: <strong>O(M*R)</strong>.  </p>
+<p><strong>prop.</strong> <br />
+KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   </p>
+<p>这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  </p>
+<p>八卦时间: <br />
+<img alt="" src="static/algoII_week4_2/pasted_image007.png" />  </p>
+<h1>4. Boyer-Moore</h1>
+<p>Heuristic in practice.<br />
+i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </p>
+<h3>intuition</h3>
+<ul>
+<li>for matching: scan chars <em>from right to left</em> (j will decrease when checking)  </li>
+<li>when encoutered a mismatch: we can skip &lt;= M chars (if the char is not in pattern)  </li>
+</ul>
+<p>ex. (pat="NEEDLE")<br />
+<img alt="" src="static/algoII_week4_2/pasted_image008.png" />  </p>
+<p>→ pb: how to skip?   </p>
+<h3>mismatch character heuristic</h3>
+<p><em>note</em>: the <code>i</code> always points to the <em>beginning</em> of the substring (<code>txt[i,...,i+M-1]</code>) to be checked for match.  </p>
+<p><strong>case 1. mismatched char not in pattern</strong><br />
+easy case → just move i to the right of this char. <br />
+<img alt="" src="static/algoII_week4_2/pasted_image009.png" />  </p>
+<p><strong>case 2. mismatched char in pattern</strong>  </p>
+<blockquote>
+<p><strong>heuristic:</strong> line up i with the <strong>rightmost</strong><em> char in pattern</em>.<br />
+<code>i += skip</code><br />
+where <em>skip length = j - index of rightmost char in pattern</em>  </p>
+</blockquote>
+<p><img alt="" src="static/algoII_week4_2/pasted_image010.png" />  </p>
+<p>note: this does not always help, in the example below, i even <em>backups</em>: <br />
+<img alt="" src="static/algoII_week4_2/pasted_image011.png" /><br />
+to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </p>
+<h3>implementation</h3>
+<p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br />
+<img alt="" src="static/algoII_week4_2/pasted_image012.png" />  </p>
+<div class="codehilite"><pre>int[] right = new int[M];  
+for(int i=0;i&lt;R;i++) right[i] = -1;//value for chars not in pattern  
+for(int j=0;j&lt;M;j++){  
+    right[pat.charAt(j)]=j;  
+}
+</pre></div>
+
+
+<p>using this table we can implemente the heuristic algorithm:   </p>
+<div class="codehilite"><pre>public static int search(String pat, String txt, int[] right){  
+    int N=txt.length(), M=pat.length();  
+    int skip;  
+    for(int i=0;i&lt;N-M;i+=skip){  
+        skip = 0;  
+        for(int j=M-1;j&gt;=0;j++)  
+            if(pat.charAt(j)!=txt.charAt(i+j)){// when mismatch happens  
+                skip = Math.max(1,j - right[txt.charAt(i+j)]);// skip if we can, else just increment i by 1  
+                break;  
+            }  
+        if(skip==0)// if the above for loop finishes without changing skip --&gt; we are done.    
+            return i;  
+    }  
+    return N;// pattern not found  
+}
+</pre></div>
+
+
+<h3>analysis</h3>
+<p><strong>property</strong>. the Boyer-Moore heuristic (in practice) takes about <strong>N/M</strong> (sublinear!) compares to search.   </p>
+<p>好神奇, 比KMP还要简单的算法, 实际效率这么高...  </p>
+<p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br />
+<img alt="" src="static/algoII_week4_2/pasted_image013.png" /><br />
+→ can be improved...   </p>
+<h1>5. Rabin-Karp</h1>
+<p>两个图灵奖的大神发明的算法..   </p>
+<h3>intuition</h3>
+<p>basic idea: <strong>modular hashing</strong><br />
+ex. for strings of numbers   </p>
+<ul>
+<li>compute hash fcn (for number strings is easy: take the string and treat it as a number, then %Q where Q is a big prime number).   </li>
+<li>for a pointer i →corresponds to the substring <code>txt[i, ..., i+M-1]</code>  → check hash for match  </li>
+</ul>
+<p>(below: text=3141592653589793, pattern=26535)<br />
+<img alt="" src="static/algoII_week4_2/pasted_image014.png" />  </p>
+<h3>computing the hash function efficiently</h3>
+<p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br />
+<img alt="" src="static/algoII_week4_2/pasted_image015.png" /><br />
+⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </p>
+<ul>
+<li><strong>Honor's method</strong>  </li>
+</ul>
+<p>linear time algorithm for evaluating polynomial. <br />
+recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
+<p>ex. (R=10, M=5)<br />
+<img alt="" src="static/algoII_week4_2/pasted_image016.png" />  </p>
+<div class="codehilite"><pre>private long hash(String key, int M){  
+    long h=0;  
+    for(int i=0;i&lt;M;i++)  
+        h = ( h*R + key.charAt(i) ) % Q  
+    return h;  
+}
+</pre></div>
+
+
+<ul>
+<li>if we know x_i, the x_i+1 can be infered:   </li>
+</ul>
+<p><img alt="" src="static/algoII_week4_2/pasted_image017.png" /><br />
+⇒ x_i+1 can be computed in constant time: <br />
+<img alt="" src="static/algoII_week4_2/pasted_image018.png" /><br />
+⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </p>
+<div class="codehilite"><pre>public static int search(String txt, String pat){  
+    int N=txt.length(), M=pat.length();  
+    long pathash = hash(pat, M);      
+    int RM = R^(M-1);// &lt;-- pseudo code, store value of R^(M-1)  
+    long txthash = hash(txt, M);// txthash will be maintained  
+    for(int i=0;i&lt;N-M;i++){  
+        if(txthash==pathash &amp;&amp; checkMatch(i,txt,pat))   
+            return i;  
+        txthash = ( (txthash - txt.charAt(i)*RM)*R + txt.charAt(i+M) ) % Q;  
+    }  
+}
+</pre></div>
+
+
+<p>更新txthash的地方可能会有modulo造成的问题... 不过先这样写吧..   </p>
+<p>for collisions: <em>Monte Carlo</em> vs. <em>Las Vegas</em>  </p>
+<h3>analysis</h3>
+<p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br />
+<strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </p>
+<p><img alt="" src="static/algoII_week4_2/pasted_image019.png" />  </p>
+<h1>Summery</h1>
+<p><img alt="" src="static/algoII_week4_2/pasted_image020.png" />  </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "algoII_week4_2.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
