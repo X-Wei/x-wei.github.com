@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 09 Dec 2015 00:00:00 +0100</lastBuildDate><item><title>Priorty Queue/Heap (优先队列/堆)小结</title><link>http://x-wei.github.io/heap-summary.html</link><description>&lt;p&gt;=============================  &lt;/p&gt;
-&lt;p&gt;今天简单介绍一下优先队列(priorty queue, 以下简称PQ)这个数据结构的实现.  &lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 09 Dec 2015 00:00:00 +0100</lastBuildDate><item><title>Priority Queue/Heap (优先队列/堆)小结</title><link>http://x-wei.github.io/heap-summary.html</link><description>&lt;p&gt;今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  &lt;/p&gt;
 &lt;p&gt;PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   &lt;/p&gt;
 &lt;h1&gt;logical structure of PQ&lt;/h1&gt;
 &lt;p&gt;个人感觉"堆"这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种&lt;strong&gt;完全二叉树(complete binary tree)&lt;/strong&gt;: 没错, PQ是一种满足某些条件的完全二叉树.   &lt;/p&gt;
@@ -143,9 +142,15 @@
 (具体见 &lt;a href="http://algs4.cs.princeton.edu/24pq/"&gt;http://algs4.cs.princeton.edu/24pq/&lt;/a&gt; 里面Q20的答案)  &lt;/p&gt;
 &lt;h3&gt;top K elements of a stream&lt;/h3&gt;
 &lt;p&gt;问题描述: 一系列数字一个一个到达, 当所有数(假设有N个)都到达以后, 求最大的K个数字.   &lt;/p&gt;
-&lt;p&gt;这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:&lt;br /&gt;
-* if minPQ.size&lt;K → &lt;code&gt;minPQ.add(n)&lt;/code&gt;&lt;br /&gt;* if minPQ.size==K → 比较n和minPQ.top(): &lt;br /&gt;    * if n&gt;minPQ.top(): &lt;code&gt;minPQ.poll(); minPQ.add(n)&lt;/code&gt;&lt;br /&gt;
-    * else pass...  &lt;/p&gt;
+&lt;p&gt;这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;if minPQ.size&amp;lt;K → &lt;code&gt;minPQ.add(n)&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;if minPQ.size==K → 比较n和minPQ.top():   &lt;ul&gt;
+&lt;li&gt;if n&amp;gt;minPQ.top(): &lt;code&gt;minPQ.poll(); minPQ.add(n)&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;else pass...  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h3&gt;median of a stream&lt;/h3&gt;
 &lt;p&gt;问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?&lt;br /&gt;
 这个的解法是使用&lt;em&gt;两个PQ&lt;/em&gt;, 一个最大堆&lt;code&gt;maxpq&lt;/code&gt;一个最小堆&lt;code&gt;minpq&lt;/code&gt;, 然后&lt;em&gt;maxpq里存放较&lt;strong&gt;&lt;em&gt;小&lt;/em&gt;&lt;/strong&gt;的一半数字, minpq里存放较&lt;strong&gt;&lt;em&gt;大&lt;/em&gt;&lt;/strong&gt;的一半数字: &lt;/em&gt;&lt;code&gt;maxpq.top()&amp;lt;=minpq.top()&lt;/code&gt;. &lt;br /&gt;

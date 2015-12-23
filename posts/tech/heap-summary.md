@@ -1,13 +1,11 @@
-Title: Priorty Queue/Heap (优先队列/堆)小结  
+Title: Priority Queue/Heap (优先队列/堆)小结  
 Date: 2015-12-09  
 Slug:  heap-summary    
 Tags: algorithm         
   
   
-=============================  
   
-  
-今天简单介绍一下优先队列(priorty queue, 以下简称PQ)这个数据结构的实现.  
+今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  
   
 PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   
   
@@ -170,6 +168,7 @@ PQ application
 问题描述: 一系列数字一个一个到达, 当所有数(假设有N个)都到达以后, 求最大的K个数字.   
   
 这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:  
+
 * if minPQ.size<K → ``minPQ.add(n)``  
 * if minPQ.size==K → 比较n和minPQ.top():   
 	* if n>minPQ.top(): ``minPQ.poll(); minPQ.add(n)``  
