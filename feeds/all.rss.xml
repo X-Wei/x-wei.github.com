@@ -1,5 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 04 Jan 2016 00:00:00 +0100</lastBuildDate><item><title>[Algorithms II] Week 5-2 Data Compression</title><link>http://x-wei.github.io/algoII_week5_2.html</link><description>&lt;h1&gt;1. Introduction to Data Compression&lt;/h1&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mx's Blog</title><link>http://x-wei.github.io</link><description></description><atom:link href="http://x-wei.github.io/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 09 Jan 2016 00:00:00 +0100</lastBuildDate><item><title>C++ STL小结&amp;代码片段</title><link>http://x-wei.github.io/cpp-demo-snippets.html</link><description>&lt;p&gt;总结了一下C++ STL里面用的比较频繁的一些代码片段. (地址: &lt;a href="https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL"&gt;https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL&lt;/a&gt;)&lt;br /&gt;
+cpp文档: &lt;a href="http://en.cppreference.com/w/cpp"&gt;http://en.cppreference.com/w/cpp&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;常用的library主要有: &lt;br /&gt;
+&lt;code&gt;&amp;lt;algorithm&amp;gt;, &amp;lt;vector&amp;gt;, &amp;lt;queue&amp;gt;, &amp;lt;set&amp;gt;, &amp;lt;map&amp;gt;, &amp;lt;cmath&amp;gt;&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;另外一个常见的cpp文件开头版本是:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;  &lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;vector&amp;gt;  &lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;algorithm&amp;gt;  &lt;/span&gt;
+&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="k"&gt;namespace&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  
+&lt;span class="cp"&gt;#define forloop(i,lo,hi) for(int i = (lo); i &amp;lt;= (hi); i++)  &lt;/span&gt;
+&lt;span class="cp"&gt;#define rep(i,N) forloop(i,0,(int)N-1)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;algorithm&lt;/h1&gt;
+&lt;h3&gt;copy()&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;OutputIt copy( InputIt first, InputIt last, OutputIt d_first );&lt;/code&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Copies the elements in the range, defined by &lt;code&gt;[first, last)&lt;/code&gt;, to another range beginning at &lt;code&gt;d_first&lt;/code&gt;.   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;注意如果要放入的container大小不够, 最后一个参数要用&lt;code&gt;back_inserter&lt;/code&gt;.  &lt;/p&gt;
+&lt;p&gt;ex.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;int a[] = {1,2,3,4,5};  
+vector&amp;lt;int&amp;gt; v(5);  
+copy(a, a+5, v.begin());  
+vector&amp;lt;int&amp;gt; v2;  
+// if v2 needs to increase capacity, need to use back_inserter  
+copy(v.begin(), v.end(), back_inserter(v2));
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;sort()&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;void sort( RandomIt first, RandomIt last, [Compare comp]);&lt;/code&gt;  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Sorts the elements in the range &lt;code&gt;[first, last)&lt;/code&gt; in ascending order.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;int a[] = {3,1,5,0,8,9};  
+vector&amp;lt;int&amp;gt; v(&amp;amp;a[0], &amp;amp;a[0]+6);  
+sort(a, a+6);  
+sort(v.begin(), v.end());
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;如果想要降序排列, 可以直接reverse一下: &lt;code&gt;reverse(v.begin(), v.end());&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;如果自定义比较函数的话, 可以自己写一个cmp函数(内容和重载的小于运算符相同), 然后把函数名放在第三个参数:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;bool my_cmp(const pair&amp;lt;int, int&amp;gt; &amp;amp;lhs, const pair&amp;lt;int, int&amp;gt; &amp;amp;rhs) {  
+    return (lhs.first &amp;lt; rhs.first) || (lhs.first==rhs.first &amp;amp;&amp;amp; lhs.second &amp;lt; rhs.second);  
+}  
+//...  
+sort(vp.begin(), vp.end(), my_cmp);
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;或者把元素封装为class/struct, 然后重载它的小于号&lt;code&gt;&amp;lt;&lt;/code&gt;运算符:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;MyFooClass&lt;/span&gt; {  
+    &lt;span class="n"&gt;public&lt;/span&gt; :  
+    &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;x&lt;/span&gt;,&lt;span class="n"&gt;y&lt;/span&gt;;      
+    &lt;span class="n"&gt;MyFooClass&lt;/span&gt;(&lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;xx&lt;/span&gt;, &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yy&lt;/span&gt;){  
+        &lt;span class="o"&gt;x&lt;/span&gt; = &lt;span class="o"&gt;xx&lt;/span&gt;;  
+        &lt;span class="n"&gt;y&lt;/span&gt; = &lt;span class="n"&gt;yy&lt;/span&gt;;  
+    }  
+    &lt;span class="nb"&gt;bool&lt;/span&gt; &lt;span class="nb"&gt;operator&lt;/span&gt; &amp;lt; ( &lt;span class="n"&gt;const&lt;/span&gt; &lt;span class="n"&gt;MyFooClass&lt;/span&gt; &amp;amp; &lt;span class="n"&gt;other&lt;/span&gt; ) &lt;span class="n"&gt;const&lt;/span&gt; {  
+        &lt;span class="k"&gt;return&lt;/span&gt; (&lt;span class="o"&gt;x&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="o"&gt;x&lt;/span&gt;) || (&lt;span class="o"&gt;x==&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="o"&gt;x&lt;/span&gt; &amp;amp;&amp;amp; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="n"&gt;y&lt;/span&gt;) ;  
+    }  
+};
+
+&lt;span class="n"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;MyFooStruct&lt;/span&gt; {  
+    &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;x&lt;/span&gt;,&lt;span class="n"&gt;y&lt;/span&gt;;  
+    &lt;span class="n"&gt;MyFooStruct&lt;/span&gt;(&lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;xx&lt;/span&gt;, &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="n"&gt;yy&lt;/span&gt;){  
+        &lt;span class="o"&gt;x&lt;/span&gt; = &lt;span class="o"&gt;xx&lt;/span&gt;;  
+        &lt;span class="n"&gt;y&lt;/span&gt; = &lt;span class="n"&gt;yy&lt;/span&gt;;  
+    }  
+    &lt;span class="nb"&gt;bool&lt;/span&gt; &lt;span class="nb"&gt;operator&lt;/span&gt; &amp;lt; ( &lt;span class="n"&gt;const&lt;/span&gt; &lt;span class="n"&gt;MyFooStruct&lt;/span&gt; &amp;amp; &lt;span class="n"&gt;other&lt;/span&gt; ) &lt;span class="n"&gt;const&lt;/span&gt; {  
+        &lt;span class="k"&gt;return&lt;/span&gt; (&lt;span class="o"&gt;x&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="o"&gt;x&lt;/span&gt;) || (&lt;span class="o"&gt;x==&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="o"&gt;x&lt;/span&gt; &amp;amp;&amp;amp; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;other&lt;/span&gt;.&lt;span class="n"&gt;y&lt;/span&gt;) ;  
+    }  
+};
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;vector&lt;/h1&gt;
+&lt;h3&gt;vector&lt;/h3&gt;
+&lt;p&gt;相当于java里面的&lt;code&gt;ArrayList&lt;/code&gt;. &lt;br /&gt;
+主要操作: &lt;code&gt;push_back()&lt;/code&gt;, &lt;code&gt;pop_back()&lt;/code&gt; (所以可以当作stack使用).   &lt;/p&gt;
+&lt;p&gt;另外iterator操作也很常用(set, map等同理):   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;for(vector&amp;lt;int&amp;gt;::iterator it=v1.begin(); it!=v1.end(); it++)  
+        cout &amp;lt;&amp;lt; *it &amp;lt;&amp;lt; &amp;quot; &amp;quot;;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;pair&lt;/h3&gt;
+&lt;p&gt;就是一个first一个second. &lt;br /&gt;
+另外有&lt;code&gt;make_pair&lt;/code&gt;函数可以构造pair.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;pair&amp;lt;string, int&amp;gt; p1(&amp;quot;pair1&amp;quot;, 1);  
+pair&amp;lt;string, int&amp;gt; p2 = make_pair(&amp;quot;pair2&amp;quot;, 2);
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外两个尖括号再一起时一定要中间加空格, 否则就是位操作运算符了! &lt;br /&gt;
+&lt;code&gt;pair&amp;lt;string, pair&amp;lt;int, double&amp;gt; &amp;gt; p3 = make_pair("pair3", make_pair(3,3.33));&lt;/code&gt;  &lt;/p&gt;
+&lt;h1&gt;queue&lt;/h1&gt;
+&lt;p&gt;包含普通队列和优先队列(pq)  &lt;/p&gt;
+&lt;h3&gt;queue&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;bool empty() const;  
+reference front();  
+void push( const value_type&amp;amp; value );  
+void pop();
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;priority_queue&lt;/h3&gt;
+&lt;p&gt;(pq的实现也可以用&lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;里的&lt;code&gt;make_heap&lt;/code&gt;, &lt;code&gt;pop_heap&lt;/code&gt;, &lt;code&gt;push_heap&lt;/code&gt;等方法. priority_queue 其实就是algorithm里面函数的封装...)&lt;br /&gt;
+和queue的API区别是, pq查看队首的函数叫&lt;code&gt;top&lt;/code&gt;而不是&lt;code&gt;front&lt;/code&gt;.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;bool empty() const;  
+const_reference top() const;  
+void push( const value_type&amp;amp; value );  
+void pop();
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;使用自定义的cmp方法, 可以把cmp的内容作为括号运算符&lt;code&gt;()&lt;/code&gt;的重载放入一个struct作为第三个类型参数, 第二个是container, 一般用vector即可.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;struct MyCmpStruct{  
+    bool operator()(const pair&amp;lt;int, int&amp;gt; &amp;amp;lhs, const pair&amp;lt;int, int&amp;gt; &amp;amp;rhs){  
+        return   return (lhs.first &amp;lt; rhs.first) || (lhs.first==rhs.first &amp;amp;&amp;amp; lhs.second &amp;lt; rhs.second);  
+    }  
+};  
+priority_queue&amp;lt;pair&amp;lt;int,int&amp;gt;, vector&amp;lt;pair&amp;lt;int,int&amp;gt; &amp;gt;, MyCmpStruct&amp;gt; ppq;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另一种方法是自定义元素的struct/class, 然后重载小于&lt;code&gt;&amp;lt;&lt;/code&gt;运算符为cmp (同sort).   &lt;/p&gt;
+&lt;h1&gt;set/map&lt;/h1&gt;
+&lt;p&gt;C++里面的set/map是用红黑树实现的, 所以key类型需要支持比较运算. &lt;br /&gt;
+set/map也支持iterator操作(&lt;code&gt;begin()&lt;/code&gt;, &lt;code&gt;end()&lt;/code&gt;), 而且由于是BST, 顺序自然是排好了的.   &lt;/p&gt;
+&lt;h3&gt;set&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nt"&gt;std&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nd"&gt;:pair&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;iterator&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;bool&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;insert&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;const&lt;/span&gt; &lt;span class="nt"&gt;value_type&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="nt"&gt;value&lt;/span&gt; &lt;span class="o"&gt;);&lt;/span&gt;  
+&lt;span class="nt"&gt;void&lt;/span&gt; &lt;span class="nt"&gt;erase&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;iterator&lt;/span&gt; &lt;span class="nt"&gt;pos&lt;/span&gt; &lt;span class="o"&gt;);&lt;/span&gt;  
+&lt;span class="nt"&gt;size_type&lt;/span&gt; &lt;span class="nt"&gt;count&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;const&lt;/span&gt; &lt;span class="nt"&gt;Key&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="nt"&gt;key&lt;/span&gt; &lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;const&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;  
+&lt;span class="nt"&gt;iterator&lt;/span&gt; &lt;span class="nt"&gt;find&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;const&lt;/span&gt; &lt;span class="nt"&gt;Key&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="nt"&gt;key&lt;/span&gt; &lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;和&lt;code&gt;erase&lt;/code&gt;的参数可以是iterator或者value.   &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;count&lt;/code&gt;的返回值为1或0  &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;find&lt;/code&gt;如果没找到则返回&lt;code&gt;s.end()&lt;/code&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;map&lt;K,V&gt;&lt;/h3&gt;
+&lt;p&gt;map的value_type是一个&lt;code&gt;pair&amp;lt;K,V&amp;gt;&lt;/code&gt;, 所以遍历是这样:   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;for(map&amp;lt;string,int&amp;gt;::iterator it=m.begin(); it!=m.end(); it++)  
+        cout &amp;lt;&amp;lt; it-&amp;gt;first &amp;lt;&amp;lt; &amp;quot;:&amp;quot; &amp;lt;&amp;lt; it-&amp;gt;second &amp;lt;&amp;lt; &amp;quot;, &amp;quot;;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;insertion: 用&lt;code&gt;[]&lt;/code&gt;或者&lt;code&gt;insert&lt;/code&gt;函数  &lt;div class="codehilite"&gt;&lt;pre&gt;map&amp;lt;string,int&amp;gt; m;  
+m[&amp;quot;aa&amp;quot;] = 3;  
+m.insert( make_pair(&amp;quot;dd&amp;quot;, 6) );
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注意&lt;code&gt;insert&lt;/code&gt;函数如果key已经存在的话value不会改变! 但是用&lt;code&gt;[]&lt;/code&gt;的话则可以.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;erase/find/count&lt;/code&gt;: 同set.   &lt;/li&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">mx</dc:creator><pubDate>Sat, 09 Jan 2016 00:00:00 +0100</pubDate><guid>http://x-wei.github.io/cpp-demo-snippets.html</guid><category>C++</category></item><item><title>[Algorithms II] Week 5-2 Data Compression</title><link>http://x-wei.github.io/algoII_week5_2.html</link><description>&lt;h1&gt;1. Introduction to Data Compression&lt;/h1&gt;
 &lt;p&gt;pb: reduce the size of a file, to save space/time for storing/transmitting. &lt;br /&gt;
 applications: generic file compression(gzip), multimedia (mp3), communication(skype).   &lt;/p&gt;
 &lt;p&gt;From binary data &lt;code&gt;B&lt;/code&gt;, ⇒ generate a compressed representation &lt;code&gt;C(B)&lt;/code&gt;. &lt;br /&gt;

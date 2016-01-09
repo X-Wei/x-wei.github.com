@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     <meta charset="utf-8">
-    <title>[Algorithms I] Week 1-2 Analysis of Algorithms</title>
+    <title>C++ STL小结&代码片段</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -99,7 +99,7 @@
 					</a>
                   </li>
               
-                  <li class="active">
+                  <li >
                     <a href="./category/notes.html">
 						<i class="icon-folder-open icon-large"></i>notes
 					</a>
@@ -111,7 +111,7 @@
 					</a>
                   </li>
               
-                  <li >
+                  <li class="active">
                     <a href="./category/tech.html">
 						<i class="icon-folder-open icon-large"></i>tech
 					</a>
@@ -139,8 +139,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to [Algorithms I] Week 1-2 Analysis of Algorithms">
-					[Algorithms I] Week 1-2 Analysis of Algorithms 
+					title="Permalink to C++ STL小结&代码片段">
+					C++ STL小结&代码片段 
 				</a>
 				 
 			</h1> 
@@ -149,173 +149,200 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2015-07-02T00:00:00">
-	<i class="icon-calendar"></i>Thu, 02 Jul 2015
+<abbr class="published" title="2016-01-09T00:00:00">
+	<i class="icon-calendar"></i>Sat, 09 Jan 2016
 </abbr>
 
 <span class="label">By</span>
 <a href="./"><i class="icon-user"></i>mx</a>
 
 <span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+<a href="./"><i class="icon-folder-open"></i>tech</a>. 
 
 
 	
 
 <span class="label">Tags</span> 
 
-	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+	<a href="./tag/C++.html"><i class="icon-tag"></i>C++</a>
 
 
 
 </footer><!-- /.post-info -->
 		</div>
-		<h1>1. Introduction</h1>
-<p><img alt="" src="static/algoI_week1_2/pasted_image.png" /></p>
-<h1>2. Observations</h1>
-<p>ex. <strong>3-SUM pb</strong><br />
-<em>given N distinct numbers, how many triples sum up to 0? (pb related to computatioal geogtry)</em></p>
-<ul>
-<li>brute force method:</li>
-</ul>
-<div class="codehilite"><pre>for(int i=0;i&lt;N;i++)
-    for(int j=i+1;j&lt;N;j++)
-        for(int k=j+1;k&lt;N;k++)
-            {if(a[i]+a[j]+a[k]==0)
-                count++;
-            }
+		<p>总结了一下C++ STL里面用的比较频繁的一些代码片段. (地址: <a href="https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL">https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL</a>)<br />
+cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com/w/cpp</a>  </p>
+<p>常用的library主要有: <br />
+<code>&lt;algorithm&gt;, &lt;vector&gt;, &lt;queue&gt;, &lt;set&gt;, &lt;map&gt;, &lt;cmath&gt;</code>  </p>
+<p>另外一个常见的cpp文件开头版本是:   </p>
+<div class="codehilite"><pre><span class="cp">#include &lt;iostream&gt;  </span>
+<span class="cp">#include &lt;vector&gt;  </span>
+<span class="cp">#include &lt;algorithm&gt;  </span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>  
+<span class="cp">#define forloop(i,lo,hi) for(int i = (lo); i &lt;= (hi); i++)  </span>
+<span class="cp">#define rep(i,N) forloop(i,0,(int)N-1)</span>
+</pre></div>
+
+
+<h1>algorithm</h1>
+<h3>copy()</h3>
+<p><code>OutputIt copy( InputIt first, InputIt last, OutputIt d_first );</code>  </p>
+<blockquote>
+<p>Copies the elements in the range, defined by <code>[first, last)</code>, to another range beginning at <code>d_first</code>.   </p>
+</blockquote>
+<p>注意如果要放入的container大小不够, 最后一个参数要用<code>back_inserter</code>.  </p>
+<p>ex.  </p>
+<div class="codehilite"><pre>int a[] = {1,2,3,4,5};  
+vector&lt;int&gt; v(5);  
+copy(a, a+5, v.begin());  
+vector&lt;int&gt; v2;  
+// if v2 needs to increase capacity, need to use back_inserter  
+copy(v.begin(), v.end(), back_inserter(v2));
+</pre></div>
+
+
+<h3>sort()</h3>
+<p><code>void sort( RandomIt first, RandomIt last, [Compare comp]);</code>  </p>
+<blockquote>
+<p>Sorts the elements in the range <code>[first, last)</code> in ascending order.  </p>
+</blockquote>
+<div class="codehilite"><pre>int a[] = {3,1,5,0,8,9};  
+vector&lt;int&gt; v(&amp;a[0], &amp;a[0]+6);  
+sort(a, a+6);  
+sort(v.begin(), v.end());
+</pre></div>
+
+
+<p>如果想要降序排列, 可以直接reverse一下: <code>reverse(v.begin(), v.end());</code>  </p>
+<p>如果自定义比较函数的话, 可以自己写一个cmp函数(内容和重载的小于运算符相同), 然后把函数名放在第三个参数:   </p>
+<div class="codehilite"><pre>bool my_cmp(const pair&lt;int, int&gt; &amp;lhs, const pair&lt;int, int&gt; &amp;rhs) {  
+    return (lhs.first &lt; rhs.first) || (lhs.first==rhs.first &amp;&amp; lhs.second &lt; rhs.second);  
+}  
+//...  
+sort(vp.begin(), vp.end(), my_cmp);
+</pre></div>
+
+
+<p>或者把元素封装为class/struct, 然后重载它的小于号<code>&lt;</code>运算符:  </p>
+<div class="codehilite"><pre><span class="k">class</span> <span class="n">MyFooClass</span> {  
+    <span class="n">public</span> :  
+    <span class="nb">int</span> <span class="o">x</span>,<span class="n">y</span>;      
+    <span class="n">MyFooClass</span>(<span class="nb">int</span> <span class="o">xx</span>, <span class="nb">int</span> <span class="n">yy</span>){  
+        <span class="o">x</span> = <span class="o">xx</span>;  
+        <span class="n">y</span> = <span class="n">yy</span>;  
+    }  
+    <span class="nb">bool</span> <span class="nb">operator</span> &lt; ( <span class="n">const</span> <span class="n">MyFooClass</span> &amp; <span class="n">other</span> ) <span class="n">const</span> {  
+        <span class="k">return</span> (<span class="o">x&lt;</span><span class="n">other</span>.<span class="o">x</span>) || (<span class="o">x==</span><span class="n">other</span>.<span class="o">x</span> &amp;&amp; <span class="n">y</span><span class="o">&lt;</span><span class="n">other</span>.<span class="n">y</span>) ;  
+    }  
+};
+
+<span class="n">struct</span> <span class="n">MyFooStruct</span> {  
+    <span class="nb">int</span> <span class="o">x</span>,<span class="n">y</span>;  
+    <span class="n">MyFooStruct</span>(<span class="nb">int</span> <span class="o">xx</span>, <span class="nb">int</span> <span class="n">yy</span>){  
+        <span class="o">x</span> = <span class="o">xx</span>;  
+        <span class="n">y</span> = <span class="n">yy</span>;  
+    }  
+    <span class="nb">bool</span> <span class="nb">operator</span> &lt; ( <span class="n">const</span> <span class="n">MyFooStruct</span> &amp; <span class="n">other</span> ) <span class="n">const</span> {  
+        <span class="k">return</span> (<span class="o">x&lt;</span><span class="n">other</span>.<span class="o">x</span>) || (<span class="o">x==</span><span class="n">other</span>.<span class="o">x</span> &amp;&amp; <span class="n">y</span><span class="o">&lt;</span><span class="n">other</span>.<span class="n">y</span>) ;  
+    }  
+};
+</pre></div>
+
+
+<h1>vector</h1>
+<h3>vector</h3>
+<p>相当于java里面的<code>ArrayList</code>. <br />
+主要操作: <code>push_back()</code>, <code>pop_back()</code> (所以可以当作stack使用).   </p>
+<p>另外iterator操作也很常用(set, map等同理):   </p>
+<div class="codehilite"><pre>for(vector&lt;int&gt;::iterator it=v1.begin(); it!=v1.end(); it++)  
+        cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+</pre></div>
+
+
+<h3>pair</h3>
+<p>就是一个first一个second. <br />
+另外有<code>make_pair</code>函数可以构造pair.   </p>
+<div class="codehilite"><pre>pair&lt;string, int&gt; p1(&quot;pair1&quot;, 1);  
+pair&lt;string, int&gt; p2 = make_pair(&quot;pair2&quot;, 2);
+</pre></div>
+
+
+<p>另外两个尖括号再一起时一定要中间加空格, 否则就是位操作运算符了! <br />
+<code>pair&lt;string, pair&lt;int, double&gt; &gt; p3 = make_pair("pair3", make_pair(3,3.33));</code>  </p>
+<h1>queue</h1>
+<p>包含普通队列和优先队列(pq)  </p>
+<h3>queue</h3>
+<div class="codehilite"><pre>bool empty() const;  
+reference front();  
+void push( const value_type&amp; value );  
+void pop();
+</pre></div>
+
+
+<h3>priority_queue</h3>
+<p>(pq的实现也可以用<code>&lt;algorithm&gt;</code>里的<code>make_heap</code>, <code>pop_heap</code>, <code>push_heap</code>等方法. priority_queue 其实就是algorithm里面函数的封装...)<br />
+和queue的API区别是, pq查看队首的函数叫<code>top</code>而不是<code>front</code>.  </p>
+<div class="codehilite"><pre>bool empty() const;  
+const_reference top() const;  
+void push( const value_type&amp; value );  
+void pop();
+</pre></div>
+
+
+<p>使用自定义的cmp方法, 可以把cmp的内容作为括号运算符<code>()</code>的重载放入一个struct作为第三个类型参数, 第二个是container, 一般用vector即可.   </p>
+<div class="codehilite"><pre>struct MyCmpStruct{  
+    bool operator()(const pair&lt;int, int&gt; &amp;lhs, const pair&lt;int, int&gt; &amp;rhs){  
+        return   return (lhs.first &lt; rhs.first) || (lhs.first==rhs.first &amp;&amp; lhs.second &lt; rhs.second);  
+    }  
+};  
+priority_queue&lt;pair&lt;int,int&gt;, vector&lt;pair&lt;int,int&gt; &gt;, MyCmpStruct&gt; ppq;
+</pre></div>
+
+
+<p>另一种方法是自定义元素的struct/class, 然后重载小于<code>&lt;</code>运算符为cmp (同sort).   </p>
+<h1>set/map</h1>
+<p>C++里面的set/map是用红黑树实现的, 所以key类型需要支持比较运算. <br />
+set/map也支持iterator操作(<code>begin()</code>, <code>end()</code>), 而且由于是BST, 顺序自然是排好了的.   </p>
+<h3>set</h3>
+<div class="codehilite"><pre><span class="nt">std</span><span class="o">:</span><span class="nd">:pair</span><span class="o">&lt;</span><span class="nt">iterator</span><span class="o">,</span><span class="nt">bool</span><span class="o">&gt;</span> <span class="nt">insert</span><span class="o">(</span> <span class="nt">const</span> <span class="nt">value_type</span><span class="o">&amp;</span> <span class="nt">value</span> <span class="o">);</span>  
+<span class="nt">void</span> <span class="nt">erase</span><span class="o">(</span> <span class="nt">iterator</span> <span class="nt">pos</span> <span class="o">);</span>  
+<span class="nt">size_type</span> <span class="nt">count</span><span class="o">(</span> <span class="nt">const</span> <span class="nt">Key</span><span class="o">&amp;</span> <span class="nt">key</span> <span class="o">)</span> <span class="nt">const</span><span class="o">;</span>  
+<span class="nt">iterator</span> <span class="nt">find</span><span class="o">(</span> <span class="nt">const</span> <span class="nt">Key</span><span class="o">&amp;</span> <span class="nt">key</span> <span class="o">);</span>
 </pre></div>
 
 
 <ul>
-<li>mesuring running time:</li>
+<li><code>insert</code>和<code>erase</code>的参数可以是iterator或者value.   </li>
+<li><code>count</code>的返回值为1或0  </li>
+<li><code>find</code>如果没找到则返回<code>s.end()</code>  </li>
 </ul>
-<p>stdlib.jar里面提供了一个<code>Stopwatch</code>类用于记录运行时间.  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image001.png" /></p>
+<h3>map<K,V></h3>
+<p>map的value_type是一个<code>pair&lt;K,V&gt;</code>, 所以遍历是这样:   </p>
+<div class="codehilite"><pre>for(map&lt;string,int&gt;::iterator it=m.begin(); it!=m.end(); it++)  
+        cout &lt;&lt; it-&gt;first &lt;&lt; &quot;:&quot; &lt;&lt; it-&gt;second &lt;&lt; &quot;, &quot;;
+</pre></div>
+
+
 <ul>
-<li>log-log plot</li>
-</ul>
-<p>T(N) = running time for input of size N<br />
-log(N)-log(T(N)) plot:<br />
-often get a straight line — power law  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image002.png" /></p>
-<ul>
-<li><strong>doubling ratio</strong>:</li>
-</ul>
-<p>(for checking the power law relationship, checking the power order)<br />
-each time double the size of input, then take log of the time ratio of 2 runs: log( T(2N)/T(N) )  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image003.png" />  </p>
-<h1>3.Mathematical Models</h1>
-<ul>
-<li>total running time: sum of cost*frequency of operations </li>
-<li>
-<p>cost of some basic operations:</p>
-<ul>
-<li>array allocation: c*N (because all array entries have to be set to 0/false/null)</li>
-<li>string concatenation: c*N (proportional to the length  of string !)</li>
-</ul>
-</li>
-<li>
-<p>simplification</p>
+<li>insertion: 用<code>[]</code>或者<code>insert</code>函数  <div class="codehilite"><pre>map&lt;string,int&gt; m;  
+m[&quot;aa&quot;] = 3;  
+m.insert( make_pair(&quot;dd&quot;, 6) );
+</pre></div>
+
+
 </li>
 </ul>
-<p>crude analysis<br />
-ignore lower terms <strong>tilde notation</strong>  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image005.png" />  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image004.png" /></p>
+<p>注意<code>insert</code>函数如果key已经存在的话value不会改变! 但是用<code>[]</code>的话则可以.   </p>
 <ul>
-<li>estimating discrete sum by relaxation</li>
+<li><code>erase/find/count</code>: 同set.   </li>
 </ul>
-<p>Replace the sum with an integral, and use calculus — 很机智...   <br />
-<img alt="" src="static/algoI_week1_2/pasted_image006.png" /></p>
-<h1>4. Order of Growth Classification</h1>
-<p>(discard the leading coefficient when considering the growth order)</p>
-<ul>
-<li>only a small set of growth functions: </li>
-</ul>
-<p><code>1, logN, N, NlogN, N^2, N^3, 2^N</code> <br />
-<img alt="" src="static/algoI_week1_2/pasted_image007.png" />   </p>
-<ul>
-<li>exemples:</li>
-</ul>
-<p>binary search ⇒ logN<br />
-divide and conquer ⇒ NlogN<br />
-exhaustive search ⇒ 2^N <br />
-<img alt="" src="static/algoI_week1_2/pasted_image008.png" /></p>
-<p>practical performance: <br />
-<img alt="" src="static/algoI_week1_2/pasted_image009.png" />  </p>
-<ul>
-<li>
-<p>ex. <strong>binary search</strong></p>
-<p>public int binearch(int arr[], int key){//arr[] already sorted
-    int lo=0,hi=arr.length;
-    while(i&lt;j){
-        int m = (lo+hi)/2;
-        if(arr[m]==key) return m;
-        else if(arr[m]&lt;key) lo=m+1;
-        else hi=m-1;
-    }
-    return -1;
-}</p>
-</li>
-</ul>
-<p>(→ Bug in Java's Arrays.binarySearch() discovered in 2006......) <br />
-→ invariant: if key in arr, arr[lo]&lt;=key&lt;=arr[hi] <br />
-<strong>proposition. </strong>binary search uses at most logN+1 compares to search a sorted array of size N.
-<strong>pf. </strong>
-denote <em>T(N)</em> := nb of compares for array with size &lt;=N<br />
-→ T(1)=1<br />
-→ recurrence relation: T(N)&lt;=T(N/2)+1<br />
-⇒ T(N)=logN  </p>
-<ul>
-<li><strong>a faster 3-SUM</strong></li>
-</ul>
-<p>→ first sort the array <em>(~NlogN)</em><br />
-→ for any pair a[i] and a[j], do binary search for -(a[i]+a[j])   <em>~(N2LogN)</em><br />
-⇒ reduce from N3 to N2logN ! (for 8k numbers, running time goes from 51s to 0.96s)  </p>
-<h1>5. Theory of Algorithms</h1>
-<ul>
-<li>
-<p>types of analysis</p>
-<p>-best case
--worst case
--average case(random input, "expected cost")</p>
-</li>
-<li>
-<p>notations</p>
-</li>
-</ul>
-<p><strong>big Theta/big O/big Omega</strong>  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image010.png" />   <br />
-    - big O: <em>upper bound  → * once a specific algo is found, find an upper bound<br />
-    - big Omega: </em>lower bound   <em>→ proove that no algo can do better<br />
-    - big Theta: symptotic growth (same order, optimal algo)  → lower and upper bound </em>match* <br />
-<img alt="" src="static/algoI_week1_2/pasted_image011.png" />   <br />
-⇒ in this course: use tilde notation: contain leading constants for highest order term</p>
-<h1>6. Memory</h1>
-<p>KB: 2^10 bytes<br />
-MB: 2^20 bytes (1 million) 
-GB: 2^30 bytes (1 billion) 
-64-bit machines: <em>8 byte pointers</em>  </p>
-<ul>
-<li>typical memory usage:</li>
-</ul>
-<p>for primary types: <br />
-<img alt="" src="static/algoI_week1_2/pasted_image012.png" /><br />
-for arrays  (with <em>array overhead=24bytes</em>) :  <br />
-<img alt="" src="static/algoI_week1_2/pasted_image013.png" /> <br />
-<em>Obj overhead: 16 bytes</em> (obj的大小=16+obj内部filed的大小)<br />
-<em>references</em>: 8 bytes (ex. inner class has a ref to encolsing class)<br />
-<em>padding</em>: each obj uses a multiply of 8 bytes (obj大小=8 bytes的整数倍)    <br />
-<img alt="" src="static/algoI_week1_2/pasted_image014.png" />   <br />
-<img alt="" src="static/algoI_week1_2/pasted_image015.png" />     </p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "algoI_week1_2.html";
+			   var disqus_identifier = "cpp-demo-snippets.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;
