@@ -170,8 +170,9 @@
 
 </footer><!-- /.post-info -->
 		</div>
-		<h1>1. Introduction to Data Compression</h1>
-<p>pb: reduce the size of a file, to save space/time for storing/transmitting. <br />
+		<p>1. Introduction to Data Compression<br />
+===================================<br />
+pb: reduce the size of a file, to save space/time for storing/transmitting. <br />
 applications: generic file compression(gzip), multimedia (mp3), communication(skype).   </p>
 <p>From binary data <code>B</code>, ⇒ generate a compressed representation <code>C(B)</code>. <br />
 <img alt="" src="static/algoII_week5_2/pasted_image.png" /><br />
@@ -179,23 +180,23 @@ applications: generic file compression(gzip), multimedia (mp3), communication(sk
 <strong>compression ratio</strong>: <code>|C(B)|/|B|</code>(||means number of <em>bits</em>)  </p>
 <h3>Tools</h3>
 <p>extension to stdio libraries: read/write <em>bits</em>   </p>
-<div class="codehilite"><pre>public class BinaryStdIn{  
-    boolean readBoolean(); // read 1 bit and return as a boolean  
-    char readChar(); // read 8 bits and return a char  
-    char readChar(int r); // read r (&lt;=8) bits and return a char  
-    // similar method for int/long/double  
-    boolean isEmpty(); // is bitstream empty?  
-    void close();  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">BinaryStdIn</span><span class="p">{</span>  
+    <span class="n">boolean</span> <span class="n">readBoolean</span><span class="p">();</span> <span class="c1">// read 1 bit and return as a boolean  </span>
+    <span class="kt">char</span> <span class="nf">readChar</span><span class="p">();</span> <span class="c1">// read 8 bits and return a char  </span>
+    <span class="kt">char</span> <span class="nf">readChar</span><span class="p">(</span><span class="kt">int</span> <span class="n">r</span><span class="p">);</span> <span class="c1">// read r (&lt;=8) bits and return a char  </span>
+    <span class="c1">// similar method for int/long/double  </span>
+    <span class="n">boolean</span> <span class="nf">isEmpty</span><span class="p">();</span> <span class="c1">// is bitstream empty?  </span>
+    <span class="kt">void</span> <span class="nf">close</span><span class="p">();</span>  
+<span class="p">}</span>
 
 
-public class BinaryStdOut{  
-    void write(boolean b); // write 1 bit  
-    void write(char c); // write 8 bits  
-    void write(char c, int r); // write r (least-significant) bits of c  
-    // similar method for int/long/double  
-    void close(); // might add some byte alignment bits   
-}
+<span class="n">public</span> <span class="n">class</span> <span class="n">BinaryStdOut</span><span class="p">{</span>  
+    <span class="kt">void</span> <span class="n">write</span><span class="p">(</span><span class="n">boolean</span> <span class="n">b</span><span class="p">);</span> <span class="c1">// write 1 bit  </span>
+    <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">);</span> <span class="c1">// write 8 bits  </span>
+    <span class="kt">void</span> <span class="nf">write</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">r</span><span class="p">);</span> <span class="c1">// write r (least-significant) bits of c  </span>
+    <span class="c1">// similar method for int/long/double  </span>
+    <span class="kt">void</span> <span class="nf">close</span><span class="p">();</span> <span class="c1">// might add some byte alignment bits   </span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -214,41 +215,41 @@ pf. by contradiction: repeatedly compress the bitstring ⇒ bit length goes to 0
 </ul>
 <p>application: JPEG...   </p>
 <p>code:   </p>
-<div class="codehilite"><pre>public class RunLength{  
-    private final static int R = 256; // max run length  
-    private final static int lgR = 8;  
-    public static void compress(){  
-        boolean bit, oldbit = false;  
-        int l=0;  
-        while(!BinaryStdIn.isEmpty()){  
-            bit = BinaryStdIn.readBoolean();  
-            if(bit!=old){  
-                oldbit = bit;  
-                BinaryStdOut.write(l,lgR);  
-                l = 0;    
-            }  
-            else if(l==R-1){  
-                BinaryStdOut.write(l,lgR);  
-                BinaryStdOut.write(0,lgR);  
-                l = 0;  
-            }  
-            l ++;  
-        }  
-        BinaryStdOut.write(l,lgR);  
-        BinaryStdOut.close();
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">RunLength</span><span class="p">{</span>  
+    <span class="n">private</span> <span class="n">final</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">R</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span> <span class="c1">// max run length  </span>
+    <span class="n">private</span> <span class="n">final</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">lgR</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>  
+    <span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">compress</span><span class="p">(){</span>  
+        <span class="n">boolean</span> <span class="n">bit</span><span class="p">,</span> <span class="n">oldbit</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>  
+        <span class="kt">int</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">()){</span>  
+            <span class="n">bit</span> <span class="o">=</span> <span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">readBoolean</span><span class="p">();</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">bit</span><span class="o">!=</span><span class="n">old</span><span class="p">){</span>  
+                <span class="n">oldbit</span> <span class="o">=</span> <span class="n">bit</span><span class="p">;</span>  
+                <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">lgR</span><span class="p">);</span>  
+                <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    
+            <span class="p">}</span>  
+            <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">l</span><span class="o">==</span><span class="n">R</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span>  
+                <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">lgR</span><span class="p">);</span>  
+                <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">lgR</span><span class="p">);</span>  
+                <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+            <span class="p">}</span>  
+            <span class="n">l</span> <span class="o">++</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="n">lgR</span><span class="p">);</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 
-    }  
-    public static void expand(){  
-        boolean bit = false;  
-        while(!BinaryStdIn.isEmpty()){  
-            int l = BinaryStdIn.readInt(lgR);  
-            for(int i=0;i&lt;l;i++)  
-                BinaryStdOut.write(bit);  
-            bit != bit;  
-        }  
-        BinaryStdOut.close();  
-    }  
-}
+    <span class="p">}</span>  
+    <span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">expand</span><span class="p">(){</span>  
+        <span class="n">boolean</span> <span class="n">bit</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>  
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">()){</span>  
+            <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="n">lgR</span><span class="p">);</span>  
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">l</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+                <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">bit</span><span class="p">);</span>  
+            <span class="n">bit</span> <span class="o">!=</span> <span class="n">bit</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -262,35 +263,35 @@ ex. Morse code, more freq chars use less chars. <br />
 <img alt="" src="static/algoII_week5_2/pasted_image003.png" />  </p>
 <h3>Huffman Trie Node</h3>
 <p>define trie nodes having frequences:   </p>
-<div class="codehilite"><pre>public static class Node implements Comparable&lt;Node&gt;{  
-    private char ch; // only used for leaves, null for internal nodes  
-    private int freq;  
-    private final Node left, right; // left--&gt;0, right--&gt;1  
-    public Node(char ch, int freq, Node left, Node right){//...}  
-    public boolean isLeaf(){  
-        return left==null &amp;&amp; right==null;}  
-    public int compareTo(Node that){  
-        return this.freq-that.freq;}  
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">static</span> <span class="nb">class</span> <span class="nx">Node</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nx">Node</span><span class="o">&gt;</span><span class="p">{</span>  
+    <span class="k">private</span> <span class="nf">char</span> <span class="nx">ch</span><span class="p">;</span> <span class="c1">// only used for leaves, null for internal nodes  </span>
+    <span class="k">private</span> <span class="nf">int</span> <span class="nx">freq</span><span class="p">;</span>  
+    <span class="k">private</span> <span class="nf">final</span> <span class="nx">Node</span> <span class="nb">left</span><span class="p">,</span> <span class="nb">right</span><span class="p">;</span> <span class="c1">// left--&gt;0, right--&gt;1  </span>
+    <span class="k">public</span> <span class="nf">Node</span><span class="p">(</span><span class="na">char</span> <span class="nx">ch</span><span class="p">,</span> <span class="na">int</span> <span class="nx">freq</span><span class="p">,</span> <span class="na">Node</span> <span class="nb">left</span><span class="p">,</span> <span class="na">Node</span> <span class="nb">right</span><span class="p">){</span><span class="c1">//...}  </span>
+    <span class="k">public</span> <span class="nf">boolean</span> <span class="nx">isLeaf</span><span class="p">(){</span>  
+        <span class="k">return</span> <span class="nb">left</span><span class="o">==</span><span class="kt">null</span> <span class="o">&amp;&amp;</span> <span class="nb">right</span><span class="o">==</span><span class="kt">null</span><span class="p">;}</span>  
+    <span class="k">public</span> <span class="nf">int</span> <span class="nx">compareTo</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">that</span><span class="p">){</span>  
+        <span class="k">return</span> <span class="nx">this.freq</span><span class="na">-that.freq</span><span class="p">;}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <h3>implementation</h3>
 <p><strong>expansion</strong><br />
 <em>in the bitstream, we first put the (serialized) trie in the head.</em>   </p>
-<div class="codehilite"><pre>public void expand{  
-    Node root = getTrie(); //   
-    int N = BinaryStdIn.readInt(); // number of chars in string  
-    for(int i=0; i&lt;N; i++){  
-        Node x = root;  
-        while (!x.isLeaf()){  
-            if(BinaryStdIn.readBoolean()) x = x.right;  
-            else x = x.left;  
-        }  
-        BinaryStdOut.write(x.ch);  
-    }  
-    BinaryStdOut.close();  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="n">expand</span><span class="p">{</span>  
+    <span class="n">Node</span> <span class="n">root</span> <span class="o">=</span> <span class="n">getTrie</span><span class="p">();</span> <span class="c1">//   </span>
+    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">readInt</span><span class="p">();</span> <span class="c1">// number of chars in string  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>  
+        <span class="n">Node</span> <span class="n">x</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>  
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">x</span><span class="p">.</span><span class="n">isLeaf</span><span class="p">()){</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">BinaryStdIn</span><span class="p">.</span><span class="n">readBoolean</span><span class="p">())</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>  
+            <span class="k">else</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">left</span><span class="p">;</span>  
+        <span class="p">}</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">ch</span><span class="p">);</span>  
+    <span class="p">}</span>  
+    <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -300,17 +301,17 @@ ie. to serialize a trie. <br />
 0 for internal nodes, and 1 for leaf (followed by the corresponding char)<br />
 <img alt="" src="static/algoII_week5_2/pasted_image004.png" /><br />
 recursive method:   </p>
-<div class="codehilite"><pre>private static void writeTrie(Node x){  
-    if(x==null) return;  
-    if(x.isLeaf()){  
-        BinaryStdOut.write(true); // leaf node  
-        BinaryStdOut.write(x.ch); // followed by the char  
-    } else {  
-        BinaryStdOut.write(false); // internal node  
-        writeTrie(x.left);  
-        writeTrie(x.right);  
-    }  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">writeTrie</span><span class="p">(</span><span class="n">Node</span> <span class="n">x</span><span class="p">){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">isLeaf</span><span class="p">()){</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span> <span class="c1">// leaf node  </span>
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">ch</span><span class="p">);</span> <span class="c1">// followed by the char  </span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  
+        <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span> <span class="c1">// internal node  </span>
+        <span class="n">writeTrie</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">left</span><span class="p">);</span>  
+        <span class="n">writeTrie</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -318,16 +319,16 @@ recursive method:   </p>
 Reconstruct the trie from the serialized bitstring. <br />
 preorder(x) = x+preorder(x.left)+preorder(x.right) ⇒ recursive method...   </p>
 <p>这个递归函数还是蛮有代表性的, 值得看.   </p>
-<div class="codehilite"><pre>private static Node readTrie(){  
-    if(BinaryStdOut.readBoolean()) {  
-        char ch = BinaryStdOut.readChar();  
-        return new Node(ch, 0, null, null);  
-    } else {  
-        Node left = readTrie();  
-        Node right = readTrie();  
-        return new Node(&#39;\0&#39;, 0, left, right); // subtle recursion  
-    }  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="n">Node</span> <span class="nf">readTrie</span><span class="p">(){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">readBoolean</span><span class="p">())</span> <span class="p">{</span>  
+        <span class="kt">char</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">BinaryStdOut</span><span class="p">.</span><span class="n">readChar</span><span class="p">();</span>  
+        <span class="k">return</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">null</span><span class="p">);</span>  
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  
+        <span class="n">Node</span> <span class="n">left</span> <span class="o">=</span> <span class="n">readTrie</span><span class="p">();</span>  
+        <span class="n">Node</span> <span class="n">right</span> <span class="o">=</span> <span class="n">readTrie</span><span class="p">();</span>  
+        <span class="k">return</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="sc">&#39;\0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span> <span class="c1">// subtle recursion  </span>
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -353,11 +354,11 @@ preorder(x) = x+preorder(x.left)+preorder(x.right) ⇒ recursive method...   </p
 <p><img alt="" src="static/algoII_week5_2/pasted_image005.png" />  </p>
 <p>application: jpeg, pdf, mp3, ...  </p>
 <p><strong>implementation</strong>  </p>
-<div class="codehilite"><pre>private static Node buildTrie(int[] freq){  
-    MinPQ&lt;Node&gt; pq = new MinPQ&lt;Node&gt;();  
-    for(char i=0; i&lt;R; i++)  
-        pq.insert( new Node(i, freq[i], null, null) );  
-    while(pq.size()&gt;1){  
+<div class="codehilite"><pre><span class="k">private</span> <span class="nf">static</span> <span class="nx">Node</span> <span class="nx">buildTrie</span><span class="p">(</span><span class="nx">int</span><span class="err">[</span><span class="cp">]</span> freq){  
+    MinPQ<span class="nt">&lt;Node&gt;</span> pq = new MinPQ<span class="nt">&lt;Node&gt;</span>();  
+    for(char i=0; i<span class="nt">&lt;R</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span>  
+        <span class="na">pq</span><span class="err">.</span><span class="na">insert</span><span class="err">(</span> <span class="na">new</span> <span class="na">Node</span><span class="err">(</span><span class="na">i</span><span class="err">,</span> <span class="na">freq</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="err">,</span> <span class="na">null</span><span class="err">,</span> <span class="na">null</span><span class="err">)</span> <span class="err">);</span>  
+    <span class="na">while</span><span class="err">(</span><span class="na">pq</span><span class="err">.</span><span class="na">size</span><span class="err">()</span><span class="nt">&gt;</span>1){  
         Node x = pq.pop(), y = pq.pop();  
         pq.insert( new Node(&#39;\0&#39;,x.freq+y.freq, x, y);  
     }  
@@ -385,23 +386,23 @@ when encoding strings, look for the longest prefix that is in our table. <br />
 </ul>
 <p>Use a trie for representing the code table → because support longest prefix match.   </p>
 <p><strong>implementation</strong>  </p>
-<div class="codehilite"><pre>public void compress(String input){  
-    TST&lt;Integer&gt; st = new TST&lt;Integer&gt;(); // a trie symbol table  
-    for(char i=0; i&lt;R; i++)  
-        st.put(&quot;&quot;+(char)i, i);  
-    int code = R+1; // R is used as &quot;stop&quot;  
-    while(input.length()&gt;0){  
-        String s = st.longestPrefixOf(input);  
-        BinaryStdOut.write(st.get(s), W);  
-        int l = s.length();  
-        if(l&lt;input.length())  
-            st.put(s+input.charAt(l), code++);  
-        input = input.substring(l);  
-    }  
-    BinaryStdOut.write(R, W); // write &quot;stop&quot;  
-    BinaryStdOut.close();
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">void</span> <span class="nb">compress</span><span class="p">(</span><span class="kt">String</span> <span class="nb">input</span><span class="p">){</span>  
+    <span class="nx">TST</span><span class="o">&lt;</span><span class="kt">Integer</span><span class="o">&gt;</span> <span class="n">st</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">TST</span><span class="o">&lt;</span><span class="kt">Integer</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// a trie symbol table  </span>
+    <span class="nb">for</span><span class="p">(</span><span class="nx">char</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nb">R</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="nx">st.put</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">+</span><span class="p">(</span><span class="nx">char</span><span class="p">)</span><span class="nx">i</span><span class="p">,</span> <span class="nx">i</span><span class="p">);</span>  
+    <span class="nx">int</span> <span class="n">code</span> <span class="o">=</span> <span class="nb">R</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="c1">// R is used as &quot;stop&quot;  </span>
+    <span class="k">while</span><span class="p">(</span><span class="nx">input.length</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>  
+        <span class="kt">String</span> <span class="n">s</span> <span class="o">=</span> <span class="nx">st.longestPrefixOf</span><span class="p">(</span><span class="nb">input</span><span class="p">);</span>  
+        <span class="nx">BinaryStdOut.write</span><span class="p">(</span><span class="nx">st.get</span><span class="p">(</span><span class="nb">s</span><span class="p">),</span> <span class="nx">W</span><span class="p">);</span>  
+        <span class="nx">int</span> <span class="n">l</span> <span class="o">=</span> <span class="nx">s.length</span><span class="p">();</span>  
+        <span class="k">if</span><span class="p">(</span><span class="nx">l</span><span class="o">&lt;</span><span class="nx">input.length</span><span class="p">())</span>  
+            <span class="nx">st.put</span><span class="p">(</span><span class="nb">s</span><span class="o">+</span><span class="nx">input.charAt</span><span class="p">(</span><span class="nx">l</span><span class="p">),</span> <span class="nb">code</span><span class="o">++</span><span class="p">);</span>  
+        <span class="n">input</span> <span class="o">=</span> <span class="nx">input.substring</span><span class="p">(</span><span class="nx">l</span><span class="p">);</span>  
+    <span class="p">}</span>  
+    <span class="nx">BinaryStdOut.write</span><span class="p">(</span><span class="nb">R</span><span class="p">,</span> <span class="nx">W</span><span class="p">);</span> <span class="c1">// write &quot;stop&quot;  </span>
+    <span class="nx">BinaryStdOut.close</span><span class="p">();</span>
 
-}
+<span class="p">}</span>
 </pre></div>
 
 
@@ -512,142 +513,12 @@ problem in expansion when reading the "83": <br />
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -657,12 +528,102 @@ problem in expansion when reading the "83": <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -672,17 +633,17 @@ problem in expansion when reading the "83": <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -692,7 +653,47 @@ problem in expansion when reading the "83": <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

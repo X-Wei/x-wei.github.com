@@ -179,87 +179,87 @@ for every node, the key is larger than <em>all nodes in left</em> subtree, small
 Fields: key, val, left, right   </p>
 <h2>Implementation</h2>
 <p>An inner class of BST nodes:    </p>
-<div class="codehilite"><pre>private class Node{   
-    private Key key;   
-    private Value val;   
-    private Node left, right;   
-    public Node(Key k, Value v){...}   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="n">Key</span> <span class="n">key</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="n">Value</span> <span class="n">val</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="n">Node</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>   
+    <span class="n">public</span> <span class="nf">Node</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){...}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>skeleton implementation of BST:    </p>
-<div class="codehilite"><pre>public class BST&lt;Key implements Comparable&lt;Key&gt;, Value&gt;{   
-private Node root;   
-private class Node{...}   
-public Value get(Key k){...}   
-public void put(Key k, Value v){}   
-public void delete(Key k){}   
-public Iterable&lt;Key&gt; iterator(){}   
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">BST</span><span class="o">&lt;</span><span class="nb">Key</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span><span class="p">,</span> <span class="nb">Value</span><span class="o">&gt;</span><span class="p">{</span>   
+<span class="k">private</span> <span class="nf">Node</span> <span class="nb">root</span><span class="p">;</span>   
+<span class="k">private</span> <span class="nf">class</span> <span class="nx">Node</span><span class="p">{</span><span class="nx">...</span><span class="p">}</span>   
+<span class="k">public</span> <span class="nf">Value</span> <span class="nb">get</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">){</span><span class="nx">...</span><span class="p">}</span>   
+<span class="k">public</span> <span class="nf">void</span> <span class="nx">put</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">,</span> <span class="nb">Value</span> <span class="nx">v</span><span class="p">){}</span>   
+<span class="k">public</span> <span class="nf">void</span> <span class="nb">delete</span><span class="p">(</span><span class="nb">Key</span> <span class="nx">k</span><span class="p">){}</span>   
+<span class="k">public</span> <span class="nf">Iterable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="nb">iterator</span><span class="p">(){}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p><strong>search</strong> <br />
 recursive version:  <br />
 (或者把这个函数写到Node类里面也可以. )   </p>
-<div class="codehilite"><pre>private Value get(Node nd, Key k){   
-    if(nd==null) return null; // search miss   
-    int cmp = k.compareTo(nd.key);   
-    if(cmp==0) return nd.val; // search hit   
-    else if (cmp&gt;0) return get(nd.right, k);   
-    else return get(nd.left, k);   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Value</span> <span class="nf">get</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">null</span><span class="p">;</span> <span class="c1">// search miss   </span>
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">;</span> <span class="c1">// search hit   </span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>   
+    <span class="k">else</span> <span class="k">return</span> <span class="n">get</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>non-recursive version:   </p>
-<div class="codehilite"><pre>public Value get(Key k){   
-    Node nd=root;   
-    while(root!=null){   
-        int cmp = k.compareTo(nd.key);   
-        if (cmp==0) return nd.val;   
-        else if(cmp&gt;0) nd = nd.right;   
-        else nd = nd.left;   
-    }   
-    return null;   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">Value</span> <span class="nf">get</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="n">Node</span> <span class="n">nd</span><span class="o">=</span><span class="n">root</span><span class="p">;</span>   
+    <span class="k">while</span><span class="p">(</span><span class="n">root</span><span class="o">!=</span><span class="n">null</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+        <span class="k">if</span> <span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">;</span>   
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>   
+        <span class="k">else</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">;</span>   
+    <span class="p">}</span>   
+    <span class="k">return</span> <span class="n">null</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p><strong>insert</strong> <br />
 recursive version:  <br />
 (注意这个recursive函数的返回值不是void! 这里是一个trick: 返回的是在分叉以前的那个节点)   </p>
-<div class="codehilite"><pre>private Node put(Node nd, Key k, Value v){   
-    if(nd==null) return new Node(k, v);   
-    int cmp = k.compareTo(nd.key);   
-    if(cmp==0) nd.val = v;   
-    else if(cmp&gt;0) nd.right = put(nd.right, k, v);   
-    else nd.left = put(nd.left, k, v);   
-    return nd;   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Node</span> <span class="nf">put</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>   
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>   
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>   
+    <span class="k">else</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">put</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>   
+    <span class="k">return</span> <span class="n">nd</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>non-recursive version: <br />
 不如递归版本优美...   </p>
-<div class="codehilite"><pre>public void put(Key k, Value v){   
-    Node nd = root;   
-    while(true){   
-        int cmp = k.compareTo(nd.key);   
-        if(cmp==0) {   
-            nd.val = v; break;   
-        }   
-        else if(cmp&gt;0){    
-            if(nd.right!=null) nd = nd.right;   
-            else {nd.right = new Node(k,v); break;}   
-        }   
-        else if (nd.left!=null) {    
-            if(nd.left!=null) nd = nd.left;   
-            else {nd.left = new Node(k,v); break;}   
-        }   
-    }   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+    <span class="n">Node</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>   
+    <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>   
+            <span class="n">nd</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>   
+        <span class="p">}</span>   
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>    
+            <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="o">!=</span><span class="n">null</span><span class="p">)</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>   
+            <span class="k">else</span> <span class="p">{</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">);</span> <span class="k">break</span><span class="p">;}</span>   
+        <span class="p">}</span>   
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="o">!=</span><span class="n">null</span><span class="p">)</span> <span class="p">{</span>    
+            <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="o">!=</span><span class="n">null</span><span class="p">)</span> <span class="n">nd</span> <span class="o">=</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">;</span>   
+            <span class="k">else</span> <span class="p">{</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">);</span> <span class="k">break</span><span class="p">;}</span>   
+        <span class="p">}</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -309,14 +309,14 @@ max: right-most <br />
 <ul>
 <li>if k&gt;nd.key   <ul>
 <li>如果min(nd.right) &gt; k: 返回nd.val   </li>
-<li>如果min(nd.right) &lt;= k: go to right   <div class="codehilite"><pre>public Value floor(Node nd, Key k){// largest element with key &lt;= k       
-int cmp = k.compareTo(nd.key);         
-if(cmp==0) return nd.val;//case 1   
-else if(cmp&lt;0) return floor(nd.left, k);//case 2   
-if (nd.right==null || min(nd.right).compareTo(k)&gt;0) //case 3   
-    return nd.val;   
-else return floor(nd.right);   
-}
+<li>如果min(nd.right) &lt;= k: go to right   <div class="codehilite"><pre><span class="n">public</span> <span class="n">Value</span> <span class="nf">floor</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">){</span><span class="c1">// largest element with key &lt;= k       </span>
+<span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>         
+<span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">;</span><span class="c1">//case 1   </span>
+<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">floor</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span><span class="c1">//case 2   </span>
+<span class="k">if</span> <span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="o">==</span><span class="n">null</span> <span class="o">||</span> <span class="n">min</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">).</span><span class="n">compareTo</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="c1">//case 3   </span>
+    <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">;</span>   
+<span class="k">else</span> <span class="k">return</span> <span class="n">floor</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -329,22 +329,22 @@ else return floor(nd.right);
 <h2>rank/select</h2>
 <p>In each node, store the number of nodes in the subtree: <em>add an extra field</em>.   </p>
 <p><strong>size</strong>   </p>
-<div class="codehilite"><pre>private class Node{   
-    private int count;   
-    //...   
-}    
-public int size(){   
-    return size(root);   
-}   
-public int size(Node nd){   
-    if(nd==null) return 0;// this is why we do not put size() inside the class Node!   
-    return nd.count;   
-}   
-public void put(Node nd, Key k, Value v){   
-    //.....   
-    nd.count = size(nd.left)+size(nd.right)+1;//maintain count for each node   
-    return nd;   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>   
+    <span class="c1">//...   </span>
+<span class="p">}</span>    
+<span class="n">public</span> <span class="kt">int</span> <span class="n">size</span><span class="p">(){</span>   
+    <span class="k">return</span> <span class="n">size</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>   
+<span class="p">}</span>   
+<span class="n">public</span> <span class="kt">int</span> <span class="n">size</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span><span class="c1">// this is why we do not put size() inside the class Node!   </span>
+    <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>   
+<span class="p">}</span>   
+<span class="n">public</span> <span class="kt">void</span> <span class="n">put</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+    <span class="c1">//.....   </span>
+    <span class="n">nd</span><span class="p">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span><span class="o">+</span><span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="c1">//maintain count for each node   </span>
+    <span class="k">return</span> <span class="n">nd</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -362,30 +362,30 @@ public void put(Node nd, Key k, Value v){
 <li>if nd.key&lt;k   </li>
 </ul>
 <p>return size(nd.left)+1+rank(nd,right, k)   </p>
-<div class="codehilite"><pre>private int rank(Node nd, Key k){   
-    if(nd==null) return 0;//remember null case   
-    int cmp = k.compareTo(nd.key);   
-    if(cmp==0) return size(nd.left)   
-    else if (cmp&lt;0) return rank(nd.left, k);   
-    else return size(nd.left)+1+rank(nd.right,k);   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">int</span> <span class="nf">rank</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span><span class="c1">//remember null case   </span>
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span>   
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmp</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">rank</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>   
+    <span class="k">else</span> <span class="k">return</span> <span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">rank</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span><span class="n">k</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>select() similar...   </p>
 <h2>iteration</h2>
 <p><strong>Inorder traversal 中序遍历</strong>   </p>
-<div class="codehilite"><pre>public Iterable&lt;Key&gt; keys(){   
-    Queue&lt;Key&gt; q = new Queue&lt;Key&gt;();   
-    inorder(root, q);   
-    return q;   
-}    
-private void inorder(Node nd, Queue&lt;Key&gt; q){   
-    if(nd==null) return;   
-    inorder(nd.left);   
-    q.enqueue(nd.key);   
-    inorder(nd.right);   
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">Iterable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="nb">keys</span><span class="p">(){</span>   
+    <span class="nb">Queue</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="nb">new</span> <span class="nb">Queue</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span><span class="p">();</span>   
+    <span class="nx">inorder</span><span class="p">(</span><span class="nb">root</span><span class="p">,</span> <span class="nx">q</span><span class="p">);</span>   
+    <span class="k">return</span> <span class="nx">q</span><span class="p">;</span>   
+<span class="p">}</span>    
+<span class="k">private</span> <span class="nf">void</span> <span class="nx">inorder</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">nd</span><span class="p">,</span> <span class="nb">Queue</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;</span> <span class="nx">q</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="nx">nd</span><span class="o">==</span><span class="kt">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>   
+    <span class="nx">inorder</span><span class="p">(</span><span class="nx">nd.left</span><span class="p">);</span>   
+    <span class="nx">q.enqueue</span><span class="p">(</span><span class="nx">nd.key</span><span class="p">);</span>   
+    <span class="nx">inorder</span><span class="p">(</span><span class="nx">nd.right</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -403,13 +403,13 @@ inorder-traversal gives the keys <em>in ascending order</em>.  <br />
 <h2>deleteMin/Max</h2>
 <p>go the the left-most node → replace it with its right node.  <br />
 Recusive function with the <em>returning-node trick</em>:    </p>
-<div class="codehilite"><pre>private Node deleteMin(Node nd){   
-    if(nd==null) return null; // this might not happen   
-    if(nd.left==null) return nd.right;   
-    else nd.left = deleteMin(nd.left);   
-    nd.count = size(nd.left)+1+size(right);//remember to maintain the count field   
-    return nd;   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Node</span> <span class="nf">deleteMin</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">null</span><span class="p">;</span> <span class="c1">// this might not happen   </span>
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>   
+    <span class="k">else</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">deleteMin</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">);</span>   
+    <span class="n">nd</span><span class="p">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">size</span><span class="p">(</span><span class="n">right</span><span class="p">);</span><span class="c1">//remember to maintain the count field   </span>
+    <span class="k">return</span> <span class="n">nd</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -436,25 +436,25 @@ Recusive function with the <em>returning-node trick</em>:    </p>
 <p><img alt="" src="static/algoI_week4_2b/pasted_image008.png" />   </p>
 <p><strong>code of Hibbard deletion</strong> <br />
 Again (for the 3rd time) use the <em>return-nd trick</em>...   </p>
-<div class="codehilite"><pre>private Node delete(Node nd, Key k){   
-    if(nd==null) return null;// search miss   
-    int cmp = k.compareTo(nd.key);   
-    if(cmp&gt;0) nd.right = delete(nd.right, k);   
-    else if(cmp&lt;0) nd.left = delete(nd.left,k);   
-    else{   
-        //if nd is the node to delete   
-        if(nd.left==null) return nd.right;   
-        if(nd.right==null) return nd.left;   
-        Key k2 = min(nd.right);   
-        nd.key = k2;   
-        nd.right = delete(nd.right, k2);   
-    }   
-    nd.count = size(nd.left)+1+size(nd.right);   
-    return nd;   
-}    
-public void delete(Key k){   
-    root = delete(root, k);   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">Node</span> <span class="nf">delete</span><span class="p">(</span><span class="n">Node</span> <span class="n">nd</span><span class="p">,</span> <span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">null</span><span class="p">;</span><span class="c1">// search miss   </span>
+    <span class="kt">int</span> <span class="n">cmp</span> <span class="o">=</span> <span class="n">k</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">key</span><span class="p">);</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>   
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">,</span><span class="n">k</span><span class="p">);</span>   
+    <span class="k">else</span><span class="p">{</span>   
+        <span class="c1">//if nd is the node to delete   </span>
+        <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">;</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">;</span>   
+        <span class="n">Key</span> <span class="n">k2</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>   
+        <span class="n">nd</span><span class="p">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">k2</span><span class="p">;</span>   
+        <span class="n">nd</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">k2</span><span class="p">);</span>   
+    <span class="p">}</span>   
+    <span class="n">nd</span><span class="p">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">left</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">size</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>   
+    <span class="k">return</span> <span class="n">nd</span><span class="p">;</span>   
+<span class="p">}</span>    
+<span class="n">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="n">root</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -548,142 +548,12 @@ BST is much better in average case, but not guaranteed for worst case.  <br />
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -693,12 +563,102 @@ BST is much better in average case, but not guaranteed for worst case.  <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -708,17 +668,17 @@ BST is much better in average case, but not guaranteed for worst case.  <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -728,7 +688,47 @@ BST is much better in average case, but not guaranteed for worst case.  <br />
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

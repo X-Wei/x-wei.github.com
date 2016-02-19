@@ -170,19 +170,20 @@
 
 </footer><!-- /.post-info -->
 		</div>
-		<h1>1. API and elementary implementations</h1>
-<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br />
+		<p>1. API and elementary implementations <br />
+===================================== <br />
+Collection: data struct for inserting and deleting items (ex. stack and queue).  <br />
 Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </p>
 <p>API:    </p>
-<div class="codehilite"><pre>public class Max&lt;Kye implements Comparable&lt;Key&gt;&gt;{   
-    public MaxPQ();    
-    public void insert(Key k);   
-    public Key delMax();    
-    public boolean isEmpty();     
-    public Key max();   
-    int size();
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="k">Max</span><span class="o">&lt;</span><span class="nx">Kye</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   
+    <span class="k">public</span> <span class="nf">MaxPQ</span><span class="p">();</span>    
+    <span class="k">public</span> <span class="nf">void</span> <span class="nb">insert</span><span class="p">(</span><span class="na">Key</span> <span class="nx">k</span><span class="p">);</span>   
+    <span class="k">public</span> <span class="nf">Key</span> <span class="nx">delMax</span><span class="p">();</span>    
+    <span class="k">public</span> <span class="nf">boolean</span> <span class="nb">isEmpty</span><span class="p">();</span>     
+    <span class="k">public</span> <span class="nf">Key</span> <span class="k">max</span><span class="p">();</span>   
+    <span class="nx">int</span> <span class="nb">size</span><span class="p">();</span>
 
-}
+<span class="p">}</span>
 </pre></div>
 
 
@@ -226,8 +227,8 @@ Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of
 <p>简言之就是:  <br />
 <img alt="" src="static/algoI_week4_1/pasted_image003.png" />   </p>
 <p>内部成员变量:    </p>
-<div class="codehilite"><pre>public class MaxPQ&lt;Key implements Comparable&lt;Key&gt;&gt;{   
-    private Key[] a;   
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">MaxPQ</span><span class="o">&lt;</span><span class="nb">Key</span> <span class="nx">implements</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nb">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   
+    <span class="k">private</span> <span class="nf">Key</span><span class="err">[</span><span class="cp">]</span> a;   
     private int N;   
 }
 </pre></div>
@@ -235,47 +236,47 @@ Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of
 
 <p><strong>siftup (swim)</strong> <br />
 if a node is larger than its parent: <em>exchange with parent until heap ordering is restored.</em>    </p>
-<div class="codehilite"><pre>private void swim(int k){   
-    while(k&gt;1 &amp;&amp; less(a[k/2], a[k]){   
-        exch(a,k,k/2);   
-        k /= 2;   
-    }   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">swim</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">]){</span>   
+        <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>   
+        <span class="n">k</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>⇒ <strong>use siftup for inserting elements</strong> <br />
 when inserting an element, first append it to the end of the array, then siftup the element to its right position.    </p>
-<div class="codehilite"><pre>public void insert(Key k){    
-a[N++]=x;   
-swim(N);   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>    
+<span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">x</span><span class="p">;</span>   
+<span class="n">swim</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p><strong>siftdown (sink)</strong> <br />
 if a node is smaller than its children: <em>exchange it with the bigger child.</em> 用公司高层变动来类比很形象...    </p>
-<div class="codehilite"><pre>private void sink(int k){   
-    while(k*2&lt;=N){   
-        int maxIndex = less(a[k],a[k*2])? k*2 : k;   
-        if(k*2+1&lt;=N &amp;&amp; less(a[maxIndex],a[k*2+1]) maxIndex = 2*k+1;   
-        if(maxIndex==k) break;   
-        exch(a,k,maxIndex);   
-        k = maxIndex;   
-    }   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">sink</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="n">N</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">maxIndex</span> <span class="o">=</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="p">])</span><span class="o">?</span> <span class="n">k</span><span class="o">*</span><span class="mi">2</span> <span class="o">:</span> <span class="n">k</span><span class="p">;</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">maxIndex</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="n">maxIndex</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">maxIndex</span><span class="o">==</span><span class="n">k</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>   
+        <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">maxIndex</span><span class="p">);</span>   
+        <span class="n">k</span> <span class="o">=</span> <span class="n">maxIndex</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p><strong>⇒ use siftdown for deleting max operation</strong> <br />
 First put a[N] to the position of root, then sink. (注意要防止loitering)   </p>
-<div class="codehilite"><pre>public Key delMax(){   
-    Key ret = a[1];   
-    a[1] = a[N];   
-    a[N--] = null; // avoid loitering   
-    sink(1);   
-    return ret;   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">Key</span> <span class="nf">delMax</span><span class="p">(){</span>   
+    <span class="n">Key</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>   
+    <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>   
+    <span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="o">--</span><span class="p">]</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span> <span class="c1">// avoid loitering   </span>
+    <span class="n">sink</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>   
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -308,18 +309,18 @@ Construct the heap using a <strong>bottom-up</strong> method: build the heaps wi
 <li>larger heaps: children(subtrees) are already heap-order → just perform sink operation for root   </li>
 </ul>
 <p>⇒ <em>sink elements at indices from N/2 to 1</em>   </p>
-<div class="codehilite"><pre>for(int k=N/2; k&gt;=1; k++)   
-sink(k);
+<div class="codehilite"><pre><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span> <span class="n">k</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span>   
+<span class="n">sink</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
 </pre></div>
 
 
 <p>→ complexity is <strong>linear</strong>, see analysis below.    </p>
 <p><strong>heap destruction </strong> <br />
 now that we have a max-heap, to get the sorted array <em>in-place,</em> simply do:    </p>
-<div class="codehilite"><pre>while(N&gt;1){   
-exch(a,1, N--);   
-sink(1);   
-}
+<div class="codehilite"><pre><span class="k">while</span><span class="p">(</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">){</span>   
+<span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">--</span><span class="p">);</span>   
+<span class="n">sink</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -485,142 +486,12 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -630,12 +501,102 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -645,17 +606,17 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -665,7 +626,47 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

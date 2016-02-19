@@ -178,15 +178,15 @@
 <p>function signature: <br />
 <code>public static int search(String pat, String txt);</code>  </p>
 <p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt){  
-    int N=txt.length(), M=pat.length();  
-    for(int i=0; i&lt;=N-M; i++){  
-        int j;  
-        for(j=0; j&lt;M &amp;&amp; pat.charAt(j)==txt.charAt(i+j); j++);  
-        if(j==M) return i;  
-    }  
-    return N;// not found  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">search</span><span class="p">(</span><span class="n">String</span> <span class="n">pat</span><span class="p">,</span> <span class="n">String</span> <span class="n">txt</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="n">txt</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;=</span><span class="n">N</span><span class="o">-</span><span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>  
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">M</span> <span class="o">&amp;&amp;</span> <span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">==</span><span class="n">txt</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">);</span> <span class="n">j</span><span class="o">++</span><span class="p">);</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">M</span><span class="p">)</span> <span class="k">return</span> <span class="n">i</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">N</span><span class="p">;</span><span class="c1">// not found  </span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -200,16 +200,16 @@ problem with brute-force: always <em>backup</em> when mismatch. <br />
 <li>i := index of the end of matched char in text  </li>
 </ul>
 <p>⇒ do explicite backup when mismatch by <code>i -= j</code>  </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt){  
-    int N=txt.length(), M=pat.length(), i=0, j=0;  
-    while(i&lt;N &amp;&amp; j&lt;M){  
-        if(pat.charAt(j)==txt.charAt(i))   
-            {j=i++; j++;}  
-        else   
-            {i=i-j+1; j=0}// &lt;==backup  
-    }  
-    return j==M ? i-M : N;  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">search</span><span class="p">(</span><span class="n">String</span> <span class="n">pat</span><span class="p">,</span> <span class="n">String</span> <span class="n">txt</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="n">txt</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">){</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">==</span><span class="n">txt</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>   
+            <span class="p">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">++</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">;}</span>  
+        <span class="k">else</span>   
+            <span class="p">{</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">}</span><span class="c1">// &lt;==backup  </span>
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">j</span><span class="o">==</span><span class="n">M</span> <span class="o">?</span> <span class="n">i</span><span class="o">-</span><span class="n">M</span> <span class="o">:</span> <span class="n">N</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -240,12 +240,12 @@ states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,
 <li>the pointer i <em>never</em> decrements (thus we can do it in a <em>streaming</em> manner)  </li>
 </ul>
 <p>→ <em>if</em> <code>dfa[][]</code> <em>is precomputed</em>, java code is very very simple:  </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt, int[][] dfa){  
-    int N=txt.length(), M=pat.length(), i, j=0;  
-    for(i=0; i&lt;N &amp;&amp; j&lt;M; i++)  
-        j = dfa[txt.charAt(i)][j];  
-    return j==M ? i-M : N;  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">search</span><span class="p">(</span><span class="n">String</span> <span class="n">pat</span><span class="p">,</span> <span class="n">String</span> <span class="n">txt</span><span class="p">,</span> <span class="kt">int</span><span class="p">[][]</span> <span class="n">dfa</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="n">txt</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="n">j</span> <span class="o">=</span> <span class="n">dfa</span><span class="p">[</span><span class="n">txt</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="n">j</span><span class="p">];</span>  
+    <span class="k">return</span> <span class="n">j</span><span class="o">==</span><span class="n">M</span> <span class="o">?</span> <span class="n">i</span><span class="o">-</span><span class="n">M</span> <span class="o">:</span> <span class="n">N</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -303,24 +303,24 @@ we maintain this state <code>X</code>, then for each <em>mismatched</em> char c,
 </ul>
 </blockquote>
 <p>java code (can be written to be more compate):   </p>
-<div class="codehilite"><pre>public int[][] constructDFA(String pat){  
-    int R=256;//ASCII code    
-    int M=pat.length();  
-    int[][] dfa = new int[R][M];  
-    // 1. fill matched transitions: dfa[pat.charAt(j)][j] = j+1   
-    for(int j=0;j&lt;M;j++)  
-        dfa[pat.charAt(j)][j] = j+1;  
-    // 2. fill 1st column --&gt; can be ignored as java int default val=0  
-    // 3. fill mismatched transitions     
-    int X = 0;  
-    for(int j=1;j&lt;M;j++){  
-        for(int c=0;c&lt;R;c++)  
-            if(c!=pat.charAt(j))  
-                dfa[c][j] = dfa[c][X];  
-        X = dfa[pat.charAt(j)][X];  
-    }  
-    return dfa;  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">int</span><span class="p">[][]</span> <span class="n">constructDFA</span><span class="p">(</span><span class="n">String</span> <span class="n">pat</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">R</span><span class="o">=</span><span class="mi">256</span><span class="p">;</span><span class="c1">//ASCII code    </span>
+    <span class="kt">int</span> <span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>  
+    <span class="kt">int</span><span class="p">[][]</span> <span class="n">dfa</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">R</span><span class="p">][</span><span class="n">M</span><span class="p">];</span>  
+    <span class="c1">// 1. fill matched transitions: dfa[pat.charAt(j)][j] = j+1   </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>  
+        <span class="n">dfa</span><span class="p">[</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>  
+    <span class="c1">// 2. fill 1st column --&gt; can be ignored as java int default val=0  </span>
+    <span class="c1">// 3. fill mismatched transitions     </span>
+    <span class="kt">int</span> <span class="n">X</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">c</span><span class="o">++</span><span class="p">)</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="o">!=</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>  
+                <span class="n">dfa</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfa</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="n">X</span><span class="p">];</span>  
+        <span class="n">X</span> <span class="o">=</span> <span class="n">dfa</span><span class="p">[</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)][</span><span class="n">X</span><span class="p">];</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">dfa</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -359,30 +359,30 @@ to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn
 <h3>implementation</h3>
 <p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br />
 <img alt="" src="static/algoII_week4_2/pasted_image012.png" />  </p>
-<div class="codehilite"><pre>int[] right = new int[M];  
-for(int i=0;i&lt;R;i++) right[i] = -1;//value for chars not in pattern  
-for(int j=0;j&lt;M;j++){  
-    right[pat.charAt(j)]=j;  
-}
+<div class="codehilite"><pre><span class="kt">int</span><span class="p">[]</span> <span class="n">right</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">M</span><span class="p">];</span>  
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">right</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="c1">//value for chars not in pattern  </span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">){</span>  
+    <span class="n">right</span><span class="p">[</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)]</span><span class="o">=</span><span class="n">j</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <p>using this table we can implemente the heuristic algorithm:   </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt, int[] right){  
-    int N=txt.length(), M=pat.length();  
-    int skip;  
-    for(int i=0;i&lt;N-M;i+=skip){  
-        skip = 0;  
-        for(int j=M-1;j&gt;=0;j++)  
-            if(pat.charAt(j)!=txt.charAt(i+j)){// when mismatch happens  
-                skip = Math.max(1,j - right[txt.charAt(i+j)]);// skip if we can, else just increment i by 1  
-                break;  
-            }  
-        if(skip==0)// if the above for loop finishes without changing skip --&gt; we are done.    
-            return i;  
-    }  
-    return N;// pattern not found  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">search</span><span class="p">(</span><span class="n">String</span> <span class="n">pat</span><span class="p">,</span> <span class="n">String</span> <span class="n">txt</span><span class="p">,</span> <span class="kt">int</span><span class="p">[]</span> <span class="n">right</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">N</span><span class="o">=</span><span class="n">txt</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span> <span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>  
+    <span class="kt">int</span> <span class="n">skip</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="o">-</span><span class="n">M</span><span class="p">;</span><span class="n">i</span><span class="o">+=</span><span class="n">skip</span><span class="p">){</span>  
+        <span class="n">skip</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">!=</span><span class="n">txt</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)){</span><span class="c1">// when mismatch happens  </span>
+                <span class="n">skip</span> <span class="o">=</span> <span class="n">Math</span><span class="p">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span> <span class="o">-</span> <span class="n">right</span><span class="p">[</span><span class="n">txt</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">)]);</span><span class="c1">// skip if we can, else just increment i by 1  </span>
+                <span class="k">break</span><span class="p">;</span>  
+            <span class="p">}</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">skip</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="c1">// if the above for loop finishes without changing skip --&gt; we are done.    </span>
+            <span class="k">return</span> <span class="n">i</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">N</span><span class="p">;</span><span class="c1">// pattern not found  </span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -414,12 +414,12 @@ ex. for strings of numbers   </p>
 recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <p>ex. (R=10, M=5)<br />
 <img alt="" src="static/algoII_week4_2/pasted_image016.png" />  </p>
-<div class="codehilite"><pre>private long hash(String key, int M){  
-    long h=0;  
-    for(int i=0;i&lt;M;i++)  
-        h = ( h*R + key.charAt(i) ) % Q  
-    return h;  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">long</span> <span class="nf">hash</span><span class="p">(</span><span class="n">String</span> <span class="n">key</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">){</span>  
+    <span class="kt">long</span> <span class="n">h</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="n">h</span> <span class="o">=</span> <span class="p">(</span> <span class="n">h</span><span class="o">*</span><span class="n">R</span> <span class="o">+</span> <span class="n">key</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">)</span> <span class="o">%</span> <span class="n">Q</span>  
+    <span class="k">return</span> <span class="n">h</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -430,17 +430,17 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 ⇒ x_i+1 can be computed in constant time: <br />
 <img alt="" src="static/algoII_week4_2/pasted_image018.png" /><br />
 ⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </p>
-<div class="codehilite"><pre>public static int search(String txt, String pat){  
-    int N=txt.length(), M=pat.length();  
-    long pathash = hash(pat, M);      
-    int RM = R^(M-1);// &lt;-- pseudo code, store value of R^(M-1)  
-    long txthash = hash(txt, M);// txthash will be maintained  
-    for(int i=0;i&lt;N-M;i++){  
-        if(txthash==pathash &amp;&amp; checkMatch(i,txt,pat))   
-            return i;  
-        txthash = ( (txthash - txt.charAt(i)*RM)*R + txt.charAt(i+M) ) % Q;  
-    }  
-}
+<div class="codehilite"><pre>public static int search<span class="p">(</span>String txt<span class="p">,</span> String pat<span class="p">){</span>  
+    int N<span class="o">=</span>txt.length<span class="p">(),</span> M<span class="o">=</span>pat.length<span class="p">();</span>  
+    long pathash <span class="o">=</span> hash<span class="p">(</span>pat<span class="p">,</span> M<span class="p">);</span>      
+    int RM <span class="o">=</span> R<span class="o">^</span><span class="p">(</span>M<span class="m">-1</span><span class="p">);</span><span class="o">//</span> <span class="o">&lt;--</span> pseudo code<span class="p">,</span> store value of R<span class="o">^</span><span class="p">(</span>M<span class="m">-1</span><span class="p">)</span>  
+    long txthash <span class="o">=</span> hash<span class="p">(</span>txt<span class="p">,</span> M<span class="p">);</span><span class="o">//</span> txthash will be maintained  
+    <span class="kr">for</span><span class="p">(</span>int i<span class="o">=</span><span class="m">0</span><span class="p">;</span>i<span class="o">&lt;</span>N<span class="o">-</span>M<span class="p">;</span>i<span class="o">++</span><span class="p">){</span>  
+        <span class="kr">if</span><span class="p">(</span>txthash<span class="o">==</span>pathash <span class="o">&amp;&amp;</span> checkMatch<span class="p">(</span>i<span class="p">,</span>txt<span class="p">,</span>pat<span class="p">))</span>   
+            <span class="kr">return</span> i<span class="p">;</span>  
+        txthash <span class="o">=</span> <span class="p">(</span> <span class="p">(</span>txthash <span class="o">-</span> txt.charAt<span class="p">(</span>i<span class="p">)</span><span class="o">*</span>RM<span class="p">)</span><span class="o">*</span>R <span class="o">+</span> txt.charAt<span class="p">(</span>i<span class="o">+</span>M<span class="p">)</span> <span class="p">)</span> % Q<span class="p">;</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -535,142 +535,12 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -680,12 +550,102 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -695,17 +655,17 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -715,7 +675,47 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

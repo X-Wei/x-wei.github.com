@@ -516,14 +516,14 @@ or even the <code>has_key</code> method of the dict class: <code>if dic.has_key(
 <p>"a program which creates a backup of all my important files"</p>
 <h2>1st version</h2>
 <ul>
-<li>Run the command using the <code>os.system</code> function which runs the command as if it was run from the system i.e. in the shell - it returns 0 if the command was successfully, else it returns an error number.<div class="codehilite"><pre>source = [&#39;/home/swaroop/byte&#39;, &#39;/home/swaroop/bin&#39;]
-target_dir = &#39;/mnt/e/backup/&#39;
-target = target_dir + time.strftime(&#39;%Y%m%d%H%M%S&#39;) + &#39;.zip&#39;
-zip_command = &quot;zip -qr &#39;%s&#39; %s&quot; % (target, &#39; &#39;.join(source))
-if os.system(zip_command) == 0:
-    print &#39;Successful backup to&#39;, target
-else:
-    print &#39;Backup FAILED&#39;
+<li>Run the command using the <code>os.system</code> function which runs the command as if it was run from the system i.e. in the shell - it returns 0 if the command was successfully, else it returns an error number.<div class="codehilite"><pre><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="err">&#39;</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">swaroop</span><span class="o">/</span><span class="n">byte</span><span class="err">&#39;</span><span class="p">,</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">swaroop</span><span class="o">/</span><span class="n">bin</span><span class="err">&#39;</span><span class="p">]</span>
+<span class="n">target_dir</span> <span class="o">=</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="n">backup</span><span class="o">/</span><span class="err">&#39;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">+</span> <span class="n">time</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="err">&#39;</span><span class="o">%</span><span class="n">Y</span><span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">d</span><span class="o">%</span><span class="n">H</span><span class="o">%</span><span class="n">M</span><span class="o">%</span><span class="n">S</span><span class="err">&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">zip</span><span class="err">&#39;</span>
+<span class="n">zip_command</span> <span class="o">=</span> <span class="s">&quot;zip -qr &#39;%s&#39; %s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="sc">&#39; &#39;</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">system</span><span class="p">(</span><span class="n">zip_command</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">:</span>
+    <span class="n">print</span> <span class="err">&#39;</span><span class="n">Successful</span> <span class="n">backup</span> <span class="n">to</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">target</span>
+<span class="nl">else:</span>
+    <span class="n">print</span> <span class="err">&#39;</span><span class="n">Backup</span> <span class="n">FAILED</span><span class="err">&#39;</span>
 </pre></div>
 
 
@@ -533,10 +533,10 @@ else:
 <ul>
 <li>
 <p>using the time as the name of the file within a directory with the current date as a directory within the main backup directory.</p>
-<div class="codehilite"><pre>if not os.path.exists(today):
-    os.mkdir(today) # make directory
-...
-target = today + os.sep + now + &#39;.zip&#39;
+<div class="codehilite"><pre><span class="k">if</span> <span class="n">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">today</span><span class="p">)</span><span class="o">:</span>
+    <span class="n">os</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">today</span><span class="p">)</span> <span class="err">#</span> <span class="n">make</span> <span class="n">directory</span>
+<span class="p">...</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">os</span><span class="p">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">now</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">zip</span><span class="err">&#39;</span>
 </pre></div>
 
 
@@ -547,12 +547,12 @@ target = today + os.sep + now + &#39;.zip&#39;
 </ul>
 <h2>3rd version</h2>
 <ul>
-<li>attaching a user-supplied comment to the name of the zip archive.<div class="codehilite"><pre>comment = raw_input(&#39;Enter a comment --&gt; &#39;)
-if len(comment) == 0: # check if a comment was entered
-    target = today + os.sep + now + &#39;.zip&#39;
-else:
-    target = today + os.sep + now + &#39;_&#39; + \
-    comment.replace(&#39; &#39;, &#39;_&#39;) + &#39;.zip&#39;
+<li>attaching a user-supplied comment to the name of the zip archive.<div class="codehilite"><pre><span class="n">comment</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Enter</span> <span class="n">a</span> <span class="n">comment</span> <span class="o">--&gt;</span> <span class="err">&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">len</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">:</span> <span class="err">#</span> <span class="n">check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">comment</span> <span class="n">was</span> <span class="n">entered</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">os</span><span class="p">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">now</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">zip</span><span class="err">&#39;</span>
+<span class="nl">else:</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">os</span><span class="p">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">now</span> <span class="o">+</span> <span class="sc">&#39;_&#39;</span> <span class="o">+</span> \
+    <span class="n">comment</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="sc">&#39; &#39;</span><span class="p">,</span> <span class="sc">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">zip</span><span class="err">&#39;</span>
 </pre></div>
 
 
@@ -594,12 +594,12 @@ else:
 <ul>
 <li>
 <p>ex:</p>
-<div class="codehilite"><pre><span class="k">class</span> <span class="n">Teacher</span>(<span class="n">SchoolMember</span>)://
-    <span class="s">&#39;&#39;&#39;Represents a teacher.&#39;&#39;&#39;</span>
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>, <span class="nb">name</span>, <span class="n">age</span>, <span class="n">salary</span>):
-        <span class="n">SchoolMember</span>.<span class="n">__init__</span>(<span class="k">self</span>, <span class="nb">name</span>, <span class="n">age</span>)
-        <span class="k">self</span>.<span class="n">salary</span> = <span class="n">salary</span>
-        <span class="nb">print</span> <span class="s">&#39;(Initialized Teacher: %s)&#39;</span> % <span class="k">self</span>.<span class="nb">name</span>
+<div class="codehilite"><pre><span class="n">class</span> <span class="n">Teacher</span><span class="p">(</span><span class="n">SchoolMember</span><span class="p">)</span><span class="o">:</span><span class="c1">//</span>
+    <span class="err">&#39;&#39;&#39;</span><span class="n">Represents</span> <span class="n">a</span> <span class="n">teacher</span><span class="p">.</span><span class="err">&#39;&#39;&#39;</span>
+    <span class="n">def</span> <span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">salary</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">SchoolMember</span><span class="p">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">salary</span>
+        <span class="n">print</span> <span class="err">&#39;</span><span class="p">(</span><span class="n">Initialized</span> <span class="n">Teacher</span><span class="o">:</span> <span class="o">%</span><span class="n">s</span><span class="p">)</span><span class="err">&#39;</span> <span class="o">%</span> <span class="n">self</span><span class="p">.</span><span class="n">name</span>
 </pre></div>
 
 
@@ -612,16 +612,16 @@ else:
 <h1>ch12. Input/Output</h1>
 <h2>Files</h2>
 <ul>
-<li>open and use files for reading or writing by creating an object of the <code>file</code> class and using its <code>read</code>, <code>readline</code> or <code>write</code> methods appropriately to read from or write to the file. Then finally, when you are finished with the file, you call the <code>close</code> method to tell Python that we are done using the file.<div class="codehilite"><pre>f = file(&#39;poem.txt&#39;, &#39;w&#39;) # open for &#39;w&#39;riting
-f.write(poem) # write text to file
-f.close() # close the file
-f = file(&#39;poem.txt&#39;) # if no mode is specified, &#39;r&#39;ead mode is assumed by default
-while True:
-    line = f.readline()# This method returns a complete line including the newline character at the end of the line.
-    if len(line) == 0: # Zero length indicates EOF
-    break
-    print line, # Notice comma to avoid automatic newline added by Python
-f.close() # close the file
+<li>open and use files for reading or writing by creating an object of the <code>file</code> class and using its <code>read</code>, <code>readline</code> or <code>write</code> methods appropriately to read from or write to the file. Then finally, when you are finished with the file, you call the <code>close</code> method to tell Python that we are done using the file.<div class="codehilite"><pre><span class="n">f</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poem</span><span class="p">.</span><span class="n">txt</span><span class="err">&#39;</span><span class="p">,</span> <span class="sc">&#39;w&#39;</span><span class="p">)</span> <span class="err">#</span> <span class="n">open</span> <span class="k">for</span> <span class="sc">&#39;w&#39;</span><span class="n">riting</span>
+<span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">poem</span><span class="p">)</span> <span class="err">#</span> <span class="n">write</span> <span class="n">text</span> <span class="n">to</span> <span class="n">file</span>
+<span class="n">f</span><span class="p">.</span><span class="n">close</span><span class="p">()</span> <span class="err">#</span> <span class="n">close</span> <span class="n">the</span> <span class="n">file</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poem</span><span class="p">.</span><span class="n">txt</span><span class="err">&#39;</span><span class="p">)</span> <span class="err">#</span> <span class="k">if</span> <span class="n">no</span> <span class="n">mode</span> <span class="n">is</span> <span class="n">specified</span><span class="p">,</span> <span class="sc">&#39;r&#39;</span><span class="n">ead</span> <span class="n">mode</span> <span class="n">is</span> <span class="n">assumed</span> <span class="n">by</span> <span class="k">default</span>
+<span class="k">while</span> <span class="n">True</span><span class="o">:</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">readline</span><span class="p">()</span><span class="err">#</span> <span class="n">This</span> <span class="n">method</span> <span class="n">returns</span> <span class="n">a</span> <span class="n">complete</span> <span class="n">line</span> <span class="n">including</span> <span class="n">the</span> <span class="n">newline</span> <span class="n">character</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">line</span><span class="p">.</span>
+    <span class="k">if</span> <span class="n">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">:</span> <span class="err">#</span> <span class="n">Zero</span> <span class="n">length</span> <span class="n">indicates</span> <span class="n">EOF</span>
+    <span class="k">break</span>
+    <span class="n">print</span> <span class="n">line</span><span class="p">,</span> <span class="err">#</span> <span class="n">Notice</span> <span class="n">comma</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">automatic</span> <span class="n">newline</span> <span class="n">added</span> <span class="n">by</span> <span class="n">Python</span>
+<span class="n">f</span><span class="p">.</span><span class="n">close</span><span class="p">()</span> <span class="err">#</span> <span class="n">close</span> <span class="n">the</span> <span class="n">file</span>
 </pre></div>
 
 
@@ -633,13 +633,13 @@ f.close() # close the file
 <li>There is another module called <code>cPickle</code> which functions exactly same as the <code>pickle</code> module except that it is written in the C language and is (upto 1000 times) faster. </li>
 <li>
 <p>pickling &amp; unpickling:</p>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">cPickle</span> <span class="kn">as</span> <span class="nn">p</span>
-<span class="n">f</span> <span class="o">=</span> <span class="nb">file</span><span class="p">(</span><span class="n">shoplistfile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
-<span class="n">p</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">shoplist</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="n">f</span> <span class="o">=</span> <span class="nb">file</span><span class="p">(</span><span class="n">shoplistfile</span><span class="p">)</span>
-<span class="n">storedlist</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">storedlist</span>
+<div class="codehilite"><pre><span class="n">import</span> <span class="n">cPickle</span> <span class="n">as</span> <span class="n">p</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">shoplistfile</span><span class="p">,</span> <span class="sc">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">p</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">shoplist</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">f</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">shoplistfile</span><span class="p">)</span>
+<span class="n">storedlist</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">print</span> <span class="n">storedlist</span>
 </pre></div>
 
 
@@ -657,16 +657,16 @@ f.close() # close the file
 </li>
 <li>
 <p>ex</p>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">sys</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&#39;Enter something --&gt; &#39;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Why did you do an EOF on me?&#39;</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span> <span class="c"># exit the program</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">Some error/exception occurred.&#39;</span>
-    <span class="c"># here, we are not exiting the program</span>
-<span class="k">print</span> <span class="s">&#39;Done&#39;</span>
+<div class="codehilite"><pre><span class="n">import</span> <span class="n">sys</span>
+<span class="nl">try:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Enter</span> <span class="n">something</span> <span class="o">--&gt;</span> <span class="err">&#39;</span><span class="p">)</span>
+<span class="n">except</span> <span class="n">EOFError</span><span class="o">:</span>
+    <span class="n">print</span> <span class="err">&#39;\</span><span class="n">nWhy</span> <span class="n">did</span> <span class="n">you</span> <span class="k">do</span> <span class="n">an</span> <span class="n">EOF</span> <span class="n">on</span> <span class="n">me</span><span class="o">?</span><span class="err">&#39;</span>
+    <span class="n">sys</span><span class="p">.</span><span class="n">exit</span><span class="p">()</span> <span class="err">#</span> <span class="n">exit</span> <span class="n">the</span> <span class="n">program</span>
+<span class="nl">except:</span>
+    <span class="n">print</span> <span class="err">&#39;\</span><span class="n">nSome</span> <span class="n">error</span><span class="o">/</span><span class="n">exception</span> <span class="n">occurred</span><span class="p">.</span><span class="err">&#39;</span>
+    <span class="err">#</span> <span class="n">here</span><span class="p">,</span> <span class="n">we</span> <span class="n">are</span> <span class="n">not</span> <span class="n">exiting</span> <span class="n">the</span> <span class="n">program</span>
+<span class="n">print</span> <span class="err">&#39;</span><span class="n">Done</span><span class="err">&#39;</span>
 </pre></div>
 
 
@@ -682,25 +682,25 @@ f.close() # close the file
 <li>using the <code>raise</code> statement. </li>
 <li>You also have to specify the name of the error/exception and the exception object that is to be thrown along with the exception. </li>
 <li>The error or exception that you can arise should be class which directly or indirectly is a derived class of the <code>Error</code> or <code>Exception</code> class respectively.</li>
-<li>ex.<div class="codehilite"><pre><span class="k">class</span> <span class="n">ShortInputException</span>(<span class="nb">Exception</span>):
-    <span class="s">&#39;&#39;&#39;A user-defined exception class.&#39;&#39;&#39;</span>
-    <span class="n">def</span> <span class="n">__init__</span>(<span class="k">self</span>, <span class="n">length</span>, <span class="n">atleast</span>):
-        <span class="nb">Exception</span>.<span class="n">__init__</span>(<span class="k">self</span>)
-        <span class="k">self</span>.<span class="n">length</span> = <span class="n">length</span>
-        <span class="k">self</span>.<span class="n">atleast</span> = <span class="n">atleast</span>
+<li>ex.<div class="codehilite"><pre><span class="n">class</span> <span class="n">ShortInputException</span><span class="p">(</span><span class="n">Exception</span><span class="p">)</span><span class="o">:</span>
+    <span class="err">&#39;&#39;&#39;</span><span class="n">A</span> <span class="n">user</span><span class="o">-</span><span class="n">defined</span> <span class="n">exception</span> <span class="n">class</span><span class="p">.</span><span class="err">&#39;&#39;&#39;</span>
+    <span class="n">def</span> <span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">atleast</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">Exception</span><span class="p">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">atleast</span> <span class="o">=</span> <span class="n">atleast</span>
 
-<span class="n">try:</span>
-    <span class="o">s</span> = <span class="n">raw_input</span>(<span class="s">&#39;Enter something --&gt; &#39;</span>)
-    <span class="k">if</span> <span class="n">len</span>(<span class="o">s</span>) &lt; <span class="mi">3</span>:
-        <span class="n">raise</span> <span class="n">ShortInputException</span>(<span class="n">len</span>(<span class="o">s</span>), <span class="mi">3</span>)<span class="c-Singleline">#  specify the name of the error/exception and the exception object that is to be thrown</span>
+<span class="nl">try:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Enter</span> <span class="n">something</span> <span class="o">--&gt;</span> <span class="err">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">:</span>
+        <span class="n">raise</span> <span class="n">ShortInputException</span><span class="p">(</span><span class="n">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span><span class="err">#</span>  <span class="n">specify</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">error</span><span class="o">/</span><span class="n">exception</span> <span class="n">and</span> <span class="n">the</span> <span class="n">exception</span> <span class="n">object</span> <span class="n">that</span> <span class="n">is</span> <span class="n">to</span> <span class="n">be</span> <span class="n">thrown</span>
 
-<span class="n">except</span> <span class="n">EOFError:</span>
-    <span class="nb">print</span> <span class="s">&#39;\nWhy did you do an EOF on me?&#39;</span>
-<span class="n">except</span> <span class="n">ShortInputException</span>, <span class="o">x</span>:
-    <span class="nb">print</span> <span class="s">&#39;ShortInputException: The input was of length %d, \</span>
-<span class="s">                was expecting at least %d&#39;</span> % (<span class="o">x</span>.<span class="n">length</span>, <span class="o">x</span>.<span class="n">atleast</span>)
-<span class="n">else:</span>
-    <span class="nb">print</span> <span class="s">&#39;No exception was raised.&#39;</span>
+<span class="n">except</span> <span class="n">EOFError</span><span class="o">:</span>
+    <span class="n">print</span> <span class="err">&#39;\</span><span class="n">nWhy</span> <span class="n">did</span> <span class="n">you</span> <span class="k">do</span> <span class="n">an</span> <span class="n">EOF</span> <span class="n">on</span> <span class="n">me</span><span class="o">?</span><span class="err">&#39;</span>
+<span class="n">except</span> <span class="n">ShortInputException</span><span class="p">,</span> <span class="n">x</span><span class="o">:</span>
+    <span class="n">print</span> <span class="err">&#39;</span><span class="n">ShortInputException</span><span class="o">:</span> <span class="n">The</span> <span class="n">input</span> <span class="n">was</span> <span class="n">of</span> <span class="n">length</span> <span class="o">%</span><span class="n">d</span><span class="p">,</span> \
+                <span class="n">was</span> <span class="n">expecting</span> <span class="n">at</span> <span class="n">least</span> <span class="o">%</span><span class="n">d</span><span class="err">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">atleast</span><span class="p">)</span>
+<span class="nl">else:</span>
+    <span class="n">print</span> <span class="err">&#39;</span><span class="n">No</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">raised</span><span class="p">.</span><span class="err">&#39;</span>
 </pre></div>
 
 
@@ -760,8 +760,8 @@ f.close() # close the file
 <li>used to derive a new list from an existing list.</li>
 <li>
 <p>ex</p>
-<div class="codehilite"><pre>listone = [2, 3, 4]
-listtwo = [2*i for i in listone if i &gt; 2]
+<div class="codehilite"><pre><span class="n">listone</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">listtwo</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="n">listone</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
 </pre></div>
 
 
@@ -782,20 +782,20 @@ listtwo = [2*i for i in listone if i &gt; 2]
 <h2>Lambda Forms</h2>
 <ul>
 <li>A <code>lambda</code> statement is used to create new function objects and then return them <em>at runtime</em>.</li>
-<li>ex. <div class="codehilite"><pre>def make_repeater(n):
-    return lambda s: s * n
-twice = make_repeater(2)
-print twice(&#39;word&#39;)
-print twice(5)
+<li>ex. <div class="codehilite"><pre><span class="n">def</span> <span class="n">make_repeater</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">:</span>
+    <span class="k">return</span> <span class="n">lambda</span> <span class="n">s</span><span class="o">:</span> <span class="n">s</span> <span class="o">*</span> <span class="n">n</span>
+<span class="n">twice</span> <span class="o">=</span> <span class="n">make_repeater</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">print</span> <span class="n">twice</span><span class="p">(</span><span class="err">&#39;</span><span class="n">word</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="n">print</span> <span class="n">twice</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 
 </li>
 </ul>
 <p>output:</p>
-<div class="codehilite"><pre>    $ python lambda.py
-    wordword
-    10
+<div class="codehilite"><pre>    <span class="err">$</span> <span class="n">python</span> <span class="n">lambda</span><span class="p">.</span><span class="n">py</span>
+    <span class="n">wordword</span>
+    <span class="mi">10</span>
 </pre></div>
 
 
@@ -905,142 +905,12 @@ print twice(5)
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -1050,12 +920,102 @@ print twice(5)
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -1065,17 +1025,17 @@ print twice(5)
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -1085,7 +1045,47 @@ print twice(5)
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

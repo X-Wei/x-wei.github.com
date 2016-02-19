@@ -192,32 +192,32 @@
 </ul>
 <h3>APIs</h3>
 <p>for weighted directed edge:   </p>
-<div class="codehilite"><pre>public class DirectedEdge{   
-    DirectedEdge(int v, int w, double weight);   
-    int from();   
-    int to();   
-    double weight();   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">DirectedEdge</span><span class="p">{</span>   
+    <span class="n">DirectedEdge</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">double</span> <span class="n">weight</span><span class="p">);</span>   
+    <span class="kt">int</span> <span class="nf">from</span><span class="p">();</span>   
+    <span class="kt">int</span> <span class="nf">to</span><span class="p">();</span>   
+    <span class="kt">double</span> <span class="nf">weight</span><span class="p">();</span>   
+<span class="p">}</span>
 </pre></div>
 
 
 <p>for edge-weighted digraph:   </p>
-<div class="codehilite"><pre>public class EdgeWeightedDigraph{   
-    private final Bag&lt;DirectedEdge&gt;[] adj;    
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">EdgeWeightedDigraph</span><span class="p">{</span>   
+    <span class="k">private</span> <span class="nf">final</span> <span class="nx">Bag</span><span class="o">&lt;</span><span class="nx">DirectedEdge</span><span class="o">&gt;</span><span class="err">[</span><span class="cp">]</span> adj;    
     EdgeWeightedDigraph(int V);   
     void addEdge(DirectedEdge e);   
-    Iterable&lt;DirectedEdge&gt; adj(int v);   
+    Iterable<span class="nt">&lt;DirectedEdge&gt;</span> adj(int v);   
     int V();   
 }
 </pre></div>
 
 
 <p>for single source shortest-path:   </p>
-<div class="codehilite"><pre>public class SP{   
-    SP(EdgeWeightedDigraph G, int s);//s is the source node   
-    double distTo(int v);//dist from s to v   
-    Iterable&lt;DirectedEdge&gt; pathTo(int v);// shortest path from s to v   
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">SP</span><span class="p">{</span>   
+    <span class="nx">SP</span><span class="p">(</span><span class="nx">EdgeWeightedDigraph</span> <span class="nx">G</span><span class="p">,</span> <span class="nx">int</span> <span class="nb">s</span><span class="p">);</span><span class="c1">//s is the source node   </span>
+    <span class="nx">double</span> <span class="nx">distTo</span><span class="p">(</span><span class="nx">int</span> <span class="nx">v</span><span class="p">);</span><span class="c1">//dist from s to v   </span>
+    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nx">DirectedEdge</span><span class="o">&gt;</span> <span class="nx">pathTo</span><span class="p">(</span><span class="nx">int</span> <span class="nx">v</span><span class="p">);</span><span class="c1">// shortest path from s to v   </span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -232,14 +232,14 @@
 <li><code>DirectedEdge edgeTo[v]</code> = last edge to v in shortest path, <code>edgeTo[s] = null</code>   </li>
 </ul>
 <p><img alt="" src="static/algoII_week2_2/pasted_image001.png" />   </p>
-<div class="codehilite"><pre>private int distTo[] = new int[V];   
-private DirectedEdge edgeTo[] = new DirectedEdge[V];   
+<div class="codehilite"><pre><span class="k">private</span> <span class="nf">int</span> <span class="nx">distTo</span><span class="err">[</span><span class="cp">]</span> = new int<span class="cp">[</span><span class="nx">V</span><span class="cp">]</span>;   
+private DirectedEdge edgeTo<span class="cp">[]</span> = new DirectedEdge<span class="cp">[</span><span class="nx">V</span><span class="cp">]</span>;   
 public double distTo(int v){   
-    return this.distTo[v];   
+    return this.distTo<span class="cp">[</span><span class="nx">v</span><span class="cp">]</span>;   
 }   
-public Iterable&lt;DirectedEdge&gt; pathTo(int v){   
-    Stack&lt;DirectedEdge&gt; path = new Stack&lt;DirectedEdge&gt;();   
-    for(DirectedEdge e = this.edgeTo[v]; e!=null; e = edgeTo[e.from])   
+public Iterable<span class="nt">&lt;DirectedEdge&gt;</span> pathTo(int v){   
+    Stack<span class="nt">&lt;DirectedEdge&gt;</span> path = new Stack<span class="nt">&lt;DirectedEdge&gt;</span>();   
+    for(DirectedEdge e = this.edgeTo<span class="cp">[</span><span class="nx">v</span><span class="cp">]</span>; e!=null; e = edgeTo<span class="cp">[</span><span class="nx">e.from</span><span class="cp">]</span>)   
         path.push(e);   
     return path;   
 }
@@ -256,13 +256,13 @@ public Iterable&lt;DirectedEdge&gt; pathTo(int v){
 <p>(consider edges one by one) <br />
 <strong>def</strong>. edge e = v--&gt;w <strong>relaxes</strong> if e.weight+distTo[v] &lt; distTo[w]. → update distTo[w] and edgeTo[w]. <br />
 <img alt="" src="static/algoII_week2_2/pasted_image003.png" />   </p>
-<div class="codehilite"><pre>private void relax(DirectedEdge e){   
-    int v = e.from(), w = e.to();   
-    if(distTo[w]&gt;distTo[v]+e.weight()){   
-        distTo[w] = distTo[v]+e.weight();   
-        edgeTo[w] = e;   
-    }   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">relax</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="p">){</span>   
+    <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">from</span><span class="p">(),</span> <span class="n">w</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">();</span>   
+    <span class="k">if</span><span class="p">(</span><span class="n">distTo</span><span class="p">[</span><span class="n">w</span><span class="p">]</span><span class="o">&gt;</span><span class="n">distTo</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">()){</span>   
+        <span class="n">distTo</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">distTo</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">();</span>   
+        <span class="n">edgeTo</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -304,34 +304,34 @@ pf.  <br />
 * CQFD by optimality condition.   </p>
 <h3>implementation</h3>
 <p>Use an <code>IndexMinPQ</code> to store vertices.   </p>
-<div class="codehilite"><pre>public class DijkstraSP{   
-    private int dist[];   
-    private DirectedEdge edgeTo[];   
-    private IndexMinPQ&lt;Integer,Double&gt; pq;   
-    DijkstraSP(EdgeWeightedDigraph G, int s){   
-        this.dist[] = new int[G.V()];   
-        this.edgeTo[] = new DirectedEdge[G.V()];   
-        this.pq = new IndexMinPQ&lt;Integer,Double&gt;(G.V());   
-        for(int v = 0; v&lt;G.V(); v++)  dist[v] = 999999;   
-        dist[s] = 0;           
-        pq.insert(s, 0.0);   
-        while(!pq.isEmpty()){   
-            int v = pq.delMin();   
-            for(DirectedEdge e:G.adj(v))    
-                relax(e);// decrease key or insert vertices to pq   
-        }   
-    }//constructor()
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">DijkstraSP</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="kt">int</span> <span class="n">dist</span><span class="p">[];</span>   
+    <span class="n">private</span> <span class="n">DirectedEdge</span> <span class="n">edgeTo</span><span class="p">[];</span>   
+    <span class="n">private</span> <span class="n">IndexMinPQ</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="n">Double</span><span class="o">&gt;</span> <span class="n">pq</span><span class="p">;</span>   
+    <span class="n">DijkstraSP</span><span class="p">(</span><span class="n">EdgeWeightedDigraph</span> <span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">){</span>   
+        <span class="n">this</span><span class="p">.</span><span class="n">dist</span><span class="p">[]</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">()];</span>   
+        <span class="n">this</span><span class="p">.</span><span class="n">edgeTo</span><span class="p">[]</span> <span class="o">=</span> <span class="n">new</span> <span class="n">DirectedEdge</span><span class="p">[</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">()];</span>   
+        <span class="n">this</span><span class="p">.</span><span class="n">pq</span> <span class="o">=</span> <span class="n">new</span> <span class="n">IndexMinPQ</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="n">Double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span>   
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span><span class="o">&lt;</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span> <span class="n">v</span><span class="o">++</span><span class="p">)</span>  <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="mi">999999</span><span class="p">;</span>   
+        <span class="n">dist</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>           
+        <span class="n">pq</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>   
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">()){</span>   
+            <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="n">delMin</span><span class="p">();</span>   
+            <span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="o">:</span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>    
+                <span class="n">relax</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="c1">// decrease key or insert vertices to pq   </span>
+        <span class="p">}</span>   
+    <span class="p">}</span><span class="c1">//constructor()</span>
 
-    private relax(DirectedEdge e){   
-        int v = e.from(), w = e.to();   
-        if(dist[w]&lt;dist[v]+e.weight()){   
-            dist[w] = dist[v]+e.weight();   
-            edgeTo[w] = e;   
-            if(pq.contains(w)) pq.decreaseKey(w, dist[w]);   
-            else pq.insert(w, dist[w]);   
-        }   
-    }//relax()   
-}//class
+    <span class="n">private</span> <span class="n">relax</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">from</span><span class="p">(),</span> <span class="n">w</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">();</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">w</span><span class="p">]</span><span class="o">&lt;</span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">()){</span>   
+            <span class="n">dist</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">();</span>   
+            <span class="n">edgeTo</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>   
+            <span class="k">if</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">w</span><span class="p">))</span> <span class="n">pq</span><span class="p">.</span><span class="n">decreaseKey</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="n">w</span><span class="p">]);</span>   
+            <span class="k">else</span> <span class="n">pq</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="n">w</span><span class="p">]);</span>   
+        <span class="p">}</span>   
+    <span class="p">}</span><span class="c1">//relax()   </span>
+<span class="p">}</span><span class="c1">//class</span>
 </pre></div>
 
 
@@ -374,15 +374,15 @@ simple algo:    </p>
     * distTo[v] will not change because of topo-order, no edge pointing to v after v is relaxed.  <br />
 * CQFD   </p>
 <h3>implementation</h3>
-<div class="codehilite"><pre>public class AsyclicSP{   
-    AsyclicSP(EdgeWeightedDigraph G, int s){   
-        // init dist[] and edgeTo[]...   
-        Topological topo = new Topological(G);   
-        for(int v: topo.order())   
-            for(DirectedEdge e:G.adj(v))   
-                relax(e);   
-    }   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">AsyclicSP</span><span class="p">{</span>   
+    <span class="n">AsyclicSP</span><span class="p">(</span><span class="n">EdgeWeightedDigraph</span> <span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">){</span>   
+        <span class="c1">// init dist[] and edgeTo[]...   </span>
+        <span class="n">Topological</span> <span class="n">topo</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Topological</span><span class="p">(</span><span class="n">G</span><span class="p">);</span>   
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="o">:</span> <span class="n">topo</span><span class="p">.</span><span class="n">order</span><span class="p">())</span>   
+            <span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="o">:</span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>   
+                <span class="n">relax</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -425,15 +425,15 @@ Grid DAG of pixels, edges are pointed to 3 downward neighbors. <br />
 pf.  <br />
 after i passes, found shortest path contain at most i edges.    </p>
 <p>code:   </p>
-<div class="codehilite"><pre>public class BellmanFordSP{   
-    BellmanFordSP(EdgeWeightedDigraph G, int s){   
-        // init dist[] and edgeTo[]...   
-        for(int i=0;i&lt;G.V();i++)   
-            for(DirectedEdge e:G.edges())   
-                relax(e);   
-    }
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">BellmanFordSP</span><span class="p">{</span>   
+    <span class="n">BellmanFordSP</span><span class="p">(</span><span class="n">EdgeWeightedDigraph</span> <span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">s</span><span class="p">){</span>   
+        <span class="c1">// init dist[] and edgeTo[]...   </span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>   
+            <span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="o">:</span><span class="n">G</span><span class="p">.</span><span class="n">edges</span><span class="p">())</span>   
+                <span class="n">relax</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   
+    <span class="p">}</span>
 
-}
+<span class="p">}</span>
 </pre></div>
 
 
@@ -443,8 +443,8 @@ after i passes, found shortest path contain at most i edges.    </p>
 <p>FIFO implementation: maintain a queue of vertices whoses dist is changed.    </p>
 <h3>Finding negative cycle</h3>
 <p>add two method to SP:   </p>
-<div class="codehilite"><pre>boolean hasNegCycle();   
-Iterable&lt;DirectedEdge&gt; negCycle();
+<div class="codehilite"><pre><span class="nb">boolean</span> <span class="nx">hasNegCycle</span><span class="p">();</span>   
+<span class="nx">Iterable</span><span class="o">&lt;</span><span class="nx">DirectedEdge</span><span class="o">&gt;</span> <span class="nx">negCycle</span><span class="p">();</span>
 </pre></div>
 
 
@@ -550,142 +550,12 @@ NB!!   </p>
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -695,12 +565,102 @@ NB!!   </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -710,17 +670,17 @@ NB!!   </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -730,7 +690,47 @@ NB!!   </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

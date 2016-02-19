@@ -180,11 +180,11 @@ when keys are strings:<br />
 <p>for string keys ⇒ do better by avoiding examing the entire key.  </p>
 <p>goal: faster than hashtable, more flexible than BST !  </p>
 <h2>String Symbol Table API</h2>
-<div class="codehilite"><pre>public class StringST&lt;V&gt;{// implements ST&lt;String, V&gt;  
-    public void put(String key, V val);  
-    public V get(String key);  
-    public void delete(String key);  
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">StringST</span><span class="o">&lt;</span><span class="nx">V</span><span class="o">&gt;</span><span class="p">{</span><span class="c1">// implements ST&lt;String, V&gt;  </span>
+    <span class="k">public</span> <span class="nf">void</span> <span class="nx">put</span><span class="p">(</span><span class="kt">String</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">V</span> <span class="nx">val</span><span class="p">);</span>  
+    <span class="k">public</span> <span class="nf">V</span> <span class="nb">get</span><span class="p">(</span><span class="kt">String</span> <span class="nb">key</span><span class="p">);</span>  
+    <span class="k">public</span> <span class="nf">void</span> <span class="nb">delete</span><span class="p">(</span><span class="kt">String</span> <span class="nb">key</span><span class="p">);</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -211,22 +211,22 @@ when keys are strings:<br />
 <h2>Java implementation</h2>
 <p>trie node class:<br />
 in each node use an array of size R to store links...  </p>
-<div class="codehilite"><pre>private static class Node{  
-    private Object val;// because cannot create arries of generic type (array of Node)  
-    private Node[] next = new Node[R];// chars are implicitly defined by link index  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>  
+    <span class="n">private</span> <span class="n">Object</span> <span class="n">val</span><span class="p">;</span><span class="c1">// because cannot create arries of generic type (array of Node)  </span>
+    <span class="n">private</span> <span class="n">Node</span><span class="p">[]</span> <span class="n">next</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Node</span><span class="p">[</span><span class="n">R</span><span class="p">];</span><span class="c1">// chars are implicitly defined by link index  </span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>另外关于为什么内部类Node声明为static, 参考这里: <br />
 <a href="http://www.geeksforgeeks.org/static-class-in-java/">http://www.geeksforgeeks.org/static-class-in-java/</a>  </p>
 <p>implementation: use private recursive methods, 和BST的实现类似, 定义一个递归的private函数, 返回插入后的Node, 很有用.   </p>
-<div class="codehilite"><pre>public class TrieST&lt;Value&gt; {  
-    pirvate final int R = 256; // ASCII chars  
-    private Node root = new Node();  
-    private static class Node{  
-        private Object val;// because cannot create arries of generic type (array of Node)  
-        private Node[] next = new Node[R];// chars are implicitly defined by link index  
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">TrieST</span><span class="o">&lt;</span><span class="nb">Value</span><span class="o">&gt;</span> <span class="p">{</span>  
+    <span class="nx">pirvate</span> <span class="nx">final</span> <span class="nx">int</span> <span class="n">R</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span> <span class="c1">// ASCII chars  </span>
+    <span class="k">private</span> <span class="nf">Node</span> <span class="n">root</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">Node</span><span class="p">();</span>  
+    <span class="k">private</span> <span class="nf">static</span> <span class="nb">class</span> <span class="nx">Node</span><span class="p">{</span>  
+        <span class="k">private</span> <span class="nf">Object</span> <span class="nx">val</span><span class="p">;</span><span class="c1">// because cannot create arries of generic type (array of Node)  </span>
+        <span class="k">private</span> <span class="nf">Node</span><span class="err">[</span><span class="cp">]</span> next = new Node<span class="cp">[</span><span class="nb">R</span><span class="cp">]</span>;// chars are implicitly defined by link index  
     }  
     public void put(String key, Value val){  
         this.put(root, key, val, 0);// use private recursive helper method  
@@ -240,7 +240,7 @@ in each node use an array of size R to store links...  </p>
         else{  
             char c = key.charAt(d);
 
-            x.next[c] = put(x.next[c], key, val, d+1);  
+            x.next<span class="cp">[</span><span class="nx">c</span><span class="cp">]</span> = put(x.next<span class="cp">[</span><span class="nx">c</span><span class="cp">]</span>, key, val, d+1);  
         }  
         return x;  
     }  
@@ -256,7 +256,7 @@ in each node use an array of size R to store links...  </p>
         if(d==key.length()) return x;  
         char c = key.charAt(d);
 
-        else return get(x.next[c], key, d+1);  
+        else return get(x.next<span class="cp">[</span><span class="nx">c</span><span class="cp">]</span>, key, d+1);  
     }  
 }
 </pre></div>
@@ -294,49 +294,49 @@ TST:  </p>
 <p><strong>searching</strong> in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  </p>
 <h2>Implementation</h2>
 <p>Node class:   </p>
-<div class="codehilite"><pre>private class Node{  
-    private Value val;  
-    private char c;// store char explicitly  
-    private Node left, mid, right;  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>  
+    <span class="n">private</span> <span class="n">Value</span> <span class="n">val</span><span class="p">;</span>  
+    <span class="n">private</span> <span class="kt">char</span> <span class="n">c</span><span class="p">;</span><span class="c1">// store char explicitly  </span>
+    <span class="n">private</span> <span class="n">Node</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <p>TST class (again use recursive helper functions)<br />
 有一种写BST代码的感觉, 另外由于这次char是显式存在node里, 代码反而更好理解了...  </p>
-<div class="codehilite"><pre>public class TST&lt;Value&gt;{  
-    private class Node{...};  
-    private Node root;  
-    public void put(String key, Value val){  
-        this.put(root, key, val, 0);  
-    }  
-    private Node put(Node x, String key, Value val, int d){  
-        char c = key.charAt(d);// char to process  
-        if(x==null) x = new Node(c);  
-        if(c==x.c) {  
-            if(d==key.length()-1) x.val = val;  
-            else x.mid = put(x.mid, key, val, d+1);// d+1 means we go down one level  
-        }  
-        else if (c&lt;x.c) x.left = put(x.left, key, val, d);// do not increment if the current char is not matchd  
-        else x.right = put(x.right, key, val, d);  
-        return x;  
-    }  
-    public Value get(String key){  
-        Node nd = this.get(root, key, 0);  
-        if(nd==null) return null;  
-        return nd.val;  
-    }  
-    private Node get(Node x, String key, int d){  
-        if(x==null) return null;  
-        char c = key.charAt(d);  
-        if(x.c==c) {  
-            if(d==key.length()-1) return x;  
-            else return get(x.mid, key, d+1);  
-        }  
-        else if(c&lt;x.c) return get(x.left, key, d);  
-        else return get(x.right, d);  
-    }  
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">TST</span><span class="o">&lt;</span><span class="nb">Value</span><span class="o">&gt;</span><span class="p">{</span>  
+    <span class="k">private</span> <span class="nf">class</span> <span class="nx">Node</span><span class="p">{</span><span class="nx">...</span><span class="p">};</span>  
+    <span class="k">private</span> <span class="nf">Node</span> <span class="nb">root</span><span class="p">;</span>  
+    <span class="k">public</span> <span class="nf">void</span> <span class="nx">put</span><span class="p">(</span><span class="kt">String</span> <span class="nb">key</span><span class="p">,</span> <span class="nb">Value</span> <span class="nx">val</span><span class="p">){</span>  
+        <span class="nx">this.put</span><span class="p">(</span><span class="nb">root</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>  
+    <span class="p">}</span>  
+    <span class="k">private</span> <span class="nf">Node</span> <span class="nx">put</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">x</span><span class="p">,</span> <span class="kt">String</span> <span class="nb">key</span><span class="p">,</span> <span class="nb">Value</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">int</span> <span class="nb">d</span><span class="p">){</span>  
+        <span class="nx">char</span> <span class="n">c</span> <span class="o">=</span> <span class="nx">key.charAt</span><span class="p">(</span><span class="nb">d</span><span class="p">);</span><span class="c1">// char to process  </span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">x</span><span class="o">==</span><span class="kt">null</span><span class="p">)</span> <span class="n">x</span> <span class="o">=</span> <span class="nb">new</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>  
+        <span class="k">if</span><span class="p">(</span><span class="nx">c</span><span class="o">==</span><span class="nx">x.c</span><span class="p">)</span> <span class="p">{</span>  
+            <span class="k">if</span><span class="p">(</span><span class="nb">d</span><span class="o">==</span><span class="nx">key.length</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">x.val</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span>  
+            <span class="k">else</span> <span class="n">x.mid</span> <span class="o">=</span> <span class="nx">put</span><span class="p">(</span><span class="nx">x.mid</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nb">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="c1">// d+1 means we go down one level  </span>
+        <span class="p">}</span>  
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">c</span><span class="o">&lt;</span><span class="nx">x.c</span><span class="p">)</span> <span class="n">x.left</span> <span class="o">=</span> <span class="nx">put</span><span class="p">(</span><span class="nx">x.left</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nb">d</span><span class="p">);</span><span class="c1">// do not increment if the current char is not matchd  </span>
+        <span class="k">else</span> <span class="n">x.right</span> <span class="o">=</span> <span class="nx">put</span><span class="p">(</span><span class="nx">x.right</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nb">d</span><span class="p">);</span>  
+        <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">public</span> <span class="nf">Value</span> <span class="nb">get</span><span class="p">(</span><span class="kt">String</span> <span class="nb">key</span><span class="p">){</span>  
+        <span class="nx">Node</span> <span class="n">nd</span> <span class="o">=</span> <span class="nx">this.get</span><span class="p">(</span><span class="nb">root</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>  
+        <span class="k">if</span><span class="p">(</span><span class="nx">nd</span><span class="o">==</span><span class="kt">null</span><span class="p">)</span> <span class="k">return</span> <span class="kt">null</span><span class="p">;</span>  
+        <span class="k">return</span> <span class="nx">nd.val</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="k">private</span> <span class="nf">Node</span> <span class="nb">get</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">x</span><span class="p">,</span> <span class="kt">String</span> <span class="nb">key</span><span class="p">,</span> <span class="nx">int</span> <span class="nb">d</span><span class="p">){</span>  
+        <span class="k">if</span><span class="p">(</span><span class="nx">x</span><span class="o">==</span><span class="kt">null</span><span class="p">)</span> <span class="k">return</span> <span class="kt">null</span><span class="p">;</span>  
+        <span class="nx">char</span> <span class="n">c</span> <span class="o">=</span> <span class="nx">key.charAt</span><span class="p">(</span><span class="nb">d</span><span class="p">);</span>  
+        <span class="k">if</span><span class="p">(</span><span class="nx">x.c</span><span class="o">==</span><span class="nx">c</span><span class="p">)</span> <span class="p">{</span>  
+            <span class="k">if</span><span class="p">(</span><span class="nb">d</span><span class="o">==</span><span class="nx">key.length</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>  
+            <span class="k">else</span> <span class="k">return</span> <span class="nb">get</span><span class="p">(</span><span class="nx">x.mid</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nb">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>  
+        <span class="p">}</span>  
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">c</span><span class="o">&lt;</span><span class="nx">x.c</span><span class="p">)</span> <span class="k">return</span> <span class="nb">get</span><span class="p">(</span><span class="nx">x.left</span><span class="p">,</span> <span class="nb">key</span><span class="p">,</span> <span class="nb">d</span><span class="p">);</span>  
+        <span class="k">else</span> <span class="k">return</span> <span class="nb">get</span><span class="p">(</span><span class="nx">x.right</span><span class="p">,</span> <span class="nb">d</span><span class="p">);</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -370,12 +370,12 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <li><strong>longest prefix</strong>: find the key that is the longest prefix of a string  </li>
 </ul>
 <h2>API</h2>
-<div class="codehilite"><pre><span class="kr">public</span> <span class="kr">class</span> <span class="nx">TrieST</span><span class="o">&lt;</span><span class="nx">Value</span><span class="o">&gt;</span><span class="p">{</span>  
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">TrieST</span><span class="o">&lt;</span><span class="nb">Value</span><span class="o">&gt;</span><span class="p">{</span>  
     <span class="c1">// functions decalred before..  </span>
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span> <span class="nx">keys</span><span class="p">;</span>  
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span> <span class="nx">keysWithPrefix</span><span class="p">(</span><span class="nb">String</span> <span class="nx">s</span><span class="p">);</span>  
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span> <span class="nx">keysThatMatch</span><span class="p">(</span><span class="nb">String</span> <span class="nx">s</span><span class="p">);</span>  
-    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span> <span class="nx">longestPrefixOf</span><span class="p">(</span><span class="nb">String</span> <span class="nx">s</span><span class="p">);</span>
+    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nb">keys</span><span class="p">;</span>  
+    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nx">keysWithPrefix</span><span class="p">(</span><span class="kt">String</span> <span class="nb">s</span><span class="p">);</span>  
+    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nx">keysThatMatch</span><span class="p">(</span><span class="kt">String</span> <span class="nb">s</span><span class="p">);</span>  
+    <span class="nx">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nx">longestPrefixOf</span><span class="p">(</span><span class="kt">String</span> <span class="nb">s</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -383,17 +383,17 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <h2>keys(): ordered iteration</h2>
 <p><code>keys()</code>: just an inorder-traversal of the <em>Rway trie</em> →dfs, + maintain the chars in the path (root to current node). <br />
 <img alt="" src="static/algoII_week4_1/pasted_image009.png" />  </p>
-<div class="codehilite"><pre>public Iterable&lt;String&gt; keys(){  
-    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  
-    collect(root, &quot;&quot;, q);// helper fcn  
-    return q;  
-}  
-private void collect(Node x, String pathstr, Queue q){  
-    if(x==null) return;  
-    if(x.val!=null)// if this is a key  
-        q.enqueue(pathstr);// pathstr is the string of chars from root to x  
-    for(char c=0;c&lt;R;c++) // dfs  
-        collect(x.next[c], pathstr+c, q);  
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nb">keys</span><span class="p">(){</span>  
+    <span class="nb">Queue</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="nb">new</span> <span class="nb">Queue</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">();</span>  
+    <span class="nx">collect</span><span class="p">(</span><span class="nb">root</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">q</span><span class="p">);</span><span class="c1">// helper fcn  </span>
+    <span class="k">return</span> <span class="nx">q</span><span class="p">;</span>  
+<span class="p">}</span>  
+<span class="k">private</span> <span class="nf">void</span> <span class="nx">collect</span><span class="p">(</span><span class="nx">Node</span> <span class="nx">x</span><span class="p">,</span> <span class="kt">String</span> <span class="nx">pathstr</span><span class="p">,</span> <span class="nb">Queue</span> <span class="nx">q</span><span class="p">){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="nx">x</span><span class="o">==</span><span class="kt">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  
+    <span class="k">if</span><span class="p">(</span><span class="nx">x.val</span><span class="o">!=</span><span class="kt">null</span><span class="p">)</span><span class="c1">// if this is a key  </span>
+        <span class="nx">q.enqueue</span><span class="p">(</span><span class="nx">pathstr</span><span class="p">);</span><span class="c1">// pathstr is the string of chars from root to x  </span>
+    <span class="nb">for</span><span class="p">(</span><span class="nx">char</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">c</span><span class="o">&lt;</span><span class="nb">R</span><span class="p">;</span><span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="c1">// dfs  </span>
+        <span class="nx">collect</span><span class="p">(</span><span class="nx">x.next</span><span class="err">[</span><span class="nx">c</span><span class="cp">]</span>, pathstr+c, q);  
 }
 </pre></div>
 
@@ -402,28 +402,28 @@ private void collect(Node x, String pathstr, Queue q){
 <p>very useful: ex. autocomplete, search bar, ...<br />
 implementation⇒ just find the end of that prefix, then call <code>keys()</code> on the <em>subtrie</em>.<br />
 之前写的俩helper function这里发挥作用了:   </p>
-<div class="codehilite"><pre>public Iterable&lt;String&gt; keysWithPrefix(String prefix){  
-    Node subtrieRoot = get(root, prefix, 0);  
-    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  
-    collect(subtrieRoot, prefix, q);  
-    return q;  
-}
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">Iterable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="nx">keysWithPrefix</span><span class="p">(</span><span class="kt">String</span> <span class="nb">prefix</span><span class="p">){</span>  
+    <span class="nx">Node</span> <span class="n">subtrieRoot</span> <span class="o">=</span> <span class="nb">get</span><span class="p">(</span><span class="nb">root</span><span class="p">,</span> <span class="nb">prefix</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>  
+    <span class="nb">Queue</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">=</span> <span class="nb">new</span> <span class="nb">Queue</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">();</span>  
+    <span class="nx">collect</span><span class="p">(</span><span class="nx">subtrieRoot</span><span class="p">,</span> <span class="nb">prefix</span><span class="p">,</span> <span class="nx">q</span><span class="p">);</span>  
+    <span class="k">return</span> <span class="nx">q</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <h2>longest prefix</h2>
 <p>⇒ just do a search and keep track of the longest key that we encounterd.   </p>
-<div class="codehilite"><pre>public String longestPrefixOf(String s){  
-    int len = search(root, s, 0, 0);  
-    return s.substring(0, len);  
-}  
-private int search(Node x, String s, int d, int len){  
-    if(x==null) return len;  
-    if(x.val!=null) len=d;// this is the current longest prefix  
-    if(d==s.length()) return length;   
-    char c = s.charAt(d);  
-    return search(x.next[c], s, d+1, len);  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">String</span> <span class="nf">longestPrefixOf</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>  
+    <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>  
+<span class="p">}</span>  
+<span class="n">private</span> <span class="kt">int</span> <span class="nf">search</span><span class="p">(</span><span class="n">Node</span> <span class="n">x</span><span class="p">,</span> <span class="n">String</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">null</span><span class="p">)</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="o">!=</span><span class="n">null</span><span class="p">)</span> <span class="n">len</span><span class="o">=</span><span class="n">d</span><span class="p">;</span><span class="c1">// this is the current longest prefix  </span>
+    <span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">())</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span>   
+    <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>  
+    <span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">next</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -528,142 +528,12 @@ private int search(Node x, String s, int d, int len){
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -673,12 +543,102 @@ private int search(Node x, String s, int d, int len){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -688,17 +648,17 @@ private int search(Node x, String s, int d, int len){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -708,7 +668,47 @@ private int search(Node x, String s, int d, int len){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

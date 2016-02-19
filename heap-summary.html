@@ -211,24 +211,24 @@
 </blockquote>
 <h1>PQ implementation</h1>
 <p>先写一下代码框架:  </p>
-<div class="codehilite"><pre>public class PQ{// maxPQ of integers  
-    int pq[];  
-    int MAX_CAPACITY=1000;// if we use ArrayList we do not need MAX_CAPACITY  
-    int size;// pq[size] is the index of last element (rightmost node in last level)   
-    public PQ(){  
-        pq = new int[MAX_CAPACITY+1];  
-        size = 0;  
-    }  
-    public boolean isEmpty(){  
-        return size==0;  
-    }  
-    public int top(){ // get top element  
-        assert !isEmpty();  
-        return pq[1];  
-    }  
-    public void add(int n); // insert element to PQ --&gt; stay tuned  
-    public int poll(); // get and remove top element --&gt; stay tuned  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">PQ</span><span class="p">{</span><span class="c1">// maxPQ of integers  </span>
+    <span class="kt">int</span> <span class="n">pq</span><span class="p">[];</span>  
+    <span class="kt">int</span> <span class="n">MAX_CAPACITY</span><span class="o">=</span><span class="mi">1000</span><span class="p">;</span><span class="c1">// if we use ArrayList we do not need MAX_CAPACITY  </span>
+    <span class="kt">int</span> <span class="n">size</span><span class="p">;</span><span class="c1">// pq[size] is the index of last element (rightmost node in last level)   </span>
+    <span class="n">public</span> <span class="nf">PQ</span><span class="p">(){</span>  
+        <span class="n">pq</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">MAX_CAPACITY</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>  
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="n">public</span> <span class="n">boolean</span> <span class="nf">isEmpty</span><span class="p">(){</span>  
+        <span class="k">return</span> <span class="n">size</span><span class="o">==</span><span class="mi">0</span><span class="p">;</span>  
+    <span class="p">}</span>  
+    <span class="n">public</span> <span class="kt">int</span> <span class="nf">top</span><span class="p">(){</span> <span class="c1">// get top element  </span>
+        <span class="n">assert</span> <span class="o">!</span><span class="n">isEmpty</span><span class="p">();</span>  
+        <span class="k">return</span> <span class="n">pq</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>  
+    <span class="p">}</span>  
+    <span class="n">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span> <span class="c1">// insert element to PQ --&gt; stay tuned  </span>
+    <span class="n">public</span> <span class="kt">int</span> <span class="nf">poll</span><span class="p">();</span> <span class="c1">// get and remove top element --&gt; stay tuned  </span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -236,31 +236,31 @@
 <h3>siftup</h3>
 <p>如果一个新元素到来, 首先将其放在最后(最底层最右边的节点), 如果新来节点的优先级比较高, 可以用siftup将其提升到一个合适的层次. 用公司结构来类比就是新入职的员工由于能力强被提高到了高层, 而提升的办法就是: 和上司交换岗位(也就是和父节点交换位置).   </p>
 <p>所以这个操作只要不断把该元素与父节点交换, 直到遇到一个优先级大于该节点的父节点或者已经到了最高处停止. 代码很短:   </p>
-<div class="codehilite"><pre>private void siftup(){  
-    int i = size;// i is the index of the newly added element     
-    for(;i&gt;1 &amp;&amp; pq[i/2]&lt;pq[i]; i/=2)  
-        swap(pq, i/2, i);  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">siftup</span><span class="p">(){</span>  
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">size</span><span class="p">;</span><span class="c1">// i is the index of the newly added element     </span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;</span><span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="n">i</span><span class="o">/=</span><span class="mi">2</span><span class="p">)</span>  
+        <span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <h3>siftdown</h3>
 <p>siftdown的功能和siftup相反: 如果在最高处是一个优先级很低的元素, 需要将其"下放". 方法就是把它和子节点里面优先级较高的进行交换.   </p>
 <p>代码也不长, 不过第一次写可能不太简洁:   </p>
-<div class="codehilite"><pre>private void siftdown(){  
-    if(isEmpty()) return;// nothing to sift when empty  
-    int i=1;// siftdown root node  
-    while(i*2&lt;=size){ // while the node is not in last level  
-        int max=pq[i], j=i;// j is the element to swap  
-        if (pq[i*2]&gt;max) // left child  
-            {j=i*2; max=pq[i*2];}  
-        if (i*2+1&lt;=size &amp;&amp; pq[i*2+1]&gt;max) // right node  
-            {j=i*2+1; max=pq[i*2+1];}  
-        if (j==i) return;// stop when node is bigger than both child  
-        swap(pq, i, j);  
-        i = j;  
-    }  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">void</span> <span class="nf">siftdown</span><span class="p">(){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">isEmpty</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span><span class="c1">// nothing to sift when empty  </span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="c1">// siftdown root node  </span>
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="n">size</span><span class="p">){</span> <span class="c1">// while the node is not in last level  </span>
+        <span class="kt">int</span> <span class="n">max</span><span class="o">=</span><span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="c1">// j is the element to swap  </span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span><span class="o">&gt;</span><span class="n">max</span><span class="p">)</span> <span class="c1">// left child  </span>
+            <span class="p">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span> <span class="n">max</span><span class="o">=</span><span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">];}</span>  
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">max</span><span class="p">)</span> <span class="c1">// right node  </span>
+            <span class="p">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="n">max</span><span class="o">=</span><span class="n">pq</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];}</span>  
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">i</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span><span class="c1">// stop when node is bigger than both child  </span>
+        <span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>  
+        <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -268,23 +268,23 @@
 <p>有了这两个sift的基本操作, add和poll的操作就简单了. <br />
 <strong>add</strong><br />
 加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  </p>
-<div class="codehilite"><pre>public void add(int n){ // insert element to PQ  
-    assert size+1&lt;MAX_CAPACITY;  
-    pq[++size] = n;  
-    siftup();  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">){</span> <span class="c1">// insert element to PQ  </span>
+    <span class="n">assert</span> <span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;</span><span class="n">MAX_CAPACITY</span><span class="p">;</span>  
+    <span class="n">pq</span><span class="p">[</span><span class="o">++</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>  
+    <span class="n">siftup</span><span class="p">();</span>  
+<span class="p">}</span>
 </pre></div>
 
 
 <p><strong>poll</strong><br />
 堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   </p>
-<div class="codehilite"><pre>public int poll(){ // get and remove top element  
-    assert !isEmpty();  
-    int top = pq[1];  
-    pq[1] = pq[size--];// put last element on the top  
-    siftdown();  
-    return top;  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">int</span> <span class="nf">poll</span><span class="p">(){</span> <span class="c1">// get and remove top element  </span>
+    <span class="n">assert</span> <span class="o">!</span><span class="n">isEmpty</span><span class="p">();</span>  
+    <span class="kt">int</span> <span class="n">top</span> <span class="o">=</span> <span class="n">pq</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>  
+    <span class="n">pq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pq</span><span class="p">[</span><span class="n">size</span><span class="o">--</span><span class="p">];</span><span class="c1">// put last element on the top  </span>
+    <span class="n">siftdown</span><span class="p">();</span>  
+    <span class="k">return</span> <span class="n">top</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -297,12 +297,12 @@
 <p>首先前面的siftdown函数很明显可以修改一下加上一个参数变为<code>siftdown(int i)</code>(i代表要向下调整的元素的下标).   </p>
 <p>在heapsort里第一步是要建立一个PQ. 最naive的建堆操作就是新建一个空的heap然后不断向里面加入数组<code>a</code>里的元素(空间复杂度N, 时间复杂度NlgN). 其实这个操作可以做的更好: 我们<em>先直接把数组a当作pq[]数组</em>, 现在显然它不满足PQ性质, 只需要<em>多次使用siftdown</em>进行调整即可.   </p>
 <p>假设一共有h(=lgN)层, 由于最后一层的节点不必调用siftdown, 我们只要从倒数第二层开始调用siftdown即可, 结合前面提到的pq的性质(N/2以后的节点都在最后一层), 写法很简单(简单起见认为a也是把第0个元素空出来好了):   </p>
-<div class="codehilite"><pre>public static void heapify(int[] a){  
-    int N = a.length;  
-    for(int i=N/2;i&lt;=1;i--){  
-        siftdown(a, i);  
-    }  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">heapify</span><span class="p">(</span><span class="kt">int</span><span class="p">[]</span> <span class="n">a</span><span class="p">){</span>  
+    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">){</span>  
+        <span class="n">siftdown</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -420,142 +420,12 @@
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -565,12 +435,102 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -580,17 +540,17 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -600,7 +560,47 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

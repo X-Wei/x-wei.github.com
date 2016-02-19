@@ -226,20 +226,20 @@ Assumption: keys are integers between 0 and R-1 (&lt;&lt;N, small integer).<br /
 <li>then get the sorted array by going through the array and using cumsum[] array  </li>
 </ul>
 <p><img alt="" src="static/algoII_week3_2/pasted_image007.png" />⇒ <img alt="" src="static/algoII_week3_2/pasted_image006.png" />  </p>
-<div class="codehilite"><pre>public void keyIndexCounting(int[] a, int R){// entries in a[] are in range [0,R-1]  
-    int N = a.length;  
-    int[] count = new int[R+1]; // count[i] = freq of key i-1, count[0] = 0  
-    for(int ai:a)   
-        count[ai+1]++;  
-    int[] cumsum = count; //cumsum = cumulated freq  
-    for(int i=0;i&lt;R;i++)   
-        cumsum[i+1] += cumsum[i];  
-    // the ranges of key i in sorted array should be [cumsum[i], cumsum[i+1]]  
-    int[] aux = new int[N];  
-    for(int ai:a)  
-        aux[cumsum[ai]++] = ai;  
-    a = aux;      
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">keyIndexCounting</span><span class="p">(</span><span class="kt">int</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">R</span><span class="p">){</span><span class="c1">// entries in a[] are in range [0,R-1]  </span>
+    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>  
+    <span class="kt">int</span><span class="p">[]</span> <span class="n">count</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">R</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// count[i] = freq of key i-1, count[0] = 0  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ai</span><span class="o">:</span><span class="n">a</span><span class="p">)</span>   
+        <span class="n">count</span><span class="p">[</span><span class="n">ai</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>  
+    <span class="kt">int</span><span class="p">[]</span> <span class="n">cumsum</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span> <span class="c1">//cumsum = cumulated freq  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>   
+        <span class="n">cumsum</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cumsum</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+    <span class="c1">// the ranges of key i in sorted array should be [cumsum[i], cumsum[i+1]]  </span>
+    <span class="kt">int</span><span class="p">[]</span> <span class="n">aux</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">ai</span><span class="o">:</span><span class="n">a</span><span class="p">)</span>  
+        <span class="n">aux</span><span class="p">[</span><span class="n">cumsum</span><span class="p">[</span><span class="n">ai</span><span class="p">]</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">ai</span><span class="p">;</span>  
+    <span class="n">a</span> <span class="o">=</span> <span class="n">aux</span><span class="p">;</span>      
+<span class="p">}</span>
 </pre></div>
 
 
@@ -265,23 +265,23 @@ idea:  </p>
 pf. by induction on i<br />
 prove that: after pass i, strings are sorted by last i characters.   </p>
 <h3>implementation</h3>
-<div class="codehilite"><pre>public static LSDsort(String[] a, int W){//W=fixed width  
-    int R = 256;//for ASCII chars  
-    int N = a.length;  
-    String[] aux = new String[N];  
-    for(int d=W-1;d&gt;=0;d--){//W passes  
-        //key-indexed counting at digit d  
-        int count = new int[R+1];  
-        for(String s:a)  
-            count[s.charAt[d]+1]++;  
-        for(int i=0;i&lt;N;i++)  
-            count[i+1] += count[i];//count = cumsum(count), range of each key  
-        for(String s:a)  
-            aux[s.charAt[d]++]=s;//put each key in right place  
-        for(int i=0;i&lt;n;i++)  
-            a[i]=aux[i];  
-    }  
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="k">static</span> <span class="nf">LSDsort</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">W</span><span class="p">){</span><span class="c1">//W=fixed width  </span>
+    <span class="kt">int</span> <span class="n">R</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span><span class="c1">//for ASCII chars  </span>
+    <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>  
+    <span class="n">String</span><span class="p">[]</span> <span class="n">aux</span> <span class="o">=</span> <span class="n">new</span> <span class="n">String</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="o">=</span><span class="n">W</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">d</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">d</span><span class="o">--</span><span class="p">){</span><span class="c1">//W passes  </span>
+        <span class="c1">//key-indexed counting at digit d  </span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">R</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>  
+        <span class="k">for</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="o">:</span><span class="n">a</span><span class="p">)</span>  
+            <span class="n">count</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">charAt</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>  
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+            <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="c1">//count = cumsum(count), range of each key  </span>
+        <span class="k">for</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="o">:</span><span class="n">a</span><span class="p">)</span>  
+            <span class="n">aux</span><span class="p">[</span><span class="n">s</span><span class="p">.</span><span class="n">charAt</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">s</span><span class="p">;</span><span class="c1">//put each key in right place  </span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">aux</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -300,18 +300,18 @@ Idea.  </p>
 <p>variable length: end-of-string are treated as before any char<br />
 <img alt="" src="static/algoII_week3_2/pasted_image010.png" />  </p>
 <h3>implementation</h3>
-<div class="codehilite"><pre>private static void sort(String[] a, String[] aux, int lo, int hi, int d){  
-    if(hi&lt;=lo) return;  
-    //sort by dth character  
-    int count = new int[R+2];// R+2 as we are taking account into the end-of-strings!!  
-    for(int i=lo;i&lt;=hi;i++) count[ a[i].charAt(d)+2 ]++;//charAt(end-of-string)=-1  
-    for(int i=0;i&lt;R;i++) count[i+1] += count[i]; //cumsum  
-    for(int i=lo;i&lt;=hi;i++) aux[count[a[i].charAt(d)+1]++] = a[i];  
-    for(int i=lo;i&lt;=hi;i++) a[i] = aux[i-lo];// attention: aux is filled from index 0 instead of lo  
-    //recursively sort each subarray (R subarrays in total, ranges stored in count[])  
-    for(int r=0;r&lt;R;r++)  
-        sort(a, aux,lo+count[r], lo+count[r+1]-1, d+1);  
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">sort</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="n">String</span><span class="p">[]</span> <span class="n">aux</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  
+    <span class="c1">//sort by dth character  </span>
+    <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">R</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span><span class="c1">// R+2 as we are taking account into the end-of-strings!!  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">count</span><span class="p">[</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span> <span class="p">]</span><span class="o">++</span><span class="p">;</span><span class="c1">//charAt(end-of-string)=-1  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="c1">//cumsum  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">aux</span><span class="p">[</span><span class="n">count</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">hi</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">lo</span><span class="p">];</span><span class="c1">// attention: aux is filled from index 0 instead of lo  </span>
+    <span class="c1">//recursively sort each subarray (R subarrays in total, ranges stored in count[])  </span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">r</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">r</span><span class="o">++</span><span class="p">)</span>  
+        <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">aux</span><span class="p">,</span><span class="n">lo</span><span class="o">+</span><span class="n">count</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">lo</span><span class="o">+</span><span class="n">count</span><span class="p">[</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -351,20 +351,20 @@ idea: do <strong>3-way partition by the dth character</strong>. <br />
 <p><img alt="" src="static/algoII_week3_2/pasted_image014.png" />  </p>
 <h3>Implementation</h3>
 <p>modification of the 3-way qsort.   </p>
-<div class="codehilite"><pre><span class="nt">private</span> <span class="nt">static</span> <span class="nt">sort</span><span class="o">(</span><span class="nt">String</span><span class="cp">[]</span> <span class="nt">a</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">lo</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">hi</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">d</span><span class="o">)</span><span class="p">{</span>  
-    <span class="n">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="n">return</span><span class="p">;</span>  
-    <span class="n">int</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">lo</span><span class="o">,</span> <span class="n">gt</span> <span class="o">=</span> <span class="n">hi</span><span class="o">,</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="o">+</span><span class="m">1</span><span class="p">;</span><span class="o">//</span> <span class="n">use</span> <span class="m">3</span> <span class="n">pointers</span><span class="o">:</span> <span class="n">lt</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">gt</span>  
-    <span class="n">char</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">a</span><span class="cp">[</span><span class="nx">lo</span><span class="cp">]</span><span class="o">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>  
-    <span class="n">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">gt</span><span class="p">)</span><span class="err">{</span><span class="o">//</span><span class="n">invariant</span><span class="o">:</span> <span class="n">a</span><span class="cp">[</span><span class="nx">lo</span><span class="p">,</span><span class="nb">lt</span><span class="p">)</span><span class="o">&lt;</span><span class="nx">pivot</span><span class="p">,</span> <span class="nx">a</span><span class="p">(</span><span class="nb">gt</span><span class="p">,</span><span class="nx">hi</span><span class="cp">]</span><span class="o">&gt;</span><span class="n">pivot</span><span class="o">,</span> <span class="n">a</span><span class="cp">[</span><span class="nb">lt</span><span class="p">,</span><span class="nx">i</span><span class="cp">]</span><span class="o">=</span><span class="n">pivot</span>  
-        <span class="n">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="o">.</span><span class="n">charAt</span><span class="cp">[</span><span class="nx">d</span><span class="cp">]</span><span class="p">;</span>  
-        <span class="n">if</span><span class="p">(</span><span class="n">c</span><span class="o">&lt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="o">,</span><span class="n">lt</span><span class="o">++,</span><span class="n">i</span><span class="o">++</span><span class="p">);</span>  
-        <span class="n">else</span> <span class="n">if</span><span class="p">(</span><span class="n">c</span><span class="o">&gt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="o">,</span><span class="n">i</span><span class="o">,</span><span class="n">gt</span><span class="o">--</span><span class="p">);</span>  
-        <span class="n">else</span><span class="o">:</span> <span class="n">i</span><span class="o">++</span><span class="p">;</span>  
-    <span class="p">}</span><span class="o">//</span><span class="nt">3-way</span> <span class="nt">partition</span>  
-    <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">lo</span><span class="o">,</span><span class="nt">lt-1</span><span class="o">,</span><span class="nt">d</span><span class="o">);</span>  
-    <span class="nt">if</span><span class="o">(</span><span class="nt">pivot</span><span class="o">&gt;=</span><span class="nt">0</span><span class="o">)</span> <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">lt</span><span class="o">,</span><span class="nt">gt</span><span class="o">,</span><span class="nt">d</span><span class="o">+</span><span class="nt">1</span><span class="o">);//</span><span class="nt">pivot</span><span class="o">&lt;</span><span class="nt">0</span> <span class="nt">means</span> <span class="nt">end-of-string</span>  
-    <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">gt</span><span class="o">+</span><span class="nt">1</span><span class="o">,</span><span class="nt">hi</span><span class="o">,</span><span class="nt">d</span><span class="o">);</span>  
-<span class="err">}</span>
+<div class="codehilite"><pre><span class="n">private</span> <span class="k">static</span> <span class="nf">sort</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">){</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  
+    <span class="kt">int</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">lo</span><span class="p">,</span> <span class="n">gt</span> <span class="o">=</span> <span class="n">hi</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="c1">// use 3 pointers: lt, i, gt  </span>
+    <span class="kt">char</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">lo</span><span class="p">].</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>  
+    <span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">gt</span><span class="p">){</span><span class="c1">//invariant: a[lo,lt)&lt;pivot, a(gt,hi]&gt;pivot, a[lt,i]=pivot  </span>
+        <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">charAt</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="o">&lt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lt</span><span class="o">++</span><span class="p">,</span><span class="n">i</span><span class="o">++</span><span class="p">);</span>  
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="o">&gt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">gt</span><span class="o">--</span><span class="p">);</span>  
+        <span class="k">else</span><span class="o">:</span> <span class="n">i</span><span class="o">++</span><span class="p">;</span>  
+    <span class="p">}</span><span class="c1">//3-way partition  </span>
+    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lo</span><span class="p">,</span><span class="n">lt</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>  
+    <span class="k">if</span><span class="p">(</span><span class="n">pivot</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span> <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">lt</span><span class="p">,</span><span class="n">gt</span><span class="p">,</span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="c1">//pivot&lt;0 means end-of-string  </span>
+    <span class="n">sort</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">gt</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">hi</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -402,20 +402,20 @@ idea: do <strong>3-way partition by the dth character</strong>. <br />
 </ul>
 <p>sorting suffix array will bring repeated substrings together<br />
 java code:   </p>
-<div class="codehilite"><pre>//int lcp(String s1, String s2) defined  
-public static lrs(String s){  
-    int N = s.length;  
-    String[] suffix = new String[N];  
-    for(int i=0;i&lt;N;i++) suffix[i] = s.substring(i);//construct suffix array  
-    Arrays.sort(suffix);// sort suffix array ==&gt; using 3-way radix sort   
-    // one pass to get longest repeated substring (bigest lcp)  
-    String lrs = &quot;&quot;;  
-    for(int i=0;i&lt;N-1;i++){  
-        int lcp = lcp(suffix[i], suffix[i+1]);  
-        if(lcp&gt;lrs.length) lrs = suffix[i].substring(0, lcp);  
-    }  
-    return lrs;  
-}
+<div class="codehilite"><pre><span class="c1">//int lcp(String s1, String s2) defined  </span>
+<span class="n">public</span> <span class="k">static</span> <span class="n">lrs</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="p">){</span>  
+    <span class="k">int</span> <span class="no">N</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>  
+    <span class="n">String</span><span class="p">[]</span> <span class="n">suffix</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">[</span><span class="no">N</span><span class="p">];</span>  
+    <span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span><span class="o">=</span><span class="mh">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="no">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">substring</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="c1">//construct suffix array  </span>
+    <span class="n">Arrays</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">suffix</span><span class="p">);</span><span class="c1">// sort suffix array ==&gt; using 3-way radix sort   </span>
+    <span class="c1">// one pass to get longest repeated substring (bigest lcp)  </span>
+    <span class="n">String</span> <span class="n">lrs</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>  
+    <span class="k">for</span><span class="p">(</span><span class="k">int</span> <span class="n">i</span><span class="o">=</span><span class="mh">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="no">N</span><span class="o">-</span><span class="mh">1</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>  
+        <span class="k">int</span> <span class="n">lcp</span> <span class="o">=</span> <span class="n">lcp</span><span class="p">(</span><span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mh">1</span><span class="p">]);</span>  
+        <span class="k">if</span><span class="p">(</span><span class="n">lcp</span><span class="o">&gt;</span><span class="n">lrs</span><span class="p">.</span><span class="n">length</span><span class="p">)</span> <span class="n">lrs</span> <span class="o">=</span> <span class="n">suffix</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">substring</span><span class="p">(</span><span class="mh">0</span><span class="p">,</span> <span class="n">lcp</span><span class="p">);</span>  
+    <span class="p">}</span>  
+    <span class="k">return</span> <span class="n">lrs</span><span class="p">;</span>  
+<span class="p">}</span>
 </pre></div>
 
 
@@ -521,142 +521,12 @@ performance: NlgN  </p>
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -666,12 +536,102 @@ performance: NlgN  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -681,17 +641,17 @@ performance: NlgN  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -701,7 +661,47 @@ performance: NlgN  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

@@ -184,13 +184,13 @@
 <li>PageRank   </li>
 </ul>
 <h1>2. Digraph API</h1>
-<div class="codehilite"><pre>public class Digraph{   
-    Digraph(int V);   
-    void addEdge(int v, int w);// edge is directed   
-    Iterable&lt;Interger&gt; adj(int v);// vertices reached by outgoing edges   
-    int V();   
-    Digraph reverse();// &lt;--new methode wrt undirected graph   
-}
+<div class="codehilite"><pre>public class Digraph<span class="p">{</span>   
+    Digraph<span class="p">(</span>int V<span class="p">);</span>   
+    void addEdge<span class="p">(</span>int v<span class="p">,</span> int w<span class="p">);</span><span class="o">//</span> edge is directed   
+    Iterable<span class="o">&lt;</span>Interger<span class="o">&gt;</span> adj<span class="p">(</span>int v<span class="p">);</span><span class="o">//</span> vertices reached by outgoing edges   
+    int V<span class="p">();</span>   
+    Digraph reverse<span class="p">();</span><span class="o">//</span> <span class="o">&lt;--</span>new methode wrt undirected graph   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -228,21 +228,21 @@ directed acyclic graph. <br />
 is the order of the vertices that we have <em>finished</em> (ie. we have visited all reachable vertices from this vertex).   </p>
 <h3>implementation</h3>
 <p>这个以前的blog写过...    </p>
-<div class="codehilite"><pre>private boolean[] visited;   
-private Stack&lt;Integer&gt; revPostorder;// stores the vertices in reverse post order   
+<div class="codehilite"><pre><span class="k">private</span> <span class="nf">boolean</span><span class="err">[</span><span class="cp">]</span> visited;   
+private Stack<span class="nt">&lt;Integer&gt;</span> revPostorder;// stores the vertices in reverse post order   
 private void dfs(Digraph G, int v){   
-    visited[v] = true;   
+    visited<span class="cp">[</span><span class="nx">v</span><span class="cp">]</span> = true;   
     for(int w: G.adj(v))   
-        if(!visited[w])   
+        if(!visited<span class="cp">[</span><span class="nx">w</span><span class="cp">]</span>)   
             dfs(G, w);   
     //** now we know the vertex v is &quot;finished&quot; **   
     revPostorder.push(v);   
 }   
-public Iterable&lt;Integer&gt; topoOrder(Digraph G){   
-    for(int v=0;v&lt;G.V();v++)   
-        if(!visited(v)) dfs(G,v);// visit all cc   
-    return revPostorder;   
-}
+public Iterable<span class="nt">&lt;Integer&gt;</span> topoOrder(Digraph G){   
+    for(int v=0;v<span class="nt">&lt;G</span><span class="err">.</span><span class="na">V</span><span class="err">();</span><span class="na">v</span><span class="err">++)</span>   
+        <span class="na">if</span><span class="err">(!</span><span class="na">visited</span><span class="err">(</span><span class="na">v</span><span class="err">))</span> <span class="na">dfs</span><span class="err">(</span><span class="na">G</span><span class="err">,</span><span class="na">v</span><span class="err">);//</span> <span class="na">visit</span> <span class="na">all</span> <span class="na">cc</span>   
+    <span class="na">return</span> <span class="na">revPostorder</span><span class="err">;</span>   
+<span class="err">}</span>
 </pre></div>
 
 
@@ -284,27 +284,27 @@ subset of  V where each pair are strongly-connected.    </p>
 <img alt="" src="static/algoII_week1_2/pasted_image002.png" />   </p>
 <p>proof: tricky, cf book...(貌似Werner课上讲过..)   </p>
 <h2>implementation</h2>
-<div class="codehilite"><pre>private int[] scc = new int[V]; // scc[v] is the index of the SCC that v belongs to   
-private int sccCount = 0;   
-private boolean[] visited = new boolean[V];   
-public getSCC(Digraph G){   
-    // 1. get topo-order in reverse graph   
-    Iterable&lt;Integer&gt; topoOrderGR = topoOrder(G.reverse());   
-    // 2. run dfs in original graph, run on vertices using the above topo-order    
-    for(int v:topoOrderGR)// &lt;-- only difference from the standard topo-order algo   
-        if(!visited[v])   
-            dfs(G, v, sccCount++);//increment sccCount everytime we done a component   
-}   
-private dfs(Digraph G, int v){   
-    // run dfs from v, and all touched vertices are marked in sccId&#39;s SCC   
-    visited[v] = true;   
-    scc[v] = sccCount;   
-    for(int w:G.adj(v))   
-        if(!visited[w]){   
-            scc[w] = sccCount;   
-            dfs(G,w);   
-        }   
-}
+<div class="codehilite"><pre>private int<span class="p">[]</span> scc <span class="o">=</span> new int<span class="p">[</span>V<span class="p">];</span> <span class="o">//</span> scc<span class="p">[</span>v<span class="p">]</span> is the index of the SCC that v belongs to   
+private int sccCount <span class="o">=</span> <span class="m">0</span><span class="p">;</span>   
+private boolean<span class="p">[]</span> visited <span class="o">=</span> new boolean<span class="p">[</span>V<span class="p">];</span>   
+public getSCC<span class="p">(</span>Digraph G<span class="p">){</span>   
+    <span class="o">//</span> <span class="m">1</span>. get topo<span class="o">-</span>order <span class="kr">in</span> reverse graph   
+    Iterable<span class="o">&lt;</span>Integer<span class="o">&gt;</span> topoOrderGR <span class="o">=</span> topoOrder<span class="p">(</span>G.reverse<span class="p">());</span>   
+    <span class="o">//</span> <span class="m">2</span>. run dfs <span class="kr">in</span> original graph<span class="p">,</span> run on vertices using the above topo<span class="o">-</span>order    
+    <span class="kr">for</span><span class="p">(</span>int v<span class="o">:</span>topoOrderGR<span class="p">)</span><span class="o">//</span> <span class="o">&lt;--</span> only difference from the standard topo<span class="o">-</span>order algo   
+        <span class="kr">if</span><span class="p">(</span><span class="o">!</span>visited<span class="p">[</span>v<span class="p">])</span>   
+            dfs<span class="p">(</span>G<span class="p">,</span> v<span class="p">,</span> sccCount<span class="o">++</span><span class="p">);</span><span class="o">//</span>increment sccCount everytime we done a component   
+<span class="p">}</span>   
+private dfs<span class="p">(</span>Digraph G<span class="p">,</span> int v<span class="p">){</span>   
+    <span class="o">//</span> run dfs from v<span class="p">,</span> and all touched vertices are marked <span class="kr">in</span> sccId<span class="s">&#39;</span><span class="err">s SCC   </span>
+    visited<span class="p">[</span>v<span class="p">]</span> <span class="o">=</span> true<span class="p">;</span>   
+    scc<span class="p">[</span>v<span class="p">]</span> <span class="o">=</span> sccCount<span class="p">;</span>   
+    <span class="kr">for</span><span class="p">(</span>int w<span class="o">:</span>G.adj<span class="p">(</span>v<span class="p">))</span>   
+        <span class="kr">if</span><span class="p">(</span><span class="o">!</span>visited<span class="p">[</span>w<span class="p">]){</span>   
+            scc<span class="p">[</span>w<span class="p">]</span> <span class="o">=</span> sccCount<span class="p">;</span>   
+            dfs<span class="p">(</span>G<span class="p">,</span>w<span class="p">);</span>   
+        <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 		</div><!-- /.entry-content -->
 		
@@ -389,142 +389,12 @@ private dfs(Digraph G, int v){
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -534,12 +404,102 @@ private dfs(Digraph G, int v){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -549,17 +509,17 @@ private dfs(Digraph G, int v){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -569,7 +529,47 @@ private dfs(Digraph G, int v){
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

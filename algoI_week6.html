@@ -213,9 +213,9 @@ recipe for user-defined types:  <br />
 <li><em>Hash function</em>: integer between 0 and M-1 (used directly as array index, should &gt;=0)   </li>
 </ul>
 <p><strong>BUG code:</strong>    </p>
-<div class="codehilite"><pre>private int hash(Key k){   
-    return k.hashCode()%M;   
-}
+<div class="codehilite"><pre><span class="n">private</span> <span class="kt">int</span> <span class="nf">hash</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+    <span class="k">return</span> <span class="n">k</span><span class="p">.</span><span class="n">hashCode</span><span class="p">()</span><span class="o">%</span><span class="n">M</span><span class="p">;</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -238,31 +238,31 @@ just take the first 31 bits: x&amp;0x7fffffff <br />
 <p><strong>idea</strong>: Using a table of size M &lt; N,  build a list for each of the table positions.    </p>
 <p><img alt="" src="static/algoI_week6/pasted_image006.png" />   </p>
 <h2>implementation</h2>
-<div class="codehilite"><pre>public class SeparateChainingHashST&lt;Key, Value&gt;{   
-    private int M = 97;   
-    private Node[] st = new Node[97];   
-    private static class Node{   
-        Object key, val; // no generic array creation!    
-        Node next;   
-        public Node(Key k, Value v, Node nxt){...}   
-    }   
-    int hash(Key k){   
-        return (k.hashCode()&amp;0x7fffffff) % M;   
-    }   
-    public Value get(Key k){   
-        int h = hash(k);   
-        for(Node x=st[h]; x!=null; x=x.next)   
-            if(k.equals(x.val)) return (Value)x.val; //cast   
-        return null;   
-    }   
-    public void put(Key k, Value v){   
-        int h = hash(k);   
-        for(Node x=st[h]; x!=null; x=x.next)   
-            if(k.equals(x.val))    
-                {x.val = v; return;}   
-        st[h] = new Node(k,v,st[h]);   
-    }   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">SeparateChainingHashST</span><span class="o">&lt;</span><span class="n">Key</span><span class="p">,</span> <span class="n">Value</span><span class="o">&gt;</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="n">Node</span><span class="p">[]</span> <span class="n">st</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Node</span><span class="p">[</span><span class="mi">97</span><span class="p">];</span>   
+    <span class="n">private</span> <span class="k">static</span> <span class="n">class</span> <span class="n">Node</span><span class="p">{</span>   
+        <span class="n">Object</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">;</span> <span class="c1">// no generic array creation!    </span>
+        <span class="n">Node</span> <span class="n">next</span><span class="p">;</span>   
+        <span class="n">public</span> <span class="nf">Node</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">,</span> <span class="n">Node</span> <span class="n">nxt</span><span class="p">){...}</span>   
+    <span class="p">}</span>   
+    <span class="kt">int</span> <span class="n">hash</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+        <span class="k">return</span> <span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">hashCode</span><span class="p">()</span><span class="o">&amp;</span><span class="mh">0x7fffffff</span><span class="p">)</span> <span class="o">%</span> <span class="n">M</span><span class="p">;</span>   
+    <span class="p">}</span>   
+    <span class="n">public</span> <span class="n">Value</span> <span class="n">get</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>   
+        <span class="k">for</span><span class="p">(</span><span class="n">Node</span> <span class="n">x</span><span class="o">=</span><span class="n">st</span><span class="p">[</span><span class="n">h</span><span class="p">];</span> <span class="n">x</span><span class="o">!=</span><span class="n">null</span><span class="p">;</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">.</span><span class="n">next</span><span class="p">)</span>   
+            <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">))</span> <span class="k">return</span> <span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">;</span> <span class="c1">//cast   </span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>   
+    <span class="p">}</span>   
+    <span class="n">public</span> <span class="kt">void</span> <span class="n">put</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>   
+        <span class="k">for</span><span class="p">(</span><span class="n">Node</span> <span class="n">x</span><span class="o">=</span><span class="n">st</span><span class="p">[</span><span class="n">h</span><span class="p">];</span> <span class="n">x</span><span class="o">!=</span><span class="n">null</span><span class="p">;</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">.</span><span class="n">next</span><span class="p">)</span>   
+            <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">))</span>    
+                <span class="p">{</span><span class="n">x</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="k">return</span><span class="p">;}</span>   
+        <span class="n">st</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">st</span><span class="p">[</span><span class="n">h</span><span class="p">]);</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -286,25 +286,25 @@ Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next
 </ul>
 <p>array M <em>must</em> be larger than N ⇒ array resizing is necessary.    </p>
 <h2>implementation</h2>
-<div class="codehilite"><pre>public class LinearProbingHashST&lt;Key, Value&gt;{   
-    private int M, N;   
-    private Object[] keys;//cannot use generic array   
-    private Object[] vals;   
-    public void put(Key k, Value v){   
-        int i = hash(k);   
-        for(;keys[i]!=null;i=(i+1)%M)   
-            if(keys[i].equals(k))    
-                {vals[i]=v; return;}   
-        keys[i]=k;   
-        vals[i]=v;   
-    }   
-    public Value get(Key k){   
-        int h=hash(k);   
-        for(;keys[h]!=null;h=(h+1)%M)   
-            if(k.equals(keys[h])) return (Value)vals[h];//ugly cast   
-        return null;   
-    }   
-}
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">LinearProbingHashST</span><span class="o">&lt;</span><span class="n">Key</span><span class="p">,</span> <span class="n">Value</span><span class="o">&gt;</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="n">Object</span><span class="p">[]</span> <span class="n">keys</span><span class="p">;</span><span class="c1">//cannot use generic array   </span>
+    <span class="n">private</span> <span class="n">Object</span><span class="p">[]</span> <span class="n">vals</span><span class="p">;</span>   
+    <span class="n">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">,</span> <span class="n">Value</span> <span class="n">v</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>   
+        <span class="k">for</span><span class="p">(;</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="n">null</span><span class="p">;</span><span class="n">i</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">M</span><span class="p">)</span>   
+            <span class="k">if</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">equals</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>    
+                <span class="p">{</span><span class="n">vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">v</span><span class="p">;</span> <span class="k">return</span><span class="p">;}</span>   
+        <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">k</span><span class="p">;</span>   
+        <span class="n">vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">v</span><span class="p">;</span>   
+    <span class="p">}</span>   
+    <span class="n">public</span> <span class="n">Value</span> <span class="nf">get</span><span class="p">(</span><span class="n">Key</span> <span class="n">k</span><span class="p">){</span>   
+        <span class="kt">int</span> <span class="n">h</span><span class="o">=</span><span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>   
+        <span class="k">for</span><span class="p">(;</span><span class="n">keys</span><span class="p">[</span><span class="n">h</span><span class="p">]</span><span class="o">!=</span><span class="n">null</span><span class="p">;</span><span class="n">h</span><span class="o">=</span><span class="p">(</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">M</span><span class="p">)</span>   
+            <span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">h</span><span class="p">]))</span> <span class="k">return</span> <span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="n">vals</span><span class="p">[</span><span class="n">h</span><span class="p">];</span><span class="c1">//ugly cast   </span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>   
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
@@ -420,142 +420,12 @@ used for fingurprints or store passwords, but too expensive for ST implementatio
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
 <span class="tag-3">
-    <a href="./tag/french.html">french</a> 
+    <a href="./tag/markdown.html">markdown</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
     <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -565,12 +435,102 @@ used for fingurprints or store passwords, but too expensive for ST implementatio
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
     <a href="./tag/fr.html">fr</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -580,17 +540,17 @@ used for fingurprints or store passwords, but too expensive for ST implementatio
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
+    <a href="./tag/regex.html">regex</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
+    <a href="./tag/inf422.html">inf422</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -600,7 +560,47 @@ used for fingurprints or store passwords, but too expensive for ST implementatio
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
