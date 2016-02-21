@@ -136,6 +136,54 @@
 
 	
 	<div class='article'>
+		<h1><a href=".././dfs-summary.html">深度优先搜索(DFS)小结</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2015-10-18T00:00:00">
+	<i class="icon-calendar"></i>Sun, 18 Oct 2015
+</abbr>
+
+<span class="label">By</span>
+<a href=".././"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href=".././"><i class="icon-folder-open"></i>tech</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href=".././tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
+<p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
+<div class="codehilite"><pre><span class="k">public</span> <span class="nf">class</span> <span class="nx">GraphNode</span><span class="p">{</span>      
+    <span class="nx">int</span> <span class="nx">val</span><span class="p">;</span>      
+    <span class="nb">List</span><span class="o">&lt;</span><span class="nx">GraphNode</span><span class="o">&gt;</span> <span class="nx">neighbors</span><span class="p">;</span>      
+<span class="p">}</span>
+</pre></div>
+
+
+<p>为了防止重复, 仍然用一个HaseSet记录走过的节点:    </p>
+<p><code>HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();</code>    </p>
+<h2>Recursive DFS</h2>
+<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
+<p>递归的DFS代码非常简洁:    </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">nd</span><span class="p">){</span>      
+    <span class="n">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">nd</span><span class="p">.</span><span class="n">val</span><span class="p">);</span>    
+    <span class="n">visited</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">nd</span><span class="p">);</span>   
+    <span class="k">for</span><span class="p">(</span><span class="n">GraphNode</span> <span class="n">next</span><span class="o">:</span> <span class="n">nd</span><span class="p">.</span><span class="n">neighbors</span><span class="p">){</span>   
+        <span class="k">if ...</span></pre></div> 
+			<a class="btn primary xsmall" href=".././dfs-summary.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
+	
+	<div class='article'>
 		<h1><a href=".././fr-input.html">A French Input Method</a></h1>
 		<div class="well small"><footer class="post-info">
 <span class="label">Date</span>
@@ -501,47 +549,6 @@
 	</div>	
 	<hr />
 	
-	<div class='article'>
-		<h1><a href=".././host_youkuqiyi.html">修改host去除优酷奇艺网站广告</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="label">Date</span>
-<abbr class="published" title="2012-04-19T00:00:00">
-	<i class="icon-calendar"></i>Thu, 19 Apr 2012
-</abbr>
-
-<span class="label">By</span>
-<a href=".././"><i class="icon-user"></i>mx</a>
-
-<span class="label">Category</span>
-<a href=".././"><i class="icon-folder-open"></i>soft</a>. 
-
-
-	
-
-<span class="label">Tags</span> 
-
-	<a href=".././tag/host.html"><i class="icon-tag"></i>host</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><p>优酷现在的广告已经是半分钟长了?? 所以屏蔽这些广告还是很有必要滴~</p>
-<p>之前, 马阳同学给我一个修改host的方式, 用了几个月之后, 发现不好使了: 虽然不会显示广告, 但是不会直接跳过去, 而是显示"广告不能正常播放..." 然后还是要等待半分钟才能看... </p>
-<p>后来, 看了<a href="http://www.nenew.net/youku-qiyi-hosts-windows-win7-windows7-vista-ubuntu-linux-archlinux-firefox-chrome.html">奶牛的博客</a>, 终于找到了解决办法, 至少到目前还是好使的~</p>
-<h1>第一步</h1>
-<p>首先, 添加屏蔽广告的host. 关于host的修改, 直接参考<a href="http://x-wei.github.com/google_host.html">这篇博客</a>, 把里面host的全部内容粘贴进对应的文件中.</p>
-<h1>第二步</h1>
-<p>然后, 按照奶牛的办法:</p>
-<h2>linux用户</h2>
-<p>找到: <code>~/.macromedia/Flash_Player/#SharedObjects/某某名字文件夹/</code> 这里, 可能会有两个文件夹: <code>www.iqiyi.com</code>以及<code>static.youku.com</code>, 删除之, 然后新建两个空白文件, 名字就取这两个文件夹的名字(要是没有这俩文件夹, 则直接新建这两个空白文件).</p>
-<h2>windows用户</h2>
-<p>和linux用户一样, 只是那个文件夹在: </p>
-<div class="codehilite"><pre><span class="p">(</span><span class="n">xp ...</span></pre></div> 
-			<a class="btn primary xsmall" href=".././host_youkuqiyi.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
 
 
 	
@@ -644,18 +651,13 @@
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
-<span class="tag-3">
-    <a href=".././tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
-    <a href=".././tag/ssh.html">ssh</a> 
+    <a href=".././tag/C++.html">C++</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-2">
-    <a href=".././tag/spark.html">spark</a> 
+<span class="tag-3">
+    <a href=".././tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -664,12 +666,162 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
+<span class="tag-4">
+    <a href=".././tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href=".././tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-3">
     <a href=".././tag/linux.html">linux</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-1">
+<span class="tag-3">
+    <a href=".././tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href=".././tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href=".././tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href=".././tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-0">
     <a href=".././tag/algorithm.html">algorithm</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
@@ -680,152 +832,7 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href=".././tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href=".././tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/pandas.html">pandas</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
     <a href=".././tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href=".././tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href=".././tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href=".././tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
