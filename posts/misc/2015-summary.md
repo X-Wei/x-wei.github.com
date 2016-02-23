@@ -6,17 +6,20 @@ I. 工作
 =====  
   
 ### 学业  
-三月初结束了在X的最后几门考试, X的课从来都不简单, 但我真的很享受, 尤其是那些数学课. (不过刚考完就sb了: 陪伴我两年的杯子丢了...)   
+三月初结束了在X的最后几门考试, X的课从来都不简单, 但我真的很享受, 尤其是那些数学课.   
+(不过刚考完就sb了: 陪伴我两年的杯子丢了...)   
 
-Polytechnique, 从憧憬变成回忆.   
+Polytechnique, 从憧憬变成回忆. X的各种经历, 三天三夜也说不完.   
+
 ![](2015-summary/lancer%20de%20bicorne_X12.jpg)  
+
 然后九月来到ETH, 课程很有意思, project比较多. 第一个学期说实话有点应付, 所以现在要好好复习备考...orz   
   
 ### 实习  
 在MEC实习了五个月, 这里的工作环境真是宽松. 一宽松我有点担心没有什么进步, 不过后来看这一段时间我的进步还是很大的.  
 实习期间做的是音乐分类工作, 实践了一些NLP的流程, 试用了不少算法, 以及读了一些paper...   
   
-有幸和神童(X11 major)一起工作, 感叹智商不够, 只能努力来凑.   
+有幸和神童Aranud(X11 major)一起工作, 感叹智商不够, 只能努力来凑.   
   
 然后顺利通过了实习的答辩, 算是给X的三年划上了圆满的句号 — 到2017年remise再见了!   
   
@@ -92,7 +95,7 @@ edx上一门比较简单的课, 只要跟着看跟着做就可以了, 第一次�
   
 * LP  
   
-二月份和我的cousine, Manu, 一起做了INF580(programmation par contraintes)的[projet](http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html). 这个projet感觉是在X三年里最得意的一个. 我们建立了非常漂亮的线性规划(LP)模型, 描述了一个类似欧拉回路的问题. 但是事情并没有一帆风顺, 我们一开始没有考虑integrality的问题, 但是最后一刻峰回路转, 稍微变通一下以后居然变得可解了! 最后的结果完爆当年的ens冠军.   
+二月份和我的cousin, Manu, 一起做了INF580(programmation par contraintes)的[projet](http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html). 这个projet感觉是在X三年里最得意的一个. 我们建立了非常漂亮的线性规划(LP)模型, 描述了一个类似欧拉回路的问题. 但是事情并没有一帆风顺, 我们一开始没有考虑integrality的问题, 但是最后一刻峰回路转, 稍微变通一下以后居然变得可解了! 最后的结果完爆当年的ens冠军.   
   
 不过, "当你手上有个锤子, 看什么东西都像钉子". 2015年的hashcode预赛, 我们翘掉cérémonie参赛, 还想用LP, 结果计算超时了就... 后来发现只要用贪心算法就可以妥妥的了... anyway, 从此兵器库里多了LP这个重型武器.   
   
@@ -176,6 +179,8 @@ IV. 娱乐
 * Center of The Universe (Eagles)  
 * Closer (Travis)  
 * Rocky Mountain Way (Eagles): 这首歌的现场版单曲循环... 歌词是nonsense, 但是Joe Walsh的吉他燃爆了, 以前觉得他用那个talbox就想跳过, 现在只觉得爽...   
+* butterfly (数码宝贝主题曲)  
+* 直到世界尽头  
 * Hotel California (Eagles): as always, 但是今年在youtube上发现一个后来Don Felder的独奏版本, 又要单曲循环了:   
   
 <embed src="http://player.youku.com/player.php/sid/XNTUwNDc5NTk2/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
