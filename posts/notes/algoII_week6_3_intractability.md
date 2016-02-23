@@ -1,11 +1,11 @@
-Title: [Algorithms II] Week 6-3 Intracability        
+Title: [Algorithms II] Week 6-3 Intractability        
 Date: 2016-02-23         
 Slug:  algoII_week6_3_intractability     
 Tags: algorithm            
    
-   
-1. Introduction to Intractability   
-=================================   
+ 
+# 1. Introduction to Intractability   
+     
    
 recall model of computation: DFA   
 a *univeral* model of computation: turing machine    
@@ -71,7 +71,8 @@ another example:
    
    
    
-3. ====== P vs. NP ======   
+3. P vs. NP     
+========
    
    
 def. **NP** is the class of all search pbs. (ie. solution be checked efficiently)    
@@ -118,8 +119,8 @@ Millennium prize by Clay instute.
    
    
    
-4. ====== Classifying Problems ======   
-   
+4. Classifying Problems  
+=================   
    
 classify pbs like classifying elements into perodic table.    
    

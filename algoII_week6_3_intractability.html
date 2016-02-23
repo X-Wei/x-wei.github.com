@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     <meta charset="utf-8">
-    <title>linux下安装并使用java开发opencv的配置</title>
+    <title>[Algorithms II] Week 6-3 Intractability</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -99,7 +99,7 @@
 					</a>
                   </li>
               
-                  <li >
+                  <li class="active">
                     <a href="./category/notes.html">
 						<i class="icon-folder-open icon-large"></i>notes
 					</a>
@@ -111,7 +111,7 @@
 					</a>
                   </li>
               
-                  <li class="active">
+                  <li >
                     <a href="./category/tech.html">
 						<i class="icon-folder-open icon-large"></i>tech
 					</a>
@@ -139,8 +139,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to linux下安装并使用java开发opencv的配置">
-					linux下安装并使用java开发opencv的配置 
+					title="Permalink to [Algorithms II] Week 6-3 Intractability">
+					[Algorithms II] Week 6-3 Intractability 
 				</a>
 				 
 			</h1> 
@@ -149,106 +149,195 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2014-02-10T00:00:00">
-	<i class="icon-calendar"></i>Mon, 10 Feb 2014
+<abbr class="published" title="2016-02-23T00:00:00">
+	<i class="icon-calendar"></i>Tue, 23 Feb 2016
 </abbr>
 
 <span class="label">By</span>
 <a href="./"><i class="icon-user"></i>mx</a>
 
 <span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>tech</a>. 
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
 
 
 	
 
 <span class="label">Tags</span> 
 
-	<a href="./tag/eclipse.html"><i class="icon-tag"></i>eclipse</a>
-
-	<a href="./tag/java.html"><i class="icon-tag"></i>java</a>
-
-	<a href="./tag/opencv.html"><i class="icon-tag"></i>opencv</a>
+	<a href="./tag/algorithm.html"><i class="icon-tag"></i>algorithm</a>
 
 
 
 </footer><!-- /.post-info -->
 		</div>
-		<p>今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... </p>
-<h2>linux编译安装opencv</h2>
-<p>首先, linux下安装opencv其实不麻烦的, 参考文档即可完成:
-<a href="http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html">http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html</a></p>
-<p>大致有以下几个步骤:</p>
-<p>1) 安装gcc以及cmake等等乱七八糟的软件(不过ubuntu下默认差不多都有了吧...)</p>
-<div class="codehilite"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span> <span class="n">cmake</span>
+		<h1>1. Introduction to Intractability</h1>
+<p>recall model of computation: DFA <br />
+a <em>univeral</em> model of computation: turing machine  <br />
+→ no more powerful model of computation.  <br />
+Turing machine can compute any function that can be computed by a physically harnessable process of the natural world.    </p>
+<p>bottom line: turing machine is a simple and universal model of computation.    </p>
+<p>Q. which algos are <em>useful in practice</em>?   </p>
+<p>useful in practice = polynomial time for all inputs   </p>
+<p>def. a pb is <strong>intractable</strong> if it cannot be solved in polynomial time.    </p>
+<p>2 pbs that <em>can be proved</em> to require exp time:    </p>
+<ol>
+<li>Given a constant-size programme, does it halt in &lt;=K steps ?   </li>
+<li>Given a N*N chess board position, can the first player force a win ?   </li>
+</ol>
+<p>Bad news: very few pbs can be proved to require exp time...   </p>
+<h1>2. Search Problems</h1>
+<p><strong>Four fundamental problems: </strong>   </p>
+<ul>
+<li><strong>LSLOVE</strong>   </li>
+</ul>
+<p>Given a system of linear equations, find a solution <br />
+var: real numbers <br />
+→ guassian elimination   </p>
+<ul>
+<li><strong>LP</strong>   </li>
+</ul>
+<p>Given a system of linear inequaties, find a solution. (not necessarily find the opt) <br />
+var: real numbers   </p>
+<ul>
+<li><strong>ILP</strong>   </li>
+</ul>
+<p>Given a system of linear inequaties, find a <strong>0-1</strong> solution.  <br />
+var: 0 or 1   </p>
+<ul>
+<li><strong>SAT</strong>   </li>
+</ul>
+<p>Given a system of <em>boolean equations</em>, find a binary solution.    </p>
+<p>Which ones of the 4 foundamental pbs have poly-time solutions?   </p>
+<ul>
+<li>LSLOVE: Gaussian elimination works in O(n3)   </li>
+<li>LP: Ellipsoid works in poly-time (simplex also poly-time <em>in practice</em>..)   </li>
+<li>ILP, SAT: No poly-time algorithm known (or believed to exist) !   </li>
+</ul>
+<p>All 4 pbs are examples of search problems.    </p>
+<p><strong>Search pb</strong>: given an instance <code>I</code>, find a solution <code>S</code> / report there's no solution.  <br />
+<em>requirement</em>: able to efficiently (poly-time) <em>check</em> that <code>S</code> is a solution. (that's the case for the above 4 fundamental pbs)   </p>
+<p>another example:  <br />
+<strong>FACTOR</strong>: given a n-bit integer, find a nontrival factor.  <br />
+(given a solution, simply need to long-divide to check...)   </p>
+<h1>3. P vs. NP</h1>
+<p>def. <strong>NP</strong> is the class of all search pbs. (ie. solution be checked efficiently)  <br />
+NB: classical definition limits to yes-no pbs... <br />
+Significance: NP pbs are what scientists and engineers <em>aspire to compute feasibly</em>. <br />
+examples:  <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image.png" />   </p>
+<p>def. <strong>P</strong> is the class of search pbs that <em>are solvable</em> in poly-time.    </p>
+<p>(What scientists and engineers <em>do compute feasibly</em>.)   </p>
+<p>examples: <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image001.png" />   </p>
+<p><strong>Nondeterminism</strong> <br />
+Nondeterminism machine can <em>guess</em> the solution (donot exist in natural world..). → NFA tries to simulate such a machine... <br />
+Ex. <code>int[] a = new int[N];</code> <br />
+・ Java: initializes entries to 0 . <br />
+・ Nondeterministic machine: <em>initializes entries to the solution!</em> <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image002.png" />   </p>
+<p>NP: <em>Search problems solvable in poly time on a nondeterministic Turing machine</em>.    </p>
+<p>Extended Church-Turing thesis: <br />
+P: Search pbs solvable in poly time <em>in natural world</em>.    </p>
+<p>do we have non-determinism in natural world? ---&gt; natural computers ?  <br />
+ex. STEINER tree: set of segments connecting given N points.  <br />
+use soap → doesn't really work... <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image003.png" />   </p>
+<p>another example for P/NP: automating creativity <br />
+<em>being creative VS appreciating creativity</em> <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image004.png" />   </p>
+<p>The central question: does P=NP?  <br />
+(can you alway avoid brute-force searching and do better?) <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image005.png" /> <br />
+Millennium prize by Clay instute. <br />
+(among all ways of earning 1M dollars, this might be the most complicated way... @_@...)   </p>
+<h1>4. Classifying Problems</h1>
+<p>classify pbs like classifying elements into perodic table.    </p>
+<p>key pb: satisfiablity <br />
+SAT. given a sys of boolean eq, find a solution.    </p>
+<p>exhaustive search: try 2^n possible solutions.  <br />
+conjecture: no poly-time algo for SAT (ie. intractable)   </p>
+<p><strong>Assumption</strong>: assume the intractability for SAT. <br />
+Tool: reduction <br />
+def. pb X reduces to pb Y: we can solve pb X with the algo for pb Y.  <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image006.png" />   </p>
+<blockquote>
+<p>if SAT poly-reduces to pb Y ⇒ pb Y in (probably) intractable.   </p>
+</blockquote>
+<h3>SAT poly-reduces to ILP</h3>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image007.png" /> <br />
+(all SAT pb can be reduced to 3SAT)   </p>
+<p>⇒ can be converted to an ILP pb:  <br />
+for each eq, introduce a var Ci: <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image009.png" />   </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image008.png" />   </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image010.png" />   </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image011.png" />   </p>
+<h1>5. NP-Completeness</h1>
+<blockquote>
+<p>def. an NP pb is <strong>NP-complete</strong> if all pbs in NP poly-reduces to it.    </p>
+</blockquote>
+<p>prop. <em>SAT id NP-complete.</em> <br />
+any pb in NP poly-reduces to SAT (reverse direction as last lecture) <br />
+pf sketch: convert non-dertiministic turing machine notation to SAT notation...   </p>
+<p>cor. poly time algo for SAT iff P=NP...   </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image012.png" />   </p>
+<p>⇒ there pbs are equivalent !    </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image013.png" />   </p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image014.png" /> <br />
+summary:  <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image015.png" />   </p>
+<p>==... <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image016.png" />   </p>
+<h1>6. Coping with Intractability</h1>
+<h3>exploit intractability</h3>
+<p>cryptography ecopoits the hardness of FACTOR pb <br />
+<img alt="" src="static/algoII_week6_3_intractability/pasted_image017.png" />   </p>
+<p>Can factor an n-bit integer in n 3 steps on a "<em>quantum computer</em>.”   </p>
+<h3>Coping with intractability</h3>
+<p>relax one of desired features...   </p>
+<ul>
+<li>special cases   </li>
+</ul>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image018.png" />   </p>
+<ul>
+<li>Develop a heuristic, and hope it produces a good solution.   </li>
+</ul>
+<p>no guarantee <br />
+ex. TSP   </p>
+<ul>
+<li>Approximation algorithm. Find solution of provably good quality.   </li>
+</ul>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image019.png" />   </p>
+<h3>Halmiton path</h3>
+<p>remark: Euler path (each edge once) easy, Halmiton path (each vertex once) NPC... <br />
+dfs solution for Halmiton path:   </p>
+<div class="codehilite"><pre><span class="n">public</span> <span class="n">class</span> <span class="n">Halmiton</span><span class="p">{</span>   
+    <span class="n">private</span> <span class="n">boolean</span><span class="p">[]</span> <span class="n">marked</span><span class="p">;</span>   
+    <span class="n">private</span> <span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="c1">// nb of Halmiton paths   </span>
+    <span class="n">public</span> <span class="nf">Halmiton</span><span class="p">(</span><span class="n">Graph</span> <span class="n">G</span><span class="p">){</span>   
+        <span class="n">marked</span> <span class="o">=</span> <span class="n">new</span> <span class="n">boolean</span><span class="p">[</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">()];</span>   
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">v</span><span class="o">&lt;</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span> <span class="n">v</span><span class="o">++</span><span class="p">)</span>   
+            <span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>    
+    <span class="p">}</span>   
+    <span class="n">private</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">Graph</span> <span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="kt">int</span> <span class="n">depth</span><span class="p">){</span>   
+        <span class="k">if</span><span class="p">(</span><span class="n">depth</span><span class="o">==</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">())</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>   
+        <span class="n">marked</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>   
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">w</span><span class="o">:</span> <span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>    
+            <span class="k">if</span><span class="p">(</span><span class="n">marked</span><span class="p">[</span><span class="n">w</span><span class="p">]</span><span class="o">==</span><span class="nb">false</span><span class="p">)</span> <span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>   
+        <span class="n">marked</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">=</span><span class="n">flase</span><span class="p">;</span> <span class="c1">// backtrack   </span>
+    <span class="p">}</span>   
+<span class="p">}</span>
 </pre></div>
 
 
-<p>2) 下载opencv-2.4.8.zip并解压缩</p>
-<p>3) 新建一个build文件夹</p>
-<div class="codehilite"><pre><span class="n">cd</span> <span class="o">~/</span><span class="n">opencv</span>
-<span class="n">mkdir</span> <span class="n">build</span>
-<span class="n">cd</span> <span class="n">build</span>
-</pre></div>
-
-
-<p>4) 在终端里输入: </p>
-<div class="codehilite"><pre><span class="n">cmake</span> <span class="o">-</span><span class="n">D</span> <span class="n">CMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">RELEASE</span> <span class="o">-</span><span class="n">D</span> <span class="n">CMAKE_INSTALL_PREFIX</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span> <span class="p">..</span>
-<span class="n">make</span>
-<span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span>
-</pre></div>
-
-
-<p>make命令会花费几十分钟时间...
-然后<strong>理论上</strong>就结束了... 如果不用java开发的话 就OK了 比如 可以运行sample文件夹下的python代码...</p>
-<p><strong>但是</strong>, 如果要使用java开发的话 需要接着这样做.....</p>
-<h2>安装opencv-java</h2>
-<p>这一步非常DT, 因为官网上还有一个文档, 专门讲怎么用java开发的...
-<a href="http://docs.opencv.org/doc/tutorials/introduction/desktop_java/java_dev_intro.html">http://docs.opencv.org/doc/tutorials/introduction/desktop_java/java_dev_intro.html</a></p>
-<p>1) 首先, 需要安装ant: </p>
-<div class="codehilite"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">ant</span>
-</pre></div>
-
-
-<p>2) 其次 需要运行cmake, 关键是cmake的参数, 官网给的是这样的: </p>
-<div class="codehilite"><pre><span class="n">export</span> <span class="n">JAVA_HOME</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">java</span><span class="o">-</span><span class="mi">6</span><span class="o">-</span><span class="n">oracle</span><span class="err">#这句不加应该也可以的</span>
-<span class="n">cmake</span> <span class="o">-</span><span class="n">DBUILD_SHARED_LIBS</span><span class="o">=</span><span class="n">OFF</span> <span class="p">..</span>
-</pre></div>
-
-
-<p>注意看输出的, 如果"To be built"里面有java这一项的话, 就<strong>应该</strong>是OK的.... 接下来只要<code>make -j8</code> 就可以了...</p>
-<p>最坑爹的地方来了, 以这样的参数运行cmake以后, 运行<code>make -j8</code>总是不成功, 说有错误.....</p>
-<p><img alt="" src="static/linux下安装并使用java开发opencv的配置/pasted_image.png" /></p>
-<p>查了半天, 发现这是一个BUG:
-<a href="http://code.opencv.org/issues/2859">http://code.opencv.org/issues/2859</a></p>
-<p>那么试一试加上参数: <code>-DBUILD_TESTS=OFF</code> 吧...</p>
-<p><strong>所以cmake的参数要这样写才可以</strong>: </p>
-<p><code>cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -DBUILD_TESTS=OFF ..</code></p>
-<p>3) 用上面那样的参数运行cmake以后, 再: </p>
-<div class="codehilite"><pre><span class="n">make</span> <span class="o">-</span><span class="n">j8</span>
-<span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span>
-</pre></div>
-
-
-<p>这样就可以成功make了...</p>
-<h2>如何判断是否安装成功?</h2>
-<p>以上操作结束后, 看看build文件夹, bin目录下是不是有一个<code>opencv-248.jar</code>文件:</p>
-<p><img alt="" src="static/linux下安装并使用java开发opencv的配置/pasted_image001.png" /></p>
-<p>如果有的话 就说明成功安装了opencv的java组件... </p>
-<p><strong>!!注意!!</strong>
-<strong>不能用windows下opencv安装目录下的那个opencv-248.jar</strong>!! 
-刚才生成那个jar和windows下的jar不一样的!! (我查了MD5码... 其实看文件大小也能看出来!!)</p>
-<h2>Eclipse下的配置</h2>
-<p>这里有一篇非常好的帖子, 写的非常到位, 我就不重复了, 链接:</p>
-<p><a href="http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/">http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/</a></p>
-<p>这个帖子虽然很好, 但是没有介绍编译的那一部分, 由于安装java组件时的编译过程和官网给的不一样, 所以才导致我废了半天的时间啊!......</p>
+<p><img alt="" src="static/algoII_week6_3_intractability/pasted_image020.png" />   </p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "linux下安装并使用java开发opencv的配置.html";
+			   var disqus_identifier = "algoII_week6_3_intractability.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;
