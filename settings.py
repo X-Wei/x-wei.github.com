@@ -46,7 +46,7 @@ SOCIAL = (
           #~ ('weibo', 'http://weibo.com/farseerfc'),
           #~ ('renren', 'http://www.renren.com/farseer'),
           
-GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"#终于被google收录了!~   
+GOOGLE_CUSTOM_SEARCH_SIDEBAR = "010017366155264590731:njcqykcxuly"
        
 #把各种网页小工具(比如倒计时, 微博展示......)的html代码放在这里 不过要使用farseerfc同学制作的bootsrtap2主题(太赞啦!!)
 SIDEBAR_CUSTOM=ur"""

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[Functional Programming Principles in Scala] Lec4: Types and Pattern Matching</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Functional Programming Principles in Scala] Lec4: Types and Pattern Matching">
+					[Functional Programming Principles in Scala] Lec4: Types and Pattern Matching 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-07-17T00:00:00">
+	<i class="icon-calendar"></i>Sun, 17 Jul 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>scala</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h2>4.1 - Objects Everywhere</h2>
+<p>scala is <em>pure</em> OO: every value is an obj, every operation is a method of obj.  </p>
+<p><code>scala.Int</code> <code>scala.Boolean</code> maps to JVM standard primitive types.  </p>
+<p>Implement <code>Boolean</code> withous primitive type in scala:  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image.png" /> </p>
+<p>Then defin <code>false</code> and <code>true</code> as objects, give implementation for <code>ifThenElse()</code> funciton:  </p>
+<div class="codehilite"><pre><span></span>object true extends Boolean{ 
+    def ifThenElse[T](t: =&gt;T, e: =&gt;T) = t 
+} 
+object false extends Boolean{ 
+    def ifThenElse[T](t: =&gt;T, e: =&gt;T) = e 
+}
+</pre></div>
+
+
+<h2>4.2 - Functions as Objects</h2>
+<p>Function values are treated as objects in scala.<br />
+the type <code>A =&gt; B</code> is an abbrevation for <code>scala.Function1[A, B]</code> </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image001.png" /> </p>
+<p><strong>Functions are objects with </strong><code>apply</code><strong> methods.</strong> </p>
+<p>anonymous function <code>(x: Int) =&gt; x*x</code> is expanded to :  </p>
+<div class="codehilite"><pre><span></span>new Function1[Int, Int]{ 
+def apply(x: Int) = x*x 
+}
+</pre></div>
+
+
+<p>function call <code>f(a,b)</code> is expanded to:  <code>f.apply(a,b)</code> 
+<code>List(1,2)</code> is expanded to : <code>List.apply(1,2)</code> </p>
+<h2>4.3 - Subtyping and Generics</h2>
+<p>2 forms of polymorphism: <em>subtyping and generics</em> </p>
+<h3>Type Bounds</h3>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image003.png" /> 
+<code>assertAllPos</code> taks either <code>EmptySet</code> or <code>NonEmptySet</code>, the return type is EmptySet (when para=EmptySet) or NonEmptySet (when para=NonEmpty).<br />
+To express this situation:  </p>
+<p><code>def assertAllPos[S &lt;: IntSet](r: S): S = ...</code> </p>
+<p>Here <code>&lt;: IntSet</code> means IntSet is an upper bound of the type parameter.  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image004.png" /> 
+and we can mix the two notations:  </p>
+<p><code>[S &gt;: NonEmpty &lt;: IntSet]</code> </p>
+<h3>Covariance</h3>
+<p>Given <code>NonEmpty &lt;: IntSet</code>,<br />
+should we have: <code>List[NonEmpty] &lt;: List[IntSet]</code> ? </p>
+<p>In this case the typse are called *covariant. * </p>
+<p>In java, arrays are covariant: <code>NonEmpty[] &lt;: IntSet[]</code> 
+but this might cause problems:  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image005.png" /> </p>
+<p>will get ArrayStoreException in 3rd line.  </p>
+<p><strong>Liskov substitution principle</strong>: when a type can be a subtype of another  </p>
+<blockquote>
+<p><em>If A&lt;:B, then everything one can do with an object of type B, one should also be able to do it with object of type A.</em>  </p>
+</blockquote>
+<p>In scala the Array is not covariant: <code>Array[IntSet]</code> is not supertype of <code>Array[NonEmpty]</code> </p>
+<h2>4.5 - Decomposition</h2>
+<p>ex: arithmetic expression interpreter: a tree of numbers and sums, both are subtype of <code>Expr</code>.  </p>
+<p>1st try: test and accessor methods </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image006.png" /> </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image007.png" /> </p>
+<p>→ tedious... And to add more operands need to add many more methods...  </p>
+<p>2nd try: (non-solution) 
+type testing and type casting 
+<code>isinstantceof</code>, <code>asinstanceof</code> </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image008.png" /> </p>
+<p>discouraged in scala. </p>
+<p>1st solution: <strong>OO decomposition</strong> 
+add <code>eval</code> method to class Expr. </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image009.png" /> </p>
+<p>limitation: if we want to simplify an expression,  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image010.png" /> </p>
+<p>⇒ there is no local simplification ! </p>
+<p>⇒ <strong>pattern matching</strong> </p>
+<h2>4.6 - Pattern Matching</h2>
+<p>goal: <em>reverse</em> the construction process.  </p>
+<ul>
+<li>which subclass it is? </li>
+<li>what were the arguments? </li>
+</ul>
+<h3>case classes</h3>
+<p>add <code>case</code> in class definition. 
+ex. </p>
+<div class="codehilite"><pre><span></span>case class Number(n: Int) extends Expr 
+case class Sum(e1: Expr, e2: Expr) extends Expr
+</pre></div>
+
+
+<p>adding <code>case</code> adds <em>companion objects</em> with <code>apply</code> methods:  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image011.png" /> </p>
+<p>according to the expansion, <code>Number(2)</code> is equal to <code>Number.apply(2)</code> which is actaully <code>new Numver(2)</code> </p>
+<h3>pattern matching</h3>
+<p><code>match</code>: extension of <code>switch</code> in java, ex:  </p>
+<div class="codehilite"><pre><span></span>def eval(e: Expr): Int = e match{ 
+    case Number(n) =&gt; n 
+    case Sum(e1, e2) =&gt; e1 + e2 
+}
+</pre></div>
+
+
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image012.png" /> </p>
+<p>patterns include:  </p>
+<ul>
+<li>constructor, ex. <code>Number(n)</code> </li>
+<li>variable, ex. <code>n, e1, e2</code> </li>
+<li>wildcard patters, ex. <code>_</code> </li>
+<li>constant, ex. <code>1, true</code> </li>
+<li>or their combination, ex <code>Sum(Number(1),  Var(x))</code> </li>
+</ul>
+<p>The whole match expression is replaced with the expression to the rhs of the first match pattern.  </p>
+<p>exercice: implement a <code>show</code> function. </p>
+<div class="codehilite"><pre><span></span>def show(e: Expr): String = e match { 
+    case Number(n) =&gt; n.toString 
+    case Sum(l, r) =&gt; show(l) + &quot;+&quot; + show(r) 
+}
+</pre></div>
+
+
+<h2>4.7 - Lists</h2>
+<p>example:  </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image013.png" /> </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image014.png" /> </p>
+<p>difference between List and Array:  </p>
+<ul>
+<li>Lists are immutable, elements cannot change </li>
+<li>Lists are recursive, arrays are flat </li>
+<li>both are homogeneous, all elements of the same type </li>
+</ul>
+<p>All <code>List</code>s in scala are constructed with:  </p>
+<ul>
+<li>Empty list <code>Nil</code> </li>
+<li>construction op <code>::</code>(pronunced: cons), <code>x::xs</code> </li>
+</ul>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image015.png" /> </p>
+<p>convention in scala: operators ending with <code>:</code>  </p>
+<ul>
+<li>are <em>right-associative</em>. <code>a::b::c</code> is equal to <code>a::(b::c)</code> </li>
+<li>seen as method calls from the right-hand operand. <code>1::2::Nil</code> equal to <code>Nil.::(2).::(1)</code> ( <code>::</code> is prepend operation) </li>
+</ul>
+<p>operations on lists:  </p>
+<ul>
+<li>head </li>
+<li>tail </li>
+<li>isEmpty </li>
+</ul>
+<p>list in pattern matching: </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image016.png" /> </p>
+<p>ex. insertion sort of lists </p>
+<p><img alt="" src="static/progfun1_lec4_pattern_matching/pasted_image017.png" /> </p>
+<div class="codehilite"><pre><span></span>def isort(xs: List[Int]): List[Int] = xs match{ 
+    case List() =&gt; List() 
+    case y::ys =&gt; insert(y, isort(ys)) 
+} 
+def insert(x:Int, xs:List[Int]): List[Int] = xs match{ 
+    case List() =&gt; List(x) 
+    case y::ys =&gt; if(x&lt;=y) x::xs else y::insert(y, ys) 
+}
+</pre></div>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "progfun1_lec4_pattern_matching.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

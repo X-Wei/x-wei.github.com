@@ -1,5 +1,1051 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-06-07T00:00:00+02:00</updated><entry><title>(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences</title><link href="http://x-wei.github.io/dlMOOC_L4.html" rel="alternate"></link><published>2016-06-07T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/dlMOOC_L4.html</id><summary type="html">&lt;p&gt;problems with text:   &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-17T00:00:00+02:00</updated><entry><title>[Functional Programming Principles in Scala] Lec4: Types and Pattern Matching</title><link href="http://x-wei.github.io/progfun1_lec4_pattern_matching.html" rel="alternate"></link><published>2016-07-17T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec4_pattern_matching.html</id><summary type="html">&lt;h2&gt;4.1 - Objects Everywhere&lt;/h2&gt;
+&lt;p&gt;scala is &lt;em&gt;pure&lt;/em&gt; OO: every value is an obj, every operation is a method of obj.  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;scala.Int&lt;/code&gt; &lt;code&gt;scala.Boolean&lt;/code&gt; maps to JVM standard primitive types.  &lt;/p&gt;
+&lt;p&gt;Implement &lt;code&gt;Boolean&lt;/code&gt; withous primitive type in scala:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image.png" /&gt; &lt;/p&gt;
+&lt;p&gt;Then defin &lt;code&gt;false&lt;/code&gt; and &lt;code&gt;true&lt;/code&gt; as objects, give implementation for &lt;code&gt;ifThenElse()&lt;/code&gt; funciton:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;object true extends Boolean{ 
+    def ifThenElse[T](t: =&amp;gt;T, e: =&amp;gt;T) = t 
+} 
+object false extends Boolean{ 
+    def ifThenElse[T](t: =&amp;gt;T, e: =&amp;gt;T) = e 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;4.2 - Functions as Objects&lt;/h2&gt;
+&lt;p&gt;Function values are treated as objects in scala.&lt;br /&gt;
+the type &lt;code&gt;A =&amp;gt; B&lt;/code&gt; is an abbrevation for &lt;code&gt;scala.Function1[A, B]&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image001.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Functions are objects with &lt;/strong&gt;&lt;code&gt;apply&lt;/code&gt;&lt;strong&gt; methods.&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;anonymous function &lt;code&gt;(x: Int) =&amp;gt; x*x&lt;/code&gt; is expanded to :  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;new Function1[Int, Int]{ 
+def apply(x: Int) = x*x 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;function call &lt;code&gt;f(a,b)&lt;/code&gt; is expanded to:  &lt;code&gt;f.apply(a,b)&lt;/code&gt; 
+&lt;code&gt;List(1,2)&lt;/code&gt; is expanded to : &lt;code&gt;List.apply(1,2)&lt;/code&gt; &lt;/p&gt;
+&lt;h2&gt;4.3 - Subtyping and Generics&lt;/h2&gt;
+&lt;p&gt;2 forms of polymorphism: &lt;em&gt;subtyping and generics&lt;/em&gt; &lt;/p&gt;
+&lt;h3&gt;Type Bounds&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image003.png" /&gt; 
+&lt;code&gt;assertAllPos&lt;/code&gt; taks either &lt;code&gt;EmptySet&lt;/code&gt; or &lt;code&gt;NonEmptySet&lt;/code&gt;, the return type is EmptySet (when para=EmptySet) or NonEmptySet (when para=NonEmpty).&lt;br /&gt;
+To express this situation:  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def assertAllPos[S &amp;lt;: IntSet](r: S): S = ...&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;Here &lt;code&gt;&amp;lt;: IntSet&lt;/code&gt; means IntSet is an upper bound of the type parameter.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image004.png" /&gt; 
+and we can mix the two notations:  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;[S &amp;gt;: NonEmpty &amp;lt;: IntSet]&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;Covariance&lt;/h3&gt;
+&lt;p&gt;Given &lt;code&gt;NonEmpty &amp;lt;: IntSet&lt;/code&gt;,&lt;br /&gt;
+should we have: &lt;code&gt;List[NonEmpty] &amp;lt;: List[IntSet]&lt;/code&gt; ? &lt;/p&gt;
+&lt;p&gt;In this case the typse are called *covariant. * &lt;/p&gt;
+&lt;p&gt;In java, arrays are covariant: &lt;code&gt;NonEmpty[] &amp;lt;: IntSet[]&lt;/code&gt; 
+but this might cause problems:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image005.png" /&gt; &lt;/p&gt;
+&lt;p&gt;will get ArrayStoreException in 3rd line.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Liskov substitution principle&lt;/strong&gt;: when a type can be a subtype of another  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;If A&amp;lt;:B, then everything one can do with an object of type B, one should also be able to do it with object of type A.&lt;/em&gt;  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In scala the Array is not covariant: &lt;code&gt;Array[IntSet]&lt;/code&gt; is not supertype of &lt;code&gt;Array[NonEmpty]&lt;/code&gt; &lt;/p&gt;
+&lt;h2&gt;4.5 - Decomposition&lt;/h2&gt;
+&lt;p&gt;ex: arithmetic expression interpreter: a tree of numbers and sums, both are subtype of &lt;code&gt;Expr&lt;/code&gt;.  &lt;/p&gt;
+&lt;p&gt;1st try: test and accessor methods &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image006.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image007.png" /&gt; &lt;/p&gt;
+&lt;p&gt;→ tedious... And to add more operands need to add many more methods...  &lt;/p&gt;
+&lt;p&gt;2nd try: (non-solution) 
+type testing and type casting 
+&lt;code&gt;isinstantceof&lt;/code&gt;, &lt;code&gt;asinstanceof&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image008.png" /&gt; &lt;/p&gt;
+&lt;p&gt;discouraged in scala. &lt;/p&gt;
+&lt;p&gt;1st solution: &lt;strong&gt;OO decomposition&lt;/strong&gt; 
+add &lt;code&gt;eval&lt;/code&gt; method to class Expr. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image009.png" /&gt; &lt;/p&gt;
+&lt;p&gt;limitation: if we want to simplify an expression,  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image010.png" /&gt; &lt;/p&gt;
+&lt;p&gt;⇒ there is no local simplification ! &lt;/p&gt;
+&lt;p&gt;⇒ &lt;strong&gt;pattern matching&lt;/strong&gt; &lt;/p&gt;
+&lt;h2&gt;4.6 - Pattern Matching&lt;/h2&gt;
+&lt;p&gt;goal: &lt;em&gt;reverse&lt;/em&gt; the construction process.  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;which subclass it is? &lt;/li&gt;
+&lt;li&gt;what were the arguments? &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;case classes&lt;/h3&gt;
+&lt;p&gt;add &lt;code&gt;case&lt;/code&gt; in class definition. 
+ex. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;case class Number(n: Int) extends Expr 
+case class Sum(e1: Expr, e2: Expr) extends Expr
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;adding &lt;code&gt;case&lt;/code&gt; adds &lt;em&gt;companion objects&lt;/em&gt; with &lt;code&gt;apply&lt;/code&gt; methods:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image011.png" /&gt; &lt;/p&gt;
+&lt;p&gt;according to the expansion, &lt;code&gt;Number(2)&lt;/code&gt; is equal to &lt;code&gt;Number.apply(2)&lt;/code&gt; which is actaully &lt;code&gt;new Numver(2)&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;pattern matching&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;match&lt;/code&gt;: extension of &lt;code&gt;switch&lt;/code&gt; in java, ex:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def eval(e: Expr): Int = e match{ 
+    case Number(n) =&amp;gt; n 
+    case Sum(e1, e2) =&amp;gt; e1 + e2 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image012.png" /&gt; &lt;/p&gt;
+&lt;p&gt;patterns include:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;constructor, ex. &lt;code&gt;Number(n)&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;variable, ex. &lt;code&gt;n, e1, e2&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;wildcard patters, ex. &lt;code&gt;_&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;constant, ex. &lt;code&gt;1, true&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;or their combination, ex &lt;code&gt;Sum(Number(1),  Var(x))&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The whole match expression is replaced with the expression to the rhs of the first match pattern.  &lt;/p&gt;
+&lt;p&gt;exercice: implement a &lt;code&gt;show&lt;/code&gt; function. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def show(e: Expr): String = e match { 
+    case Number(n) =&amp;gt; n.toString 
+    case Sum(l, r) =&amp;gt; show(l) + &amp;quot;+&amp;quot; + show(r) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;4.7 - Lists&lt;/h2&gt;
+&lt;p&gt;example:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image013.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image014.png" /&gt; &lt;/p&gt;
+&lt;p&gt;difference between List and Array:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lists are immutable, elements cannot change &lt;/li&gt;
+&lt;li&gt;Lists are recursive, arrays are flat &lt;/li&gt;
+&lt;li&gt;both are homogeneous, all elements of the same type &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All &lt;code&gt;List&lt;/code&gt;s in scala are constructed with:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Empty list &lt;code&gt;Nil&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;construction op &lt;code&gt;::&lt;/code&gt;(pronunced: cons), &lt;code&gt;x::xs&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image015.png" /&gt; &lt;/p&gt;
+&lt;p&gt;convention in scala: operators ending with &lt;code&gt;:&lt;/code&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;are &lt;em&gt;right-associative&lt;/em&gt;. &lt;code&gt;a::b::c&lt;/code&gt; is equal to &lt;code&gt;a::(b::c)&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;seen as method calls from the right-hand operand. &lt;code&gt;1::2::Nil&lt;/code&gt; equal to &lt;code&gt;Nil.::(2).::(1)&lt;/code&gt; ( &lt;code&gt;::&lt;/code&gt; is prepend operation) &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;operations on lists:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;head &lt;/li&gt;
+&lt;li&gt;tail &lt;/li&gt;
+&lt;li&gt;isEmpty &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;list in pattern matching: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image016.png" /&gt; &lt;/p&gt;
+&lt;p&gt;ex. insertion sort of lists &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec4_pattern_matching/pasted_image017.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def isort(xs: List[Int]): List[Int] = xs match{ 
+    case List() =&amp;gt; List() 
+    case y::ys =&amp;gt; insert(y, isort(ys)) 
+} 
+def insert(x:Int, xs:List[Int]): List[Int] = xs match{ 
+    case List() =&amp;gt; List(x) 
+    case y::ys =&amp;gt; if(x&amp;lt;=y) x::xs else y::insert(y, ys) 
+}
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec3: Data and Abstraction</title><link href="http://x-wei.github.io/progfun1_lec3_data_abstraction.html" rel="alternate"></link><published>2016-06-28T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec3_data_abstraction.html</id><summary type="html">&lt;p&gt;This week, we'll cover traits, and we'll learn how to organize classes into hierarchies. We'll cover the hierarchy of standard Scala types, and see how to organize classes and traits into packages. Finally, we'll touch upon the different sorts of polymorphism in Scala. &lt;/p&gt;
+&lt;h2&gt;3.1 - Class Hierarchies&lt;/h2&gt;
+&lt;h3&gt;abstract class&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;abstract class IntSet { 
+  def incl(x: Int): IntSet 
+  def contains(x: Int): Boolean 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;abstract class:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;contains members without implementation &lt;/li&gt;
+&lt;li&gt;cannot be created with &lt;code&gt;new&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;class Extensions&lt;/h3&gt;
+&lt;p&gt;implement the integer set abstract class with BST 
+2 types of trees: &lt;code&gt;Empty&lt;/code&gt; and &lt;code&gt;NonEmpty&lt;/code&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Empty&lt;/span&gt; &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;IntSet&lt;/span&gt; { 
+  &lt;span class="n"&gt;override&lt;/span&gt; &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;incl&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;: &lt;span class="nb"&gt;Int&lt;/span&gt;): &lt;span class="n"&gt;IntSet&lt;/span&gt; = &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;NonEmpty&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;, &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Empty&lt;/span&gt;, &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Empty&lt;/span&gt;)
+
+  &lt;span class="n"&gt;override&lt;/span&gt; &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="nb"&gt;contains&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;: &lt;span class="nb"&gt;Int&lt;/span&gt;): &lt;span class="n"&gt;Boolean&lt;/span&gt; = &lt;span class="n"&gt;false&lt;/span&gt; 
+}
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;NonEmpty&lt;/span&gt;(&lt;span class="n"&gt;elem:&lt;/span&gt; &lt;span class="nb"&gt;Int&lt;/span&gt;, &lt;span class="n"&gt;left:&lt;/span&gt; &lt;span class="n"&gt;IntSet&lt;/span&gt;, &lt;span class="n"&gt;right:&lt;/span&gt; &lt;span class="n"&gt;IntSet&lt;/span&gt;) &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;IntSet&lt;/span&gt; { 
+  &lt;span class="n"&gt;override&lt;/span&gt; &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;incl&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;: &lt;span class="nb"&gt;Int&lt;/span&gt;): &lt;span class="n"&gt;IntSet&lt;/span&gt; = 
+    &lt;span class="k"&gt;if&lt;/span&gt; (&lt;span class="o"&gt;x&lt;/span&gt; == &lt;span class="n"&gt;elem&lt;/span&gt;) &lt;span class="n"&gt;this&lt;/span&gt; 
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; (&lt;span class="n"&gt;elem&lt;/span&gt; &amp;gt; &lt;span class="o"&gt;x&lt;/span&gt;) &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;NonEmpty&lt;/span&gt;(&lt;span class="n"&gt;elem&lt;/span&gt;, &lt;span class="n"&gt;left&lt;/span&gt;.&lt;span class="n"&gt;incl&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;), &lt;span class="n"&gt;right&lt;/span&gt;)// &lt;span class="n"&gt;immutable&lt;/span&gt;! 
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;NonEmpty&lt;/span&gt;(&lt;span class="n"&gt;elem&lt;/span&gt;, &lt;span class="n"&gt;left&lt;/span&gt;, &lt;span class="n"&gt;right&lt;/span&gt;.&lt;span class="n"&gt;incl&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;))
+
+  &lt;span class="n"&gt;override&lt;/span&gt; &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="nb"&gt;contains&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;: &lt;span class="nb"&gt;Int&lt;/span&gt;): &lt;span class="n"&gt;Boolean&lt;/span&gt; = 
+    &lt;span class="k"&gt;if&lt;/span&gt; (&lt;span class="n"&gt;elem&lt;/span&gt; == &lt;span class="o"&gt;x&lt;/span&gt;) &lt;span class="nb"&gt;true&lt;/span&gt; 
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; (&lt;span class="n"&gt;elem&lt;/span&gt; &amp;gt; &lt;span class="o"&gt;x&lt;/span&gt;) &lt;span class="n"&gt;left&lt;/span&gt;.&lt;span class="nb"&gt;contains&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;) 
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;right&lt;/span&gt;.&lt;span class="nb"&gt;contains&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;root class of all classes: &lt;code&gt;Object&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;replace concrete defintion of super class: &lt;code&gt;override&lt;/code&gt; is mandantory. &lt;/p&gt;
+&lt;h3&gt;Object&lt;/h3&gt;
+&lt;p&gt;in the previous example, seems only one single &lt;code&gt;Empty&lt;/code&gt; set is needed.&lt;br /&gt;
+⇒ define &lt;code&gt;Empty&lt;/code&gt; as &lt;strong&gt;singleton object&lt;/strong&gt; 
+no other &lt;code&gt;Empty&lt;/code&gt; instances can be created, object is a &lt;em&gt;value.&lt;/em&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;object Empty extends IntSet { 
+  override def incl(x: Int): IntSet = new NonEmpty(x, Empty, Empty)
+
+  override def contains(x: Int): Boolean = false
+
+  override def toString = &amp;quot;.&amp;quot; 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Program&lt;/h3&gt;
+&lt;p&gt;create standalone scala applicatoins.&lt;br /&gt;
+Each such applications contains an &lt;code&gt;object&lt;/code&gt; with a &lt;code&gt;main(args:Array[String])&lt;/code&gt; method &lt;/p&gt;
+&lt;h3&gt;exercice: implement union&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;union(other:IntSet): IntSet&lt;/code&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;override def union(other: IntSet): IntSet = 
+  left union (right union (other incl elem))
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;why this recursive call terminates ?&lt;br /&gt;
+every call to &lt;code&gt;union&lt;/code&gt; is on a &lt;em&gt;smaller&lt;/em&gt; IntSet ! &lt;/p&gt;
+&lt;p&gt;写成这样就会stackoverflow: &lt;code&gt;other.incl(elem).union(left).union(right)&lt;/code&gt;&lt;br /&gt;
+讨论见: &lt;a href="https://www.coursera.org/learn/progfun1/discussions/weeks/3/threads/AzJ-4CLYEeag6wpD-92Rcw"&gt;https://www.coursera.org/learn/progfun1/discussions/weeks/3/threads/AzJ-4CLYEeag6wpD-92Rcw&lt;/a&gt; 
+(需要点"view earlier replies"才有) 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image012.png" /&gt; &lt;/p&gt;
+&lt;h3&gt;Dynamic Binding&lt;/h3&gt;
+&lt;p&gt;behavior depends on the runtime type of the object.  &lt;/p&gt;
+&lt;p&gt;~ higher-order functions &lt;/p&gt;
+&lt;h2&gt;Lecture 3.2 - How Classes Are Organized&lt;/h2&gt;
+&lt;h3&gt;package&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;named&lt;/span&gt; &lt;span class="n"&gt;imports&lt;/span&gt; 
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;week3.Rational&lt;/span&gt; 
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;week3.&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;Rational&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Hello&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; 
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;wildcard&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt;  
+&lt;span class="nn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;week3._&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;can import either from a package or from an object &lt;/p&gt;
+&lt;p&gt;automatically imported in scala:&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image001.png" /&gt; 
+ex: 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image002.png" /&gt; &lt;/p&gt;
+&lt;p&gt;scaladoc: &lt;a href="http://www.scala-lang.org/files/archive/api/current/#package"&gt;http://www.scala-lang.org/files/archive/api/current/#package&lt;/a&gt; &lt;/p&gt;
+&lt;h3&gt;Traits&lt;/h3&gt;
+&lt;p&gt;in scala/java, a class has only one super class (single inheritance).&lt;br /&gt;
+have several supertypes? ⇒ trait! &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;one class can extend many traits (concated by &lt;code&gt;with&lt;/code&gt;)  — like java &lt;code&gt;interface&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image003.png" /&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;traits can contain fileds and concrete methods &lt;/li&gt;
+&lt;li&gt;on the other hand, traits cannot have (value) parameters, but classes can &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;scala class hierchy&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image004.png" /&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Any&lt;/code&gt;: base class of all &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;AnyVal&lt;/code&gt;: primitive types (&lt;code&gt;Int, Unit, Boolean,...&lt;/code&gt;) &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;AnyRef&lt;/code&gt;: (=alias of &lt;code&gt;java.lang.Object&lt;/code&gt;) all reference types (&lt;code&gt;String, List, Seq, Iterable,...&lt;/code&gt;) &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Nothing&lt;/code&gt;: bottom of the hierchy, &lt;em&gt;is subtype of every type&lt;/em&gt; &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Null&lt;/code&gt;: &lt;em&gt;subtype of every reference type, &lt;/em&gt;&lt;code&gt;null&lt;/code&gt;'s type is &lt;code&gt;Null&lt;/code&gt;, not compatible with &lt;code&gt;AnyVal&lt;/code&gt; types.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;exception: &lt;code&gt;throw Exc&lt;/code&gt;, the typeof &lt;code&gt;Exc&lt;/code&gt; is &lt;code&gt;Nothing&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;exercice:&lt;br /&gt;
+&lt;code&gt;if (true) 1 else false&lt;/code&gt; ⇒ type = &lt;code&gt;AnyVal&lt;/code&gt; &lt;/p&gt;
+&lt;h2&gt;Lecture 3.3 - Polymorphism&lt;/h2&gt;
+&lt;h3&gt;cons-list&lt;/h3&gt;
+&lt;p&gt;immutable linked list 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image005.png" /&gt; 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image006.png" /&gt; 
+implement this in scala: 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image007.png" /&gt; &lt;/p&gt;
+&lt;p&gt;the &lt;code&gt;val&lt;/code&gt; in the class definition: &lt;strong&gt;defines at the same time parameter and field of a class&lt;/strong&gt;, equivalent to:&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image008.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type parameters&lt;/strong&gt; (generic) 
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image009.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trait List[T]{ 
+  def isEmpty : Boolean 
+  def head: T 
+  def tail: List[T] 
+}
+
+class Cons[T](val head:T, val tail: List[T]) extends List[T] { 
+  def isEmpty(): Boolean = false 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;head and tail are implemented in the parameters(fields), difference between &lt;code&gt;val&lt;/code&gt; and &lt;code&gt;def&lt;/code&gt; only consist in the initialization (CBN, CBV). &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Nil&lt;/span&gt;[&lt;span class="n"&gt;T&lt;/span&gt;] &lt;span class="n"&gt;extends&lt;/span&gt; &lt;span class="nb"&gt;List&lt;/span&gt;[&lt;span class="n"&gt;T&lt;/span&gt;]{ 
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;isEmpty&lt;/span&gt; = &lt;span class="n"&gt;false&lt;/span&gt; 
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;head:&lt;/span&gt; &lt;span class="n"&gt;Nothing&lt;/span&gt; = &lt;span class="n"&gt;throw&lt;/span&gt; &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;NoSuchElementException&lt;/span&gt;(&lt;span class="s"&gt;&amp;quot;Nil.head&amp;quot;&lt;/span&gt;) 
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;tail:&lt;/span&gt; &lt;span class="n"&gt;Nothing&lt;/span&gt; = &lt;span class="n"&gt;throw&lt;/span&gt; &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;NoSuchElementException&lt;/span&gt;(&lt;span class="s"&gt;&amp;quot;Nil.tail&amp;quot;&lt;/span&gt;) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;use nothing as return type, and throw an exception.  &lt;/p&gt;
+&lt;h3&gt;generic functions&lt;/h3&gt;
+&lt;p&gt;type parameters can be applied to functions.&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec3_data_abstraction/pasted_image011.png" /&gt; 
+sometime the type parameter can be deduced by scala compiler.&lt;br /&gt;
+ex. &lt;code&gt;singleton(2); singleton(true)&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;Types and Evaulation&lt;/h3&gt;
+&lt;p&gt;type parameters don't affect evaluation.&lt;br /&gt;
+can assume type parameters are removed before the evaluation (&lt;em&gt;type erasure&lt;/em&gt;).  &lt;/p&gt;
+&lt;h3&gt;Polymorphism&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;subtyping: instances of subclass can be passed to a base class &lt;/li&gt;
+&lt;li&gt;generics: function/class with type parameters &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;exercice: write a function &lt;code&gt;nth(n: Int, list: List)&lt;/code&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def nth[T](n: Int, list:List[T]): T =  
+  if(list.isEmpty) throw new IndexOutOfBoundsException() 
+  else if (n==0) list.head 
+  else nth(n-1, list.tail)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Programming Assignment: Object-Oriented Sets&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;TweetSet&lt;/code&gt;: an abstract class &lt;code&gt;TweetSet&lt;/code&gt; with two concrete subclasses,&lt;code&gt;Empty&lt;/code&gt; which represents an empty set, and &lt;code&gt;NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet&lt;/code&gt;), which represents a non-empty set as a binary tree rooted at elem. The tweets are indexed by their text bodies: the bodies of all tweets on the left are lexicographically smaller than elem and all bodies of elements on the right are lexicographically greater. &lt;/p&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec2: Higher Order Functions</title><link href="http://x-wei.github.io/progfun1_lec2_highorder_func.html" rel="alternate"></link><published>2016-06-23T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec2_highorder_func.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;This week, we'll learn about functions as first-class values, and higher order functions. We'll also learn about Scala's syntax and how it's formally defined. Finally, we'll learn about methods, classes, and data abstraction through the design of a data structure for rational numbers. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;2.1 - Higher-Order Functions&lt;/h2&gt;
+&lt;p&gt;higher order functions: functions that takes functions as parameter or returns functions.  &lt;/p&gt;
+&lt;p&gt;example:&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image.png" /&gt; 
+⇒ put the &lt;code&gt;f&lt;/code&gt; as a parameter &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum(f:Int =&amp;gt; Int, a: Int, b: Int):Int = { 
+  if(a&amp;gt;b) 0 
+  else f(a) + sum(f, a+1, b) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;function types&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;A =&amp;gt; B&lt;/code&gt; is a function that takes &lt;code&gt;A&lt;/code&gt; as parameter and returns &lt;code&gt;B&lt;/code&gt;. &lt;/p&gt;
+&lt;h3&gt;Anonymous functions&lt;/h3&gt;
+&lt;p&gt;"literals" for functions, syntactic sugar. 
+ex.   &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(x: Int, y: Int) =&amp;gt; x+y&lt;/code&gt; 
+&lt;code&gt;(x: Int) =&amp;gt; x*x&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;use anon functions in previous &lt;code&gt;sum()&lt;/code&gt; function:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sum(x=&amp;gt;x, 1, 10) 
+sum(x=&amp;gt;x*x, 1, 10)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;exercice: turn &lt;code&gt;sum()&lt;/code&gt; into tailrec fashion. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum2(f:Int =&amp;gt; Int, a: Int, b: Int):Int = { 
+  @tailrec 
+  def sumTR(a: Int, acc: Int): Int = { 
+    if (a &amp;gt; b) acc 
+    else sumTR(a + 1, acc + f(a)) 
+  } 
+  sumTR(a, 0) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;(note: using namescoping to eliminate parameters in inner functions) &lt;/p&gt;
+&lt;h2&gt;2.2 - Currying&lt;/h2&gt;
+&lt;p&gt;define a function that &lt;em&gt;returns  a funtion&lt;/em&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum3(f:Int =&amp;gt; Int): (Int, Int)=&amp;gt;Int = { 
+  def sumF(a:Int, b:Int):Int = { 
+    if(a&amp;gt;b) 0 
+    else f(a) + sum3(f, a+1, b) 
+  } 
+  sumF 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;when calling this function:&lt;br /&gt;
+&lt;code&gt;sum3(cube)(1,10)&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;syntactic sugar: shorter version of functions that return functions: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum3(f:Int =&amp;gt; Int)(a:Int, b:Int):Int = { 
+    if(a&amp;gt;b) 0 
+    else f(a) + sum3(f)(a+1, b) 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;question: what is type of &lt;code&gt;sum3&lt;/code&gt;? 
+→ &lt;code&gt;Int =&amp;gt; Int =&amp;gt; (Int, Int) =&amp;gt; Int&lt;/code&gt; 
+note: functional types are &lt;em&gt;associated to the right&lt;/em&gt;,&lt;br /&gt;
+&lt;code&gt;Int =&amp;gt; Int =&amp;gt; Int&lt;/code&gt; is equivalent to &lt;code&gt;Int =&amp;gt; (Int =&amp;gt; Int)&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;"currying"&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image002.png" /&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image003.png" /&gt; &lt;/p&gt;
+&lt;p&gt;exercice:&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image005.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def product(f: Int =&amp;gt; Int)(a: Int, b: Int): Int = { 
+  if (a &amp;gt; b) 1 
+  else a * product(f)(a + 1, b) 
+} 
+product(x=&amp;gt;x)(1,10)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image006.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def fact(n:Int) = product(x=&amp;gt;x)(1,n) 
+fact(10)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image007.png" /&gt; 
+    def more_general(op: (Int,Int) =&amp;gt; Int, default: Int) 
+                    (f: Int=&amp;gt; Int)(a:Int, b:Int):Int = { 
+      if(a&amp;gt;b) default 
+      else op(a, more_general(op, default)(f)(a + 1, b)) 
+    } 
+    more_general((x,y)=&amp;gt;x+y, 0)(x=&amp;gt;x)(1,10) &lt;/p&gt;
+&lt;p&gt;老师的解法:&lt;br /&gt;
+    def map_reduce(f:Int=&amp;gt; Int, op:(Int, Int)=&amp;gt;Int, default:Int) 
+                  (a:Int, b:Int):Int = { 
+      if(a&amp;gt;b) default 
+      else op(f(a), map_reduce(f, op, default)(a+1,b)) 
+    } 
+    def factorial2(n:Int):Int = map_reduce(x=&amp;gt;x, (a,b)=&amp;gt; a*b, 1)(1,n) 
+    factorial2(10) &lt;/p&gt;
+&lt;h2&gt;2.3 - Example: Finding Fixed Points&lt;/h2&gt;
+&lt;p&gt;find the fix point of a function: x = f(x) 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image008.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val tol = 0.001 
+def isCloseEnough(x:Double, y:Double):Boolean = 
+  math.abs((x-y)/x)&amp;lt;tol 
+def fixedPoint(f: Double=&amp;gt;Double)(firstGuess:Double):Double = { 
+  def iterate(guess:Double):Double = { 
+    if(isCloseEnough(guess, f(guess))) guess 
+    else iterate(f(guess)) 
+  } 
+  iterate(firstGuess) 
+} 
+fixedPoint(x=&amp;gt;1+x/2)(1)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;using the fixepoint function for &lt;code&gt;sqrt&lt;/code&gt;: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sqrt(x) = y such that: x=y*y &lt;/li&gt;
+&lt;li&gt;=y such that y = x/y &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;=&lt;em&gt;fixed point for the function f(y)=x/y&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;def sqrt(x:Double):Double = fixedPoint(y=&amp;gt;x/y)(1) 
+sqrt(2) &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ doesn't converge! ⇒ guess oscillates between 1 and 2... 
+average damping: prevent the estimate from varying to much. 
+⇒  &lt;em&gt;by taking the average of successive values&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def sqrt2(x: Double): Double = fixedPoint(y =&amp;gt; (y + x / y) / 2)(1)&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;abstract this damping technique: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def avgDamping(f:Double=&amp;gt; Double)(x:Double):Double = 
+  (f(x)+x)/2 
+def sqrt2(x: Double): Double = fixedPoint(avgDamping(y=&amp;gt;x/y))(1)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;summary: The highest level of abstraction is not always the best, but it is important to know the techniques of abstraction, so as to use them when appropriate. &lt;/p&gt;
+&lt;h2&gt;2.4 - Scala Syntax Summary&lt;/h2&gt;
+&lt;p&gt;notations(EBNF): &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;|&lt;/code&gt; denotes an alternative &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[...]&lt;/code&gt; an option (0 or 1) &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{...}&lt;/code&gt; a repetition (0 or more) &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Types&lt;/strong&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image009.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Expressions&lt;/strong&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image010.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Definitions&lt;/strong&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image011.png" /&gt; &lt;/p&gt;
+&lt;h2&gt;2.5 - Functions and Data&lt;/h2&gt;
+&lt;p&gt;example. &lt;em&gt;rational numbers&lt;/em&gt; (x/y) 
+define a class:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Rational&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt;:&lt;span class="n"&gt;Int&lt;/span&gt;, &lt;span class="n"&gt;y:Int&lt;/span&gt;){ 
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;numer&lt;/span&gt; = &lt;span class="o"&gt;x&lt;/span&gt; 
+  &lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;denom&lt;/span&gt; = &lt;span class="n"&gt;y&lt;/span&gt; 
+} 
+&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="o"&gt;x&lt;/span&gt; = &lt;span class="nb"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Rational&lt;/span&gt;(&lt;span class="mi"&gt;1&lt;/span&gt;,&lt;span class="mi"&gt;2&lt;/span&gt;) 
+&lt;span class="o"&gt;x&lt;/span&gt;.&lt;span class="n"&gt;numer&lt;/span&gt; 
+&lt;span class="o"&gt;x&lt;/span&gt;.&lt;span class="n"&gt;denom&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;this definition creates both a class and the constructor.&lt;br /&gt;
+now implement arithmetic: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def add(that: Rational) = 
+  new Rational(numer * that.denom + denom * that.numer, that.denom * denom)
+
+def neg = new Rational(-numer, denom)
+
+def sub(that: Rational) = 
+  add(that.neg)
+
+override def toString = numer + &amp;quot;/&amp;quot; + denom
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;2.6 - More Fun With Rationals&lt;/h2&gt;
+&lt;p&gt;simplify the rationals &lt;em&gt;at construction&lt;/em&gt;:  add private members:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b) 
+private val g = gcd(x, y) 
+def numer = x/g 
+def denom = y/g
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;other options:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;replace &lt;code&gt;g&lt;/code&gt; with &lt;code&gt;gcd(x,y)&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;turn &lt;code&gt;numer&lt;/code&gt; and &lt;code&gt;denom&lt;/code&gt; into &lt;code&gt;val&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;add less and max function:  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def less(that:Rational) = 
+  this.numer*that.denom &amp;lt; this.denom*that.numer
+
+def max(that:Rational) = if(this.less(that)) that else this
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;preconditions&lt;/h3&gt;
+&lt;p&gt;ex: avoid divide by 0.  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;require(y!=0, "denominator must be non zero")&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;→ &lt;em&gt;java.lang.IllegalArgumentException: requirement failed: denominator must be non zero&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;require&lt;/code&gt;is a test to perform when the class is initialized.&lt;br /&gt;
+similar: &lt;code&gt;assert()&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;constructor&lt;/h3&gt;
+&lt;p&gt;in scala a class implicitly introduces a &lt;strong&gt;primary constructor:&lt;/strong&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;takes parameters of the class&lt;/em&gt; &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;executes all statements in the class body&lt;/em&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;to add another constructor: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def this(x:Int) = this(x,1)&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;exercice:&lt;br /&gt;
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image012.png" /&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;override def toString = { 
+  val g = gcd(numer, denom) 
+  numer/g + &amp;quot;/&amp;quot; + denom/g 
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;2.7 - Evaluation and Operators&lt;/h2&gt;
+&lt;h2&gt;evaluation for class/object&lt;/h2&gt;
+&lt;p&gt;extend the substitution model to classes and objects 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image014.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image015.png" /&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image016.png" /&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image017.png" /&gt; &lt;/p&gt;
+&lt;p&gt;examples:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image019.png" /&gt; &lt;/p&gt;
+&lt;h2&gt;operator overloading&lt;/h2&gt;
+&lt;h3&gt;infix ops&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;any method with one parameter can be used as an infix operator.&lt;/strong&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image020.png" /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;scala identifiers can bu symbolic:&lt;/em&gt; 
+&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image021.png" /&gt; &lt;/p&gt;
+&lt;p&gt;⇒ change names to &lt;code&gt;+, &amp;lt;, -,&lt;/code&gt; use in this way: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;x + y 
+x &amp;lt; y 
+x max y 
+x - y - z
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;unitary ops&lt;/h3&gt;
+&lt;p&gt;now change the &lt;code&gt;neg&lt;/code&gt; method: prefix operator, and might be confused with the sub(&lt;code&gt;-&lt;/code&gt;) 
+⇒ it's name is special: &lt;code&gt;unary_-&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def unary_- = new Rational(-numer, denom)&lt;/code&gt; &lt;/p&gt;
+&lt;h3&gt;precedence of ops&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;the precedence of an op is defined by its first letter&lt;/strong&gt; 
+order (by increasing precedence): &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec2_highorder_func/pasted_image022.png" /&gt; 
+quite the same as in java &lt;/p&gt;
+&lt;h2&gt;Programming Assignment: Functional Sets&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Mathematically, we call the function which takes an integer as argument and which returns a boolean indicating whether the given integer belongs to a set, the characteristic function of the set. For example, we can characterize the set of negative integers by the characteristic function (x: Int) =&amp;gt; x &amp;lt; 0. &lt;/p&gt;
+&lt;p&gt;Therefore, we choose to represent a set by its characterisitc function and define a type alias for this representation: &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;type Set = Int =&amp;gt; Boolean 
+def contains(s: Set, elem: Int): Boolean = s(elem)
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec1: Functions &amp; Evaluation</title><link href="http://x-wei.github.io/progfun1_lec1_fun_and_eval.html" rel="alternate"></link><published>2016-06-21T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec1_fun_and_eval.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;In this week, we'll learn the difference between functional imperative programming. We step through the basics of Scala; covering expressions, evaluation, conditionals, functions, and recursion  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;1.1 - Programming Paradigms&lt;/h2&gt;
+&lt;p&gt;imperative programming:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;modify mutable variables  &lt;/li&gt;
+&lt;li&gt;using assignments  &lt;/li&gt;
+&lt;li&gt;control structures: if-else, loops, break, continue, return, etc.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;~~~&amp;gt; Von Neumann computer:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;conceptualize data structures word-by-word. ⇒ need higher level abstractions (theories).&lt;/em&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image001.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;theory doesn't describe mutations!&lt;/strong&gt;&lt;br /&gt;
+ex. theories of polynomials  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image002.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;To implement high-level concepts following their math theories, &lt;strong&gt;there's no place for mutation&lt;/strong&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image003.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Functional programming&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image004.png" /&gt;&lt;br /&gt;
+functions in FP language are 1st-class citizens.  &lt;/p&gt;
+&lt;h2&gt;1.2 - Elements of Programming&lt;/h2&gt;
+&lt;p&gt;in a language:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;primitive expressions  &lt;/li&gt;
+&lt;li&gt;operators to combin expressions  &lt;/li&gt;
+&lt;li&gt;abstract expressions: introduce a name for an expression  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;primitive types in scala are written capatilized:   &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image005.png" /&gt;  &lt;/p&gt;
+&lt;h3&gt;REPL&lt;/h3&gt;
+&lt;p&gt;interactive shell: write expressions and respond its value  &lt;/p&gt;
+&lt;h3&gt;Evaluation&lt;/h3&gt;
+&lt;p&gt;evaluation: &lt;strong&gt;expression → value&lt;/strong&gt;&lt;br /&gt;
+evaluation stops onces it results in a &lt;em&gt;value.&lt;/em&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;evaluate non-primitive expressions:&lt;/strong&gt;  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;take the left-most operator  &lt;/li&gt;
+&lt;li&gt;take (left and right) operands   &lt;/li&gt;
+&lt;li&gt;apply the operator to operands  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;evaluate names:&lt;/strong&gt;&lt;br /&gt;
+replace the name with the rhs of its &lt;em&gt;definition.&lt;/em&gt;  &lt;/p&gt;
+&lt;p&gt;definitions can have parameters.&lt;br /&gt;
+ex. variable/return types are &lt;em&gt;after&lt;/em&gt; their names, seperated by a &lt;code&gt;:&lt;/code&gt;&lt;br /&gt;
+&lt;code&gt;def power(x: Double, y: Int): Double = ...&lt;/code&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;evaluate a parameterized function:&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image006.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image007.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;This scheme is called "&lt;strong&gt;substition model&lt;/strong&gt;" — formalized in the lambda calculus. This can be applied as long as there is no &lt;em&gt;side effects&lt;/em&gt;(ex. modify variable &lt;code&gt;c++&lt;/code&gt;)&lt;em&gt;.&lt;/em&gt;   &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Termination&lt;/strong&gt;&lt;br /&gt;
+Q: does every expression evaluates to a value? &lt;br /&gt;
+NO, ex. &lt;br /&gt;
+&lt;code&gt;def loop: Int = loop&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;change evaluation strategy&lt;/strong&gt;&lt;br /&gt;
+do &lt;em&gt;not&lt;/em&gt; reduce argument values before rewrite function application.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image008.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;call-by-name and call-by-value&lt;/h2&gt;
+&lt;p&gt;the above evaluation schemes.   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;call-by-value: reduce argument values before rewrite function application.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;advantage: it evaluates every function argument only once.  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;call-by-name: do not reduce arg values  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;advantage: a function argument is not evaluated if the corresponding parameter is unused in the evaluation&lt;br /&gt;
+of the function body.  &lt;/p&gt;
+&lt;p&gt;ex.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image009.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;1.3 - Evaluation Strategies and Termination&lt;/h2&gt;
+&lt;p&gt;CBV and CBN:  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image010.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image011.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;ex.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def first(x: Int, y: Int) = x  
+first(1, loop)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;in scala:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;normally use call-by-value (more efficient than call-by-name because it avoid repeated computation of CBN).  &lt;/li&gt;
+&lt;li&gt;but: &lt;strong&gt;if a  &lt;/strong&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;strong&gt; before a parameter type&lt;/strong&gt;, that parameter is called &lt;em&gt;by-name&lt;/em&gt;.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def constOne(x: Int, y: =&amp;gt; Int) = 1  
+constOne(1+2, loop)  
+constOne(loop, 1)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;1.4 - Conditionals and Value Definitions&lt;/h2&gt;
+&lt;h3&gt;conditional expressions&lt;/h3&gt;
+&lt;p&gt;the &lt;code&gt;if-else&lt;/code&gt; expression&lt;br /&gt;
+the &lt;code&gt;if-else&lt;/code&gt; is an expression, not statement.&lt;br /&gt;
+ex. &lt;code&gt;def abs(x: Int): Int = if (x&amp;gt;=0) x else -x&lt;/code&gt;&lt;br /&gt;
+the &lt;code&gt;x&amp;gt;=0&lt;/code&gt; is a boolean expression, sometimes called &lt;strong&gt;predicates&lt;/strong&gt;.  &lt;/p&gt;
+&lt;h3&gt;CBN and CBV for definition&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;def&lt;/code&gt; form is by name, its rhs is evaluated at each use  &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;val&lt;/code&gt; is by value, evaluted at the definiton  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;scala&amp;gt; def loop:Boolean = loop  
+loop: Boolean
+
+scala&amp;gt; def x = loop  
+x: Boolean
+
+scala&amp;gt; val x = loop  
+Execution interrupted by signal.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;exercice: implement &lt;code&gt;and(x,y)&lt;/code&gt;  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;scala&amp;gt; def and(x:Boolean, y: =&amp;gt; Boolean) = if(x) y else false  
+and: (x: Boolean, y: =&amp;gt; Boolean)Boolean
+
+scala&amp;gt; and(false, loop)  
+res3: Boolean = false
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;1.5 - Example: square roots with Newton's method&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image012.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def sqrt(x: Double): Double = ...&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;need helper (recursive) functions.   &lt;/p&gt;
+&lt;p&gt;note: in scala the &lt;em&gt;return type of recursive functions&lt;/em&gt; must be given.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def improve(guess: Double, x: Double): Double =  
+  (x / guess + guess) / 2.0
+
+def isGoodGuess(guess: Double, x: Double): Boolean =  
+  math.abs((guess * guess - x)/x)&amp;lt;0.001
+
+def sqrtItr(guess: Double, x: Double): Double = {  
+  if (isGoodGuess(guess, x)) guess  
+  else sqrtItr(improve(guess, x), x)  
+}
+
+def sqrt(x:Double): Double = sqrtItr(1, x)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;1.6 - Blocks and Lexical Scope&lt;/h2&gt;
+&lt;h3&gt;nested functions&lt;/h3&gt;
+&lt;p&gt;put aux functions inside a function.   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sqrt(x:Double): Double = {  
+  def improve(guess: Double, x: Double): Double =  
+    (x / guess + guess) / 2.0
+
+  def isGoodGuess(guess: Double, x: Double): Boolean =  
+    math.abs((guess * guess - x)/x)&amp;lt;0.001
+
+  def sqrtItr(guess: Double, x: Double): Double = {  
+    if (isGoodGuess(guess, x)) guess  
+    else sqrtItr(improve(guess, x), x)  
+  }
+
+  sqrtItr(1, x)  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;blocks and visibility&lt;/h3&gt;
+&lt;p&gt;blocks: delimited by braces &lt;code&gt;{...}&lt;/code&gt;&lt;br /&gt;
+The last element of a block is an expression that defines its value.&lt;br /&gt;
+Blocks are themselves expressions; &lt;em&gt;a block may appear everywhere an expression can&lt;/em&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image013.png" /&gt;   &lt;/p&gt;
+&lt;p&gt;ex.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val x = 0  
+def f(y: Int) = y +1  
+val result = {  
+  val x = f(3);  
+  x * x  
+} + x // result = 16
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ex. eliminate the parameter &lt;code&gt;x&lt;/code&gt; of helper functions inside the &lt;code&gt;sqrt&lt;/code&gt; function  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sqrt(x:Double): Double = {  
+  def improve(guess: Double): Double =  
+    (x / guess + guess) / 2.0
+
+  def isGoodGuess(guess: Double): Boolean =  
+    math.abs((guess * guess - x)/x)&amp;lt;0.001
+
+  def sqrtItr(guess: Double): Double = {  
+    if (isGoodGuess(guess)) guess  
+    else sqrtItr(improve(guess))  
+  }
+
+  sqrtItr(1)  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;about multiline expressions: put the operator in the first line to avoid ambguity.   &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image014.png" /&gt;  &lt;/p&gt;
+&lt;h2&gt;1.7 - Tail Recursion&lt;/h2&gt;
+&lt;p&gt;review: evaluation of function application.   &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image015.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image016.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;ex1. gcd  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def gcd(a:Int, b:Int): Int=  
+  if(b==0) a else gcd(b, a%b)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image017.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;ex2. factorial  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def factorial(n:Int): Int =  
+  if(n==0) 1 else n*factorial(n-1)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec1_fun_and_eval/pasted_image018.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;difference from the &lt;code&gt;gcd&lt;/code&gt; case:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;in &lt;code&gt;gcd&lt;/code&gt;, the expression is reduced to a &lt;code&gt;gcd()&lt;/code&gt;  &lt;/li&gt;
+&lt;li&gt;in &lt;code&gt;factorial&lt;/code&gt;, &lt;em&gt;add one more element to the expression in each step&lt;/em&gt;!  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;tail recursion&lt;/h3&gt;
+&lt;p&gt;if &lt;strong&gt;a function calls itself  as its last action&lt;/strong&gt;, then the function's stack can be reused. &lt;br /&gt;
+⇒ tail recursion functions are iterative process.   &lt;/p&gt;
+&lt;p&gt;In general, if &lt;strong&gt;the last action of a function consists of calling a function (which may be the same)&lt;/strong&gt;, one stack frame would be sufficient for both functions. Such calls are called &lt;em&gt;tail-calls&lt;/em&gt;.  &lt;/p&gt;
+&lt;p&gt;tail-recursive function:   &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;more efficient  &lt;/li&gt;
+&lt;li&gt;can avoid stackoverflow  &lt;/li&gt;
+&lt;li&gt;might not be as clear as a non-tailrec version   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;add &lt;code&gt;@tailrec&lt;/code&gt;annotation to the function, if its not tailrec, an error will be shown.    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;@tailrec  
+def gcd(a: Int, b: Int): Int = ...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;exercice: turn factorial into tailrec fashion. &lt;br /&gt;
+→ idea: use an &lt;strong&gt;accumulator &lt;/strong&gt;(partial result) &lt;code&gt;acc&lt;/code&gt; .  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def factorialTR(n:Int):Int = {  
+  @tailrec  
+  def fact(n:Int, acc:Int):Int = {  
+    if(n==0) acc  
+    else fact(n-1, n*acc)  
+  }  
+  fact(n, 1)  
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Programming Assignment: Recursion&lt;/h2&gt;
+&lt;p&gt;三道递归的练习题...  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  /**  
+    * Exercise 1  
+    */  
+  def pascal(c: Int, r: Int): Int = {  
+    if (c == 0 || c == r) 1  
+    else pascal(c, r - 1) + pascal(c - 1, r - 1)  
+  }
+
+  /**  
+    * Exercise 2  
+    */  
+  def balance(chars: List[Char]): Boolean = {  
+    def balance_rec(chars: List[Char], acc: Int): Boolean = {  
+      if (acc&amp;lt;0) false  
+      else if (chars.isEmpty) acc == 0  
+      else if (chars.head == &amp;#39;(&amp;#39;) balance_rec(chars.tail, acc+1)  
+      else if (chars.head == &amp;#39;)&amp;#39;) balance_rec(chars.tail, acc-1)  
+      else balance_rec(chars.tail, acc)  
+    }
+
+    balance_rec(chars, 0)  
+  }
+
+  /**  
+    * Exercise 3  
+    */  
+  def countChange(money: Int, coins: List[Int]): Int = {  
+    if(money==0 ) 1  
+    else if(coins.isEmpty || money&amp;lt;0) 0  
+    else countChange(money, coins.tail) + countChange(money-coins.head, coins)  
+  }
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec0: Getting Started</title><link href="http://x-wei.github.io/progfun1_lec0_setup.html" rel="alternate"></link><published>2016-06-20T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec0_setup.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Get up and running with Scala on your computer. Complete an example assignment to familiarize yourself with our unique way of submitting assignments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;Tool setup&lt;/h1&gt;
+&lt;h3&gt;IntelliJ&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;use worksheet as a better REPL&lt;/em&gt;&lt;/p&gt;
+&lt;h3&gt;SBT&lt;/h3&gt;
+&lt;p&gt;navigate to the directory of the assignment you are working on, then start &lt;code&gt;sbt&lt;/code&gt;. 
+(when first running &lt;code&gt;sbt&lt;/code&gt;, will take 5~10 minutes to download files...)&lt;/p&gt;
+&lt;h4&gt;REPL&lt;/h4&gt;
+&lt;p&gt;type &lt;code&gt;console&lt;/code&gt; to enter scala REPL, hit &lt;code&gt;ctrl-d&lt;/code&gt; to exit REPL. &lt;/p&gt;
+&lt;h4&gt;Compile / run / test&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;compile&lt;/code&gt;: The compile task will compile the source code of the assignment which is located in the directory &lt;code&gt;src/main/scala&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;test&lt;/code&gt;: The directory &lt;code&gt;src/test/scala&lt;/code&gt; contains unit tests for the project. In order to run these tests in sbt, you can use the test command.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;run&lt;/code&gt;: If your project has an object with a main method (or an object extending the trait App), then you can run the code in sbt easily by typing run. In case sbt finds multiple main methods, it will ask you which one you'd like to execute.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;submit&lt;/h4&gt;
+&lt;p&gt;submitting assignments in sbt: 
+&lt;code&gt;submit your@email.com YourSubmissionPassWord&lt;/code&gt;&lt;/p&gt;
+&lt;h1&gt;Scala tutorial&lt;/h1&gt;
+&lt;h3&gt;Classes, Traits, Objects and Packages&lt;/h3&gt;
+&lt;h4&gt;Classes&lt;/h4&gt;
+&lt;p&gt;Classes in Scala are very similar to classes in Java. They are templates containing fields and methods. Like in Java, classes can be instantiated using the new construct, there can be many “instances” (or “objects”) of the same class.&lt;/p&gt;
+&lt;p&gt;In Scala there exists &lt;strong&gt;a special kind of class named case classes&lt;/strong&gt;. You will learn about case classes during the course.&lt;/p&gt;
+&lt;p&gt;Classes in Scala &lt;strong&gt;cannot have static members&lt;/strong&gt;. You can use &lt;em&gt;objects&lt;/em&gt; (see below) to achieve similar functionality as with static members in Java.&lt;/p&gt;
+&lt;h4&gt;Traits&lt;/h4&gt;
+&lt;p&gt;Traits are like &lt;strong&gt;interfaces&lt;/strong&gt; in Java, but they &lt;em&gt;can also contain concrete members&lt;/em&gt;, i.e. method implementations or field definitions.&lt;/p&gt;
+&lt;h4&gt;Objects&lt;/h4&gt;
+&lt;p&gt;Object in Scala are like classes, but for every object definition there is only one single instance. &lt;em&gt;It is not possible to create instances of objects using new&lt;/em&gt;, instead you can just access the members (methods or fields) of an object using its name.&lt;/p&gt;
+&lt;h4&gt;Packages&lt;/h4&gt;
+&lt;p&gt;Adding a statement such as package foo.bar at the top of a file makes the code in a file part of the package foo.bar. You can then do import foo.bar._ to make everything from package foo.bar available in your code. The content of a package can be scattered across many files. If you define a class MyClass in package foo.bar, you can import that specific class (and not anything else from that package) with import foo.bar.MyClass.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;In Scala, everything can be imported, not only class names&lt;/em&gt;. So for instance if you have an object baz in package foo.bar, then import foo.bar.baz._ would import all the members of that object.&lt;/p&gt;
+&lt;h3&gt;Hello, World! in Scala&lt;/h3&gt;
+&lt;p&gt;In Scala, the main or &lt;em&gt;entry point method is defined in an object&lt;/em&gt;. An object can be made executable by either adding extending the type &lt;code&gt;App&lt;/code&gt; or by adding a method &lt;code&gt;def main(args: Array[String])&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here are two ways to define a program which outputs “Hello, World!” in Scala:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;object HelloWorld extends App {
+  println(&amp;quot;Hello, World!&amp;quot;)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;or: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;object HelloWorld {
+  def main(args: Array[String]) {
+    println(&amp;quot;Hello, World!&amp;quot;)
+  }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Source Files, Classfiles and the JVM&lt;/h3&gt;
+&lt;p&gt;Scala source code is stored in text files with the extension &lt;code&gt;.scala&lt;/code&gt;. Typically Scala programmers create one source file for each class, or one source file for a class hierarchy: In fact, Scala &lt;em&gt;allows multiple classes and objects to be defined in the same source file&lt;/em&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The name of a Scala source file can be chosen &lt;em&gt;freely&lt;/em&gt;, but it is recommended to use the name of a class which is defined in that file.&lt;/li&gt;
+&lt;li&gt;Package hierarchies should be reflected in directory structure: a source file defining class C in package foo.bar should be stored in a subdirectory as foo/bar/C.scala. Scala does not really enforce this convention, but some tools such as the Scala IDE for eclipse might have problems otherwise.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The scala compiler compiles &lt;code&gt;.scala&lt;/code&gt; source files to &lt;code&gt;.class&lt;/code&gt; files, like the Java compiler. Classfiles are binary files containing machine code for the Java Virtual Machine. In order to run a Scala program, the JVM has to know the directory where classfiles are stored. This parameter is called the “classpath”.&lt;/p&gt;
+&lt;p&gt;If you are using eclipse or sbt to compile and run your Scala code, you don’t need to do any of the above manually - these tools take care of invoking the Scala compiler and the JVM with the correct arguments.&lt;/p&gt;
+&lt;h1&gt;Scala Style Guide&lt;/h1&gt;
+&lt;p&gt;style checker: &lt;a href="http://www.scalastyle.org/"&gt;http://www.scalastyle.org/&lt;/a&gt;
+(in IntelliJ: You can enable scalastyle in Intellij by selecting Settings-&amp;gt;Editor-&amp;gt;Inspections, then searching for Scala style inspections.)&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;Avoid Casts and Type Tests&lt;/em&gt;: Never use isInstanceOf or asInstanceOf - there’s always a better solution.&lt;/li&gt;
+&lt;li&gt;Indentation &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Line Length and Whitespace&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Use local Values to simplify complex Expressions&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Choose meaningful Names for Methods and Values&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Common Subexpressions&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;*Don’t Copy-Paste Code!: factor out common parts into separate methods instead of copying code around. *&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Scala doesn’t require Semicolons&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Don’t submit Code with “print” Statements: the final code should be free of debugging statements.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Avoid using Return&lt;/em&gt;: often don’t need to use explicit returns. &lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Avoid mutable local Variables&lt;/em&gt;: You can often rewrite code that uses mutable local variables to code with helper functions that take accumulators.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Eliminate redundant “If” Expressions&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Cheatsheet&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://github.com/lampepfl/progfun-wiki/blob/gh-pages/CheatSheet.md"&gt;https://github.com/lampepfl/progfun-wiki/blob/gh-pages/CheatSheet.md&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Example Assignment&lt;/h1&gt;
+&lt;h3&gt;implementation&lt;/h3&gt;
+&lt;p&gt;implement &lt;code&gt;max&lt;/code&gt; and &lt;code&gt;sum&lt;/code&gt; method for &lt;code&gt;List[Int]&lt;/code&gt;. 
+trick: use recursion. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum(xs: List[Int]): Int = {
+    if (xs.isEmpty) 0
+    else xs.head + sum(xs.tail)
+}
+
+def max(xs: List[Int]): Int = {
+    if (xs.isEmpty) throw new java.util.NoSuchElementException()
+    max(xs, Int.MinValue)
+}
+def max(xs: List[Int], m: Int): Int = {
+    if (xs.isEmpty) m
+    else if (xs.head &amp;gt; m) max(xs.tail, xs.head)
+    else max(xs.tail, m)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;ScalaTest&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A test suite is simply a collection of individual tests for some specific component of a program. A test suite is created by defining a class which extends the type &lt;code&gt;org.scalatest.FunSuite&lt;/code&gt;. When running ScalaTest, it will automatically find this class and execute all of its tests.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You have two options for running this test suite:
+- Start the sbt console and run the "&lt;code&gt;test&lt;/code&gt;" command
+- Right-click this file in eclipse and chose "Run As" - "JUnit Test"&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tests are written using the &lt;code&gt;test&lt;/code&gt; operator which takes two arguments:&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A description of the test. This description has to be unique, no two tests can have the same description. &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;The test body, a piece of Scala code that implements the test 
+The most common way to implement a test body is using the method &lt;code&gt;assert&lt;/code&gt; which tests that its argument evaluates to &lt;code&gt;true&lt;/code&gt;. So one of the simplest successful tests is the following:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;test("one plus one is two")(assert(1 + 1 == 2))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In Scala, it is allowed to pass an argument to a method using the block  syntax, i.e. &lt;code&gt;{ argument }&lt;/code&gt; instead of parentheses&lt;code&gt;(argument)&lt;/code&gt;.
+This allows tests to be written in a more readable manner:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;test(&amp;quot;one plus one is three?&amp;quot;) {
+    assert(1 + 1 == 3) // This assertion fails! Go ahead and fix it.
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;One problem with the previous (failing) test is that ScalaTest will      &lt;br /&gt;
+only tell you that a test failed, but it will not tell you what was      &lt;br /&gt;
+the reason for the failure. The output looks like this:                    &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{{{                                                                        
+   [info] - one plus one is three? *** FAILED ***                          
+}}}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This situation can be improved by &lt;strong&gt;using a special equality operator &lt;/strong&gt;&lt;code&gt;===&lt;/code&gt; instead of &lt;code&gt;==&lt;/code&gt; (this is only possible in ScalaTest). So if you  run the next test, ScalaTest will show the following output:               &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{{{                                                                        
+   [info] - details why one plus one is not three *** FAILED ***           
+   [info]   2 did not equal 3 (ListsSuite.scala:67)                        
+}}}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;We recommend to always use the &lt;/strong&gt;&lt;code&gt;===&lt;/code&gt;&lt;strong&gt; equality operator when writing tests.&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;In order to test the exceptional behavior of a methods, ScalaTest offers the &lt;code&gt;intercept&lt;/code&gt;operation.                                              &lt;/p&gt;
+&lt;p&gt;In the following example, we test the fact that the method &lt;code&gt;intNotZero&lt;/code&gt; throws an &lt;code&gt;IllegalArgumentException&lt;/code&gt; if its argument is &lt;code&gt;0&lt;/code&gt;.     &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def intNotZero(x: Int): Int = {
+    if (x == 0) throw new IllegalArgumentException(&amp;quot;zero is not allowed&amp;quot;)
+    else x
+  }     
+test(&amp;quot;intNotZero throws an exception if its argument is 0&amp;quot;) {
+    intercept[IllegalArgumentException] {
+      intNotZero(0)
+    }
+  }
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It is allowed to have multiple &lt;code&gt;assert&lt;/code&gt; statements inside one test, however it is recommended to write an individual &lt;code&gt;test&lt;/code&gt; statement for every tested aspect of a method.&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  test(&amp;quot;sum of a few numbers&amp;quot;) {
+    assert(sum(List(1,2,0)) === 3)
+  }
+  test(&amp;quot;sum of empty list&amp;quot;){
+    assert(sum(List())===0)
+  }
+  test(&amp;quot;sum of negative numbers&amp;quot;){
+    assert(sum(List(-1,-1,-1)) === -3)
+  }
+
+  test(&amp;quot;max of a few numbers&amp;quot;) {
+    assert(max(List(3, 7, 2)) === 7)
+  }
+  test(&amp;quot;max of empty list throws NoSuchElementException&amp;quot;){
+    intercept[NoSuchElementException]{
+      max(List())
+    }
+  }
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="scala"></category></entry><entry><title>(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences</title><link href="http://x-wei.github.io/dlMOOC_L4.html" rel="alternate"></link><published>2016-06-07T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/dlMOOC_L4.html</id><summary type="html">&lt;p&gt;problems with text:   &lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;often very rare word is important, e.g. &lt;em&gt;retinopathy&lt;/em&gt;  &lt;/li&gt;
 &lt;li&gt;ambiguity: e.g. &lt;em&gt;cat&lt;/em&gt; and &lt;em&gt;kitty&lt;/em&gt;  &lt;/li&gt;

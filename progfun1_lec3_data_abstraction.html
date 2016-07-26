@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[Functional Programming Principles in Scala] Lec3: Data and Abstraction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Functional Programming Principles in Scala] Lec3: Data and Abstraction">
+					[Functional Programming Principles in Scala] Lec3: Data and Abstraction 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-06-28T00:00:00">
+	<i class="icon-calendar"></i>Tue, 28 Jun 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>scala</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>This week, we'll cover traits, and we'll learn how to organize classes into hierarchies. We'll cover the hierarchy of standard Scala types, and see how to organize classes and traits into packages. Finally, we'll touch upon the different sorts of polymorphism in Scala. </p>
+<h2>3.1 - Class Hierarchies</h2>
+<h3>abstract class</h3>
+<div class="codehilite"><pre><span></span>abstract class IntSet { 
+  def incl(x: Int): IntSet 
+  def contains(x: Int): Boolean 
+}
+</pre></div>
+
+
+<p>abstract class:  </p>
+<ul>
+<li>contains members without implementation </li>
+<li>cannot be created with <code>new</code> </li>
+</ul>
+<h3>class Extensions</h3>
+<p>implement the integer set abstract class with BST 
+2 types of trees: <code>Empty</code> and <code>NonEmpty</code> </p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="n">Empty</span> <span class="n">extends</span> <span class="n">IntSet</span> { 
+  <span class="n">override</span> <span class="n">def</span> <span class="n">incl</span>(<span class="o">x</span>: <span class="nb">Int</span>): <span class="n">IntSet</span> = <span class="nb">new</span> <span class="n">NonEmpty</span>(<span class="o">x</span>, <span class="nb">new</span> <span class="n">Empty</span>, <span class="nb">new</span> <span class="n">Empty</span>)
+
+  <span class="n">override</span> <span class="n">def</span> <span class="nb">contains</span>(<span class="o">x</span>: <span class="nb">Int</span>): <span class="n">Boolean</span> = <span class="n">false</span> 
+}
+
+<span class="k">class</span> <span class="n">NonEmpty</span>(<span class="n">elem:</span> <span class="nb">Int</span>, <span class="n">left:</span> <span class="n">IntSet</span>, <span class="n">right:</span> <span class="n">IntSet</span>) <span class="n">extends</span> <span class="n">IntSet</span> { 
+  <span class="n">override</span> <span class="n">def</span> <span class="n">incl</span>(<span class="o">x</span>: <span class="nb">Int</span>): <span class="n">IntSet</span> = 
+    <span class="k">if</span> (<span class="o">x</span> == <span class="n">elem</span>) <span class="n">this</span> 
+    <span class="k">else</span> <span class="k">if</span> (<span class="n">elem</span> &gt; <span class="o">x</span>) <span class="nb">new</span> <span class="n">NonEmpty</span>(<span class="n">elem</span>, <span class="n">left</span>.<span class="n">incl</span>(<span class="o">x</span>), <span class="n">right</span>)// <span class="n">immutable</span>! 
+    <span class="k">else</span> <span class="nb">new</span> <span class="n">NonEmpty</span>(<span class="n">elem</span>, <span class="n">left</span>, <span class="n">right</span>.<span class="n">incl</span>(<span class="o">x</span>))
+
+  <span class="n">override</span> <span class="n">def</span> <span class="nb">contains</span>(<span class="o">x</span>: <span class="nb">Int</span>): <span class="n">Boolean</span> = 
+    <span class="k">if</span> (<span class="n">elem</span> == <span class="o">x</span>) <span class="nb">true</span> 
+    <span class="k">else</span> <span class="k">if</span> (<span class="n">elem</span> &gt; <span class="o">x</span>) <span class="n">left</span>.<span class="nb">contains</span>(<span class="o">x</span>) 
+    <span class="k">else</span> <span class="n">right</span>.<span class="nb">contains</span>(<span class="o">x</span>) 
+}
+</pre></div>
+
+
+<p>root class of all classes: <code>Object</code> </p>
+<p>replace concrete defintion of super class: <code>override</code> is mandantory. </p>
+<h3>Object</h3>
+<p>in the previous example, seems only one single <code>Empty</code> set is needed.<br />
+⇒ define <code>Empty</code> as <strong>singleton object</strong> 
+no other <code>Empty</code> instances can be created, object is a <em>value.</em> </p>
+<div class="codehilite"><pre><span></span>object Empty extends IntSet { 
+  override def incl(x: Int): IntSet = new NonEmpty(x, Empty, Empty)
+
+  override def contains(x: Int): Boolean = false
+
+  override def toString = &quot;.&quot; 
+}
+</pre></div>
+
+
+<h3>Program</h3>
+<p>create standalone scala applicatoins.<br />
+Each such applications contains an <code>object</code> with a <code>main(args:Array[String])</code> method </p>
+<h3>exercice: implement union</h3>
+<p><code>union(other:IntSet): IntSet</code> </p>
+<div class="codehilite"><pre><span></span>override def union(other: IntSet): IntSet = 
+  left union (right union (other incl elem))
+</pre></div>
+
+
+<p>why this recursive call terminates ?<br />
+every call to <code>union</code> is on a <em>smaller</em> IntSet ! </p>
+<p>写成这样就会stackoverflow: <code>other.incl(elem).union(left).union(right)</code><br />
+讨论见: <a href="https://www.coursera.org/learn/progfun1/discussions/weeks/3/threads/AzJ-4CLYEeag6wpD-92Rcw">https://www.coursera.org/learn/progfun1/discussions/weeks/3/threads/AzJ-4CLYEeag6wpD-92Rcw</a> 
+(需要点"view earlier replies"才有) 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image012.png" /> </p>
+<h3>Dynamic Binding</h3>
+<p>behavior depends on the runtime type of the object.  </p>
+<p>~ higher-order functions </p>
+<h2>Lecture 3.2 - How Classes Are Organized</h2>
+<h3>package</h3>
+<div class="codehilite"><pre><span></span><span class="o">//</span> <span class="n">named</span> <span class="n">imports</span> 
+<span class="kn">import</span> <span class="nn">week3.Rational</span> 
+<span class="kn">import</span> <span class="nn">week3.</span><span class="p">{</span><span class="n">Rational</span><span class="p">,</span> <span class="n">Hello</span><span class="p">}</span> 
+<span class="o">//</span> <span class="n">wildcard</span> <span class="kn">import</span>  
+<span class="nn">import</span> <span class="nn">week3._</span>
+</pre></div>
+
+
+<p>can import either from a package or from an object </p>
+<p>automatically imported in scala:<br />
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image001.png" /> 
+ex: 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image002.png" /> </p>
+<p>scaladoc: <a href="http://www.scala-lang.org/files/archive/api/current/#package">http://www.scala-lang.org/files/archive/api/current/#package</a> </p>
+<h3>Traits</h3>
+<p>in scala/java, a class has only one super class (single inheritance).<br />
+have several supertypes? ⇒ trait! </p>
+<ul>
+<li>one class can extend many traits (concated by <code>with</code>)  — like java <code>interface</code> </li>
+</ul>
+<p><img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image003.png" /> </p>
+<ul>
+<li>traits can contain fileds and concrete methods </li>
+<li>on the other hand, traits cannot have (value) parameters, but classes can </li>
+</ul>
+<h3>scala class hierchy</h3>
+<p><img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image004.png" /> </p>
+<ul>
+<li><code>Any</code>: base class of all </li>
+<li><code>AnyVal</code>: primitive types (<code>Int, Unit, Boolean,...</code>) </li>
+<li><code>AnyRef</code>: (=alias of <code>java.lang.Object</code>) all reference types (<code>String, List, Seq, Iterable,...</code>) </li>
+<li><code>Nothing</code>: bottom of the hierchy, <em>is subtype of every type</em> </li>
+<li><code>Null</code>: <em>subtype of every reference type, </em><code>null</code>'s type is <code>Null</code>, not compatible with <code>AnyVal</code> types.  </li>
+</ul>
+<p>exception: <code>throw Exc</code>, the typeof <code>Exc</code> is <code>Nothing</code> </p>
+<p>exercice:<br />
+<code>if (true) 1 else false</code> ⇒ type = <code>AnyVal</code> </p>
+<h2>Lecture 3.3 - Polymorphism</h2>
+<h3>cons-list</h3>
+<p>immutable linked list 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image005.png" /> 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image006.png" /> 
+implement this in scala: 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image007.png" /> </p>
+<p>the <code>val</code> in the class definition: <strong>defines at the same time parameter and field of a class</strong>, equivalent to:<br />
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image008.png" /> </p>
+<p><strong>type parameters</strong> (generic) 
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image009.png" /> </p>
+<div class="codehilite"><pre><span></span>trait List[T]{ 
+  def isEmpty : Boolean 
+  def head: T 
+  def tail: List[T] 
+}
+
+class Cons[T](val head:T, val tail: List[T]) extends List[T] { 
+  def isEmpty(): Boolean = false 
+}
+</pre></div>
+
+
+<p>head and tail are implemented in the parameters(fields), difference between <code>val</code> and <code>def</code> only consist in the initialization (CBN, CBV). </p>
+<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="n">Nil</span>[<span class="n">T</span>] <span class="n">extends</span> <span class="nb">List</span>[<span class="n">T</span>]{ 
+  <span class="n">def</span> <span class="n">isEmpty</span> = <span class="n">false</span> 
+  <span class="n">def</span> <span class="n">head:</span> <span class="n">Nothing</span> = <span class="n">throw</span> <span class="nb">new</span> <span class="n">NoSuchElementException</span>(<span class="s">&quot;Nil.head&quot;</span>) 
+  <span class="n">def</span> <span class="n">tail:</span> <span class="n">Nothing</span> = <span class="n">throw</span> <span class="nb">new</span> <span class="n">NoSuchElementException</span>(<span class="s">&quot;Nil.tail&quot;</span>) 
+}
+</pre></div>
+
+
+<p>use nothing as return type, and throw an exception.  </p>
+<h3>generic functions</h3>
+<p>type parameters can be applied to functions.<br />
+<img alt="" src="static/progfun1_lec3_data_abstraction/pasted_image011.png" /> 
+sometime the type parameter can be deduced by scala compiler.<br />
+ex. <code>singleton(2); singleton(true)</code> </p>
+<h3>Types and Evaulation</h3>
+<p>type parameters don't affect evaluation.<br />
+can assume type parameters are removed before the evaluation (<em>type erasure</em>).  </p>
+<h3>Polymorphism</h3>
+<ul>
+<li>subtyping: instances of subclass can be passed to a base class </li>
+<li>generics: function/class with type parameters </li>
+</ul>
+<p>exercice: write a function <code>nth(n: Int, list: List)</code> </p>
+<div class="codehilite"><pre><span></span>def nth[T](n: Int, list:List[T]): T =  
+  if(list.isEmpty) throw new IndexOutOfBoundsException() 
+  else if (n==0) list.head 
+  else nth(n-1, list.tail)
+</pre></div>
+
+
+<h2>Programming Assignment: Object-Oriented Sets</h2>
+<p><code>TweetSet</code>: an abstract class <code>TweetSet</code> with two concrete subclasses,<code>Empty</code> which represents an empty set, and <code>NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet</code>), which represents a non-empty set as a binary tree rooted at elem. The tweets are indexed by their text bodies: the bodies of all tweets on the left are lexicographically smaller than elem and all bodies of elements on the right are lexicographically greater. </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "progfun1_lec3_data_abstraction.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
