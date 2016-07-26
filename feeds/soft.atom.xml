@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/soft.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-05-21T00:00:00+02:00</updated><entry><title>在java程序里使用weka进行机器学习</title><link href="http://x-wei.github.io/java-use-weka.html" rel="alternate"></link><updated>2016-05-21T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/java-use-weka.html</id><summary type="html">&lt;p&gt;之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/soft.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-26T00:00:00+02:00</updated><entry><title>两层ssh连接(2-hop ssh connection)代理配置</title><link href="http://x-wei.github.io/double-hop-ssh.html" rel="alternate"></link><published>2016-07-26T00:00:00+02:00</published><author><name>syf</name></author><id>http://x-wei.github.io/double-hop-ssh.html</id><summary type="html">&lt;p&gt;问题: 
+现在本地ssh连接eth的cscs服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到cscs. 现在配置本地的ssh代理使之可以一次完成. &lt;/p&gt;
+&lt;h1&gt;第一步: 生成sshkey&lt;/h1&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh-keygen
+cat ~/.ssh/id_rsa.pub | ssh your_username@ela.cscs.ch &amp;#39;cat &amp;gt;&amp;gt; ~/.ssh/authorized_keys&amp;#39;
+ssh your_username@ela.cscs.ch
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;第二步: 修改.ssh/config文件内容&lt;/h1&gt;
+&lt;p&gt;用文本编辑器打开&lt;code&gt;.ssh/config&lt;/code&gt;文件, 添加如下内容: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Host daint
+    Hostname daint101
+    User your_username
+    ForwardAgent yes
+    ForwardX11 yes
+    Port 22
+    IdentityFile ~/.ssh/id_rsa
+    ProxyCommand ssh -q -Y your_username@ela.cscs.ch netcat %h %p -w 10
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;直连第二层ssh&lt;/h1&gt;
+&lt;p&gt;进行了以上配置以后, 连接到cscs就不再需要两层ssh的命令了, 直接:  &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$ssh daint&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;即可 !&lt;/p&gt;
+&lt;h1&gt;用rsync同步远程文件夹&lt;/h1&gt;
+&lt;p&gt;例子: 把本地文件夹同步到第二层ssh的目录下.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rsync -a --progress ~/Downloads/nn_coref-master daint:/scratch/daint/your_username/code&lt;/code&gt;&lt;/p&gt;</summary><category term="ssh"></category></entry><entry><title>在java程序里使用weka进行机器学习</title><link href="http://x-wei.github.io/java-use-weka.html" rel="alternate"></link><published>2016-05-21T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/java-use-weka.html</id><summary type="html">&lt;p&gt;之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   &lt;/p&gt;
 &lt;h1&gt;1. Include jars into project&lt;/h1&gt;
 &lt;p&gt;weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...).   &lt;/p&gt;
 &lt;p&gt;weka的文档在解压缩的文件里有, 另外在线文档在: &lt;a href="http://weka.sourceforge.net/doc.stable-3-8/"&gt;http://weka.sourceforge.net/doc.stable-3-8/&lt;/a&gt;  &lt;/p&gt;
@@ -24,14 +52,14 @@
 &lt;h3&gt;新建Attribute&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html&lt;/a&gt;   &lt;br /&gt;
 新建numeric的attribue只要简单的在构造函数里传入一个attribute的名字即可:   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;// Create numeric attributes &amp;quot;length&amp;quot; and &amp;quot;weight&amp;quot;   
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;// Create numeric attributes &amp;quot;length&amp;quot; and &amp;quot;weight&amp;quot;   
 Attribute length = new Attribute(&amp;quot;length&amp;quot;);   
 Attribute weight = new Attribute(&amp;quot;weight&amp;quot;);
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;新建离散(normial)的attribue则需要一个list乘放所有可能的数值:   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;// Create list to hold nominal values &amp;quot;first&amp;quot;, &amp;quot;second&amp;quot;, &amp;quot;third&amp;quot;   
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;// Create list to hold nominal values &amp;quot;first&amp;quot;, &amp;quot;second&amp;quot;, &amp;quot;third&amp;quot;   
 List my_nominal_values = new ArrayList(3);   
 my_nominal_values.add(&amp;quot;first&amp;quot;);   
 my_nominal_values.add(&amp;quot;second&amp;quot;);   
@@ -47,7 +75,7 @@ Attribute position = new Attribute(&amp;quot;position&amp;quot;, my_nominal_valu
 &lt;p&gt;&lt;code&gt;Instances&lt;/code&gt;的构造函数有两种, 一种是直接在arff文件里读取, 这个后面再说. 另一种构造函数是在java函数里构建Instance时用的, 它构造一个空的Instance集合, 构造函数提供dataset的名字, attribute的集合(arraylist)以及初始的capacity:   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Instances(String name, ArrayList&amp;lt;Attribute&amp;gt; attInfo, int capacity)&lt;/code&gt;  &lt;/p&gt;
 &lt;p&gt;其中的第二个参数attInfo其实就相当于是表头信息了, 它是一个Attribute的ArrayList.   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;ArrayList&amp;lt;Attribute&amp;gt; atts = new ArrayList&amp;lt;Attribute&amp;gt;();  
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ArrayList&amp;lt;Attribute&amp;gt; atts = new ArrayList&amp;lt;Attribute&amp;gt;();  
 atts.add(length);  
 atts.add(weight);  
 atts.add(position);  
@@ -64,7 +92,7 @@ Instances adataset = new Instances(&amp;quot;aDataSet&amp;quot;, atts, 10);
 &lt;p&gt;这里有一个坑: 一定要指定Instance所属的DataSet(既它属于哪一个Instances对象)再使用setValue函数, 否则在调用setValue的时候可能会有问题!!!   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;void setDataset(Instances instances)&lt;/code&gt;  &lt;/p&gt;
 &lt;p&gt;构造函数里只需要提供这个instance的attribute数量即可. 然后使用&lt;code&gt;setValue&lt;/code&gt;函数可以给每个attribue指定数值. setValue函数的第一个参数接收一个Attribue对象, 第二个参数就是这个attribue的数值(double或者string).   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;// Create empty instance with three attribute values   
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;// Create empty instance with three attribute values   
 Instance inst = new DenseInstance(3);   
 instance.setDataset(  adataset); // before calling setValue, should first set the Dataset!``  
 // Set instance&amp;#39;s values for the attributes &amp;quot;length&amp;quot;, &amp;quot;weight&amp;quot;, and &amp;quot;position&amp;quot;  
@@ -90,7 +118,7 @@ inst.setValue(position, &amp;quot;first&amp;quot;);
 &lt;img alt="" src="java-use-weka/pasted_image001.png" /&gt;  &lt;/p&gt;
 &lt;p&gt;然后, weka提供了非常方便的方法, 直接从arff文件里得到&lt;code&gt;Instances&lt;/code&gt;对象, 从model文件里得到&lt;code&gt;Classifier&lt;/code&gt;对象: &lt;br /&gt;
 (参考链接: &lt;a href="https://weka.wikispaces.com/Serialization"&gt;https://weka.wikispaces.com/Serialization&lt;/a&gt; 以及 &lt;a href="https://weka.wikispaces.com/Use+Weka+in+your+Java+code"&gt;https://weka.wikispaces.com/Use+Weka+in+your+Java+code&lt;/a&gt;)  &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;Classifier clf = (Classifier) weka.core.SerializationHelper.read(&amp;quot;/some/where/j48.model&amp;quot;);  
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Classifier clf = (Classifier) weka.core.SerializationHelper.read(&amp;quot;/some/where/j48.model&amp;quot;);  
 Instances testset = new Instances(new BufferedReader(new FileReader(&amp;quot;/some/where/test.arff&amp;quot;)));``
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -101,7 +129,7 @@ Instances testset = new Instances(new BufferedReader(new FileReader(&amp;quot;/s
 Evaluation的构造函数里提供的Instances应该为training set, 这个训练集的作用是"to get some header information and prior class distribution information", 如果构造时给的是testing set的话, 应该调用&lt;code&gt;useNoPriors()&lt;/code&gt;函数一下.   &lt;/p&gt;
 &lt;p&gt;构造了evalation对象以后, 只要使用 &lt;code&gt;evaluateModel(Classifier classifier, Instances data)&lt;/code&gt; 函数即可, 第一个参数为训练好了的模型(&lt;code&gt;clf&lt;/code&gt;), 第二个参数为要用来测试的数据(&lt;code&gt;testset&lt;/code&gt;).   &lt;/p&gt;
 &lt;p&gt;然后可以输出统计信息, 就像在wekaGUI界面一样, 主要靠&lt;code&gt;toSummaryString()&lt;/code&gt;和&lt;code&gt;toMatrixString()&lt;/code&gt;两个函数.   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;Instances trainInstances = ... instances got from somewhere  
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Instances trainInstances = ... instances got from somewhere  
 Instances testInstances = ... instances got from somewhere  
 Classifier scheme = ... scheme got from somewhere
 
@@ -114,7 +142,7 @@ System.out.println(evaluation.toMatrixString());
 
 &lt;h1&gt;7. 输出预测结果&lt;/h1&gt;
 &lt;p&gt;对于每一个Instance, 只需要调用Classifier的&lt;code&gt;classifyInstance(Instance instance)&lt;/code&gt;或者&lt;code&gt;distributionForInstance(Instance instance)&lt;/code&gt;函数, 即可得到预测结果...   &lt;/p&gt;
-&lt;p&gt;Voila, 大概就是这样, weka这个工具还是蛮好用的(只要能忍受它界面的丑), 而且也算没有太多的坑...   &lt;/p&gt;</summary><category term="ml"></category><category term="weka"></category><category term="java"></category></entry><entry><title>学术文章写作利器: TeXmacs介绍</title><link href="http://x-wei.github.io/TeXmacs_intro.html" rel="alternate"></link><updated>2015-11-22T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/TeXmacs_intro.html</id><summary type="html">&lt;p&gt;今天介绍一个论文写作的神器: TeXmacs !   &lt;/p&gt;
+&lt;p&gt;Voila, 大概就是这样, weka这个工具还是蛮好用的(只要能忍受它界面的丑), 而且也算没有太多的坑...   &lt;/p&gt;</summary><category term="ml"></category><category term="weka"></category><category term="java"></category></entry><entry><title>学术文章写作利器: TeXmacs介绍</title><link href="http://x-wei.github.io/TeXmacs_intro.html" rel="alternate"></link><published>2015-11-22T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/TeXmacs_intro.html</id><summary type="html">&lt;p&gt;今天介绍一个论文写作的神器: TeXmacs !   &lt;/p&gt;
 &lt;h1&gt;0. Why TeXmacs?&lt;/h1&gt;
 &lt;p&gt;一说到"论文写作神器"一般大家首先想到的就是LaTeX, 确实LaTeX写出来的数学公式和文章的排版非常漂亮. 但是作为一个几年来用过LaTeX写过几次报告的小白用户, 说句实话我从来都没有喜欢上过LaTeX. 根本的原因大概是: LaTeX的语法是一种标记语言(markup language), 本质上是给机器看而不是给人看的—就像html源代码是为了给浏览器看而不是直接给人看的.   &lt;/p&gt;
 &lt;h2&gt;0.0 LaTeX强迫症自测&lt;/h2&gt;
@@ -342,7 +370,7 @@ TeXmacs实际上远比我这里介绍的强大, 见这里: &lt;a href="http://ww
 &lt;h2&gt;5.2 参考文献&lt;/h2&gt;
 &lt;h3&gt;bibtex文件&lt;/h3&gt;
 &lt;p&gt;首先, 为了引入参考文献, 需要建立一个&lt;em&gt;demo.bib&lt;/em&gt;文件, 里面放的就是参考文献的bibtex代码, 比如:   &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;@ARTICLE{lda,  
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;@ARTICLE{lda,  
     author = {David M. Blei and Andrew Y. Ng and Michael I. Jordan and John Lafferty},  
     title = {Latent Dirichlet Allocation},  
     journal = {The Journal of Machine Learning Research},  
@@ -385,7 +413,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;另外, 这篇文章所做的示例文件可以在这里下载: &lt;a href="https://github.com/X-Wei/texmacs-demo"&gt;https://github.com/X-Wei/texmacs-demo&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;欢迎抛弃LaTeX &amp;amp; 拥抱TeXmacs!  &lt;/p&gt;</summary><category term="tex"></category><category term="TeXmacs"></category></entry><entry><title>linux系统添加swap分区&amp;调整swapness</title><link href="http://x-wei.github.io/linux-swap.html" rel="alternate"></link><updated>2015-09-27T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/linux-swap.html</id><summary type="html">&lt;p&gt;当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   &lt;/p&gt;
+&lt;p&gt;欢迎抛弃LaTeX &amp;amp; 拥抱TeXmacs!  &lt;/p&gt;</summary><category term="tex"></category><category term="TeXmacs"></category></entry><entry><title>linux系统添加swap分区&amp;调整swapness</title><link href="http://x-wei.github.io/linux-swap.html" rel="alternate"></link><published>2015-09-27T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/linux-swap.html</id><summary type="html">&lt;p&gt;当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   &lt;/p&gt;
 &lt;p&gt;然后就看到chrome这几年来吃内存越来越严重, 导致我开多几个标签页再开eclipse的话电脑就很有可能直接卡死... 郁闷啊 ! 于是决定给系统增加一个swap分区. 之前给&lt;a href="http://thealternative.ch/index.php?view=linuxdays"&gt;thealternative&lt;/a&gt;写邮件询问这件事, Sandro Kalbermatter同学热情回复了我告诉我怎么做, 按照他说的果然成功了, 特此一记.    &lt;/p&gt;
 &lt;h2&gt;step1. 建立swap分区&lt;/h2&gt;
 &lt;p&gt;首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    &lt;/p&gt;
@@ -394,7 +422,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;img alt="" src="linux-swap/pasted_image.png" /&gt;   &lt;/p&gt;
 &lt;h2&gt;step2. 编辑fstab&lt;/h2&gt;
 &lt;p&gt;建立好了swap分区以后, 打开终端, 输入&lt;code&gt;sudo blkid&lt;/code&gt;查看所有的磁盘分区.    &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo blkid   
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo blkid   
 /dev/sda1: &lt;span class="nv"&gt;LABEL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;FILES&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ext2&amp;quot;&lt;/span&gt;    
 /dev/sda2: &lt;span class="nv"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;952b70b9-c7ee-4adf-9ceb-ac631ed8d7eb&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;swap&amp;quot;&lt;/span&gt;    
 /dev/sdb1: &lt;span class="nv"&gt;LABEL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;WIN7&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;UUID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;D268862068860407&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;TYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ntfs&amp;quot;&lt;/span&gt;    
@@ -412,7 +440,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;p&gt;由于内存读写要比swap分区快很多, 在内存足够的情况下完全没有必要使用swap, 于是修改swapness为20:    &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;sudo leafpaf /etc/sysctl.conf&lt;/code&gt;   &lt;/p&gt;
 &lt;p&gt;在文件里加入一行: &lt;code&gt;vm.swappiness = 10&lt;/code&gt;   &lt;/p&gt;
-&lt;p&gt;重启即可...   &lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>Linux下pdf文件的压缩与合并</title><link href="http://x-wei.github.io/Linux%E4%B8%8Bpdf%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%90%88%E5%B9%B6.html" rel="alternate"></link><updated>2014-10-29T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Linux下pdf文件的压缩与合并.html</id><summary type="html">&lt;h2&gt;压缩pdf&lt;/h2&gt;
+&lt;p&gt;重启即可...   &lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>Linux下pdf文件的压缩与合并</title><link href="http://x-wei.github.io/Linux%E4%B8%8Bpdf%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%90%88%E5%B9%B6.html" rel="alternate"></link><published>2014-10-29T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Linux下pdf文件的压缩与合并.html</id><summary type="html">&lt;h2&gt;压缩pdf&lt;/h2&gt;
 &lt;p&gt;用&lt;code&gt;convert&lt;/code&gt; 只简单指定resize好像不太好使: &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;convert -resize 50% input.pdf out.pdf&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;用&lt;code&gt;gs&lt;/code&gt;(&lt;a href="http://blog.sciencenet.cn/blog-467089-773990.html"&gt;http://blog.sciencenet.cn/blog-467089-773990.html&lt;/a&gt;):&lt;/p&gt;
@@ -421,7 +449,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;p&gt;&lt;code&gt;convert -density 200 -compress jpeg input.pdf out.pdf&lt;/code&gt;&lt;/p&gt;
 &lt;h2&gt;合并pdf&lt;/h2&gt;
 &lt;p&gt;之前&lt;a href="http://x-wei.github.io/%E5%9B%BE%E7%89%87%E5%90%88%E5%B9%B6%E4%B8%BApdf,%20%E5%90%88%E5%B9%B6mp3,%20%E6%89%B9%E9%87%8F%E5%8E%8B%E7%BC%A9%E5%9B%BE%E7%89%87.html"&gt;博客&lt;/a&gt;写过, 用pdfjoin: &lt;/p&gt;
-&lt;p&gt;&lt;code&gt;pdfjoin $(ls *.pdf|sort -n) --outfile out.pdf&lt;/code&gt;&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>putty使用备忘</title><link href="http://x-wei.github.io/putty%E4%BD%BF%E7%94%A8%E5%A4%87%E5%BF%98.html" rel="alternate"></link><updated>2014-07-28T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/putty使用备忘.html</id><summary type="html">&lt;p&gt;最近要用SSH连接服务器, Windows下面当然就是用putty了, 遇到的问题总结一下. &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pdfjoin $(ls *.pdf|sort -n) --outfile out.pdf&lt;/code&gt;&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>putty使用备忘</title><link href="http://x-wei.github.io/putty%E4%BD%BF%E7%94%A8%E5%A4%87%E5%BF%98.html" rel="alternate"></link><published>2014-07-28T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/putty使用备忘.html</id><summary type="html">&lt;p&gt;最近要用SSH连接服务器, Windows下面当然就是用putty了, 遇到的问题总结一下. &lt;/p&gt;
 &lt;h2&gt;保存session&lt;/h2&gt;
 &lt;p&gt;打开putty.exe以后, 输入服务器ip, 之后先别点击登录, 先保存一下session下一次就不用再输入了: &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="putty使用备忘/pasted_image.png" /&gt;&lt;/p&gt;
@@ -432,7 +460,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;p&gt;而在&lt;strong&gt;本地的&lt;/strong&gt;文件系统里移动的话, 用&lt;code&gt;lpwd/lcd/lls.&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;移动到了想要传输文件的目录以后(本地和服务器都移动好了以后), 使用&lt;code&gt;put filename&lt;/code&gt;上传本地文件到服务器, 使用 &lt;code&gt;get filename&lt;/code&gt; 下载服务器文件到本地. &lt;/p&gt;
 &lt;p&gt;&lt;a href="http://www.lellansin.com/putty%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6.html"&gt;http://www.lellansin.com/putty%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6.html&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;然后这个put和get的命令在文件传输比较慢的时候也没有什么进度提示, 不过可以再开一个putty登录进服务器, 然后用 &lt;code&gt;ls -lh&lt;/code&gt; 看看已经传输了多少了...&lt;/p&gt;</summary><category term="ssh"></category></entry><entry><title>IPython上手学习笔记</title><link href="http://x-wei.github.io/IPython%E4%B8%8A%E6%89%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><updated>2014-07-22T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/IPython上手学习笔记.html</id><summary type="html">&lt;p&gt;&lt;a href="http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book"&gt;Learning IPython for Interactive Computing and Data Visualization&lt;/a&gt;这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. &lt;/p&gt;
+&lt;p&gt;然后这个put和get的命令在文件传输比较慢的时候也没有什么进度提示, 不过可以再开一个putty登录进服务器, 然后用 &lt;code&gt;ls -lh&lt;/code&gt; 看看已经传输了多少了...&lt;/p&gt;</summary><category term="ssh"></category></entry><entry><title>IPython上手学习笔记</title><link href="http://x-wei.github.io/IPython%E4%B8%8A%E6%89%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><published>2014-07-22T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/IPython上手学习笔记.html</id><summary type="html">&lt;p&gt;&lt;a href="http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book"&gt;Learning IPython for Interactive Computing and Data Visualization&lt;/a&gt;这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. &lt;/p&gt;
 &lt;p&gt;(在开始系统学IPython之前简单使用过IPython, 那时候我还是更喜欢bpython的代码提示功能...)&lt;/p&gt;
 &lt;h1&gt;ch1: 10 IPython essentials&lt;/h1&gt;
 &lt;ul&gt;
@@ -454,7 +482,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;li&gt;&lt;code&gt;%timeit&lt;/code&gt; 命令, 可以用来做基准测试(&lt;em&gt;benchmarking&lt;/em&gt;), 测试一个命令(或者一个函数)的运行时间&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;ex. &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nf"&gt;%timeit&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%timeit&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
 &lt;span class="mi"&gt;10000&lt;/span&gt; &lt;span class="n"&gt;loops&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mf"&gt;56.5&lt;/span&gt; &lt;span class="err"&gt;µ&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;per&lt;/span&gt; &lt;span class="n"&gt;loop&lt;/span&gt;
 
 &lt;span class="nf"&gt;%timeit&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="n"&gt;xrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
@@ -466,7 +494,7 @@ TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些�
 &lt;li&gt;&lt;code&gt;%debug&lt;/code&gt; 命令: 当有exception的时候, 在console里输入&lt;code&gt;%debug&lt;/code&gt;即可打开debugger. &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;在debugger里, 输入&lt;code&gt;u,d&lt;/code&gt;(up, down)查看stack, 输入&lt;code&gt;q&lt;/code&gt;退出debugger&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nf"&gt;%debug&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%debug&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;ipython&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;input&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;34&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="n"&gt;c374156862&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;module&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
       &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
 &lt;span class="o"&gt;----&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;     &lt;span class="n"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;Exception&lt;/span&gt;
@@ -535,7 +563,7 @@ Automatic pdb calling has been turned ON&lt;/p&gt;
 &lt;h2&gt;navigating the file system&lt;/h2&gt;
 &lt;p&gt;例子: 完成下载压缩包, 解压缩, 以及打开解压后的文件这些操作...&lt;/p&gt;
 &lt;p&gt;在py变量前面加入$, 可以把这个变量共享给OS或者magic command:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
 &lt;span class="nf"&gt;%mkdir&lt;/span&gt; &lt;span class="n"&gt;$folder&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -546,7 +574,7 @@ Automatic pdb calling has been turned ON&lt;/p&gt;
 &lt;code&gt;%bookmark bm&lt;/code&gt;
 那么以后可以直接用 &lt;code&gt;cd bm&lt;/code&gt; 跳到这个目录下. &lt;code&gt;%bookmark -l&lt;/code&gt; 可以列出收藏夹的目录内容.&lt;/p&gt;
 &lt;p&gt;然后发现原来IPython连文件名都是可以提示的啊!... &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;with open(&amp;#39;0&amp;lt;TAB&amp;gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;with open(&amp;#39;0&amp;lt;TAB&amp;gt;
 0.circles 0.edges
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -555,7 +583,7 @@ Automatic pdb calling has been turned ON&lt;/p&gt;
 &lt;p&gt;在IPython里调用系统的命令, 不用再使用&lt;code&gt;sys.exec('...')&lt;/code&gt;之类冗长的方式了, 只需要在系统的命令前面加上一个感叹号&lt;code&gt;!&lt;/code&gt;即可...&lt;/p&gt;
 &lt;p&gt;shell返回的结果可以作为一个string的列表保存在一个python variable里.&lt;/p&gt;
 &lt;p&gt;ex. &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;In [2]: files = !ls -1 -S | grep edges
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;In [2]: files = !ls -1 -S | grep edges
 In [3]: files
 Out[3]: [&amp;#39;1912.edges&amp;#39;,
     &amp;#39;107.edges&amp;#39;,
@@ -646,7 +674,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;li&gt;j,k: 上下移动选中的cell, vim风格..&lt;/li&gt;
 &lt;li&gt;dd(d按两下): 删除一个cell(vim 风格...)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;......爽到爆!!&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>Eclipse快捷键总结</title><link href="http://x-wei.github.io/Eclipse%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%80%BB%E7%BB%93.html" rel="alternate"></link><updated>2014-07-15T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Eclipse快捷键总结.html</id><summary type="html">&lt;p&gt;Eclipse让我很喜欢的最大原因大概就是它的好用的快捷键了, 这里进行一下总结, 掌握这些快捷键可以让编辑代码变得更加高效. &lt;/p&gt;
+&lt;p&gt;......爽到爆!!&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>Eclipse快捷键总结</title><link href="http://x-wei.github.io/Eclipse%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%80%BB%E7%BB%93.html" rel="alternate"></link><published>2014-07-15T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Eclipse快捷键总结.html</id><summary type="html">&lt;p&gt;Eclipse让我很喜欢的最大原因大概就是它的好用的快捷键了, 这里进行一下总结, 掌握这些快捷键可以让编辑代码变得更加高效. &lt;/p&gt;
 &lt;h2&gt;基本快捷键&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;格式化代码: &lt;code&gt;ctrl+alt+F&lt;/code&gt;&lt;/li&gt;
@@ -695,7 +723,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;ul&gt;
 &lt;li&gt;查找下一处出现的地方: &lt;code&gt;ctrl+k&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;有时候也用得着.&lt;/p&gt;</summary><category term="eclipse"></category></entry><entry><title>Eclipse插件推荐</title><link href="http://x-wei.github.io/Eclipse%E6%8F%92%E4%BB%B6%E6%8E%A8%E8%8D%90.html" rel="alternate"></link><updated>2014-07-15T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/Eclipse插件推荐.html</id><summary type="html">&lt;p&gt;Eclipse被称为编程的瑞士军刀, 意思就是只用一个eclipse就可以做很多事情. &lt;/p&gt;
+&lt;p&gt;有时候也用得着.&lt;/p&gt;</summary><category term="eclipse"></category></entry><entry><title>Eclipse插件推荐</title><link href="http://x-wei.github.io/Eclipse%E6%8F%92%E4%BB%B6%E6%8E%A8%E8%8D%90.html" rel="alternate"></link><published>2014-07-15T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Eclipse插件推荐.html</id><summary type="html">&lt;p&gt;Eclipse被称为编程的瑞士军刀, 意思就是只用一个eclipse就可以做很多事情. &lt;/p&gt;
 &lt;p&gt;最近越来越喜欢eclipse了, 因为作为编辑器而言, eclipse的编辑器让我用起来最舒服的一个(配合一些&lt;a href="x-wei.github.com/Eclipse快捷键总结.html"&gt;快捷键&lt;/a&gt;以后更是非常爽). 这半年多来发现了一些非常好用的eclipse的插件, 有了这些插件, eclipse可以做更多的事情... 接下来简单介绍一下:&lt;/p&gt;
 &lt;h2&gt;插件安装的方法&lt;/h2&gt;
 &lt;p&gt;先简单说一下eclipse的插件安装方法, 在eclispe界面上, 点击: Help-&amp;gt;Install New Software:&lt;/p&gt;
@@ -753,7 +781,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;blockquote&gt;
 &lt;p&gt;Help--&amp;gt; About Eclipse Platform--&amp;gt; Installation Details&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;最后再补充一句, Eclipse的最大优势是编辑器非常讨我喜欢, 但是缺点是在老机器上运行比较卡, 而且不管写什么都要先指定workspace以及建立一个project. 如果想要一把轻量级的"瑞士军刀"的话, geany是个不错的选择.&lt;/p&gt;</summary><category term="eclipse"></category></entry><entry><title>使用Eclipse的UML插件生成类图</title><link href="http://x-wei.github.io/%E4%BD%BF%E7%94%A8Eclipse%E7%9A%84UML%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E7%B1%BB%E5%9B%BE.html" rel="alternate"></link><updated>2014-05-31T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/使用Eclipse的UML插件生成类图.html</id><summary type="html">&lt;p&gt;Created samedi 31 mai 2014UML就是可以把程序的结构用图的形式表达出来的东西(好像叫类图), 虽然写程序的时候不大会用到这种东西来搞, 但是写报告的时候如果能够加上一张图的话, 就可以少费些口舌来解释代码了, 而且还有一种高大上的赶脚... 所以写完程序写报告的时候可以用一下. &lt;/p&gt;
+&lt;p&gt;最后再补充一句, Eclipse的最大优势是编辑器非常讨我喜欢, 但是缺点是在老机器上运行比较卡, 而且不管写什么都要先指定workspace以及建立一个project. 如果想要一把轻量级的"瑞士军刀"的话, geany是个不错的选择.&lt;/p&gt;</summary><category term="eclipse"></category></entry><entry><title>使用Eclipse的UML插件生成类图</title><link href="http://x-wei.github.io/%E4%BD%BF%E7%94%A8Eclipse%E7%9A%84UML%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E7%B1%BB%E5%9B%BE.html" rel="alternate"></link><published>2014-05-31T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/使用Eclipse的UML插件生成类图.html</id><summary type="html">&lt;p&gt;Created samedi 31 mai 2014UML就是可以把程序的结构用图的形式表达出来的东西(好像叫类图), 虽然写程序的时候不大会用到这种东西来搞, 但是写报告的时候如果能够加上一张图的话, 就可以少费些口舌来解释代码了, 而且还有一种高大上的赶脚... 所以写完程序写报告的时候可以用一下. &lt;/p&gt;
 &lt;p&gt;废话不多说, 看看我最后生成的UML图:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./eclipse的UML插件/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;这张图表示一个抽象类&lt;code&gt;Operration&lt;/code&gt;有三个子类, 然后他们之间的关系... 如果用文字的话要解释半天吧...&lt;/p&gt;
@@ -771,7 +799,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;ul&gt;
 &lt;li&gt;然后就OK了...&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;另外还在网上找到了&lt;a href="http://www.modelgoon.org/"&gt;model goon&lt;/a&gt;, 不过它生成的类图貌似没有把所有信息都标上, 而且不太好看...&lt;/p&gt;</summary><category term="java"></category><category term="eclipse"></category></entry><entry><title>A French Input Method</title><link href="http://x-wei.github.io/fr-input.html" rel="alternate"></link><updated>2014-05-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/fr-input.html</id><summary type="html">&lt;h2&gt;Well, to be brief...&lt;/h2&gt;
+&lt;p&gt;另外还在网上找到了&lt;a href="http://www.modelgoon.org/"&gt;model goon&lt;/a&gt;, 不过它生成的类图貌似没有把所有信息都标上, 而且不太好看...&lt;/p&gt;</summary><category term="java"></category><category term="eclipse"></category></entry><entry><title>A French Input Method</title><link href="http://x-wei.github.io/fr-input.html" rel="alternate"></link><published>2014-05-23T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/fr-input.html</id><summary type="html">&lt;h2&gt;Well, to be brief...&lt;/h2&gt;
 &lt;p&gt;I made a french input method, if you got annoyed by the freaking french keyboard when typing accented words (i.e.  &lt;strong&gt;é, û, ü, î,...&lt;/strong&gt; ), or you are using a QWERTY keyboard, this will be quite useful !&lt;/p&gt;
 &lt;p&gt;In fact, I used &lt;a href="http://yong.dgod.net/"&gt;XiaoxiaoInput&lt;/a&gt; and &lt;a href="https://fcitx-im.org/wiki/Fcitx"&gt;Fcitx&lt;/a&gt;, which are 2 excellent Chinese input methods, I just made a french word table, and added it to the program...&lt;/p&gt;
 &lt;h2&gt;screenshot:&lt;/h2&gt;
@@ -815,7 +843,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;p&gt;see &lt;a href="https://github.com/X-Wei/fcitx-table-french"&gt;here&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;mac&lt;/strong&gt; &lt;/p&gt;
 &lt;p&gt;I haven't made the mac version yet...&lt;/p&gt;
-&lt;p&gt;&lt;img alt="" src="./fr-input/doge.jpg" /&gt;&lt;/p&gt;</summary><category term="fr"></category></entry><entry><title>我的ubuntu10.04配置总结</title><link href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html" rel="alternate"></link><updated>2013-07-20T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/我的ubuntu10.04配置总结.html</id><summary type="html">&lt;p&gt;ubuntu已经出到了13.04, 我之所以坚持使用ubuntu10.04的版本(到现在已经三年了, 现在10.04已经过了支持周期而我还在继续用它), 主要是因为ubuntu出的unity界面以及gnome3的界面实在是用起来不爽(吐槽不已!!)... &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="./fr-input/doge.jpg" /&gt;&lt;/p&gt;</summary><category term="fr"></category></entry><entry><title>我的ubuntu10.04配置总结</title><link href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html" rel="alternate"></link><published>2013-07-20T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/我的ubuntu10.04配置总结.html</id><summary type="html">&lt;p&gt;ubuntu已经出到了13.04, 我之所以坚持使用ubuntu10.04的版本(到现在已经三年了, 现在10.04已经过了支持周期而我还在继续用它), 主要是因为ubuntu出的unity界面以及gnome3的界面实在是用起来不爽(吐槽不已!!)... &lt;/p&gt;
 &lt;p&gt;目前我的lucid(ubuntu 10.04)经过我的配置, 在我用来已经十分顺手了.. 不过长久这么下去也不是办法...... 在换新的主力系统之前, 把我目前这个系统的配置写下来.&lt;/p&gt;
 &lt;h2&gt;安装的软件&lt;/h2&gt;
 &lt;p&gt;写一下用起来特别爽的一些软件: &lt;/p&gt;
@@ -903,29 +931,29 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 &lt;/ul&gt;
 &lt;p&gt;win+S
 命令是: &lt;code&gt;gnome-screenshot -ia&lt;/code&gt;
-这个之前也&lt;a href="http://x-wei.github.io/scrshot-shortcut.html"&gt;写过&lt;/a&gt;.&lt;/p&gt;</summary><category term="ubuntu"></category><category term="外观"></category><category term="快捷键"></category></entry><entry><title>多张图片合并为pdf, 合并mp3, 批量压缩图片</title><link href="http://x-wei.github.io/%E5%9B%BE%E7%89%87%E5%90%88%E5%B9%B6%E4%B8%BApdf,%20%E5%90%88%E5%B9%B6mp3,%20%E6%89%B9%E9%87%8F%E5%8E%8B%E7%BC%A9%E5%9B%BE%E7%89%87.html" rel="alternate"></link><updated>2012-11-16T19:47:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/图片合并为pdf, 合并mp3, 批量压缩图片.html</id><summary type="html">&lt;p&gt;前一阵遇到的三个小功能, linux下有简单的命令可以实现...&lt;/p&gt;
+这个之前也&lt;a href="http://x-wei.github.io/scrshot-shortcut.html"&gt;写过&lt;/a&gt;.&lt;/p&gt;</summary><category term="ubuntu"></category><category term="外观"></category><category term="快捷键"></category></entry><entry><title>多张图片合并为pdf, 合并mp3, 批量压缩图片</title><link href="http://x-wei.github.io/%E5%9B%BE%E7%89%87%E5%90%88%E5%B9%B6%E4%B8%BApdf,%20%E5%90%88%E5%B9%B6mp3,%20%E6%89%B9%E9%87%8F%E5%8E%8B%E7%BC%A9%E5%9B%BE%E7%89%87.html" rel="alternate"></link><published>2012-11-16T19:47:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/图片合并为pdf, 合并mp3, 批量压缩图片.html</id><summary type="html">&lt;p&gt;前一阵遇到的三个小功能, linux下有简单的命令可以实现...&lt;/p&gt;
 &lt;h2&gt;多张图片合并为pdf&lt;/h2&gt;
 &lt;p&gt;这个在网上搜一般找到的结果是:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;convert *.jpg xx.pdf
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;convert *.jpg xx.pdf
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;但是这么做的问题是, 运行起来超级慢, 电脑直接卡死!!!&lt;/p&gt;
 &lt;p&gt;后来看了&lt;a href="http://pityonline.info/2009/12/%E7%BB%88%E4%BA%8E%E6%90%9E%E5%AE%9A%E4%BA%86%E5%A4%9A%E5%BC%A0%E5%9B%BE%E7%89%87%E5%90%88%E6%88%90%E4%B8%80%E4%BB%BDpdf%E6%96%87%E6%A1%A3%EF%BC%81/"&gt;这里&lt;/a&gt;, 知道了可以用pdfjam来做. 先要安装pdfjam, 然后:&lt;/p&gt;
 &lt;p&gt;先将所有jpg文件重命名为pdf：&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;rename &amp;#39;s/\.jpg$/\.pdf/&amp;#39; *.jpg
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;rename &amp;#39;s/\.jpg$/\.pdf/&amp;#39; *.jpg
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;合成刚重命名的pdf文件为一份：&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;pdfjoin $(ls *.pdf|sort -n) --outfile xx.pdf
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pdfjoin $(ls *.pdf|sort -n) --outfile xx.pdf
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;后来看到pdfjam其实是在用latex, 想到其实也可以先自动生成一个tex文件然后再调用tex生成pdf... 不过既然有现成的软件就直接用吧!!&lt;/p&gt;
 &lt;h2&gt;合并mp3&lt;/h2&gt;
 &lt;p&gt;超级简单的一条命令:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;cat *.mp3 &amp;gt; output.mp3
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cat *.mp3 &amp;gt; output.mp3
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -943,7 +971,7 @@ Out[3]: [&amp;#39;1912.edges&amp;#39;,
 6
 7
 8
-9&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+9&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
 &lt;span class="nv"&gt;images&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="sb"&gt;`&lt;/span&gt;ls *.JPG&lt;span class="sb"&gt;`&lt;/span&gt;
 &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;resize images begining...&amp;quot;&lt;/span&gt;
 &lt;span class="k"&gt;for&lt;/span&gt; image in &lt;span class="nv"&gt;$images&lt;/span&gt;
@@ -955,9 +983,9 @@ convert &lt;span class="nv"&gt;$image&lt;/span&gt; -resize 50% &lt;span class="n
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;p&gt;然后就OK了... 顺便吐槽下gmail的附件大小限制!!...&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>git push使用代理</title><link href="http://x-wei.github.io/git%20push%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86.html" rel="alternate"></link><updated>2012-09-21T11:22:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/git push使用代理.html</id><summary type="html">&lt;p&gt;来到X之后, 上外网全部要用代理的, 非常不爽... 而且ubuntu的所谓的全局代理设置(首选项--&amp;gt;网络代理)好像并不管用... 设置了之后apt-get命令可以用, 但是常用软件(最常用莫过于chrome了)都要单独设置才可以...&lt;/p&gt;
+&lt;p&gt;然后就OK了... 顺便吐槽下gmail的附件大小限制!!...&lt;/p&gt;</summary><category term="linux"></category></entry><entry><title>git push使用代理</title><link href="http://x-wei.github.io/git%20push%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86.html" rel="alternate"></link><published>2012-09-21T11:22:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/git push使用代理.html</id><summary type="html">&lt;p&gt;来到X之后, 上外网全部要用代理的, 非常不爽... 而且ubuntu的所谓的全局代理设置(首选项--&amp;gt;网络代理)好像并不管用... 设置了之后apt-get命令可以用, 但是常用软件(最常用莫过于chrome了)都要单独设置才可以...&lt;/p&gt;
 &lt;p&gt;然而极为不爽的是git, 这边可以clone, 但是一到push的时候就报错:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git push 
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git push 
 ssh: connect to host github.com port 22: Network is unreachable
 fatal: The remote end hung up unexpectedly
 &lt;/pre&gt;&lt;/div&gt;
@@ -967,12 +995,12 @@ fatal: The remote end hung up unexpectedly
 &lt;p&gt;不过今天终于弄好了, 虽然不太明白是怎么弄好了的... 这里记一下.&lt;/p&gt;
 &lt;p&gt;参考了&lt;a href="http://blog.csdn.net/itstarting/article/details/7305384"&gt;这篇文章&lt;/a&gt;, 不过好像又不大一样(我实在是不懂这个东西是什么原理, 只要求能用就好...).&lt;/p&gt;
 &lt;p&gt;首先, 设置代理地址和端口:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git config --global http.proxy&lt;span class="o"&gt;=&lt;/span&gt;yourproxyserver:theport
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git config --global http.proxy&lt;span class="o"&gt;=&lt;/span&gt;yourproxyserver:theport
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;然后好象就好了...... 不过push的时候要指定用户名和https的地址, 根据提示输入github密码才能使用.&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git push https://x-wei@github.com/X-Wei/x-wei.github.com/
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git push https://x-wei@github.com/X-Wei/x-wei.github.com/
 Password: 
 Counting objects: 234, &lt;span class="k"&gt;done&lt;/span&gt;.
 Delta compression using up to &lt;span class="m"&gt;4&lt;/span&gt; threads.
@@ -984,7 +1012,7 @@ To &amp;lt;https://x-wei@github.com/X-Wei/x-wei.github.com/&amp;gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;好吧暂时就这样用吧, 虽然原理是什么我完全不知道......&lt;/p&gt;</summary><category term="git"></category></entry><entry><title>[更新]访问google服务和优酷去广告功能的host列表</title><link href="http://x-wei.github.io/google_youku_host_20120706.html" rel="alternate"></link><updated>2012-07-06T00:36:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/google_youku_host_20120706.html</id><summary type="html">&lt;p&gt;之前两篇帖子介绍了如何通过修改host文件达到无鸭梨&lt;a href="http://x-wei.github.com/google_host.html"&gt;访问google服务&lt;/a&gt;以及&lt;a href="http://x-wei.github.com/host_youkuqiyi.html"&gt;屏蔽优酷土豆广告&lt;/a&gt;的目的, 虽然不明白这东西到底是啥原理, 但一直用得很爽......&lt;/p&gt;
+&lt;p&gt;好吧暂时就这样用吧, 虽然原理是什么我完全不知道......&lt;/p&gt;</summary><category term="git"></category></entry><entry><title>[更新]访问google服务和优酷去广告功能的host列表</title><link href="http://x-wei.github.io/google_youku_host_20120706.html" rel="alternate"></link><published>2012-07-06T00:36:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/google_youku_host_20120706.html</id><summary type="html">&lt;p&gt;之前两篇帖子介绍了如何通过修改host文件达到无鸭梨&lt;a href="http://x-wei.github.com/google_host.html"&gt;访问google服务&lt;/a&gt;以及&lt;a href="http://x-wei.github.com/host_youkuqiyi.html"&gt;屏蔽优酷土豆广告&lt;/a&gt;的目的, 虽然不明白这东西到底是啥原理, 但一直用得很爽......&lt;/p&gt;
 &lt;p&gt;在学校里使用那一个hosts文件一直很顺利, 没啥毛病, 有人抱怨说那个方法不给力, 我也没管...&lt;/p&gt;
 &lt;p&gt;后来回家发现原来的host确实不给力了, 优酷广告可以屏蔽, 但gmail的附件预览不能...... 今晚决定搞一搞这个问题... 原先的文件在学校管用的原因, 我猜测是google的host有不少是ipv6的, 回家后这些行都不行了...... 于是上网搜索, 想改改新的host.&lt;/p&gt;
 &lt;p&gt;搜了一大堆都是2011年贴出来的, 不知能不能用... 边搜边想, 这样每隔一段时间去搜host的方法貌似有点笨......&lt;/p&gt;
@@ -1000,7 +1028,7 @@ To &amp;lt;https://x-wei@github.com/X-Wei/x-wei.github.com/&amp;gt;
 3
 4
 5
-6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
 sudo mv /etc/hosts /etc/hosts.bak
 wget &amp;lt;http://hostsx.googlecode.com/svn/trunk/HostsX.orzhosts&amp;gt;
 sudo mv hosts /etc/hosts
@@ -1014,23 +1042,23 @@ sudo /etc/init.d/networking restart
 &lt;p&gt;本来使用hozstx也有关于google的行, 只是实测貌似不给力...... 于是我现在把这俩host内容都放在我本地的hosts文件里(看来host这东西还是多多益善...), 另外, 这两个都提供了youtube等网站的host, 但是实测都不给力...... 不过反正一般也不上什么youtube/twitter(想上的同学自己折腾下"goagent"......), 目前的效果(&lt;strong&gt;访问google所有服务, 上优酷/土豆/奇艺没广告&lt;/strong&gt;)已经很满意了~~&lt;/p&gt;
 &lt;p&gt;最后贴上&lt;a href="./[更新]访问google和优酷去广告功能的host/hosts"&gt;我的host文件&lt;/a&gt;... &lt;/p&gt;
 &lt;p&gt;我已经把最开头locoalhost那两行删了(否则可能有问题), 下载下来后把这些内容添加到本地的host文件中即可~ 本地的hosts文件位于:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;linux: /ect/hosts
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;linux: /ect/hosts
 windows: c:/windows/system32/drivers/etc/hosts
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;如果又不能用了, 可以自己去把 &lt;a href="https://smarthosts.googlecode.com/svn/trunk/hosts"&gt;https://smarthosts.googlecode.com/svn/trunk/hosts&lt;/a&gt; 和 &lt;a href="http://hostsx.googlecode.com/svn/trunk/HostsX.orzhosts"&gt;http://hostsx.googlecode.com/svn/trunk/HostsX.orzhosts&lt;/a&gt; 这俩文件的内容粘贴进本地的hosts文件里就可以了. 我估计换一次host能撑很长时间吧... 当然如果真的很懒的话也可以用他们提供的小软件来搞~&lt;/p&gt;
-&lt;p&gt;P.S. 码字+修改花了好长的时间啊啊... 大概是因为昨天看了篇文章, &lt;a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/"&gt;"为什么你应该（从现在开始就）写博客"&lt;/a&gt;......&lt;/p&gt;</summary><category term="google"></category><category term="host"></category></entry><entry><title>github上两个比较有用的小项目</title><link href="http://x-wei.github.io/github%E4%B8%8A%E4%B8%A4%E4%B8%AA%E6%AF%94%E8%BE%83%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E9%A1%B9%E7%9B%AE.html" rel="alternate"></link><updated>2012-05-31T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/github上两个比较有用的小项目.html</id><summary type="html">&lt;p&gt;github上的好东西不少, 最近发现了两个比较有用的python程序, 这俩功能都是我比较想要的, 有需求就会有牛人去实现~&lt;/p&gt;
+&lt;p&gt;P.S. 码字+修改花了好长的时间啊啊... 大概是因为昨天看了篇文章, &lt;a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/"&gt;"为什么你应该（从现在开始就）写博客"&lt;/a&gt;......&lt;/p&gt;</summary><category term="google"></category><category term="host"></category></entry><entry><title>github上两个比较有用的小项目</title><link href="http://x-wei.github.io/github%E4%B8%8A%E4%B8%A4%E4%B8%AA%E6%AF%94%E8%BE%83%E6%9C%89%E7%94%A8%E7%9A%84%E5%B0%8F%E9%A1%B9%E7%9B%AE.html" rel="alternate"></link><published>2012-05-31T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/github上两个比较有用的小项目.html</id><summary type="html">&lt;p&gt;github上的好东西不少, 最近发现了两个比较有用的python程序, 这俩功能都是我比较想要的, 有需求就会有牛人去实现~&lt;/p&gt;
 &lt;h1&gt;1. 视频下载器youku-lixian&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://github.com/iambus/youku-lixian"&gt;https://github.com/iambus/youku-lixian&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;可不止支持下载优酷的视频奥, 土豆, 奇艺, 新浪, 酷6...... 通吃~&lt;/p&gt;
 &lt;p&gt;而且每个都只是一个小小的py文件, 直接就可以运行, 比起什么优酷客户端, 奇艺客户端小多了! 太赞了!~&lt;/p&gt;
 &lt;h1&gt;2. 115网盘自动摇奖&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://gist.github.com/2698830"&gt;https://gist.github.com/2698830&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;这个功能我曾经想要实现, 但是关于网络通信方面知道的太少了, 搞了一通也没有成功. 现在有人把它共享出来, 代码居然还不到100行, 强大啊~&lt;/p&gt;</summary><category term="git"></category><category term="python"></category></entry><entry><title>在bolg页面上加入ubuntu发布倒计时图标</title><link href="http://x-wei.github.io/%E5%9C%A8bolg%E9%A1%B5%E9%9D%A2%E4%B8%8A%E5%8A%A0%E5%85%A5ubuntu%E5%8F%91%E5%B8%83%E5%80%92%E8%AE%A1%E6%97%B6%E5%9B%BE%E6%A0%87.html" rel="alternate"></link><updated>2012-04-25T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/在bolg页面上加入ubuntu发布倒计时图标.html</id><summary type="html">&lt;p&gt;明天ubuntu12.04&lt;strong&gt;LTS&lt;/strong&gt;就要发布了! 然后今天下课回来在各种网站上闲逛, 突然发现了这个页面: &lt;a href="http://www.ubuntu.com/community/countdown"&gt;给网页添加ubuntu发布倒计时&lt;/a&gt;. 很厉害的样子, 介绍说只要把那一段代码加入网页的html文件就可以了. 我试了一下, 直接加在index.html上面--还真的可以唉~~&lt;/p&gt;
+&lt;p&gt;这个功能我曾经想要实现, 但是关于网络通信方面知道的太少了, 搞了一通也没有成功. 现在有人把它共享出来, 代码居然还不到100行, 强大啊~&lt;/p&gt;</summary><category term="git"></category><category term="python"></category></entry><entry><title>在bolg页面上加入ubuntu发布倒计时图标</title><link href="http://x-wei.github.io/%E5%9C%A8bolg%E9%A1%B5%E9%9D%A2%E4%B8%8A%E5%8A%A0%E5%85%A5ubuntu%E5%8F%91%E5%B8%83%E5%80%92%E8%AE%A1%E6%97%B6%E5%9B%BE%E6%A0%87.html" rel="alternate"></link><published>2012-04-25T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/在bolg页面上加入ubuntu发布倒计时图标.html</id><summary type="html">&lt;p&gt;明天ubuntu12.04&lt;strong&gt;LTS&lt;/strong&gt;就要发布了! 然后今天下课回来在各种网站上闲逛, 突然发现了这个页面: &lt;a href="http://www.ubuntu.com/community/countdown"&gt;给网页添加ubuntu发布倒计时&lt;/a&gt;. 很厉害的样子, 介绍说只要把那一段代码加入网页的html文件就可以了. 我试了一下, 直接加在index.html上面--还真的可以唉~~&lt;/p&gt;
 &lt;p&gt;不过, pelican每次都是自动生成和更新index.html的啊, 难道每次都要手动加入这一行代码?? 难道还要自己修改pelican的代码??......&lt;/p&gt;
 &lt;p&gt;此时我想到了farseerfc学长的配置文件, 其中我把他的微博秀那几行注释掉了:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;#~ SIDEBAR_CUSTOM = r&amp;quot;&amp;quot;&amp;quot;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#~ SIDEBAR_CUSTOM = r&amp;quot;&amp;quot;&amp;quot;
 #~ &lt;span class="nt"&gt;&amp;lt;li&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;nav-header&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;h4&amp;gt;&amp;lt;i&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;icon-list-alt&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/i&amp;gt;&lt;/span&gt;Weibo&lt;span class="nt"&gt;&amp;lt;/h4&amp;gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
 #~ &lt;span class="nt"&gt;&amp;lt;iframe&lt;/span&gt; &lt;span class="na"&gt;width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;100%&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;550&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;share_self&amp;quot;&lt;/span&gt;  &lt;span class="na"&gt;frameborder=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;0&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;scrolling=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;no&amp;quot;&lt;/span&gt; 
 &lt;span class="err"&gt;#~&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;lt;http://widget.weibo.com/weiboshow/index.php?language=&amp;amp;width=0&amp;amp;height=550&amp;amp;fansRow=1&amp;amp;ptype=1&amp;amp;speed=0&amp;amp;skin=2&amp;amp;isTitle=1&amp;amp;noborder=1&amp;amp;isWeibo=1&amp;amp;isFans=1&amp;amp;uid=1862842353&amp;amp;verifier=b193b9de&amp;amp;dpc=1&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
@@ -1040,7 +1068,7 @@ windows: c:/windows/system32/drivers/etc/hosts
 
 
 &lt;p&gt;今天仔细一看, 我靠, &lt;code&gt;SIDEBAR_CUSTOM&lt;/code&gt;不就是可以自定义的侧边栏么??!! 赶紧, 写上这样一行:&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;SIDEBAR_CUSTOM=r&amp;quot;&amp;quot;&amp;quot;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;SIDEBAR_CUSTOM=r&amp;quot;&amp;quot;&amp;quot;
 &lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;lt;http://www.ubuntu.com/&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;lt;http://www.ubuntu.com/countdown/banner1.png&amp;gt;&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;border=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;0&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;180&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;150&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;alt=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;The next version of Ubuntu is coming soon&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
 &amp;quot;&amp;quot;&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1050,7 +1078,7 @@ windows: c:/windows/system32/drivers/etc/hosts
 &lt;p&gt;那么怎么添加多个小工具呢? 很简单, 只要在字符串SIDEBAR_CUSTOM里面罗列copy来的代码就可以啦!~(比如, 还可以&lt;a href="http://www.google.com/talk/service/badge/New"&gt;添加gtalk&lt;/a&gt;的小工具.) 所以, google自定义搜索引擎其实也可以这样添加的~&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;BTW&lt;/strong&gt;
 今天才知道原来pelican是支持中文文件名的啊啊啊啊啊... 以后没必要取那些dt的英文文件名了...
-另外今天又自己修改了一点bootstrap2主题(把存档页面换成了bootstrap主题的...), 越来越喜欢pelican这个工具了~&lt;/p&gt;</summary><category term="pelican"></category></entry><entry><title>不用安装插件, 设置chrome点击播放flash</title><link href="http://x-wei.github.io/chrome_flashblock.html" rel="alternate"></link><updated>2012-04-24T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/chrome_flashblock.html</id><summary type="html">&lt;p&gt;以前搜索怎么加速打开网页的速度, 有人会推荐flashblock插件. 安装之后, 所有的flash(视频也好, 广告也好)都不会自动播放, 只有自己去点击一下才会播放. 当时觉得这样挺好啊, 因为flash肯定占用了不少带宽以及cpu嘛~&lt;/p&gt;
+另外今天又自己修改了一点bootstrap2主题(把存档页面换成了bootstrap主题的...), 越来越喜欢pelican这个工具了~&lt;/p&gt;</summary><category term="pelican"></category></entry><entry><title>不用安装插件, 设置chrome点击播放flash</title><link href="http://x-wei.github.io/chrome_flashblock.html" rel="alternate"></link><published>2012-04-24T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/chrome_flashblock.html</id><summary type="html">&lt;p&gt;以前搜索怎么加速打开网页的速度, 有人会推荐flashblock插件. 安装之后, 所有的flash(视频也好, 广告也好)都不会自动播放, 只有自己去点击一下才会播放. 当时觉得这样挺好啊, 因为flash肯定占用了不少带宽以及cpu嘛~&lt;/p&gt;
 &lt;p&gt;后来, 发现cbl同学没有安装插件也实现了这样的效果, 如下图:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./chrome_flashblock/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;cbl教我把chrome设置成插件点击播放, 个人感觉这样挺有用的~
@@ -1061,7 +1089,7 @@ windows: c:/windows/system32/drivers/etc/hosts
 &lt;img alt="" src="./chrome_flashblock/pasted_image002.png" /&gt;&lt;/p&gt;
 &lt;p&gt;这样设置之后, chrome就不会自动播放flash, 然后再设置点击运行flash.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;第二步&lt;/strong&gt;, 在地址栏输入: &lt;chrome://flags/&gt;, 找到"点后运行"一行, 选择"启用".&lt;/p&gt;
-&lt;p&gt;OK, 到此为止, 就可以不装插件实现flashblock效果了~~&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>使用google自定义搜索以及让google收录自己的网站</title><link href="http://x-wei.github.io/add-google-custom-search.html" rel="alternate"></link><updated>2012-04-23T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/add-google-custom-search.html</id><summary type="html">&lt;p&gt;虽然我的blog点击人数可能还是个位数的, 我还是每天都想折腾一下它...&lt;/p&gt;
+&lt;p&gt;OK, 到此为止, 就可以不装插件实现flashblock效果了~~&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>使用google自定义搜索以及让google收录自己的网站</title><link href="http://x-wei.github.io/add-google-custom-search.html" rel="alternate"></link><published>2012-04-23T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/add-google-custom-search.html</id><summary type="html">&lt;p&gt;虽然我的blog点击人数可能还是个位数的, 我还是每天都想折腾一下它...&lt;/p&gt;
 &lt;p&gt;bootstrap2模板里提供了很丰富的内容(可以看farseerfc学长的页面), 其中的google站内搜索我觉得很有用, 于是也自己去弄了一下...&lt;/p&gt;
 &lt;h1&gt;使用google自定义搜索&lt;/h1&gt;
 &lt;p&gt;要登录google&lt;a href="http://www.google.com/cse/?hl=zh-CN"&gt;自定义搜索&lt;/a&gt;, 的页面, 用google帐号登录, 然后选择新建一个自定义搜索引擎, 会看到这样的界面: &lt;/p&gt;
@@ -1077,7 +1105,7 @@ windows: c:/windows/system32/drivers/etc/hosts
 &lt;p&gt;在基本信息里面就会看到"搜索引擎的唯一 ID", 把那一串数字赋值给GOOGLE_CUSTOM_SEARCH_SIDEBAR即可~&lt;/p&gt;
 &lt;h1&gt;让google收录你的网站&lt;/h1&gt;
 &lt;p&gt;但是我没有那么顺利的完成以上, 因为我在测试自定义引擎的时候总是搜不到任何我的网站的东西... 还以为是设置搜索的网页格式写错了呢... 非常崩溃... 后来在zyb同学的提醒下意识到可能是google没有收录我的网页... 果然, google怎么也搜不到我的网站的内容唉...&lt;/p&gt;
-&lt;p&gt;那么怎么才能让google收录自己的网页?? 难道要坐等几个月后google发现我? 呵呵, 其实是可以主动申请让搜索引擎收录自己的网站的, 我看的&lt;a href="http://zhidao.baidu.com/question/102933806.html"&gt;这里&lt;/a&gt;. 原来就是很简单的一个工作, &lt;a href=""&gt;登录http://www.google.com/addurl/?hl=zh-CN&amp;amp;continue=/addurl&lt;/a&gt; (要是想被百度收录就登录 &lt;a href="http://www.baidu.com/search/url_submit.html"&gt;http://www.baidu.com/search/url_submit.html&lt;/a&gt; ) 填上你的网址以及验证码(google的验证码太难辨认... 而百度的有点太简单了吧...)就可以了, 我昨天填的, 今天一试发现就可以搜索到了! 然后又发现google自定义搜索也好使了!~~&lt;/p&gt;</summary><category term="pelican"></category><category term="google"></category></entry><entry><title>修改host去除优酷奇艺网站广告</title><link href="http://x-wei.github.io/host_youkuqiyi.html" rel="alternate"></link><updated>2012-04-19T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/host_youkuqiyi.html</id><summary type="html">&lt;p&gt;优酷现在的广告已经是半分钟长了?? 所以屏蔽这些广告还是很有必要滴~&lt;/p&gt;
+&lt;p&gt;那么怎么才能让google收录自己的网页?? 难道要坐等几个月后google发现我? 呵呵, 其实是可以主动申请让搜索引擎收录自己的网站的, 我看的&lt;a href="http://zhidao.baidu.com/question/102933806.html"&gt;这里&lt;/a&gt;. 原来就是很简单的一个工作, &lt;a href=""&gt;登录http://www.google.com/addurl/?hl=zh-CN&amp;amp;continue=/addurl&lt;/a&gt; (要是想被百度收录就登录 &lt;a href="http://www.baidu.com/search/url_submit.html"&gt;http://www.baidu.com/search/url_submit.html&lt;/a&gt; ) 填上你的网址以及验证码(google的验证码太难辨认... 而百度的有点太简单了吧...)就可以了, 我昨天填的, 今天一试发现就可以搜索到了! 然后又发现google自定义搜索也好使了!~~&lt;/p&gt;</summary><category term="pelican"></category><category term="google"></category></entry><entry><title>修改host去除优酷奇艺网站广告</title><link href="http://x-wei.github.io/host_youkuqiyi.html" rel="alternate"></link><published>2012-04-19T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/host_youkuqiyi.html</id><summary type="html">&lt;p&gt;优酷现在的广告已经是半分钟长了?? 所以屏蔽这些广告还是很有必要滴~&lt;/p&gt;
 &lt;p&gt;之前, 马阳同学给我一个修改host的方式, 用了几个月之后, 发现不好使了: 虽然不会显示广告, 但是不会直接跳过去, 而是显示"广告不能正常播放..." 然后还是要等待半分钟才能看... &lt;/p&gt;
 &lt;p&gt;后来, 看了&lt;a href="http://www.nenew.net/youku-qiyi-hosts-windows-win7-windows7-vista-ubuntu-linux-archlinux-firefox-chrome.html"&gt;奶牛的博客&lt;/a&gt;, 终于找到了解决办法, 至少到目前还是好使的~&lt;/p&gt;
 &lt;h1&gt;第一步&lt;/h1&gt;
@@ -1088,14 +1116,14 @@ windows: c:/windows/system32/drivers/etc/hosts
 &lt;p&gt;找到: &lt;code&gt;~/.macromedia/Flash_Player/#SharedObjects/某某名字文件夹/&lt;/code&gt; 这里, 可能会有两个文件夹: &lt;code&gt;www.iqiyi.com&lt;/code&gt;以及&lt;code&gt;static.youku.com&lt;/code&gt;, 删除之, 然后新建两个空白文件, 名字就取这两个文件夹的名字(要是没有这俩文件夹, 则直接新建这两个空白文件).&lt;/p&gt;
 &lt;h2&gt;windows用户&lt;/h2&gt;
 &lt;p&gt;和linux用户一样, 只是那个文件夹在: &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;(xp) C:\Documents and Settings\Administrator\Application Data\Macromedia\Flash Player\#SharedObjects\某某名字文件夹 (呵呵, 略长略长...)
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(xp) C:\Documents and Settings\Administrator\Application Data\Macromedia\Flash Player\#SharedObjects\某某名字文件夹 (呵呵, 略长略长...)
 (win7) C:\Users\用户名\AppData\Roaming\Macromedia\Flash Player\#SharedObjects\某某名字文件夹
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;注意啊, 新建的空白文件就是叫&lt;code&gt;www.iqiyi.com&lt;/code&gt;和&lt;code&gt;static.youku.com&lt;/code&gt;, 我的意思是...别加上.txt的后缀之类的...&lt;/p&gt;
 &lt;p&gt;这样做好之后, 看优酷奇艺的视频就没有广告了, enjoy~&lt;/p&gt;
-&lt;p&gt;另外, 我的host文件里好像提供了土豆的屏蔽规则, 但是貌似不大好使...&lt;/p&gt;</summary><category term="host"></category></entry><entry><title>修改host访问google的所有服务</title><link href="http://x-wei.github.io/google_host.html" rel="alternate"></link><updated>2012-04-18T00:00:00+02:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/google_host.html</id><summary type="html">&lt;p&gt;google的服务(mail, doc, site, code, project...)很多都实在很方便(个人感觉QQ, 网易什么的和它绝对不是一个档次). 但是比较悲剧的是, google服务在国内不很稳定, 时不时上不去(比如gmail), 而有的服务(比如site)居然完全上不去...&lt;/p&gt;
+&lt;p&gt;另外, 我的host文件里好像提供了土豆的屏蔽规则, 但是貌似不大好使...&lt;/p&gt;</summary><category term="host"></category></entry><entry><title>修改host访问google的所有服务</title><link href="http://x-wei.github.io/google_host.html" rel="alternate"></link><published>2012-04-18T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/google_host.html</id><summary type="html">&lt;p&gt;google的服务(mail, doc, site, code, project...)很多都实在很方便(个人感觉QQ, 网易什么的和它绝对不是一个档次). 但是比较悲剧的是, google服务在国内不很稳定, 时不时上不去(比如gmail), 而有的服务(比如site)居然完全上不去...&lt;/p&gt;
 &lt;p&gt;自己的经验, 使用修改host的方式可以比较好的解决这个问题(而youtube啊, facebook啊什么的修改了不一定好使...) 这里贴一下..&lt;/p&gt;
 &lt;p&gt;其实就是修改一个文件...linux用户修改&lt;code&gt;/ect/hosts&lt;/code&gt;, windows用户修改&lt;code&gt;c:/windows/system32/drivers/etc/hosts&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;2012-07-06更新&lt;/strong&gt;&lt;/p&gt;
@@ -1103,7 +1131,7 @@ windows: c:/windows/system32/drivers/etc/hosts
 &lt;p&gt;&lt;S&gt;
 关于google的host, 网上到处都是, 比如&lt;a href="http://www.douban.com/note/161139377/"&gt;这里&lt;/a&gt;, 不过我没有试过这里的host可不可以(应该可以吧...), 还是把我的host贴出来吧. 这里说一下, 我同时还加了去优酷广告(这里修改完了还要&lt;a href="http://x-wei.github.com/host_youkuqiyi.html"&gt;再处理一下&lt;/a&gt;), 上youtube(貌似有点问题). 把这些东西粘贴进hosts文件, 即可访问google的服务, gmail也不会抽风了~~
 (要是嫌复制粘贴麻烦, 直接&lt;a href="./google_host/hosts"&gt;下载hosts文件&lt;/a&gt;)&lt;/S&gt;&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;#优酷屏蔽广告规则如下：
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#优酷屏蔽广告规则如下：
 127.0.0.1       stat.youku.com
 127.0.0.1       static.lstat.youku.com
 127.0.0.1       static.atm.youku.com/crossdomain.xml
@@ -2441,7 +2469,7 @@ ff02::2 ip6-allrouters
 125.56.199.9 photos-f.ak.fbcdn.net
 125.56.199.9 photos-g.ak.fbcdn.net
 125.56.199.9 photos-h.ak.fbcdn.net
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="google"></category><category term="host"></category></entry><entry><title>使用google doc建立在线调查表!~</title><link href="http://x-wei.github.io/google_doc_form.html" rel="alternate"></link><updated>2012-03-21T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/google_doc_form.html</id><summary type="html">&lt;p&gt;在线办公我以前试过zoho, 但是一个xls文件有多个人同时编辑时会有问题...&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="google"></category><category term="host"></category></entry><entry><title>使用google doc建立在线调查表!~</title><link href="http://x-wei.github.io/google_doc_form.html" rel="alternate"></link><published>2012-03-21T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/google_doc_form.html</id><summary type="html">&lt;p&gt;在线办公我以前试过zoho, 但是一个xls文件有多个人同时编辑时会有问题...&lt;/p&gt;
 &lt;p&gt;昨天收到学长关于春游的&lt;a href="https://docs.google.com/spreadsheet/viewform?formkey=dDhzYnRNVHFReXRoanlpZWRyYjM4Y2c6MQ"&gt;调查表&lt;/a&gt;, 居然是用google doc做的, 很给力. 我早就想做一个分布式通讯录, 所以研究了一下. 越来越感觉google提供的服务(google doc, google site, google project)太方便了!!!&lt;/p&gt;
 &lt;h2&gt;建立&lt;/h2&gt;
 &lt;p&gt;大概的流程是这样的:
@@ -2470,7 +2498,7 @@ ff02::2 ip6-allrouters
 &lt;h2&gt;一点不足&lt;/h2&gt;
 &lt;p&gt;就是一旦发布了, 任何有这个链接的人都可以填这个表格... 没有密码之类的...
 我的方法是设置一个必填的"验证问题"项, 只有回答对了验证问题的人, 我才发给他同学录...&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>自定义nautilus的菜单栏</title><link href="http://x-wei.github.io/nautilus-menu.html" rel="alternate"></link><updated>2012-03-08T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/nautilus-menu.html</id><summary type="html">&lt;p&gt;Nautilus是gnome的默认文件浏览器, 那次更新安装了elementory主题的Nautilus之后, 发现菜单栏少了些很常用的功能: 比如上一层,主页, 刷新等...&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="google"></category></entry><entry><title>自定义nautilus的菜单栏</title><link href="http://x-wei.github.io/nautilus-menu.html" rel="alternate"></link><published>2012-03-08T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/nautilus-menu.html</id><summary type="html">&lt;p&gt;Nautilus是gnome的默认文件浏览器, 那次更新安装了elementory主题的Nautilus之后, 发现菜单栏少了些很常用的功能: 比如上一层,主页, 刷新等...&lt;/p&gt;
 &lt;p&gt;其实可以自定义的, 编辑-&amp;gt;customize toolbar:
 &lt;img alt="" src="./nautilus-menu/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;顺便提一下, 发现了些方便的快捷键:
@@ -2481,7 +2509,7 @@ F2: 重命名
 F5/ctrl+R: 刷新
 ctrl+L: 输入位置地址
 ctrl+H:显示隐藏文件&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="外观"></category><category term="快捷键"></category></entry><entry><title>chrome护眼设置--把背景设置为绿豆沙</title><link href="http://x-wei.github.io/chrome-background.html" rel="alternate"></link><updated>2012-02-23T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/chrome-background.html</id><summary type="html">&lt;p&gt;直接把&lt;a href="http://hi.baidu.com/laolao18k/blog/item/3a268016cd4c4907c83d6d46.html"&gt;这里&lt;/a&gt;的贴上吧...
+&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="外观"></category><category term="快捷键"></category></entry><entry><title>chrome护眼设置--把背景设置为绿豆沙</title><link href="http://x-wei.github.io/chrome-background.html" rel="alternate"></link><published>2012-02-23T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/chrome-background.html</id><summary type="html">&lt;p&gt;直接把&lt;a href="http://hi.baidu.com/laolao18k/blog/item/3a268016cd4c4907c83d6d46.html"&gt;这里&lt;/a&gt;的贴上吧...
 (以下为copy)&lt;/p&gt;
 &lt;p&gt;首先，下载安装chrome的&lt;a href="https://chrome.google.com/extensions/detail/pabfempgigicdjjlccdgnbmeggkbjdhd"&gt;stylist插件&lt;/a&gt;
 然后，打开"扩展设置"，点击chrome stylist的选项，点击demo进行修改。 &lt;/p&gt;
@@ -2492,18 +2520,18 @@ ctrl+H:显示隐藏文件&lt;/p&gt;
 &lt;img alt="" src="./chrome-background/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;04/24/2012续&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;关于那个正则表达式, 如果写成 &lt;code&gt;*{ background: #C7EDCC !important;}&lt;/code&gt;, 虽然一片绿豆色很护眼, 但是不少网页显示会有问题. 比如校内上新鲜事显示不了照片预览, gmail的加星标签看不见等... 最坑爹的是有的网页文字是浅色的, 那样的话几乎看不清楚了... 我现在使用的这样的规则: &lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;background&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#C7EDCC&lt;/span&gt; &lt;span class="cp"&gt;!important&lt;/span&gt;&lt;span class="p"&gt;;}&lt;/span&gt; 
-&lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;black&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;background&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="m"&gt;#C7EDCC&lt;/span&gt; &lt;span class="cp"&gt;!important&lt;/span&gt;&lt;span class="p"&gt;;}&lt;/span&gt; 
+&lt;span class="nt"&gt;body&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nb"&gt;color&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="nb"&gt;black&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;第一行, 指定只是网页的body部分为绿豆沙色(大部分网页的背景都是body); 第二行, 指定body里的文字都使用黑色.&lt;/p&gt;
 &lt;p&gt;这样弄下来比原先要好不少(关于上面提到的显示校内网和gmail的问题都解决了), 虽然网页不是全部绿豆沙了...&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tips"></category><category term="google"></category><category term="外观"></category></entry><entry><title>chrome输出网页为pdf!</title><link href="http://x-wei.github.io/chrome%E8%BE%93%E5%87%BA%E7%BD%91%E9%A1%B5%E4%B8%BApdf!.html" rel="alternate"></link><updated>2012-02-23T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/chrome输出网页为pdf!.html</id><summary type="html">&lt;p&gt;不用装插件, 直接右键--&amp;gt;打印--&amp;gt;打印到文件 即可!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tips"></category><category term="google"></category><category term="外观"></category></entry><entry><title>chrome输出网页为pdf!</title><link href="http://x-wei.github.io/chrome%E8%BE%93%E5%87%BA%E7%BD%91%E9%A1%B5%E4%B8%BApdf!.html" rel="alternate"></link><published>2012-02-23T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/chrome输出网页为pdf!.html</id><summary type="html">&lt;p&gt;不用装插件, 直接右键--&amp;gt;打印--&amp;gt;打印到文件 即可!&lt;/p&gt;
 &lt;p&gt;太方便了! 关键是pdf分页很合理, 效果超好!&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./chrome%E8%BE%93%E5%87%BA%E7%BD%91%E9%A1%B5%E4%B8%BApdf!/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;03/05/2012续&lt;/strong&gt;
-打印前需要把网页缩放足够小, 否则打印的文件只是一部分网页.&lt;/p&gt;</summary></entry><entry><title>gnome护眼设置--窗口背景设置为绿豆沙</title><link href="http://x-wei.github.io/gnome-background.html" rel="alternate"></link><updated>2012-02-23T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/gnome-background.html</id><summary type="html">&lt;p&gt;我就说win能做到ubuntu也能~&lt;/p&gt;
+打印前需要把网页缩放足够小, 否则打印的文件只是一部分网页.&lt;/p&gt;</summary></entry><entry><title>gnome护眼设置--窗口背景设置为绿豆沙</title><link href="http://x-wei.github.io/gnome-background.html" rel="alternate"></link><published>2012-02-23T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/gnome-background.html</id><summary type="html">&lt;p&gt;我就说win能做到ubuntu也能~&lt;/p&gt;
 &lt;p&gt;主题--&amp;gt;自定义--&amp;gt;颜色&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./gnome-background/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;修改窗口和输入框两项的颜色:
@@ -2513,7 +2541,7 @@ ctrl+H:显示隐藏文件&lt;/p&gt;
 &lt;p&gt;然后貌似nautils要再设置一下:
 编辑--&amp;gt;背景和徽标--&amp;gt;颜色--&amp;gt;把那个绿豆沙颜色加进去&lt;/p&gt;
 &lt;p&gt;再加上[chrome的设置], 嗯 就完美了!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tips"></category><category term="外观"></category></entry><entry><title>cmus--很棒的终端音乐播放器</title><link href="http://x-wei.github.io/cmus-%E5%BE%88%E6%A3%92%E7%9A%84%E7%BB%88%E7%AB%AF%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8.html" rel="alternate"></link><updated>2012-01-23T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/cmus-很棒的终端音乐播放器.html</id><summary type="html">&lt;p&gt;最近发现一个终端下超好用的音乐播放器: &lt;a href="http://en.wikipedia.org/wiki/Cmus"&gt;CMUS&lt;/a&gt;. 界面简洁, vi的按键绑定, 由于最近越来越感觉键盘和快捷键的方便, 对这个迷你的播放器爱不释手.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;--imported from zim&lt;/strong&gt;&lt;/p&gt;</summary><category term="tips"></category><category term="外观"></category></entry><entry><title>cmus--很棒的终端音乐播放器</title><link href="http://x-wei.github.io/cmus-%E5%BE%88%E6%A3%92%E7%9A%84%E7%BB%88%E7%AB%AF%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8.html" rel="alternate"></link><published>2012-01-23T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/cmus-很棒的终端音乐播放器.html</id><summary type="html">&lt;p&gt;最近发现一个终端下超好用的音乐播放器: &lt;a href="http://en.wikipedia.org/wiki/Cmus"&gt;CMUS&lt;/a&gt;. 界面简洁, vi的按键绑定, 由于最近越来越感觉键盘和快捷键的方便, 对这个迷你的播放器爱不释手.&lt;/p&gt;
 &lt;p&gt;关于它的用法可以参考&lt;a href="http://www.tuxarena.com/static/cmus_guide.php"&gt;这里&lt;/a&gt;, 另外&lt;a href="http://roylez.heroku.com/2010/01/26/replay-gain.html"&gt;这里&lt;/a&gt;还介绍了怎么设置replay gain(大概是不同音乐播放的音量相同), 但我没有设置.&lt;/p&gt;
 &lt;p&gt;网站上的文档不多, 我觉得最好的教程还是man:
 man cmus
@@ -2531,7 +2559,7 @@ man cmus-tutorial
 &lt;p&gt;c--暂停, hl/&amp;lt;&amp;gt;--快进快退, x--播放, v--停止&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;右下角显示播放模式: R表示重复, S随机, C连续(播完一曲后不停)&lt;/li&gt;
-&lt;/ol&gt;</summary></entry><entry><title>zip乱码解决</title><link href="http://x-wei.github.io/zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3.html" rel="alternate"></link><updated>2012-01-12T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/zip乱码解决.html</id><summary type="html">&lt;p&gt;这个问题困扰了很久, 以前的方法参考了&lt;a href="http://thiger.blog.hexun.com/46569055_d.html"&gt;这里&lt;/a&gt;, 使用一条命令:
+&lt;/ol&gt;</summary></entry><entry><title>zip乱码解决</title><link href="http://x-wei.github.io/zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3.html" rel="alternate"></link><published>2012-01-12T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/zip乱码解决.html</id><summary type="html">&lt;p&gt;这个问题困扰了很久, 以前的方法参考了&lt;a href="http://thiger.blog.hexun.com/46569055_d.html"&gt;这里&lt;/a&gt;, 使用一条命令:
 &lt;code&gt;unzip -O CP936 xxx.zip&lt;/code&gt;
 但是谁tm记得住? 所以每次都要上网现查...&lt;/p&gt;
 &lt;p&gt;今天看到了ubuntu论坛上的&lt;a href="http://forum.ubuntu.org.cn/viewtopic.php?f=122&amp;amp;t=301951"&gt;帖子&lt;/a&gt;, 六楼给出了终极的解决方案. &lt;/p&gt;
@@ -2540,7 +2568,7 @@ man cmus-tutorial
 &lt;p&gt;代码:
 &lt;code&gt;sudo cp 7z* /usr/lib/p7zip/&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;注意以后不要升级p7zip&lt;/p&gt;
-&lt;p&gt;一切就正常了! 而且打开时也没有乱码! so good!&lt;/p&gt;</summary><category term="中文乱码"></category></entry><entry><title>把抓图工具关联到ubuntu快捷键</title><link href="http://x-wei.github.io/scrshot-shortcut.html" rel="alternate"></link><updated>2012-01-10T00:00:00+01:00</updated><author><name>mx</name></author><id>http://x-wei.github.io/scrshot-shortcut.html</id><summary type="html">&lt;p&gt;终端输入gnome-screenshot --help, 发现选项"-a"表示的是抓取一部分屏幕.&lt;/p&gt;
+&lt;p&gt;一切就正常了! 而且打开时也没有乱码! so good!&lt;/p&gt;</summary><category term="中文乱码"></category></entry><entry><title>把抓图工具关联到ubuntu快捷键</title><link href="http://x-wei.github.io/scrshot-shortcut.html" rel="alternate"></link><published>2012-01-10T00:00:00+01:00</published><author><name>mx</name></author><id>http://x-wei.github.io/scrshot-shortcut.html</id><summary type="html">&lt;p&gt;终端输入gnome-screenshot --help, 发现选项"-a"表示的是抓取一部分屏幕.&lt;/p&gt;
 &lt;p&gt;于是打开编辑键盘快捷键窗口, 新建一个快捷键如下图:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="./scrshot-shortcut/pasted_image.png" /&gt;&lt;/p&gt;
 &lt;p&gt;这样, 按下Ctrl+Alt+s快捷键后即可启动抓图, 且是抓取一个区域. 不过不知为什么, 反应比较慢, 需要按下一段时间  (一秒钟?)才会有反应.&lt;/p&gt;

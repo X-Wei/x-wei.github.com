@@ -178,7 +178,7 @@
 <p>function signature: <br />
 <code>public static int search(String pat, String txt);</code>  </p>
 <p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt){  
+<div class="codehilite"><pre><span></span>public static int search(String pat, String txt){  
     int N=txt.length(), M=pat.length();  
     for(int i=0; i&lt;=N-M; i++){  
         int j;  
@@ -200,7 +200,7 @@ problem with brute-force: always <em>backup</em> when mismatch. <br />
 <li>i := index of the end of matched char in text  </li>
 </ul>
 <p>⇒ do explicite backup when mismatch by <code>i -= j</code>  </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt){  
+<div class="codehilite"><pre><span></span>public static int search(String pat, String txt){  
     int N=txt.length(), M=pat.length(), i=0, j=0;  
     while(i&lt;N &amp;&amp; j&lt;M){  
         if(pat.charAt(j)==txt.charAt(i))   
@@ -240,7 +240,7 @@ states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,
 <li>the pointer i <em>never</em> decrements (thus we can do it in a <em>streaming</em> manner)  </li>
 </ul>
 <p>→ <em>if</em> <code>dfa[][]</code> <em>is precomputed</em>, java code is very very simple:  </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt, int[][] dfa){  
+<div class="codehilite"><pre><span></span>public static int search(String pat, String txt, int[][] dfa){  
     int N=txt.length(), M=pat.length(), i, j=0;  
     for(i=0; i&lt;N &amp;&amp; j&lt;M; i++)  
         j = dfa[txt.charAt(i)][j];  
@@ -303,7 +303,7 @@ we maintain this state <code>X</code>, then for each <em>mismatched</em> char c,
 </ul>
 </blockquote>
 <p>java code (can be written to be more compate):   </p>
-<div class="codehilite"><pre>public int[][] constructDFA(String pat){  
+<div class="codehilite"><pre><span></span>public int[][] constructDFA(String pat){  
     int R=256;//ASCII code    
     int M=pat.length();  
     int[][] dfa = new int[R][M];  
@@ -359,7 +359,7 @@ to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn
 <h3>implementation</h3>
 <p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br />
 <img alt="" src="static/algoII_week4_2/pasted_image012.png" />  </p>
-<div class="codehilite"><pre>int[] right = new int[M];  
+<div class="codehilite"><pre><span></span>int[] right = new int[M];  
 for(int i=0;i&lt;R;i++) right[i] = -1;//value for chars not in pattern  
 for(int j=0;j&lt;M;j++){  
     right[pat.charAt(j)]=j;  
@@ -368,7 +368,7 @@ for(int j=0;j&lt;M;j++){
 
 
 <p>using this table we can implemente the heuristic algorithm:   </p>
-<div class="codehilite"><pre>public static int search(String pat, String txt, int[] right){  
+<div class="codehilite"><pre><span></span>public static int search(String pat, String txt, int[] right){  
     int N=txt.length(), M=pat.length();  
     int skip;  
     for(int i=0;i&lt;N-M;i+=skip){  
@@ -414,7 +414,7 @@ ex. for strings of numbers   </p>
 recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <p>ex. (R=10, M=5)<br />
 <img alt="" src="static/algoII_week4_2/pasted_image016.png" />  </p>
-<div class="codehilite"><pre>private long hash(String key, int M){  
+<div class="codehilite"><pre><span></span>private long hash(String key, int M){  
     long h=0;  
     for(int i=0;i&lt;M;i++)  
         h = ( h*R + key.charAt(i) ) % Q  
@@ -430,7 +430,7 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 ⇒ x_i+1 can be computed in constant time: <br />
 <img alt="" src="static/algoII_week4_2/pasted_image018.png" /><br />
 ⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </p>
-<div class="codehilite"><pre>public static int search(String txt, String pat){  
+<div class="codehilite"><pre><span></span>public static int search(String txt, String pat){  
     int N=txt.length(), M=pat.length();  
     long pathash = hash(pat, M);      
     int RM = R^(M-1);// &lt;-- pseudo code, store value of R^(M-1)  
@@ -534,18 +534,68 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -555,7 +605,42 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -569,148 +654,13 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/weka.html">weka</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
     <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/codejam.html">codejam</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/deep learning.html">deep learning</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -720,17 +670,67 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code>  </p>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
+    <a href="./tag/LP.html">LP</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

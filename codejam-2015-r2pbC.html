@@ -201,7 +201,7 @@ Large dataset <br />
 </ul>
 </blockquote>
 <p>我的codejam程序模板长这样:    </p>
-<div class="codehilite"><pre>def readval(typ=int):   
+<div class="codehilite"><pre><span></span>def readval(typ=int):   
     return typ( raw_input() )
 
 def readvals(typ=int):   
@@ -221,20 +221,20 @@ if __name__==&#39;__main__&#39;:
 <p>在small set(N=20) 中, 对于那18个未知语言的句子, 每句可能是英语或法语. 那么穷举所有可能性, 然后选择双语单词最少的即可. 2^18约等于几十万 , 按说python还是可以handle的 (2^10=1k, 2^ 20=1M, python每秒大约能循环几百万次).    </p>
 <h2>naive bruteforce</h2>
 <p>生成所有的可能性组合, python的<code>itertools</code>包里提供了<a href="https://docs.python.org/2/library/itertools.html#itertools.combinations">combinations</a>函数, <code>combinations(iterable, r)</code>返回所有在iterable中大小为r的子集(的迭代器):    </p>
-<div class="codehilite"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="s">&#39;ABCD&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="k">print</span> <span class="n">c</span>   
-<span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">)</span>   
-<span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">)</span>   
-<span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">)</span>   
-<span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">)</span>   
-<span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">)</span>   
-<span class="p">(</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>   
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="s1">&#39;ABCD&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="k">print</span> <span class="n">c</span>   
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span>   
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>   
+<span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)</span>   
+<span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>   
+<span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)</span>   
+<span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>用<code>combination</code>函数即可实现枚举每句话是英语还是法语的功能.    </p>
 <p>当每句话是英语还是法语已经确定以后, 可以用集合取交集的方法(<code>set1.intersection(set2)</code>)得到两种语言一共有多少个重复的单词. 程序长这样:    </p>
-<div class="codehilite"><pre>def testcase(cas): # not fast enough...   
+<div class="codehilite"><pre><span></span>def testcase(cas): # not fast enough...   
     N = readval()   
     En = set( readvals(str) )   
     Fr = set( readvals(str) )   
@@ -267,7 +267,7 @@ if __name__==&#39;__main__&#39;:
 <li>两种语言的词汇表进行union/intersection: 假设共有K个不同的单词, 那么用一个K位的bitmap即可表示一种语言包含了哪些单词. 然后集合的union和intersection即可表示为OR和AND的逻辑运算.    </li>
 </ul>
 <p>bit manipulation蛮subtle的, 不过习惯了就好... 另外python的integer可以任意长度, 不用像C/java那样考虑bitmap位数大于64的情况, 还是非常方便的. 代码如下:    </p>
-<div class="codehilite"><pre>def testcase(cas): # use bitmap instead of set to speedup for small case !!    
+<div class="codehilite"><pre><span></span>def testcase(cas): # use bitmap instead of set to speedup for small case !!    
     N = readval()   
     scent = []; allwords = set()   
     for i in xrange(N):    
@@ -304,21 +304,21 @@ if __name__==&#39;__main__&#39;:
 </ul>
 <p>在这样构造的图里计算maxflow即可得到mincut, 也就是题目的答案...    </p>
 <p>在实现这个解法的时候用到了networkx这个包, 它提供了比bgl好用100倍的接口(虽然也比bgl慢差不多100倍 ==...). <em>任何hashable的object都可以用来作为节点的index</em>, 所以写起来非常舒服, 15行搞定:    </p>
-<div class="codehilite"><pre><span class="k">def</span> <span class="nf">testcase_maxflow</span><span class="p">(</span><span class="n">ind</span><span class="p">):</span> <span class="c"># using maxflow !   </span>
+<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">testcase_maxflow</span><span class="p">(</span><span class="n">ind</span><span class="p">):</span> <span class="c1"># using maxflow !   </span>
     <span class="n">INF</span> <span class="o">=</span> <span class="mf">1e10</span>   
     <span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>   
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>   
     <span class="n">N</span> <span class="o">=</span> <span class="n">readval</span><span class="p">()</span>   
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>   
         <span class="n">words</span> <span class="o">=</span> <span class="n">readvals</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>   
-        <span class="n">si</span> <span class="o">=</span> <span class="s">&#39;sent-</span><span class="si">%d</span><span class="s">&#39;</span><span class="o">%</span><span class="n">i</span>   
+        <span class="n">si</span> <span class="o">=</span> <span class="s1">&#39;sent-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">i</span>   
         <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">si</span> <span class="p">)</span>   
         <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>    
-            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">wd</span><span class="o">+</span><span class="s">&#39;_l&#39;</span><span class="p">,</span> <span class="n">wd</span><span class="o">+</span><span class="s">&#39;_r&#39;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span> <span class="p">)</span>   
-            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">si</span><span class="p">,</span> <span class="n">wd</span><span class="o">+</span><span class="s">&#39;_l&#39;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">INF</span> <span class="p">)</span>   
-            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">wd</span><span class="o">+</span><span class="s">&#39;_r&#39;</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">INF</span> <span class="p">)</span>   
-    <span class="n">flow_value</span><span class="p">,</span> <span class="n">flow_dict</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">maximum_flow</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s">&#39;sent-0&#39;</span><span class="p">,</span> <span class="s">&#39;sent-1&#39;</span><span class="p">)</span>   
-    <span class="k">print</span> <span class="s">&#39;Case #</span><span class="si">%d</span><span class="s">: </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">ind</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">flow_value</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">wd</span><span class="o">+</span><span class="s1">&#39;_l&#39;</span><span class="p">,</span> <span class="n">wd</span><span class="o">+</span><span class="s1">&#39;_r&#39;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span> <span class="p">)</span>   
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">si</span><span class="p">,</span> <span class="n">wd</span><span class="o">+</span><span class="s1">&#39;_l&#39;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">INF</span> <span class="p">)</span>   
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">wd</span><span class="o">+</span><span class="s1">&#39;_r&#39;</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">INF</span> <span class="p">)</span>   
+    <span class="n">flow_value</span><span class="p">,</span> <span class="n">flow_dict</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">maximum_flow</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;sent-0&#39;</span><span class="p">,</span> <span class="s1">&#39;sent-1&#39;</span><span class="p">)</span>   
+    <span class="k">print</span> <span class="s1">&#39;Case #</span><span class="si">%d</span><span class="s1">: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">ind</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">flow_value</span><span class="p">)</span> <span class="p">)</span>
 </pre></div>
 
 
@@ -326,19 +326,19 @@ if __name__==&#39;__main__&#39;:
 <h1>法3: 线性规划 (integer) linear programming</h1>
 <p>写完上面那个解法以后, 我又看了看<a href="https://www.go-hero.net/jam/15/name/linguo">大神</a>的解法, 发现他居然用的是<a href="https://pythonhosted.org/PuLP/pulp.html">pulp</a>(python线性规划的包), 于是自己想了一下, 这个问题确实可以用线性规划来建模 !    </p>
 <p>首先说一句pulp这个包, 它提供了非常好用的接口来构造LP问题, 增加约束或者定义objective只要用<code>prob+=[expression]</code>就好了, 可以说比AMPL好用不少... 下面是一个简单的例子:    </p>
-<div class="codehilite"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pulp</span> <span class="kn">import</span> <span class="o">*</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;Integer&#39;</span><span class="p">)</span> <span class="c"># var category can be integer   </span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="s">&quot;myProblem&quot;</span><span class="p">,</span> <span class="n">LpMinimize</span><span class="p">)</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="c"># add constraint   </span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="c"># add objective   </span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">status</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span> <span class="c"># solve using default solver   </span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">status</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">GLPK</span><span class="p">(</span><span class="n">msg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span> <span class="c"># or use glpk solver   </span>
+<div class="codehilite"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pulp</span> <span class="kn">import</span> <span class="o">*</span>   
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>   
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">LpVariable</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">)</span> <span class="c1"># var category can be integer   </span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;myProblem&quot;</span><span class="p">,</span> <span class="n">LpMinimize</span><span class="p">)</span>   
+<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="c1"># add constraint   </span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">prob</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="c1"># add objective   </span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">status</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span> <span class="c1"># solve using default solver   </span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">status</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">GLPK</span><span class="p">(</span><span class="n">msg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span> <span class="c1"># or use glpk solver   </span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">LpStatus</span><span class="p">[</span><span class="n">status</span><span class="p">]</span>   
-<span class="s">&#39;Optimal&#39;</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">objective</span><span class="p">)</span> <span class="c"># see objective value   </span>
+<span class="s1">&#39;Optimal&#39;</span>   
+<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">objective</span><span class="p">)</span> <span class="c1"># see objective value   </span>
 <span class="o">-</span><span class="mf">8.0</span>   
-<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c"># see variable value    </span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># see variable value    </span>
 <span class="mf">2.0</span>
 </pre></div>
 
@@ -350,7 +350,7 @@ if __name__==&#39;__main__&#39;:
 (<a href="http://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp">这篇文章</a>总结了各种逻辑关系用线性规划的描述方式, 写的得非常详细. )   </p>
 <p>要最小化的目标函数就是 <code>sum(wef)</code> 了, 约束除了刚才那个<code>wef &gt;= we+wf-1</code>以外, 还要表达单词和句子之间的关系: 如果一个句子为英(法)语, 那么句子里的每一个单词都为英(法)语. 这是一个<code>se==&gt;we</code>的逻辑关系, 用线性约束表达为: <code>we&gt;=se</code>.    </p>
 <p>所以整个模型是:    </p>
-<div class="codehilite"><pre>Minimize sum(wef)   
+<div class="codehilite"><pre><span></span>Minimize sum(wef)   
 st:   
 we &gt;= se   
 wf &gt;= (1-se)   
@@ -360,7 +360,7 @@ Se[0]==1, Se[1]==0
 
 
 <p>用pulp编写的代码如下:    </p>
-<div class="codehilite"><pre>def testcase(ind):# formulate it as linear programming    
+<div class="codehilite"><pre><span></span>def testcase(ind):# formulate it as linear programming    
     N = readval()   
     sentc = []   
     allwords = set()   
@@ -396,7 +396,7 @@ Se[0]==1, Se[1]==0
 
 <p>以上代码在small上运行约1分钟, large约3分钟.    </p>
 <p>另外我发现<a href="https://www.go-hero.net/jam/15/name/liutianren">另一个大神</a>代码里没有用Binary/Integer的lp变量, 也就是说他用的是连续的线性规划! 当我把变量的定义改成:    </p>
-<div class="codehilite"><pre>Se = [ LpVariable(&#39;Se_&#39;+str(i), 0, 1) for i in xrange(N) ] # Se[i] = indicator(scentence i is english)   
+<div class="codehilite"><pre><span></span>Se = [ LpVariable(&#39;Se_&#39;+str(i), 0, 1) for i in xrange(N) ] # Se[i] = indicator(scentence i is english)   
 we = [ LpVariable(&#39;we_&#39;+str(j), 0) for j in xrange(M) ] # we[j] = indicator(word j is english)    
 wf = [ LpVariable(&#39;wf_&#39;+str(j), 0) for j in xrange(M) ] # wf[j] = indicator(word j is french)    
 wef = [ LpVariable(&#39;wef_&#39;+str(j), 0) for j in xrange(M) ] # wef[j] = indicator(word j is BOTH en and fr)
@@ -490,18 +490,68 @@ wef = [ LpVariable(&#39;wef_&#39;+str(j), 0) for j in xrange(M) ] # wef[j] = ind
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -511,7 +561,42 @@ wef = [ LpVariable(&#39;wef_&#39;+str(j), 0) for j in xrange(M) ] # wef[j] = ind
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -525,148 +610,13 @@ wef = [ LpVariable(&#39;wef_&#39;+str(j), 0) for j in xrange(M) ] # wef[j] = ind
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/weka.html">weka</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
     <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/codejam.html">codejam</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/deep learning.html">deep learning</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -676,17 +626,67 @@ wef = [ LpVariable(&#39;wef_&#39;+str(j), 0) for j in xrange(M) ] # wef[j] = ind
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
+    <a href="./tag/LP.html">LP</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

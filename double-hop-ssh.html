@@ -3,7 +3,7 @@
   <head>
     <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     <meta charset="utf-8">
-    <title>Linux下pdf文件的压缩与合并</title>
+    <title>两层ssh连接(2-hop ssh connection)代理配置</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -139,8 +139,8 @@
 			<h1>
 				<a href=""
 					rel="bookmark" 
-					title="Permalink to Linux下pdf文件的压缩与合并">
-					Linux下pdf文件的压缩与合并 
+					title="Permalink to 两层ssh连接(2-hop ssh connection)代理配置">
+					两层ssh连接(2-hop ssh connection)代理配置 
 				</a>
 				 
 			</h1> 
@@ -149,12 +149,12 @@
 		<div class="well">
 			<footer class="post-info">
 <span class="label">Date</span>
-<abbr class="published" title="2014-10-29T00:00:00">
-	<i class="icon-calendar"></i>Wed, 29 Oct 2014
+<abbr class="published" title="2016-07-26T00:00:00">
+	<i class="icon-calendar"></i>Tue, 26 Jul 2016
 </abbr>
 
 <span class="label">By</span>
-<a href="./"><i class="icon-user"></i>mx</a>
+<a href="./"><i class="icon-user"></i>syf</a>
 
 <span class="label">Category</span>
 <a href="./"><i class="icon-folder-open"></i>soft</a>. 
@@ -164,29 +164,48 @@
 
 <span class="label">Tags</span> 
 
-	<a href="./tag/linux.html"><i class="icon-tag"></i>linux</a>
+	<a href="./tag/ssh.html"><i class="icon-tag"></i>ssh</a>
 
 
 
 </footer><!-- /.post-info -->
 		</div>
-		<h2>压缩pdf</h2>
-<p>用<code>convert</code> 只简单指定resize好像不太好使: </p>
-<p><code>convert -resize 50% input.pdf out.pdf</code></p>
-<p>用<code>gs</code>(<a href="http://blog.sciencenet.cn/blog-467089-773990.html">http://blog.sciencenet.cn/blog-467089-773990.html</a>):</p>
-<p><code>gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dQUIET -dBATCH -sOutputFile=out.pdf input.pdf</code> </p>
-<p>后来发现老是compress以后的结果不好, 看到<a href="http://superuser.com/questions/427851/batch-resize-and-compress-pdf-files">这篇帖子</a>发现<strong>convert有好多选项</strong>. 最后实验下来这样convert的效果很好, 既能压缩文件, 又保证了压缩后还足够清楚:</p>
-<p><code>convert -density 200 -compress jpeg input.pdf out.pdf</code></p>
-<h2>合并pdf</h2>
-<p>之前<a href="http://x-wei.github.io/%E5%9B%BE%E7%89%87%E5%90%88%E5%B9%B6%E4%B8%BApdf,%20%E5%90%88%E5%B9%B6mp3,%20%E6%89%B9%E9%87%8F%E5%8E%8B%E7%BC%A9%E5%9B%BE%E7%89%87.html">博客</a>写过, 用pdfjoin: </p>
-<p><code>pdfjoin $(ls *.pdf|sort -n) --outfile out.pdf</code></p>
+		<p>问题: 
+现在本地ssh连接eth的cscs服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到cscs. 现在配置本地的ssh代理使之可以一次完成. </p>
+<h1>第一步: 生成sshkey</h1>
+<div class="codehilite"><pre><span></span>ssh-keygen
+cat ~/.ssh/id_rsa.pub | ssh your_username@ela.cscs.ch &#39;cat &gt;&gt; ~/.ssh/authorized_keys&#39;
+ssh your_username@ela.cscs.ch
+</pre></div>
+
+
+<h1>第二步: 修改.ssh/config文件内容</h1>
+<p>用文本编辑器打开<code>.ssh/config</code>文件, 添加如下内容: </p>
+<div class="codehilite"><pre><span></span>Host daint
+    Hostname daint101
+    User your_username
+    ForwardAgent yes
+    ForwardX11 yes
+    Port 22
+    IdentityFile ~/.ssh/id_rsa
+    ProxyCommand ssh -q -Y your_username@ela.cscs.ch netcat %h %p -w 10
+</pre></div>
+
+
+<h1>直连第二层ssh</h1>
+<p>进行了以上配置以后, 连接到cscs就不再需要两层ssh的命令了, 直接:  </p>
+<p><code>$ssh daint</code></p>
+<p>即可 !</p>
+<h1>用rsync同步远程文件夹</h1>
+<p>例子: 把本地文件夹同步到第二层ssh的目录下.</p>
+<p><code>rsync -a --progress ~/Downloads/nn_coref-master daint:/scratch/daint/your_username/code</code></p>
 		</div><!-- /.entry-content -->
 		
 		<div class="comments">
 		<h2>Comments !</h2>
 			<div id="disqus_thread"></div>
 			<script type="text/javascript">
-			   var disqus_identifier = "Linux下pdf文件的压缩与合并.html";
+			   var disqus_identifier = "double-hop-ssh.html";
 			   (function() {
 				var dsq = document.createElement('script'); 
 				dsq.type = 'text/javascript'; dsq.async = true;

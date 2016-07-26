@@ -191,7 +191,7 @@ add(-5, 9, abs)  </p>
 </ul>
 <h3>map()</h3>
 <p><code>map()</code>是 Python 内置的高阶函数，它接收一个函数 f 和一个 list，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 并返回。map()函数不改变原有的 list，而是返回一个新的 list。  </p>
-<div class="codehilite"><pre>def format_name(s):  
+<div class="codehilite"><pre><span></span>def format_name(s):  
     return s.title()  
 print map(format_name, [&#39;adam&#39;, &#39;LISA&#39;, &#39;barT&#39;])
 </pre></div>
@@ -210,7 +210,7 @@ Apply function of two arguments cumulatively to the items of iterable, from left
 <h3>返回函数</h3>
 <p>在函数内部定义一个函数 然后返回这个内部定义的函数. <br />
 <em>返回函数可以把一些计算延迟执行</em>  </p>
-<div class="codehilite"><pre>def calc_sum(lst):  
+<div class="codehilite"><pre><span></span>def calc_sum(lst):  
     def lazy_sum():  
         return sum(lst)  
     return lazy_sum
@@ -218,21 +218,21 @@ Apply function of two arguments cumulatively to the items of iterable, from left
 
 
 <p>调用<code>calc_sum()</code>并没有计算出结果，而是返回函数:  </p>
-<div class="codehilite"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">calc_sum</span><span class="p">(</span><span class="cp">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="cp">]</span><span class="p">)</span>  
-<span class="o">&gt;&gt;&gt;</span> <span class="nx">f</span>  
-<span class="o">&lt;</span><span class="kd">function</span> <span class="nx">lazy_sum</span> <span class="nx">at</span> <span class="mh">0x1037bfaa0</span><span class="o">&gt;</span>
+<div class="codehilite"><pre><span></span>&gt;&gt;&gt; f = calc_sum([1, 2, 3, 4])  
+&gt;&gt;&gt; f  
+&lt;function lazy_sum at 0x1037bfaa0&gt;
 </pre></div>
 
 
 <p>对返回的函数进行调用时，才计算出结果:  </p>
-<div class="codehilite"><pre>&gt;&gt;&gt; f()  
+<div class="codehilite"><pre><span></span>&gt;&gt;&gt; f()  
 10
 </pre></div>
 
 
 <h3>闭包</h3>
 <p>函数<code>f</code>内部定义的函数<code>g</code>无法被外部访问 → 可以防止其他代码调用<code>g</code>. </p>
-<div class="codehilite"><pre>def calc_sum(lst):  
+<div class="codehilite"><pre><span></span>def calc_sum(lst):  
     def lazy_sum():  
         return sum(lst)  
     return lazy_sum
@@ -243,7 +243,7 @@ Apply function of two arguments cumulatively to the items of iterable, from left
 像这种<strong>内层函数引用了外层函数的变量（参数也算变量），然后返回内层函数</strong>的情况，称为闭包（Closure）。  </p>
 <p>闭包的特点是返回的函数还引用了外层函数的局部变量，所以，要正确使用闭包，就要<em>确保引用的局部变量在函数返回后不能变</em>。<br />
 ex:   </p>
-<div class="codehilite"><pre># 希望一次返回3个函数，分别计算1x1,2x2,3x3:  
+<div class="codehilite"><pre><span></span># 希望一次返回3个函数，分别计算1x1,2x2,3x3:  
 def count():  
     fs = []  
     for i in range(1, 4):  
@@ -257,7 +257,7 @@ f1, f2, f3 = count()
 
 <p>以为调用f1()，f2()和f3()结果应该是1，4，9，但实际结果全部都是 9 !  原因就是当count()函数返回了3个函数时，这3个函数所引用的变量 i 的值已经变成了3。<em>函数只在执行时才去获取外层参数i</em>, 由于f1、f2、f3并没有被调用，所以，此时他们并未计算 i*i，当 f1 被调用时i已经变为3... <br />
 上面的正确写法是:   </p>
-<div class="codehilite"><pre>def count():  
+<div class="codehilite"><pre><span></span>def count():  
     fs = []  
     for i in range(1, 4):  
         def f(j=i):   
@@ -273,7 +273,7 @@ print f1(), f2(), f3()
 <h3>匿名函数</h3>
 <p>Python中，对匿名函数提供了有限支持。 <br />
 关键字<code>lambda</code> 表示匿名函数，冒号前面的 x 表示函数参数。匿名函数有个限制，就是只能有一个表达式，不写return，返回值就是该表达式的结果。  </p>
-<div class="codehilite"><pre>map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9])  
+<div class="codehilite"><pre><span></span>map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9])  
 myabs = lambda x: -x if x &lt; 0 else x   
 &gt;&gt;&gt; myabs(-1)  
 1
@@ -285,7 +285,7 @@ myabs = lambda x: -x if x &lt; 0 else x
 ex. 希望函数调用时打印调用日志<br />
 <img alt="" src="static/imooc_py_functional/pasted_image.png" /><br />
 ⇒ 方法: 高阶函数: <strong>接收要修改的函数, 进行包装后返回包装过的新函数.</strong>    </p>
-<div class="codehilite"><pre>def new_f(f):  
+<div class="codehilite"><pre><span></span>def new_f(f):  
     def fn(x):  
         print &#39;call %s()&#39; % f.__name__  
         return f(x)  
@@ -307,7 +307,7 @@ ex. 希望函数调用时打印调用日志<br />
         return fn  </p>
 <h3>带参数decorator</h3>
 <p>接上面的log函数, 如果有的函数非常重要，希望打印出'[INFO] call xxx()...'，有的函数不太重要，希望打印出'[DEBUG] call xxx()...'，这时，log函数本身就需要传入'INFO'或'DEBUG'这样的参数，类似这样：  </p>
-<div class="codehilite"><pre>@log(&#39;DEBUG&#39;)  
+<div class="codehilite"><pre><span></span>@log(&#39;DEBUG&#39;)  
 def my_func():  
     pass
 </pre></div>
@@ -316,13 +316,13 @@ def my_func():
 <p>把上面的定义翻译成高阶函数的调用，就是：<br />
 <code>my_func = log('DEBUG')(my_func)</code><br />
 再展开一下：  </p>
-<div class="codehilite"><pre>log_decorator = log(&#39;DEBUG&#39;)  
+<div class="codehilite"><pre><span></span>log_decorator = log(&#39;DEBUG&#39;)  
 my_func = log_decorator(my_func)
 </pre></div>
 
 
 <p>相当于:   </p>
-<div class="codehilite"><pre>log_decorator = log(&#39;DEBUG&#39;)  
+<div class="codehilite"><pre><span></span>log_decorator = log(&#39;DEBUG&#39;)  
 @log_decorator  
 def my_func():  
     pass
@@ -330,7 +330,7 @@ def my_func():
 
 
 <p>所以，带参数的log函数<em>首先<strong><em>返回一个decorator函数</em></strong>，再让这个decorator函数接收my_func并返回新函数</em>：  </p>
-<div class="codehilite"><pre>def log(prefix):  
+<div class="codehilite"><pre><span></span>def log(prefix):  
     def log_decorator(f):  
         def wrapper(*args, **kw):  
             print &#39;[%s] %s()...&#39; % (prefix, f.__name__)  
@@ -348,7 +348,7 @@ print test()
 <h3>完善decorator</h3>
 <p>上面的decorator会修改函数名:   </p>
 <ul>
-<li>在没有decorator的情况下，打印函数名：  <div class="codehilite"><pre>def f1(x):  
+<li>在没有decorator的情况下，打印函数名：  <div class="codehilite"><pre><span></span>def f1(x):  
     pass  
 print f1.__name__
 </pre></div>
@@ -358,7 +358,7 @@ print f1.__name__
 </ul>
 <p>⇒ 输出： f1  </p>
 <ul>
-<li>有decorator的情况下，再打印函数名：  <div class="codehilite"><pre>def log(f):  
+<li>有decorator的情况下，再打印函数名：  <div class="codehilite"><pre><span></span>def log(f):  
     def wrapper(*args, **kw):  
         print &#39;call...&#39;  
         return f(*args, **kw)  
@@ -374,7 +374,7 @@ print f2.__name__
 </ul>
 <p>⇒ 输出： wrapper  </p>
 <p>这对于那些依赖函数名的代码就会失效。decorator还改变了函数的<code>__doc__</code>等其它属性。如果要让调用者看不出一个函数经过了@decorator的“改造”，就需要<em>把原函数的一些属性复制到新函数中</em>：  </p>
-<div class="codehilite"><pre>def log(f):  
+<div class="codehilite"><pre><span></span>def log(f):  
     def wrapper(*args, **kw):  
         print &#39;call...&#39;  
         return f(*args, **kw)  
@@ -385,27 +385,27 @@ print f2.__name__
 
 
 <p>这样写很不方便, Python内置的<code>functools</code>可以用来自动化完成这个“复制”的任务：  </p>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">functools</span>  
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>  
 <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>  
     <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  
-        <span class="k">print</span> <span class="s">&#39;call...&#39;</span>  
+        <span class="k">print</span> <span class="s1">&#39;call...&#39;</span>  
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>  
     <span class="k">return</span> <span class="n">wrapper</span>
 </pre></div>
 
 
 <p><code>functools.wraps(f)</code>是一个装饰器函数, 目的是为了把最后返回的函数再次装饰(复制f的属性进去)... 所以对于带参数的装饰器, 应该在最里面返回的wrapper函数前加上<code>@functools.wraps(f)</code>  </p>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">functools</span>  
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">functools</span>  
 <span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">unit</span><span class="p">):</span>  
     <span class="k">def</span> <span class="nf">perf_decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>  
         <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  
-            <span class="k">print</span> <span class="s">&#39;call </span><span class="si">%s</span><span class="s">() in </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span><span class="o">%</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span> <span class="p">)</span> <span class="c">#closure  </span>
+            <span class="k">print</span> <span class="s1">&#39;call </span><span class="si">%s</span><span class="s1">() in </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span> <span class="p">)</span> <span class="c1">#closure  </span>
             <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>  
         <span class="k">return</span> <span class="n">wrapper</span>  
     <span class="k">return</span> <span class="n">perf_decorator</span>  
-<span class="nd">@performance</span><span class="p">(</span><span class="s">&#39;ms&#39;</span><span class="p">)</span>  
+<span class="nd">@performance</span><span class="p">(</span><span class="s1">&#39;ms&#39;</span><span class="p">)</span>  
 <span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>  
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>  
 <span class="k">print</span> <span class="n">factorial</span><span class="o">.</span><span class="n">__name__</span>
@@ -414,7 +414,7 @@ print f2.__name__
 
 <h3>偏函数</h3>
 <p>假设要转换大量的二进制字符串，每次都传入<code>int(x, base=2)</code>非常麻烦，于是，我们想到，可以定义一个int2()的函数，默认把base=2传进去：  </p>
-<div class="codehilite"><pre>def int2(x, base=2):  
+<div class="codehilite"><pre><span></span>def int2(x, base=2):  
     return int(x, base)
 </pre></div>
 
@@ -424,15 +424,15 @@ print f2.__name__
 <p><code>functools.partial(func[,*args][, **keywords])</code><br />
 Return a new partial object which when called will behave like func called with the positional arguments args and keyword arguments keywords.  </p>
 </blockquote>
-<div class="codehilite"><pre><span class="kn">import</span> <span class="nn">functools</span>  
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>  
 <span class="n">int2</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  
-<span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s">&#39;1000000&#39;</span><span class="p">)</span>  
+<span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s1">&#39;1000000&#39;</span><span class="p">)</span>  
 <span class="mi">64</span>  
-<span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s">&#39;1010101&#39;</span><span class="p">)</span>  
+<span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s1">&#39;1010101&#39;</span><span class="p">)</span>  
 <span class="mi">85</span>
 
 <span class="n">sorted_ignore_case</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="nb">sorted</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>  
-<span class="k">print</span> <span class="n">sorted_ignore_case</span><span class="p">([</span><span class="s">&#39;bob&#39;</span><span class="p">,</span> <span class="s">&#39;about&#39;</span><span class="p">,</span> <span class="s">&#39;Zoo&#39;</span><span class="p">,</span> <span class="s">&#39;Credit&#39;</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">sorted_ignore_case</span><span class="p">([</span><span class="s1">&#39;bob&#39;</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="s1">&#39;Zoo&#39;</span><span class="p">,</span> <span class="s1">&#39;Credit&#39;</span><span class="p">])</span>
 </pre></div>
 		</div><!-- /.entry-content -->
 		
@@ -516,18 +516,68 @@ Return a new partial object which when called will behave like func called with 
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -537,7 +587,42 @@ Return a new partial object which when called will behave like func called with 
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -551,148 +636,13 @@ Return a new partial object which when called will behave like func called with 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/weka.html">weka</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
     <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/codejam.html">codejam</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/deep learning.html">deep learning</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -702,17 +652,67 @@ Return a new partial object which when called will behave like func called with 
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
+    <a href="./tag/LP.html">LP</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 

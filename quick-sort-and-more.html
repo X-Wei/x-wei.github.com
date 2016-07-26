@@ -193,7 +193,7 @@
 <img alt="" src="static/quick-sort-and-more/pasted_image005.png" /><br />
 所以pivot的位置就是j, 函数返回j即可.    </p>
 <p>java实现:   </p>
-<div class="codehilite"><pre>int partition(int[] a, int lo, int hi){  
+<div class="codehilite"><pre><span></span>int partition(int[] a, int lo, int hi){  
     int pivot = a[lo], i=lo, j=hi;  
     while(true){  
         for(;j&gt;=lo &amp;&amp; a[j]&gt;=pivot;j--);// move j to a point where a[j]&lt;pivot  
@@ -218,7 +218,7 @@
 <p>qsort之所以快, 是因为每次都能够按照pivot分为大致同样长度的两个子数组(所以每次子问题的规模除以二), 所以复杂度为<strong>O(NlogN)</strong>. 最坏情况下, 如果每次两个子数组中可能有一个长度为0, 那么每次子问题的规模只减少了1, 所以复杂度变成了quadratic <strong>O(N2)</strong>.  </p>
 <p>为了防止这种最坏情况的出现, 可以在一切开始之前把数组打乱顺序, 所以这一节讨论快速shuffle的算法. 最经典的就是Knuth的shuffle算法了, 算法很简答, 描述为: for(k=1 to n): 每次把第k个元素和前k个元素中的随机一个元素交换.  </p>
 <p>代码只有两行:  </p>
-<div class="codehilite"><pre>void shuffle(int[] a){  
+<div class="codehilite"><pre><span></span>void shuffle(int[] a){  
     for(int K=0; K&lt;a.length; K++)  
         swap(K, Random.nextInt(K+1));  
 }
@@ -228,16 +228,16 @@
 <p>关于算法的正确性, 其实只要证明"元素i在shuffle后最终位于位置i"的概率为1/N即可, 不难证明.   </p>
 <h2>quick sort</h2>
 <p>好了 有了以上两个辅助函数就可以写qsort函数了:   </p>
-<div class="codehilite"><pre><span class="k">void</span> <span class="nx">qsort</span><span class="p">(</span><span class="kr">int</span><span class="cp">[]</span> <span class="nx">a</span><span class="p">,</span> <span class="kr">int</span> <span class="nx">lo</span><span class="p">,</span> <span class="kr">int</span> <span class="nx">hi</span><span class="p">){</span><span class="c1">//recursive helper function  </span>
-    <span class="k">if</span><span class="p">(</span><span class="nx">lo</span><span class="o">&gt;=</span><span class="nx">hi</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  
-    <span class="kr">int</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">partition</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">lo</span><span class="p">,</span> <span class="nx">hi</span><span class="p">);</span>  
-    <span class="nx">qsort</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">lo</span><span class="p">,</span> <span class="nx">p</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>  
-    <span class="nx">qsort</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">hi</span><span class="p">,</span> <span class="nx">p</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>  
-<span class="p">}</span>  
-<span class="k">void</span> <span class="nx">qsort</span><span class="p">(</span><span class="kr">int</span><span class="cp">[]</span> <span class="nx">a</span><span class="p">){</span>  
-    <span class="nx">shuffle</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>  
-    <span class="nx">qsort</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>  
-<span class="p">}</span>
+<div class="codehilite"><pre><span></span>void qsort(int[] a, int lo, int hi){//recursive helper function  
+    if(lo&gt;=hi) return;  
+    int p = partition(a, lo, hi);  
+    qsort(a, lo, p-1);  
+    qsort(a, hi, p+1);  
+}  
+void qsort(int[] a){  
+    shuffle(a);  
+    qsort(a, 0, a.length-1);  
+}
 </pre></div>
 
 
@@ -248,7 +248,7 @@
 <p>之前说过, <code>partition()</code>函数的返回值表示pivot在排序好的数组中的位置(rank), 这个消息非常有用: 中值只不过是rank等于长度除以2的元素而已.   </p>
 <p>为了寻找rank等于k的元素, 我们用partition函数可以每次把问题规模缩小: 如果partition()=p<k, 那么pivot左边的subarray不必考虑, 如果p>k那么右边subarray不用考虑, 如果数组事先shuffle过了的话, 问题规模每次缩小一半.   </p>
 <p>定义一个函数, 寻找rank等于k的元素, 代码类似于二分查找:   </p>
-<div class="codehilite"><pre>int findKth(int[] a, int k){  
+<div class="codehilite"><pre><span></span>int findKth(int[] a, int k){  
     shuffle(a);  
     int lo=0, hi=a.length-1;  
     while(lo&lt;hi){  
@@ -279,7 +279,7 @@
 <p><img alt="" src="static/quick-sort-and-more/pasted_image006.png" /><br />
 这个图很有助于写代码: <br />
 <img alt="" src="static/quick-sort-and-more/pasted_image007.png" />  </p>
-<div class="codehilite"><pre>void qsort3way(int[] a, int lo, int hi){  
+<div class="codehilite"><pre><span></span>void qsort3way(int[] a, int lo, int hi){  
     if(hi&lt;=lo) return;  
     int lt=lo, i=lo, gt=hi, pivot=a[lo];  
     while (i&lt;=gt){// [i,gt] is unseen elements  
@@ -380,18 +380,68 @@
 
 <li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
 
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
 <span class="tag-2">
     <a href="./tag/ml.html">ml</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-4">
-    <a href="./tag/ssh.html">ssh</a> 
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -401,7 +451,42 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -415,148 +500,13 @@
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/weka.html">weka</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-2">
     <a href="./tag/google.html">google</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/codejam.html">codejam</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
 <span class="tag-4">
     <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/deep learning.html">deep learning</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
@@ -566,17 +516,67 @@
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
+    <a href="./tag/LP.html">LP</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
 <span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
 </span>
 <!-- <i class="icon-tag icon-large"></i> -->
 
