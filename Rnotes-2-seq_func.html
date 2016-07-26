@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>R语言从入门到放弃 (2). 向量(列表)及函数</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to R语言从入门到放弃 (2). 向量(列表)及函数">
+					R语言从入门到放弃 (2). 向量(列表)及函数 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-07-26T23:48:00">
+	<i class="icon-calendar"></i>Tue, 26 Jul 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/R.html"><i class="icon-tag"></i>R</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以<code>1</code>等价于<code>c(1)</code>.  </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> a <span class="o">&lt;-</span> <span class="m">1</span>
+<span class="o">&gt;</span> a
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> <span class="kp">length</span><span class="p">(</span>a<span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> a<span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> <span class="kp">typeof</span><span class="p">(</span>a<span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;double&quot;</span> <span class="c1"># means &quot;double vector&quot; (I think)</span>
+<span class="o">&gt;</span> <span class="m">1</span> <span class="o">==</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="kc">TRUE</span>
+</pre></div>
+
+
+<h2>fancy indexing</h2>
+<p>R的vector/list/matrix支持类似numpy(稍有不同)的fancy indexing, 以下是例子: </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> v <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span>
+<span class="o">&gt;</span> v<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span> <span class="c1"># slicing</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span>
+<span class="o">&gt;</span> v<span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)]</span> <span class="c1"># EXCLUDING first 3 elements</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">4</span>  <span class="m">5</span>  <span class="m">6</span>  <span class="m">7</span>  <span class="m">8</span>  <span class="m">9</span> <span class="m">10</span>
+<span class="o">&gt;</span> v<span class="p">[</span><span class="m">-1</span><span class="p">]</span> <span class="c1"># EXCLUDING first element</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">2</span>  <span class="m">3</span>  <span class="m">4</span>  <span class="m">5</span>  <span class="m">6</span>  <span class="m">7</span>  <span class="m">8</span>  <span class="m">9</span> <span class="m">10</span>
+<span class="o">&gt;</span> v<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">9</span><span class="p">)]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">2</span> <span class="m">4</span> <span class="m">9</span>
+<span class="o">&gt;</span> v<span class="p">[</span>v<span class="o">%%</span><span class="m">2</span><span class="o">==</span><span class="m">0</span><span class="p">]</span> <span class="c1"># indexing using logical array</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">2</span>  <span class="m">4</span>  <span class="m">6</span>  <span class="m">8</span> <span class="m">10</span>
+
+<span class="c1"># works also for lists</span>
+<span class="o">&gt;</span> l <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="s">&quot;aa&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span> l<span class="p">[</span><span class="m">-1</span><span class="p">]</span>
+<span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">2</span>
+
+<span class="p">[[</span><span class="m">2</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">3</span>
+
+<span class="p">[[</span><span class="m">3</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">&quot;aa&quot;</span>
+</pre></div>
+
+
+<p>以下是矩阵的fancy indexing例子: </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> mat <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">9</span><span class="p">,</span> nrow<span class="o">=</span><span class="m">3</span><span class="p">,</span> ncol<span class="o">=</span><span class="m">3</span><span class="p">)</span>
+<span class="o">&gt;</span> mat
+     <span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="p">[,</span><span class="m">2</span><span class="p">]</span> <span class="p">[,</span><span class="m">3</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">,]</span>    <span class="m">1</span>    <span class="m">4</span>    <span class="m">7</span>
+<span class="p">[</span><span class="m">2</span><span class="p">,]</span>    <span class="m">2</span>    <span class="m">5</span>    <span class="m">8</span>
+<span class="p">[</span><span class="m">3</span><span class="p">,]</span>    <span class="m">3</span>    <span class="m">6</span>    <span class="m">9</span>
+<span class="o">&gt;</span> mat<span class="p">[</span><span class="m">1</span><span class="p">,]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span> <span class="m">4</span> <span class="m">7</span>
+<span class="o">&gt;</span> mat<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">)]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">4</span> <span class="m">7</span>
+<span class="o">&gt;</span> mat<span class="p">[</span><span class="m">-1</span><span class="p">,]</span>
+     <span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="p">[,</span><span class="m">2</span><span class="p">]</span> <span class="p">[,</span><span class="m">3</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">,]</span>    <span class="m">2</span>    <span class="m">5</span>    <span class="m">8</span>
+<span class="p">[</span><span class="m">2</span><span class="p">,]</span>    <span class="m">3</span>    <span class="m">6</span>    <span class="m">9</span>
+<span class="o">&gt;</span> mat<span class="p">[,</span><span class="m">2</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span>
+</pre></div>
+
+
+<h2>names / dimnames</h2>
+<p>好玩的是可以用<code>names</code>/<code>dimnames</code>函数给每个值加上一个名字: </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="kp">names</span><span class="p">(</span>v<span class="p">)</span> <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">&quot;elem&quot;</span><span class="p">,</span> sep<span class="o">=</span><span class="s">&quot;-&quot;</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>v<span class="p">))</span>
+<span class="o">&gt;</span> v
+ elem<span class="m">-1</span>  elem<span class="m">-2</span>  elem<span class="m">-3</span>  elem<span class="m">-4</span>  elem<span class="m">-5</span>  elem<span class="m">-6</span>  elem<span class="m">-7</span>  elem<span class="m">-8</span>  elem<span class="m">-9</span> elem<span class="m">-10</span> 
+      <span class="m">1</span>       <span class="m">2</span>       <span class="m">3</span>       <span class="m">4</span>       <span class="m">5</span>       <span class="m">6</span>       <span class="m">7</span>       <span class="m">8</span>       <span class="m">9</span>      <span class="m">10</span> 
+<span class="o">&gt;</span> <span class="kp">names</span><span class="p">(</span>v<span class="p">)</span> <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">&quot;elem&quot;</span><span class="p">,</span> sep<span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>v<span class="p">))</span>
+<span class="o">&gt;</span> v
+ elem_1  elem_2  elem_3  elem_4  elem_5  elem_6  elem_7  elem_8  elem_9 elem_10 
+      <span class="m">1</span>       <span class="m">2</span>       <span class="m">3</span>       <span class="m">4</span>       <span class="m">5</span>       <span class="m">6</span>       <span class="m">7</span>       <span class="m">8</span>       <span class="m">9</span>      <span class="m">10</span> 
+<span class="o">&gt;</span> v<span class="o">$</span>elem_1
+Error <span class="kr">in</span> v<span class="o">$</span>elem_1 <span class="o">:</span> <span class="o">$</span> operator is invalid <span class="kr">for</span> atomic vectors
+<span class="o">&gt;</span> v<span class="p">[</span><span class="s">&quot;elem_1&quot;</span><span class="p">]</span>
+elem_1 
+     <span class="m">1</span>
+<span class="o">&gt;</span> <span class="kp">names</span><span class="p">(</span>l<span class="p">)</span> <span class="o">&lt;-</span> <span class="kp">paste</span><span class="p">(</span><span class="s">&quot;elem&quot;</span><span class="p">,</span> sep<span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>l<span class="p">))</span>
+<span class="o">&gt;</span> l<span class="o">$</span>elem_1
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> l<span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="o">$</span>elem_1
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+<span class="o">&gt;</span> l<span class="p">[</span><span class="s">&quot;elem_1&quot;</span><span class="p">]</span>
+<span class="o">$</span>elem_1
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+</pre></div>
+
+
+<p>上面例子看到, vector不能使用<code>$</code>来获得"field", 但是list可以, 这是list和vector的一个区别. </p>
+<p>下面是矩阵的例子: </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="kp">dimnames</span><span class="p">(</span>mat<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span> <span class="kp">paste</span><span class="p">(</span><span class="s">&quot;row&quot;</span><span class="p">,</span>sep<span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>mat<span class="p">)),</span> <span class="kp">paste</span><span class="p">(</span><span class="s">&quot;col&quot;</span><span class="p">,</span>sep<span class="o">=</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="kp">ncol</span><span class="p">(</span>mat<span class="p">))</span> <span class="p">)</span>
+<span class="o">&gt;</span> mat
+      col_1 col_2 col_3
+row_1     <span class="m">1</span>     <span class="m">4</span>     <span class="m">7</span>
+row_2     <span class="m">2</span>     <span class="m">5</span>     <span class="m">8</span>
+row_3     <span class="m">3</span>     <span class="m">6</span>     <span class="m">9</span>
+<span class="o">&gt;</span> mat<span class="p">[</span><span class="s">&quot;row_1&quot;</span><span class="p">,</span><span class="s">&quot;col_1&quot;</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+</pre></div>
+
+
+<h2>c()</h2>
+<p>关于<code>c</code>这个函数, 值得一提的除了它自动"展开"参数的list/vector以外(上次博客提到), 还有就是它会自动cast, 文档里是这么说的: </p>
+<blockquote>
+<p>The output type is determined from the highest type of the components in the hierarchy NULL &lt; raw &lt; logical &lt; integer &lt; double &lt; complex &lt; character &lt; list &lt; expression. </p>
+</blockquote>
+<p>其中的logical, integer, character都属于(atomic) vector, list和他们不同, 见后文. </p>
+<p>以下是例子: </p>
+<div class="codehilite"><pre><span></span>&gt; c(1,2,TRUE) # logical &lt; integer
+[1] 1 2 1
+&gt; c(1,2,&quot;char&quot;) # integer &lt; character
+[1] &quot;1&quot;    &quot;2&quot;    &quot;char&quot;
+&gt; c(1,2,list(1)) # integer &lt; list
+[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 1
+</pre></div>
+
+
+<h2>vector VS list ( matrix VS data.frame )</h2>
+<p>用于集合主要是vector和list, 他们的区别是: <strong>vector只能存放同样类型的元素, 而list可以存放不同类型的元素</strong><em>.</em> </p>
+<p>vector可以是: numeric, logical, char... 类比一下, vector类似java里的array, list类似python的list. </p>
+<p>另外访问第i个元素, vector是 <code>v[i]</code>, 而list需要用两个括号 <code>l[[i]]</code>(<code>l[i]</code>还是一个list, <code>l[[i]]</code>才是想要的东西... )</p>
+<p>看例子: </p>
+<div class="codehilite"><pre><span></span>&gt; c(1,2,3) # numeric vector
+[1] 1 2 3
+&gt; c(1,2,&quot;a&quot;) # c() 自动cast把前两个数字转成了char, 变成一个char类型的vector
+[1] &quot;1&quot; &quot;2&quot; &quot;a&quot;
+&gt; list(1,2,&quot;a&quot;) # list
+[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] &quot;a&quot;
+</pre></div>
+
+
+<p>同理, matrix和data.frame也类似, matrix的所有元素必须相同, 而data.frame可以每一列各不相同(不过一列之中需要相同). 另外data.frame也支持用<code>$</code>选取一列, matrix则不支持.</p>
+<h2>functions</h2>
+<p>R的函数定义为如下形式, 注意, 函数体的最后一句就是返回值, 不用显示写"return" (类似scala).</p>
+<div class="codehilite"><pre><span></span>myfunnction <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>params<span class="p">,</span> <span class="kc">...</span><span class="p">){</span>
+  <span class="c1"># ...</span>
+  the.return.value
+<span class="p">}</span>
+</pre></div>
+
+
+<p>另外注意到上面函数定义, 参数里有三个点<code>...</code>, 这个不是必须的, 它的的作用见下一节. </p>
+<p>R是函数式语言: 一个function可以作为参数传递, 例子就是<code>apply</code>, 见下一节.</p>
+<h2>apply/lapply/sapply</h2>
+<h3>apply</h3>
+<p>apply这个函数的doc写到用法为: </p>
+<p><code>apply(X, MARGIN, FUN, ...)</code></p>
+<p><code>X</code>是操作的数据(<strong>一般为matrix</strong>), <code>MARGIN</code>为选择对行或列操作(类似numpy的<code>axis</code>参数), <code>FUN</code>就是作为参数传入的函数了. </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> mat <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">12</span><span class="p">,</span> nrow<span class="o">=</span><span class="m">3</span><span class="p">,</span> ncol<span class="o">=</span><span class="m">4</span><span class="p">)</span>
+<span class="o">&gt;</span> mat
+     <span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="p">[,</span><span class="m">2</span><span class="p">]</span> <span class="p">[,</span><span class="m">3</span><span class="p">]</span> <span class="p">[,</span><span class="m">4</span><span class="p">]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">,]</span>    <span class="m">1</span>    <span class="m">4</span>    <span class="m">7</span>   <span class="m">10</span>
+<span class="p">[</span><span class="m">2</span><span class="p">,]</span>    <span class="m">2</span>    <span class="m">5</span>    <span class="m">8</span>   <span class="m">11</span>
+<span class="p">[</span><span class="m">3</span><span class="p">,]</span>    <span class="m">3</span>    <span class="m">6</span>    <span class="m">9</span>   <span class="m">12</span>
+<span class="o">&gt;</span> <span class="kp">apply</span><span class="p">(</span>mat<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="kp">sum</span><span class="p">)</span> <span class="c1"># apply on row</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">22</span> <span class="m">26</span> <span class="m">30</span>
+<span class="o">&gt;</span> <span class="kp">apply</span><span class="p">(</span>mat<span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="kp">sum</span><span class="p">)</span> <span class="c1"># apply on col</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">6</span> <span class="m">15</span> <span class="m">24</span> <span class="m">33</span>
+</pre></div>
+
+
+<p>这里类似做reduce操作, 而MARGIN就是指定要reduce哪一个维度. </p>
+<p>另外文档里的三个点<code>...</code>很有意思, 它是<strong>参数FUN的额外参数</strong> ! 下面是一个例子, 给FUN传入了一个匿名函数: <code>function(x,power) sum(x^power)</code>, 它计算x里元素的power次方, 然后加起来. 所以在apply里可以指定FUN这个<code>power</code>参数的数值, 这就对应着apply用法里的这三个点<code>...</code>.</p>
+<div class="codehilite"><pre><span></span>&gt; apply(mat, 1, function(x,power) sum(x^power), power=1 )
+[1] 22 26 30
+&gt; apply(mat, 1, function(x,power) sum(x^power), power=2 )
+[1] 166 214 270
+</pre></div>
+
+
+<h3>lapply/sapply</h3>
+<p>如果说上面<code>apply</code>一般用在matrix上, 用于将一个matrix <strong>reduce</strong>为向量的话, <code>lapply/sapply</code>就是<strong>map</strong>操作了: 作用在一个vector/list上, 返回对每一个元素进行操作后的新list. </p>
+<p>它们的区别大概是: lapply返回list, sapply返回vector. </p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> sq <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> x<span class="o">^</span><span class="m">2</span>
+<span class="o">&gt;</span> l <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">)</span>
+<span class="o">&gt;</span> v <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span>
+<span class="o">&gt;</span> <span class="kp">lapply</span><span class="p">(</span>v<span class="p">,</span> sq<span class="p">)</span> <span class="c1"># lapply returns a list</span>
+<span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+
+<span class="p">[[</span><span class="m">2</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">4</span>
+
+<span class="p">[[</span><span class="m">3</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">9</span>
+
+<span class="p">[[</span><span class="m">4</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">16</span>
+
+<span class="o">&gt;</span> <span class="kp">lapply</span><span class="p">(</span>l<span class="p">,</span> sq<span class="p">)</span> <span class="c1"># lapply returns a list</span>
+<span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span>
+
+<span class="p">[[</span><span class="m">2</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">4</span>
+
+<span class="p">[[</span><span class="m">3</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">9</span>
+
+<span class="p">[[</span><span class="m">4</span><span class="p">]]</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">16</span>
+
+<span class="o">&gt;</span> <span class="kp">sapply</span><span class="p">(</span>v<span class="p">,</span> sq<span class="p">)</span> <span class="c1"># sapply returns a vector</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">1</span>  <span class="m">4</span>  <span class="m">9</span> <span class="m">16</span>
+<span class="o">&gt;</span> <span class="kp">sapply</span><span class="p">(</span>l<span class="p">,</span> sq<span class="p">)</span> <span class="c1"># sapply returns a vector</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span>  <span class="m">1</span>  <span class="m">4</span>  <span class="m">9</span> <span class="m">16</span>
+</pre></div>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "Rnotes-2-seq_func.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/R.html">R</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

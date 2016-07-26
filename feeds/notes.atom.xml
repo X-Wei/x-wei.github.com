@@ -1,5 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-26T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (1) 基础</title><link href="http://x-wei.github.io/Rnotes-1-basics.html" rel="alternate"></link><published>2016-07-26T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-1-basics.html</id><summary type="html">&lt;p&gt;这个"从入门到放弃"系列是为了应付eth的&lt;a href="https://stat.ethz.ch/education/semesters/ss2016/CompStat"&gt;computational statistics&lt;/a&gt;这门课... 对R无爱... &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-26T23:48:00+02:00</updated><entry><title>R语言从入门到放弃 (2). 向量(列表)及函数</title><link href="http://x-wei.github.io/Rnotes-2-seq_func.html" rel="alternate"></link><published>2016-07-26T23:48:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-2-seq_func.html</id><summary type="html">&lt;p&gt;首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以&lt;code&gt;1&lt;/code&gt;等价于&lt;code&gt;c(1)&lt;/code&gt;.  &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;length&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;a&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;typeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;a&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;double&amp;quot;&lt;/span&gt; &lt;span class="c1"&gt;# means &amp;quot;double vector&amp;quot; (I think)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="kc"&gt;TRUE&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;fancy indexing&lt;/h2&gt;
+&lt;p&gt;R的vector/list/matrix支持类似numpy(稍有不同)的fancy indexing, 以下是例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# slicing&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="c1"&gt;# EXCLUDING first 3 elements&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;4&lt;/span&gt;  &lt;span class="m"&gt;5&lt;/span&gt;  &lt;span class="m"&gt;6&lt;/span&gt;  &lt;span class="m"&gt;7&lt;/span&gt;  &lt;span class="m"&gt;8&lt;/span&gt;  &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# EXCLUDING first element&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;2&lt;/span&gt;  &lt;span class="m"&gt;3&lt;/span&gt;  &lt;span class="m"&gt;4&lt;/span&gt;  &lt;span class="m"&gt;5&lt;/span&gt;  &lt;span class="m"&gt;6&lt;/span&gt;  &lt;span class="m"&gt;7&lt;/span&gt;  &lt;span class="m"&gt;8&lt;/span&gt;  &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;9&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="m"&gt;9&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;v&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# indexing using logical array&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;2&lt;/span&gt;  &lt;span class="m"&gt;4&lt;/span&gt;  &lt;span class="m"&gt;6&lt;/span&gt;  &lt;span class="m"&gt;8&lt;/span&gt; &lt;span class="m"&gt;10&lt;/span&gt;
+
+&lt;span class="c1"&gt;# works also for lists&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;aa&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;aa&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;以下是矩阵的fancy indexing例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;matrix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; nrow&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; ncol&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat
+     &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;1&lt;/span&gt;    &lt;span class="m"&gt;4&lt;/span&gt;    &lt;span class="m"&gt;7&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;2&lt;/span&gt;    &lt;span class="m"&gt;5&lt;/span&gt;    &lt;span class="m"&gt;8&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;3&lt;/span&gt;    &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="m"&gt;9&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="m"&gt;7&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="m"&gt;7&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;
+     &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;2&lt;/span&gt;    &lt;span class="m"&gt;5&lt;/span&gt;    &lt;span class="m"&gt;8&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;3&lt;/span&gt;    &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="m"&gt;9&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat&lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt; &lt;span class="m"&gt;5&lt;/span&gt; &lt;span class="m"&gt;6&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;names / dimnames&lt;/h2&gt;
+&lt;p&gt;好玩的是可以用&lt;code&gt;names&lt;/code&gt;/&lt;code&gt;dimnames&lt;/code&gt;函数给每个值加上一个名字: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;elem&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; sep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;-&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;length&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v
+ elem&lt;span class="m"&gt;-1&lt;/span&gt;  elem&lt;span class="m"&gt;-2&lt;/span&gt;  elem&lt;span class="m"&gt;-3&lt;/span&gt;  elem&lt;span class="m"&gt;-4&lt;/span&gt;  elem&lt;span class="m"&gt;-5&lt;/span&gt;  elem&lt;span class="m"&gt;-6&lt;/span&gt;  elem&lt;span class="m"&gt;-7&lt;/span&gt;  elem&lt;span class="m"&gt;-8&lt;/span&gt;  elem&lt;span class="m"&gt;-9&lt;/span&gt; elem&lt;span class="m"&gt;-10&lt;/span&gt; 
+      &lt;span class="m"&gt;1&lt;/span&gt;       &lt;span class="m"&gt;2&lt;/span&gt;       &lt;span class="m"&gt;3&lt;/span&gt;       &lt;span class="m"&gt;4&lt;/span&gt;       &lt;span class="m"&gt;5&lt;/span&gt;       &lt;span class="m"&gt;6&lt;/span&gt;       &lt;span class="m"&gt;7&lt;/span&gt;       &lt;span class="m"&gt;8&lt;/span&gt;       &lt;span class="m"&gt;9&lt;/span&gt;      &lt;span class="m"&gt;10&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;elem&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; sep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;_&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;length&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v
+ elem_1  elem_2  elem_3  elem_4  elem_5  elem_6  elem_7  elem_8  elem_9 elem_10 
+      &lt;span class="m"&gt;1&lt;/span&gt;       &lt;span class="m"&gt;2&lt;/span&gt;       &lt;span class="m"&gt;3&lt;/span&gt;       &lt;span class="m"&gt;4&lt;/span&gt;       &lt;span class="m"&gt;5&lt;/span&gt;       &lt;span class="m"&gt;6&lt;/span&gt;       &lt;span class="m"&gt;7&lt;/span&gt;       &lt;span class="m"&gt;8&lt;/span&gt;       &lt;span class="m"&gt;9&lt;/span&gt;      &lt;span class="m"&gt;10&lt;/span&gt; 
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="o"&gt;$&lt;/span&gt;elem_1
+Error &lt;span class="kr"&gt;in&lt;/span&gt; v&lt;span class="o"&gt;$&lt;/span&gt;elem_1 &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; operator is invalid &lt;span class="kr"&gt;for&lt;/span&gt; atomic vectors
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;elem_1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+elem_1 
+     &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;l&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;elem&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; sep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;_&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;length&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;l&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l&lt;span class="o"&gt;$&lt;/span&gt;elem_1
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;elem_1
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;elem_1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;$&lt;/span&gt;elem_1
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;上面例子看到, vector不能使用&lt;code&gt;$&lt;/code&gt;来获得"field", 但是list可以, 这是list和vector的一个区别. &lt;/p&gt;
+&lt;p&gt;下面是矩阵的例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;dimnames&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;mat&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;row&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;sep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;_&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;nrow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;mat&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="kp"&gt;paste&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;col&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;sep&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;_&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;ncol&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;mat&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat
+      col_1 col_2 col_3
+row_1     &lt;span class="m"&gt;1&lt;/span&gt;     &lt;span class="m"&gt;4&lt;/span&gt;     &lt;span class="m"&gt;7&lt;/span&gt;
+row_2     &lt;span class="m"&gt;2&lt;/span&gt;     &lt;span class="m"&gt;5&lt;/span&gt;     &lt;span class="m"&gt;8&lt;/span&gt;
+row_3     &lt;span class="m"&gt;3&lt;/span&gt;     &lt;span class="m"&gt;6&lt;/span&gt;     &lt;span class="m"&gt;9&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;row_1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;col_1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;c()&lt;/h2&gt;
+&lt;p&gt;关于&lt;code&gt;c&lt;/code&gt;这个函数, 值得一提的除了它自动"展开"参数的list/vector以外(上次博客提到), 还有就是它会自动cast, 文档里是这么说的: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The output type is determined from the highest type of the components in the hierarchy NULL &amp;lt; raw &amp;lt; logical &amp;lt; integer &amp;lt; double &amp;lt; complex &amp;lt; character &amp;lt; list &amp;lt; expression. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其中的logical, integer, character都属于(atomic) vector, list和他们不同, 见后文. &lt;/p&gt;
+&lt;p&gt;以下是例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; c(1,2,TRUE) # logical &amp;lt; integer
+[1] 1 2 1
+&amp;gt; c(1,2,&amp;quot;char&amp;quot;) # integer &amp;lt; character
+[1] &amp;quot;1&amp;quot;    &amp;quot;2&amp;quot;    &amp;quot;char&amp;quot;
+&amp;gt; c(1,2,list(1)) # integer &amp;lt; list
+[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;vector VS list ( matrix VS data.frame )&lt;/h2&gt;
+&lt;p&gt;用于集合主要是vector和list, 他们的区别是: &lt;strong&gt;vector只能存放同样类型的元素, 而list可以存放不同类型的元素&lt;/strong&gt;&lt;em&gt;.&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;vector可以是: numeric, logical, char... 类比一下, vector类似java里的array, list类似python的list. &lt;/p&gt;
+&lt;p&gt;另外访问第i个元素, vector是 &lt;code&gt;v[i]&lt;/code&gt;, 而list需要用两个括号 &lt;code&gt;l[[i]]&lt;/code&gt;(&lt;code&gt;l[i]&lt;/code&gt;还是一个list, &lt;code&gt;l[[i]]&lt;/code&gt;才是想要的东西... )&lt;/p&gt;
+&lt;p&gt;看例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; c(1,2,3) # numeric vector
+[1] 1 2 3
+&amp;gt; c(1,2,&amp;quot;a&amp;quot;) # c() 自动cast把前两个数字转成了char, 变成一个char类型的vector
+[1] &amp;quot;1&amp;quot; &amp;quot;2&amp;quot; &amp;quot;a&amp;quot;
+&amp;gt; list(1,2,&amp;quot;a&amp;quot;) # list
+[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] &amp;quot;a&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;同理, matrix和data.frame也类似, matrix的所有元素必须相同, 而data.frame可以每一列各不相同(不过一列之中需要相同). 另外data.frame也支持用&lt;code&gt;$&lt;/code&gt;选取一列, matrix则不支持.&lt;/p&gt;
+&lt;h2&gt;functions&lt;/h2&gt;
+&lt;p&gt;R的函数定义为如下形式, 注意, 函数体的最后一句就是返回值, 不用显示写"return" (类似scala).&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;myfunnction &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;params&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;...&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+  &lt;span class="c1"&gt;# ...&lt;/span&gt;
+  the.return.value
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外注意到上面函数定义, 参数里有三个点&lt;code&gt;...&lt;/code&gt;, 这个不是必须的, 它的的作用见下一节. &lt;/p&gt;
+&lt;p&gt;R是函数式语言: 一个function可以作为参数传递, 例子就是&lt;code&gt;apply&lt;/code&gt;, 见下一节.&lt;/p&gt;
+&lt;h2&gt;apply/lapply/sapply&lt;/h2&gt;
+&lt;h3&gt;apply&lt;/h3&gt;
+&lt;p&gt;apply这个函数的doc写到用法为: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;apply(X, MARGIN, FUN, ...)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;X&lt;/code&gt;是操作的数据(&lt;strong&gt;一般为matrix&lt;/strong&gt;), &lt;code&gt;MARGIN&lt;/code&gt;为选择对行或列操作(类似numpy的&lt;code&gt;axis&lt;/code&gt;参数), &lt;code&gt;FUN&lt;/code&gt;就是作为参数传入的函数了. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;matrix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; nrow&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; ncol&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; mat
+     &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;[,&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;1&lt;/span&gt;    &lt;span class="m"&gt;4&lt;/span&gt;    &lt;span class="m"&gt;7&lt;/span&gt;   &lt;span class="m"&gt;10&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;2&lt;/span&gt;    &lt;span class="m"&gt;5&lt;/span&gt;    &lt;span class="m"&gt;8&lt;/span&gt;   &lt;span class="m"&gt;11&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;    &lt;span class="m"&gt;3&lt;/span&gt;    &lt;span class="m"&gt;6&lt;/span&gt;    &lt;span class="m"&gt;9&lt;/span&gt;   &lt;span class="m"&gt;12&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;mat&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# apply on row&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;22&lt;/span&gt; &lt;span class="m"&gt;26&lt;/span&gt; &lt;span class="m"&gt;30&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;mat&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# apply on col&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;6&lt;/span&gt; &lt;span class="m"&gt;15&lt;/span&gt; &lt;span class="m"&gt;24&lt;/span&gt; &lt;span class="m"&gt;33&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这里类似做reduce操作, 而MARGIN就是指定要reduce哪一个维度. &lt;/p&gt;
+&lt;p&gt;另外文档里的三个点&lt;code&gt;...&lt;/code&gt;很有意思, 它是&lt;strong&gt;参数FUN的额外参数&lt;/strong&gt; ! 下面是一个例子, 给FUN传入了一个匿名函数: &lt;code&gt;function(x,power) sum(x^power)&lt;/code&gt;, 它计算x里元素的power次方, 然后加起来. 所以在apply里可以指定FUN这个&lt;code&gt;power&lt;/code&gt;参数的数值, 这就对应着apply用法里的这三个点&lt;code&gt;...&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; apply(mat, 1, function(x,power) sum(x^power), power=1 )
+[1] 22 26 30
+&amp;gt; apply(mat, 1, function(x,power) sum(x^power), power=2 )
+[1] 166 214 270
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;lapply/sapply&lt;/h3&gt;
+&lt;p&gt;如果说上面&lt;code&gt;apply&lt;/code&gt;一般用在matrix上, 用于将一个matrix &lt;strong&gt;reduce&lt;/strong&gt;为向量的话, &lt;code&gt;lapply/sapply&lt;/code&gt;就是&lt;strong&gt;map&lt;/strong&gt;操作了: 作用在一个vector/list上, 返回对每一个元素进行操作后的新list. &lt;/p&gt;
+&lt;p&gt;它们的区别大概是: lapply返回list, sapply返回vector. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; sq &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt; x&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; l &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; v &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;lapply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;,&lt;/span&gt; sq&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# lapply returns a list&lt;/span&gt;
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;9&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;16&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;lapply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;l&lt;span class="p"&gt;,&lt;/span&gt; sq&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# lapply returns a list&lt;/span&gt;
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;9&lt;/span&gt;
+
+&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;16&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;sapply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="p"&gt;,&lt;/span&gt; sq&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# sapply returns a vector&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;1&lt;/span&gt;  &lt;span class="m"&gt;4&lt;/span&gt;  &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="m"&gt;16&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;sapply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;l&lt;span class="p"&gt;,&lt;/span&gt; sq&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# sapply returns a vector&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="m"&gt;1&lt;/span&gt;  &lt;span class="m"&gt;4&lt;/span&gt;  &lt;span class="m"&gt;9&lt;/span&gt; &lt;span class="m"&gt;16&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="R"></category></entry><entry><title>R语言从入门到放弃 (1). 基础</title><link href="http://x-wei.github.io/Rnotes-1-basics.html" rel="alternate"></link><published>2016-07-26T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-1-basics.html</id><summary type="html">&lt;p&gt;这个"从入门到放弃"系列是为了应付eth的&lt;a href="https://stat.ethz.ch/education/semesters/ss2016/CompStat"&gt;computational statistics&lt;/a&gt;这门课... 对R无爱... &lt;/p&gt;
 &lt;h2&gt;terminology&lt;/h2&gt;
 &lt;p&gt;首先在stat里面有一些叫法和以前不太一样: &lt;/p&gt;
 &lt;ul&gt;
@@ -47,6 +269,8 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;p&gt;利用这个性质, 可以这样向一个列表(向量)添加东西: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;l &amp;lt;- c(l, new_element)&lt;/code&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;numeric(l)&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -138,7 +362,17 @@
 &lt;p&gt;这个函数可以用来给一个数组的前面加一个前缀, 看例子: &lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; paste(&amp;quot;a&amp;quot;, 1:5, sep=&amp;quot;-&amp;quot;)
 [1] &amp;quot;a-1&amp;quot; &amp;quot;a-2&amp;quot; &amp;quot;a-3&amp;quot; &amp;quot;a-4&amp;quot; &amp;quot;a-5&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="R"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec4: Types and Pattern Matching</title><link href="http://x-wei.github.io/progfun1_lec4_pattern_matching.html" rel="alternate"></link><published>2016-07-17T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec4_pattern_matching.html</id><summary type="html">&lt;h2&gt;4.1 - Objects Everywhere&lt;/h2&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;operators: with &lt;code&gt;%&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一些运算符需要用%包裹起来, 比如:
+- &lt;code&gt;%%&lt;/code&gt;: 取模
+- &lt;code&gt;%*%&lt;/code&gt;: 矩阵相乘
+- &lt;code&gt;%/%&lt;/code&gt;: 整数相除(类似java里int的除法)
+- &lt;code&gt;a %in% b&lt;/code&gt;: 判断元素是否属于b&lt;/p&gt;</summary><category term="R"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec4: Types and Pattern Matching</title><link href="http://x-wei.github.io/progfun1_lec4_pattern_matching.html" rel="alternate"></link><published>2016-07-17T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec4_pattern_matching.html</id><summary type="html">&lt;h2&gt;4.1 - Objects Everywhere&lt;/h2&gt;
 &lt;p&gt;scala is &lt;em&gt;pure&lt;/em&gt; OO: every value is an obj, every operation is a method of obj.  &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;scala.Int&lt;/code&gt; &lt;code&gt;scala.Boolean&lt;/code&gt; maps to JVM standard primitive types.  &lt;/p&gt;
 &lt;p&gt;Implement &lt;code&gt;Boolean&lt;/code&gt; withous primitive type in scala:  &lt;/p&gt;

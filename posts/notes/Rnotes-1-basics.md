@@ -1,4 +1,4 @@
-Title: R语言从入门到放弃 (1) 基础
+Title: R语言从入门到放弃 (1). 基础
 Date: 2016-07-26
 Slug:  Rnotes-1-basics
 Tags: R
@@ -76,7 +76,9 @@ combine values into vector/list.
 	> c(c(1,2),3)
 	[1] 1 2 3
 
+利用这个性质, 可以这样向一个列表(向量)添加东西: 
 
+``l <- c(l, new_element)``
 
 
 * ``numeric(l)``
@@ -177,6 +179,13 @@ which.max/min类似于argmax/min
 
 
 
+* operators: with ``%``
+
+一些运算符需要用%包裹起来, 比如:
+- ``%%``: 取模
+- ``%*%``: 矩阵相乘
+- ``%/%``: 整数相除(类似java里int的除法)
+- ``a %in% b``: 判断元素是否属于b
 
 
 
