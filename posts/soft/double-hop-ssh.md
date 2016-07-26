@@ -7,7 +7,7 @@ Author: syf
 
 
 问题: 
-现在本地ssh连接eth的cscs服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到cscs. 现在配置本地的ssh代理使之可以一次完成. 
+现在本地ssh连接eth的daint服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到daint. 现在配置本地的ssh代理使之可以一次完成. 
 
 第一步: 生成sshkey
 =============
