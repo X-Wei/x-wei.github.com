@@ -1,5 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-26T23:48:00+02:00</updated><entry><title>R语言从入门到放弃 (2). 向量(列表)及函数</title><link href="http://x-wei.github.io/Rnotes-2-seq_func.html" rel="alternate"></link><published>2016-07-26T23:48:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-2-seq_func.html</id><summary type="html">&lt;p&gt;首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以&lt;code&gt;1&lt;/code&gt;等价于&lt;code&gt;c(1)&lt;/code&gt;.  &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-28T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (3). 绘图</title><link href="http://x-wei.github.io/Rnotes-3-plot.html" rel="alternate"></link><published>2016-07-28T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-3-plot.html</id><summary type="html">&lt;p&gt;R关于绘图应该可以写很多, 不过这里只列举在compstat这门课里最经常用的几个函数. 关于R的绘图, 详细了解可以运行 &lt;code&gt;demo(graphics)&lt;/code&gt;或者 &lt;code&gt;example("plot")&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;R里面的绘图命令分为两类: 一类是"high-level"的"创建新图片"命令, 运行以后会新画一个图; 另一类则是"low-level"的命令, 不会创建新图片, 而只会在当前图片中修改添加(例如添加线条, 添加点等). 下面分别简单介绍, 最后再介绍其他一些绘图配置的命令. &lt;/p&gt;
+&lt;h1&gt;configurations/parameters&lt;/h1&gt;
+&lt;p&gt;介绍一下常用的参数意义, 以及画图的配置. 详细文档见&lt;code&gt;?par&lt;/code&gt;. 这些参数可以放在绘图命令中. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;par(mfrow=c(1,2))&lt;/code&gt;: 这个命令是设定画图的布局, 把放置图片的区域分为一行两列, 第一个plot的图片在左边, 第二个在右边. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;col&lt;/code&gt;: 设定画图(线段/点)的颜色, 可以用数字(col=1, 2, ...)也可以用英文(col="red", "gray", "blue"等)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lty&lt;/code&gt;: 设定线段类型, 例如lty=1为实线, lty=2为虚线&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pch&lt;/code&gt;: 设定点的类型(pch="point character")&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cex&lt;/code&gt;: 似乎是设定文字大小的, 一般设置cex=0.6&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;high level命令: plot&lt;/h1&gt;
+&lt;p&gt;创建新图片的命令主要就是plot这个函数 (其他还有如&lt;code&gt;hist&lt;/code&gt;, &lt;code&gt;contour&lt;/code&gt;, &lt;code&gt;boxplot&lt;/code&gt;, 不太常用, 看文档应该能会用). &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;plot&lt;/code&gt;的内容或者为一系列x和y坐标, 或者为一个formula(见plot.formula). : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;type&lt;/code&gt;: 指定画线(&lt;code&gt;type="l"&lt;/code&gt;)或者画点(&lt;code&gt;type="p"&lt;/code&gt;, 默认值). &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当type="l"的时候, 可以设定&lt;code&gt;lty&lt;/code&gt;参数, type="p"则可以设定&lt;code&gt;pch&lt;/code&gt;参数. &lt;/p&gt;
+&lt;p&gt;当&lt;code&gt;type="n"&lt;/code&gt;的时候表示不画任何东西 — 然后可以用后面介绍的low level命令往里面添加东西. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;main&lt;/code&gt;: 设定图片的标题&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xlab&lt;/code&gt;/&lt;code&gt;ylab&lt;/code&gt;: x/y轴的文字&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xlim/ylim&lt;/code&gt;: 设定x/y轴的范围, 例如: &lt;code&gt;xlim=c(0,10)&lt;/code&gt;. &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个参数比较重要, 如果想要根据数据来动态调整的话, 可以使用extendrange函数, 它返回比数据range稍大一点的range: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; extendrange(1:10)
+[1]  0.55 10.45
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;一个plot的例子:　&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;plot(x,　y,　type=&amp;quot;l&amp;quot;, lty=2, 
+    xlab=&amp;quot;x axis label&amp;quot;, ylab=&amp;quot;y=10sin(x)+x&amp;quot;, 
+    main=&amp;quot;sample plot&amp;quot;, 
+    xlim=c(-1, 101), ylim=extendrange(y)　)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="Rnotes-3-plot/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;low level命令&lt;/h1&gt;
+&lt;h3&gt;points&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;points(x, y)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;添加(多个)点, 这些点的坐标在x和y中. &lt;br /&gt;
+此时可以用&lt;code&gt;pch&lt;/code&gt;参数指定点的类型.&lt;/p&gt;
+&lt;h3&gt;lines&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;lines(x, y)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;添加多条线段, 这些线段依次经过一系列的点, 而点的xy坐标放在x和y中.&lt;br /&gt;
+此时可以设定&lt;code&gt;lty&lt;/code&gt;指定线段类型. &lt;/p&gt;
+&lt;h3&gt;abline&lt;/h3&gt;
+&lt;p&gt;这个函数作用是添加一条直线, 可以传入&lt;code&gt;lty&lt;/code&gt;参数. &lt;/p&gt;
+&lt;p&gt;abline有多种用法: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;abline(a=a, b=b)&lt;/code&gt;: 指定斜率和截距(y=ax+b)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;abline(h=y0)&lt;/code&gt;/&lt;code&gt;abline(v=x0)&lt;/code&gt;: 画水平/垂直的线&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;abline(reg=lm_fit)&lt;/code&gt;: reg为有coeff的对象(如一个线性fit), 画出fitted line&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;rug&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;rug(x)&lt;/code&gt;的作用是在x轴添加小线段, 位置为参数&lt;code&gt;x&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;lengend&lt;/h3&gt;
+&lt;p&gt;添加图例, 直接看例子:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;legend("topleft", c("data", "fitted"), lty=1:2)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这样在左上角(其他可选项见文档)添加图例, 文字"data"对应lty=1的数据, "fitted"对应lty=2的. &lt;/p&gt;
+&lt;h3&gt;example&lt;/h3&gt;
+&lt;p&gt;下面是一个low level绘图例子(在前一个图基础上添加各种东西): &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;newpts.x &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;50&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+newpts.y &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;40&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;70&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;60&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+points&lt;span class="p"&gt;(&lt;/span&gt;newpts.x&lt;span class="p"&gt;,&lt;/span&gt; newpts.y&lt;span class="p"&gt;,&lt;/span&gt; pch&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;blue&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+lines&lt;span class="p"&gt;(&lt;/span&gt;newpts.x&lt;span class="p"&gt;,&lt;/span&gt; newpts.y&lt;span class="p"&gt;,&lt;/span&gt; lty&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;red&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+abline&lt;span class="p"&gt;(&lt;/span&gt;h&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;gray&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+abline&lt;span class="p"&gt;(&lt;/span&gt;v&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;blue&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; lty&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+fit &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; lm&lt;span class="p"&gt;(&lt;/span&gt;y&lt;span class="o"&gt;~&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# fit to linear model&lt;/span&gt;
+abline&lt;span class="p"&gt;(&lt;/span&gt;fit&lt;span class="p"&gt;,&lt;/span&gt; lty&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+legend&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;topleft&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;linear fit&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;lines example&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;vertical line&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; 
+                  lty&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;rep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;black&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;blue&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="Rnotes-3-plot/pasted_image002.png" /&gt;&lt;/p&gt;</summary><category term="R"></category></entry><entry><title>R语言从入门到放弃 (2). 向量(列表)及函数</title><link href="http://x-wei.github.io/Rnotes-2-seq_func.html" rel="alternate"></link><published>2016-07-26T23:48:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-2-seq_func.html</id><summary type="html">&lt;p&gt;首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以&lt;code&gt;1&lt;/code&gt;等价于&lt;code&gt;c(1)&lt;/code&gt;.  &lt;/p&gt;
 &lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a
 &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
@@ -243,9 +329,14 @@ row_3     &lt;span class="m"&gt;3&lt;/span&gt;     &lt;span class="m"&gt;6&lt;/s
 &lt;li&gt;(r markdown编辑器窗口中) &lt;code&gt;ctrl+shift+enter&lt;/code&gt;: 运行当前code chunk&lt;/li&gt;
 &lt;li&gt;(选中一个函数名) &lt;code&gt;F1&lt;/code&gt;: 在右下角帮助窗口里显示相关文档. &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;获得文档也可以输入: &lt;code&gt;?funcname&lt;/code&gt; 或者 &lt;code&gt;help(funcname)&lt;/code&gt; 输入 &lt;code&gt;??funcname&lt;/code&gt; 则是非精确匹配的查找.
-另外获得例子可以使用&lt;code&gt;demo()&lt;/code&gt;, 例如: &lt;code&gt;demo(graphs)&lt;/code&gt;&lt;/p&gt;
 &lt;h2&gt;R 文档&lt;/h2&gt;
+&lt;p&gt;获得文档也可以输入: &lt;code&gt;?funcname&lt;/code&gt; 或者 &lt;code&gt;help(funcname)&lt;/code&gt; 输入 &lt;code&gt;??funcname&lt;/code&gt; 则是非精确匹配的查找.&lt;/p&gt;
+&lt;p&gt;另外获得例子可以使用&lt;code&gt;demo()&lt;/code&gt;/&lt;code&gt;example()&lt;/code&gt;, 例如: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;demo(graphs)
+example(&amp;quot;plot&amp;quot;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;p&gt;下面是一个R文档的例子(运行&lt;code&gt;?lm&lt;/code&gt;得到): &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="Rnotes-1-basics/pasted_image002.png" /&gt;&lt;/p&gt;
 &lt;p&gt;章节Arguments里介绍了每个参数的意义和用法, 然后往下翻还有一个Values章节: &lt;/p&gt;

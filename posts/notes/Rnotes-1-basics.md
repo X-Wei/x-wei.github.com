@@ -35,12 +35,19 @@ Rstudio
 * (选中一个函数名) ``F1``: 在右下角帮助窗口里显示相关文档. 
 
 
-获得文档也可以输入: ``?funcname`` 或者 ``help(funcname)`` 输入 ``??funcname`` 则是非精确匹配的查找.
-另外获得例子可以使用``demo()``, 例如: ``demo(graphs)``
 
 
 R 文档
 ----
+
+获得文档也可以输入: ``?funcname`` 或者 ``help(funcname)`` 输入 ``??funcname`` 则是非精确匹配的查找.
+
+另外获得例子可以使用``demo()``/``example()``, 例如: 
+
+	demo(graphs)
+	example("plot")
+
+
 下面是一个R文档的例子(运行``?lm``得到): 
 
 ![](Rnotes-1-basics/pasted_image002.png)
