@@ -11,7 +11,8 @@ terminology
 首先在stat里面有一些叫法和以前不太一样: 
 
 * ``predictor variable``: 就是机器学习里面说的feature (Xi)
-* ``response variable``: 就是要预测的东西(y)
+* ``design points``: 是机器学习里的训练数据(X1...Xn)
+* ``response variable``: 要预测的变量(y)
 
 
 Rstudio

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>R语言从入门到放弃 (4). 统计回归</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to R语言从入门到放弃 (4). 统计回归">
+					R语言从入门到放弃 (4). 统计回归 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-07-29T00:00:00">
+	<i class="icon-calendar"></i>Fri, 29 Jul 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/R.html"><i class="icon-tag"></i>R</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>R里面的统计函数有很多, 这里只用线性模型<code>lm</code>以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(<strong>NW, </strong><code>ksmooth</code>), Local Polynomial(<strong>LP, </strong><code>loess</code>), Smoothing Spline(<strong>SS, </strong><code>smooth.spline</code>). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. </p>
+<p>数据的形式是:　</p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image002.png" /></p>
+<p>目标是估计函数m(). 例子使用R自带的<code>cars</code>数据集, 它包含两列: 汽车速度speed和刹车距离dist. </p>
+<div class="codehilite"><pre><span></span><span class="x">&gt; data(cars)</span>
+<span class="x">&gt; summary(cars)</span>
+<span class="x">     speed           dist       </span>
+<span class="x"> Min.   : 4.0   Min.   :  2.00  </span>
+<span class="x"> 1st Qu.:12.0   1st Qu.: 26.00  </span>
+<span class="x"> Median :15.0   Median : 36.00  </span>
+<span class="x"> Mean   :15.4   Mean   : 42.98  </span>
+<span class="x"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span>
+<span class="x"> Max.   :25.0   Max.   :120.00  </span>
+<span class="x">&gt; ?cars</span>
+<span class="x">&gt; plot(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">)</span>
+</pre></div>
+
+
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image003.png" /></p>
+<h1>Theory</h1>
+<p>首先简单介绍一下这4个smoother的原理: </p>
+<h3>linear model</h3>
+<p>认为m是线性形式(包含intercept): </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image008.png" /></p>
+<h3>Nadaraya-Watson kernel smoother</h3>
+<p>m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image.png" /></p>
+<p>另外m_NW(x)还可以看做是最小化加权的square-error: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image001.png" /></p>
+<h3>Local Polynomial smoother</h3>
+<p>m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个<em>常数函数</em>mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image004.png" /></p>
+<p>最后m_LP在x处的取值为: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image005.png" /></p>
+<h3>Smoothing Spline</h3>
+<p>设定m的形式为knot在xi的spline, 加上penalize项: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image006.png" /></p>
+<p>另外SS可以看作是bandwidth随x变化的kernel smoother. </p>
+<h1>fit model</h1>
+<h3>formula</h3>
+<p><code>lm</code>和<code>loess</code>的文档里都提到参数为formula, 它大概是指示要fit的表达式形式. 这里面的加减号不是算数意义上的加减. 看例子: </p>
+<ul>
+<li><code>dist ~ speed</code>: 表示dist是speed的函数</li>
+<li><code>y ~ .</code> : 表示y是所有其他变量的函数</li>
+<li><code>y ~　x1+x2</code>: y 是x1和x2的函数</li>
+<li><code>y ~ x - 1</code>: y是x的函数, 且没有intercept项</li>
+</ul>
+<h3>fit models</h3>
+<p>这几个函数的fit写法各不相同, 有的要提供formula, 有的要提供x和y值, 需要看文档: </p>
+<div class="codehilite"><pre><span></span>fit.lm <span class="o">&lt;-</span> lm<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span>
+fit.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">)</span>
+fit.lp <span class="o">&lt;-</span> loess<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span>
+fit.ss <span class="o">&lt;-</span> smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">)</span>
+</pre></div>
+
+
+<h1>predict, fitted/residuals</h1>
+<p>predict的写法也是各不相同, 一般都是用<code>predict</code>函数, 然而这个函数在作用到不同smoother上面, 参数和返回值也都不一样......orz 关于<code>xx</code>smoother的predict函数用法参考?<code>predict.xx</code>. 最奇葩的是NW, 它不能用<code>predict</code>函数, 而要fit的时候在<code>skmooth</code>函数里传入<code>x.points</code>参数... </p>
+<p>看predict例子: </p>
+<div class="codehilite"><pre><span></span>newspeed <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">26</span>
+pred.lm <span class="o">&lt;-</span> predict<span class="p">(</span>fit.lm<span class="p">,</span> newdata <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>speed <span class="o">=</span> newspeed<span class="p">),</span> interval <span class="o">=</span> <span class="s">&quot;prediction&quot;</span><span class="p">)[,</span><span class="s">&quot;fit&quot;</span><span class="p">]</span>
+pred.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>newspeed<span class="p">)</span><span class="o">$</span>y
+pred.lp <span class="o">&lt;-</span> predict<span class="p">(</span>fit.lp<span class="p">,</span> newdata<span class="o">=</span>newspeed<span class="p">)</span>
+pred.ss <span class="o">&lt;-</span> predict<span class="p">(</span>fit.ss<span class="p">,</span> x<span class="o">=</span>newspeed<span class="p">)</span><span class="o">$</span>y
+</pre></div>
+
+
+<p>另外, 如果想看smoother在design points(Xi)处的预测值, 可以用<code>fitted</code>函数(NW还是不能用), 例子: </p>
+<div class="codehilite"><pre><span></span>fitted.lm <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.lm<span class="p">)</span>
+fitted.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>cars<span class="o">$</span>speed<span class="p">)</span><span class="o">$</span>y
+fitted.lp <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.lp<span class="p">)</span>
+fitted.ss <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.ss<span class="p">)</span>
+</pre></div>
+
+
+<p>要看每个点的residual ri=yi-yhat_i, 用<code>residuals</code>函数(NW不行):</p>
+<div class="codehilite"><pre><span></span>resd.lm <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.lm<span class="p">)</span>
+resd.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>cars<span class="o">$</span>dist<span class="p">)</span><span class="o">$</span>y <span class="o">-</span> cars<span class="o">$</span>dist 
+resd.lp <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.lp<span class="p">)</span>
+resd.ss <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.ss<span class="p">)</span>
+</pre></div>
+
+
+<p>可以画出这几个方法的fit: </p>
+<div class="codehilite"><pre><span></span>abline(fit.lm, lty=1, col=1) # linear model is just a straigh line
+lines(newspeed, pred.nw, lty=2, col=2)
+lines(newspeed, pred.lp, lty=3, col=3)
+lines(newspeed, pred.ss, lty=4, col=4)
+legend(&quot;topleft&quot;, c(&quot;lm&quot;, &quot;nw&quot;, &quot;lp&quot;, &quot;ss&quot;), lty=1:4, col=1:4)
+</pre></div>
+
+
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image009.png" /></p>
+<h1>bandwidth&amp;df: Hat Matrix</h1>
+<p>三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. </p>
+<p>自由度df是带宽的函数, smoother的df可以用它的<strong>hat matrix</strong> S计算出来. </p>
+<p>一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image010.png" /></p>
+<p>而df则是S的迹: df = tr(S). df的</p>
+<p>根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image012.png" /></p>
+<p>所以计算S可以用下面的代码: </p>
+<div class="codehilite"><pre><span></span>n <span class="o">&lt;-</span> <span class="kp">nrow</span><span class="p">(</span>cars<span class="p">)</span>
+Snw <span class="o">&lt;-</span> Slp <span class="o">&lt;-</span> Sss <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> nrow<span class="o">=</span>n<span class="p">,</span> ncol<span class="o">=</span>n<span class="p">)</span>
+In <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>n<span class="p">)</span> <span class="c1"># identity matrix</span>
+<span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">){</span>
+  y <span class="o">&lt;-</span> In<span class="p">[,</span>j<span class="p">]</span> <span class="c1"># unit vector ej</span>
+  Snw<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span>y<span class="p">,</span>kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">,</span> bandwidth <span class="o">=</span> <span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>x<span class="p">)</span><span class="o">$</span>y
+  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>loess<span class="p">(</span>y<span class="o">~</span>cars<span class="o">$</span>speed<span class="p">))</span>
+  Sss<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="p">))</span>
+<span class="p">}</span>
+
+df.nw <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Snw<span class="p">))</span>
+df.lp <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span>
+df.ss <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Sss<span class="p">))</span>
+</pre></div>
+
+
+<p>发现三个非参smoother的自由度不同, 所以上面画图的比较并没有意义, 为了让三者的自由度相同, 可以设定ksmooth/loess/smooth.spline的参数.</p>
+<p>控制带宽, Lp的参数为<code>span</code>, SS的参数为<code>spar</code>; 而指定想要的自由度则分别是<code>enp.target</code>和<code>df</code>. </p>
+<div class="codehilite"><pre><span></span><span class="kp">cat</span><span class="p">(</span><span class="s">&quot;let all 3 np smoother use the same df=&quot;</span><span class="p">,</span> df.nw<span class="p">)</span>
+Slp <span class="o">&lt;-</span> Sss <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> nrow<span class="o">=</span>n<span class="p">,</span> ncol<span class="o">=</span>n<span class="p">)</span>
+In <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>n<span class="p">)</span> <span class="c1"># identity matrix</span>
+<span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">){</span>
+  y <span class="o">&lt;-</span> In<span class="p">[,</span>j<span class="p">]</span>
+  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>loess<span class="p">(</span>y<span class="o">~</span>cars<span class="o">$</span>speed<span class="p">,</span> enp.target<span class="o">=</span>df.nw<span class="p">))</span>
+  Sss<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="p">,</span> df<span class="o">=</span>df.nw<span class="p">))</span>
+<span class="p">}</span>
+<span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span>
+<span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Sss<span class="p">))</span>
+</pre></div>
+
+
+<p>发现SS的df参数使用以后控制的非常接近NW的df了, 不过lp的df还是不够接近, 用span来控制应该更准确一些, 为了找到合适的span, 用以下代码来寻找使得df=df.nw的span取值: </p>
+<div class="codehilite"><pre><span></span>dflp <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>span<span class="p">,</span> val<span class="p">){</span>
+  <span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">)</span>
+  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> loess<span class="p">(</span>In<span class="p">[,</span>j<span class="p">]</span> <span class="o">~</span> cars<span class="o">$</span>speed<span class="p">,</span> span <span class="o">=</span> span<span class="p">)</span><span class="o">$</span>fitted
+  <span class="kr">return</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span> <span class="o">-</span> val<span class="p">)</span>
+<span class="p">}</span>
+chosen_span <span class="o">&lt;-</span> uniroot<span class="p">(</span>dflp<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> val <span class="o">=</span> df.nw<span class="p">)</span><span class="o">$</span>root
+</pre></div>
+
+
+<p>如果不用这个循环计算的话, 可以用<code>sfsmisc</code>包里的<code>hatMat</code>函数: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image013.png" />  </p>
+<p>参数<code>trace</code>取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
+需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: </p>
+<div class="codehilite"><pre><span></span><span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span>
+<span class="x">       pred.sm = function(x,y) </span>
+<span class="x">         ksmooth(x, y, kernel=&quot;normal&quot;, bandwidth=2, x.points=x)</span><span class="p">$</span><span class="nv">y</span><span class="x"> )</span>
+<span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span>
+<span class="x">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span>
+<span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span>
+<span class="x">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span>
+</pre></div>
+
+
+<h1>CV and Hat Matrix</h1>
+<p>为了预测smoother的performance, 用loo CV来估计MSE(mean sq err)的值. </p>
+<p>loo CV可以用下面这个通用函数得到(注意看对于参数的要求): </p>
+<div class="codehilite"><pre><span></span><span class="c1">##&#39; Calculates the LOO CV score for given data and regression prediction function</span>
+<span class="c1">##&#39;</span>
+<span class="c1">##&#39; @param reg.data: regression data; data.frame with columns &#39;x&#39;, &#39;y&#39;</span>
+<span class="c1">##&#39; @param reg.fcn:  regr.prediction function; arguments:</span>
+<span class="c1">##&#39;                    reg.x: regression x-values</span>
+<span class="c1">##&#39;                    reg.y: regression y-values</span>
+<span class="c1">##&#39;                    x:     x-value(s) of evaluation point(s)</span>
+<span class="c1">##&#39;                  value: prediction at point(s) x</span>
+<span class="c1">##&#39; @return LOOCV score</span>
+loocv <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>reg.data<span class="p">,</span> reg.fcn<span class="p">){</span>
+  <span class="c1">## Help function to calculate leave-one-out regression values</span>
+  loo.reg.value <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>i<span class="p">,</span> reg.data<span class="p">,</span> reg.fcn<span class="p">)</span>
+    <span class="kr">return</span><span class="p">(</span>reg.fcn<span class="p">(</span>reg.data<span class="o">$</span>x<span class="p">[</span><span class="o">-</span>i<span class="p">],</span> reg.data<span class="o">$</span>y<span class="p">[</span><span class="o">-</span>i<span class="p">],</span> reg.data<span class="o">$</span>x<span class="p">[</span>i<span class="p">]))</span>
+
+  <span class="c1">## Calculate LOO regression values using the help function above</span>
+  n <span class="o">&lt;-</span> <span class="kp">nrow</span><span class="p">(</span>reg.data<span class="p">)</span>
+  loo.values <span class="o">&lt;-</span> <span class="kp">sapply</span><span class="p">(</span><span class="m">1</span><span class="o">:</span>n<span class="p">,</span> loo.reg.value<span class="p">,</span> reg.data<span class="p">,</span> reg.fcn<span class="p">)</span>
+
+  <span class="c1">## Calculate and return MSE</span>
+  <span class="kr">return</span><span class="p">(</span> <span class="kp">mean</span><span class="p">(</span> <span class="p">(</span>loo.values<span class="o">-</span>reg.data<span class="o">$</span>y<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>比如, 为了计算NW的CV数值, 需要这样: </p>
+<div class="codehilite"><pre><span></span>regfcn.nw <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>regx<span class="p">,</span> regy<span class="p">,</span> x<span class="p">)</span>
+  ksmooth<span class="p">(</span>regx<span class="p">,</span> regy<span class="p">,</span> kernel<span class="o">=</span><span class="s">&quot;normal&quot;</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>x<span class="p">)</span><span class="o">$</span>y
+loocv<span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span>x<span class="o">=</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="o">=</span>cars<span class="o">$</span>dist<span class="p">),</span> regfcn.nw<span class="p">)</span>
+</pre></div>
+
+
+<p>不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image014.png" /></p>
+<p>试一下: </p>
+<div class="codehilite"><pre><span></span><span class="c1"># compute CV using shortcut euqation</span>
+yhat.nw <span class="o">&lt;-</span> Snw <span class="o">%*%</span> cars<span class="o">$</span>y <span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span>
+<span class="kp">mean</span><span class="p">(</span>  <span class="p">(</span> <span class="p">(</span>cars<span class="o">$</span>y<span class="o">-</span>yhat.nw<span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="kp">diag</span><span class="p">(</span>Snw<span class="p">))</span> <span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>得到的结果和之前用loocv一样, 都是253.9128 !~ </p>
+<p>或者只用df, 计算generalized CV, 公式为: </p>
+<p><img alt="" src="static/Rnotes-4-regression/pasted_image015.png" /></p>
+<div class="codehilite"><pre><span></span><span class="cp">#</span><span class="nf">compute</span><span class="x"> GCV</span>
+<span class="x">mean( (cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span>
+</pre></div>
+
+
+<p>得到gcv=269.3911, 和looCV也比较接近. </p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "Rnotes-4-regression.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/R.html">R</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

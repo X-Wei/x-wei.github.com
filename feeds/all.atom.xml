@@ -1,5 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-28T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (3). 绘图</title><link href="http://x-wei.github.io/Rnotes-3-plot.html" rel="alternate"></link><published>2016-07-28T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-3-plot.html</id><summary type="html">&lt;p&gt;R关于绘图应该可以写很多, 不过这里只列举在compstat这门课里最经常用的几个函数. 关于R的绘图, 详细了解可以运行 &lt;code&gt;demo(graphics)&lt;/code&gt;或者 &lt;code&gt;example("plot")&lt;/code&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-29T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (4). 统计回归</title><link href="http://x-wei.github.io/Rnotes-4-regression.html" rel="alternate"></link><published>2016-07-29T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-4-regression.html</id><summary type="html">&lt;p&gt;R里面的统计函数有很多, 这里只用线性模型&lt;code&gt;lm&lt;/code&gt;以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(&lt;strong&gt;NW, &lt;/strong&gt;&lt;code&gt;ksmooth&lt;/code&gt;), Local Polynomial(&lt;strong&gt;LP, &lt;/strong&gt;&lt;code&gt;loess&lt;/code&gt;), Smoothing Spline(&lt;strong&gt;SS, &lt;/strong&gt;&lt;code&gt;smooth.spline&lt;/code&gt;). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. &lt;/p&gt;
+&lt;p&gt;数据的形式是:　&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;p&gt;目标是估计函数m(). 例子使用R自带的&lt;code&gt;cars&lt;/code&gt;数据集, 它包含两列: 汽车速度speed和刹车距离dist. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;&amp;gt; data(cars)&lt;/span&gt;
+&lt;span class="x"&gt;&amp;gt; summary(cars)&lt;/span&gt;
+&lt;span class="x"&gt;     speed           dist       &lt;/span&gt;
+&lt;span class="x"&gt; Min.   : 4.0   Min.   :  2.00  &lt;/span&gt;
+&lt;span class="x"&gt; 1st Qu.:12.0   1st Qu.: 26.00  &lt;/span&gt;
+&lt;span class="x"&gt; Median :15.0   Median : 36.00  &lt;/span&gt;
+&lt;span class="x"&gt; Mean   :15.4   Mean   : 42.98  &lt;/span&gt;
+&lt;span class="x"&gt; 3rd Qu.:19.0   3rd Qu.: 56.00  &lt;/span&gt;
+&lt;span class="x"&gt; Max.   :25.0   Max.   :120.00  &lt;/span&gt;
+&lt;span class="x"&gt;&amp;gt; ?cars&lt;/span&gt;
+&lt;span class="x"&gt;&amp;gt; plot(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;dist&lt;/span&gt;&lt;span class="x"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;Theory&lt;/h1&gt;
+&lt;p&gt;首先简单介绍一下这4个smoother的原理: &lt;/p&gt;
+&lt;h3&gt;linear model&lt;/h3&gt;
+&lt;p&gt;认为m是线性形式(包含intercept): &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image008.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Nadaraya-Watson kernel smoother&lt;/h3&gt;
+&lt;p&gt;m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;p&gt;另外m_NW(x)还可以看做是最小化加权的square-error: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Local Polynomial smoother&lt;/h3&gt;
+&lt;p&gt;m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个&lt;em&gt;常数函数&lt;/em&gt;mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image004.png" /&gt;&lt;/p&gt;
+&lt;p&gt;最后m_LP在x处的取值为: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Smoothing Spline&lt;/h3&gt;
+&lt;p&gt;设定m的形式为knot在xi的spline, 加上penalize项: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;p&gt;另外SS可以看作是bandwidth随x变化的kernel smoother. &lt;/p&gt;
+&lt;h1&gt;fit model&lt;/h1&gt;
+&lt;h3&gt;formula&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;lm&lt;/code&gt;和&lt;code&gt;loess&lt;/code&gt;的文档里都提到参数为formula, 它大概是指示要fit的表达式形式. 这里面的加减号不是算数意义上的加减. 看例子: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dist ~ speed&lt;/code&gt;: 表示dist是speed的函数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;y ~ .&lt;/code&gt; : 表示y是所有其他变量的函数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;y ~　x1+x2&lt;/code&gt;: y 是x1和x2的函数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;y ~ x - 1&lt;/code&gt;: y是x的函数, 且没有intercept项&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;fit models&lt;/h3&gt;
+&lt;p&gt;这几个函数的fit写法各不相同, 有的要提供formula, 有的要提供x和y值, 需要看文档: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;fit.lm &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; lm&lt;span class="p"&gt;(&lt;/span&gt;dist&lt;span class="o"&gt;~&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; data&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="p"&gt;)&lt;/span&gt;
+fit.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ksmooth&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;,&lt;/span&gt; kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+fit.lp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; loess&lt;span class="p"&gt;(&lt;/span&gt;dist&lt;span class="o"&gt;~&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; data&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="p"&gt;)&lt;/span&gt;
+fit.ss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; smooth.spline&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;predict, fitted/residuals&lt;/h1&gt;
+&lt;p&gt;predict的写法也是各不相同, 一般都是用&lt;code&gt;predict&lt;/code&gt;函数, 然而这个函数在作用到不同smoother上面, 参数和返回值也都不一样......orz 关于&lt;code&gt;xx&lt;/code&gt;smoother的predict函数用法参考?&lt;code&gt;predict.xx&lt;/code&gt;. 最奇葩的是NW, 它不能用&lt;code&gt;predict&lt;/code&gt;函数, 而要fit的时候在&lt;code&gt;skmooth&lt;/code&gt;函数里传入&lt;code&gt;x.points&lt;/code&gt;参数... &lt;/p&gt;
+&lt;p&gt;看predict例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;newspeed &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="m"&gt;26&lt;/span&gt;
+pred.lm &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class="p"&gt;(&lt;/span&gt;fit.lm&lt;span class="p"&gt;,&lt;/span&gt; newdata &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;speed &lt;span class="o"&gt;=&lt;/span&gt; newspeed&lt;span class="p"&gt;),&lt;/span&gt; interval &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;prediction&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;fit&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+pred.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ksmooth&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;,&lt;/span&gt; kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; bandwidth&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; x.points&lt;span class="o"&gt;=&lt;/span&gt;newspeed&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y
+pred.lp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class="p"&gt;(&lt;/span&gt;fit.lp&lt;span class="p"&gt;,&lt;/span&gt; newdata&lt;span class="o"&gt;=&lt;/span&gt;newspeed&lt;span class="p"&gt;)&lt;/span&gt;
+pred.ss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; predict&lt;span class="p"&gt;(&lt;/span&gt;fit.ss&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="o"&gt;=&lt;/span&gt;newspeed&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;另外, 如果想看smoother在design points(Xi)处的预测值, 可以用&lt;code&gt;fitted&lt;/code&gt;函数(NW还是不能用), 例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;fitted.lm &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;fit.lm&lt;span class="p"&gt;)&lt;/span&gt;
+fitted.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ksmooth&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;,&lt;/span&gt; kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; bandwidth&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; x.points&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y
+fitted.lp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;fit.lp&lt;span class="p"&gt;)&lt;/span&gt;
+fitted.ss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;fit.ss&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;要看每个点的residual ri=yi-yhat_i, 用&lt;code&gt;residuals&lt;/code&gt;函数(NW不行):&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;resd.lm &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; residuals&lt;span class="p"&gt;(&lt;/span&gt;fit.lm&lt;span class="p"&gt;)&lt;/span&gt;
+resd.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ksmooth&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;,&lt;/span&gt; kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; bandwidth&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; x.points&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y &lt;span class="o"&gt;-&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;dist 
+resd.lp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; residuals&lt;span class="p"&gt;(&lt;/span&gt;fit.lp&lt;span class="p"&gt;)&lt;/span&gt;
+resd.ss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; residuals&lt;span class="p"&gt;(&lt;/span&gt;fit.ss&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;可以画出这几个方法的fit: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;abline(fit.lm, lty=1, col=1) # linear model is just a straigh line
+lines(newspeed, pred.nw, lty=2, col=2)
+lines(newspeed, pred.lp, lty=3, col=3)
+lines(newspeed, pred.ss, lty=4, col=4)
+legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;lm&amp;quot;, &amp;quot;nw&amp;quot;, &amp;quot;lp&amp;quot;, &amp;quot;ss&amp;quot;), lty=1:4, col=1:4)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image009.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;bandwidth&amp;amp;df: Hat Matrix&lt;/h1&gt;
+&lt;p&gt;三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. &lt;/p&gt;
+&lt;p&gt;自由度df是带宽的函数, smoother的df可以用它的&lt;strong&gt;hat matrix&lt;/strong&gt; S计算出来. &lt;/p&gt;
+&lt;p&gt;一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image010.png" /&gt;&lt;/p&gt;
+&lt;p&gt;而df则是S的迹: df = tr(S). df的&lt;/p&gt;
+&lt;p&gt;根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image012.png" /&gt;&lt;/p&gt;
+&lt;p&gt;所以计算S可以用下面的代码: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;n &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;nrow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="p"&gt;)&lt;/span&gt;
+Snw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Slp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Sss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;matrix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; nrow&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;,&lt;/span&gt; ncol&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt;
+In &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# identity matrix&lt;/span&gt;
+&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;j &lt;span class="kr"&gt;in&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;n&lt;span class="p"&gt;){&lt;/span&gt;
+  y &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; In&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="c1"&gt;# unit vector ej&lt;/span&gt;
+  Snw&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; ksmooth&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt;y&lt;span class="p"&gt;,&lt;/span&gt;kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; bandwidth &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; x.points&lt;span class="o"&gt;=&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y
+  Slp&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;loess&lt;span class="p"&gt;(&lt;/span&gt;y&lt;span class="o"&gt;~&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;))&lt;/span&gt;
+  Sss&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;smooth.spline&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+df.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Snw&lt;span class="p"&gt;))&lt;/span&gt;
+df.lp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Slp&lt;span class="p"&gt;))&lt;/span&gt;
+df.ss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Sss&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;发现三个非参smoother的自由度不同, 所以上面画图的比较并没有意义, 为了让三者的自由度相同, 可以设定ksmooth/loess/smooth.spline的参数.&lt;/p&gt;
+&lt;p&gt;控制带宽, Lp的参数为&lt;code&gt;span&lt;/code&gt;, SS的参数为&lt;code&gt;spar&lt;/code&gt;; 而指定想要的自由度则分别是&lt;code&gt;enp.target&lt;/code&gt;和&lt;code&gt;df&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kp"&gt;cat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;let all 3 np smoother use the same df=&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; df.nw&lt;span class="p"&gt;)&lt;/span&gt;
+Slp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Sss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;matrix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; nrow&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;,&lt;/span&gt; ncol&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt;
+In &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;# identity matrix&lt;/span&gt;
+&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;j &lt;span class="kr"&gt;in&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;n&lt;span class="p"&gt;){&lt;/span&gt;
+  y &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; In&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt;
+  Slp&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;loess&lt;span class="p"&gt;(&lt;/span&gt;y&lt;span class="o"&gt;~&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; enp.target&lt;span class="o"&gt;=&lt;/span&gt;df.nw&lt;span class="p"&gt;))&lt;/span&gt;
+  Sss&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; fitted&lt;span class="p"&gt;(&lt;/span&gt;smooth.spline&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="p"&gt;,&lt;/span&gt; df&lt;span class="o"&gt;=&lt;/span&gt;df.nw&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Slp&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Sss&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;发现SS的df参数使用以后控制的非常接近NW的df了, 不过lp的df还是不够接近, 用span来控制应该更准确一些, 为了找到合适的span, 用以下代码来寻找使得df=df.nw的span取值: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dflp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;span&lt;span class="p"&gt;,&lt;/span&gt; val&lt;span class="p"&gt;){&lt;/span&gt;
+  &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;j &lt;span class="kr"&gt;in&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt;
+  Slp&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; loess&lt;span class="p"&gt;(&lt;/span&gt;In&lt;span class="p"&gt;[,&lt;/span&gt;j&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; span &lt;span class="o"&gt;=&lt;/span&gt; span&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;fitted
+  &lt;span class="kr"&gt;return&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Slp&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; val&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+chosen_span &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; uniroot&lt;span class="p"&gt;(&lt;/span&gt;dflp&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; val &lt;span class="o"&gt;=&lt;/span&gt; df.nw&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;root
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;如果不用这个循环计算的话, 可以用&lt;code&gt;sfsmisc&lt;/code&gt;包里的&lt;code&gt;hatMat&lt;/code&gt;函数: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image013.png" /&gt;  &lt;/p&gt;
+&lt;p&gt;参数&lt;code&gt;trace&lt;/code&gt;取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
+需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;hatMat(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, T, &lt;/span&gt;
+&lt;span class="x"&gt;       pred.sm = function(x,y) &lt;/span&gt;
+&lt;span class="x"&gt;         ksmooth(x, y, kernel=&amp;quot;normal&amp;quot;, bandwidth=2, x.points=x)&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;y&lt;/span&gt;&lt;span class="x"&gt; )&lt;/span&gt;
+&lt;span class="x"&gt;hatMat(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, T, &lt;/span&gt;
+&lt;span class="x"&gt;       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )&lt;/span&gt;
+&lt;span class="x"&gt;hatMat(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, T, &lt;/span&gt;
+&lt;span class="x"&gt;       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;CV and Hat Matrix&lt;/h1&gt;
+&lt;p&gt;为了预测smoother的performance, 用loo CV来估计MSE(mean sq err)的值. &lt;/p&gt;
+&lt;p&gt;loo CV可以用下面这个通用函数得到(注意看对于参数的要求): &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;##&amp;#39; Calculates the LOO CV score for given data and regression prediction function&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39; @param reg.data: regression data; data.frame with columns &amp;#39;x&amp;#39;, &amp;#39;y&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39; @param reg.fcn:  regr.prediction function; arguments:&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39;                    reg.x: regression x-values&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39;                    reg.y: regression y-values&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39;                    x:     x-value(s) of evaluation point(s)&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39;                  value: prediction at point(s) x&lt;/span&gt;
+&lt;span class="c1"&gt;##&amp;#39; @return LOOCV score&lt;/span&gt;
+loocv &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;reg.data&lt;span class="p"&gt;,&lt;/span&gt; reg.fcn&lt;span class="p"&gt;){&lt;/span&gt;
+  &lt;span class="c1"&gt;## Help function to calculate leave-one-out regression values&lt;/span&gt;
+  loo.reg.value &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;i&lt;span class="p"&gt;,&lt;/span&gt; reg.data&lt;span class="p"&gt;,&lt;/span&gt; reg.fcn&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="kr"&gt;return&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;reg.fcn&lt;span class="p"&gt;(&lt;/span&gt;reg.data&lt;span class="o"&gt;$&lt;/span&gt;x&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;i&lt;span class="p"&gt;],&lt;/span&gt; reg.data&lt;span class="o"&gt;$&lt;/span&gt;y&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;i&lt;span class="p"&gt;],&lt;/span&gt; reg.data&lt;span class="o"&gt;$&lt;/span&gt;x&lt;span class="p"&gt;[&lt;/span&gt;i&lt;span class="p"&gt;]))&lt;/span&gt;
+
+  &lt;span class="c1"&gt;## Calculate LOO regression values using the help function above&lt;/span&gt;
+  n &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;nrow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;reg.data&lt;span class="p"&gt;)&lt;/span&gt;
+  loo.values &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;sapply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;n&lt;span class="p"&gt;,&lt;/span&gt; loo.reg.value&lt;span class="p"&gt;,&lt;/span&gt; reg.data&lt;span class="p"&gt;,&lt;/span&gt; reg.fcn&lt;span class="p"&gt;)&lt;/span&gt;
+
+  &lt;span class="c1"&gt;## Calculate and return MSE&lt;/span&gt;
+  &lt;span class="kr"&gt;return&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;loo.values&lt;span class="o"&gt;-&lt;/span&gt;reg.data&lt;span class="o"&gt;$&lt;/span&gt;y&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;比如, 为了计算NW的CV数值, 需要这样: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;regfcn.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;regx&lt;span class="p"&gt;,&lt;/span&gt; regy&lt;span class="p"&gt;,&lt;/span&gt; x&lt;span class="p"&gt;)&lt;/span&gt;
+  ksmooth&lt;span class="p"&gt;(&lt;/span&gt;regx&lt;span class="p"&gt;,&lt;/span&gt; regy&lt;span class="p"&gt;,&lt;/span&gt; kernel&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; bandwidth&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; x.points&lt;span class="o"&gt;=&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;y
+loocv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;),&lt;/span&gt; regfcn.nw&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image014.png" /&gt;&lt;/p&gt;
+&lt;p&gt;试一下: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# compute CV using shortcut euqation&lt;/span&gt;
+yhat.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Snw &lt;span class="o"&gt;%*%&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;y &lt;span class="c1"&gt;# or use regfcn.nw(cars$speed, cars$dist, cars$speed)&lt;/span&gt;
+&lt;span class="kp"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;  &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;y&lt;span class="o"&gt;-&lt;/span&gt;yhat.nw&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kp"&gt;diag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Snw&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;得到的结果和之前用loocv一样, 都是253.9128 !~ &lt;/p&gt;
+&lt;p&gt;或者只用df, 计算generalized CV, 公式为: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image015.png" /&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;compute&lt;/span&gt;&lt;span class="x"&gt; GCV&lt;/span&gt;
+&lt;span class="x"&gt;mean( (cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;dist&lt;/span&gt;&lt;span class="x"&gt;-yhat.nw)^2 ) / ( 1 - df.nw/n )^2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;得到gcv=269.3911, 和looCV也比较接近. &lt;/p&gt;</summary><category term="R"></category></entry><entry><title>R语言从入门到放弃 (3). 绘图</title><link href="http://x-wei.github.io/Rnotes-3-plot.html" rel="alternate"></link><published>2016-07-28T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-3-plot.html</id><summary type="html">&lt;p&gt;R关于绘图应该可以写很多, 不过这里只列举在compstat这门课里最经常用的几个函数. 关于R的绘图, 详细了解可以运行 &lt;code&gt;demo(graphics)&lt;/code&gt;或者 &lt;code&gt;example("plot")&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;R里面的绘图命令分为两类: 一类是"high-level"的"创建新图片"命令, 运行以后会新画一个图; 另一类则是"low-level"的命令, 不会创建新图片, 而只会在当前图片中修改添加(例如添加线条, 添加点等). 下面分别简单介绍, 最后再介绍其他一些绘图配置的命令. &lt;/p&gt;
 &lt;h1&gt;configurations/parameters&lt;/h1&gt;
 &lt;p&gt;介绍一下常用的参数意义, 以及画图的配置. 详细文档见&lt;code&gt;?par&lt;/code&gt;. 这些参数可以放在绘图命令中. &lt;/p&gt;
@@ -312,7 +520,8 @@ row_3     &lt;span class="m"&gt;3&lt;/span&gt;     &lt;span class="m"&gt;6&lt;/s
 &lt;p&gt;首先在stat里面有一些叫法和以前不太一样: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;predictor variable&lt;/code&gt;: 就是机器学习里面说的feature (Xi)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;response variable&lt;/code&gt;: 就是要预测的东西(y)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;design points&lt;/code&gt;: 是机器学习里的训练数据(X1...Xn)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response variable&lt;/code&gt;: 要预测的变量(y)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;Rstudio&lt;/h2&gt;
 &lt;p&gt;这个是用R编程的标配, 确实很方便, 不用可惜. 另外R markdown也不错, 可以边写markdown边运行代码, 建议编辑器窗口里新建rmd文件. &lt;/p&gt;
