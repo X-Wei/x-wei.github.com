@@ -1,5 +1,654 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-29T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (4). 统计回归</title><link href="http://x-wei.github.io/Rnotes-4-regression.html" rel="alternate"></link><published>2016-07-29T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-4-regression.html</id><summary type="html">&lt;p&gt;R里面的统计函数有很多, 这里只用线性模型&lt;code&gt;lm&lt;/code&gt;以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(&lt;strong&gt;NW, &lt;/strong&gt;&lt;code&gt;ksmooth&lt;/code&gt;), Local Polynomial(&lt;strong&gt;LP, &lt;/strong&gt;&lt;code&gt;loess&lt;/code&gt;), Smoothing Spline(&lt;strong&gt;SS, &lt;/strong&gt;&lt;code&gt;smooth.spline&lt;/code&gt;). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-30T00:00:00+02:00</updated><entry><title>[Functional Programming Principles in Scala] Lec6: Collections</title><link href="http://x-wei.github.io/progfun1_lec6_collections.html" rel="alternate"></link><published>2016-07-30T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec6_collections.html</id><summary type="html">&lt;h1&gt;6.1 - Other Collections&lt;/h1&gt;
+&lt;p&gt;so far: only seen List. → more (&lt;strong&gt;immutable&lt;/strong&gt;) collections. &lt;/p&gt;
+&lt;h3&gt;vector&lt;/h3&gt;
+&lt;p&gt;List:  is linear -- access to head is faster than middle or end element. 
+Vector: better rand access performance. &lt;/p&gt;
+&lt;p&gt;represented as very shallow trees(32-split at each node)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec6_collections/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Vector&lt;/code&gt; support similar operations as List (head, tail,map, fold) , except concat &lt;code&gt;::&lt;/code&gt;, instead Vectors have &lt;code&gt;+:&lt;/code&gt; and &lt;code&gt;:+&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;x +: xs&lt;/code&gt; create new vector with x in head&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs :+ x&lt;/code&gt; create new vector with x in tail&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;implementation of &lt;code&gt;:+&lt;/code&gt;: create copies&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec6_collections/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Seq&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Seq&lt;/code&gt; is base class for &lt;code&gt;Vector&lt;/code&gt; and &lt;code&gt;List&lt;/code&gt;, &lt;code&gt;Seq&lt;/code&gt; itself is subclass of &lt;code&gt;Iterable&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Hierarchy of Iterables: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec6_collections/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Array ans String&lt;/h3&gt;
+&lt;p&gt;Array and String support same op as Seq, can implicitly be converted to seq when needed. But they are NOT subclasses of Seq as they come from java. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;scala&amp;gt; val xs: Array[Int] = Array(1,2,3)
+xs: Array[Int] = Array(1, 2, 3)
+
+scala&amp;gt; xs map (2*_)
+res3: Array[Int] = Array(2, 4, 6)
+
+scala&amp;gt; val ys = &amp;quot;Hello&amp;quot;
+ys: String = Hello
+
+scala&amp;gt; ys filter (_.isUpper)
+res4: String = H
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Range&lt;/h3&gt;
+&lt;p&gt;represents a seq of evenly spaced integers.&lt;/p&gt;
+&lt;p&gt;represented as an obj with 3 values: lower bound, upper bound, step value. &lt;/p&gt;
+&lt;p&gt;3 op: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;to&lt;/code&gt;: inclusive &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;until&lt;/code&gt;: exclusive&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;by&lt;/code&gt;: step value&lt;/p&gt;
+&lt;p&gt;1 to 6       // 1 2 3 4 5 6
+1 until 6    // 1 2 3 4 5
+1 to 6 by 2  // 1 3 5
+6 to 1 by -2 // 6 4 2&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;More ops on Seq&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;xs exists p&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs forall p&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xs zip ys&lt;/code&gt;: takes 2 seq, returns a single seq, each elem is a pair&lt;/p&gt;
+&lt;p&gt;scala&amp;gt; List(1,2,3) zip Vector(2,3,4)
+res7: List[(Int, Int)] = List((1,2), (2,3), (3,4))&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xs.unzip&lt;/code&gt;: reverse zip, return 2 lists &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;xs flatMap f&lt;/code&gt;: apply f to all elements, and &lt;strong&gt;concat the results&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;scala&amp;gt; "hello" flatMap (c =&amp;gt; List('.', c))
+res9: String = .h.e.l.l.o&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;flatten&lt;/code&gt;: flatten a seq of seq into just one seq...&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;xs flatMap f = (xs map f).flatten&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The result is concated, instead of being a list of list. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;xs.sum&lt;/code&gt;/&lt;code&gt;xs.product&lt;/code&gt;: for numeric collection&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.max&lt;/code&gt;/&lt;code&gt;xs.min&lt;/code&gt;: an ordering must exist&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Examples&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;cartesen product: 1..M x 1..N:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;(1 to M) flatMap( x =&amp;gt; (1 to N) map (y =&amp;gt; (x,y)) )&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;scalar of 2 vectors&lt;/p&gt;
+&lt;p&gt;def scalaProd(xs: Vector[Double], ys: Vector[Double]): Double = 
+  (xs zip ys) map (xy =&amp;gt; xy._1 * xy._2).sum&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;alternative: use pattern matching in map (need to add braces &lt;code&gt;{}&lt;/code&gt;!): &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(xs zip ys) map ( {case(x,y) =&amp;gt; x*y}).sum
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;test isPrime for a number&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;def isPrime(n: Int): Boolean = (2 until n) forall (d =&amp;gt; n%d!=0)&lt;/code&gt;&lt;/p&gt;
+&lt;h1&gt;6.2 - Combinatorial Search and For-Expressions&lt;/h1&gt;
+&lt;p&gt;goal: handle nested seq. &lt;/p&gt;
+&lt;p&gt;⇒ extend usage of higher order functions instead of using nested loops. &lt;/p&gt;
+&lt;p&gt;example:   &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;given n, find all (i,j) st: 1&amp;lt;=j&amp;lt;i&amp;lt;=n, and i+j is prime.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(1 until n) flatMap ( i =&amp;gt; (1 until i) map (j =&amp;gt; (i,j)) ) filter ( {case(i,j) =&amp;gt; isPrime(i+j)})&lt;/p&gt;
+&lt;p&gt;this works, but less understandable... ⇒ for expressions. &lt;/p&gt;
+&lt;h3&gt;for/yield expressions&lt;/h3&gt;
+&lt;p&gt;example: class of person&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;case class Person(name: String, age: Int)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;To obtain names of persons over 20 years old: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;persons filter (_.age&amp;gt;20) map (_.name)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;equivalent to :&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;for (p &amp;lt;- person if p.age &amp;gt; 20) yield p.name&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The for expression is similar to jave for-loop, except &lt;strong&gt;it builds a list of the results of all iterations&lt;/strong&gt;. &lt;/p&gt;
+&lt;p&gt;for expression form: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;for( s ) yield e&lt;/code&gt;
+where &lt;code&gt;s&lt;/code&gt; can contain &lt;strong&gt;generators&lt;/strong&gt; and &lt;strong&gt;filters&lt;/strong&gt;: &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;generator: &lt;code&gt;p&amp;lt;-e&lt;/code&gt; where &lt;code&gt;e&lt;/code&gt; is a collection, &lt;code&gt;p&lt;/code&gt; is a pattern&lt;/li&gt;
+&lt;li&gt;filter: &lt;code&gt;if f&lt;/code&gt; where t is boolean expr&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;rewrite the prime sum example: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  i &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; until n
+  j &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; until i
+  &lt;span class="kr"&gt;if&lt;/span&gt; isPrime&lt;span class="p"&gt;(&lt;/span&gt;i&lt;span class="o"&gt;+&lt;/span&gt;j&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; yield &lt;span class="p"&gt;(&lt;/span&gt;i&lt;span class="p"&gt;,&lt;/span&gt;j&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;exercice: write the scalaProd using for expr: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def scalaProd&lt;span class="p"&gt;(&lt;/span&gt;xs&lt;span class="o"&gt;:&lt;/span&gt; Vector&lt;span class="p"&gt;[&lt;/span&gt;Double&lt;span class="p"&gt;],&lt;/span&gt; ys&lt;span class="o"&gt;:&lt;/span&gt; Vector&lt;span class="p"&gt;[&lt;/span&gt;Double&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; Double &lt;span class="o"&gt;=&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;,&lt;/span&gt;y&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; xs zip ys &lt;span class="p"&gt;)&lt;/span&gt; yield x&lt;span class="o"&gt;*&lt;/span&gt;y &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="kp"&gt;sum&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;more on scala for expr: 
+&lt;a href="http://www.artima.com/pins1ed/for-expressions-revisited.html"&gt;http://www.artima.com/pins1ed/for-expressions-revisited.html&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;6.3 - Combinatorial Search Example&lt;/h1&gt;
+&lt;p&gt;goal: combine &lt;code&gt;set&lt;/code&gt; and &lt;code&gt;for&lt;/code&gt;-expr to solve the n-queens problem. &lt;/p&gt;
+&lt;h3&gt;Sets&lt;/h3&gt;
+&lt;p&gt;3 fundamental iterable collection types: seq, &lt;strong&gt;set&lt;/strong&gt;, map. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;set support most operations on seq (c.f. doc on Iterable)&lt;/li&gt;
+&lt;li&gt;sets are unordered&lt;/li&gt;
+&lt;li&gt;set don't have dup elements&lt;/li&gt;
+&lt;li&gt;contains: &lt;code&gt;s contains e&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Example: N-Queens&lt;/h3&gt;
+&lt;p&gt;8*8 chess board, 8 queens 
+⇒ places queens st: no two queen in same row/col/diag&lt;/p&gt;
+&lt;p&gt;algo: put one queen in each row (in the right column) &lt;/p&gt;
+&lt;p&gt;recursive solution: suppose already have solutions for first n-1 rows. 
+represent each (partial)solution as a list of column index. &lt;/p&gt;
+&lt;p&gt;return all possible solutions (as a Set). &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def queens(n: Int): Set[List[Int]] = {
+    def placeQueens(k: Int): Set[List[Int]] = ???// place first k rows
+    placeQueens(n)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Fill in the helper function: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def placeQueens&lt;span class="p"&gt;(&lt;/span&gt;k&lt;span class="o"&gt;:&lt;/span&gt; Int&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; Set&lt;span class="p"&gt;[&lt;/span&gt;List&lt;span class="p"&gt;[&lt;/span&gt;Int&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kr"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;k&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; Set&lt;span class="p"&gt;(&lt;/span&gt;List&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="kr"&gt;else&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        queens &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; placeQueens&lt;span class="p"&gt;(&lt;/span&gt;k&lt;span class="m"&gt;-1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; queens&lt;span class="p"&gt;(&lt;/span&gt;List&lt;span class="p"&gt;[&lt;/span&gt;Int&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; one solution to k&lt;span class="m"&gt;-1&lt;/span&gt;
+        &lt;span class="kt"&gt;c&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; until n
+        &lt;span class="kr"&gt;if&lt;/span&gt; isSafe&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; queens&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="kr"&gt;if&lt;/span&gt; column &lt;span class="kt"&gt;c&lt;/span&gt; doesn&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="err"&gt;t conflict with the partial solution queens&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt; yield &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;queens &lt;span class="o"&gt;//&lt;/span&gt; the kth row solution is &lt;span class="kr"&gt;in&lt;/span&gt; head of &lt;span class="kt"&gt;list&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now fill in the function isSafe that check if a column is valid wrt queens for above rows:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def isSafe(col: Int, queens: List[Int]): Boolean = {
+    val k = queens.length // current row is k
+    val indexedQueens = (k-1 to 0 by -1) zip queens // List[(row, col)]
+    indexedQueens forall { 
+            case(r,c) =&amp;gt; c!=col &amp;amp;&amp;amp; k-r!=math.abs(c-col) }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now the queens function will work. &lt;/p&gt;
+&lt;p&gt;Write another function to print the solution out: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def show&lt;span class="p"&gt;(&lt;/span&gt;queens&lt;span class="o"&gt;:&lt;/span&gt; List&lt;span class="p"&gt;[&lt;/span&gt;Int&lt;span class="p"&gt;])&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; String &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    val lines &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;col &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; queens.reverse&lt;span class="p"&gt;)&lt;/span&gt; 
+                yield Vector.fill&lt;span class="p"&gt;(&lt;/span&gt;queens.length&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;* &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;updated&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;X &amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="m"&gt;.&lt;/span&gt;mkString
+    &lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; lines.mkString&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;queens&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; map show&lt;span class="p"&gt;)&lt;/span&gt; mkString &lt;span class="s"&gt;&amp;quot;====\n&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;6.4 - Maps&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;Map[Key, Value]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;ex: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val romanNumerals = Map(&amp;quot;I&amp;quot; -&amp;gt;1, &amp;quot;V&amp;quot; -&amp;gt;5, &amp;quot;X&amp;quot; -&amp;gt; 10)
+val captial = Map(&amp;quot;France&amp;quot; -&amp;gt; &amp;quot;Paris&amp;quot;, &amp;quot;US&amp;quot; -&amp;gt; &amp;quot;Washington&amp;quot;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Maps are iterables and &lt;strong&gt;functions&lt;/strong&gt;: maps Key to Value like a function call &lt;/p&gt;
+&lt;p&gt;ex. &lt;code&gt;romanNumerals("I")&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;will throw &lt;code&gt;NoSuchElementException&lt;/code&gt; if the key is not in map. &lt;/p&gt;
+&lt;p&gt;⇒ use &lt;code&gt;get&lt;/code&gt;: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;scala&amp;gt; captial(&amp;quot;France&amp;quot;)
+res3: String = Paris
+
+scala&amp;gt; captial get &amp;quot;France&amp;quot;
+res4: Option[String] = Some(Paris)
+
+scala&amp;gt; captial get &amp;quot;China&amp;quot;
+res5: Option[String] = None
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;have a look at the Option type:&lt;/p&gt;
+&lt;h3&gt;The Option Type&lt;/h3&gt;
+&lt;p&gt;definition: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trait Option[+A]
+case class Some[+A](value: A] extends Option[A]
+object None extends Option[Nothing]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;so the get function of map gives: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;None&lt;/code&gt; if key is not in map&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Some(x)&lt;/code&gt; if map associates key to x&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;since &lt;code&gt;Some&lt;/code&gt; is case class, can use pattern matching to decompose. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def showCaptical(country: String) = captial.get(country) match{
+    case Some(cap) =&amp;gt; cap
+    case None =&amp;gt; &amp;quot;missing data&amp;quot;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Sorted and GroupBy&lt;/h3&gt;
+&lt;p&gt;two useful SQL queries. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;orderBy can be expressed using sortWith and sorted: &lt;/p&gt;
+&lt;p&gt;val fruit = List("apple", "pear", "orange", "pineapple")
+scala&amp;gt; fruit sortWith (&lt;em&gt;.length &amp;lt; &lt;/em&gt;.length)
+res7: List[String] = List(pear, apple, orange, pineapple)
+scala&amp;gt; fruit.sorted
+res8: List[String] = List(apple, orange, pear, pineapple)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;GroupBy(f)&lt;/code&gt;: &lt;strong&gt;partition a collection into a map of collections&lt;/strong&gt; according to &lt;code&gt;f&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;scala&amp;gt; fruit groupBy (_.head)
+res9: scala.collection.immutable.Map[Char,List[String]] = 
+        Map(p -&amp;gt; List(pear, pineapple), 
+            a -&amp;gt; List(apple), 
+            o -&amp;gt; List(orange))&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;map Example: polynomials&lt;/h3&gt;
+&lt;p&gt;can be seen as map from exponents to coefficients:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec6_collections/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;p&gt;⇒ represent polynm as maps&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;class Poly(val terms: Map[Int, Double]) {
+    def + (other: Poly) = new Poly(terms ++ // ++ on maps: will override older entries in terms!
+                            (other.terms maps adjust)) // adjust defined below
+
+    def adjust(term: (Int, Double)):(Int, Double) = {
+        val (exp, coeff) = term
+        terms get exp match{
+            case None =&amp;gt; Pair(exp, coeff) // or write: exp -&amp;gt; coeff
+            case Some(coeff1) =&amp;gt; Pair(exp, coeff+coeff1)
+        }
+    }
+    override def toString = 
+    (for( (exp, coeff) &lt;span class="nt"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="err"&gt;terms.toList.sorted.reverse)&lt;/span&gt; &lt;span class="err"&gt;yield&lt;/span&gt; &lt;span class="err"&gt;coeff+&amp;quot;x^&amp;quot;+exp)&lt;/span&gt; &lt;span class="err"&gt;mkString&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;+&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;default values&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;withDefulatValue&lt;/code&gt;: makes a map into a &lt;strong&gt;total map&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;rewrite the poly example: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;class Poly&lt;span class="p"&gt;(&lt;/span&gt;terms0&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kp"&gt;Map&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;Int&lt;span class="p"&gt;,&lt;/span&gt; Double&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    val terms &lt;span class="o"&gt;=&lt;/span&gt; terms0 withDefaultValue &lt;span class="m"&gt;0.0&lt;/span&gt;
+    def &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;other&lt;span class="o"&gt;:&lt;/span&gt; Poly&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; new Poly&lt;span class="p"&gt;(&lt;/span&gt;terms &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; on maps&lt;span class="o"&gt;:&lt;/span&gt; will override older entries &lt;span class="kr"&gt;in&lt;/span&gt; terms&lt;span class="o"&gt;!&lt;/span&gt;
+                            &lt;span class="p"&gt;(&lt;/span&gt;other.terms maps adjust&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; adjust defined below
+
+    def adjust&lt;span class="p"&gt;(&lt;/span&gt;term&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;Int&lt;span class="p"&gt;,&lt;/span&gt; Double&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Int&lt;span class="p"&gt;,&lt;/span&gt; Double&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        val &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; coeff&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; term
+        exp &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;coeff &lt;span class="o"&gt;+&lt;/span&gt; terms&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    override def toString &lt;span class="o"&gt;=&lt;/span&gt; 
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; coeff&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; terms.toList.sorted.reverse&lt;span class="p"&gt;)&lt;/span&gt; yield coeff&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;x^&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="kp"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; mkString &lt;span class="s"&gt;&amp;quot;+ &amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;change to variable parameter for better constructor calling: add another constructor&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def this(bindings: (int, Double)*) = // bindings is s sequence
+this(bindings.toMap)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Exercie: re-implement the &lt;code&gt;+&lt;/code&gt; using foldLeft : &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def + (other: Poly) =
+    new Poly( (other.terms foldLeft terms)(addTerm) )
+def addTerm(terms:Map[Int, Double], term: (Int, Double)): Map[Int, Double] = {
+    val (exp, coeff) = term
+    terms + ( exp -&amp;gt; (coeff + terms(exp)) ) // map + (k,v) updates the map
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;6.5 - Putting the Pieces Together: T9 keyboard mnem&lt;/h1&gt;
+&lt;p&gt;convert a seq of numbers to a scentence&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val mnem  = Map(&amp;#39;2&amp;#39;-&amp;gt;&amp;quot;ABC&amp;quot;, &amp;#39;3&amp;#39;-&amp;gt;&amp;quot;DEF&amp;quot;, 4-&amp;gt;&amp;quot;GHI&amp;quot;, &amp;#39;5&amp;#39;-&amp;gt;&amp;quot;JKL&amp;quot;,
+            &amp;#39;6&amp;#39;-&amp;gt;&amp;quot;MNO&amp;quot;, &amp;#39;7&amp;#39;-&amp;gt;&amp;quot;PQRS&amp;quot;, &amp;#39;8&amp;#39;-&amp;gt;&amp;quot;TUV&amp;quot;, &amp;#39;9&amp;#39;-&amp;gt;&amp;quot;WXYZ&amp;quot; )
+val in = Source.fromURL(&amp;quot;...&amp;quot;)
+val words = in.getLines.toList // dictionary: list of valid words
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;goal: design a &lt;code&gt;translate(phoneNumber)&lt;/code&gt; that produces all phrases of words that can serve as mnemonics(助忆) for a phone number. &lt;/p&gt;
+&lt;p&gt;Step 1: invert the mnem map to a map from A~Z to 2~9: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val charCode: Map[Char, Char] = 
+for ( (digit, str) &lt;span class="nt"&gt;&amp;lt;-mnem&lt;/span&gt;&lt;span class="err"&gt;;&lt;/span&gt; &lt;span class="err"&gt;ltr&amp;lt;-str)&lt;/span&gt; &lt;span class="err"&gt;yield&lt;/span&gt; &lt;span class="err"&gt;ltr-&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;digit
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Step 2: map a word to the string it represents, ex. "java"-&amp;gt;"5282"&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def wordCode(word: String):String = 
+    word.toUpperCase map charCode
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Step 3: maps from digit string to all possible valid strings, ex. "5282"-&amp;gt;List("java", "kata",...)
+⇒ just a groupby!!&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val wordsForNum: Map[String, Seq[String]] = 
+    words groupBy wordCode
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;→ Error: key not found: "-", some words contains a "-"... → drop such words... &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;val words = in.getLines.toList filter (wd =&amp;gt; wd forall (ch =&amp;gt; ch.isLetter))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Step 4: return all ways to encode a number as a list of words →  recursive, recurse on the nb of first words~&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def encode&lt;span class="p"&gt;(&lt;/span&gt;number&lt;span class="o"&gt;:&lt;/span&gt; String&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; Set&lt;span class="p"&gt;[&lt;/span&gt;List&lt;span class="p"&gt;[&lt;/span&gt;String&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;number.isEmpty&lt;span class="p"&gt;)&lt;/span&gt; Set&lt;span class="p"&gt;(&lt;/span&gt;List&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="kp"&gt;else&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; 
+        val phraseList &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;  
+            split &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; to number.length &lt;span class="o"&gt;//&lt;/span&gt; the first word &lt;span class="kr"&gt;in&lt;/span&gt; phrase uses numbers&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="kp"&gt;split&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            firstWd &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; wordsForNum&lt;span class="p"&gt;[&lt;/span&gt; number.take&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;split&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+            followingWds &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; encode&lt;span class="p"&gt;(&lt;/span&gt;number.drop&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;split&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt; yield firstWd&lt;span class="o"&gt;::&lt;/span&gt;follwingWds
+        phraseList.toSet
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ error in the line with &lt;code&gt;wordsForNum&lt;/code&gt;: key not found... 
+⇒ &lt;code&gt;wordsForNum["7"]&lt;/code&gt; will give error 
+⇒ make the &lt;code&gt;wordsForNum&lt;/code&gt; a total map, using withDefaultValue&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val wordsForNum: Map[String, Seq[String]] = 
+    (words groupBy wordCode) withDefaultValue( Seq() )
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Step 5: return strings (instead of List[String])&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def translate(number: String): Set[String] = {  
+    encode(number) map (_.mkString(&amp;quot; &amp;quot;))
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;summary: 
+&lt;img alt="" src="progfun1_lec6_collections/pasted_image007.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec6_collections/pasted_image009.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.scala-exercises.org/"&gt;https://www.scala-exercises.org/&lt;/a&gt;&lt;/p&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec5: Lists</title><link href="http://x-wei.github.io/progfun1_lec5_lists.html" rel="alternate"></link><published>2016-07-29T21:30:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec5_lists.html</id><summary type="html">&lt;h1&gt;5.1 - More Functions on Lists&lt;/h1&gt;
+&lt;p&gt;already known methods: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;xs.head
+xs.tail
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;sublist and ele access: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;xs.length&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.last&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.init&lt;/code&gt;: all elementh except last element&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.take(n)&lt;/code&gt;: sublist of first n elements&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.drop(n)&lt;/code&gt;: the rest of list after taking first n elements&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs(n)&lt;/code&gt;: = &lt;code&gt;xs.apply(n)&lt;/code&gt; , element at index n&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;More methods:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;concatenation: &lt;code&gt;xs ++ ys&lt;/code&gt; (&lt;code&gt;:::&lt;/code&gt; is legacy usage)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.reverse&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.updated(n,x)&lt;/code&gt;: return a same list, except xs(n)=x (Note: Lists are immutable, so cannot modify)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.indexOf(x)&lt;/code&gt;: index or -1&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;xs.contains(x)&lt;/code&gt;: same as &lt;code&gt;xs.indexOf(x)&amp;gt;=0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;complexity: 
+head, tail: simple to implement
+⇒ complexity of &lt;code&gt;last&lt;/code&gt;?&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def last[T](xs: List[T]): T = xs match{
+    case List() =&amp;gt; throw new Error(&amp;quot;last of Nil&amp;quot;)
+    case List(x) =&amp;gt; x
+    case y::ys =&amp;gt; last(ys)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ complexity of last = O(n)&lt;/p&gt;
+&lt;p&gt;implement &lt;code&gt;init&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def init[T](xs: List[T]): T = xs match{
+    case List() =&amp;gt; throw new Error(&amp;quot;init of Nil&amp;quot;)
+    case List(x) =&amp;gt; List()
+    case y::ys =&amp;gt; y::init(ys)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ complexity = O(length of xs)&lt;/p&gt;
+&lt;p&gt;implement concatenation &lt;code&gt;:::&lt;/code&gt;/&lt;code&gt;++&lt;/code&gt;
+(NB: &lt;code&gt;:::&lt;/code&gt; is right-associative, &lt;code&gt;xs:::ys&lt;/code&gt; = &lt;code&gt;ys. :::(xs)&lt;/code&gt;. )&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def concat[T](xs: List[T], ys: List[T]) = xs match{
+    case List() =&amp;gt; ys
+    case z::zs =&amp;gt; x:concat(xs, ys)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ complexity of concat = O(length of xs)&lt;/p&gt;
+&lt;p&gt;implement of reverse&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def reverse[T](xs: List[T]) = xs match{
+    case List() =&amp;gt; List()
+    case y::ys =&amp;gt; reverse(ys) ++ y
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ complexity of reverse: every call contains a concat, thus complexity=O(n2)&lt;/p&gt;
+&lt;p&gt;exercice: remove nth element: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def removeAt[T](n:Int, xs: List[T]): List[T] = 
+(xs take n ) ++ (xs drop n+1)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;5.2 - Pairs and Tuples&lt;/h1&gt;
+&lt;p&gt;example: sort list faster than insertion sort → merge sort. &lt;/p&gt;
+&lt;p&gt;sort 2 sublist, merge them ⇒ list is sorted&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def msort(xs: List[Int]): List[Int] = {
+    val n = xs.length/2
+    if(n==0) xs
+    else{
+        def merge(xs: List[Int], ys: List[Int]) = ... // see below
+        val (fst, snd) = x splitAt n // splitAt returns 2 sublists
+        merge(msort(fst), msort(snd))
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;merge: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def merge(xs: List[Int], ys: List[Int]): List[Int] = xs match {
+    case Nil =&amp;gt; ys
+    case x::zs =&amp;gt; match ys{
+        case Nil =&amp;gt; xs
+        case y::ws =&amp;gt; {
+            if(x&amp;lt;y) x::merge(zs, ys)
+            else y::merge(xs, ws)
+        }
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Pair/Tuple&lt;/h3&gt;
+&lt;p&gt;written as &lt;code&gt;(x, y)&lt;/code&gt; in scala. pair can be used as patterns :  similar for tuples. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val pair = (&amp;quot;a&amp;quot;, 2)
+val (label, value) = pair
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image.png" /&gt;&lt;/p&gt;
+&lt;p&gt;tuple implementation: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image001.png" /&gt;&lt;/p&gt;
+&lt;p&gt;⇒ can use &lt;code&gt;_1&lt;/code&gt; &lt;code&gt;_2&lt;/code&gt; to access elements&lt;/p&gt;
+&lt;p&gt;exercice: rewrite the merge function using a &lt;em&gt;pattern matching over pairs&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def merge(xs: List[Int], ys: List[Int]): List[Int] =
+(xs, ys) match {
+    case (Nil, ys) =&amp;gt; ys
+    case (xs, Nil) =&amp;gt; xs
+    case (x:zs, y:ws) =&amp;gt; 
+        if(x&amp;lt;y) x::merge(zs, ys)
+        else y::merge(xs, ws)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;5.3 - Implicit Parameters&lt;/h1&gt;
+&lt;p&gt;pb: how to apply msort to list of other element types. &lt;/p&gt;
+&lt;p&gt;using type parameters ? &lt;code&gt;msort[T]&lt;/code&gt;⇒ the compare operator is not always defined ! &lt;/p&gt;
+&lt;p&gt;⇒ &lt;em&gt;pass the lt function as a parameter&lt;/em&gt;: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;def msort[T](xs: List[T])(lt: (T,T)=&amp;gt;Boolean) = ...&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;another option: &lt;code&gt;scala.math.Ordering[T]&lt;/code&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;impor math.Ordering
+def msort[T](xs: List[T])(ord: Ordering) = ...// use ord.lt(x,y)
+msort(nums)(Ordering.Int)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;pb: pass each time the function parameter is cumbersome... ⇒ use &lt;strong&gt;implicite&lt;/strong&gt; parameters&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def msort[T](xs: List[T])(implicite ord: Ordering) = ...// use ord.lt(x,y)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ the function calls can ignore the implicite parameter, the compiler will figure it out. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;5.4 - Higher-Order List Functions&lt;/h1&gt;
+&lt;p&gt;functions over list have similar pattern: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;transform each element &lt;/li&gt;
+&lt;li&gt;retrive elements that satisfy some cretirion&lt;/li&gt;
+&lt;li&gt;combing elements using an operator&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;map&lt;/h3&gt;
+&lt;p&gt;apply an operation to every elements. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;abstract class List[T]{
+    def map[U](f: T=&amp;gt;U): List[U] = this match {
+        case Nil =&amp;gt; this
+        case x:xs =&amp;gt; f(x)::xs.map(f)
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;filtering&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def filter(p: T=&amp;gt;Boolean): List[T] = this match {
+    case Nil =&amp;gt; this
+    case x:xs =&amp;gt; f(p(x)) x::xs.filter(p) else xs.filter(p)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;other methods that extracts sublist: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;p&gt;exercice: implement a function &lt;code&gt;pack&lt;/code&gt;: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image004.png" /&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def pack[T](xs: List[T]): List[List[T]] = xs match {
+    case Nil =&amp;gt; Nil
+    case x::ys =&amp;gt; {
+        val (head, tail) = xs span (c =&amp;gt; c==x)
+        head :: pack(tail)
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;exercice2: implement  a function &lt;code&gt;encode&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def encode[T](xs: List[T]): List[(T, Int)] = xs match {
+    case Nil =&amp;gt; Nil
+    case x::ys =&amp;gt; {
+        val (head, tail) = xs span (c =&amp;gt; c==x)
+        (x, head.length) :: pack(tail)
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;another version: use the pack: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def encode[T](xs: List[T]): List[(T, Int)] = 
+    pack(xs) map (l =&amp;gt; (l.head, l.length))
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;5.5 - Reduction of Lists&lt;/h1&gt;
+&lt;p&gt;fold/reduce: combine elements using an operator. &lt;/p&gt;
+&lt;h3&gt;reduceLeft&lt;/h3&gt;
+&lt;p&gt;(can apply only to non-empty lists) 
+inserts a binary operator between adj elements: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;p&gt;ex. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum(xs: List[Int]) = (0::xs) reduceLeft ( (x,y)=&amp;gt; x+y)
+def prod(xs: List[Int]) = (1::xs) reduceLeft ( (x,y)=&amp;gt; x*y)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;write shorter function values using underscore &lt;code&gt;_&lt;/code&gt;:  every &lt;code&gt;_&lt;/code&gt; represents a new parameter&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum(xs: List[Int]) = (0::xs) reduceLeft ( _+_ )
+def prod(xs: List[Int]) = (1::xs) reduceLeft ( _*_ )
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;foldLeft&lt;/h3&gt;
+&lt;p&gt;foldLeft is like reduceLeft, but can apply on Nil, and takes an &lt;strong&gt;accumulator&lt;/strong&gt; &lt;code&gt;z&lt;/code&gt; =&amp;gt; returns z when calling on Nil. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image007.png" /&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def sum(xs: List[Int]) = (xs foldleft 0) ( _+_ )
+def prod(xs: List[Int]) = (xs foldleft 1) ( _*_ )
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image008.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;foldRight/reduceRight&lt;/h3&gt;
+&lt;p&gt;dual functions to &lt;code&gt;foldLeft&lt;/code&gt; and &lt;code&gt;reduceLeft&lt;/code&gt;, but produce a tree leaned to right&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image010.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image011.png" /&gt;&lt;/p&gt;
+&lt;p&gt;if the operation is associative and communitive, foldLeft and foldRight should give same results. Other times need to think. &lt;/p&gt;
+&lt;p&gt;ex. concat&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image012.png" /&gt;
+if apply foldLeft ⇒ type error, because the &lt;code&gt;::&lt;/code&gt; operator will be applied to 2 elements of type T.&lt;/p&gt;
+&lt;h1&gt;5.6 - Reasoning About Concat&lt;/h1&gt;
+&lt;p&gt;proof of programs&lt;/p&gt;
+&lt;h3&gt;structural induction&lt;/h3&gt;
+&lt;p&gt;pb: prove some properties of concat:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image015.png" /&gt;&lt;/p&gt;
+&lt;p&gt;类似数学归纳法: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image016.png" /&gt;&lt;/p&gt;
+&lt;p&gt;ex. prove &lt;code&gt;(xs ++ ys) ++ zs = xs ++ (ys ++ zs)&lt;/code&gt;: induction on &lt;code&gt;xs&lt;/code&gt;&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def concat[T](xs: List[T], ys: List[T]) = xs match{
+    case Nil =&amp;gt; ys
+    case z::zs =&amp;gt; x:concat(xs, ys)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;base case: &lt;code&gt;xs=Nil&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;(Nil ++ ys ) ++ zs = Nil ++ (ys ++ zs)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;induction step: &lt;code&gt;x::xs&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image017.png" /&gt;&lt;/p&gt;
+&lt;h2&gt;5.7 - A Larger Equational Proof on Lists&lt;/h2&gt;
+&lt;p&gt;pb: want to prove that &lt;code&gt;xs.reverse.revese == xs&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;base case: &lt;code&gt;Nil.reverse.revers = Nil&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;induction step&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;pb: cannot advance 
+⇒ generalize the argument. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun1_lec5_lists/pasted_image018.png" /&gt;&lt;/p&gt;</summary><category term="scala"></category></entry><entry><title>R语言从入门到放弃 (4). 统计回归</title><link href="http://x-wei.github.io/Rnotes-4-regression.html" rel="alternate"></link><published>2016-07-29T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/Rnotes-4-regression.html</id><summary type="html">&lt;p&gt;R里面的统计函数有很多, 这里只用线性模型&lt;code&gt;lm&lt;/code&gt;以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(&lt;strong&gt;NW, &lt;/strong&gt;&lt;code&gt;ksmooth&lt;/code&gt;), Local Polynomial(&lt;strong&gt;LP, &lt;/strong&gt;&lt;code&gt;loess&lt;/code&gt;), Smoothing Spline(&lt;strong&gt;SS, &lt;/strong&gt;&lt;code&gt;smooth.spline&lt;/code&gt;). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. &lt;/p&gt;
 &lt;p&gt;数据的形式是:　&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="Rnotes-4-regression/pasted_image002.png" /&gt;&lt;/p&gt;
 &lt;p&gt;目标是估计函数m(). 例子使用R自带的&lt;code&gt;cars&lt;/code&gt;数据集, 它包含两列: 汽车速度speed和刹车距离dist. &lt;/p&gt;

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[Functional Programming Principles in Scala] Lec6: Collections</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Functional Programming Principles in Scala] Lec6: Collections">
+					[Functional Programming Principles in Scala] Lec6: Collections 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-07-30T00:00:00">
+	<i class="icon-calendar"></i>Sat, 30 Jul 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>scala</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h1>6.1 - Other Collections</h1>
+<p>so far: only seen List. → more (<strong>immutable</strong>) collections. </p>
+<h3>vector</h3>
+<p>List:  is linear -- access to head is faster than middle or end element. 
+Vector: better rand access performance. </p>
+<p>represented as very shallow trees(32-split at each node)</p>
+<p><img alt="" src="static/progfun1_lec6_collections/pasted_image.png" /></p>
+<p><code>Vector</code> support similar operations as List (head, tail,map, fold) , except concat <code>::</code>, instead Vectors have <code>+:</code> and <code>:+</code>:</p>
+<ul>
+<li><code>x +: xs</code> create new vector with x in head</li>
+<li><code>xs :+ x</code> create new vector with x in tail</li>
+</ul>
+<p>implementation of <code>:+</code>: create copies</p>
+<p><img alt="" src="static/progfun1_lec6_collections/pasted_image002.png" /></p>
+<h3>Seq</h3>
+<p><code>Seq</code> is base class for <code>Vector</code> and <code>List</code>, <code>Seq</code> itself is subclass of <code>Iterable</code>.</p>
+<p>Hierarchy of Iterables: </p>
+<p><img alt="" src="static/progfun1_lec6_collections/pasted_image005.png" /></p>
+<h3>Array ans String</h3>
+<p>Array and String support same op as Seq, can implicitly be converted to seq when needed. But they are NOT subclasses of Seq as they come from java. </p>
+<div class="codehilite"><pre><span></span>scala&gt; val xs: Array[Int] = Array(1,2,3)
+xs: Array[Int] = Array(1, 2, 3)
+
+scala&gt; xs map (2*_)
+res3: Array[Int] = Array(2, 4, 6)
+
+scala&gt; val ys = &quot;Hello&quot;
+ys: String = Hello
+
+scala&gt; ys filter (_.isUpper)
+res4: String = H
+</pre></div>
+
+
+<h3>Range</h3>
+<p>represents a seq of evenly spaced integers.</p>
+<p>represented as an obj with 3 values: lower bound, upper bound, step value. </p>
+<p>3 op: </p>
+<ul>
+<li><code>to</code>: inclusive </li>
+<li><code>until</code>: exclusive</li>
+<li>
+<p><code>by</code>: step value</p>
+<p>1 to 6       // 1 2 3 4 5 6
+1 until 6    // 1 2 3 4 5
+1 to 6 by 2  // 1 3 5
+6 to 1 by -2 // 6 4 2</p>
+</li>
+</ul>
+<h3>More ops on Seq</h3>
+<ul>
+<li><code>xs exists p</code></li>
+<li><code>xs forall p</code></li>
+<li>
+<p><code>xs zip ys</code>: takes 2 seq, returns a single seq, each elem is a pair</p>
+<p>scala&gt; List(1,2,3) zip Vector(2,3,4)
+res7: List[(Int, Int)] = List((1,2), (2,3), (3,4))</p>
+</li>
+<li>
+<p><code>xs.unzip</code>: reverse zip, return 2 lists </p>
+</li>
+<li>
+<p><code>xs flatMap f</code>: apply f to all elements, and <strong>concat the results</strong> </p>
+<p>scala&gt; "hello" flatMap (c =&gt; List('.', c))
+res9: String = .h.e.l.l.o</p>
+</li>
+<li>
+<p><code>flatten</code>: flatten a seq of seq into just one seq...</p>
+</li>
+</ul>
+<p><code>xs flatMap f = (xs map f).flatten</code></p>
+<p>The result is concated, instead of being a list of list. </p>
+<ul>
+<li><code>xs.sum</code>/<code>xs.product</code>: for numeric collection</li>
+<li><code>xs.max</code>/<code>xs.min</code>: an ordering must exist</li>
+</ul>
+<h3>Examples</h3>
+<ul>
+<li>cartesen product: 1..M x 1..N:</li>
+</ul>
+<p><code>(1 to M) flatMap( x =&gt; (1 to N) map (y =&gt; (x,y)) )</code></p>
+<ul>
+<li>
+<p>scalar of 2 vectors</p>
+<p>def scalaProd(xs: Vector[Double], ys: Vector[Double]): Double = 
+  (xs zip ys) map (xy =&gt; xy._1 * xy._2).sum</p>
+</li>
+</ul>
+<p>alternative: use pattern matching in map (need to add braces <code>{}</code>!): </p>
+<div class="codehilite"><pre><span></span>(xs zip ys) map ( {case(x,y) =&gt; x*y}).sum
+</pre></div>
+
+
+<ul>
+<li>test isPrime for a number</li>
+</ul>
+<p><code>def isPrime(n: Int): Boolean = (2 until n) forall (d =&gt; n%d!=0)</code></p>
+<h1>6.2 - Combinatorial Search and For-Expressions</h1>
+<p>goal: handle nested seq. </p>
+<p>⇒ extend usage of higher order functions instead of using nested loops. </p>
+<p>example:   </p>
+<blockquote>
+<p>given n, find all (i,j) st: 1&lt;=j&lt;i&lt;=n, and i+j is prime.</p>
+</blockquote>
+<p>(1 until n) flatMap ( i =&gt; (1 until i) map (j =&gt; (i,j)) ) filter ( {case(i,j) =&gt; isPrime(i+j)})</p>
+<p>this works, but less understandable... ⇒ for expressions. </p>
+<h3>for/yield expressions</h3>
+<p>example: class of person</p>
+<p><code>case class Person(name: String, age: Int)</code></p>
+<p>To obtain names of persons over 20 years old: </p>
+<p><code>persons filter (_.age&gt;20) map (_.name)</code></p>
+<p>equivalent to :</p>
+<p><code>for (p &lt;- person if p.age &gt; 20) yield p.name</code></p>
+<p>The for expression is similar to jave for-loop, except <strong>it builds a list of the results of all iterations</strong>. </p>
+<p>for expression form: </p>
+<blockquote>
+<p><code>for( s ) yield e</code>
+where <code>s</code> can contain <strong>generators</strong> and <strong>filters</strong>: </p>
+</blockquote>
+<ul>
+<li>generator: <code>p&lt;-e</code> where <code>e</code> is a collection, <code>p</code> is a pattern</li>
+<li>filter: <code>if f</code> where t is boolean expr</li>
+</ul>
+<p>rewrite the prime sum example: </p>
+<div class="codehilite"><pre><span></span><span class="kr">for</span><span class="p">{</span>
+  i <span class="o">&lt;-</span> <span class="m">1</span> until n
+  j <span class="o">&lt;-</span> <span class="m">1</span> until i
+  <span class="kr">if</span> isPrime<span class="p">(</span>i<span class="o">+</span>j<span class="p">)</span>
+<span class="p">}</span> yield <span class="p">(</span>i<span class="p">,</span>j<span class="p">)</span>
+</pre></div>
+
+
+<p>exercice: write the scalaProd using for expr: </p>
+<div class="codehilite"><pre><span></span>def scalaProd<span class="p">(</span>xs<span class="o">:</span> Vector<span class="p">[</span>Double<span class="p">],</span> ys<span class="o">:</span> Vector<span class="p">[</span>Double<span class="p">])</span><span class="o">:</span> Double <span class="o">=</span>
+    <span class="p">(</span><span class="kr">for</span><span class="p">(</span> <span class="p">(</span>x<span class="p">,</span>y<span class="p">)</span> <span class="o">&lt;-</span> xs zip ys <span class="p">)</span> yield x<span class="o">*</span>y <span class="p">)</span> <span class="kp">sum</span>
+</pre></div>
+
+
+<p>more on scala for expr: 
+<a href="http://www.artima.com/pins1ed/for-expressions-revisited.html">http://www.artima.com/pins1ed/for-expressions-revisited.html</a></p>
+<h1>6.3 - Combinatorial Search Example</h1>
+<p>goal: combine <code>set</code> and <code>for</code>-expr to solve the n-queens problem. </p>
+<h3>Sets</h3>
+<p>3 fundamental iterable collection types: seq, <strong>set</strong>, map. </p>
+<ul>
+<li>set support most operations on seq (c.f. doc on Iterable)</li>
+<li>sets are unordered</li>
+<li>set don't have dup elements</li>
+<li>contains: <code>s contains e</code></li>
+</ul>
+<h3>Example: N-Queens</h3>
+<p>8*8 chess board, 8 queens 
+⇒ places queens st: no two queen in same row/col/diag</p>
+<p>algo: put one queen in each row (in the right column) </p>
+<p>recursive solution: suppose already have solutions for first n-1 rows. 
+represent each (partial)solution as a list of column index. </p>
+<p>return all possible solutions (as a Set). </p>
+<div class="codehilite"><pre><span></span>def queens(n: Int): Set[List[Int]] = {
+    def placeQueens(k: Int): Set[List[Int]] = ???// place first k rows
+    placeQueens(n)
+}
+</pre></div>
+
+
+<p>Fill in the helper function: </p>
+<div class="codehilite"><pre><span></span>def placeQueens<span class="p">(</span>k<span class="o">:</span> Int<span class="p">)</span><span class="o">:</span> Set<span class="p">[</span>List<span class="p">[</span>Int<span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kr">if</span> <span class="p">(</span>k<span class="o">==</span><span class="m">0</span><span class="p">)</span> Set<span class="p">(</span>List<span class="p">())</span>
+    <span class="kr">else</span> <span class="kr">for</span><span class="p">{</span>
+        queens <span class="o">&lt;-</span> placeQueens<span class="p">(</span>k<span class="m">-1</span><span class="p">)</span> <span class="o">//</span> queens<span class="p">(</span>List<span class="p">[</span>Int<span class="p">])</span> <span class="o">=</span> one solution to k<span class="m">-1</span>
+        <span class="kt">c</span> <span class="o">&lt;-</span> <span class="m">0</span> until n
+        <span class="kr">if</span> isSafe<span class="p">(</span><span class="kt">c</span><span class="p">,</span> queens<span class="p">)</span> <span class="o">//</span> <span class="kr">if</span> column <span class="kt">c</span> doesn<span class="s">&#39;</span><span class="err">t conflict with the partial solution queens</span>
+    <span class="p">}</span> yield <span class="kt">c</span><span class="o">::</span>queens <span class="o">//</span> the kth row solution is <span class="kr">in</span> head of <span class="kt">list</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now fill in the function isSafe that check if a column is valid wrt queens for above rows:</p>
+<div class="codehilite"><pre><span></span>def isSafe(col: Int, queens: List[Int]): Boolean = {
+    val k = queens.length // current row is k
+    val indexedQueens = (k-1 to 0 by -1) zip queens // List[(row, col)]
+    indexedQueens forall { 
+            case(r,c) =&gt; c!=col &amp;&amp; k-r!=math.abs(c-col) }
+}
+</pre></div>
+
+
+<p>Now the queens function will work. </p>
+<p>Write another function to print the solution out: </p>
+<div class="codehilite"><pre><span></span>def show<span class="p">(</span>queens<span class="o">:</span> List<span class="p">[</span>Int<span class="p">])</span><span class="o">:</span> String <span class="o">=</span> <span class="p">{</span>
+    val lines <span class="o">=</span> <span class="kr">for</span> <span class="p">(</span>col <span class="o">&lt;-</span> queens.reverse<span class="p">)</span> 
+                yield Vector.fill<span class="p">(</span>queens.length<span class="p">(</span><span class="s">&quot;* &quot;</span><span class="p">)</span><span class="m">.</span>updated<span class="p">(</span><span class="kp">col</span><span class="p">,</span> <span class="s">&quot;X &quot;</span><span class="p">)</span><span class="m">.</span>mkString
+    <span class="s">&quot;\n&quot;</span> <span class="o">+</span> lines.mkString<span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="p">(</span>queens<span class="p">(</span><span class="m">4</span><span class="p">)</span> map show<span class="p">)</span> mkString <span class="s">&quot;====\n&quot;</span>
+</pre></div>
+
+
+<h1>6.4 - Maps</h1>
+<p><code>Map[Key, Value]</code></p>
+<p>ex: </p>
+<div class="codehilite"><pre><span></span>val romanNumerals = Map(&quot;I&quot; -&gt;1, &quot;V&quot; -&gt;5, &quot;X&quot; -&gt; 10)
+val captial = Map(&quot;France&quot; -&gt; &quot;Paris&quot;, &quot;US&quot; -&gt; &quot;Washington&quot;)
+</pre></div>
+
+
+<p>Maps are iterables and <strong>functions</strong>: maps Key to Value like a function call </p>
+<p>ex. <code>romanNumerals("I")</code></p>
+<p>will throw <code>NoSuchElementException</code> if the key is not in map. </p>
+<p>⇒ use <code>get</code>: </p>
+<div class="codehilite"><pre><span></span>scala&gt; captial(&quot;France&quot;)
+res3: String = Paris
+
+scala&gt; captial get &quot;France&quot;
+res4: Option[String] = Some(Paris)
+
+scala&gt; captial get &quot;China&quot;
+res5: Option[String] = None
+</pre></div>
+
+
+<p>have a look at the Option type:</p>
+<h3>The Option Type</h3>
+<p>definition: </p>
+<div class="codehilite"><pre><span></span>trait Option[+A]
+case class Some[+A](value: A] extends Option[A]
+object None extends Option[Nothing]
+</pre></div>
+
+
+<p>so the get function of map gives: </p>
+<ul>
+<li><code>None</code> if key is not in map</li>
+<li><code>Some(x)</code> if map associates key to x</li>
+</ul>
+<p>since <code>Some</code> is case class, can use pattern matching to decompose. </p>
+<div class="codehilite"><pre><span></span>def showCaptical(country: String) = captial.get(country) match{
+    case Some(cap) =&gt; cap
+    case None =&gt; &quot;missing data&quot;
+}
+</pre></div>
+
+
+<h3>Sorted and GroupBy</h3>
+<p>two useful SQL queries. </p>
+<ul>
+<li>
+<p>orderBy can be expressed using sortWith and sorted: </p>
+<p>val fruit = List("apple", "pear", "orange", "pineapple")
+scala&gt; fruit sortWith (<em>.length &lt; </em>.length)
+res7: List[String] = List(pear, apple, orange, pineapple)
+scala&gt; fruit.sorted
+res8: List[String] = List(apple, orange, pear, pineapple)</p>
+</li>
+<li>
+<p><code>GroupBy(f)</code>: <strong>partition a collection into a map of collections</strong> according to <code>f</code></p>
+<p>scala&gt; fruit groupBy (_.head)
+res9: scala.collection.immutable.Map[Char,List[String]] = 
+        Map(p -&gt; List(pear, pineapple), 
+            a -&gt; List(apple), 
+            o -&gt; List(orange))</p>
+</li>
+</ul>
+<h3>map Example: polynomials</h3>
+<p>can be seen as map from exponents to coefficients:</p>
+<p><img alt="" src="static/progfun1_lec6_collections/pasted_image006.png" /></p>
+<p>⇒ represent polynm as maps</p>
+<div class="codehilite"><pre><span></span>class Poly(val terms: Map[Int, Double]) {
+    def + (other: Poly) = new Poly(terms ++ // ++ on maps: will override older entries in terms!
+                            (other.terms maps adjust)) // adjust defined below
+
+    def adjust(term: (Int, Double)):(Int, Double) = {
+        val (exp, coeff) = term
+        terms get exp match{
+            case None =&gt; Pair(exp, coeff) // or write: exp -&gt; coeff
+            case Some(coeff1) =&gt; Pair(exp, coeff+coeff1)
+        }
+    }
+    override def toString = 
+    (for( (exp, coeff) <span class="nt">&lt;-</span> <span class="err">terms.toList.sorted.reverse)</span> <span class="err">yield</span> <span class="err">coeff+&quot;x^&quot;+exp)</span> <span class="err">mkString</span> <span class="err">&quot;+</span> <span class="err">&quot;</span>
+<span class="err">}</span>
+</pre></div>
+
+
+<h3>default values</h3>
+<p><code>withDefulatValue</code>: makes a map into a <strong>total map</strong></p>
+<p>rewrite the poly example: </p>
+<div class="codehilite"><pre><span></span>class Poly<span class="p">(</span>terms0<span class="o">:</span> <span class="kp">Map</span><span class="p">[</span>Int<span class="p">,</span> Double<span class="p">])</span> <span class="p">{</span>
+    val terms <span class="o">=</span> terms0 withDefaultValue <span class="m">0.0</span>
+    def <span class="o">+</span> <span class="p">(</span>other<span class="o">:</span> Poly<span class="p">)</span> <span class="o">=</span> new Poly<span class="p">(</span>terms <span class="o">++</span> <span class="o">//</span> <span class="o">++</span> on maps<span class="o">:</span> will override older entries <span class="kr">in</span> terms<span class="o">!</span>
+                            <span class="p">(</span>other.terms maps adjust<span class="p">))</span> <span class="o">//</span> adjust defined below
+
+    def adjust<span class="p">(</span>term<span class="o">:</span> <span class="p">(</span>Int<span class="p">,</span> Double<span class="p">))</span><span class="o">:</span><span class="p">(</span>Int<span class="p">,</span> Double<span class="p">)</span> <span class="o">=</span> <span class="p">{</span>
+        val <span class="p">(</span><span class="kp">exp</span><span class="p">,</span> coeff<span class="p">)</span> <span class="o">=</span> term
+        exp <span class="o">-&gt;</span> <span class="p">(</span>coeff <span class="o">+</span> terms<span class="p">(</span><span class="kp">exp</span><span class="p">))</span>
+    <span class="p">}</span>
+    override def toString <span class="o">=</span> 
+    <span class="p">(</span><span class="kr">for</span><span class="p">(</span> <span class="p">(</span><span class="kp">exp</span><span class="p">,</span> coeff<span class="p">)</span> <span class="o">&lt;-</span> terms.toList.sorted.reverse<span class="p">)</span> yield coeff<span class="o">+</span><span class="s">&quot;x^&quot;</span><span class="o">+</span><span class="kp">exp</span><span class="p">)</span> mkString <span class="s">&quot;+ &quot;</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>change to variable parameter for better constructor calling: add another constructor</p>
+<div class="codehilite"><pre><span></span>def this(bindings: (int, Double)*) = // bindings is s sequence
+this(bindings.toMap)
+</pre></div>
+
+
+<p>Exercie: re-implement the <code>+</code> using foldLeft : </p>
+<div class="codehilite"><pre><span></span>def + (other: Poly) =
+    new Poly( (other.terms foldLeft terms)(addTerm) )
+def addTerm(terms:Map[Int, Double], term: (Int, Double)): Map[Int, Double] = {
+    val (exp, coeff) = term
+    terms + ( exp -&gt; (coeff + terms(exp)) ) // map + (k,v) updates the map
+}
+</pre></div>
+
+
+<h1>6.5 - Putting the Pieces Together: T9 keyboard mnem</h1>
+<p>convert a seq of numbers to a scentence</p>
+<div class="codehilite"><pre><span></span>val mnem  = Map(&#39;2&#39;-&gt;&quot;ABC&quot;, &#39;3&#39;-&gt;&quot;DEF&quot;, 4-&gt;&quot;GHI&quot;, &#39;5&#39;-&gt;&quot;JKL&quot;,
+            &#39;6&#39;-&gt;&quot;MNO&quot;, &#39;7&#39;-&gt;&quot;PQRS&quot;, &#39;8&#39;-&gt;&quot;TUV&quot;, &#39;9&#39;-&gt;&quot;WXYZ&quot; )
+val in = Source.fromURL(&quot;...&quot;)
+val words = in.getLines.toList // dictionary: list of valid words
+</pre></div>
+
+
+<p>goal: design a <code>translate(phoneNumber)</code> that produces all phrases of words that can serve as mnemonics(助忆) for a phone number. </p>
+<p>Step 1: invert the mnem map to a map from A~Z to 2~9: </p>
+<div class="codehilite"><pre><span></span>val charCode: Map[Char, Char] = 
+for ( (digit, str) <span class="nt">&lt;-mnem</span><span class="err">;</span> <span class="err">ltr&lt;-str)</span> <span class="err">yield</span> <span class="err">ltr-</span><span class="nt">&gt;</span>digit
+</pre></div>
+
+
+<p>Step 2: map a word to the string it represents, ex. "java"-&gt;"5282"</p>
+<div class="codehilite"><pre><span></span>def wordCode(word: String):String = 
+    word.toUpperCase map charCode
+</pre></div>
+
+
+<p>Step 3: maps from digit string to all possible valid strings, ex. "5282"-&gt;List("java", "kata",...)
+⇒ just a groupby!!</p>
+<div class="codehilite"><pre><span></span>val wordsForNum: Map[String, Seq[String]] = 
+    words groupBy wordCode
+</pre></div>
+
+
+<p>→ Error: key not found: "-", some words contains a "-"... → drop such words... </p>
+<p><code>val words = in.getLines.toList filter (wd =&gt; wd forall (ch =&gt; ch.isLetter))</code></p>
+<p>Step 4: return all ways to encode a number as a list of words →  recursive, recurse on the nb of first words~</p>
+<div class="codehilite"><pre><span></span>def encode<span class="p">(</span>number<span class="o">:</span> String<span class="p">)</span><span class="o">:</span> Set<span class="p">[</span>List<span class="p">[</span>String<span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="kr">if</span><span class="p">(</span>number.isEmpty<span class="p">)</span> Set<span class="p">(</span>List<span class="p">())</span>
+    <span class="kp">else</span><span class="p">{</span> 
+        val phraseList <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>  
+            split <span class="o">&lt;-</span> <span class="m">1</span> to number.length <span class="o">//</span> the first word <span class="kr">in</span> phrase uses numbers<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="kp">split</span><span class="p">]</span>
+            firstWd <span class="o">&lt;-</span> wordsForNum<span class="p">[</span> number.take<span class="p">(</span><span class="kp">split</span><span class="p">)</span> <span class="p">]</span>
+            followingWds <span class="o">&lt;-</span> encode<span class="p">(</span>number.drop<span class="p">(</span><span class="kp">split</span><span class="p">))</span>
+        <span class="p">}</span> yield firstWd<span class="o">::</span>follwingWds
+        phraseList.toSet
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>⇒ error in the line with <code>wordsForNum</code>: key not found... 
+⇒ <code>wordsForNum["7"]</code> will give error 
+⇒ make the <code>wordsForNum</code> a total map, using withDefaultValue</p>
+<div class="codehilite"><pre><span></span>val wordsForNum: Map[String, Seq[String]] = 
+    (words groupBy wordCode) withDefaultValue( Seq() )
+</pre></div>
+
+
+<p>Step 5: return strings (instead of List[String])</p>
+<div class="codehilite"><pre><span></span>def translate(number: String): Set[String] = {  
+    encode(number) map (_.mkString(&quot; &quot;))
+}
+</pre></div>
+
+
+<p>summary: 
+<img alt="" src="static/progfun1_lec6_collections/pasted_image007.png" /></p>
+<h1>Conclusion</h1>
+<p><img alt="" src="static/progfun1_lec6_collections/pasted_image009.png" /></p>
+<p><a href="https://www.scala-exercises.org/">https://www.scala-exercises.org/</a></p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "progfun1_lec6_collections.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/R.html">R</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>
