@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[Functional Program Design in Scala] Lec1: For Expressions and Monads</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [Functional Program Design in Scala] Lec1: For Expressions and Monads">
+					[Functional Program Design in Scala] Lec1: For Expressions and Monads 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-08-12T00:00:00">
+	<i class="icon-calendar"></i>Fri, 12 Aug 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>scala</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<h1>Recap: Functions and Pattern Matching</h1>
+<h3>case classes</h3>
+<p>ex: json
+json objects can be seq, num, str, bool,...</p>
+<p>⇒ represented as abstract class and case classes. </p>
+<h3>pattern matching</h3>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image002.png" /></p>
+<p>→ question: what is the type of the <code>{case(key, value)=&gt;"..."}</code> clause? </p>
+<p>it is <code>(JBinding =&gt; String)</code> type, which is a shorthand for <code>Function1[JBinding, String]</code>. </p>
+<h3>Function1 Trait</h3>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image003.png" /></p>
+<h3>subclass a function type</h3>
+<p>function types can also be extended ! </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image005.png" /></p>
+<p>element accessing can be written as function calls because <code>Seq</code>s are functions!</p>
+<h3>Partial Match</h3>
+<p>if there is no match → throw MatchError</p>
+<div class="codehilite"><pre><span></span>val f: String=&gt;String  = {case &quot;ping&quot; =&gt; &quot;pong&quot;}
+f(&quot;ping&quot;) // no pb
+f(&quot;abc&quot;) // MatchError
+</pre></div>
+
+
+<p>⇒ define f as partial function</p>
+<div class="codehilite"><pre><span></span>val f: PartialFunction[String,String]  = {case &quot;ping&quot; =&gt; &quot;pong&quot;}
+f.isDefinedAt(&quot;ping&quot;)
+f.isDefinedAt(&quot;abc&quot;)
+</pre></div>
+
+
+<p><code>isDefinedAt</code> is a method for the <code>PartialFunction</code> class. </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image006.png" /></p>
+<p>The f definition is translated to: </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image007.png" /></p>
+<p>But the <code>PartialFunction</code> will only apply for level 1: </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image008.png" /></p>
+<h1>Recap: Collections</h1>
+<p>scala collections hirarchy: </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image009.png" /></p>
+<p>collections <em>share</em> some general methods (<strong>core methods</strong>): </p>
+<ul>
+<li>map</li>
+<li>flatMap</li>
+<li>filter</li>
+<li>foldLeft/foldRight</li>
+</ul>
+<p>(idealized) implementation of <code>map</code> and <code>flatMap</code> on Lists: </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image011.png" /></p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image013.png" /></p>
+<h3>For expressions</h3>
+<p>for-expr can <em>simplify combinations of core methods</em>. </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image014.png" /></p>
+<p><strong>the</strong> <strong>lhs of a generator can also be a pattern!</strong></p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image015.png" /></p>
+<p>pat &lt;- expr </p>
+<p>is translated to : </p>
+<div class="codehilite"><pre><span></span>x <span class="o">&lt;-</span> expr withFilter <span class="p">{</span>case pat <span class="o">=&gt;</span> true<span class="p">;</span> case _ <span class="o">=&gt;</span> false
+                <span class="p">}</span> map <span class="p">{</span>case pat <span class="o">=&gt;</span> x<span class="p">}</span>
+</pre></div>
+
+
+<h1>1.1 - Queries with For</h1>
+<p>for notation is equivalent to common ops on databases(ex. sql). </p>
+<p>ex. books in library</p>
+<p><code>case class Book(title: String, authors: List[String])</code></p>
+<p>query1: books with author name is "Bird"</p>
+<div class="codehilite"><pre><span></span><span class="kr">for</span><span class="p">(</span> b<span class="o">&lt;-</span>books<span class="p">;</span> a <span class="o">&lt;-</span> b.authors <span class="kr">if</span> a startsWith <span class="s">&quot;Bird,&quot;</span><span class="p">)</span> 
+yield b.title
+</pre></div>
+
+
+<p>query2: books with "Program" in the title: </p>
+<div class="codehilite"><pre><span></span><span class="kr">for</span><span class="p">(</span> b<span class="o">&lt;-</span>books <span class="kr">if</span> b.title indexOf <span class="s">&quot;Program&quot;</span> <span class="o">&gt;=</span><span class="m">0</span><span class="p">)</span>
+yield b.title
+</pre></div>
+
+
+<p>query3: names of authors who wrote &gt;=2 books</p>
+<div class="codehilite"><pre><span></span><span class="kr">for</span><span class="p">{</span>
+    b1 <span class="o">&lt;-</span> books
+    b2 <span class="o">&lt;-</span> books 
+    <span class="kr">if</span> b1<span class="o">!=</span>b2
+    a1 <span class="o">&lt;-</span> b1.authors
+    a2 <span class="o">&lt;-</span> b2.authors
+    <span class="kr">if</span> a1<span class="o">==</span>a2
+<span class="p">}</span> yield a1
+</pre></div>
+
+
+<p>→ pb: the authors will be doubled → b1,b2 and b2,b1
+⇒ change line 3 to <code>b1.title &lt; b2.title</code></p>
+<p>→ still pb: print 3 times if authors write 3 books... 
+⇒ 
+sol1. use <code>distinct</code> function 
+sol2. decalre books as Set instead of List. </p>
+<h1>1.2 - Translation of For</h1>
+<p>for expressions → higer order functions</p>
+<p>map, flatMap, filter can all be implemented with for expression:</p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image016.png" /></p>
+<p>In reality: scala translates for expr to map/flatMap/filter. </p>
+<h3>implemention of for-expr: 3 rules</h3>
+<ul>
+<li>rule 1: in for(..) only a simple generator </li>
+</ul>
+<p><code>for(x &lt;- l1) yield e2</code></p>
+<p>is translated to: <code>l1.map(x =&gt; e2)</code></p>
+<ul>
+<li>rule2: in for(..), followed by the generator there is a filter</li>
+</ul>
+<p><code>for(x &lt;- l1 if f; s) yield e2 //s is seq of other generators and filters</code></p>
+<p>is translated to: </p>
+<p><code>for( x &lt;- l1.withFilter(x=&gt;f) ) yield e2</code></p>
+<ul>
+<li>rule3: in for(..), starts with 2 generators → flatMap</li>
+</ul>
+<p><code>for( x&lt;-l1; y&lt;-l2; s) yield e3</code></p>
+<p>is translated to: </p>
+<p><code>l1.flatMap( x =&gt; for(y&lt;-l2; s) yield e3 )</code></p>
+<p>example: </p>
+<div class="codehilite"><pre><span></span><span class="kr">for</span><span class="p">{</span> 
+b <span class="o">&lt;-</span> books
+a <span class="o">&lt;-</span> b.authors <span class="kr">if</span> a startsWith <span class="s">&quot;Bird&quot;</span>
+<span class="p">}</span> yield b.title
+</pre></div>
+
+
+<p>translated to: </p>
+<div class="codehilite"><pre><span></span>books flatMap ( 
+    b =&gt; b.authors.filter( a =&gt; a startsWith &quot;Bird&quot;).map(y=&gt;y.title)
+
+)
+</pre></div>
+
+
+<p>NB: for expr is not restricted to collections, it supports any types with <code>map/flatMap/withFilter</code> method. ⇒ use for expr for your own types as well. </p>
+<h1>1.3 - Functional Random Generators</h1>
+<p>goal: use for expr on rand generators. </p>
+<p>for expr support any type with map/flatMap/filter ⇒ ex. rand value generator. </p>
+<p>generate rand value of type T: </p>
+<div class="codehilite"><pre><span></span>trait Generator[+T] { 
+def generate: T
+}
+</pre></div>
+
+
+<p>first implement Generator[Int], then use this to implement booleans, pairs, lists, sets, trees,......</p>
+<div class="codehilite"><pre><span></span>val integers = new Generator[Int]{
+    val rand = new java.util.Random
+    def generate = rand.nextInt()
+}
+
+val booleans = new Generator[Boolean{
+    def generate = integers.generate &gt; 0
+}
+
+val pairs = new Generator[(Int, Int)]{
+    def generate = (integers.generate, integers.generate)
+}
+</pre></div>
+
+
+<p>→ can we avoid the <code>new Generator[...]</code> ? </p>
+<p><em>ideally we want to write booleans as pairs as:</em> </p>
+<div class="codehilite"><pre><span></span>val booleans <span class="o">=</span> <span class="kr">for</span><span class="p">(</span> x <span class="o">&lt;-</span> integers <span class="p">)</span> yield x<span class="o">&gt;</span><span class="m">0</span>
+def pairs<span class="p">[</span><span class="bp">T</span><span class="p">,</span>U<span class="p">](</span><span class="kp">t</span><span class="o">:</span> Generator<span class="p">[</span><span class="bp">T</span><span class="p">],</span> u<span class="o">:</span> Generator<span class="p">[</span>U<span class="p">])</span> <span class="o">=</span> 
+    <span class="kr">for</span><span class="p">{</span>x <span class="o">&lt;-</span> <span class="kp">t</span><span class="p">;</span> y <span class="o">&lt;-</span> u<span class="p">}</span> yield <span class="p">(</span>x<span class="p">,</span>y<span class="p">)</span>
+</pre></div>
+
+
+<p>the for expr will be translated to map/flatMap/filter... </p>
+<p>⇒ define map and flatMap on the Generator trait so that it supports for expr!</p>
+<div class="codehilite"><pre><span></span>trait Generator[+T]{
+    self =&gt; // syntax: `self` is an alias of `this`
+    def generate: T
+
+    def map[S](f: T=&gt;S): Generator[S] = 
+        new Generator[S]{
+            def generate = f(self.generate) // can&#39;t use `this` here: inf loop
+            // or use Generator.this.generate
+        }
+
+    def flatMap(f: T=&gt;Generator[S]): Generator[S] = 
+        new Generator[S]{   
+            def generate = f(self.generate).generate 
+        }
+}
+</pre></div>
+
+
+<p>ex. the booleans expression: </p>
+<p><code>val booleans = for (x&lt;-integers) yield x&gt;0</code></p>
+<p>is translated to: </p>
+<p><code>val booleans = integers map (x=&gt;x&gt;0)</code></p>
+<p>which is then expands to: </p>
+<div class="codehilite"><pre><span></span>val booleans = 
+new Generator[Boolean]{
+    val f = (x =&gt; x&gt;0)
+    def generate = f(integers.generate)
+
+}
+</pre></div>
+
+
+<p>after reduction, the expression is: </p>
+<div class="codehilite"><pre><span></span>val booleans = new Generator[Boolean{
+    def generate = integers.generate &gt; 0
+}
+</pre></div>
+
+
+<p>which is the initial implementation... </p>
+<h3>other base Generators</h3>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image017.png" /></p>
+<p>(The <code>T*</code> syntax is variable parameter)</p>
+<h3>rand List Generator</h3>
+<div class="codehilite"><pre><span></span>def lists<span class="o">:</span> Generator<span class="p">[</span>List<span class="p">[</span>Int<span class="p">]]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>
+    isEmpty <span class="o">&lt;-</span> booleans
+    <span class="kt">list</span> <span class="o">&lt;-</span> <span class="kr">if</span> <span class="p">(</span>isEmpty<span class="p">)</span> emptyLists <span class="kr">else</span> nonEmptyLists
+<span class="p">}</span> yield <span class="kt">list</span>
+
+def emptyLists <span class="o">=</span> <span class="kp">single</span><span class="p">(</span>Nil<span class="p">)</span>
+
+def nonEmptyLists <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>
+    head <span class="o">&lt;-</span> integers
+    tail <span class="o">&lt;-</span> lists <span class="o">//</span> recursive call to <span class="sb">`lists`</span>
+<span class="p">}</span> yield <span class="kp">head</span><span class="o">::</span><span class="kp">tail</span>
+</pre></div>
+
+
+<h3>rand (binary) Tree Generator</h3>
+<p>two types of tree nodes: leaf or inner node</p>
+<div class="codehilite"><pre><span></span>def trees<span class="o">:</span> Generator<span class="p">[</span>Tree<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>
+    isLeaf <span class="o">&lt;-</span> booleans
+    tree <span class="o">&lt;-</span> <span class="kr">if</span><span class="p">(</span>isLeaf<span class="p">)</span> leafs <span class="kr">else</span> inners
+<span class="p">}</span> yield tree
+
+def leafs<span class="o">:</span> Generator<span class="p">[</span>Leaf<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>
+    x <span class="o">&lt;-</span> integers
+<span class="p">}</span> yield Leaf<span class="p">(</span>x<span class="p">)</span>
+
+def inners<span class="o">:</span> Generator<span class="p">[</span>Inner<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span>
+    l <span class="o">&lt;-</span> trees
+    r <span class="o">&lt;-</span> trees
+<span class="p">}</span> yield Inner<span class="p">(</span>l<span class="p">,</span> r<span class="p">)</span>
+</pre></div>
+
+
+<h2>Application: random testing</h2>
+<p>test: check <em>postconditions</em> (expected results)</p>
+<p>→ generate random test inputs</p>
+<p>a generic wrapper:</p>
+<div class="codehilite"><pre><span></span>def randTest[T](g: Generator[T], numTimes: Int=100)(testfcn: T=&gt;Boolean): Unit = {
+    for( i <span class="nt">&lt;-</span> <span class="err">0</span> <span class="err">until</span> <span class="err">numTimes){</span>
+        <span class="err">val</span> <span class="na">value:T =</span> <span class="s">g.generate</span>
+        <span class="err">assert(testfcn(value),</span> <span class="err">&quot;test</span> <span class="err">failed</span> <span class="err">for</span> <span class="err">&quot;+value)</span>
+    <span class="err">}</span>
+    <span class="err">println(&quot;passed&quot;</span> <span class="err">+</span> <span class="err">numTime</span> <span class="err">+</span> <span class="err">&quot;tests&quot;)</span>
+<span class="err">}</span>
+</pre></div>
+
+
+<h3>ScalaCheck</h3>
+<p><em>instead of writing tests, write properties that are assumed to hold.</em> </p>
+<div class="codehilite"><pre><span></span>forAll { 
+    (l1:List[Int], l2:List[Int]) =&gt;
+        l1.size + l2.size == (l1++l2).size
+}
+</pre></div>
+
+
+<h1>1.4 - Monads</h1>
+<p>from last section: not only collections, but also any type with map and flatmap can use for expr ⇒ monads. </p>
+<p><def>. Monads is a type M[T] with 2 operations: <code>flatMap</code> ("bind") and <code>unit</code>, and satisfy some laws.</p>
+<div class="codehilite"><pre><span></span>train M[T]{
+    def flatMap[U](f: T=&gt;M[U]): M[U]): M[U]
+}
+def unit[T](x:T): M[T]
+</pre></div>
+
+
+<p>examples: </p>
+<ul>
+<li><code>List</code> is a monad, <code>unit(x) = List(x)</code></li>
+<li><code>Set</code>, with <code>unit(x) = Set(x)</code></li>
+<li><code>Option</code>, with <code>unit(x) = Some(x)</code></li>
+<li><code>Generator</code>, with <code>unit(x) = single(x)</code></li>
+</ul>
+<p><code>map</code> can be defined as a combination of <code>flatMap</code> and <code>unit</code>: </p>
+<p><code>m map f == m flatMap (x =&gt; unit( f(x)) )</code></p>
+<h3>Monad laws</h3>
+<ul>
+<li>associativity</li>
+</ul>
+<p><code>(m flatMap f) flatMap g == m flatMap ( x =&gt; f(x) flatMap g )</code> </p>
+<p>↔ (x+y+z) = x+(y+z)</p>
+<ul>
+<li>left unit</li>
+</ul>
+<p><code>unit(x) flatMap f == f(x)</code></p>
+<ul>
+<li>right unit</li>
+</ul>
+<p><code>m flatMap unit == m</code></p>
+<h2>the Try type</h2>
+<p>We define a Try class, which is similar to Option class. </p>
+<div class="codehilite"><pre><span></span>abstraxt class Try[+T]
+case class Success[T](x:T) extends Try[T]
+case class Failure(ex: Exception) extends Try[Nothing]
+</pre></div>
+
+
+<p>we can write <code>Try(expr)</code> to give a computation a try, by implementing the <code>apply</code> method of object Try:</p>
+<div class="codehilite"><pre><span></span>object Try{
+def apply[T](expr: =&gt;T): Try[T]= // expr is passed BY NAME, otherwise will cause exception in eval
+    try Success(expr) // java syntax of try-catch
+    catch{ case NonFatal(ex) =&gt; Failure(ex) }
+}
+}
+</pre></div>
+
+
+<p>if Try is a Monad ⇒ can be written in for expr: </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image018.png" /></p>
+<p>⇒ define map and flatMap on <code>Try</code> type. </p>
+<p><img alt="" src="static/progfun2_lec1_forexpr/pasted_image019.png" /></p>
+<p>question: is Try a monad with <code>unit(x)=Try(x)</code>?
+⇒ no, left-unit fails: <code>Try(expr) flatMap f != f(expr)</code>
+(lhs never nonfatal exception, but rhs will raise)</p>
+<p>Try is not a monad, but it can still use for expr...</p>
+<h3>Conclusion</h3>
+<p>for exprs are useful not only for collections: <code>Generator</code>, <code>Option</code>, <code>Try</code></p>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "progfun2_lec1_forexpr.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/R.html">R</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

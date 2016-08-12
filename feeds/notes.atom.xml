@@ -1,5 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-07-30T00:00:00+02:00</updated><entry><title>[Functional Programming Principles in Scala] Lec6: Collections</title><link href="http://x-wei.github.io/progfun1_lec6_collections.html" rel="alternate"></link><published>2016-07-30T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec6_collections.html</id><summary type="html">&lt;h1&gt;6.1 - Other Collections&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/notes.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-08-12T00:00:00+02:00</updated><entry><title>[Functional Program Design in Scala] Lec1: For Expressions and Monads</title><link href="http://x-wei.github.io/progfun2_lec1_forexpr.html" rel="alternate"></link><published>2016-08-12T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun2_lec1_forexpr.html</id><summary type="html">&lt;h1&gt;Recap: Functions and Pattern Matching&lt;/h1&gt;
+&lt;h3&gt;case classes&lt;/h3&gt;
+&lt;p&gt;ex: json
+json objects can be seq, num, str, bool,...&lt;/p&gt;
+&lt;p&gt;⇒ represented as abstract class and case classes. &lt;/p&gt;
+&lt;h3&gt;pattern matching&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image002.png" /&gt;&lt;/p&gt;
+&lt;p&gt;→ question: what is the type of the &lt;code&gt;{case(key, value)=&amp;gt;"..."}&lt;/code&gt; clause? &lt;/p&gt;
+&lt;p&gt;it is &lt;code&gt;(JBinding =&amp;gt; String)&lt;/code&gt; type, which is a shorthand for &lt;code&gt;Function1[JBinding, String]&lt;/code&gt;. &lt;/p&gt;
+&lt;h3&gt;Function1 Trait&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image003.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;subclass a function type&lt;/h3&gt;
+&lt;p&gt;function types can also be extended ! &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image005.png" /&gt;&lt;/p&gt;
+&lt;p&gt;element accessing can be written as function calls because &lt;code&gt;Seq&lt;/code&gt;s are functions!&lt;/p&gt;
+&lt;h3&gt;Partial Match&lt;/h3&gt;
+&lt;p&gt;if there is no match → throw MatchError&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val f: String=&amp;gt;String  = {case &amp;quot;ping&amp;quot; =&amp;gt; &amp;quot;pong&amp;quot;}
+f(&amp;quot;ping&amp;quot;) // no pb
+f(&amp;quot;abc&amp;quot;) // MatchError
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;⇒ define f as partial function&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val f: PartialFunction[String,String]  = {case &amp;quot;ping&amp;quot; =&amp;gt; &amp;quot;pong&amp;quot;}
+f.isDefinedAt(&amp;quot;ping&amp;quot;)
+f.isDefinedAt(&amp;quot;abc&amp;quot;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;isDefinedAt&lt;/code&gt; is a method for the &lt;code&gt;PartialFunction&lt;/code&gt; class. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image006.png" /&gt;&lt;/p&gt;
+&lt;p&gt;The f definition is translated to: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image007.png" /&gt;&lt;/p&gt;
+&lt;p&gt;But the &lt;code&gt;PartialFunction&lt;/code&gt; will only apply for level 1: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image008.png" /&gt;&lt;/p&gt;
+&lt;h1&gt;Recap: Collections&lt;/h1&gt;
+&lt;p&gt;scala collections hirarchy: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image009.png" /&gt;&lt;/p&gt;
+&lt;p&gt;collections &lt;em&gt;share&lt;/em&gt; some general methods (&lt;strong&gt;core methods&lt;/strong&gt;): &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;map&lt;/li&gt;
+&lt;li&gt;flatMap&lt;/li&gt;
+&lt;li&gt;filter&lt;/li&gt;
+&lt;li&gt;foldLeft/foldRight&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(idealized) implementation of &lt;code&gt;map&lt;/code&gt; and &lt;code&gt;flatMap&lt;/code&gt; on Lists: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image011.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image013.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;For expressions&lt;/h3&gt;
+&lt;p&gt;for-expr can &lt;em&gt;simplify combinations of core methods&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image014.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;the&lt;/strong&gt; &lt;strong&gt;lhs of a generator can also be a pattern!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image015.png" /&gt;&lt;/p&gt;
+&lt;p&gt;pat &amp;lt;- expr &lt;/p&gt;
+&lt;p&gt;is translated to : &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;x &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; expr withFilter &lt;span class="p"&gt;{&lt;/span&gt;case pat &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; true&lt;span class="p"&gt;;&lt;/span&gt; case _ &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; false
+                &lt;span class="p"&gt;}&lt;/span&gt; map &lt;span class="p"&gt;{&lt;/span&gt;case pat &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; x&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;1.1 - Queries with For&lt;/h1&gt;
+&lt;p&gt;for notation is equivalent to common ops on databases(ex. sql). &lt;/p&gt;
+&lt;p&gt;ex. books in library&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;case class Book(title: String, authors: List[String])&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;query1: books with author name is "Bird"&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; b&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;books&lt;span class="p"&gt;;&lt;/span&gt; a &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; b.authors &lt;span class="kr"&gt;if&lt;/span&gt; a startsWith &lt;span class="s"&gt;&amp;quot;Bird,&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+yield b.title
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;query2: books with "Program" in the title: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; b&lt;span class="o"&gt;&amp;lt;-&lt;/span&gt;books &lt;span class="kr"&gt;if&lt;/span&gt; b.title indexOf &lt;span class="s"&gt;&amp;quot;Program&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+yield b.title
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;query3: names of authors who wrote &amp;gt;=2 books&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    b1 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; books
+    b2 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; books 
+    &lt;span class="kr"&gt;if&lt;/span&gt; b1&lt;span class="o"&gt;!=&lt;/span&gt;b2
+    a1 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; b1.authors
+    a2 &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; b2.authors
+    &lt;span class="kr"&gt;if&lt;/span&gt; a1&lt;span class="o"&gt;==&lt;/span&gt;a2
+&lt;span class="p"&gt;}&lt;/span&gt; yield a1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;→ pb: the authors will be doubled → b1,b2 and b2,b1
+⇒ change line 3 to &lt;code&gt;b1.title &amp;lt; b2.title&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;→ still pb: print 3 times if authors write 3 books... 
+⇒ 
+sol1. use &lt;code&gt;distinct&lt;/code&gt; function 
+sol2. decalre books as Set instead of List. &lt;/p&gt;
+&lt;h1&gt;1.2 - Translation of For&lt;/h1&gt;
+&lt;p&gt;for expressions → higer order functions&lt;/p&gt;
+&lt;p&gt;map, flatMap, filter can all be implemented with for expression:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image016.png" /&gt;&lt;/p&gt;
+&lt;p&gt;In reality: scala translates for expr to map/flatMap/filter. &lt;/p&gt;
+&lt;h3&gt;implemention of for-expr: 3 rules&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;rule 1: in for(..) only a simple generator &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;for(x &amp;lt;- l1) yield e2&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;is translated to: &lt;code&gt;l1.map(x =&amp;gt; e2)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;rule2: in for(..), followed by the generator there is a filter&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;for(x &amp;lt;- l1 if f; s) yield e2 //s is seq of other generators and filters&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;is translated to: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;for( x &amp;lt;- l1.withFilter(x=&amp;gt;f) ) yield e2&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;rule3: in for(..), starts with 2 generators → flatMap&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;for( x&amp;lt;-l1; y&amp;lt;-l2; s) yield e3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;is translated to: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;l1.flatMap( x =&amp;gt; for(y&amp;lt;-l2; s) yield e3 )&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;example: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; 
+b &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; books
+a &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; b.authors &lt;span class="kr"&gt;if&lt;/span&gt; a startsWith &lt;span class="s"&gt;&amp;quot;Bird&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; yield b.title
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;translated to: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;books flatMap ( 
+    b =&amp;gt; b.authors.filter( a =&amp;gt; a startsWith &amp;quot;Bird&amp;quot;).map(y=&amp;gt;y.title)
+
+)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;NB: for expr is not restricted to collections, it supports any types with &lt;code&gt;map/flatMap/withFilter&lt;/code&gt; method. ⇒ use for expr for your own types as well. &lt;/p&gt;
+&lt;h1&gt;1.3 - Functional Random Generators&lt;/h1&gt;
+&lt;p&gt;goal: use for expr on rand generators. &lt;/p&gt;
+&lt;p&gt;for expr support any type with map/flatMap/filter ⇒ ex. rand value generator. &lt;/p&gt;
+&lt;p&gt;generate rand value of type T: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trait Generator[+T] { 
+def generate: T
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;first implement Generator[Int], then use this to implement booleans, pairs, lists, sets, trees,......&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val integers = new Generator[Int]{
+    val rand = new java.util.Random
+    def generate = rand.nextInt()
+}
+
+val booleans = new Generator[Boolean{
+    def generate = integers.generate &amp;gt; 0
+}
+
+val pairs = new Generator[(Int, Int)]{
+    def generate = (integers.generate, integers.generate)
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;→ can we avoid the &lt;code&gt;new Generator[...]&lt;/code&gt; ? &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;ideally we want to write booleans as pairs as:&lt;/em&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val booleans &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; x &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; integers &lt;span class="p"&gt;)&lt;/span&gt; yield x&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;
+def pairs&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;U&lt;span class="p"&gt;](&lt;/span&gt;&lt;span class="kp"&gt;t&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="bp"&gt;T&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; u&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;U&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 
+    &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;x &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;t&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; y &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; u&lt;span class="p"&gt;}&lt;/span&gt; yield &lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;,&lt;/span&gt;y&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;the for expr will be translated to map/flatMap/filter... &lt;/p&gt;
+&lt;p&gt;⇒ define map and flatMap on the Generator trait so that it supports for expr!&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trait Generator[+T]{
+    self =&amp;gt; // syntax: `self` is an alias of `this`
+    def generate: T
+
+    def map[S](f: T=&amp;gt;S): Generator[S] = 
+        new Generator[S]{
+            def generate = f(self.generate) // can&amp;#39;t use `this` here: inf loop
+            // or use Generator.this.generate
+        }
+
+    def flatMap(f: T=&amp;gt;Generator[S]): Generator[S] = 
+        new Generator[S]{   
+            def generate = f(self.generate).generate 
+        }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;ex. the booleans expression: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;val booleans = for (x&amp;lt;-integers) yield x&amp;gt;0&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;is translated to: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;val booleans = integers map (x=&amp;gt;x&amp;gt;0)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;which is then expands to: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val booleans = 
+new Generator[Boolean]{
+    val f = (x =&amp;gt; x&amp;gt;0)
+    def generate = f(integers.generate)
+
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;after reduction, the expression is: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;val booleans = new Generator[Boolean{
+    def generate = integers.generate &amp;gt; 0
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;which is the initial implementation... &lt;/p&gt;
+&lt;h3&gt;other base Generators&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image017.png" /&gt;&lt;/p&gt;
+&lt;p&gt;(The &lt;code&gt;T*&lt;/code&gt; syntax is variable parameter)&lt;/p&gt;
+&lt;h3&gt;rand List Generator&lt;/h3&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def lists&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;List&lt;span class="p"&gt;[&lt;/span&gt;Int&lt;span class="p"&gt;]]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    isEmpty &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; booleans
+    &lt;span class="kt"&gt;list&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;isEmpty&lt;span class="p"&gt;)&lt;/span&gt; emptyLists &lt;span class="kr"&gt;else&lt;/span&gt; nonEmptyLists
+&lt;span class="p"&gt;}&lt;/span&gt; yield &lt;span class="kt"&gt;list&lt;/span&gt;
+
+def emptyLists &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;single&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;Nil&lt;span class="p"&gt;)&lt;/span&gt;
+
+def nonEmptyLists &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    head &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; integers
+    tail &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; lists &lt;span class="o"&gt;//&lt;/span&gt; recursive call to &lt;span class="sb"&gt;`lists`&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; yield &lt;span class="kp"&gt;head&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="kp"&gt;tail&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;rand (binary) Tree Generator&lt;/h3&gt;
+&lt;p&gt;two types of tree nodes: leaf or inner node&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def trees&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;Tree&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    isLeaf &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; booleans
+    tree &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kr"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;isLeaf&lt;span class="p"&gt;)&lt;/span&gt; leafs &lt;span class="kr"&gt;else&lt;/span&gt; inners
+&lt;span class="p"&gt;}&lt;/span&gt; yield tree
+
+def leafs&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;Leaf&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    x &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; integers
+&lt;span class="p"&gt;}&lt;/span&gt; yield Leaf&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="p"&gt;)&lt;/span&gt;
+
+def inners&lt;span class="o"&gt;:&lt;/span&gt; Generator&lt;span class="p"&gt;[&lt;/span&gt;Inner&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;for&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    l &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; trees
+    r &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; trees
+&lt;span class="p"&gt;}&lt;/span&gt; yield Inner&lt;span class="p"&gt;(&lt;/span&gt;l&lt;span class="p"&gt;,&lt;/span&gt; r&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Application: random testing&lt;/h2&gt;
+&lt;p&gt;test: check &lt;em&gt;postconditions&lt;/em&gt; (expected results)&lt;/p&gt;
+&lt;p&gt;→ generate random test inputs&lt;/p&gt;
+&lt;p&gt;a generic wrapper:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def randTest[T](g: Generator[T], numTimes: Int=100)(testfcn: T=&amp;gt;Boolean): Unit = {
+    for( i &lt;span class="nt"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="err"&gt;0&lt;/span&gt; &lt;span class="err"&gt;until&lt;/span&gt; &lt;span class="err"&gt;numTimes){&lt;/span&gt;
+        &lt;span class="err"&gt;val&lt;/span&gt; &lt;span class="na"&gt;value:T =&lt;/span&gt; &lt;span class="s"&gt;g.generate&lt;/span&gt;
+        &lt;span class="err"&gt;assert(testfcn(value),&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;test&lt;/span&gt; &lt;span class="err"&gt;failed&lt;/span&gt; &lt;span class="err"&gt;for&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;+value)&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;
+    &lt;span class="err"&gt;println(&amp;quot;passed&amp;quot;&lt;/span&gt; &lt;span class="err"&gt;+&lt;/span&gt; &lt;span class="err"&gt;numTime&lt;/span&gt; &lt;span class="err"&gt;+&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;tests&amp;quot;)&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;ScalaCheck&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;instead of writing tests, write properties that are assumed to hold.&lt;/em&gt; &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;forAll { 
+    (l1:List[Int], l2:List[Int]) =&amp;gt;
+        l1.size + l2.size == (l1++l2).size
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;1.4 - Monads&lt;/h1&gt;
+&lt;p&gt;from last section: not only collections, but also any type with map and flatmap can use for expr ⇒ monads. &lt;/p&gt;
+&lt;p&gt;&lt;def&gt;. Monads is a type M[T] with 2 operations: &lt;code&gt;flatMap&lt;/code&gt; ("bind") and &lt;code&gt;unit&lt;/code&gt;, and satisfy some laws.&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;train M[T]{
+    def flatMap[U](f: T=&amp;gt;M[U]): M[U]): M[U]
+}
+def unit[T](x:T): M[T]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;examples: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;List&lt;/code&gt; is a monad, &lt;code&gt;unit(x) = List(x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Set&lt;/code&gt;, with &lt;code&gt;unit(x) = Set(x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Option&lt;/code&gt;, with &lt;code&gt;unit(x) = Some(x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Generator&lt;/code&gt;, with &lt;code&gt;unit(x) = single(x)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;map&lt;/code&gt; can be defined as a combination of &lt;code&gt;flatMap&lt;/code&gt; and &lt;code&gt;unit&lt;/code&gt;: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;m map f == m flatMap (x =&amp;gt; unit( f(x)) )&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;Monad laws&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;associativity&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;(m flatMap f) flatMap g == m flatMap ( x =&amp;gt; f(x) flatMap g )&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;↔ (x+y+z) = x+(y+z)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;left unit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;unit(x) flatMap f == f(x)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;right unit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;m flatMap unit == m&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;the Try type&lt;/h2&gt;
+&lt;p&gt;We define a Try class, which is similar to Option class. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;abstraxt class Try[+T]
+case class Success[T](x:T) extends Try[T]
+case class Failure(ex: Exception) extends Try[Nothing]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;we can write &lt;code&gt;Try(expr)&lt;/code&gt; to give a computation a try, by implementing the &lt;code&gt;apply&lt;/code&gt; method of object Try:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;object Try{
+def apply[T](expr: =&amp;gt;T): Try[T]= // expr is passed BY NAME, otherwise will cause exception in eval
+    try Success(expr) // java syntax of try-catch
+    catch{ case NonFatal(ex) =&amp;gt; Failure(ex) }
+}
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;if Try is a Monad ⇒ can be written in for expr: &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image018.png" /&gt;&lt;/p&gt;
+&lt;p&gt;⇒ define map and flatMap on &lt;code&gt;Try&lt;/code&gt; type. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="progfun2_lec1_forexpr/pasted_image019.png" /&gt;&lt;/p&gt;
+&lt;p&gt;question: is Try a monad with &lt;code&gt;unit(x)=Try(x)&lt;/code&gt;?
+⇒ no, left-unit fails: &lt;code&gt;Try(expr) flatMap f != f(expr)&lt;/code&gt;
+(lhs never nonfatal exception, but rhs will raise)&lt;/p&gt;
+&lt;p&gt;Try is not a monad, but it can still use for expr...&lt;/p&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;for exprs are useful not only for collections: &lt;code&gt;Generator&lt;/code&gt;, &lt;code&gt;Option&lt;/code&gt;, &lt;code&gt;Try&lt;/code&gt;&lt;/p&gt;</summary><category term="scala"></category></entry><entry><title>[Functional Programming Principles in Scala] Lec6: Collections</title><link href="http://x-wei.github.io/progfun1_lec6_collections.html" rel="alternate"></link><published>2016-07-30T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun1_lec6_collections.html</id><summary type="html">&lt;h1&gt;6.1 - Other Collections&lt;/h1&gt;
 &lt;p&gt;so far: only seen List. → more (&lt;strong&gt;immutable&lt;/strong&gt;) collections. &lt;/p&gt;
 &lt;h3&gt;vector&lt;/h3&gt;
 &lt;p&gt;List:  is linear -- access to head is faster than middle or end element. 
