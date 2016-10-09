@@ -1,5 +1,470 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-08-12T00:00:00+02:00</updated><entry><title>[Functional Program Design in Scala] Lec1: For Expressions and Monads</title><link href="http://x-wei.github.io/progfun2_lec1_forexpr.html" rel="alternate"></link><published>2016-08-12T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun2_lec1_forexpr.html</id><summary type="html">&lt;h1&gt;Recap: Functions and Pattern Matching&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's Blog</title><link href="http://x-wei.github.io" rel="alternate"></link><link href="http://x-wei.github.io/feeds/all-zhs.atom.xml" rel="self"></link><id>http://x-wei.github.io</id><updated>2016-10-07T20:20:00+02:00</updated><entry><title>[learning torch] 3. Container (models)</title><link href="http://x-wei.github.io/learn-torch-3-container.html" rel="alternate"></link><published>2016-10-07T20:20:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/learn-torch-3-container.html</id><summary type="html">&lt;p&gt;doc: 
+&lt;a href="https://github.com/torch/nn/blob/master/doc/containers.md"&gt;https://github.com/torch/nn/blob/master/doc/containers.md&lt;/a&gt;
+ref: 
+&lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/"&gt;http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. &lt;em&gt;Container contains modules (layers)&lt;/em&gt;.&lt;/p&gt;
+&lt;h2&gt;Container class&lt;/h2&gt;
+&lt;p&gt;important methods: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;add(module)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;get(index)&lt;/code&gt;: get module at the index&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;size()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;important subclasses:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Sequential&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Parallel&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Concat&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Sequential&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Sequential&lt;/code&gt;&lt;strong&gt; is just a stack of layers&lt;/strong&gt;, add layer by &lt;code&gt;model:add()&lt;/code&gt;. Here is a simple 2-layer MLP example: &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt;  mlp = nn.Sequential()
+                                                                      [0.0000s] 
+th&amp;gt; mlp:add( nn.Linear(10, 25) ) -- 10 input, 25 hidden units
+                                                                      [0.0001s] 
+th&amp;gt; mlp:add( nn.Tanh() ) -- some hyperbolic tangent transfer function
+                                                                      [0.0001s] 
+th&amp;gt; mlp:add( nn.Linear(25, 1) ) -- 1 output
+                                                                      [0.0001s] 
+th&amp;gt; mlp:forward(torch.range(1,10))
+ 1.2697
+[torch.DoubleTensor of size 1]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Parallel&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;module = Parallel(inputDimension,outputDimension)&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Creates a container module that applies its ith child module to the ith slice of the input Tensor&lt;/em&gt; by using &lt;code&gt;select&lt;/code&gt; on dimension &lt;code&gt;inputDimension&lt;/code&gt;. It concatenates the results of its contained modules together along dimension &lt;code&gt;outputDimension&lt;/code&gt;. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;So if the input for parallel model is &lt;code&gt;x&lt;/code&gt;,  the input for its ith child module should be: &lt;code&gt;x.select(inputDimension, i)&lt;/code&gt;, 
+and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimension)&lt;/code&gt; (concat along this dimension). &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; mlp = nn.Parallel(2,1) -- select(split) on dim2 for input, concat along dim1 for output
+                                                                      [0.0000s] 
+th&amp;gt; mlp:add(nn.Linear(10,3)) -- input=1st slice of x (x:select()), output1: size=3
+                                                                      [0.0001s] 
+th&amp;gt; mlp:add(nn.Linear(10,2)) -- output2: size=2
+                                                                      [0.0001s] 
+th&amp;gt; x = torch.randn(10,2) 
+                                                                      [0.0001s] 
+th&amp;gt; x
+ 0.3242 -1.3911
+ 0.7433 -0.2725
+ 0.3947  0.3332
+ 1.1618  0.6743
+ 0.6655 -1.0901
+ 0.0419 -0.7845
+-0.8508 -1.4670
+-0.3842 -0.4107
+ 0.5238  2.3616
+ 1.4136 -0.1327
+[torch.DoubleTensor of size 10x2]
+
+                                                                      [0.0002s] 
+th&amp;gt; mlp:forward(x)
+-0.0456
+-0.5682
+-0.3488
+-1.3786
+-0.6320
+[torch.DoubleTensor of size 5]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Concat&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;module = nn.Concat(dim)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Concat concatenates the output of its "parallel" children modules along &lt;code&gt;dim&lt;/code&gt;: these child modules &lt;em&gt;take the same inputs&lt;/em&gt;, and their output is concatenated.&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;mlp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;nn&lt;/span&gt;&lt;span class="nc"&gt;.Concat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;--&lt;/span&gt; &lt;span class="nt"&gt;ouput&lt;/span&gt; &lt;span class="nt"&gt;concat&lt;/span&gt; &lt;span class="nt"&gt;along&lt;/span&gt; &lt;span class="nt"&gt;dim&lt;/span&gt; &lt;span class="nt"&gt;1&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;mlp&lt;/span&gt;&lt;span class="nd"&gt;:add&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;nn&lt;/span&gt;&lt;span class="nc"&gt;.Linear&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;10&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;);&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;mlp&lt;/span&gt;&lt;span class="nd"&gt;:add&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt; &lt;span class="nt"&gt;nn&lt;/span&gt;&lt;span class="nc"&gt;.Linear&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;10&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;3&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;);&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0000&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;torch&lt;/span&gt;&lt;span class="nc"&gt;.randn&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;5&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;mlp&lt;/span&gt;&lt;span class="nd"&gt;:forward&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;x&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+ &lt;span class="nt"&gt;0&lt;/span&gt;&lt;span class="nc"&gt;.7497&lt;/span&gt;
+&lt;span class="nt"&gt;-0&lt;/span&gt;&lt;span class="nc"&gt;.1909&lt;/span&gt;
+ &lt;span class="nt"&gt;0&lt;/span&gt;&lt;span class="nc"&gt;.3280&lt;/span&gt;
+&lt;span class="nt"&gt;-0&lt;/span&gt;&lt;span class="nc"&gt;.3981&lt;/span&gt;
+ &lt;span class="nt"&gt;0&lt;/span&gt;&lt;span class="nc"&gt;.0207&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;torch.DoubleTensor&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="torch"></category></entry><entry><title>[learning torch] 2. Module (layers)</title><link href="http://x-wei.github.io/learn-torch-2-module.html" rel="alternate"></link><published>2016-10-07T19:40:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/learn-torch-2-module.html</id><summary type="html">&lt;p&gt;&lt;code&gt;Module&lt;/code&gt; is an abstract class which defines fundamental methods necessary for a &lt;em&gt;Layer&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/module.md"&gt;https://github.com/torch/nn/blob/master/doc/module.md&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Module class&lt;/h2&gt;
+&lt;p&gt;variables in &lt;code&gt;Module&lt;/code&gt;: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;output&lt;/code&gt;: Tensor, the ouput computed from last call of &lt;code&gt;forward(input)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gradInput&lt;/code&gt;: Tensor, gradient wrt input of module, computed from last call of &lt;code&gt;updateGradInput(input, gradOutput)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;important methods in &lt;code&gt;Module&lt;/code&gt;: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;forward(input)&lt;/code&gt;: return corresponding output of layer&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;backward(input, gradOutput)&lt;/code&gt;: return gradInput wrt the given input&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Linear&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear"&gt;https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Linear&lt;/code&gt; extends &lt;code&gt;Module&lt;/code&gt;, it's just linear transformation of input: &lt;code&gt;y=Ax+b&lt;/code&gt; (parameters/variables: &lt;code&gt;weight&lt;/code&gt;, &lt;code&gt;bias&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;gradWeight&lt;/code&gt;, &lt;code&gt;gradBias&lt;/code&gt; are respectively the gradient of each parameter. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;nn&lt;/span&gt;&lt;span class="nc"&gt;.Linear&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;3&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;--&lt;/span&gt; &lt;span class="nt"&gt;3&lt;/span&gt; &lt;span class="nt"&gt;input&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;2&lt;/span&gt; &lt;span class="nt"&gt;output&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nc"&gt;.weight&lt;/span&gt;&lt;span class="nd"&gt;:fill&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nc"&gt;.bias&lt;/span&gt;&lt;span class="nd"&gt;:zero&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0000&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;torch&lt;/span&gt;&lt;span class="nc"&gt;.Tensor&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0000&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nd"&gt;:forward&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;x&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0000&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;gradinput&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nd"&gt;:backward&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;x&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;y&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;gradinput&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;torch.DoubleTensor&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nc"&gt;.gradInput&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+ &lt;span class="nt"&gt;12&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;torch.DoubleTensor&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nc"&gt;.gradWeight&lt;/span&gt;
+&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="nc"&gt;.1132e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;171&lt;/span&gt;  &lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="nc"&gt;.2000e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;01&lt;/span&gt; &lt;span class="nt"&gt;7&lt;/span&gt;&lt;span class="nc"&gt;.3587e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;223&lt;/span&gt;
+&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="nc"&gt;.7112e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;243&lt;/span&gt; &lt;span class="nt"&gt;2&lt;/span&gt;&lt;span class="nc"&gt;.3276e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;251&lt;/span&gt; &lt;span class="nt"&gt;5&lt;/span&gt;&lt;span class="nc"&gt;.0404e&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nt"&gt;180&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;torch.DoubleTensor&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="nx"&gt;x3&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; 
+&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;ln&lt;/span&gt;&lt;span class="nc"&gt;.gradBias&lt;/span&gt;
+ &lt;span class="nt"&gt;6&lt;/span&gt;
+ &lt;span class="nt"&gt;6&lt;/span&gt;
+&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;torch.DoubleTensor&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="nx"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+
+                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Identity&lt;/h2&gt;
+&lt;p&gt;output reproduces input, this layer can be used to model the input layer of a neural network. &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; id = nn.Identity()
+                                                                      [0.0000s] 
+th&amp;gt; y = id:forward(x)
+                                                                      [0.0000s] 
+th&amp;gt; y
+ 1
+ 2
+ 3
+[torch.DoubleTensor of size 3]
+
+                                                                      [0.0001s] 
+th&amp;gt; id:backward(x,y)
+ 1
+ 2
+ 3
+[torch.DoubleTensor of size 3]
+
+                                                                      [0.0001s] 
+th&amp;gt; id.gradInput
+ 1
+ 2
+ 3
+[torch.DoubleTensor of size 3]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Other modules&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/simple.md"&gt;https://github.com/torch/nn/blob/master/doc/simple.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;some examples:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Add&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Mul&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CMul&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Reshape&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="torch"></category></entry><entry><title>[learning torch] 1. Tensor</title><link href="http://x-wei.github.io/learn-torch-1-tensor.html" rel="alternate"></link><published>2016-10-07T15:30:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/learn-torch-1-tensor.html</id><summary type="html">&lt;p&gt;A Tensor is the fondamental data type in torch, (similar to numpy for tensorflow), it's a potentially multi-dimensional matrix.&lt;/p&gt;
+&lt;p&gt;See doc: &lt;a href="https://github.com/torch/torch7/blob/master/doc/tensor.md"&gt;https://github.com/torch/torch7/blob/master/doc/tensor.md&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;basic ops&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Indicate shape in constructor:&lt;/p&gt;
+&lt;p&gt;th&amp;gt; x = torch.Tensor(3,4)
+                                                                      [0.0000s]
+th&amp;gt; x
+ 3.7366e+193  9.4775e+170  3.3018e+180   4.8950e-85
+ 1.3808e+267  7.6859e+261   3.7512e-81  1.4692e+195
+ 9.7016e+189  6.9641e+252  9.1815e+170  4.5239e+217
+[torch.DoubleTensor of size 3x4]&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By default the elements of a newly allocated memory are &lt;strong&gt;not initialized&lt;/strong&gt;, might contain arbitrary numbers ! &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;x:dim()&lt;/code&gt;: return nb of dimensions&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x:nElement()&lt;/code&gt;: return nb of elements ("size")&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x:size()&lt;/code&gt;: return "shape", shortcut is: &lt;code&gt;#x&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;x:resize(sz1, sz2, ...)&lt;/code&gt;: will not throw exception when total size is inconsistent!&lt;/p&gt;
+&lt;p&gt;th&amp;gt; #x
+ 3
+ 4
+[torch.LongStorage of size 2]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0001s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x:size()
+ 3
+ 4
+[torch.LongStorage of size 2]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0001s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x:dim()
+2&lt;/p&gt;
+&lt;p&gt;th&amp;gt; x = torch.Tensor(3,4)
+                                                                      [0.0000s]
+th&amp;gt; x:resize(2,6)
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270  8.2791e-114  3.6822e+180
+  4.8548e-27   6.9204e-72  8.8289e+199  1.1567e+247   4.8548e-27  7.7700e-109
+[torch.DoubleTensor of size 2x6]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0002s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x:resize(2,7)
+Columns 1 to 6
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270  8.2791e-114  3.6822e+180
+  6.9204e-72  8.8289e+199  1.1567e+247   4.8548e-27  7.7700e-109   6.9006e-72&lt;/p&gt;
+&lt;p&gt;Columns 7 to 7
+  4.8548e-27
+ 1.0240e-259
+[torch.DoubleTensor of size 2x7]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0001s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x:resize(2,4)
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270
+ 8.2791e-114  3.6822e+180   4.8548e-27   6.9204e-72
+[torch.DoubleTensor of size 2x4]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;fill with constant value:&lt;/p&gt;
+&lt;p&gt;th&amp;gt; x:fill(1)
+ 1  1  1  1
+ 1  1  1  1
+ 1  1  1  1
+[torch.DoubleTensor of size 3x4]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;other constructors:&lt;/p&gt;
+&lt;p&gt;th&amp;gt; y = torch.Tensor(x) -- note: y is just a reference of x!!!
+                                                                      [0.0001s]
+th&amp;gt; y = torch.Tensor({{2,3,4},{1,2,3}})
+                                                                      [0.0000s]
+th&amp;gt; y
+ 2  3  4
+ 1  2  3
+[torch.DoubleTensor of size 2x3]&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Storage&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;One could say that a &lt;code&gt;Tensor&lt;/code&gt; is a particular way of viewing a &lt;code&gt;Storage&lt;/code&gt;: a &lt;code&gt;Storage&lt;/code&gt; only represents a chunk of memory, while the &lt;code&gt;Tensor&lt;/code&gt; interprets this chunk of memory as having dimensions. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; s = x:storage() -- &amp;#39;flatten&amp;#39; version of x
+                                                                      [0.0000s]
+th&amp;gt; for i=1,#s do s[i]=i end
+                                                                      [0.0000s]
+th&amp;gt; x
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;short for range: torch.range(1,5)&lt;/p&gt;
+&lt;h2&gt;Slicing&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors"&gt;https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Slicing using &lt;code&gt;sub()&lt;/code&gt; and &lt;code&gt;select()&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;th&amp;gt; x
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]&lt;/p&gt;
+&lt;p&gt;th&amp;gt; print(x:sub(2,3,2,4)) -- x[2:3, 2:4] slicing
+  6   7   8
+ 10  11  12
+[torch.DoubleTensor of size 2x3]&lt;/p&gt;
+&lt;p&gt;th&amp;gt; print(x:select(2,2)) -- select(dim, index), dim=1 for rows, =2 for cols
+  2
+  6
+ 10
+[torch.DoubleTensor of size 3]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Or use slicing/indexing &lt;strong&gt;shortcut&lt;/strong&gt;: &lt;code&gt;[{{dim1start, dim1end},...}] [dim1, dim2,...]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;th&amp;gt; x
+  1   2   3   4   5   6
+  7   8   9  10  11  12
+ 13  14  15  16  17  18
+ 19  20  21  22  23  24
+ 25  26  27  28  29  30
+[torch.DoubleTensor of size 5x6]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0002s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x[2][3]
+9 &lt;br /&gt;
+                                                                      [0.0000s]
+th&amp;gt; x[{2,3}]
+9 &lt;br /&gt;
+                                                                      [0.0000s]
+th&amp;gt; x[{2,{2,5}}]
+  8
+  9
+ 10
+ 11
+[torch.DoubleTensor of size 4]&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;                                                                  [0.0001s]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;th&amp;gt; x[{{}, 3}]
+  3
+  9
+ 15
+ 21
+ 27
+[torch.DoubleTensor of size 5]&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;All are references&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;All tensor operations in this class do not make any memory copy. &lt;strong&gt;All these methods transform the existing tensor, or return a new tensor referencing the same storage&lt;/strong&gt;. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; y = torch.Tensor(x)
+                                                                      [0.0000s]
+th&amp;gt; y
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&amp;gt; y:select(1,1):zero() -- x will be effected
+                                                                      [0.0001s]
+th&amp;gt; y
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&amp;gt; x
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If don't want to modify original tensor, use &lt;code&gt;clone()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; y = x:clone()
+                                                                      [0.0000s]
+th&amp;gt; y:sub(1,3,1,2):fill(-1)
+-1 -1
+-1 -1
+-1 -1
+[torch.DoubleTensor of size 3x2]
+
+                                                                      [0.0001s]
+th&amp;gt; y
+ -1  -1   0   0
+ -1  -1   7   8
+ -1  -1  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&amp;gt; x
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Matrix ops&lt;/h2&gt;
+&lt;p&gt;Some matrix operations&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;random matrix:&lt;/p&gt;
+&lt;p&gt;th&amp;gt; torch.manualSeed(1)
+                                                                      [0.0000s]
+th&amp;gt; A = torch.rand(3,4)
+                                                                      [0.0001s]
+th&amp;gt; print(A) 
+ 0.4170  0.9972  0.7203  0.9326
+ 0.0001  0.1281  0.3023  0.9990
+ 0.1468  0.2361  0.0923  0.3966
+[torch.DoubleTensor of size 3x4]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;transpose &lt;/p&gt;
+&lt;p&gt;th&amp;gt; At = A:t()
+                                                                      [0.0000s]
+th&amp;gt; At
+ 0.4170  0.0001  0.1468
+ 0.9972  0.1281  0.2361
+ 0.7203  0.3023  0.0923
+ 0.9326  0.9990  0.3966
+[torch.DoubleTensor of size 4x3]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;matrix mul is just &lt;code&gt;*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;th&amp;gt; A * At 
+ 2.5568  1.2773  0.7330
+ 1.2773  1.1059  0.4544
+ 0.7330  0.4544  0.2431
+[torch.DoubleTensor of size 3x3]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;inner product: &lt;code&gt;dot()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;th&amp;gt; A[1]:dot(At:select(2,1))
+2.5568154905493&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;inverse: &lt;code&gt;torch.inverse(sq_mat)&lt;/code&gt;   &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;More operations&lt;/h2&gt;
+&lt;p&gt;can be found at: &lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/torch/torch7/blob/master/doc/maths.md"&gt;https://github.com/torch/torch7/blob/master/doc/maths.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;example: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;torch.ones()/eye()/zeros()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;torch.cat()&lt;/code&gt;: concat tensors   &lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; torch.cat(torch.ones(3, 2), torch.zeros(2, 2), 1)
+ 1  1
+ 1  1
+ 1  1
+ 0  0
+ 0  0
+[torch.DoubleTensor of size 5x2]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;torch.conv2()&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="torch"></category></entry><entry><title>[Functional Program Design in Scala] Lec1: For Expressions and Monads</title><link href="http://x-wei.github.io/progfun2_lec1_forexpr.html" rel="alternate"></link><published>2016-08-12T00:00:00+02:00</published><author><name>mx</name></author><id>http://x-wei.github.io/progfun2_lec1_forexpr.html</id><summary type="html">&lt;h1&gt;Recap: Functions and Pattern Matching&lt;/h1&gt;
 &lt;h3&gt;case classes&lt;/h3&gt;
 &lt;p&gt;ex: json
 json objects can be seq, num, str, bool,...&lt;/p&gt;

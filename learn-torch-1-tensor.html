@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <meta charset="utf-8">
+    <title>[learning torch] 1. Tensor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+	
+	.tag-0 {
+		font-size: 20pt;
+	}
+	
+	.tag-1 {
+		font-size: 16pt;
+	}
+	
+	.tag-2 {
+		font-size: 12pt;
+	}
+
+	.tag-4 {
+		font-size: 8pt;
+	}
+	
+    </style>
+    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="./theme/css/font-awesome.css" rel="stylesheet">
+	
+    <link href="./theme/css/pygments.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
+    
+
+  </head>
+
+
+
+
+
+  <body>
+    <!-- Baidu Button BEGIN -->
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    <!-- Baidu Button END -->
+<!-- UJian Button BEGIN -->
+<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
+<!-- UJian Button END -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="./index.html">mx's Blog </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+			  <li class="divider-vertical"></li>
+              
+              
+                  <li >
+                    <a href="./category/misc.html">
+						<i class="icon-folder-open icon-large"></i>misc
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/music.html">
+						<i class="icon-folder-open icon-large"></i>music
+					</a>
+                  </li>
+              
+                  <li class="active">
+                    <a href="./category/notes.html">
+						<i class="icon-folder-open icon-large"></i>notes
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/soft.html">
+						<i class="icon-folder-open icon-large"></i>soft
+					</a>
+                  </li>
+              
+                  <li >
+                    <a href="./category/tech.html">
+						<i class="icon-folder-open icon-large"></i>tech
+					</a>
+                  </li>
+              
+			  
+			  <ul class="nav pull-right">
+				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+			  </ul>
+			  
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="span9" id="content">
+            
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to [learning torch] 1. Tensor">
+					[learning torch] 1. Tensor 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="label">Date</span>
+<abbr class="published" title="2016-10-07T15:30:00">
+	<i class="icon-calendar"></i>Fri, 07 Oct 2016
+</abbr>
+
+<span class="label">By</span>
+<a href="./"><i class="icon-user"></i>mx</a>
+
+<span class="label">Category</span>
+<a href="./"><i class="icon-folder-open"></i>notes</a>. 
+
+
+	
+
+<span class="label">Tags</span> 
+
+	<a href="./tag/torch.html"><i class="icon-tag"></i>torch</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>A Tensor is the fondamental data type in torch, (similar to numpy for tensorflow), it's a potentially multi-dimensional matrix.</p>
+<p>See doc: <a href="https://github.com/torch/torch7/blob/master/doc/tensor.md">https://github.com/torch/torch7/blob/master/doc/tensor.md</a></p>
+<h2>basic ops</h2>
+<ul>
+<li>
+<p>Indicate shape in constructor:</p>
+<p>th&gt; x = torch.Tensor(3,4)
+                                                                      [0.0000s]
+th&gt; x
+ 3.7366e+193  9.4775e+170  3.3018e+180   4.8950e-85
+ 1.3808e+267  7.6859e+261   3.7512e-81  1.4692e+195
+ 9.7016e+189  6.9641e+252  9.1815e+170  4.5239e+217
+[torch.DoubleTensor of size 3x4]</p>
+</li>
+</ul>
+<p>By default the elements of a newly allocated memory are <strong>not initialized</strong>, might contain arbitrary numbers ! </p>
+<ul>
+<li><code>x:dim()</code>: return nb of dimensions</li>
+<li><code>x:nElement()</code>: return nb of elements ("size")</li>
+<li><code>x:size()</code>: return "shape", shortcut is: <code>#x</code></li>
+<li>
+<p><code>x:resize(sz1, sz2, ...)</code>: will not throw exception when total size is inconsistent!</p>
+<p>th&gt; #x
+ 3
+ 4
+[torch.LongStorage of size 2]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0001s]
+</pre></div>
+
+
+<p>th&gt; x:size()
+ 3
+ 4
+[torch.LongStorage of size 2]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0001s]
+</pre></div>
+
+
+<p>th&gt; x:dim()
+2</p>
+<p>th&gt; x = torch.Tensor(3,4)
+                                                                      [0.0000s]
+th&gt; x:resize(2,6)
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270  8.2791e-114  3.6822e+180
+  4.8548e-27   6.9204e-72  8.8289e+199  1.1567e+247   4.8548e-27  7.7700e-109
+[torch.DoubleTensor of size 2x6]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0002s]
+</pre></div>
+
+
+<p>th&gt; x:resize(2,7)
+Columns 1 to 6
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270  8.2791e-114  3.6822e+180
+  6.9204e-72  8.8289e+199  1.1567e+247   4.8548e-27  7.7700e-109   6.9006e-72</p>
+<p>Columns 7 to 7
+  4.8548e-27
+ 1.0240e-259
+[torch.DoubleTensor of size 2x7]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0001s]
+</pre></div>
+
+
+<p>th&gt; x:resize(2,4)
+ 1.7479e+270  7.0981e+194  7.4861e-114  1.7479e+270
+ 8.2791e-114  3.6822e+180   4.8548e-27   6.9204e-72
+[torch.DoubleTensor of size 2x4]</p>
+</li>
+<li>
+<p>fill with constant value:</p>
+<p>th&gt; x:fill(1)
+ 1  1  1  1
+ 1  1  1  1
+ 1  1  1  1
+[torch.DoubleTensor of size 3x4]</p>
+</li>
+<li>
+<p>other constructors:</p>
+<p>th&gt; y = torch.Tensor(x) -- note: y is just a reference of x!!!
+                                                                      [0.0001s]
+th&gt; y = torch.Tensor({{2,3,4},{1,2,3}})
+                                                                      [0.0000s]
+th&gt; y
+ 2  3  4
+ 1  2  3
+[torch.DoubleTensor of size 2x3]</p>
+</li>
+</ul>
+<h2>Storage</h2>
+<blockquote>
+<p>One could say that a <code>Tensor</code> is a particular way of viewing a <code>Storage</code>: a <code>Storage</code> only represents a chunk of memory, while the <code>Tensor</code> interprets this chunk of memory as having dimensions. </p>
+</blockquote>
+<div class="codehilite"><pre><span></span>th&gt; s = x:storage() -- &#39;flatten&#39; version of x
+                                                                      [0.0000s]
+th&gt; for i=1,#s do s[i]=i end
+                                                                      [0.0000s]
+th&gt; x
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+</pre></div>
+
+
+<p>short for range: torch.range(1,5)</p>
+<h2>Slicing</h2>
+<p><a href="https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors">https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors</a></p>
+<ul>
+<li>
+<p>Slicing using <code>sub()</code> and <code>select()</code>. </p>
+<p>th&gt; x
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]</p>
+<p>th&gt; print(x:sub(2,3,2,4)) -- x[2:3, 2:4] slicing
+  6   7   8
+ 10  11  12
+[torch.DoubleTensor of size 2x3]</p>
+<p>th&gt; print(x:select(2,2)) -- select(dim, index), dim=1 for rows, =2 for cols
+  2
+  6
+ 10
+[torch.DoubleTensor of size 3]</p>
+</li>
+<li>
+<p>Or use slicing/indexing <strong>shortcut</strong>: <code>[{{dim1start, dim1end},...}] [dim1, dim2,...]</code></p>
+<p>th&gt; x
+  1   2   3   4   5   6
+  7   8   9  10  11  12
+ 13  14  15  16  17  18
+ 19  20  21  22  23  24
+ 25  26  27  28  29  30
+[torch.DoubleTensor of size 5x6]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0002s]
+</pre></div>
+
+
+<p>th&gt; x[2][3]
+9 <br />
+                                                                      [0.0000s]
+th&gt; x[{2,3}]
+9 <br />
+                                                                      [0.0000s]
+th&gt; x[{2,{2,5}}]
+  8
+  9
+ 10
+ 11
+[torch.DoubleTensor of size 4]</p>
+<div class="codehilite"><pre><span></span>                                                                  [0.0001s]
+</pre></div>
+
+
+<p>th&gt; x[{{}, 3}]
+  3
+  9
+ 15
+ 21
+ 27
+[torch.DoubleTensor of size 5]</p>
+</li>
+</ul>
+<h2>All are references</h2>
+<blockquote>
+<p>All tensor operations in this class do not make any memory copy. <strong>All these methods transform the existing tensor, or return a new tensor referencing the same storage</strong>. </p>
+</blockquote>
+<div class="codehilite"><pre><span></span>th&gt; y = torch.Tensor(x)
+                                                                      [0.0000s]
+th&gt; y
+  1   2   3   4
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&gt; y:select(1,1):zero() -- x will be effected
+                                                                      [0.0001s]
+th&gt; y
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&gt; x
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+</pre></div>
+
+
+<p>If don't want to modify original tensor, use <code>clone()</code>:</p>
+<div class="codehilite"><pre><span></span>th&gt; y = x:clone()
+                                                                      [0.0000s]
+th&gt; y:sub(1,3,1,2):fill(-1)
+-1 -1
+-1 -1
+-1 -1
+[torch.DoubleTensor of size 3x2]
+
+                                                                      [0.0001s]
+th&gt; y
+ -1  -1   0   0
+ -1  -1   7   8
+ -1  -1  11  12
+[torch.DoubleTensor of size 3x4]
+
+                                                                      [0.0001s]
+th&gt; x
+  0   0   0   0
+  5   6   7   8
+  9  10  11  12
+[torch.DoubleTensor of size 3x4]
+</pre></div>
+
+
+<h2>Matrix ops</h2>
+<p>Some matrix operations</p>
+<ul>
+<li>
+<p>random matrix:</p>
+<p>th&gt; torch.manualSeed(1)
+                                                                      [0.0000s]
+th&gt; A = torch.rand(3,4)
+                                                                      [0.0001s]
+th&gt; print(A) 
+ 0.4170  0.9972  0.7203  0.9326
+ 0.0001  0.1281  0.3023  0.9990
+ 0.1468  0.2361  0.0923  0.3966
+[torch.DoubleTensor of size 3x4]</p>
+</li>
+<li>
+<p>transpose </p>
+<p>th&gt; At = A:t()
+                                                                      [0.0000s]
+th&gt; At
+ 0.4170  0.0001  0.1468
+ 0.9972  0.1281  0.2361
+ 0.7203  0.3023  0.0923
+ 0.9326  0.9990  0.3966
+[torch.DoubleTensor of size 4x3]</p>
+</li>
+<li>
+<p>matrix mul is just <code>*</code></p>
+<p>th&gt; A * At 
+ 2.5568  1.2773  0.7330
+ 1.2773  1.1059  0.4544
+ 0.7330  0.4544  0.2431
+[torch.DoubleTensor of size 3x3]</p>
+</li>
+<li>
+<p>inner product: <code>dot()</code></p>
+<p>th&gt; A[1]:dot(At:select(2,1))
+2.5568154905493</p>
+</li>
+<li>
+<p>inverse: <code>torch.inverse(sq_mat)</code>   </p>
+</li>
+</ul>
+<h2>More operations</h2>
+<p>can be found at: </p>
+<p><a href="https://github.com/torch/torch7/blob/master/doc/maths.md">https://github.com/torch/torch7/blob/master/doc/maths.md</a></p>
+<p>example: </p>
+<ul>
+<li><code>torch.ones()/eye()/zeros()</code></li>
+<li>
+<p><code>torch.cat()</code>: concat tensors   </p>
+<div class="codehilite"><pre><span></span>th&gt; torch.cat(torch.ones(3, 2), torch.zeros(2, 2), 1)
+ 1  1
+ 1  1
+ 1  1
+ 0  0
+ 0  0
+[torch.DoubleTensor of size 5x2]
+</pre></div>
+
+
+</li>
+<li>
+<p><code>torch.conv2()</code></p>
+</li>
+</ul>
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "learn-torch-1-tensor.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://xweisblog.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      
+		<div class="span3 well sidebar-nav" id="sidebar">
+            <ul class="nav nav-list">
+
+<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
+
+    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
+
+    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
+
+    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
+
+    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
+<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+
+<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+
+
+    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+
+
+
+<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
+
+<li>
+<a href="./category/misc.html">
+    <i class="icon-folder-open icon-large"></i>misc
+</a>
+</li>
+
+<li>
+<a href="./category/music.html">
+    <i class="icon-folder-open icon-large"></i>music
+</a>
+</li>
+
+<li>
+<a href="./category/notes.html">
+    <i class="icon-folder-open icon-large"></i>notes
+</a>
+</li>
+
+<li>
+<a href="./category/soft.html">
+    <i class="icon-folder-open icon-large"></i>soft
+</a>
+</li>
+
+<li>
+<a href="./category/tech.html">
+    <i class="icon-folder-open icon-large"></i>tech
+</a>
+</li>
+
+
+<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
+
+<span class="tag-4">
+    <a href="./tag/算法.html">算法</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/host.html">host</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/python.html">python</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/regex.html">regex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/pandas.html">pandas</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/git.html">git</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/markdown.html">markdown</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/快捷键.html">快捷键</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/codejam.html">codejam</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/android.html">android</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/eclipse.html">eclipse</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/中文乱码.html">中文乱码</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/LP.html">LP</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/GRE.html">GRE</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/opencv.html">opencv</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/C++.html">C++</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/R.html">R</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/ssh.html">ssh</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/tips.html">tips</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/java.html">java</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-1">
+    <a href="./tag/algorithm.html">algorithm</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/french.html">french</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/shell.html">shell</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/inf422.html">inf422</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/linux.html">linux</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/Toefl.html">Toefl</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/scrapy.html">scrapy</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/tex.html">tex</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/weka.html">weka</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/外观.html">外观</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/ml.html">ml</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/scala.html">scala</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/fr.html">fr</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/TeXmacs.html">TeXmacs</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/google.html">google</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/ubuntu.html">ubuntu</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/pelican.html">pelican</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/torch.html">torch</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-4">
+    <a href="./tag/巴黎高科.html">巴黎高科</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-3">
+    <a href="./tag/出国.html">出国</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/deep learning.html">deep learning</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<span class="tag-2">
+    <a href="./tag/spark.html">spark</a> 
+</span>
+<!-- <i class="icon-tag icon-large"></i> -->
+
+<br>
+<br>
+
+
+
+<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
+<div id="cse" style="width: 100%;">Loading</div>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript"> 
+  google.load('search', '1');
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '010017366155264590731:njcqykcxuly', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+</script>
+<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+
+
+
+    
+<br>
+<Script Language="JavaScript"> 
+var timedate= new Date("June 22,2013"); 
+var now = new ate(); 
+var date = now.getTime() - timedate.getTime(); 
+var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
+if (time >= 0) ;
+document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
+</Script>
+
+
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">推荐文章</h3>
+<div class="textwidget">
+
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
+<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
+<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
+<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
+</div></li>
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">About me</h3>
+<div class="textwidget">
+上海西南某高校电院毕业生, X2012.<br/>
+</div></li>
+
+<br>
+<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
+
+<br>
+<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
+
+
+<br>
+<li class="widget-container widget_text">
+<h3 class="widget-title">Who are Visiting</h3>
+<div class="textwidget">
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+</div></li>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
+</a><br/>
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+        </address><!-- /#about -->
+
+        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+    
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-30756331-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+    
+    
+<script type="text/javascript">
+    var disqus_shortname = 'xweisblog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery.js"></script>
+    <script src="./theme/js/bootstrap-transition.js"></script>
+    <script src="./theme/js/bootstrap-alert.js"></script>
+    <script src="./theme/js/bootstrap-modal.js"></script>
+    <script src="./theme/js/bootstrap-dropdown.js"></script>
+    <script src="./theme/js/bootstrap-scrollspy.js"></script>
+    <script src="./theme/js/bootstrap-tab.js"></script>
+    <script src="./theme/js/bootstrap-tooltip.js"></script>
+    <script src="./theme/js/bootstrap-popover.js"></script>
+    <script src="./theme/js/bootstrap-button.js"></script>
+    <script src="./theme/js/bootstrap-collapse.js"></script>
+    <script src="./theme/js/bootstrap-carousel.js"></script>
+    <script src="./theme/js/bootstrap-typeahead.js"></script>
+	
+	<!--<script src="./theme/js/autosidebar.js"></script>-->
+  </body>
+</html>

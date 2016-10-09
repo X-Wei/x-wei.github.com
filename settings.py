@@ -30,7 +30,7 @@ STATIC_PATHS = ["static"]
 PATH = 'posts'
 THEME='./pelican-themes/bs6'
 
-REVERSE_ARCHIVE_ORDER=True
+#~ REVERSE_ARCHIVE_ORDER=True
 
 LINKS = (('dofine', 'http://log.dofine.me/'),
          ('farseerfc', "http://farseerfc.github.com/"),
