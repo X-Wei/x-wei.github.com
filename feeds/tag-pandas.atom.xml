@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-pandas.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2014-07-22T00:00:00+02:00</updated><entry><title>pandas学习笔记</title><link href="http://x-wei.github.io/pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" rel="alternate"></link><published>2014-07-22T00:00:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2014-07-22:pandas学习笔记.html</id><summary type="html">&lt;p&gt;首先, 导入pandas
+&lt;code&gt;import pandas as pd&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;以及开启pylab: IPython里输入&lt;code&gt;%pylab&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.bearrelroll.com/2013/05/python-pandas-tutorial/"&gt;http://www.bearrelroll.com/2013/05/python-pandas-tutorial/&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="_1"&gt;基本操作&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://cloga.info/python/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/2013/09/17/pandas_intro/"&gt;http://cloga.info/python/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/2013/09/17/pandas_intro/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pandas和numpy的关系&lt;/strong&gt;: pandas是建立在numpy上面的, pandas可以处理不同类型的数据集合(heterogeneous data set: &lt;strong&gt;DataFrame&lt;/strong&gt;), numpy处理的是相同类型的数据集合(homogeneous data set: &lt;strong&gt;ndarray&lt;/strong&gt;)&lt;/p&gt;
+&lt;h2 id="csv"&gt;读写csv文件&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;read_csv()&lt;/strong&gt;
+&lt;code&gt;df=pd.read_csv('data.csv')&lt;/code&gt;
+说一下数据类型的问题: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;返回类型数据帧(&lt;strong&gt;DataFrame&lt;/strong&gt;): &lt;code&gt;type(df) = pandas.core.frame.DataFrame&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;df.columns&lt;/code&gt;包含了所有列的标签(&lt;em&gt;字段名&lt;/em&gt;)
+&lt;code&gt;df.index&lt;/code&gt;包含了所有行的标签(可能没有的话, 就是一系列递增的数字了)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;但是其中的每一列是&lt;strong&gt;Series&lt;/strong&gt;类型: &lt;code&gt;type(df.dep)=pandas.core.series.Series&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;然后可以将Series转换为numpy的ndarray: &lt;code&gt;array(df.dep)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;to_csv()&lt;/strong&gt;
+没啥好说的..
+&lt;code&gt;df.to_csv('csvfilename')&lt;/code&gt;
+要是不希望把index也作为一列写进csv文件的话, 就选择参数&lt;code&gt;index=False&lt;/code&gt;
+&lt;a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv"&gt;http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_csv.html?highlight=to_csv#pandas.DataFrame.to_csv&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="indexing-slicing"&gt;indexing &amp;amp; slicing&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;选择一列: &lt;code&gt;df['dep']&lt;/code&gt; 或者&lt;code&gt;df.dep&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;选择前3行(前三条记录): &lt;code&gt;df[:2]&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;使用标签选取数据&lt;/strong&gt;: &lt;code&gt;df.loc[行标签, 列标签]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;选择前两列:
+&lt;code&gt;df.loc[:,('one','two')]&lt;/code&gt;
+或者用
+&lt;code&gt;df.loc[:,df.columns[:2]]&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;使用位置选取数据&lt;/strong&gt;: &lt;code&gt;df.iloc[行位置, 列位置]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;df.iloc[:,:2]&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;自动判断的切片&lt;/strong&gt;: &lt;code&gt;df.ix[行位置或行标签, 列位置或列标签]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以前面俩基本用不着了...&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;df.ix[:,('one','two')]&lt;/span&gt;
+&lt;span class="code-line"&gt;df.ix[:,:2]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;boolean indexing&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex. 选择dep是'PAR'的记录
+&lt;code&gt;hk[hk.dep == 'PAR'].head()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;ex. 多个条件, 比如dep是'PAR', dst是'BHM':
+&lt;code&gt;hk[(hk.dep == 'PAR')&amp;amp;(hk.dst=='BHM')].head()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;: 中括号里面的表达式, 每一个条件需要括号括起来, 中间的&lt;code&gt;&amp;amp;&lt;/code&gt;不能用&lt;code&gt;and&lt;/code&gt;, 等于号&lt;code&gt;==&lt;/code&gt;不能用&lt;code&gt;is&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;文档里的一个表格:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;设置小数精度&lt;/strong&gt;
+&lt;a href="http://pandas.pydata.org/pandas-docs/stable/options.html?highlight=precision"&gt;http://pandas.pydata.org/pandas-docs/stable/options.html?highlight=precision&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;设置小数点后六位的精度: 
+&lt;code&gt;pd.set_option('precision',7)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;注意六位精度的话要设置precision为7=6+1.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;调整某一列的次序&lt;/strong&gt;
+&lt;code&gt;df.reindex(columns=pd.Index(['x', 'y']).append(df.columns - ['x', 'y']))&lt;/code&gt;
+&lt;a href="http://stackoverflow.com/questions/12329853/how-to-rearrange-pandas-column-sequence"&gt;http://stackoverflow.com/questions/12329853/how-to-rearrange-pandas-column-sequence&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;随机抽取几行&lt;/strong&gt;
+    rand_idx = random.choice(df.index,9, replace=False) #要设置replace = False以防止重复!
+    df.ix[rand_idx]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;两个df相merge&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;两个df的column都一样, index不重复(增加行):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;pd.concat([df1,df2])&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;两个df的index一样, column不同(增加列)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;pd.concat([df1,df2], axis = 1)&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="addingdeleting-columns"&gt;adding/deleting columns&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://pandas.pydata.org/pandas-docs/stable/dsintro.html#column-selection-addition-deletion"&gt;http://pandas.pydata.org/pandas-docs/stable/dsintro.html#column-selection-addition-deletion&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新建一列, 加到最后面:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;df['new_col']=xxx&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;想要把一列插进中间某一处, 使用df.insert:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;df.insert(1, 'bar', df['one'])&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;删除一列, 只需用 &lt;code&gt;del&lt;/code&gt; 关键字:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;del df['one_col']&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;两个Series组成一个dataframe:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;pd.concat([s1, s2], axis=1)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;重命名一列:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;df=df.rename(columns = {'old_name':'new_name'})&lt;/code&gt;
+或者:
+&lt;code&gt;df.rename(columns = {'old_name':'new_name'}, inplace=True)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/20868394/changing-a-specific-column-name-in-pandas-dataframe"&gt;http://stackoverflow.com/questions/20868394/changing-a-specific-column-name-in-pandas-dataframe&lt;/a&gt;
+&lt;a href="http://www.bearrelroll.com/2013/05/python-pandas-tutorial/"&gt;http://www.bearrelroll.com/2013/05/python-pandas-tutorial/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="apply-map-agg"&gt;apply() &amp;amp; map() &amp;amp; agg()&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;apply()&lt;/strong&gt;
+对dataframe的内容进行批量处理, 这样要比循环来得快. 
+&lt;code&gt;df.apply(func, axis=0,...)&lt;/code&gt;
+&lt;code&gt;func&lt;/code&gt;: 定义的函数
+&lt;code&gt;axis&lt;/code&gt;: =0的时候对列操作, =1的时候对行操作
+ex.
+&lt;code&gt;df.apply(self, func, axis=0,&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;map()&lt;/strong&gt;
+和python内建的没啥区别
+&lt;code&gt;df['one'].map(sqrt)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;groupby()&lt;/strong&gt;
+按照某一列(&lt;em&gt;字段&lt;/em&gt;)分组, 得到一个&lt;code&gt;DataFrameGroupBy&lt;/code&gt;对象. 之后再对这个对象进行分组操作, 如:
+    df.groupby(['A','B']).sum()##按照A、B两列的值分组求和
+    groups = df.groupby('A')#按照A列的值分组求和
+    groups['B'].sum()##按照A列的值分组求B组和
+    groups['B'].count()##按照A列的值分组B组计数&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;agg()&lt;/strong&gt;
+对分组的结果再分别进行不同的操作... 参数是一个dict, 把每个字段映射到一个函数上来...... 说的不清楚, 直接看例子: 
+    In [82]: df
+    Out[82]: 
+           one  two  three
+    index               &lt;br/&gt;
+    a        1    1      2
+    b        2    2      4
+    c        3    3      6
+    d      NaN    4    NaN&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;In [83]: g=df.groupby('one')&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;In [84]: g.agg({'two': sum,'three': sqrt})&lt;/span&gt;
+&lt;span class="code-line"&gt;Out[84]: &lt;/span&gt;
+&lt;span class="code-line"&gt;     two     three&lt;/span&gt;
+&lt;span class="code-line"&gt;one               &lt;/span&gt;
+&lt;span class="code-line"&gt;1      1  1.414214&lt;/span&gt;
+&lt;span class="code-line"&gt;2      2  2.000000&lt;/span&gt;
+&lt;span class="code-line"&gt;3      3  2.449490&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;甚至还可以对每一列进行多个处理操作:
+    In [100]: g.agg({'two': [sum],'three': [sqrt,exp]})
+    Out[100]: 
+         two     three          &lt;br/&gt;
+         sum      sqrt         exp
+    one                         &lt;br/&gt;
+    1      1  1.414214    7.389056
+    2      2  2.000000   54.598150
+    3      3  2.449490  403.428793&lt;/p&gt;
+&lt;p&gt;具体见: &lt;a href="http://stackoverflow.com/questions/14529838/apply-multiple-functions-to-multiple-groupby-columns"&gt;http://stackoverflow.com/questions/14529838/apply-multiple-functions-to-multiple-groupby-columns&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;统计出现频率&lt;/strong&gt;
+方法1: 
+&lt;code&gt;_hkhist=hk.groupby(groups).count().ix[:,0]#count of groupes&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;方法2:
+&lt;code&gt;hk.groupby('dep').size()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;方法3:
+(只适用于一列的情况)
+&lt;code&gt;hk.dep.value_counts()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;把一列index转为column(不再作为index使用)&lt;/strong&gt;
+&lt;a href="http://stackoverflow.com/questions/20461165/how-to-convert-pandas-index-in-a-dataframe-to-a-column"&gt;http://stackoverflow.com/questions/20461165/how-to-convert-pandas-index-in-a-dataframe-to-a-column&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;比如, 原来的dataframe是三层index的, column只有一列(名字叫做'0'):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image002.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df.reset_index(level=2,inplace=True)&lt;/code&gt;
+这样就可以把第三层的内容作为使用, 而不是作为index, 现在column有两列了, 再给两列命名一下:
+&lt;code&gt;hist_hub.columns = ['hub','occurrence']&lt;/code&gt;
+就得到了:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image003.png"/&gt;&lt;/p&gt;
+&lt;p&gt;关于level这个参数:
+level : int, str, tuple, or list, default None
+Only remove the given levels from the index. Removes all levels by default&lt;/p&gt;
+&lt;h2 id="plotting"&gt;Plotting&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://cloga.info/python/2014/02/23/Plotting_with_Pandas/"&gt;http://cloga.info/python/2014/02/23/Plotting_with_Pandas/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;统计出现次数, 画柱状图:&lt;/strong&gt;
+    g=hk.groupby('dep')
+    dd=g['dst'].count()
+    dd.plot(kind='bar')&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image.png"/&gt;
+或者用pandas提供的:
+&lt;a href="http://pandas.pydata.org/pandas-docs/stable/basics.html#value-counts-histogramming-mode"&gt;http://pandas.pydata.org/pandas-docs/stable/basics.html#value-counts-histogramming-mode&lt;/a&gt;
+nb=hk['#vol_hacker']
+hist=nb.value_counts()*100.0/len(hk)
+hist=hist.sort_index()
+hist.plot(kind='bar')&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;积累分布曲线&lt;/strong&gt;
+&lt;a href="http://stackoverflow.com/questions/6326360/python-matplotlib-probability-plot-for-several-data-set"&gt;http://stackoverflow.com/questions/6326360/python-matplotlib-probability-plot-for-several-data-set&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;counts, start, dx, _ = scipy.stats.cumfreq(data, numbins=20)&lt;/span&gt;
+&lt;span class="code-line"&gt;x = np.arange(counts.size) * dx + start&lt;/span&gt;
+&lt;span class="code-line"&gt;plt.plot(x, counts, 'ro')&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;或者用pandas提供的东西也能做吧:
+&lt;a href="http://pandas.pydata.org/pandas-docs/stable/basics.html#discretization-and-quantiling"&gt;http://pandas.pydata.org/pandas-docs/stable/basics.html#discretization-and-quantiling&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;hist2d&lt;/strong&gt;
+用pcolormesh
+&lt;a href="http://www.physicsforums.com/showthread.php?t=653864"&gt;http://www.physicsforums.com/showthread.php?t=653864&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;貌似要转置!!
+&lt;a href="http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y"&gt;http://stackoverflow.com/questions/24791614/numpy-pcolormesh-typeerror-dimensions-of-c-are-incompatible-with-x-and-or-y&lt;/a&gt;&lt;/p&gt;</summary><category term="pandas"></category><category term="python"></category></entry></feed>

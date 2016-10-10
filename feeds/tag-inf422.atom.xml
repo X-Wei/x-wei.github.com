@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-inf422.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2013-11-08T00:00:00+01:00</updated><entry><title>ADT环境搭建</title><link href="http://x-wei.github.io/ADT%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" rel="alternate"></link><published>2013-11-08T00:00:00+01:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2013-11-08:ADT环境搭建.html</id><summary type="html">&lt;p&gt;这学期INF422, 第一节课就是android安装调试环境的搭建(居然要一节课?), 这里总结一下.&lt;/p&gt;
+&lt;h3 id="bundle"&gt;第一步: 下载bundle&lt;/h3&gt;
+&lt;p&gt;下载&lt;a href="http://developer.android.com/sdk/index.html"&gt;ADT-Bundle&lt;/a&gt;
+解压缩以后啥都有了, 包含一个eclipse...&lt;/p&gt;
+&lt;h3 id="_1"&gt;第二步: 修改环境变量&lt;/h3&gt;
+&lt;p&gt;linux下的环境变量放在&lt;code&gt;.bashrc文件&lt;/code&gt;, 加入下面一行: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PATH=$PATH:&amp;lt;dir&amp;gt;/sdk/tools/:&amp;lt;dir&amp;gt;/sdk/platform-tools/:&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;其中&lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt;是放置SDK的目录地址.&lt;/p&gt;
+&lt;p&gt;测试一下好不好使, 在终端中输入&lt;code&gt;android&lt;/code&gt;, 看是否会弹出SDK manager&lt;/p&gt;
+&lt;h3 id="virtual-machine"&gt;第三步: 新建一个virtual machine&lt;/h3&gt;
+&lt;p&gt;可以用eclipse的AVDmanager做, 也可以用命令行做. &lt;/p&gt;
+&lt;p&gt;输入:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;android list targets&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;找到想要的target(我们要4.1.2)的那个id(一个数字), 然后, 运行命令: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;android create avd -t &amp;lt;target_id&amp;gt; -n inf422 --abi armeabi-v7a&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这样就生成了一个名叫"inf422"的虚拟机&lt;/p&gt;
+&lt;h3 id="_2"&gt;第四步: 关联到自定义的镜像&lt;/h3&gt;
+&lt;p&gt;inf422这门课提供了一个修改过的android镜像, 在&lt;a href="http://www.enseignement.polytechnique.fr/informatique/INF422/ramdisk.img"&gt;这里&lt;/a&gt;和&lt;a href="http://www.enseignement.polytechnique.fr/informatique/INF422/kernel-qemu"&gt;这里&lt;/a&gt;下载, 下载到本地的目录上了以后, 运行: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;emulator @inf422 -ramdisk &amp;lt;IMAGES&amp;gt;/ramdisk.img -kernel &amp;lt;IMAGES&amp;gt;/kernel-qemu&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;其中&lt;images&gt;是刚刚存放那俩镜像文件的目录. &lt;/images&gt;&lt;/p&gt;
+&lt;h3 id="telnet"&gt;第五步: telnet连接虚拟机&lt;/h3&gt;
+&lt;p&gt;课程里用的emulator使用telnet服务器, 且是在虚拟机的23端口接收信息. 先重定向一下端口, 定向到localhost的4444端口:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;adb forward tcp:4444 tcp:23&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这样, 以后要登录模拟器emulator的时候, 只需要输入: &lt;/p&gt;
+&lt;p&gt;&lt;code&gt;telnet localhost 4444&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;(用户名是root, 不要密码)&lt;/p&gt;
+&lt;h2 id="_3"&gt;第六步: 用两种方法进入虚拟机&lt;/h2&gt;
+&lt;p&gt;刚才的4444端口是进入emulator用的, 而打开虚拟机的时候, 窗口标题是一个数字再加虚拟机的名字(我的显示的是"5554:inf422"), 这个5554是另外一个端口, 用于用shell方式登陆, 登陆后可以使用shell命令查看文件或者进行一些操作. &lt;/p&gt;
+&lt;p&gt;而与之对应, 从4444端口登陆, 则是进入emulator的控制console&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;两种方法和AVD交流:&lt;/em&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;console: linux命令, 命令行&lt;/li&gt;
+&lt;li&gt;emulator: 发送命令产生一些事件(电话, 短信, GPS等)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;第二种方式可以模拟一些手机事件, 很有用... 使用help命令查看emulator怎么使用&lt;/p&gt;</summary><category term="android"></category><category term="inf422"></category></entry></feed>

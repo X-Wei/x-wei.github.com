@@ -1,185 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+<html lang="zh-Hant"
+>
+<head>
+    <title>python pickle 的一个小问题 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
-    <title>python pickle 的一个小问题</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <!-- Le styles -->
-    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-	
-	.tag-0 {
-		font-size: 20pt;
-	}
-	
-	.tag-1 {
-		font-size: 16pt;
-	}
-	
-	.tag-2 {
-		font-size: 12pt;
-	}
 
-	.tag-4 {
-		font-size: 8pt;
-	}
-	
-    </style>
-    <link href="./theme/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="./theme/css/font-awesome.css" rel="stylesheet">
-	
-    <link href="./theme/css/pygments.css" rel="stylesheet">
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+<link rel="canonical" href="http://x-wei.github.io/python pickle 的一个小问题.html">
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="./theme/images/favicon.ico">
-    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="python" />
+        <meta name="description" content="python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住... 不过今天在使用pickle的时候遇到了一个很奇怪的问题. 是这样的, 原本写了一个程序main.py, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个util.py文件里. 并且在main.py的第一行写上: from util import * 按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误: airport_info = pk.load(file(&#39;airport_info.dict&#39;, &#39;rb&#39;)) &gt;&gt;AttributeError: &#39;module&#39; object has no attribute &#39;Airport&#39; 其中Airport是我定义的一个类, 本来在main.py里面, 后来被我移动到了util.py里面... 感觉很奇怪, 于是去水源求助 ..." />
 
-    <link href="./feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="mx's Blog ATOM Feed" />
-    
-    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="mx's Blog RSS Feed" />
-    
-
-  </head>
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="python pickle 的一个小问题"/>
+        <meta property="og:url" content="http://x-wei.github.io/python pickle 的一个小问题.html"/>
+        <meta property="og:description" content="python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住... 不过今天在使用pickle的时候遇到了一个很奇怪的问题. 是这样的, 原本写了一个程序main.py, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个util.py文件里. 并且在main.py的第一行写上: from util import * 按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误: airport_info = pk.load(file(&#39;airport_info.dict&#39;, &#39;rb&#39;)) &gt;&gt;AttributeError: &#39;module&#39; object has no attribute &#39;Airport&#39; 其中Airport是我定义的一个类, 本来在main.py里面, 后来被我移动到了util.py里面... 感觉很奇怪, 于是去水源求助 ..."/>
+        <meta property="article:published_time" content="2014-07-15" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="http://x-wei.github.io/python pickle 的一个小问题.png"/>
 
 
 
+    <!-- Bootstrap -->
+        <link href="http://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
 
+    <link href="http://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-  <body>
-    <!-- Baidu Button BEGIN -->
-    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["tsina","twi","weixin","fbook","douban","linkedin","qzone","evernotecn","renren","youdao","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"24"},"slide":{"type":"slide","bdImg":"6","bdPos":"right","bdTop":"289"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
-    <!-- Baidu Button END -->
-<!-- UJian Button BEGIN -->
-<script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?type=slide"></script>
-<!-- UJian Button END -->
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="./index.html">mx's Blog </a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              
-              
-              
-			  <li class="divider-vertical"></li>
-              
-              
-                  <li >
-                    <a href="./category/misc.html">
-						<i class="icon-folder-open icon-large"></i>misc
-					</a>
-                  </li>
-              
-                  <li >
-                    <a href="./category/music.html">
-						<i class="icon-folder-open icon-large"></i>music
-					</a>
-                  </li>
-              
-                  <li >
-                    <a href="./category/notes.html">
-						<i class="icon-folder-open icon-large"></i>notes
-					</a>
-                  </li>
-              
-                  <li >
-                    <a href="./category/soft.html">
-						<i class="icon-folder-open icon-large"></i>soft
-					</a>
-                  </li>
-              
-                  <li class="active">
-                    <a href="./category/tech.html">
-						<i class="icon-folder-open icon-large"></i>tech
-					</a>
-                  </li>
-              
-			  
-			  <ul class="nav pull-right">
-				<li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
-			  </ul>
-			  
-            </ul>
-            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
-          </div><!--/.nav-collapse -->
+    <link href="http://x-wei.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="http://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="http://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="http://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="http://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">python pickle 的一个小问题 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
         </div>
-      </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li class="active">
+                                <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="搜索" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="http://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">归档</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="span9" id="content">
-            
-<section id="content">    
-	<article>
-		<header>
-			<h1>
-				<a href=""
-					rel="bookmark" 
-					title="Permalink to python pickle 的一个小问题">
-					python pickle 的一个小问题 
-				</a>
-				 
-			</h1> 
-		</header>
-		<div class="entry-content">
-		<div class="well">
-			<footer class="post-info">
-<span class="label">Date</span>
-<abbr class="published" title="2014-07-15T00:00:00">
-	<i class="icon-calendar"></i>Tue, 15 Jul 2014
-</abbr>
-
-<span class="label">By</span>
-<a href="./"><i class="icon-user"></i>mx</a>
-
-<span class="label">Category</span>
-<a href="./"><i class="icon-folder-open"></i>tech</a>. 
-
-
-	
-
-<span class="label">Tags</span> 
-
-	<a href="./tag/python.html"><i class="icon-tag"></i>python</a>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="http://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="http://x-wei.github.io/category/tech.html" title="tech">tech</a></li>
+                <li class="active">python pickle 的一个小问题</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        python pickle 的一个小问题
+                        <a href="http://x-wei.github.io/python pickle 的一个小问题.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 python pickle 的一个小问题 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2014-07-15T00:00:00+02:00"><i class="fa fa-calendar"></i> Tue, 15 Jul 2014</time>
+    </span>
 
 
 
-</footer><!-- /.post-info -->
-		</div>
-		<p>python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...</p>
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/python.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> python</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                <p>python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...</p>
 <p>不过今天在使用pickle的时候遇到了一个很奇怪的问题. </p>
 <p>是这样的, 原本写了一个程序<code>main.py</code>, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个<code>util.py</code>文件里. 并且在main.py的第一行写上: </p>
 <p><code>from util import *</code></p>
 <p>按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误:</p>
-<div class="codehilite"><pre><span></span>    <span class="n">airport_info</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">(</span><span class="s1">&#39;airport_info.dict&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span> 
-    <span class="o">&gt;&gt;</span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;module&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;Airport&#39;</span>
+<div class="highlight"><pre><span class="code-line"><span></span>    <span class="n">airport_info</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">(</span><span class="s1">'airport_info.dict'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">))</span> </span>
+<span class="code-line">    <span class="o">&gt;&gt;</span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">'module'</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">'Airport'</span></span>
 </pre></div>
-
-
 <p>其中<code>Airport</code>是我定义的一个类, 本来在main.py里面, 后来被我移动到了util.py里面...</p>
 <p>感觉很奇怪, 于是去<a href="https://bbs.sjtu.edu.cn/frame2.html">水源</a>求助, 果然fcfarseer学长就很快给了<a href="https://bbs.sjtu.edu.cn/bbscon,board,Script,file,M.1405431916.A.html">回复</a>:</p>
 <blockquote>
@@ -190,443 +218,538 @@
 <p>所以问题出在这里(我的理解): 原先我把数据pickle进文件的时候, <code>Airport这个class是定义在了main.py里面, 所以当我在util.py里面load数据的时候, pickle发现原来的main.py里面已经没有了 Airport这个class, 于是就出现了Error...</code></p>
 <p>解决办法也不难, 只需要在<code>util.py</code>里面再生成一下那些要load的数据文件, 之后再次unpickle的时候就会去<code>util.py</code>而不是<code>main.py</code>里找class的定义, 也就没有问题了!</p>
 <p>今天碰到的这个问题不是那么evident, 所以特地记一下.</p>
-		</div><!-- /.entry-content -->
-		
-		<div class="comments">
-		<h2>Comments !</h2>
-			<div id="disqus_thread"></div>
-			<script type="text/javascript">
-			   var disqus_identifier = "python pickle 的一个小问题.html";
-			   (function() {
-				var dsq = document.createElement('script'); 
-				dsq.type = 'text/javascript'; dsq.async = true;
-				dsq.src = 'http://xweisblog.disqus.com/embed.js';
-				(document.getElementsByTagName('head')[0] || 
-				 document.getElementsByTagName('body')[0]).appendChild(dsq);
-			  })();
-			</script>
-		</div>
-		
-	</article>
-</section>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
 
-        </div><!--/span-->
-      
-		<div class="span3 well sidebar-nav" id="sidebar">
-            <ul class="nav nav-list">
-
-<li  class="nav-header"><h4><i class="icon-external-link"></i>blogroll</h4></li>
-
-    <li><a href="http://log.dofine.me/"><i class="icon-external-link"></i>dofine</a></li>
-
-    <li><a href="http://farseerfc.github.com/"><i class="icon-external-link"></i>farseerfc</a></li>
-
-    <li><a href="http://hyhx2008.github.com/"><i class="icon-external-link"></i>H.Y.</a></li>
-
-    <li><a href="http://reginald1787.github.io/"><i class="icon-external-link"></i>reginald1787</a></li>
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/使用Eclipse的UML插件生成类图.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        使用Eclipse的UML插件生成类图
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/Eclipse插件推荐.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        Eclipse插件推荐<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
 
 
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
 
-<li class="nav-header"><h4><i class="icon-home icon-large"></i> social</h4></li>
-<li><a href="./feeds/all.atom.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>atom feed</a></li>
+                            var disqus_identifier = 'python pickle 的一个小问题';
+                        var disqus_url = '/python pickle 的一个小问题.html';
 
-<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
 
 
-    <li><a href="https://github.com/x-wei"><i class="icon-github-sign icon-large"></i>github</a></li>
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
 
-
-
-<li class="nav-header"><h4><i class="icon-folder-close icon-large"></i>Categories</h4></li>
-
-<li>
-<a href="./category/misc.html">
-    <i class="icon-folder-open icon-large"></i>misc
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="http://x-wei.github.io/about.html">
+关于  mx
 </a>
-</li>
-
-<li>
-<a href="./category/music.html">
-    <i class="icon-folder-open icon-large"></i>music
-</a>
-</li>
-
-<li>
-<a href="./category/notes.html">
-    <i class="icon-folder-open icon-large"></i>notes
-</a>
-</li>
-
-<li>
-<a href="./category/soft.html">
-    <i class="icon-folder-open icon-large"></i>soft
-</a>
-</li>
-
-<li>
-<a href="./category/tech.html">
-    <i class="icon-folder-open icon-large"></i>tech
-</a>
-</li>
-
-
-<li class="nav-header"><h4><i class="icon-tags icon-large"></i>Tags</h4></li>
-
-<span class="tag-4">
-    <a href="./tag/算法.html">算法</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/host.html">host</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/python.html">python</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/regex.html">regex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/pandas.html">pandas</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/git.html">git</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/markdown.html">markdown</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/快捷键.html">快捷键</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/codejam.html">codejam</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/android.html">android</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/eclipse.html">eclipse</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/中文乱码.html">中文乱码</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/LP.html">LP</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/GRE.html">GRE</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/opencv.html">opencv</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/C++.html">C++</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/R.html">R</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/ssh.html">ssh</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/tips.html">tips</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/java.html">java</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Simon&Garfunkel.html">Simon&Garfunkel</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-1">
-    <a href="./tag/algorithm.html">algorithm</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/french.html">french</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/shell.html">shell</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/inf422.html">inf422</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/linux.html">linux</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/Toefl.html">Toefl</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/scrapy.html">scrapy</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/tex.html">tex</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/weka.html">weka</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/外观.html">外观</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/ml.html">ml</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/scala.html">scala</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/fr.html">fr</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/TeXmacs.html">TeXmacs</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/google.html">google</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/ubuntu.html">ubuntu</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/pelican.html">pelican</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/torch.html">torch</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-4">
-    <a href="./tag/巴黎高科.html">巴黎高科</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-3">
-    <a href="./tag/出国.html">出国</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/deep learning.html">deep learning</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<span class="tag-2">
-    <a href="./tag/spark.html">spark</a> 
-</span>
-<!-- <i class="icon-tag icon-large"></i> -->
-
-<br>
-<br>
-
-
-
-<li class="nav-header"><h4><i class="icon-search"></i>Google Search</h4></li>
-<div id="cse" style="width: 100%;">Loading</div>
-<script src="http://www.google.com/jsapi" type="text/javascript"></script>
-<script type="text/javascript"> 
-  google.load('search', '1');
-  google.setOnLoadCallback(function() {
-    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
-      '010017366155264590731:njcqykcxuly', customSearchOptions);
-    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
-    customSearchControl.draw('cse');
-  }, true);
-</script>
-<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
-
-
-
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="http://x-wei.github.io/about.html"><img width="100%" src="http://x-wei.github.io/../_images/mx.jpg"/></a>
     
-<br>
-<Script Language="JavaScript"> 
-var timedate= new Date("June 22,2013"); 
-var now = new ate(); 
-var date = now.getTime() - timedate.getTime(); 
-var time = Math.floor(date / (1000 * 60 * 60 * 24)); 
-if (time >= 0) ;
-document.write("<p style='text-align: center'><strong><font style='color:black;font-size:36px;'>"+time +"</font></strong> days<br/><strong>since GRADUATION from<br/> Shanghai Jiao Tong University</strong></p>");
-</Script>
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
 
-
-
-
-<br>
-<li class="widget-container widget_text">
-<h3 class="widget-title">推荐文章</h3>
+<h4 class="widget-title">推荐文章</h4>
 <div class="textwidget">
-
-<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br>
-<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br>
-<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br>
-<a href="http://x-wei.github.com/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br>
-<a href="http://x-wei.github.com/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br>
-<a href="http://x-wei.github.com/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br>
-</div></li>
-
-<br>
 <li class="widget-container widget_text">
-<h3 class="widget-title">About me</h3>
-<div class="textwidget">
-上海西南某高校电院毕业生, X2012.<br/>
-</div></li>
-
-<br>
-<a href="https://www.polytechnique.edu/" target="_blank"><img src="http://x-wei.github.com/static/x-logo.png" alt="X" width="160" border="0" /></a><br/>
-
-<br>
-<a href="http://www.sjtu.edu.cn/"><img src="http://x-wei.github.com/static/ssss.jpg" border="0"alt="上海西南某高校"></a><br/>
-
-
-<br>
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
 <li class="widget-container widget_text">
-<h3 class="widget-title">Who are Visiting</h3>
-<div class="textwidget">
-<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
-</div></li>
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
 
 <!-- hitwebcounter Code START -->
 <a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
-<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" >
-</a><br/>
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
 
 
 
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="http://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/torch.html">
+                    torch <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/suan-fa.html">
+                    算法 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/scala.html">
+                    scala <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/android.html">
+                    android <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/python.html">
+                    python <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 34</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
 
 
-</ul>
-        </div><!--/.well -->
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
 
-      </div><!--/row-->
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2016 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
 
-      <hr>
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="http://x-wei.github.io/theme/js/jquery.min.js"></script>
 
-      <footer>
-        <address id="about">
-                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
-				which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
-        </address><!-- /#about -->
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://x-wei.github.io/theme/js/bootstrap.min.js"></script>
 
-        <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
-		   and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
-      </footer>
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://x-wei.github.io/theme/js/respond.min.js"></script>
 
-    </div><!--/.fluid-container-->
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'http://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
 
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="http://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
 
-    
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="http://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
 </script>
-<script type="text/javascript">
-try {
-	var pageTracker = _gat._getTracker("UA-30756331-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
 
-    
-    
-<script type="text/javascript">
-    var disqus_shortname = 'xweisblog';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
-    
-
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="./theme/js/jquery.js"></script>
-    <script src="./theme/js/bootstrap-transition.js"></script>
-    <script src="./theme/js/bootstrap-alert.js"></script>
-    <script src="./theme/js/bootstrap-modal.js"></script>
-    <script src="./theme/js/bootstrap-dropdown.js"></script>
-    <script src="./theme/js/bootstrap-scrollspy.js"></script>
-    <script src="./theme/js/bootstrap-tab.js"></script>
-    <script src="./theme/js/bootstrap-tooltip.js"></script>
-    <script src="./theme/js/bootstrap-popover.js"></script>
-    <script src="./theme/js/bootstrap-button.js"></script>
-    <script src="./theme/js/bootstrap-collapse.js"></script>
-    <script src="./theme/js/bootstrap-carousel.js"></script>
-    <script src="./theme/js/bootstrap-typeahead.js"></script>
-	
-	<!--<script src="./theme/js/autosidebar.js"></script>-->
-  </body>
+</body>
 </html>
