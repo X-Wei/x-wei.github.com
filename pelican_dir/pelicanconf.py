@@ -8,6 +8,8 @@ SITENAME = "mx's blog"
 
 SITEURL = '//' + getenv("SITEURL", default='localhost:8000')
 
+SITEURL = 'http://x-wei.github.io'
+
 OUTPUT_PATH = 'output/'
 
 TIMEZONE = 'Europe/Paris'
@@ -52,12 +54,14 @@ EXTRA_PATH_METADATA = {
     'static/CNAME': {'path': 'CNAME'},
     'static/robots.txt': {'path': 'robots.txt'},
     'static/manifest.json': {'path': 'manifest.json'},
+    #~ 'tag/images': {'path': '../images'}
 }
 
 PAGE_URL = "{slug}.html"
 PAGE_SAVE_AS = "{slug}.html"
 PAGE_PATHS = ['pages']
-
+#~ TAG_SAVE_AS='tag_{slug}.html'
+#~ CATEGORY_SAVE_AS='category_{slug}.html'
 
 # -------theme settings, see https://github.com/DandyDev/pelican-bootstrap3/wiki/Variables
 THEME = "pelican-themes/pelican-bootstrap3"
@@ -77,7 +81,6 @@ OUTPUT_SOURCES = False
 DIRECT_TEMPLATES = (('search', 'index', 'categories', 'authors', 'archives','tags'))
 AVATAR = 'images/mx.jpg'
 ABOUT_PAGE = "about.html"
-#~ SIDEBAR_IMAGES = ['_images/ssss.jpg', '_images/x-logo.png']
 ABOUT_ME = ur"""
 <h3 style="text-align:center">
 <a href="https://github.com/x-wei" target="_blank">
@@ -105,11 +108,11 @@ ABOUT_ME = ur"""
 </div>
 
 <br><a href="https://www.polytechnique.edu/" target="_blank">
-<img src="images/x-logo.png" alt="X" width="180" border="0" />
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
 </a><br/>
 
 <br><a href="http://www.sjtu.edu.cn/">
-<img src="images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
 </a><br/>
 
 <br>
@@ -138,6 +141,7 @@ MD_EXTENSIONS = ['admonition',
 
 PLUGINS = [#"i18n_subsites",
            "better_codeblock_line_numbering",
+           #~ 'better_figures_and_images',
            'tipue_search',
            'neighbors',
            'series',

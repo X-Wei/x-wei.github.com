@@ -202,7 +202,7 @@ mx's blog            </a>
 <p>pb: reduce the size of a file, to save space/time for storing/transmitting. <br/>
 applications: generic file compression(gzip), multimedia (mp3), communication(skype).   </p>
 <p>From binary data <code>B</code>, ⇒ generate a compressed representation <code>C(B)</code>. <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image.png"/><br/>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image.png"/><br/>
 <strong>lossless compression</strong>: get exactly <code>B</code> from <code>C(B)</code><br/>
 <strong>compression ratio</strong>: <code>|C(B)|/|B|</code>(||means number of <em>bits</em>)  </p>
 <h3 id="tools">Tools</h3>
@@ -226,14 +226,14 @@ applications: generic file compression(gzip), multimedia (mp3), communication(sk
 <span class="code-line">}</span>
 </pre></div>
 <p>usage example: store a date 12/31/1999<br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image001.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image001.png"/> </p>
 <p>universal date compression?<br/>
 <strong>prop</strong>. NO algorithm can compress every bitstring.<br/>
 pf. by contradiction: repeatedly compress the bitstring ⇒ bit length goes to 0.   </p>
 <h1 id="2-run-length-coding">2. Run-Length Coding</h1>
 <p>one simple type of redundancy in bitstream: long runs of repeated bits. <br/>
 ⇒ use <em>4-bit counts</em> to represent alternating 1s and 0s. <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image002.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image002.png"/> </p>
 <ul>
 <li>question1: how many bits to represent counts ? ⇒ pick 8 bits (just tradeoff)  </li>
 <li>question2: what if run length is bigger than max length(2^8)? ⇒ just add length=0 of the alternating bit...   </li>
@@ -283,7 +283,7 @@ ex. Morse code, more freq chars use less chars. <br/>
 → pb: ambiguity? one code is the prefix of another... <br/>
 → need to use <em>prefix-free code</em> </p>
 <p>⇒ use a trie to represent the prefix-free code, in bitstream, use a binary trie: <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image003.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image003.png"/> </p>
 <h3 id="huffman-trie-node">Huffman Trie Node</h3>
 <p>define trie nodes having frequences:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public static class Node implements Comparable&lt;Node&gt;{  </span>
@@ -318,7 +318,7 @@ ex. Morse code, more freq chars use less chars. <br/>
 ie. to serialize a trie. <br/>
 ⇒ use <em>preorder traversal</em>: <br/>
 0 for internal nodes, and 1 for leaf (followed by the corresponding char)<br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image004.png"/><br/>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image004.png"/><br/>
 recursive method:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>private static void writeTrie(Node x){  </span>
 <span class="code-line">    if(x==null) return;  </span>
@@ -366,7 +366,7 @@ preorder(x) = x+preorder(x.left)+preorder(x.right) ⇒ recursive method...   </p
 <li>repeat until we get only 1 trie  </li>
 </ul>
 </blockquote>
-<p><img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image005.png"/> </p>
+<p><img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image005.png"/> </p>
 <p>application: jpeg, pdf, mp3, ...  </p>
 <p><strong>implementation</strong> </p>
 <div class="highlight"><pre><span class="code-line"><span></span>private static Node buildTrie(int[] freq){  </span>
@@ -388,7 +388,7 @@ adaptive model: learn and <em>update</em> the model as you read the text. <br/>
 decoder will do the same thing.   </p>
 <p>build a table of not only mapping chars to codes, but also mapping &gt;=2-char combinations to codes(of fixed width). <br/>
 when encoding strings, look for the longest prefix that is in our table. <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image006.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image006.png"/> </p>
 <h3 id="lzw-compression">LZW compression</h3>
 <p>LZW compression algo  </p>
 <ul>
@@ -425,13 +425,13 @@ when encoding strings, look for the longest prefix that is in our table. <br/>
 </ul>
 <p>to represent the table: just an array.   </p>
 <p><em>note</em> when add new entries: add key = <code>s+c</code>, where <code>s</code> is the last decoded string, <code>c</code> is the first char of the currently decoded string.<br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image008.png"/><br/>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image008.png"/><br/>
 example: when decoded ABR, s = BR, currently decoded string = ABR, so we add BRA.   </p>
 <p><strong>tricky case</strong>: ABABABA<br/>
 compression<br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image009.png"/><br/>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image009.png"/><br/>
 problem in expansion when reading the "83": <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image011.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image011.png"/> </p>
 <p>→ need to be able to update the table when encountering a code not yet defined...   </p>
 <h1 id="summary">Summary</h1>
 <ul>
@@ -439,7 +439,7 @@ problem in expansion when reading the "83": <br/>
 <li>LZW: variable-length symbols, with fixed-length codes.   </li>
 </ul>
 <p>theoretical limit: <br/>
-<img alt="" class="img-responsive" src="_images/algoII_week5_2/pasted_image012.png"/> </p>
+<img alt="" class="img-responsive" src="images/algoII_week5_2/pasted_image012.png"/> </p>
 <p>还剩下一周的内容, 可能要等到二月底考完以后有时间再看了, 现在先复习备考...</p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -542,7 +542,7 @@ problem in expansion when reading the "83": <br/>
         </h4>
     </div>
 <div class="panel-body" id="aboutme">
-        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+        <a href="./about.html"><img width="100%" src="./../images/mx.jpg"/></a>
     
 <h3 style="text-align:center">
 <a href="https://github.com/x-wei" target="_blank">
@@ -570,18 +570,18 @@ problem in expansion when reading the "83": <br/>
 </div>
 
 <br><a href="https://www.polytechnique.edu/" target="_blank">
-<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
 </a><br/>
 
 <br><a href="http://www.sjtu.edu.cn/">
-<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
 </a><br/>
 
 <br>
 <h4 class="widget-title">Who are visiting</h4>
 <div class="textwidget" >
 <script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
-s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
 </script></div>
 
 <!-- hitwebcounter Code START -->

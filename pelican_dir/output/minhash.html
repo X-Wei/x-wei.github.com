@@ -207,34 +207,34 @@ mx's blog            </a>
 <p>另一个思路是, 使用某个hash函数, 对于每一个数据计算一个哈希值. 这个hash函数要满足: <strong>当i和j的相似度很高的时候, hash(i)和hash(j)的值(很可能)相同.</strong> 这次介绍的minHash就是这样的一种方法.    </p>
 <h2 id="jaccard-similarity">Jaccard similarity</h2>
 <p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term(term可以是单词, 也可以是n-gram或叫shingle): <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image.png"/> </p>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image.png"/> </p>
 <p>一段文本(document i)可以用binary vectorization变为一个binary的向量:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image001.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image001.png"/> <br/>
 (这里没有用TF或者TFIDF, 只用一个简单的binary向量化, 因为只有binary的时候才适合我们接下来的推导...)   </p>
 <p>每个document可以看作一些term的<em>集合</em>, 集合之间的相似度有一个经典的度量: jaccard similarity. <br/>
 对集合S1和S2, 他们的相似度定义为:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image003.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image003.png"/> <br/>
 也很好理解, 重合部分比例越高相似度就越高, 另外jaccard-sim取值在0到1之间.    </p>
 <p>对于document i和j, 他们的向量形式分别是di和dj. 现在我们希望计算hash(di)和hash(dj), 使得:    </p>
-<p><img alt="" class="img-responsive" src="_images/minhash/pasted_image004.png"/> </p>
+<p><img alt="" class="img-responsive" src="images/minhash/pasted_image004.png"/> </p>
 <h2 id="minhash">minHash</h2>
 <p>min hash的思路是这样的, 首先生成一个随机的(1...M)的排序(permutation)π:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image005.png"/> </p>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image005.png"/> </p>
 <p>然后, 对于每个document d, 都按照这个permutation, 把d的分量从新排列:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image006.png"/> </p>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image006.png"/> </p>
 <p>然后定义<code>minHash(di)</code>为permutation以后的di里的第一个不为0的位置:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image008.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image008.png"/> <br/>
 (上面个公式里d的下标只是代表第i个文本, 并不代表分量... 我应该写上标的..) <br/>
 所以<code>minHash()</code>返回1到M之间的一个数.    </p>
 <h2 id="proof">proof</h2>
 <p>现在证明一下为什么这样选择minHash函数可以保证两个文本的哈希值相等的概率为他们的jaccard similarity.    </p>
 <p>对于d2和d2, 我们分别查看π(d1)和π(d2)的每个分量, 这两个数有(11), (10), (01), (00)这四种可能, 分别记每种可能性的出现次数为a,b,c,d:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image009.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image009.png"/> <br/>
 那么jaccard similarity可以表示为:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image010.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image010.png"/> <br/>
 再看<code>minHash()</code>是如何计算的, 当π(d1)_k和π(d2)_k都为0的时候会继续增加k, 一直到π(d1)_k和π(d2)_k中某一个为1.  <br/>
 那么<code>minHash(d1)==minHash(d2)</code>的情况就是二者都为1的情况, 这种情况的可能性为:  <br/>
-<img alt="" class="img-responsive" src="_images/minhash/pasted_image011.png"/> <br/>
+<img alt="" class="img-responsive" src="images/minhash/pasted_image011.png"/> <br/>
 这个概率恰好就是jaccard similarity.    </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -337,7 +337,7 @@ mx's blog            </a>
         </h4>
     </div>
 <div class="panel-body" id="aboutme">
-        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+        <a href="./about.html"><img width="100%" src="./../images/mx.jpg"/></a>
     
 <h3 style="text-align:center">
 <a href="https://github.com/x-wei" target="_blank">
@@ -365,18 +365,18 @@ mx's blog            </a>
 </div>
 
 <br><a href="https://www.polytechnique.edu/" target="_blank">
-<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
 </a><br/>
 
 <br><a href="http://www.sjtu.edu.cn/">
-<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
 </a><br/>
 
 <br>
 <h4 class="widget-title">Who are visiting</h4>
 <div class="textwidget" >
 <script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
-s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
 </script></div>
 
 <!-- hitwebcounter Code START -->

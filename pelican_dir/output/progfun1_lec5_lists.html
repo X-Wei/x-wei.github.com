@@ -287,9 +287,9 @@ head, tail: simple to implement
 <div class="highlight"><pre><span class="code-line"><span></span>val pair = ("a", 2)</span>
 <span class="code-line">val (label, value) = pair</span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image.png"/></p>
 <p>tuple implementation: </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image001.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image001.png"/></p>
 <p>⇒ can use <code>_1</code> <code>_2</code> to access elements</p>
 <p>exercice: rewrite the merge function using a <em>pattern matching over pairs</em>:</p>
 <div class="highlight"><pre><span class="code-line"><span></span>def merge(xs: List[Int], ys: List[Int]): List[Int] =</span>
@@ -315,7 +315,7 @@ head, tail: simple to implement
 <div class="highlight"><pre><span class="code-line"><span></span>def msort[T](xs: List[T])(implicite ord: Ordering) = ...// use ord.lt(x,y)</span>
 </pre></div>
 <p>⇒ the function calls can ignore the implicite parameter, the compiler will figure it out. </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image002.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image002.png"/></p>
 <h1 id="54-higher-order-list-functions">5.4 - Higher-Order List Functions</h1>
 <p>functions over list have similar pattern: </p>
 <ul>
@@ -339,9 +339,9 @@ head, tail: simple to implement
 <span class="code-line">}</span>
 </pre></div>
 <p>other methods that extracts sublist: </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image003.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image003.png"/></p>
 <p>exercice: implement a function <code>pack</code>: </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image004.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image004.png"/></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def pack[T](xs: List[T]): List[List[T]] = xs match {</span>
 <span class="code-line">    case Nil =&gt; Nil</span>
 <span class="code-line">    case x::ys =&gt; {</span>
@@ -351,7 +351,7 @@ head, tail: simple to implement
 <span class="code-line">}</span>
 </pre></div>
 <p>exercice2: implement  a function <code>encode</code>:</p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image005.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image005.png"/></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def encode[T](xs: List[T]): List[(T, Int)] = xs match {</span>
 <span class="code-line">    case Nil =&gt; Nil</span>
 <span class="code-line">    case x::ys =&gt; {</span>
@@ -369,7 +369,7 @@ head, tail: simple to implement
 <h3 id="reduceleft">reduceLeft</h3>
 <p>(can apply only to non-empty lists) 
 inserts a binary operator between adj elements: </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image006.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image006.png"/></p>
 <p>ex. </p>
 <div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (0::xs) reduceLeft ( (x,y)=&gt; x+y)</span>
 <span class="code-line">def prod(xs: List[Int]) = (1::xs) reduceLeft ( (x,y)=&gt; x*y)</span>
@@ -380,26 +380,26 @@ inserts a binary operator between adj elements: </p>
 </pre></div>
 <h3 id="foldleft">foldLeft</h3>
 <p>foldLeft is like reduceLeft, but can apply on Nil, and takes an <strong>accumulator</strong> <code>z</code> =&gt; returns z when calling on Nil. </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image007.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image007.png"/></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (xs foldleft 0) ( _+_ )</span>
 <span class="code-line">def prod(xs: List[Int]) = (xs foldleft 1) ( _*_ )</span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image008.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image008.png"/></p>
 <h3 id="foldrightreduceright">foldRight/reduceRight</h3>
 <p>dual functions to <code>foldLeft</code> and <code>reduceLeft</code>, but produce a tree leaned to right</p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image010.png"/></p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image011.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image010.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image011.png"/></p>
 <p>if the operation is associative and communitive, foldLeft and foldRight should give same results. Other times need to think. </p>
 <p>ex. concat</p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image012.png"/>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image012.png"/>
 if apply foldLeft ⇒ type error, because the <code>::</code> operator will be applied to 2 elements of type T.</p>
 <h1 id="56-reasoning-about-concat">5.6 - Reasoning About Concat</h1>
 <p>proof of programs</p>
 <h3 id="structural-induction">structural induction</h3>
 <p>pb: prove some properties of concat:</p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image015.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image015.png"/></p>
 <p>类似数学归纳法: </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image016.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image016.png"/></p>
 <p>ex. prove <code>(xs ++ ys) ++ zs = xs ++ (ys ++ zs)</code>: induction on <code>xs</code></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def concat[T](xs: List[T], ys: List[T]) = xs match{</span>
 <span class="code-line">    case Nil =&gt; ys</span>
@@ -413,7 +413,7 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
 <ul>
 <li>induction step: <code>x::xs</code></li>
 </ul>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image017.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image017.png"/></p>
 <h2 id="57-a-larger-equational-proof-on-lists">5.7 - A Larger Equational Proof on Lists</h2>
 <p>pb: want to prove that <code>xs.reverse.revese == xs</code></p>
 <ul>
@@ -422,7 +422,7 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
 </ul>
 <p>pb: cannot advance 
 ⇒ generalize the argument. </p>
-<p><img alt="" class="img-responsive" src="_images/progfun1_lec5_lists/pasted_image018.png"/></p>
+<p><img alt="" class="img-responsive" src="images/progfun1_lec5_lists/pasted_image018.png"/></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -524,7 +524,7 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
         </h4>
     </div>
 <div class="panel-body" id="aboutme">
-        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+        <a href="./about.html"><img width="100%" src="./../images/mx.jpg"/></a>
     
 <h3 style="text-align:center">
 <a href="https://github.com/x-wei" target="_blank">
@@ -552,18 +552,18 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
 </div>
 
 <br><a href="https://www.polytechnique.edu/" target="_blank">
-<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
 </a><br/>
 
 <br><a href="http://www.sjtu.edu.cn/">
-<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
 </a><br/>
 
 <br>
 <h4 class="widget-title">Who are visiting</h4>
 <div class="textwidget" >
 <script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
-s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
 </script></div>
 
 <!-- hitwebcounter Code START -->
