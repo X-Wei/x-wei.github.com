@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[python进阶课程] 函数式编程 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="./imooc_py_functional.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="python" />
+        <meta name="description" content="http://www.imooc.com/learn/317 函数式编程: 更抽象, 更脱离指令(计算机), 更贴近计算(数学). 不需要变量 (python允许有变量, 所以python非纯函数式) 高阶函数 闭包: 返回函数 匿名函数 高阶函数 变量可以指向函数 f=abs; f(-10) 函数名: 就是指向函数的变量 abs=len 高阶函数: 接收函数作为参数的函数 def add(x,y,f): return f(x)+f(y) add(-5, 9, abs) map() map()是 Python 内置的高阶函数 ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[python进阶课程] 函数式编程"/>
+        <meta property="og:url" content="./imooc_py_functional.html"/>
+        <meta property="og:description" content="http://www.imooc.com/learn/317 函数式编程: 更抽象, 更脱离指令(计算机), 更贴近计算(数学). 不需要变量 (python允许有变量, 所以python非纯函数式) 高阶函数 闭包: 返回函数 匿名函数 高阶函数 变量可以指向函数 f=abs; f(-10) 函数名: 就是指向函数的变量 abs=len 高阶函数: 接收函数作为参数的函数 def add(x,y,f): return f(x)+f(y) add(-5, 9, abs) map() map()是 Python 内置的高阶函数 ..."/>
+        <meta property="article:published_time" content="2016-02-17" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="./imooc_py_functional.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="./theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+
+
+        <link href="./theme/css/material.min.css" rel="stylesheet">
+        <link href="./theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[python进阶课程] 函数式编程 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="搜索" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">归档</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="./" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="./category/notes.html" title="notes">notes</a></li>
+                <li class="active">[python进阶课程] 函数式编程</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [python进阶课程] 函数式编程
+                        <a href="./imooc_py_functional.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [python进阶课程] 函数式编程 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-02-17T00:00:00+01:00"><i class="fa fa-calendar"></i> Wed, 17 Feb 2016</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="./tag/python.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> python</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                <p><a href="http://www.imooc.com/learn/317">http://www.imooc.com/learn/317</a></p>
+<p>函数式编程: 更抽象, 更脱离指令(计算机), 更贴近计算(数学).   </p>
+<ul>
+<li>不需要变量 (python允许有变量, 所以python非纯函数式)  </li>
+<li>高阶函数  </li>
+<li>闭包: 返回函数  </li>
+<li>匿名函数  </li>
+</ul>
+<h2 id="_1">高阶函数</h2>
+<ul>
+<li>变量可以指向函数 <code>f=abs; f(-10)</code> </li>
+<li>函数名: 就是指向函数的变量 <code>abs=len</code> </li>
+<li>
+<p>高阶函数: 接收函数作为参数的函数  </p>
+<p>def add(x,y,f): <br/>
+    return f(x)+f(y)<br/>
+add(-5, 9, abs)  </p>
+</li>
+</ul>
+<h3 id="map">map()</h3>
+<p><code>map()</code>是 Python 内置的高阶函数，它接收一个函数 f 和一个 list，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 并返回。map()函数不改变原有的 list，而是返回一个新的 list。  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def format_name(s):  </span>
+<span class="code-line">    return s.title()  </span>
+<span class="code-line">print map(format_name, ['adam', 'LISA', 'barT'])</span>
+</pre></div>
+<h3 id="reduce">reduce()</h3>
+<p><code>reduce()</code>函数也是Python内置的一个高阶函数。reduce()函数接收的参数和 map()类似，一个函数 f，一个list，但行为和 map()不同，reduce()传入的函数 f 必须接收两个参数，reduce()对list的每个元素反复调用函数f，并返回最终结果值。  </p>
+<blockquote>
+<p><code>reduce(function, iterable[, initializer])</code><br/>
+Apply function of two arguments cumulatively to the items of iterable, from left to right, so as to reduce the iterable to a single value.  If the optional initializer is present, it is placed before the items of the iterable in the calculation, and serves as a default when the iterable is empty. If initializer is not given and iterable contains only one item, the first item is returned.   </p>
+</blockquote>
+<h3 id="filter">filter()</h3>
+<p>filter()函数接收一个函数 f 和一个list，这个函数 f 的作用是对每个元素进行判断，返回 True或 False，filter()根据判断结果自动过滤掉不符合条件的元素，返回由符合条件元素组成的新list。  </p>
+<h3 id="sorted">自定义sorted()</h3>
+<p>sorted()也是一个高阶函数，它可以接收一个比较函数<code>cmp</code>来实现自定义排序，比较函数的定义是，传入两个待比较的元素 x, y，如果 x 应该排在 y 的前面，返回 -1，如果 x 应该排在 y 的后面，返回 1。如果 x 和 y 相等，返回 0。  </p>
+<h3 id="_2">返回函数</h3>
+<p>在函数内部定义一个函数 然后返回这个内部定义的函数. <br/>
+<em>返回函数可以把一些计算延迟执行</em> </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def calc_sum(lst):  </span>
+<span class="code-line">    def lazy_sum():  </span>
+<span class="code-line">        return sum(lst)  </span>
+<span class="code-line">    return lazy_sum</span>
+</pre></div>
+<p>调用<code>calc_sum()</code>并没有计算出结果，而是返回函数:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; f = calc_sum([1, 2, 3, 4])  </span>
+<span class="code-line">&gt;&gt;&gt; f  </span>
+<span class="code-line">&lt;function lazy_sum at 0x1037bfaa0&gt;</span>
+</pre></div>
+<p>对返回的函数进行调用时，才计算出结果:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; f()  </span>
+<span class="code-line">10</span>
+</pre></div>
+<h3 id="_3">闭包</h3>
+<p>函数<code>f</code>内部定义的函数<code>g</code>无法被外部访问 → 可以防止其他代码调用<code>g</code>. </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def calc_sum(lst):  </span>
+<span class="code-line">    def lazy_sum():  </span>
+<span class="code-line">        return sum(lst)  </span>
+<span class="code-line">    return lazy_sum</span>
+</pre></div>
+<p>注意: 发现没法把 <code>lazy_sum</code> 移到 <code>calc_sum</code> 的外部，因为它<em>引用了 calc_sum 的参数</em> <code>lst</code>。<br/>
+像这种<strong>内层函数引用了外层函数的变量（参数也算变量），然后返回内层函数</strong>的情况，称为闭包（Closure）。  </p>
+<p>闭包的特点是返回的函数还引用了外层函数的局部变量，所以，要正确使用闭包，就要<em>确保引用的局部变量在函数返回后不能变</em>。<br/>
+ex:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span># 希望一次返回3个函数，分别计算1x1,2x2,3x3:  </span>
+<span class="code-line">def count():  </span>
+<span class="code-line">    fs = []  </span>
+<span class="code-line">    for i in range(1, 4):  </span>
+<span class="code-line">        def f():  </span>
+<span class="code-line">             return i*i  </span>
+<span class="code-line">        fs.append(f)  </span>
+<span class="code-line">    return fs  </span>
+<span class="code-line">f1, f2, f3 = count()</span>
+</pre></div>
+<p>以为调用f1()，f2()和f3()结果应该是1，4，9，但实际结果全部都是 9 !  原因就是当count()函数返回了3个函数时，这3个函数所引用的变量 i 的值已经变成了3。<em>函数只在执行时才去获取外层参数i</em>, 由于f1、f2、f3并没有被调用，所以，此时他们并未计算 i*i，当 f1 被调用时i已经变为3... <br/>
+上面的正确写法是:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def count():  </span>
+<span class="code-line">    fs = []  </span>
+<span class="code-line">    for i in range(1, 4):  </span>
+<span class="code-line">        def f(j=i):   </span>
+<span class="code-line">            return j*j  </span>
+<span class="code-line">        fs.append(f)  </span>
+<span class="code-line">    return fs  </span>
+<span class="code-line">f1, f2, f3 = count()  </span>
+<span class="code-line">print f1(), f2(), f3()</span>
+</pre></div>
+<p><strong>因此，返回函数不要引用任何循环变量，或者后续会发生变化的变量。</strong> </p>
+<h3 id="_4">匿名函数</h3>
+<p>Python中，对匿名函数提供了有限支持。 <br/>
+关键字<code>lambda</code> 表示匿名函数，冒号前面的 x 表示函数参数。匿名函数有个限制，就是只能有一个表达式，不写return，返回值就是该表达式的结果。  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>map(lambda x: x * x, [1, 2, 3, 4, 5, 6, 7, 8, 9])  </span>
+<span class="code-line">myabs = lambda x: -x if x &lt; 0 else x   </span>
+<span class="code-line">&gt;&gt;&gt; myabs(-1)  </span>
+<span class="code-line">1</span>
+</pre></div>
+<h2 id="_5">装饰器</h2>
+<p>问题: 定义了函数, 想在运行时增加函数功能同时不改动函数代码.<br/>
+ex. 希望函数调用时打印调用日志<br/>
+<img alt="" class="img-responsive" src="_images/imooc_py_functional/pasted_image.png"/><br/>
+⇒ 方法: 高阶函数: <strong>接收要修改的函数, 进行包装后返回包装过的新函数.</strong> </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def new_f(f):  </span>
+<span class="code-line">    def fn(x):  </span>
+<span class="code-line">        print 'call %s()' % f.__name__  </span>
+<span class="code-line">        return f(x)  </span>
+<span class="code-line">    return fn</span>
+</pre></div>
+<p>函数<code>new_fn</code>就是所谓装饰器函数. python的@语法可以简化装饰器调用: <br/>
+<img alt="" class="img-responsive" src="_images/imooc_py_functional/pasted_image001.png"/><br/>
+(注意: 右边代码, 原本未装饰的f1函数已经被彻底隐藏了. )<br/>
+优点: 极大简化代码.  <br/>
+<img alt="" class="img-responsive" src="_images/imooc_py_functional/pasted_image002.png"/> </p>
+<h3 id="decorator">无参数decorator</h3>
+<p>上面例子里面的<code>new_fn</code>函数只能装饰接收一个参数x的函数, 想要处理接收任意参数的函数 ⇒ 利用Python的 <code>*args</code> 和 <code>**kw</code><br/>
+    def log(f):<br/>
+        def fn(*args, <strong>kw):<br/>
+            print 'call %s() in %s'%( f.<strong>name</strong>, time.ctime() )<br/>
+            return f(*args, </strong>kw)<br/>
+        return fn  </p>
+<h3 id="decorator_1">带参数decorator</h3>
+<p>接上面的log函数, 如果有的函数非常重要，希望打印出'[INFO] call xxx()...'，有的函数不太重要，希望打印出'[DEBUG] call xxx()...'，这时，log函数本身就需要传入'INFO'或'DEBUG'这样的参数，类似这样：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>@log('DEBUG')  </span>
+<span class="code-line">def my_func():  </span>
+<span class="code-line">    pass</span>
+</pre></div>
+<p>把上面的定义翻译成高阶函数的调用，就是：<br/>
+<code>my_func = log('DEBUG')(my_func)</code><br/>
+再展开一下：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>log_decorator = log('DEBUG')  </span>
+<span class="code-line">my_func = log_decorator(my_func)</span>
+</pre></div>
+<p>相当于:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span>log_decorator = log('DEBUG')  </span>
+<span class="code-line">@log_decorator  </span>
+<span class="code-line">def my_func():  </span>
+<span class="code-line">    pass</span>
+</pre></div>
+<p>所以，带参数的log函数<em>首先<strong><em>返回一个decorator函数</em></strong>，再让这个decorator函数接收my_func并返回新函数</em>：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def log(prefix):  </span>
+<span class="code-line">    def log_decorator(f):  </span>
+<span class="code-line">        def wrapper(*args, **kw):  </span>
+<span class="code-line">            print '[%s] %s()...' % (prefix, f.__name__)  </span>
+<span class="code-line">            return f(*args, **kw)  </span>
+<span class="code-line">        return wrapper  </span>
+<span class="code-line">    return log_decorator  </span>
+<span class="code-line">@log('DEBUG')  </span>
+<span class="code-line">def test():  </span>
+<span class="code-line">    pass  </span>
+<span class="code-line">print test()</span>
+</pre></div>
+<p>这里用到了闭包: 最里层wrapper函数(即修饰过个函数)用到了prefix参数.   </p>
+<h3 id="decorator_2">完善decorator</h3>
+<p>上面的decorator会修改函数名:   </p>
+<ul>
+<li>在没有decorator的情况下，打印函数名：  <div class="highlight"><pre><span class="code-line"><span></span>def f1(x):  </span>
+<span class="code-line">    pass  </span>
+<span class="code-line">print f1.__name__</span>
+</pre></div>
+</li>
+</ul>
+<p>⇒ 输出： f1  </p>
+<ul>
+<li>有decorator的情况下，再打印函数名：  <div class="highlight"><pre><span class="code-line"><span></span>def log(f):  </span>
+<span class="code-line">    def wrapper(*args, **kw):  </span>
+<span class="code-line">        print 'call...'  </span>
+<span class="code-line">        return f(*args, **kw)  </span>
+<span class="code-line">    return wrapper  </span>
+<span class="code-line">@log  </span>
+<span class="code-line">def f2(x):  </span>
+<span class="code-line">    pass  </span>
+<span class="code-line">print f2.__name__</span>
+</pre></div>
+</li>
+</ul>
+<p>⇒ 输出： wrapper  </p>
+<p>这对于那些依赖函数名的代码就会失效。decorator还改变了函数的<code>__doc__</code>等其它属性。如果要让调用者看不出一个函数经过了@decorator的“改造”，就需要<em>把原函数的一些属性复制到新函数中</em>：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def log(f):  </span>
+<span class="code-line">    def wrapper(*args, **kw):  </span>
+<span class="code-line">        print 'call...'  </span>
+<span class="code-line">        return f(*args, **kw)  </span>
+<span class="code-line">    wrapper.__name__ = f.__name__  </span>
+<span class="code-line">    wrapper.__doc__ = f.__doc__  </span>
+<span class="code-line">    return wrapper</span>
+</pre></div>
+<p>这样写很不方便, Python内置的<code>functools</code>可以用来自动化完成这个“复制”的任务：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">functools</span>  </span>
+<span class="code-line"><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>  </span>
+<span class="code-line">    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  </span>
+<span class="code-line">    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  </span>
+<span class="code-line">        <span class="k">print</span> <span class="s1">'call...'</span>  </span>
+<span class="code-line">        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>  </span>
+<span class="code-line">    <span class="k">return</span> <span class="n">wrapper</span></span>
+</pre></div>
+<p><code>functools.wraps(f)</code>是一个装饰器函数, 目的是为了把最后返回的函数再次装饰(复制f的属性进去)... 所以对于带参数的装饰器, 应该在最里面返回的wrapper函数前加上<code>@functools.wraps(f)</code> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">functools</span>  </span>
+<span class="code-line"><span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">unit</span><span class="p">):</span>  </span>
+<span class="code-line">    <span class="k">def</span> <span class="nf">perf_decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>  </span>
+<span class="code-line">        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  </span>
+<span class="code-line">        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  </span>
+<span class="code-line">            <span class="k">print</span> <span class="s1">'call </span><span class="si">%s</span><span class="s1">() in </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span> <span class="p">)</span> <span class="c1">#closure  </span></span>
+<span class="code-line">            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>  </span>
+<span class="code-line">        <span class="k">return</span> <span class="n">wrapper</span>  </span>
+<span class="code-line">    <span class="k">return</span> <span class="n">perf_decorator</span>  </span>
+<span class="code-line"><span class="nd">@performance</span><span class="p">(</span><span class="s1">'ms'</span><span class="p">)</span>  </span>
+<span class="code-line"><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>  </span>
+<span class="code-line">    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>  </span>
+<span class="code-line"><span class="k">print</span> <span class="n">factorial</span><span class="o">.</span><span class="n">__name__</span></span>
+</pre></div>
+<h3 id="_6">偏函数</h3>
+<p>假设要转换大量的二进制字符串，每次都传入<code>int(x, base=2)</code>非常麻烦，于是，我们想到，可以定义一个int2()的函数，默认把base=2传进去：  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>def int2(x, base=2):  </span>
+<span class="code-line">    return int(x, base)</span>
+</pre></div>
+<p><code>functools.partial</code>可以把一个参数多的函数变成一个参数少的新函数，少的参数需要在创建时指定默认值，这样，新函数调用的难度就降低了。  </p>
+<blockquote>
+<p><code>functools.partial(func[,*args][, **keywords])</code><br/>
+Return a new partial object which when called will behave like func called with the positional arguments args and keyword arguments keywords.  </p>
+</blockquote>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">functools</span>  </span>
+<span class="code-line"><span class="n">int2</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  </span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s1">'1000000'</span><span class="p">)</span>  </span>
+<span class="code-line"><span class="mi">64</span>  </span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">int2</span><span class="p">(</span><span class="s1">'1010101'</span><span class="p">)</span>  </span>
+<span class="code-line"><span class="mi">85</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">sorted_ignore_case</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="nb">sorted</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>  </span>
+<span class="code-line"><span class="k">print</span> <span class="n">sorted_ignore_case</span><span class="p">([</span><span class="s1">'bob'</span><span class="p">,</span> <span class="s1">'about'</span><span class="p">,</span> <span class="s1">'Zoo'</span><span class="p">,</span> <span class="s1">'Credit'</span><span class="p">])</span></span>
+</pre></div>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="./cpp-demo-snippets.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        C++ STL小结&代码片段
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="./algoII_week6_1_reductions.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Algorithms II] Week 6-1 Reductions<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'imooc_py_functional';
+                        var disqus_url = '/imooc_py_functional.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="./about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="./tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="./tag/pelican.html">
+                    pelican <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/torch.html">
+                    torch <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/suan-fa.html">
+                    算法 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/scala.html">
+                    scala <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/android.html">
+                    android <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/python.html">
+                    python <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/algorithm.html">
+                    algorithm <sup> 34</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2016 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="./theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="./theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = './theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="./theme/js/ripples.min.js"></script>
+<script src="./theme/js/material.min.js"></script>
+<script src="./theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>运筹的力量: 用线性规划解决Google 2014 HashCode问题 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="./运筹的力量: 用线性规划解决Google 2014 HashCode问题.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="LP,算法" />
+        <meta name="description" content="INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. 这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记. 问题描述 谷歌那次比赛的题目在这里(我们做的是Main Round的题目): https://sites.google.com/site/hashcode2014/tasks 简单来说, 就是已知巴黎的道路信息, 设法用八辆车(每辆车的行驶时间有限)从巴黎谷歌出发, 尽可能多的走遍巴黎的所有街道, 参赛者给出这些车的路线, 他们的分数就是这八辆车走过的街道的长度之和(重复走的街道不算分). 去年四月份我们也参加了这个比赛, 不过当时纠结于如何设计每辆车的路线, 最后只是用了贪心算法, 再加上一点点的随机, 得到的结果并不好... 当时ENS的人包揽了前三名, 而且比赛后进一步把分数刷到了满分: 他们的路线可以把所有街道都跑遍. 这学期学了INF580以后, 手里有了 ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="运筹的力量: 用线性规划解决Google 2014 HashCode问题"/>
+        <meta property="og:url" content="./运筹的力量: 用线性规划解决Google 2014 HashCode问题.html"/>
+        <meta property="og:description" content="INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. 这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记. 问题描述 谷歌那次比赛的题目在这里(我们做的是Main Round的题目): https://sites.google.com/site/hashcode2014/tasks 简单来说, 就是已知巴黎的道路信息, 设法用八辆车(每辆车的行驶时间有限)从巴黎谷歌出发, 尽可能多的走遍巴黎的所有街道, 参赛者给出这些车的路线, 他们的分数就是这八辆车走过的街道的长度之和(重复走的街道不算分). 去年四月份我们也参加了这个比赛, 不过当时纠结于如何设计每辆车的路线, 最后只是用了贪心算法, 再加上一点点的随机, 得到的结果并不好... 当时ENS的人包揽了前三名, 而且比赛后进一步把分数刷到了满分: 他们的路线可以把所有街道都跑遍. 这学期学了INF580以后, 手里有了 ..."/>
+        <meta property="article:published_time" content="2015-02-02" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="LP" />
+            <meta property="article:tag" content="算法" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="./运筹的力量: 用线性规划解决Google 2014 HashCode问题.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="./theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+
+
+        <link href="./theme/css/material.min.css" rel="stylesheet">
+        <link href="./theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">运筹的力量: 用线性规划解决Google 2014 HashCode问题 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li class="active">
+                                <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li class="active">
+                            <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="搜索" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">归档</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="./" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="./category/tech.html" title="tech">tech</a></li>
+                <li class="active">运筹的力量: 用线性规划解决Google 2014 HashCode问题</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        运筹的力量: 用线性规划解决Google 2014 HashCode问题
+                        <a href="./运筹的力量: 用线性规划解决Google 2014 HashCode问题.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 运筹的力量: 用线性规划解决Google 2014 HashCode问题 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-02-02T00:00:00+01:00"><i class="fa fa-calendar"></i> Mon, 02 Feb 2015</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="./tag/lp.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> LP</a>
+	<a href="./tag/suan-fa.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> 算法</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                <p>INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. </p>
+<p>这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记.</p>
+<h1 id="_1">问题描述</h1>
+<p>谷歌那次比赛的题目在这里(我们做的是Main Round的题目): <a href="https://sites.google.com/site/hashcode2014/tasks">https://sites.google.com/site/hashcode2014/tasks</a></p>
+<p>简单来说, 就是已知巴黎的道路信息, 设法用八辆车(每辆车的行驶时间有限)从巴黎谷歌出发, 尽可能多的走遍巴黎的所有街道, 参赛者给出这些车的路线, 他们的分数就是这八辆车走过的街道的长度之和(重复走的街道不算分). </p>
+<p>去年四月份我们也参加了这个比赛, 不过当时纠结于如何设计每辆车的路线, 最后只是用了贪心算法, 再加上一点点的随机, 得到的结果并不好... 当时ENS的人包揽了前三名, 而且比赛后进一步把分数刷到了满分: 他们的路线可以把所有街道都跑遍. </p>
+<p>这学期学了INF580以后, 手里有了<strong>JaCoP</strong>以及<strong>AMPL</strong>等"重型武器", 我们经过一番努力也得到了满分, 而且用了几乎最少的时间. 代码放在了: <a href="https://github.com/X-Wei/INF580_HashCode2014">https://github.com/X-Wei/INF580_HashCode2014</a> (里面还有个pdf的报告, 比这篇博客里说的精炼).</p>
+<h1 id="i">I. 初步建模</h1>
+<h2 id="lp">线性规划(LP)模型</h2>
+<p>站在一个更高的角度上考虑这个问题, 从一个线性规划的角度看, 给定一个图<code>G(V,E)</code>, 目标是最大化走过的街道长度, 如果用对每条街道<code>e</code>, 定义一个<code>x_e</code>,: 当一条街被经过的时候使它为1, 否则为0, 那么目标函数就是一个x的线性组合(系数就是对应街道的长度). </p>
+<p>但是如果一条街被经过了大于一次, <code>x_e</code>也只能是1, 所以再引入一个变量<code>y_e</code>: 用来表示一条街被经过的<strong>次数</strong>. 所以<code>x_e</code>可以看成是<code>y_e</code>的indicatrice函数: <img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/equation.png"/>, 这一点可以通过增加线性约束: <code>x_e&lt;=y_e</code> 即可实现, 因为<code>x_e</code>的取值范围是{0,1}. </p>
+<p>不过一条街可能从两个方向被经过(<code>G</code>里面的边是有向的), 如果<code>e</code>'代表反方向的<code>e</code>, 那么还应该增加约束:  <code>x_e+x_e'&lt;=1</code> 就好了. </p>
+<p>接下来<code>y</code>要满足的就是所有的<code>y</code>要组成一个<em>路径(path)</em>, 对于既不是起点又不是终点的一个节点<code>v</code>, 还是很好写的, 类似flot: <code>sum(进入v的y_e) = sum(从v流出的y_e)</code>.</p>
+<p>对于起点<code>v_start</code>来说, 其实也不难: <code>sum(进入v_start的y_e) = sum(从v-start流出的y_e)+1</code>.</p>
+<p>但是对于终点的话, 有个问题是我们不知道车会停在哪里! Manu太聪明了, 对每一个节点<code>v</code>引入了另一个变量<code>f_v</code>,取值范围也是{0,1}, 如果在节点<code>v</code>停下来, 那么<code>f_v</code>等于1, 否则就是0. 所以上面的约束可以写成: <code>sum(进入v的y) = sum(从v流出的y_e)+f_v</code>. 另外别忘了只能停在一个节点, 所以再加约束: <code>sum(所有的f_v)=1</code>.</p>
+<p>以上的目标函数以及约束, 虽然数目庞大, 但是都是线性的, 所以是一个整数线性规划问题, 写成数学形式就是: </p>
+<p><img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image001.png"/></p>
+<h2 id="solution">从solution得到路径</h2>
+<p>一旦上面那个线性规划问题解决了, 我们得到的将会是那些变量<code>x</code>,<code>y</code>,以及<code>f</code>, 但是需要从中提取一条路径最后才能作为solution!! </p>
+<p>这个问题实际上可以归结为: 给定一个一笔画的曲线(其实就是那些<code>y</code>: 可以想象把每条边都复制<code>y</code>次, 得到的就是这么一个曲线了), 找出一个可以将其一笔画出来的路径(这条路径也叫"欧拉路径", 没"汉密尔顿路径"有名). 聪明的Manu很快想出来一个算法(我们叫它"Orsini算法"): 大意是当走到底没有走完的时候, 把那些错过的路径夹在原路径的中间就好了. </p>
+<p>算法描述如下: </p>
+<blockquote>
+<p>i) 从起点开始出发走, 把走过的边涂上颜色(以后不能再走), 只要还可以继续走(还有没有着色的边可走)就一直走下去, 一直到无路可走. (应该会停在<code>f=1</code>的地方), 得到路径<code>p0</code>.</p>
+<p>ii)  如果所有边已经被走过了: <strong>over</strong>. 如果没有: 找一个没有走过的边与<code>p0</code>的交叉点: <code>v</code>(如果找不到的话说明有问题: 后面就遇到这个问题了), 然后执行(iii)</p>
+<p>iii) 从<code>v</code>出发, 在进行类似(i)的操作得到一条路径(应该是一个环), 然后把<code>p0</code>从<code>v</code>那里劈开, 把这个环塞到中间组成新的<code>p0</code>, 然后再执行(ii).  </p>
+</blockquote>
+<p>这样就可以得到对应的路径了. </p>
+<h2 id="_2">一开始的想法</h2>
+<p>以上的建模是针对一辆车的, 我们一开始的想法是: 对一辆车进行这个操作, 得到结果以后更新一下<code>G</code>(把那些已经走过的街道的长度设为0, 然后再走下一辆车... 这样跑8次就能得到最优解了. </p>
+<p>一切看起来<em>似乎</em>都非常完美......</p>
+<h1 id="ii">II.遇到的问题</h1>
+<h2 id="_3">计算能力问题</h2>
+<p>写好了AMPL的程序以后, 我们遇到的第一个问题是: 这么大的问题, 一般电脑算不出来(曾经用glpk让电脑跑了一夜, 还是没有得到结果). </p>
+<p>后来问老师, 老师说glpk并不是非常高效的求解器, 然后推荐给了我们一个非常给力的网站: <a href="http://neos-server.org/neos/">NEOS</a> ! 这个网站可以让人上传AMPL程序, 然后用它们的服务器跑, 而且使用的求解器也是商用的, 比开源求解器快的不是一个数量级(我们发现最快的求解器是<em>Gurobi</em>, 十分给力). </p>
+<p>这样一来计算的问题就解决了, 但是我们很快发现一个更严重的问题, 是我们的建模里的一个严重缺陷...</p>
+<h2 id="subtour">subtour问题</h2>
+<p>我们兴冲冲的拿NEOS的结果跑Orsini算法的时候, 发现总是报错: 也就是在第二步, 程序无法找到一个和<code>p0</code>有交叉点的边: <em>也就意味着我们的模型得到的路径并不是只有一个connected component!!! </em>也就是说, 我们得到的解其实是一条从起点到某个终点的路径, 外加很多和这个路径没有交点的圈圈(subtour)!</p>
+<p>是啊, 这个问题很类似旅行商问题(TSP), 而TSP的困难之一 就是要解决subtour的话需要加入2^n个新的约束.... 2^10000个约束? impossible...</p>
+<h1 id="iii-subtour">III. subtour问题的"解决"</h1>
+<h2 id="_4">各种纠结</h2>
+<p>在一次PC上有一道题目介绍了TSP subtour问题的一种建模方式, "potentiel"建模, 可以防止加入2^n个约束: 为每个节点<code>v</code>引入新的变量<code>u_v</code>,<code>u_v</code>代表了节点<code>v</code>被访问的顺序, 约束做的非常巧妙, 是这样的: </p>
+<p><img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image002.png"/></p>
+<p>这样, 当<code>x_ij</code>是1的时候, 就保证<code>u_j</code>比<code>u_i</code>大1, 而当<code>x_ij</code>是0的时候, 这个约束则非常松弛, 几乎相当于没有. </p>
+<p>不过这个方法套到我们这个projet的话也有问题: 那就是每个节点只能有一个<code>u_v</code>, 所以每个节点只能最多访问一次.... 不过我们很快想到了办法: 把所有节点复制一个(复制"一层"), 然后每条边的话也进行复制, 同时加上那些连接各层的边. </p>
+<p>举个例子, 原来的一条边是: <code>(u, v)</code>, 我们复制了一层, 这些新节点叫它们<code>u',v</code>',... 那么在这个两层的图里, 我们要把原来的这条边变成4条: <code>(u, v)</code>, <code>(u, v')</code>, <code>(u', v)</code> 和 <code>(u', v')</code>. 这样就可以保证路径可以经过一个点两次了, 如果想要保证可以经过一个点K次, 只要做K层就好了(每条边变成K^2条). </p>
+<p>然后, <code>x</code>也不需要了, 因为每条边的<code>y</code>最大就是1. 但是还有一个问题是目标函数, 由于一条边变成了四条, 如果走四遍的话就多算了四次这条边的长度... 有两种解决办法: 一是类似前面的方法, 给每条边指定定一个indicatrice, 这样就不会重复了, 还有一种更简单的办法是, 在四条边里, 只取一条边的长度保持不变, 其他长度都设成0, 算法自然会优先走那条长度不是0的边(这个没有仔细证明, 不过貌似是这样的). 我们采用了第二个办法.... </p>
+<p>就这样废了好大功夫, 写好了两层节点的程序, 送去NEOS一跑.... 超时了(超过8h后NEOS会自动停止求解过程)... 后来我们发现即使是不多加新一层的程序, 也会超时. 那节PC里也说, 这种建模方法实际上计算效率比加入2^N个约束的建模还要差... </p>
+<p>所以总结一下就是: 问题还是没有解决...</p>
+<h2 id="subtour_1">绕过subtour问题</h2>
+<p>就在一筹莫展之际, Manu提议把搜索的范围缩小: 不用整个巴黎的数据, 只取起点附近的区域, 这样的话, 说不定我们原先的模型得到的结果会少一点connected components... 试了一下, 果然! 虽然没有强制要求路径的连通性, 得到的结果确实(几乎)只有一个联通分支! </p>
+<p>后来就想到了一个很聪明的办法: 用八倍的T作为时间限制, 让一辆车去跑, 由于时间很充分, 我们得到的解应该不太会出现多个联通分支, 然后一旦得到了这个路径(后来我们叫它"big path"), 只需要把它分成8段, 每辆车先从起点(巴黎谷歌)跑到每一段的开头, 然后沿着这条路跑就好了啊!! 虽然从巴黎谷歌跑到每一段的起点会稍微浪费一些时间, 但是这点损失其实微不足道!! 而且也不用跑8次LP这么麻烦了 -- 要是早点想到这个就好了!!</p>
+<p>而且很神奇的是, 把时间变成了8T以后, 我们的Lp模型计算的更快了: 原先要计算30分钟左右, 现在只要差不多3分钟就出结果了!! 这一点没太想明白, 可能是搜索的空间变小了??</p>
+<p>说写就写, 最短路径用Dijkstra算法就能得到了, 不一会就写出了这个把一条big path变成8条small path的程序. 然后我们一举得到了1957596分(离满分还差了两千米左右)!!</p>
+<h1 id="iv">IV. 进一步优化</h1>
+<p>优化的话有两个方向: 第一个方向是修改那个程序代码, 使得每次走到big path某段起点的时候可以少走些路, 不过这个方向应该没什么前途: 程序写起来麻烦不说, 可以改进的空间也很有限, 因为big path一共也没有剩多少时间, 所以八辆车是不可能把big path走完的. 第二个方向则是设法优化big path的时间使用, 使得它在得到最长路径的同时使用尽量少的时间. </p>
+<h2 id="_5">引入时间正则项</h2>
+<p>其实8T作为时间来说非常充裕, 但是我们的解里面, big path还是把时间用的差不多了: 因为时间根本没有出现在目标函数里. 所以, 可以把时间也作为目标函数加上去, 不过要注意最优先要优化的还是路径长度, 所以时间项前面要乘以一个非常小的数(比如0.000001), 类似做regularization. </p>
+<p>所以新的目标函数是: </p>
+<p><img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image003.png"/></p>
+<p>这样一运行, 我们的big path居然剩下了六千多秒的时间!!! 这些时间足够八辆车跑到各段的起点了!! 我们这样, 八辆车走完了big path所有的路程得到的结果离满分只差了7米, 而最后一辆车还有两千多秒没有走! </p>
+<p>检查了一下, 发现有一个7米长的路是唯一剩下没走过的路: 于是只要再让最后一辆车去走一下就好了(因为时间够用), 最终我们的方案走完了整个巴黎:</p>
+<p><img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image005.png"/></p>
+<p>等一下, 这里有点奇怪: 为什么优化得到的结果并不是最优的(没有走完所有的路程)? 我们通过后来手动走那条剩下的路都没有超时, 所以说其实肯定可以在8T的时间走遍所有街道的! 后来查了一下才发现, 原来Gurobi并不是返回最优解, 而是当当前可行解与最优解足够接近的时候就直接停止, 这个参数的名字叫mipgap, 更多参数可以参考这里: <a href="http://www.gurobi.com/documentation/6.0/ampl-gurobi-guide/parameters">http://www.gurobi.com/documentation/6.0/ampl-gurobi-guide/parameters</a> .</p>
+<p>这也就解释了为什么NEOS得到的解不是最优的, 不过还好, 通过最后手动添加那条没走的边, 还是走完了所有的街道. </p>
+<p>............</p>
+<p>只是作为强迫症的话觉得还是有点......不够完美.</p>
+<h2 id="_6">直接优化时间</h2>
+<p>今晚, 机智的Manu想到了解决办法: 既然知道所有的街道都会被走遍, 直接不把它看成目标, 而是直接作为约束好了, 然后约束直接改成优化时间! </p>
+<p>要就经过所有街道的约束很简单, 那就是对任何街道<code>e</code>, 都有: <code>y_e+y_e'&gt;=1</code>. 另外肯定所有街道都会经过, <code>x</code>就没有必要存在了. </p>
+<p>LP模型表达为: </p>
+<p><img alt="" class="img-responsive" src="_images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image004.png"/></p>
+<p>用这样的模型, 我们的big path 省下了一万两千多秒, 所以我们的最终结果里, 最后的一辆车跑完以后还有9596秒没有用!!</p>
+<p>到这一步, 真的可以算是完美解决这个问题了, 而且强迫症也得救了. </p>
+<p>Yeah!  : )</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="./Linux下pdf文件的压缩与合并.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        Linux下pdf文件的压缩与合并
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="./Scrapy 上手笔记.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        Scrapy 上手笔记<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = '运筹的力量: 用线性规划解决Google 2014 HashCode问题';
+                        var disqus_url = '/运筹的力量: 用线性规划解决Google 2014 HashCode问题.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="./about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="./tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="./tag/pelican.html">
+                    pelican <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/torch.html">
+                    torch <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/suan-fa.html">
+                    算法 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/scala.html">
+                    scala <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/android.html">
+                    android <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/python.html">
+                    python <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/algorithm.html">
+                    algorithm <sup> 34</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2016 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="./theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="./theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = './theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="./theme/js/ripples.min.js"></script>
+<script src="./theme/js/material.min.js"></script>
+<script src="./theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

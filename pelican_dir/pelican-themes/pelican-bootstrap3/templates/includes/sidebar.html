@@ -1,0 +1,73 @@
+{% if DISPLAY_TAGS_ON_SIDEBAR is not defined %}
+    {% set DISPLAY_TAGS_ON_SIDEBAR = True %}
+{% endif %}
+
+<section>
+    <div class="sidebar-container">
+        {% if ABOUT_ME %}
+        {% include 'includes/aboutme.html' %}
+        {% endif %}
+        
+        {% if SOCIAL %}
+        {% include 'includes/social.html' %}
+        {% endif %}
+
+        {% if DISPLAY_RECENT_POSTS_ON_SIDEBAR %}
+            {% if RECENT_POST_COUNT is not defined %}
+                {% set RECENT_POST_COUNT = 5 %}
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group" id="recentposts">
+                    {% for article in articles[:RECENT_POST_COUNT] %}
+                        <li class="list-group-item">
+                            <a href="{{ SITEURL }}/{{ article.url }}">
+                                {{ article.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if DISPLAY_CATEGORIES_ON_SIDEBAR %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{ SITEURL }}/{{ CATEGORIES_URL }}"><h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4></a>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group" id="categories">
+                    {% for cat, null in categories %}
+                        <li class="list-group-item">
+                            <a href="{{ SITEURL }}/{{ cat.url }}">
+                                <i class="fa fa-folder-open fa-lg"></i> {{ cat }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+            
+
+        {% if DISPLAY_TAGS_ON_SIDEBAR %}
+        {% include 'includes/sidebar_tags.html' %}
+        {% endif %}
+
+        {% if LINKS %}
+        {% include 'includes/links.html' %}
+        {% endif %}
+
+        {% if GITHUB_USER %}
+        {% include 'includes/github.html' %}
+        {% endif %}
+
+
+    </div>
+</section>
+

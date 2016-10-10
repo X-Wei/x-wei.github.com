@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Algorithms II] Week 3-2 Radix Sorts - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="./algoII_week3_2.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="algorithm" />
+        <meta name="description" content="This week: string sort. 1. Strings in Java char data type char in C 8-bit integer, 256 characters, 7-bit ASCII code char in Java 16-bit Unicode String data type String: immutable sequence of characters operations: lengthe, ith char, substring, concatenate implementation: using a char[], maintain a length and an offset ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Algorithms II] Week 3-2 Radix Sorts"/>
+        <meta property="og:url" content="./algoII_week3_2.html"/>
+        <meta property="og:description" content="This week: string sort. 1. Strings in Java char data type char in C 8-bit integer, 256 characters, 7-bit ASCII code char in Java 16-bit Unicode String data type String: immutable sequence of characters operations: lengthe, ith char, substring, concatenate implementation: using a char[], maintain a length and an offset ..."/>
+        <meta property="article:published_time" content="2015-11-23" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="algorithm" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="./algoII_week3_2.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="./theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+
+
+        <link href="./theme/css/material.min.css" rel="stylesheet">
+        <link href="./theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Algorithms II] Week 3-2 Radix Sorts - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="搜索" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">归档</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="./" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="./category/notes.html" title="notes">notes</a></li>
+                <li class="active">[Algorithms II] Week 3-2 Radix Sorts</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Algorithms II] Week 3-2 Radix Sorts
+                        <a href="./algoII_week3_2.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Algorithms II] Week 3-2 Radix Sorts 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-11-23T00:00:00+01:00"><i class="fa fa-calendar"></i> Mon, 23 Nov 2015</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="./tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                <p>This week: string sort.  </p>
+<h1 id="1-strings-in-java">1. Strings in Java</h1>
+<h3 id="char-data-type">char data type</h3>
+<ul>
+<li><strong>char in C</strong> </li>
+</ul>
+<p>8-bit integer, 256 characters, 7-bit ASCII code  </p>
+<ul>
+<li><strong>char in Java</strong> </li>
+</ul>
+<p><em>16-bit Unicode</em> </p>
+<h3 id="string-data-type">String data type</h3>
+<p><code>String</code>: <em>immutable</em> sequence of characters<br/>
+operations: lengthe, ith char, substring, concatenate  </p>
+<p>implementation: using a <code>char[]</code>, maintain a <code>length</code> and an <code>offset.</code> ⇒ substring methode is O(1) time.<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image.png"/><br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image001.png"/> </p>
+<h3 id="stringbuilder-data-type">StringBuilder data type</h3>
+<p><code>StringBuilder</code>: <em>mutable</em> data type.<br/>
+implementation: using a resizing <code>char[]</code> array (ArrayList). <br/>
+⇒ contat in (amortized) constant time, <em>substring in linear time</em>!<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image002.png"/> </p>
+<p>ex.   </p>
+<ul>
+<li>reverse a string: linear using StringBuilder, quad using String.   </li>
+<li>form an array of suffixes: quad (time&amp;space) using StringBuilder, linear (time&amp;space) using String.   </li>
+</ul>
+<p><img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image003.png"/><br/>
+<strong>Longest Common Prefix:</strong><br/>
+runs in linear/subinear time ⇒ <code>compareTo()</code> for strings takes (sub)linear time!  </p>
+<h3 id="alphabet">Alphabet</h3>
+<p>alphabet different for different type of string (ex. binary numbers, DNA, ...)<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image004.png"/><br/>
+def. <strong>Radix</strong> <code>R</code> is number of digits  in alphabet.   </p>
+<h1 id="2-key-indexed-counting">2. Key-Indexed Counting</h1>
+<p>review of <em>compare-based</em> sorting algorithms:<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image005.png"/><br/>
+lower-bound for compare-based algorithms: ~<em>NlgN</em> (=Lg(N!))<br/>
+⇒ goal: do better by avoiding using compares.   </p>
+<h3 id="key-indexed-counting">Key-indexed counting</h3>
+<p>is an algorithm to sort <em>by character(ex. sort array of string by their 1st character).</em> <br/>
+Assumption: keys are integers between 0 and R-1 (&lt;&lt;N, small integer).<br/>
+⇒ use keys as array index, to sort an <em>array of N integers between 0 and R-1</em>.   </p>
+<p><strong>[algo]</strong> </p>
+<blockquote>
+<ul>
+<li>count freq of each key index (of size <em>R+1</em>)  </li>
+<li>using count array, compute a <em>cumulated freq</em> (cumsum of <code>count[]</code>)  </li>
+<li>the <code>cumsum[]</code> array stores the <strong>index range</strong> of each key index:   </li>
+</ul>
+</blockquote>
+<p>index range of key-i in sorted array is <code>[cumsum[i], cumsum[i+1]]</code> </p>
+<ul>
+<li>then get the sorted array by going through the array and using cumsum[] array  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image007.png"/>⇒ <img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image006.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span>public void keyIndexCounting(int[] a, int R){// entries in a[] are in range [0,R-1]  </span>
+<span class="code-line">    int N = a.length;  </span>
+<span class="code-line">    int[] count = new int[R+1]; // count[i] = freq of key i-1, count[0] = 0  </span>
+<span class="code-line">    for(int ai:a)   </span>
+<span class="code-line">        count[ai+1]++;  </span>
+<span class="code-line">    int[] cumsum = count; //cumsum = cumulated freq  </span>
+<span class="code-line">    for(int i=0;i&lt;R;i++)   </span>
+<span class="code-line">        cumsum[i+1] += cumsum[i];  </span>
+<span class="code-line">    // the ranges of key i in sorted array should be [cumsum[i], cumsum[i+1]]  </span>
+<span class="code-line">    int[] aux = new int[N];  </span>
+<span class="code-line">    for(int ai:a)  </span>
+<span class="code-line">        aux[cumsum[ai]++] = ai;  </span>
+<span class="code-line">    a = aux;      </span>
+<span class="code-line">}</span>
+</pre></div>
+<h3 id="analysis">analysis</h3>
+<ul>
+<li>running time: <strong>linear</strong> in time and in space.   </li>
+<li><strong>stable</strong> sorting: that's why we need the cumsum and aux array...  </li>
+</ul>
+<h1 id="3-lsd-radix-sort">3. LSD Radix Sort</h1>
+<p>LSD = least significant digit (for string sorting)<br/>
+(assume strings all of same length)<br/>
+idea:  </p>
+<ul>
+<li>consider chars from right to left   </li>
+<li>sort using dth character as key (using key-indexed counting)  </li>
+</ul>
+<p>important: the key-indexed counting should be stable.<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image008.png"/> </p>
+<h3 id="analysis_1">analysis</h3>
+<p>time: W * N (W=length of string)  </p>
+<p>correctness:<br/>
+<strong>prop</strong>. LSD sorting works<br/>
+pf. by induction on i<br/>
+prove that: after pass i, strings are sorted by last i characters.   </p>
+<h3 id="implementation">implementation</h3>
+<div class="highlight"><pre><span class="code-line"><span></span>public static LSDsort(String[] a, int W){//W=fixed width  </span>
+<span class="code-line">    int R = 256;//for ASCII chars  </span>
+<span class="code-line">    int N = a.length;  </span>
+<span class="code-line">    String[] aux = new String[N];  </span>
+<span class="code-line">    for(int d=W-1;d&gt;=0;d--){//W passes  </span>
+<span class="code-line">        //key-indexed counting at digit d  </span>
+<span class="code-line">        int count = new int[R+1];  </span>
+<span class="code-line">        for(String s:a)  </span>
+<span class="code-line">            count[s.charAt[d]+1]++;  </span>
+<span class="code-line">        for(int i=0;i&lt;N;i++)  </span>
+<span class="code-line">            count[i+1] += count[i];//count = cumsum(count), range of each key  </span>
+<span class="code-line">        for(String s:a)  </span>
+<span class="code-line">            aux[s.charAt[d]++]=s;//put each key in right place  </span>
+<span class="code-line">        for(int i=0;i&lt;n;i++)  </span>
+<span class="code-line">            a[i]=aux[i];  </span>
+<span class="code-line">    }  </span>
+<span class="code-line">}</span>
+</pre></div>
+<ul>
+<li>if keys are binary numbers → break into bit characters then apply LSD.   </li>
+<li>if not fixed length → some fix..  </li>
+<li>sort 1 million 32-bit integers? (Google/Obama interview) ⇒ LSD string sort~   </li>
+</ul>
+<h1 id="4-msd-radix-sort">4. MSD Radix Sort</h1>
+<p>most-significant-digit first (from left to right)<br/>
+Idea.  </p>
+<ul>
+<li>partition array into R pieces according to first character (the count[] array is the partition)  </li>
+<li><em>recursively</em> sort each subarrays  </li>
+</ul>
+<p>variable length: end-of-string are treated as before any char<br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image010.png"/> </p>
+<h3 id="implementation_1">implementation</h3>
+<div class="highlight"><pre><span class="code-line"><span></span>private static void sort(String[] a, String[] aux, int lo, int hi, int d){  </span>
+<span class="code-line">    if(hi&lt;=lo) return;  </span>
+<span class="code-line">    //sort by dth character  </span>
+<span class="code-line">    int count = new int[R+2];// R+2 as we are taking account into the end-of-strings!!  </span>
+<span class="code-line">    for(int i=lo;i&lt;=hi;i++) count[ a[i].charAt(d)+2 ]++;//charAt(end-of-string)=-1  </span>
+<span class="code-line">    for(int i=0;i&lt;R;i++) count[i+1] += count[i]; //cumsum  </span>
+<span class="code-line">    for(int i=lo;i&lt;=hi;i++) aux[count[a[i].charAt(d)+1]++] = a[i];  </span>
+<span class="code-line">    for(int i=lo;i&lt;=hi;i++) a[i] = aux[i-lo];// attention: aux is filled from index 0 instead of lo  </span>
+<span class="code-line">    //recursively sort each subarray (R subarrays in total, ranges stored in count[])  </span>
+<span class="code-line">    for(int r=0;r&lt;R;r++)  </span>
+<span class="code-line">        sort(a, aux,lo+count[r], lo+count[r+1]-1, d+1);  </span>
+<span class="code-line">}</span>
+</pre></div>
+<h3 id="analysis_2">analysis</h3>
+<ul>
+<li>can recycle <code>aux[]</code>, but <em>not</em> <code>count[]</code>.   </li>
+<li>too slow for small subarrays (if len(subarray)&lt;&lt;R)  </li>
+<li>huge nb of subarrays because of recursion   </li>
+</ul>
+<p>improvement ⇒ cutoff to insertion sort...   </p>
+<p>characteristics of MSD sort: <br/>
+examines <strong>just enough chars</strong> to sort. <br/>
+→ can be sublinear in N. <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image011.png"/> </p>
+<h3 id="msd-vs-quicksort">MSD vs. quicksort</h3>
+<p>disadvantages for MSD:  </p>
+<ul>
+<li>random access of memory (cache inefficient)  </li>
+<li>too many instructions in inner loop   </li>
+<li>extra space for count[]  </li>
+<li>extra space for aux[]  </li>
+</ul>
+<p>disadvantages for qsort:  </p>
+<ul>
+<li>NlgN nb of string compares  </li>
+<li>has to rescan many chars for keys with <em>long prefix matches</em> </li>
+</ul>
+<h1 id="5-3-way-radix-quicksort">5. 3-way Radix Quicksort</h1>
+<p><em>⇒ combine benefits of qsort and MSD.</em> <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image015.png"/><br/>
+idea: do <strong>3-way partition by the dth character</strong>. <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image013.png"/> </p>
+<ul>
+<li>less overhead than <em>R-way</em> partitioning for MSD  </li>
+<li>do not re-examine chars equal to the partitioning char  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image014.png"/> </p>
+<h3 id="implementation_2">Implementation</h3>
+<p>modification of the 3-way qsort.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">private</span> <span class="nt">static</span> <span class="nt">sort</span><span class="o">(</span><span class="nt">String</span><span class="cp">[]</span> <span class="nt">a</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">lo</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">hi</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">d</span><span class="o">)</span><span class="p">{</span>  </span>
+<span class="code-line">    <span class="n">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span> <span class="n">return</span><span class="p">;</span>  </span>
+<span class="code-line">    <span class="n">int</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">lo</span><span class="o">,</span> <span class="n">gt</span> <span class="o">=</span> <span class="n">hi</span><span class="o">,</span> <span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="o">+</span><span class="m">1</span><span class="p">;</span><span class="o">//</span> <span class="n">use</span> <span class="m">3</span> <span class="n">pointers</span><span class="o">:</span> <span class="n">lt</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">gt</span>  </span>
+<span class="code-line">    <span class="n">char</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">a</span><span class="cp">[</span><span class="nx">lo</span><span class="cp">]</span><span class="o">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>  </span>
+<span class="code-line">    <span class="n">while</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">gt</span><span class="p">)</span><span class="err">{</span><span class="o">//</span><span class="n">invariant</span><span class="o">:</span> <span class="n">a</span><span class="cp">[</span><span class="nx">lo</span><span class="p">,</span><span class="nb">lt</span><span class="p">)</span><span class="o">&lt;</span><span class="nx">pivot</span><span class="p">,</span> <span class="nx">a</span><span class="p">(</span><span class="nb">gt</span><span class="p">,</span><span class="nx">hi</span><span class="cp">]</span><span class="o">&gt;</span><span class="n">pivot</span><span class="o">,</span> <span class="n">a</span><span class="cp">[</span><span class="nb">lt</span><span class="p">,</span><span class="nx">i</span><span class="cp">]</span><span class="o">=</span><span class="n">pivot</span>  </span>
+<span class="code-line">        <span class="n">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="cp">[</span><span class="nx">i</span><span class="cp">]</span><span class="o">.</span><span class="n">charAt</span><span class="cp">[</span><span class="nx">d</span><span class="cp">]</span><span class="p">;</span>  </span>
+<span class="code-line">        <span class="n">if</span><span class="p">(</span><span class="n">c</span><span class="o">&lt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="o">,</span><span class="n">lt</span><span class="o">++,</span><span class="n">i</span><span class="o">++</span><span class="p">);</span>  </span>
+<span class="code-line">        <span class="n">else</span> <span class="n">if</span><span class="p">(</span><span class="n">c</span><span class="o">&gt;</span><span class="n">pivot</span><span class="p">)</span> <span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="o">,</span><span class="n">i</span><span class="o">,</span><span class="n">gt</span><span class="o">--</span><span class="p">);</span>  </span>
+<span class="code-line">        <span class="n">else</span><span class="o">:</span> <span class="n">i</span><span class="o">++</span><span class="p">;</span>  </span>
+<span class="code-line">    <span class="p">}</span><span class="o">//</span><span class="nt">3-way</span> <span class="nt">partition</span>  </span>
+<span class="code-line">    <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">lo</span><span class="o">,</span><span class="nt">lt-1</span><span class="o">,</span><span class="nt">d</span><span class="o">);</span>  </span>
+<span class="code-line">    <span class="nt">if</span><span class="o">(</span><span class="nt">pivot</span><span class="o">&gt;=</span><span class="nt">0</span><span class="o">)</span> <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">lt</span><span class="o">,</span><span class="nt">gt</span><span class="o">,</span><span class="nt">d</span><span class="o">+</span><span class="nt">1</span><span class="o">);//</span><span class="nt">pivot</span><span class="o">&lt;</span><span class="nt">0</span> <span class="nt">means</span> <span class="nt">end-of-string</span>  </span>
+<span class="code-line">    <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">gt</span><span class="o">+</span><span class="nt">1</span><span class="o">,</span><span class="nt">hi</span><span class="o">,</span><span class="nt">d</span><span class="o">);</span>  </span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h3 id="analysis_3">analysis</h3>
+<p><strong>wrt. qsort:</strong> </p>
+<ul>
+<li>from NlgN <strong>string</strong> compares to NlgN <strong>char</strong> compares.  </li>
+<li>avoids re-comparing long common prefixes.  </li>
+</ul>
+<p><strong>wrt. MSD:</strong> </p>
+<ul>
+<li>short inner loop  </li>
+<li>cache friendly  </li>
+<li>in-place  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image016.png"/> </p>
+<h1 id="6-suffix-arrays">6. Suffix Arrays</h1>
+<p>(<em>some applications of suffix array)</em> </p>
+<h3 id="keyword-in-context-search">keyword-in-context search</h3>
+<p>given N chars (N huge), <em>preprocess</em> it to enable fast substring search. <br/>
+⇒ suffix sort  </p>
+<ul>
+<li>generate suffix array (linear time &amp; space )  </li>
+<li>sort on the suffix ⇒ brings repeated suffixes together  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image017.png"/> </p>
+<h3 id="longest-repeated-substring">longest repeated substring</h3>
+<ul>
+<li>brute force algorithm  </li>
+</ul>
+<p>try all i, j as starts of indices, then compute longest common prefix (LCP)<br/>
+→ O(D*N2) where D is length of longest repeated substring.   </p>
+<ul>
+<li>⇒ use suffix array   </li>
+</ul>
+<p>sorting suffix array will bring repeated substrings together<br/>
+java code:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span>//int lcp(String s1, String s2) defined  </span>
+<span class="code-line">public static lrs(String s){  </span>
+<span class="code-line">    int N = s.length;  </span>
+<span class="code-line">    String[] suffix = new String[N];  </span>
+<span class="code-line">    for(int i=0;i&lt;N;i++) suffix[i] = s.substring(i);//construct suffix array  </span>
+<span class="code-line">    Arrays.sort(suffix);// sort suffix array ==&gt; using 3-way radix sort   </span>
+<span class="code-line">    // one pass to get longest repeated substring (bigest lcp)  </span>
+<span class="code-line">    String lrs = "";  </span>
+<span class="code-line">    for(int i=0;i&lt;N-1;i++){  </span>
+<span class="code-line">        int lcp = lcp(suffix[i], suffix[i+1]);  </span>
+<span class="code-line">        if(lcp&gt;lrs.length) lrs = suffix[i].substring(0, lcp);  </span>
+<span class="code-line">    }  </span>
+<span class="code-line">    return lrs;  </span>
+<span class="code-line">}</span>
+</pre></div>
+<p><strong>lrs worst-case input</strong>: <em>lrs very long</em> (say N/2). <br/>
+⇒ <em>quadratic</em> for lrs and for sorting. <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week3_2/pasted_image018.png"/> </p>
+<p>→ <em>improvement of lrs for worst-case performance:</em><br/>
+<strong>Manber-Myers algo</strong><br/>
+sketch:   </p>
+<ul>
+<li>phase 0: sort suffix[] on 1st char   </li>
+<li>phase i: given suffix[] is sorted based on first 2^(i-1) chars → create suffix[] sorted on first 2^i chars.   </li>
+</ul>
+<p>each phase: double the nb of chars sorted on. <br/>
+maintain an inverse[] array, to make comparisons constant time. <br/>
+performance: NlgN  </p>
+<h2 id="string-sorting-summery">String sorting summery</h2>
+<ul>
+<li>can have linear sort: use chars as array index  </li>
+<li>sublinear sort: not all date need to be examined  </li>
+<li>3-way radix qsort is <em>asymptotically optimal</em> </li>
+</ul>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="./TeXmacs_intro.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        学术文章写作利器: TeXmacs介绍
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="./algoII_week4_1.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Algorithms II] Week 4-1 Tries<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'algoII_week3_2';
+                        var disqus_url = '/algoII_week3_2.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="./about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="./tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="./tag/pelican.html">
+                    pelican <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/torch.html">
+                    torch <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/suan-fa.html">
+                    算法 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/scala.html">
+                    scala <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/android.html">
+                    android <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/python.html">
+                    python <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/algorithm.html">
+                    algorithm <sup> 34</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2016 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="./theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="./theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = './theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="./theme/js/ripples.min.js"></script>
+<script src="./theme/js/material.min.js"></script>
+<script src="./theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

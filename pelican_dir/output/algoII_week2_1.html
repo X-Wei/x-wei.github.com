@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Algorithms II] Week 2-1 Minimum Spanning Trees - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="./algoII_week2_1.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="algorithm" />
+        <meta name="description" content="1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification: edge ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Algorithms II] Week 2-1 Minimum Spanning Trees"/>
+        <meta property="og:url" content="./algoII_week2_1.html"/>
+        <meta property="og:description" content="1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification: edge ..."/>
+        <meta property="article:published_time" content="2015-11-11" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="algorithm" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="./algoII_week2_1.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="./theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
+
+
+        <link href="./theme/css/material.min.css" rel="stylesheet">
+        <link href="./theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Algorithms II] Week 2-1 Minimum Spanning Trees - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="./category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="./category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="./category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="./category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="./category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="搜索" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="./archives.html"><i class="fa fa-th-list"></i><span class="icon-label">归档</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="./" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="./category/notes.html" title="notes">notes</a></li>
+                <li class="active">[Algorithms II] Week 2-1 Minimum Spanning Trees</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Algorithms II] Week 2-1 Minimum Spanning Trees
+                        <a href="./algoII_week2_1.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Algorithms II] Week 2-1 Minimum Spanning Trees 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-11-11T00:00:00+01:00"><i class="fa fa-calendar"></i> Wed, 11 Nov 2015</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="./tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                <h1 id="1-introduction-to-msts">1. Introduction to MSTs</h1>
+<p>Given: undirected connecte graph <code>G</code> with positive edge weights.  <br/>
+def. <strong>Spanning tree </strong><code>T</code> <br/>
+is a subgraph of <code>G</code>, that is both tree (<em>connected, acyclic</em>) and spanning(<em>all vertices are included</em>).  <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image-0.png"/> <br/>
+⇒ Goal: find a spanning tree with minimum weight sum.   </p>
+<h1 id="2-greedy-algorithm">2. Greedy Algorithm</h1>
+<p>assumptions for simplification:    </p>
+<ul>
+<li>edge weights are distinct   </li>
+<li>graph is connected   </li>
+</ul>
+<p>→ MST uniquely exists.   </p>
+<h2 id="cut-property">cut property</h2>
+<p>def. a <strong>cut</strong> of a graph is a partition of its vertices into 2 non-empty sets. <br/>
+def. a <strong>crossing-edge</strong> (wrt a cut) is an edge connecting vertex from one set to another. <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image001-0.png"/> </p>
+<p><strong>prop. </strong>Given any cut, the crossing edges with minimum weight <em>is in the MST</em>.  <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image002-0.png"/> <br/>
+<em>proof.</em> <br/>
+Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min-weighted edge among all crossing-edges.   </p>
+<p>If <code>e</code> is not in the MST <br/>
+   → exist another crossing-edge, <code>f</code>, in the MST (otherwise not connected) <br/>
+    → adding <code>e</code> to the MST will create a cycle (tree property) <br/>
+        → the edge <code>f</code> will be in this cycle <br/>
+        → removing <code>f</code> and adding <code>e</code> will give us another spanning tree (!) <br/>
+                → this new spanning tree has smaller weight sum ⇒ contradiction, CQFD.   </p>
+<h2 id="greedy-mst-algo">Greedy MST algo</h2>
+<p>[<strong>algo</strong> ] Greedy MST  </p>
+<blockquote>
+<ul>
+<li>initialize: all edges not selected (colored gray)   </li>
+<li>find any cut with <em>all crossing-edge gray</em> </li>
+<li>use this cut and select the min-weighted crossing edge (color the edge as black)   </li>
+<li>repeat V-1 times.    </li>
+</ul>
+</blockquote>
+<p><strong>prop.</strong> the greedy algorithm gets the MST.  <br/>
+<em>pf.</em> </p>
+<ul>
+<li>any selected (black) edges are in the MST (according to the cut property)   </li>
+<li>If we haven't selected V-1 edges → there is always a cut with all crossing-edges gray. (证明algo不会卡死)   </li>
+</ul>
+<p>(<em>if edge weight not distinct, the proof fails, but can be fixed)</em> </p>
+<p><strong>efficient implementations</strong>:    </p>
+<ul>
+<li>how to choose the cut each time?   </li>
+<li>how to find min-weighted crossing-edge?    </li>
+</ul>
+<p>⇒ Kruskal &amp; Prim   </p>
+<h1 id="3-edge-weighted-graph-api">3. Edge-Weighted Graph API</h1>
+<h2 id="edge-api">Edge API</h2>
+<p>→ <em>Edge abstraction</em>: make Edge comparable.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span>public class Edge implements Comparable&lt;Edge&gt;{   </span>
+<span class="code-line">    Edge(int v, int w, double weight);   </span>
+<span class="code-line">    int either();// get one of the endpoint of edge (as we are in undirected graph contex here)   </span>
+<span class="code-line">    int other(int v);// get the other endpoint    </span>
+<span class="code-line">    int compareTo(Edge that);// compare by edge weight   </span>
+<span class="code-line">    double weight();   </span>
+<span class="code-line">}</span>
+</pre></div>
+<p><img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image.png"/> </p>
+<h2 id="edge-weighted-graph-api">Edge-weighted Graph API</h2>
+<p>adj-list implementation: <code>Bag&lt;Edge&gt;[] adj;</code>(for undirected graph, each edge appears twice in adj)   </p>
+<div class="highlight"><pre><span class="code-line"><span></span>public class EdgeWeightedGraph{   </span>
+<span class="code-line">    private final int V;   </span>
+<span class="code-line">    private final Bag&lt;Edge&gt;[] adj;   </span>
+<span class="code-line">    EdgeWeightedGraph(int V){   </span>
+<span class="code-line">        this.V = V;   </span>
+<span class="code-line">        this.adj = (Bag&lt;Edge&gt;)new Bag[V];   </span>
+<span class="code-line">        for(int v=0;v&lt;V;v++) adj[v] = new Bag&lt;Edge&gt;();   </span>
+<span class="code-line">    }   </span>
+<span class="code-line">    void addEdge(Edge e){// use the Edge class instead of directly v and w   </span>
+<span class="code-line">        int v = e.either(), w = e.other();   </span>
+<span class="code-line">        adj[v].add(e);   </span>
+<span class="code-line">        adj[w].add(e);   </span>
+<span class="code-line">    }   </span>
+<span class="code-line">    Iterable&lt;Edge&gt; adj(int v){//get Edges incident to v   </span>
+<span class="code-line">        return adj[v];   </span>
+<span class="code-line">    }   </span>
+<span class="code-line">    Iterable&lt;Edge&gt; edges();// get all Edges   </span>
+<span class="code-line">}</span>
+</pre></div>
+<p>(allow self-loops and parallel edges)   </p>
+<h2 id="mst-api">MST API</h2>
+<div class="highlight"><pre><span class="code-line"><span></span>public class MST{   </span>
+<span class="code-line">    MST(EdgeWeightedGraph G);//compute the MST   </span>
+<span class="code-line">    Iterable&lt;Edge&gt; edges();// selected edges in the MST   </span>
+<span class="code-line">    double weight();// sum of all edge weights in MST   </span>
+<span class="code-line">}</span>
+</pre></div>
+<h1 id="4-kruskals-algorithm">4.  Kruskal's Algorithm</h1>
+<p><strong>[algo]</strong> </p>
+<blockquote>
+<ul>
+<li>consider edges in ascending order of weight,   </li>
+<li>add the edge to MST <em>unless it creates a cycle</em>.    </li>
+</ul>
+</blockquote>
+<p>In the running of Kruskal: we have several small connect components and they merge with each other until we get MST.    </p>
+<h2 id="correctness">correctness</h2>
+<p><strong>prop. </strong>Kruskal's algo works. <br/>
+<em>pf</em> <br/>
+(idea: proove that Kruskal is a special case of the greedy algorithm, ie. how to select the specific cut) <br/>
+suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br/>
+→ select a cut = vertices connected to v in the (constructing) MST; and the rest vertices.  <br/>
+    → for this cut, there is no black crossing edges <br/>
+        → moreover among all crossing edges of the cut the edge e has the smallest weight!! (by def of Kruskal) CQFD   </p>
+<h2 id="implementation">implementation</h2>
+<ul>
+<li>how to test if adding an edge will create a cycle ?    </li>
+</ul>
+<p>DFS from v to w? → O(V) <br/>
+⇒ <strong>Union-Find</strong> !  O(lg*V) ☺ (almost constant time)   </p>
+<p>if <code>find(v)==find(w)</code>, then we know adding e will create a cycle.    </p>
+<ul>
+<li>considering edges in order? → use a prority queue.    <div class="highlight"><pre><span class="code-line"><span></span><span class="nt">public</span> <span class="nt">class</span> <span class="nt">KruskalMST</span> <span class="nt">extends</span> <span class="nt">MST</span><span class="p">{</span>   </span>
+<span class="code-line">    <span class="n">private</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">mst</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   </span>
+<span class="code-line">    <span class="n">public</span> <span class="n">KruskalMST</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="n">G</span><span class="p">)</span><span class="err">{</span>   </span>
+<span class="code-line">        <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">pq</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   </span>
+<span class="code-line">        <span class="o">//</span> <span class="n">build</span> <span class="n">pq</span> <span class="o">--&gt;</span> <span class="n">can</span> <span class="n">be</span> <span class="n">optimized</span> <span class="n">to</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="n">if</span> <span class="n">build</span> <span class="nb">bottom</span><span class="o">-</span><span class="n">up</span>   </span>
+<span class="code-line">        <span class="n">for</span><span class="p">(</span><span class="n">Edge</span> <span class="n">e</span><span class="o">:</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="n">pq</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   </span>
+<span class="code-line">        <span class="n">UF</span> <span class="n">uf</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UF</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">());</span><span class="o">//</span> <span class="n">build</span> <span class="n">a</span> <span class="n">UF</span> <span class="n">of</span> <span class="n">V</span> <span class="n">elements</span>   </span>
+<span class="code-line">        <span class="n">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">mst</span><span class="o">.</span><span class="nb">size</span><span class="p">()</span><span class="o">&lt;</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">()</span><span class="m">-1</span><span class="p">)</span><span class="err">{</span>   </span>
+<span class="code-line">            <span class="n">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">delMin</span><span class="p">();</span>   </span>
+<span class="code-line">            <span class="n">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">either</span><span class="p">()</span><span class="o">,</span><span class="n">w</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">other</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   </span>
+<span class="code-line">            <span class="n">if</span><span class="p">(</span> <span class="n">uf</span><span class="o">.</span><span class="n">connecte</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">)</span> <span class="p">)</span> <span class="n">continue</span><span class="p">;</span>   </span>
+<span class="code-line">            <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">);</span>   </span>
+<span class="code-line">            <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>           </span>
+<span class="code-line">        <span class="p">}</span>   </span>
+<span class="code-line">    <span class="err">}</span>   </span>
+<span class="code-line">    <span class="nt">public</span> <span class="nt">Iterable</span><span class="o">&lt;</span><span class="nt">Edge</span><span class="o">&gt;</span> <span class="nt">edges</span><span class="o">()</span><span class="p">{</span>   </span>
+<span class="code-line">        <span class="n">return</span> <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="p">;</span>   </span>
+<span class="code-line">    <span class="p">}</span>   </span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+</li>
+</ul>
+<h2 id="complexity">complexity</h2>
+<p>running time: O(ElogE) <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image001.png"/> </p>
+<h1 id="5-prims-algorithm">5. Prim's Algorithm</h1>
+<p>since 1930...  <br/>
+Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.</em> </p>
+<p><strong>[algo]</strong> </p>
+<blockquote>
+<ul>
+<li>Add to the tree T the edge <em>that have exactely one endpoint in T</em> and with minimum weight,  </li>
+<li>repeat V-1 times.    </li>
+</ul>
+</blockquote>
+<p>In the running of Prim: there is always ONE connnected component .    </p>
+<h2 id="correctness_1">Correctness</h2>
+<p><strong>prop</strong>. Prim's algo works. <br/>
+<em>pf.</em> <br/>
+suppose edge e is the min-weighted edge connect a vertex in T with a vertex out of T.  <br/>
+→ select the cut = vertices in the tree T; vertices out of T <br/>
+→ by def, there is no black crossing edge <br/>
+→ e is the min-weighed edge by def of Prim. CQFD   </p>
+<h2 id="implementation_1">implementation</h2>
+<p>challenge: how to find such an edge (connect T and other vertex, with min weight) ? <br/>
+⇒ priority queue    </p>
+<h3 id="lazy-implementation">"lazy" implementation</h3>
+<p><strong>[algo]</strong> </p>
+<blockquote>
+<ul>
+<li>Maintain a PQ of edges that connect T and the rest vertices.    </li>
+<li><code>e = pq.delMin(), e = v-w</code>,  if <code>v</code> and <code>w</code> are both in T (as edges in pq might become obsolete as T grows) ⇒ <em>just disregard it</em> </li>
+<li>to maintain the pq: add all incident edges(with other endpoint not in T) of the newly added vertex to pq   </li>
+</ul>
+</blockquote>
+<div class="highlight"><pre><span class="code-line"><span></span>public class LazyPrimMST{   </span>
+<span class="code-line">    private Bag&lt;Edge&gt; mst;   </span>
+<span class="code-line">    LazyPrimMST(EdgeWeightedGraph G){   </span>
+<span class="code-line">        boolean[] marked = new boolean[G.V()]; // vertices in T   </span>
+<span class="code-line">        MinPQ&lt;Edge&gt; pq = new MinPQ&lt;Edge&gt;();    </span>
+<span class="code-line">        this.mst = new Bag&lt;Edge&gt;();   </span>
+<span class="code-line">        marked[0] = 0; // add vertex 0 to T   </span>
+<span class="code-line">        for(Edge e:G.adj(0))    </span>
+<span class="code-line">            pq.insert(e);// add edges to pq   </span>
+<span class="code-line">        while(!pq.isEmpty() &amp;&amp; this.mst.size()&lt;G.V()-1){   </span>
+<span class="code-line">            e = pq.delMin();   </span>
+<span class="code-line">            int v = e.either(), w = e.other(v);   </span>
+<span class="code-line">            if(marked[v] &amp;&amp; marked[w]) continue;//ignore obsolete edges   </span>
+<span class="code-line">            v = marked[v] ? w : v;// v is the newly added vertex   </span>
+<span class="code-line">            marked[v] = true;   </span>
+<span class="code-line">            for(Edge e:G.adj(v)){   </span>
+<span class="code-line">                if(!marked[e.other(v)])   </span>
+<span class="code-line">                    pq.insert(e);   </span>
+<span class="code-line">            }   </span>
+<span class="code-line">        }   </span>
+<span class="code-line">    }   </span>
+<span class="code-line">}</span>
+</pre></div>
+<p>Running time: <strong>O(ElgE)</strong> <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image002.png"/> <br/>
+space: <strong>O(E)</strong> in worst time.   </p>
+<h3 id="eager-implementation">"eager" implementation</h3>
+<p>Idea:    </p>
+<blockquote>
+<p>use a <strong>PQ of vertices</strong><em>, priority of vertex v := min-weight of edge that connects v to T.</em> </p>
+</blockquote>
+<p><strong>[algo]</strong> </p>
+<blockquote>
+<ul>
+<li>Get from pq the vertex <code>v</code> that is closest to T, add it to T. <br/>
+Update pq -- consider <code>v</code>'s incident edge <code>e=v-w:</code> <ul>
+<li>if w in T → ignore   </li>
+<li>else:   <ul>
+<li>if w in pq → add w to pq   </li>
+<li>else → if <code>v-w</code> has smaller weight than the current priority, update <code>w</code>'s priority.      </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>repeat till get V-1 edges.    </li>
+</ul>
+</blockquote>
+<p><img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image003.png"/> </p>
+<p>key implementation component: a <a href="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_part_II/MinPQ.txt">MinPQ</a> that supports priority(key) update.    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="n">IndexMinPQ</span><span class="s">&lt;Key extends Comparable&lt;Key&gt;</span>&gt;{   </span>
+<span class="code-line">    <span class="n">IndexMinPQ</span>(<span class="nb">int</span> <span class="n">N</span>);// <span class="n">indices</span> <span class="k">of</span> <span class="n">elements:</span> <span class="mi">0</span>...<span class="n">N-1</span>   </span>
+<span class="code-line">    <span class="nb">void</span> <span class="n">insert</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);   </span>
+<span class="code-line">    <span class="nb">void</span> <span class="n">decreaseKey</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);// <span class="n">update</span> <span class="n">the</span> <span class="nb">key</span>(<span class="n">priority</span>) <span class="k">of</span> <span class="n">element-i</span>   </span>
+<span class="code-line">    <span class="nb">int</span> <span class="n">delMin</span>();   </span>
+<span class="code-line">    <span class="nb">int</span> <span class="n">size</span>();   </span>
+<span class="code-line">}</span>
+</pre></div>
+<p>implementation of such a PQ:   </p>
+<blockquote>
+<p>Use same code as standart PQ (maintain a heap[] array). <br/>
+Elements are always accessed by "index", in range 0...N-1.
+maintain 3 parallel arrays: <code>keys[], pq[], qp[]</code>:   </p>
+<ul>
+<li><code>keys[i]</code>: is the priority of element i (the element with index=i)   </li>
+<li><code>pq[i]</code>: is the index of the element in the heap position i (ie. in heap[i] is pq[i]th element  )   </li>
+<li><code>qp[i]</code>: is heap position of element i  ( ⇔ the ith element is in heap[qp[i]] )   </li>
+</ul>
+</blockquote>
+<p>to <code>decreaseKey(i,key)</code>: change <code>keys[i]</code>, then call <code>siftup(qp[i])</code> </p>
+<p><img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image004.png"/> <br/>
+summery of pq implementations:  <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image005.png"/> </p>
+<h1 id="6-mst-context">6. MST Context</h1>
+<ul>
+<li>unsolved pb: does a linear MST algo exists?   </li>
+</ul>
+<p>(recap: for UF, tarjan has <em>prooved</em> that linear algo doesn't exist — although Nlg*N is fast enough...) <br/>
+@_@... <br/>
+<img alt="" class="img-responsive" src="_images/algoII_week2_1/pasted_image007.png"/> <br/>
+(这个Yao是清华那个Yao吧?)   </p>
+<ul>
+<li>Euclidean MST   </li>
+</ul>
+<p>Given N points in plane, edge weight := Euclidean distance. (<em>dense graph, E = V2</em>) <br/>
+→ exploit geomerty, O(NlgN)   </p>
+<ul>
+<li>clustering   </li>
+</ul>
+<p>k-clustering (~ dist-fcn) <br/>
+single-link clustering (def. dist of clusters = dist of 2 closest elements in each cluster) <br/>
+→ Kruskal...   </p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="./algoII_week1_2.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Algorithms II] Week 1-2 Directed Graphs
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="./algoII_week2_2.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Algorithms II] Week 2-2 Shortest Paths<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'algoII_week2_1';
+                        var disqus_url = '/algoII_week2_1.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="./about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="./about.html"><img width="100%" src="./../_images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="_images/x-logo.png" alt="X" width="175" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="_images/ssss.jpg" width="175" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=175&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="./tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="./tag/pelican.html">
+                    pelican <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/torch.html">
+                    torch <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/suan-fa.html">
+                    算法 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/scala.html">
+                    scala <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/android.html">
+                    android <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/python.html">
+                    python <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="./tag/algorithm.html">
+                    algorithm <sup> 34</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="./tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="./tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="./tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2016 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="./theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="./theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="./theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = './theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="./theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="./theme/js/ripples.min.js"></script>
+<script src="./theme/js/material.min.js"></script>
+<script src="./theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

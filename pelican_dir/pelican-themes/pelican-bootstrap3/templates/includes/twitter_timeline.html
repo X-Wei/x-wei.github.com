@@ -1,0 +1,43 @@
+{% extends "includes/sidebar_item.html" %}
+{% block sidebarxs %}hidden-xs{% endblock sidebarxs %}
+{% block sidebartitle %}
+<i class="fa fa-twitter fa-lg"></i><span class="icon-label">最新推文</span>
+{% endblock sidebartitle %}
+
+{% block sidebarcontent %}
+<div id="twitter_timeline">
+    <a class="twitter-timeline" data-chrome="noheader" href="https://twitter.com/{{ TWITTER_USERNAME }}" data-widget-id="{{TWITTER_WIDGET_ID}}">Tweets by {{TWITTER_USERNAME}}</a>
+</div>
+<script>
+var oldOnload = window.onload || function () {};
+window.onload = function ()
+{
+oldOnload();
+
+var FROM_CHINA=false;
+$.ajax( { 
+  url: '//freegeoip.net/json/', 
+  type: 'POST', 
+  dataType: 'jsonp',
+  success: function(location) {
+    // If the visitor is browsing from China
+    if (location.country_code === 'CN' ) {
+      FROM_CHINA = true;
+	  $('#twitter_timeline').hide();
+    }else{
+		!function(d,s,id){
+			var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+			if(!d.getElementById(id)){
+				js=d.createElement(s);
+				js.id=id;
+				js.src=p+"://platform.twitter.com/widgets.js";
+				fjs.parentNode.insertBefore(js,fjs);}
+		}(document,"script","twitter-wjs");
+    }
+  }
+ });
+}
+</script>
+{% endblock sidebarcontent %}
+
+

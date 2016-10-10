@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} - {{ SITENAME }}{% endblock %}
+{% block html_lang %}{{ page.lang }}{% endblock %}
+{% block meta %}
+    {% if page.author %}
+        <meta name="author" content="{{ page.author }}" />
+    {% else %}
+        <meta name="author" content="{{ AUTHOR }}" />
+    {% endif %}
+    {% if page.summary %}
+        <meta name="description" content="{{ page.summary|striptags|escape }}" />
+    {% endif %}
+{% endblock %}
+{% block opengraph %}
+    {% if OPEN_GRAPH_FB_APP_ID %}
+        <meta property="fb:app_id" content="{{ OPEN_GRAPH_FB_APP_ID }}"/>
+    {% endif %}
+    <meta property="og:site_name" content="{{ SITENAME }}" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="{{ page.title|striptags|escape }}"/>
+    <meta property="og:url" content="{{ SITEURL }}/{{ page.url }}"/>
+    <meta property="og:description" content="{{ page.summary|striptags|escape }}" />
+    {% if page.og_image %}
+        <meta property="og:image"
+              content="{{ SITEURL }}/{{ page.og_image }}"/>
+    {% elif OPEN_GRAPH_IMAGE %}
+        <meta property="og:image"
+              content="{{ SITEURL }}/{{ OPEN_GRAPH_IMAGE }}"/>
+    {% endif %}
+{% endblock %}
+
+{% block canonical_rel %}
+<link rel="canonical" href="{{ SITEURL }}/{{ page.url }}">
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if DISPLAY_BREADCRUMBS %}
+    <ol class="breadcrumb">
+        <li><a href="{{ SITEURL }}" title="{{ SITENAME }}"><i class="fa fa-home fa-lg"></i></a></li>
+	  {% if page.url %}
+        <li class="active">{{ page.title }}</li>
+	  {% endif %}
+    </ol>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <section id="content" class="body">
+        <header class="page-header jumbotron jumbotron-primary panel-primary">
+            <div class="panel-heading">
+                <h1 class="entry-title">
+                <div class="row">
+                    <div class="col-lg-20 col-md-18">
+                        {{ page.title }}
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        {% import 'includes/translations.html' as translations with context %}
+                        {{ translations.translations_for(page) }}
+                         <a onclick="$.get('{{SITEURL}}/{{page.slug}}.rst.html', function(data){$('#source-code').html(data)});$('#article-content').toggle();$('#source-content').toggle();" class="btn btn-primary" title="显示这篇文章的源文件"><i class="fa fa-code"></i></a>
+                    </div>
+                </div>
+                </h1>
+                {% if PDF_PROCESSOR %}
+                    <a href="{{ SITEURL }}/pdf/{{ page.slug }}.pdf">
+                        get the pdf
+                    </a>
+                {% endif %}
+            </div>
+        </header>
+        <div class="entry-content jumbotron" id="article-content">
+            {{ page.content }}
+        </div>
+        <div class="entry-content jumbotron" id="source-content" style="display: none">
+            <div id="source-code"></div>
+        </div>
+        {% include 'includes/comments.html' %}
+    </section>
+{% endblock %}
