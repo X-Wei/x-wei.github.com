@@ -56,7 +56,7 @@ EXTRA_PATH_METADATA = {
 
 PAGE_URL = "{slug}.html"
 PAGE_SAVE_AS = "{slug}.html"
-PAGE_PATHS = ['_pages']
+PAGE_PATHS = ['pages']
 
 
 # -------theme settings, see https://github.com/DandyDev/pelican-bootstrap3/wiki/Variables
