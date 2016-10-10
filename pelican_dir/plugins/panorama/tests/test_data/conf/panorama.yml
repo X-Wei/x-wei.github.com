@@ -1,0 +1,73 @@
+---
+# Metadata to retrieve
+metadata_columns: [title, date, category]
+
+# Names of the tags
+tag_columns: [genre, ranking, publisher, writer]
+
+# Configurations
+confs:
+    # articles by ranking
+    - chart_id: nb_article_by_ranking
+      producer:
+        function_name: count_article_by_column
+        args:
+          column: ranking
+      renderer:
+        class_name: discreteBarChart
+    # articles by genre
+    - chart_id: nb_article_by_genre
+      producer:
+        function_name: count_article_by_column
+        args:
+          column: genre
+      renderer:
+        class_name: pieChart
+    # articles by year
+    - chart_id: nb_article_by_year
+      producer:
+        function_name: count_article_by_year
+      renderer:
+        class_name: discreteBarChart
+    # articles by genre and year as a multi bar chart
+    - chart_id: nb_article_by_genre_year
+      producer:
+        function_name: count_article_by_column_by_year
+        args:
+          column: genre
+      renderer:
+        class_name: multiBarChart
+    # articles by genre and year as a stacked area chart
+    - chart_id: nb_article_by_ranking_year
+      producer:
+        function_name: count_article_by_column_by_year
+        args:
+          column: ranking
+      renderer:
+        class_name: stackedAreaChart
+    # top 5 articles by writer and year as a pie chart
+    - chart_id: top_article_by_writer
+      producer:
+        function_name: top_article
+        args:
+          column: writer
+          top: 5
+      renderer:
+        class_name: pieChart
+    # Error unknown column
+    - chart_id: top_article_error
+      producer:
+        function_name: top_article
+        args:
+          column: unknown_column
+          top: 5
+      renderer:
+        class_name: pieChart
+
+# Chart conf
+chart_conf:
+    DEFAULT:
+        height: 300
+        width: 700
+    discreteBarChart:
+        width: 500

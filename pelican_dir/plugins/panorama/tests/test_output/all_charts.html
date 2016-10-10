@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link href="https://raw.githubusercontent.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet"/>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://raw.githubusercontent.com/novus/nvd3/master/nv.d3.min.js"></script>
+</head>
+<body>
+<h1>nb_article_by_year</h1>
+
+<div id="nb_article_by_year">
+    <svg style="width:700px;height:300px;"></svg>
+</div>
+
+
+<script>
+
+
+
+                data_nb_article_by_year=[{"values": [{"y": 1, "x": 2007}, {"y": 2, "x": 2008}, {"y": 1, "x": 2010}, {"y": 7, "x": 2014}], "key": "title", "yAxis": "1"}];
+
+
+            nv.addGraph(function() {
+        var chart = nv.models.discreteBarChart();
+
+        chart.margin({top: 30, right: 60, bottom: 20, left: 60});
+
+        var datum = data_nb_article_by_year;
+
+
+
+                    chart.yAxis
+                .tickFormat(d3.format(',.0f'));
+
+    
+    
+
+        
+
+
+
+            d3.select('#nb_article_by_year svg')
+            .datum(datum)
+            .transition().duration(500)
+            .attr('width', 700)
+            .attr('height', 300)
+            .call(chart);
+
+    
+        });
+
+
+
+
+
+</script>
+
+<h1>nb_article_by_category</h1>
+<div id="nb_article_by_category"><svg style="width:700px;height:300px;"></svg></div>
+
+
+
+    <script>
+
+
+
+    data_nb_article_by_category=[{"values": [{"value": 2, "label": "Article"}, {"value": 5, "label": "Critique"}, {"value": 3, "label": "Info"}, {"value": 1, "label": "yeah"}], "key": "title"}];
+
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart();
+        chart.margin({top: 30, right: 60, bottom: 20, left: 60});
+        var datum = data_nb_article_by_category[0].values;
+
+    chart.tooltipContent(function(key, y, e, graph) {
+          var x = String(key);
+              var y =  String(y)  + ' posts';
+
+              tooltip_str = '<center><b>'+x+'</b></center>' + y;
+              return tooltip_str;
+              });
+        chart.showLabels(true);
+
+            chart.donut(false);
+
+    chart.showLegend(true);
+
+
+
+
+        chart
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value });
+
+        chart.width(700);
+
+        chart.height(300);
+
+
+            d3.select('#nb_article_by_category svg')
+            .datum(datum)
+            .transition().duration(500)
+            .attr('width', 700)
+            .attr('height', 300)
+            .call(chart);
+
+
+        });
+
+
+
+    </script>
+
+<h1>nb_article_by_category_year</h1>
+
+<div id="nb_article_by_category_year">
+    <svg style="width:700px;height:300px;"></svg>
+</div>
+
+
+<script>
+
+
+
+        data_nb_article_by_category_year=[{"values": [{"y": 0.0, "x": 2007}, {"y": 0.0, "x": 2008}, {"y": 0.0, "x": 2009}, {"y": 0.0, "x": 2010}, {"y": 0.0, "x": 2011}, {"y": 0.0, "x": 2012}, {"y": 0.0, "x": 2013}, {"y": 2.0, "x": 2014}], "key": "Article", "yAxis": "1"}, {"values": [{"y": 0.0, "x": 2007}, {"y": 1.0, "x": 2008}, {"y": 0.0, "x": 2009}, {"y": 0.0, "x": 2010}, {"y": 0.0, "x": 2011}, {"y": 0.0, "x": 2012}, {"y": 0.0, "x": 2013}, {"y": 4.0, "x": 2014}], "key": "Critique", "yAxis": "1"}, {"values": [{"y": 1.0, "x": 2007}, {"y": 1.0, "x": 2008}, {"y": 0.0, "x": 2009}, {"y": 0.0, "x": 2010}, {"y": 0.0, "x": 2011}, {"y": 0.0, "x": 2012}, {"y": 0.0, "x": 2013}, {"y": 1.0, "x": 2014}], "key": "Info", "yAxis": "1"}, {"values": [{"y": 0.0, "x": 2007}, {"y": 0.0, "x": 2008}, {"y": 0.0, "x": 2009}, {"y": 1.0, "x": 2010}, {"y": 0.0, "x": 2011}, {"y": 0.0, "x": 2012}, {"y": 0.0, "x": 2013}, {"y": 0.0, "x": 2014}], "key": "yeah", "yAxis": "1"}];
+
+    nv.addGraph(function() {
+        var chart = nv.models.multiBarChart();
+
+        chart.margin({top: 30, right: 60, bottom: 20, left: 60});
+
+        var datum = data_nb_article_by_category_year;
+
+
+
+            chart.yAxis
+                .tickFormat(d3.format(',.2f'));
+
+                    chart.tooltipContent(function(key, y, e, graph) {
+                        var x = String(graph.point.x);
+                        var y = String(graph.point.y);
+                                            if(key == 'Article'){
+                        var y =  String(graph.point.y)  + ' posts';
+                    }
+                    if(key == 'Critique'){
+                        var y =  String(graph.point.y)  + ' posts';
+                    }
+                    if(key == 'Info'){
+                        var y =  String(graph.point.y)  + ' posts';
+                    }
+                    if(key == 'yeah'){
+                        var y =  String(graph.point.y)  + ' posts';
+                    }
+
+                        tooltip_str = '<center><b>'+key+'</b></center>' + y + ' at ' + x;
+                        return tooltip_str;
+                    });
+
+      chart.showLegend(true);
+
+
+
+        
+
+
+        d3.select('#nb_article_by_category_year svg')
+            .datum(datum)
+            .transition().duration(500)
+            .attr('width', 700)
+            .attr('height', 300)
+            .call(chart);
+
+
+    });
+
+
+
+
+    </script>
+
+</body>
+</html>

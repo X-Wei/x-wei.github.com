@@ -1,0 +1,1 @@
+from .pelicanfly import register

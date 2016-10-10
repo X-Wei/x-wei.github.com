@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ photo.title }}</h1>
+<p>
+  Back to <a href="{{photoset.url}}">{{ photoset.title }}</a>
+</p>
+<p>
+  {% if 'original' in photo.sizes %}
+  Download <a href="{{ photo.sizes.original.source }}">original</a>
+  {% else %}
+  No original available.
+  {% endif %}
+</p>
+<p>
+  View on <a href="{{ photo.urls.photopage }}">Flickr</a>
+</p>
+<p>
+  Taken on {{ photo.dates.taken }}
+</p>
+
+<p>
+Tags: 
+{% for tag in photo.tags %}
+{{ tag.tag }}{% if loop.last %}.{% else %}, {% endif %}
+{% endfor %}
+</p>
+
+{% if photo_next %}
+<p style="float: right;">
+  <a href="{{ photo_next.url }}">
+    <img src="{{ photo_next.sizes['square'].source }}" />
+    {{ photo_next.title }} &raquo;
+  </a>
+</p>
+{% endif %}
+{% if photo_previous %}
+<p style="float: left;">
+  <a href="{{ photo_previous.url }}">
+    &laquo; {{ photo_previous.title }}
+    <img src="{{ photo_previous.sizes['square'].source }}" />
+  </a>
+</p>
+{% endif %}
+
+<hr style="clear:both;"/>
+
+<img src="{{photo.sizes.large.source}}" />
+
+{% endblock %}
