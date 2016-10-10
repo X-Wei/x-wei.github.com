@@ -12,12 +12,12 @@ Tags: google
 大概的流程是这样的:
 用google帐号进入google doc, 然后点击creat->form, 会看到这样的页面:
 
-![](_images/./google_doc_form/pasted_image.png)
+![](images/./google_doc_form/pasted_image.png)
 
 嗯, 功能是比较简单但是够用!
 点击add item 或者右边俩方框的按钮, 就可以添加问题了, 很easy, 我做的同学录是这个样子的:
 
-![](_images/./google_doc_form/pasted_image001.png)
+![](images/./google_doc_form/pasted_image001.png)
 
 然后还可以选择主题...
 
@@ -25,7 +25,7 @@ Tags: google
 --
 编辑完成之后, 就可以发布了, 点击右上角的"Share"(有个g+的图标, 我一开始以为是像人人那样的分享呢...), 之后页面底部就会有一个链接~! 把这个链接发给别人, 别人就可以提交了~
 
-![](_images/./google_doc_form/pasted_image002.png)
+![](images/./google_doc_form/pasted_image002.png)
 
 btw, 如果不想发布, 只想发给几个人看的话, 点击share右边的那个"email this form"按钮, 输入联系人的邮箱地址即可~
 
@@ -33,16 +33,16 @@ btw, 如果不想发布, 只想发给几个人看的话, 点击share右边的那
 --
 那么别人提交之后, 我怎么看统计结果呢? 进入google doc, 会发现刚才建立的form的结果在一个表单里:
 
-![](_images/./google_doc_form/pasted_image003.png)
+![](images/./google_doc_form/pasted_image003.png)
 
 点进去看, 就可以看到大家的回复统计
 
-![](_images/./google_doc_form/pasted_image004.png)
+![](images/./google_doc_form/pasted_image004.png)
 
 看! 多方便!!
 然后, 可以把这个文件共享给别人: 右键->share:
 
-![](_images/./google_doc_form/pasted_image005.png)
+![](images/./google_doc_form/pasted_image005.png)
 
 发布后的修改
 ------
@@ -50,7 +50,7 @@ btw, 如果不想发布, 只想发给几个人看的话, 点击share右边的那
 
 注意那个more action里面的confirmation, 不要勾选"publish response summery"...否则任何人提交后就可以看到目前所有的信息了...
 
-![](_images/./google_doc_form/pasted_image006.png)
+![](images/./google_doc_form/pasted_image006.png)
 
 一点不足
 ----

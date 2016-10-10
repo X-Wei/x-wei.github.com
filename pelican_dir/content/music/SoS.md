@@ -10,7 +10,7 @@ Date: 2012-06-05
 
 BUT SOMEHOW, 决定第一首写它, 寂静之声(SoS).
 
-![](_images/./TheSoundofSilence/SnG.jpg)
+![](images/./TheSoundofSilence/SnG.jpg)
 
 如果把硬盘里的歌全部删了, 只能留十首歌的话, 我是肯定会留下这一首.
 
@@ -21,7 +21,7 @@ BUT SOMEHOW, 决定第一首写它, 寂静之声(SoS).
 
 不必多说, 这首歌应该知名度很高的吧, 西蒙与加芬科的成名作. Simon&Garfunkel组合凭借电影<<毕业生>>的两首配乐被许多人所熟知(另一首是Scarborough Fair). 
 
-![](_images/./TheSoundofSilence/Graduate.jpg)
+![](images/./TheSoundofSilence/Graduate.jpg)
 
 以下摘自百度百科:
 
@@ -185,9 +185,9 @@ And whisper’d in the sounds of silence.
 
 + concert in central park
 
-![](_images/./TheSoundofSilence/CiCP.jpg)
+![](images/./TheSoundofSilence/CiCP.jpg)
 
-![](_images/./TheSoundofSilence/CiCP2.gif)
+![](images/./TheSoundofSilence/CiCP2.gif)
 
 >1981年9月19日，在美国纽约中央公园上演了一场摇滚史上着名的音乐会，那就是Simon & Garfunkel举行的免费音乐会，这也是两人各自单飞11年后的首度合作，约50万歌迷前来捧场，场面蔚为壮观，虽然当时两人都已年过40，但是和声依旧美妙。 
 

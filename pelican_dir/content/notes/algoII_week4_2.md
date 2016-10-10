@@ -28,9 +28,9 @@ brute-force algo: look for ``pattern`` at every position of ``text``.
 	}  
   
 **worst case: **when txt/pat are repetitive → MN compares.   
-![](_images/algoII_week4_2/pasted_image.png)  
+![](images/algoII_week4_2/pasted_image.png)  
 problem with brute-force: always *backup* when mismatch.   
-![](_images/algoII_week4_2/pasted_image001.png)  
+![](images/algoII_week4_2/pasted_image001.png)  
 **brute-force alternative**  
   
 * j := number of matched chars in pattern  
@@ -70,7 +70,7 @@ ex.
 states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   
 >``dfa[c][i]`` = the next state if we are currently in state-i and encoutered char-c.  
  
-![](_images/algoII_week4_2/pasted_image002.png)  
+![](images/algoII_week4_2/pasted_image002.png)  
 
 **interpretation of DFA for KMP algo**  
 >in the DFA after reading ``txt[i]``, the index of state is the **number of matched chars** in pattern, or length of *longest prefix of pat that is a suffix of txt[0:i]. *  
@@ -98,8 +98,8 @@ running time: linear.
   
 when at state j, for the char ``c0==pat.charAt(j+1)``, just go on matching: ``dfa[c0][j] = j+1``  
 ex. (*pat="ABABAC"*)  
-![](_images/algoII_week4_2/pasted_image003.png)  
-![](_images/algoII_week4_2/pasted_image004.png)  
+![](images/algoII_week4_2/pasted_image003.png)  
+![](images/algoII_week4_2/pasted_image004.png)  
   
   
   
@@ -122,13 +122,13 @@ pattern = ``"ABABAC"``, state ``j=5``, char ``c='B``'
   
 similarly we can get ``dfa['A'][5]=1``, as indicated below:   
 (*pat="ABABAC"*)  
-![](_images/algoII_week4_2/pasted_image005.png)  
+![](images/algoII_week4_2/pasted_image005.png)  
   
 one concern: seems this simulation needs ``j`` steps ?  
 ⇒ can be changed to be constant time if we maintain a **state X := the state of simulating of input=pat[1...j-1]**  
 we maintain this state ``X``, then for each *mismatched* char c, we just need to look at ``dfa[c][X]``.   
 (*pat="ABABAC"*)  
-![](_images/algoII_week4_2/pasted_image006.png)  
+![](images/algoII_week4_2/pasted_image006.png)  
   
   
 **[Algo]**  
@@ -169,7 +169,7 @@ KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.
 这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  
   
 八卦时间:   
-![](_images/algoII_week4_2/pasted_image007.png)  
+![](images/algoII_week4_2/pasted_image007.png)  
   
 4. Boyer-Moore  
 ==============  
@@ -182,7 +182,7 @@ i does not necessarily go through all txt chars ⇒ i may *skip* some chars.
 * when encoutered a mismatch: we can skip <= M chars (if the char is not in pattern)  
   
 ex. (pat="NEEDLE")  
-![](_images/algoII_week4_2/pasted_image008.png)  
+![](images/algoII_week4_2/pasted_image008.png)  
   
 → pb: how to skip?   
   
@@ -191,22 +191,22 @@ ex. (pat="NEEDLE")
   
 **case 1. mismatched char not in pattern**  
 easy case → just move i to the right of this char.   
-![](_images/algoII_week4_2/pasted_image009.png)  
+![](images/algoII_week4_2/pasted_image009.png)  
   
 **case 2. mismatched char in pattern**  
 >**heuristic:** line up i with the **rightmost*** char in pattern*.  
 ``i += skip``  
 where *skip length = j - index of rightmost char in pattern*  
 
-![](_images/algoII_week4_2/pasted_image010.png)  
+![](images/algoII_week4_2/pasted_image010.png)  
   
 note: this does not always help, in the example below, i even *backups*:   
-![](_images/algoII_week4_2/pasted_image011.png)  
+![](images/algoII_week4_2/pasted_image011.png)  
 to avoid backup, in this case we just *increment i by 1* (heuristic doesn't help in this case).  
   
 ### implementation  
 use an array ``right[]`` as *skip table*, ``right[c]`` is the index of rightmost occurrence of char c (-1 if c not in pat).   
-![](_images/algoII_week4_2/pasted_image012.png)  
+![](images/algoII_week4_2/pasted_image012.png)  
   
 	int[] right = new int[M];  
 	for(int i=0;i<R;i++) right[i] = -1;//value for chars not in pattern  
@@ -239,7 +239,7 @@ using this table we can implemente the heuristic algorithm:
 好神奇, 比KMP还要简单的算法, 实际效率这么高...  
   
 worst-case performance: **N*M**... 这一点不如KMP.   
-![](_images/algoII_week4_2/pasted_image013.png)  
+![](images/algoII_week4_2/pasted_image013.png)  
 → can be improved...   
   
 5. Rabin-Karp  
@@ -254,11 +254,11 @@ ex. for strings of numbers
 * for a pointer i →corresponds to the substring ``txt[i, ..., i+M-1]``  → check hash for match  
   
 (below: text=3141592653589793, pattern=26535)  
-![](_images/algoII_week4_2/pasted_image014.png)  
+![](images/algoII_week4_2/pasted_image014.png)  
   
 ### computing the hash function efficiently  
 let ti be the ith char in txt, the hashcode for substring ``txt[i,...,i+M-1]`` is:   
-![](_images/algoII_week4_2/pasted_image015.png)  
+![](images/algoII_week4_2/pasted_image015.png)  
 ⇒ just an M-digit base-R integer modulo Q ! ``poly(M, R) % Q``*. *  
   
   
@@ -268,7 +268,7 @@ linear time algorithm for evaluating polynomial.
 recursive equation: ``poly(i, R) = poly(i-1, R)*R+ti``  
   
 ex. (R=10, M=5)  
-![](_images/algoII_week4_2/pasted_image016.png)  
+![](images/algoII_week4_2/pasted_image016.png)  
   
 	private long hash(String key, int M){  
 		long h=0;  
@@ -281,9 +281,9 @@ ex. (R=10, M=5)
   
 * if we know x_i, the x_i+1 can be infered:   
   
-![](_images/algoII_week4_2/pasted_image017.png)  
+![](images/algoII_week4_2/pasted_image017.png)  
 ⇒ x_i+1 can be computed in constant time:   
-![](_images/algoII_week4_2/pasted_image018.png)  
+![](images/algoII_week4_2/pasted_image018.png)  
 ⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   
   
 	public static int search(String txt, String pat){  
@@ -307,8 +307,8 @@ for collisions: *Monte Carlo* vs. *Las Vegas*
 **Theory**: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N.   
 **Practice**: choose Q to be sufficiently large, and collision probability is ~1/Q.   
   
-![](_images/algoII_week4_2/pasted_image019.png)  
+![](images/algoII_week4_2/pasted_image019.png)  
   
 Summery  
 =======  
-![](_images/algoII_week4_2/pasted_image020.png)  
+![](images/algoII_week4_2/pasted_image020.png)  

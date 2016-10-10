@@ -8,13 +8,13 @@ Tags: tips, 外观
 
 主题-->自定义-->颜色
 
-![](_images/./gnome-background/pasted_image.png)
+![](images/./gnome-background/pasted_image.png)
 
 
 修改窗口和输入框两项的颜色:
 126-12-91
 
-![](_images/./gnome-background/pasted_image002.png)
+![](images/./gnome-background/pasted_image002.png)
 
 
 现在就很舒服了

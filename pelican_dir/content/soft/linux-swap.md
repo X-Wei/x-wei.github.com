@@ -14,7 +14,7 @@ step1. 建立swap分区
 关于swap分区应该多大, 根据[这个帖子](http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space), 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   
    
 我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:    
-![](_images/linux-swap/pasted_image.png)   
+![](images/linux-swap/pasted_image.png)   
    
    
    
@@ -34,7 +34,7 @@ step2. 编辑fstab
 ``UUID=put-the-uud-here       none            swap            defaults  0 0``   
    
 然后重启, 就可以看到swap分区了!    
-![](_images/linux-swap/pasted_image001.png)   
+![](images/linux-swap/pasted_image001.png)   
    
 step3. 调整swapness   
 -----------------   

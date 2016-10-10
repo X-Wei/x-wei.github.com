@@ -43,11 +43,11 @@ requirement:
 * Default implementation: *memory address* for x.    
 * Custom implementations for standard types: Integer, Double, String, File, URL, Date...   
    
-![](_images/algoI_week6/pasted_image.png)   
+![](images/algoI_week6/pasted_image.png)   
 Strings: Horner's method — compute a polynome.    
-![](_images/algoI_week6/pasted_image001.png)   
+![](images/algoI_week6/pasted_image001.png)   
 recipe for user-defined types:    
-![](_images/algoI_week6/pasted_image002.png)   
+![](images/algoI_week6/pasted_image002.png)   
    
 Modeular hasing   
 ---------------   
@@ -69,7 +69,7 @@ Modeular hasing
 ``return Math.abs(k.hashCode()) % M;``   
    
 → bug: Math.abs() returns negative numbers for -2^31   
-![](_images/algoI_week6/pasted_image003.png)   
+![](images/algoI_week6/pasted_image003.png)   
    
 **correct code:**   
 just take the first 31 bits: x&0x7fffffff   
@@ -82,17 +82,17 @@ uniform hasing assumption
 each key is equally likely to hash to an integer between 0 and M-1   
    
 一些数学结论:    
-![](_images/algoI_week6/pasted_image004.png)   
+![](images/algoI_week6/pasted_image004.png)   
    
    
 2. Separate Chaining   
 ====================   
 *one strategy for collision resolution.*    
-![](_images/algoI_week6/pasted_image005.png)   
+![](images/algoI_week6/pasted_image005.png)   
    
 **idea**: Using a table of size M < N,  build a list for each of the table positions.    
    
-![](_images/algoI_week6/pasted_image006.png)   
+![](images/algoI_week6/pasted_image006.png)   
    
 implementation   
 --------------   
@@ -142,7 +142,7 @@ Another approch for collision resolution.
    
 idea: **open addressing**   
 Use an array of size **M>N**, when a key collides, *find next open slot*.    
-![](_images/algoI_week6/pasted_image007.png)   
+![](images/algoI_week6/pasted_image007.png)   
    
 * insert: when occupied, move pointer until got open slot   
 * search: when not found, move pointer until find or reach open slot   
@@ -182,14 +182,14 @@ A contiguous block of items.
 New keys are more likely to hash into a cluster.    
    
 Knuth parking pb:    
-![](_images/algoI_week6/pasted_image008.png)   
-![](_images/algoI_week6/pasted_image010.png)   
-![](_images/algoI_week6/pasted_image009.png)   
+![](images/algoI_week6/pasted_image008.png)   
+![](images/algoI_week6/pasted_image010.png)   
+![](images/algoI_week6/pasted_image009.png)   
 (当年Knuth就是在证明了这个以后决定写那套书)   
    
 Typical choice: **N/M ~ 1/2** (3/2 for search hit and 5/2 for search miss)   
    
-![](_images/algoI_week6/pasted_image011.png)   
+![](images/algoI_week6/pasted_image011.png)   
    
 4. Hash Table Context   
 =====================   
@@ -197,28 +197,28 @@ widely used in applicataions.
    
 cost for computing hash VS cost for searching:    
 hashCode() for strings in java 1.1: exemain only 8-9 evenly spaced characters to save time.   
-![](_images/algoI_week6/pasted_image012.png)   
+![](images/algoI_week6/pasted_image012.png)   
    
 uniform hashing assumption: performance not guaranteed...   
-![](_images/algoI_week6/pasted_image013.png)   
+![](images/algoI_week6/pasted_image013.png)   
    
-![](_images/algoI_week6/pasted_image014.png)   
+![](images/algoI_week6/pasted_image014.png)   
    
 **one-way hash functions**   
 Hard to find a key that hash to a desired value, or 2 keys having the same hash value.    
-![](_images/algoI_week6/pasted_image015.png)   
+![](images/algoI_week6/pasted_image015.png)   
 used for fingurprints or store passwords, but too expensive for ST implementations.    
    
 Seperate chaining VS linear probing   
 -----------------------------------   
-![](_images/algoI_week6/pasted_image016.png)   
+![](images/algoI_week6/pasted_image016.png)   
    
 variations   
 ----------   
-![](_images/algoI_week6/pasted_image017.png)   
+![](images/algoI_week6/pasted_image017.png)   
    
 ST choice: hash tables VS balanced search trees   
 -----------------------------------------------   
    
-![](_images/algoI_week6/pasted_image018.png)   
+![](images/algoI_week6/pasted_image018.png)   
    

@@ -6,7 +6,7 @@ Tags: algorithm
 
 1. Introduction
 ===============   
-![](_images/algoI_week1_2/pasted_image.png)
+![](images/algoI_week1_2/pasted_image.png)
 
 
 2. Observations
@@ -29,7 +29,7 @@ for(int i=0;i<N;i++)
 * mesuring running time:
 
 stdlib.jar里面提供了一个``Stopwatch``类用于记录运行时间.    
-![](_images/algoI_week1_2/pasted_image001.png)
+![](images/algoI_week1_2/pasted_image001.png)
 
 
 * log-log plot
@@ -37,13 +37,13 @@ stdlib.jar里面提供了一个``Stopwatch``类用于记录运行时间.
 T(N) = running time for input of size N  
 log(N)-log(T(N)) plot:  
 often get a straight line — power law    
-![](_images/algoI_week1_2/pasted_image002.png)
+![](images/algoI_week1_2/pasted_image002.png)
 
 * **doubling ratio**:
 
 (for checking the power law relationship, checking the power order)  
 each time double the size of input, then take log of the time ratio of 2 runs: log( T(2N)/T(N) )    
-![](_images/algoI_week1_2/pasted_image003.png)  
+![](images/algoI_week1_2/pasted_image003.png)  
 
 
 3.Mathematical Models
@@ -60,13 +60,13 @@ each time double the size of input, then take log of the time ratio of 2 runs: l
 
 crude analysis  
 ignore lower terms **tilde notation**    
-![](_images/algoI_week1_2/pasted_image005.png)    
-![](_images/algoI_week1_2/pasted_image004.png)
+![](images/algoI_week1_2/pasted_image005.png)    
+![](images/algoI_week1_2/pasted_image004.png)
 
 * estimating discrete sum by relaxation
 
 Replace the sum with an integral, and use calculus — 很机智...     
-![](_images/algoI_week1_2/pasted_image006.png)
+![](images/algoI_week1_2/pasted_image006.png)
 
 
 4. Order of Growth Classification
@@ -77,17 +77,17 @@ Replace the sum with an integral, and use calculus — 很机智...
 * only a small set of growth functions: 
 
 ``1, logN, N, NlogN, N^2, N^3, 2^N   ``   
-![](_images/algoI_week1_2/pasted_image007.png)   
+![](images/algoI_week1_2/pasted_image007.png)   
 
 * exemples:
 
 binary search ⇒ logN  
 divide and conquer ⇒ NlogN  
 exhaustive search ⇒ 2^N   
-![](_images/algoI_week1_2/pasted_image008.png)
+![](images/algoI_week1_2/pasted_image008.png)
 	
 practical performance:   
-![](_images/algoI_week1_2/pasted_image009.png)  
+![](images/algoI_week1_2/pasted_image009.png)  
 
 * ex. **binary search**
 
@@ -132,11 +132,11 @@ denote *T(N)* := nb of compares for array with size <=N
 * notations
 
 **big Theta/big O/big Omega**    
-![](_images/algoI_week1_2/pasted_image010.png)     
+![](images/algoI_week1_2/pasted_image010.png)     
 	- big O: *upper bound  → * once a specific algo is found, find an upper bound  
 	- big Omega: *lower bound   *→ proove that no algo can do better  
 	- big Theta: symptotic growth (same order, optimal algo)  → lower and upper bound *match*   
-![](_images/algoI_week1_2/pasted_image011.png)     
+![](images/algoI_week1_2/pasted_image011.png)     
 ⇒ in this course: use tilde notation: contain leading constants for highest order term
 	
 
@@ -152,11 +152,11 @@ GB: 2^30 bytes (1 billion)
 * typical memory usage:
 
 for primary types:   
-![](_images/algoI_week1_2/pasted_image012.png)  
+![](images/algoI_week1_2/pasted_image012.png)  
 for arrays  (with *array overhead=24bytes*) :    
-![](_images/algoI_week1_2/pasted_image013.png)   
+![](images/algoI_week1_2/pasted_image013.png)   
 *Obj overhead: 16 bytes* (obj的大小=16+obj内部filed的大小)  
 *references*: 8 bytes (ex. inner class has a ref to encolsing class)  
 *padding*: each obj uses a multiply of 8 bytes (obj大小=8 bytes的整数倍)      
-![](_images/algoI_week1_2/pasted_image014.png)     
-![](_images/algoI_week1_2/pasted_image015.png)     
+![](images/algoI_week1_2/pasted_image014.png)     
+![](images/algoI_week1_2/pasted_image015.png)     

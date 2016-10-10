@@ -15,14 +15,14 @@ cannot cocatenate linear units → equivalent to one big matrix...
   
 rectified linear units (RELU)  
 -----------------------------  
-![](_images/dlMOOC_L2/pasted_image.png)  
+![](images/dlMOOC_L2/pasted_image.png)  
   
-![](_images/dlMOOC_L2/pasted_image002.png)  
+![](images/dlMOOC_L2/pasted_image002.png)  
   
 chain rule: efficient computationally  
-![](_images/dlMOOC_L2/pasted_image003.png)  
+![](images/dlMOOC_L2/pasted_image003.png)  
   
-![](_images/dlMOOC_L2/pasted_image004.png)  
+![](images/dlMOOC_L2/pasted_image004.png)  
   
 back propagation  
 ----------------  
@@ -30,10 +30,10 @@ easy to compute the gradient as long as the function Y(X) is made of simple bloc
 most deep-learning framework can do it automatically for you.   
   
 N.B. The backprop block takes 2x memory/compute wrt the forward prop blocks.   
-![](_images/dlMOOC_L2/pasted_image005.png)  
+![](images/dlMOOC_L2/pasted_image005.png)  
   
 first neural network: RELU units between linear classifiers:   
-![](_images/dlMOOC_L2/pasted_image001.png)  
+![](images/dlMOOC_L2/pasted_image001.png)  
   
 Tensor flow  
 -----------  
@@ -122,7 +122,7 @@ Regularization
 * early termination: stop when cannot improve in validation performance.   
 * L2 regularization: adding L2 norm of   
   
-![](_images/dlMOOC_L2/pasted_image006.png)  
+![](images/dlMOOC_L2/pasted_image006.png)  
   
 Dropout  
 -------  
@@ -130,10 +130,10 @@ def. **activation** is the output of last layer that flows into the next layer.
 dropout: *randomly set half of activations to 0*.  
   
 rational: forcing your model to learn reduadant representations (consus over an ensemble of nns...)...   
-![](_images/dlMOOC_L2/pasted_image007.png)  
+![](images/dlMOOC_L2/pasted_image007.png)  
   
 N.B.  
 for evaluation no longer dropout, ``ye`` = average of activations, trick to let ``ye=E(yt)``, in training, multiply the remaining activations by 2.  
-![](_images/dlMOOC_L2/pasted_image008.png)  
+![](images/dlMOOC_L2/pasted_image008.png)  
   
   

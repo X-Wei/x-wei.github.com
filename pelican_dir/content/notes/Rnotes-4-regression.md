@@ -8,7 +8,7 @@ R里面的统计函数有很多, 这里只用线性模型``lm``以及(一维)非
 
 数据的形式是:　
 
-![](_images/Rnotes-4-regression/pasted_image002.png)
+![](images/Rnotes-4-regression/pasted_image002.png)
 
 目标是估计函数m(). 例子使用R自带的``cars``数据集, 它包含两列: 汽车速度speed和刹车距离dist. 
 
@@ -25,7 +25,7 @@ R里面的统计函数有很多, 这里只用线性模型``lm``以及(一维)非
 	> plot(cars$speed, cars$dist)
 
 
-![](_images/Rnotes-4-regression/pasted_image003.png)
+![](images/Rnotes-4-regression/pasted_image003.png)
 
 Theory
 ======
@@ -34,32 +34,32 @@ Theory
 ### linear model
 认为m是线性形式(包含intercept): 
 
-![](_images/Rnotes-4-regression/pasted_image008.png)
+![](images/Rnotes-4-regression/pasted_image008.png)
 
 ### Nadaraya-Watson kernel smoother
 m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. 
 
-![](_images/Rnotes-4-regression/pasted_image.png)
+![](images/Rnotes-4-regression/pasted_image.png)
 
 另外m_NW(x)还可以看做是最小化加权的square-error: 
 
-![](_images/Rnotes-4-regression/pasted_image001.png)
+![](images/Rnotes-4-regression/pasted_image001.png)
 
 ### Local Polynomial smoother
 
 m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个*常数函数*mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): 
 
-![](_images/Rnotes-4-regression/pasted_image004.png)
+![](images/Rnotes-4-regression/pasted_image004.png)
 
 最后m_LP在x处的取值为: 
 
-![](_images/Rnotes-4-regression/pasted_image005.png)
+![](images/Rnotes-4-regression/pasted_image005.png)
 
 ### Smoothing Spline
 
 设定m的形式为knot在xi的spline, 加上penalize项: 
 
-![](_images/Rnotes-4-regression/pasted_image006.png)
+![](images/Rnotes-4-regression/pasted_image006.png)
 
 另外SS可以看作是bandwidth随x变化的kernel smoother. 
 
@@ -120,7 +120,7 @@ predict的写法也是各不相同, 一般都是用``predict``函数, 然而这�
 	lines(newspeed, pred.ss, lty=4, col=4)
 	legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)
 
-![](_images/Rnotes-4-regression/pasted_image009.png)
+![](images/Rnotes-4-regression/pasted_image009.png)
 
 bandwidth&df: Hat Matrix
 ========================
@@ -131,13 +131,13 @@ bandwidth&df: Hat Matrix
 
 一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: 
 
-![](_images/Rnotes-4-regression/pasted_image010.png)
+![](images/Rnotes-4-regression/pasted_image010.png)
 
 而df则是S的迹: df = tr(S). df的
 
 根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: 
 
-![](_images/Rnotes-4-regression/pasted_image012.png)
+![](images/Rnotes-4-regression/pasted_image012.png)
 
 所以计算S可以用下面的代码: 
 
@@ -181,7 +181,7 @@ bandwidth&df: Hat Matrix
 
 如果不用这个循环计算的话, 可以用``sfsmisc``包里的``hatMat``函数: 
 
-![](_images/Rnotes-4-regression/pasted_image013.png)  
+![](images/Rnotes-4-regression/pasted_image013.png)  
 
 参数``trace``取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: 
@@ -233,7 +233,7 @@ loo CV可以用下面这个通用函数得到(注意看对于参数的要求):
 
 不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: 
 
-![](_images/Rnotes-4-regression/pasted_image014.png)
+![](images/Rnotes-4-regression/pasted_image014.png)
 
 试一下: 
 
@@ -246,7 +246,7 @@ loo CV可以用下面这个通用函数得到(注意看对于参数的要求):
 
 或者只用df, 计算generalized CV, 公式为: 
 
-![](_images/Rnotes-4-regression/pasted_image015.png)
+![](images/Rnotes-4-regression/pasted_image015.png)
 
 	#compute GCV
 	mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2

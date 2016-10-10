@@ -15,7 +15,7 @@ sort *any* datatype
 *callback = reference to executable code*   
 i.e. passing functions as argument to sort() method  
 sort() function calls object's ``compareTo()`` method    
-![](_images/algoI_week2_2/pasted_image.png)   
+![](images/algoI_week2_2/pasted_image.png)   
 → implement the ``Comparable`` interface:    
 
         public class XX implements Comparable<XX>{
@@ -67,7 +67,7 @@ if algo passes the test using only less ant swap, then it's correct.
 
 Idea: each time*: find the minimum from the remaining items.* 
 **a[min] is the smallest element to right of a[i] ⇒ swap a[i] and a[min]** (elements to left of i are sorted)   
-![](_images/algoI_week2_2/pasted_image002.png)    
+![](images/algoI_week2_2/pasted_image002.png)    
 
 invariants
 ----------
@@ -100,7 +100,7 @@ analysis
 selection sort uses *N-1 + N-2 + ... + 1 = ~N^2/2* compares, and *N* exchanges. 
 → quadratic time
 
-![](_images/algoI_week2_2/pasted_image003.png)
+![](images/algoI_week2_2/pasted_image003.png)
 
 
 * **insensitive** to input: quadratic time *even if input is already sorted.* 
@@ -113,7 +113,7 @@ selection sort uses *N-1 + N-2 + ... + 1 = ~N^2/2* compares, and *N* exchanges.
 quite different performance characteritics than selection sort. 
 
 Idea: **In iteration i: move all entries larger than a[i] to its left.**    
-![](_images/algoI_week2_2/pasted_image004.png)   
+![](images/algoI_week2_2/pasted_image004.png)   
 
 invariants
 ----------
@@ -122,7 +122,7 @@ invariants
 * entries to the right of i are not yet been seen   
 
 
-![](_images/algoI_week2_2/pasted_image005.png)   
+![](images/algoI_week2_2/pasted_image005.png)   
 
 implementation
 --------------
@@ -144,10 +144,10 @@ analysis
 --------
 **proposition **(average case):   
 (the performance *on average* — *for randomly sorted array* )   
-![](_images/algoI_week2_2/pasted_image007.png)   
+![](images/algoI_week2_2/pasted_image007.png)   
 *proof:*
 *expect each entry to move halfway back*   
-![](_images/algoI_week2_2/pasted_image008.png)   
+![](images/algoI_week2_2/pasted_image008.png)   
 
 ### best case and worst case
 **best case**
@@ -177,12 +177,12 @@ First non-trival sorting methode: an improvement of insertion sort.
 
 def. **"h-sorted array"**  
 an array is h-sorted if every h-interleaved subarray is sorted. (h=1: just a sorted array)    
-![](_images/algoI_week2_2/pasted_image009.png)     
+![](images/algoI_week2_2/pasted_image009.png)     
 
 Idea: move entries >1 position at a time by *h-sorting* the array, then decrease h.   
 
 use decreasing sequences of value h:    
-![](_images/algoI_week2_2/pasted_image010.png)     
+![](images/algoI_week2_2/pasted_image010.png)     
 
 implementation
 --------------
@@ -195,7 +195,7 @@ for small h: nearly in order
 
 **proposition**  
 A g-sorted array *remains g-sorted* after h-sorting it.    
-![](_images/algoI_week2_2/pasted_image011.png)    
+![](images/algoI_week2_2/pasted_image011.png)    
 (subtle to prove...)  
 
 **which sequence of h to use**
@@ -228,13 +228,13 @@ A g-sorted array *remains g-sorted* after h-sorting it.
 analysis
 --------
 **proposition (for worst case   )**  
-![](_images/algoI_week2_2/pasted_image012.png)     
+![](images/algoI_week2_2/pasted_image012.png)     
 → better than quadratic time !     
 
 **property  (found in practice)**
 # of compares < Cte * N * (# of *h* used )   
  → #compares < NlgN * Cte   
-![](_images/algoI_week2_2/pasted_image013.png)   
+![](images/algoI_week2_2/pasted_image013.png)   
 *accurate model has not been discovered  *
 
 (所以shellsort在实际使用中几乎和快速排序一样快! — 尽管没有数学证明来保证)
@@ -276,7 +276,7 @@ algo:
     - r = rand( [0~i**]** ) or rand( **[**i, N-1] )   
     - swap a[r] and a[i]   
 
-![](_images/algoI_week2_2/pasted_image014.png)
+![](images/algoI_week2_2/pasted_image014.png)
 
 implementation: 
 
@@ -302,7 +302,7 @@ CQFD.
 example: online poker  
 --------------------- 
 <https://www.cigital.com/papers/download/developer_gambling.php>  ←那个扑克网站已经被黑出翔了...    
-![](_images/algoI_week2_2/pasted_image015.png)    
+![](images/algoI_week2_2/pasted_image015.png)    
 bugs: 
 
 1. r never get 52 (52th card never moved)
@@ -318,7 +318,7 @@ application of sorting for the field of computational geometry.
 convex hull
 -----------
 smallest polygoneenclosing all N points.   
-![](_images/algoI_week2_2/pasted_image017.png)      
+![](images/algoI_week2_2/pasted_image017.png)      
 
 * input: N points
 * output: sequence of *vertices* in counterclockwise (*ccw*) order. 
@@ -330,7 +330,7 @@ application: robot motion planning; farest pair.
 * can traverse convex hull by making only ccw turns
 * let p be the point with lowest y-coord, wrt p, vertices appear in increasing order of polar angle.   
 
-![](_images/algoI_week2_2/pasted_image018.png)   
+![](images/algoI_week2_2/pasted_image018.png)   
 
 
 Algo
@@ -340,14 +340,14 @@ Algo
     * *sort points by polar angle* with p   
     * consider points in order (stack is used), *discard unless creates a ccw turn*.   
 
-![](_images/algoI_week2_2/pasted_image019.png)   ![](_images/algoI_week2_2/pasted_image020.png)    ![](_images/algoI_week2_2/pasted_image021.png)   
+![](images/algoI_week2_2/pasted_image019.png)   ![](images/algoI_week2_2/pasted_image020.png)    ![](images/algoI_week2_2/pasted_image021.png)   
 
 **CCW**   
 given three points a b c, returns if a→b→c is a CCW turn.    
-![](_images/algoI_week2_2/pasted_image023.png)      
+![](images/algoI_week2_2/pasted_image023.png)      
 (assumption: no 3 points on a line)  
  ⇒ calculate *cross product of ab and bc ⇒ determinants!*   
-![](_images/algoI_week2_2/pasted_image024.png)     
+![](images/algoI_week2_2/pasted_image024.png)     
 area>0 ⇔ CCW   
 
 

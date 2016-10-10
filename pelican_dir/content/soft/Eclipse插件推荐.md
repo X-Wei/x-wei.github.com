@@ -11,11 +11,11 @@ Eclipse被称为编程的瑞士军刀, 意思就是只用一个eclipse就可以�
 -------
 先简单说一下eclipse的插件安装方法, 在eclispe界面上, 点击: Help->Install New Software:
 
-![](_images/./Eclipse插件推荐/pasted_image.png)
+![](images/./Eclipse插件推荐/pasted_image.png)
 
 之后添加对应的URL就可以了... 
 
-![](_images/./Eclipse插件推荐/pasted_image001.png)
+![](images/./Eclipse插件推荐/pasted_image001.png)
 
 
 ADT
@@ -88,7 +88,7 @@ X是个神奇的学校, 所以上网要设置代理..... 关于设置代理的�
 
 >window → preference → General → Network Connections
 
-![](_images/./eclipse的UML插件/pasted_image001.png)
+![](images/./eclipse的UML插件/pasted_image001.png)
 
 
 插件卸载的方法

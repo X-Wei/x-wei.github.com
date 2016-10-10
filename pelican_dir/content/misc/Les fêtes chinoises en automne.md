@@ -12,7 +12,7 @@ Tags: french
 
 第一期的杂志封面是这样的...
 
-![](_images/./Les-fetes-chinoises-en-automne/pasted_image.png)
+![](images/./Les-fetes-chinoises-en-automne/pasted_image.png)
 
 把我和QY写的关于中秋和重阳的文章放上来吧, 很水......
 
@@ -33,9 +33,9 @@ Aujourd’hui, la fête de la lune est une de ces fêtes traditionnel les plus i
 La fête de la lune est une fête de réunion , donc il y a beaucoup de poèmes sur ce thème. Quelques poèmes sont eextrêmement connus par les Chinois.
 Quand la famille se réunit , on regarde la lune ronde et on prépare des gâteaux de lune. <<Le gateau de lune>>. C’est un gâteau spécial pour la fête de la lune, il est aussi rond que la lune, et symbolise le rassemblement de la famille. Et parce que le 15 août du calendrier lunaire est usuellement très près de la fête  nationale, il y a des vacances de 7 jours. Il y a un pic du tourisme et dans les transports public à chaque année à cette période. 
 
-![](_images/./Les-fetes-chinoises-en-automne/pasted_image001.png)
+![](images/./Les-fetes-chinoises-en-automne/pasted_image001.png)
 
-![](_images/./Les-fetes-chinoises-en-automne/pasted_image002.png)
+![](images/./Les-fetes-chinoises-en-automne/pasted_image002.png)
 
 La fête du Chongyang
 --------------------
@@ -48,9 +48,9 @@ La fête du Chongyang est une fête très importante pour les chinois, mais l’
 Pendant la fête du Chongyang, il y a des activités diverses, comme l’ alpinisme, la dégustation du vin de chrysanthème et l’admiration des fleurs. Ces activités célèbrent la légende. D'ailleurs, on mange le gâteau de Chongyang, un dessert très sucré et délicieux.
 Le respect des vieillards a été attribué aujourd’hui à la fête de Chongyang, parce que le chiffre neuf, homonyme du mot ‘longtemps’ en chinois, est un symbole de longévité. Les jeunes profitent de l’occasion pour faire une excursion avec des vieillards ou leur préparer des plats savoureux.
 
-![](_images/./Les-fetes-chinoises-en-automne/pasted_image003.png)
+![](images/./Les-fetes-chinoises-en-automne/pasted_image003.png)
 
-![](_images/./Les-fetes-chinoises-en-automne/pasted_image004.png)
+![](images/./Les-fetes-chinoises-en-automne/pasted_image004.png)
 
 Recette de Gâteau de Lune
 -------------------------

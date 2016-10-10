@@ -30,7 +30,7 @@ MLlib: <https://spark.apache.org/mllib/>
 *Collaborative filtering* is a method of making automatic predictions (filtering) about the interests of a user by collecting preferences or taste information from many users (collaborating). The underlying assumption of the collaborative filtering approach is that if a person A has the same opinion as a person B on an issue, A is more likely to have B's opinion on a different issue x than to have the opinion on x of a person chosen randomly. 
 
 一图胜千言:   
-![](_images/sparkmooc_note_lab4/Collaborative_filtering.gif)
+![](images/sparkmooc_note_lab4/Collaborative_filtering.gif)
 
 ### Matrix Factorization
 CF问题实际上是矩阵分解的问题: 
@@ -40,14 +40,14 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 
 *With collaborative filtering, the idea is to approximate the ratings matrix by factorizing it as the product of two matrices: one that describes properties of each user (shown in green), and one that describes properties of each movie (shown in blue).*
 
-![](_images/sparkmooc_note_lab4/pasted_image002.png)
+![](images/sparkmooc_note_lab4/pasted_image002.png)
 
 若N个用户, M个电影 ⇒ 把rating矩阵(N*M)分解为 一个N*d矩阵(*user矩阵*)与一个d*M(*movie矩阵*)矩阵之积. 
 
 其中d个维度可以有(隐含的)意义: 比如f[j]第一个维度代表了电影j中动作片的成分, f[i]的第一个维度表示用户i对动作片的喜爱程度, 以此类推... 所以f[i]与f[j]的内积就可以是用户i对电影j的评分的一个不错的预测. 
 
 假设*f[j]已知*, 那么f[i]要满足: 对那些用户i已经打过分的电影(即r_ij存在)上的估计偏差最小:     
-![](_images/sparkmooc_note_lab4/pasted_image.png)      
+![](images/sparkmooc_note_lab4/pasted_image.png)      
 (后面加上的那一项是正则项: 不希望f[i]的模过大)
 
 不过前面的假设, "f[j]已知"这个条件其实并不成立 ⇒ **Alternating Least Squares algorithm**: 交替优化f[i]和f[j]的取值, 每次固定一个, 而优化另一个, 交替进行, 直到收敛(好像Kmeans也是利用的这种方法). 
@@ -65,7 +65,7 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 ``trainingRDD, validationRDD, testRDD = ratingsRDD.randomSplit([6, 2, 2], seed=0L)``
 
 ### Root Mean Square Error (RMSE)
-![](_images/sparkmooc_note_lab4/pasted_image003.png)    
+![](images/sparkmooc_note_lab4/pasted_image003.png)    
 compute the sum of squared error given predictedRDD and actualRDD RDDs. 
 Both RDDs consist of tuples of the form (UserID, MovieID, Rating)
 

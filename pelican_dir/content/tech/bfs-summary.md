@@ -65,7 +65,7 @@ properties
 距离start近的节点(depth浅的节点)一定比距离start远的节点早被访问到.    
    
 这是对一个树BFS的时候节点的访问顺序:    
-![](_images/bfs-summary/pasted_image.png)   
+![](images/bfs-summary/pasted_image.png)   
    
 BFS "by layer"   
 --------------   

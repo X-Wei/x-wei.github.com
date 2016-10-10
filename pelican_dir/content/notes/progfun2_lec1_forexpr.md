@@ -15,19 +15,19 @@ json objects can be seq, num, str, bool,...
 
 ### pattern matching
 
-![](_images/progfun2_lec1_forexpr/pasted_image002.png)
+![](images/progfun2_lec1_forexpr/pasted_image002.png)
 
 → question: what is the type of the ``{case(key, value)=>"..."}`` clause? 
 
 it is ``(JBinding => String)`` type, which is a shorthand for ``Function1[JBinding, String]``. 
 
 ### Function1 Trait
-![](_images/progfun2_lec1_forexpr/pasted_image003.png)
+![](images/progfun2_lec1_forexpr/pasted_image003.png)
 
 ### subclass a function type
 function types can also be extended ! 
 
-![](_images/progfun2_lec1_forexpr/pasted_image005.png)
+![](images/progfun2_lec1_forexpr/pasted_image005.png)
 
 element accessing can be written as function calls because ``Seq``s are functions!
 
@@ -47,15 +47,15 @@ if there is no match → throw MatchError
 
 ``isDefinedAt`` is a method for the ``PartialFunction`` class. 
 
-![](_images/progfun2_lec1_forexpr/pasted_image006.png)
+![](images/progfun2_lec1_forexpr/pasted_image006.png)
 
 The f definition is translated to: 
 
-![](_images/progfun2_lec1_forexpr/pasted_image007.png)
+![](images/progfun2_lec1_forexpr/pasted_image007.png)
 
 But the ``PartialFunction`` will only apply for level 1: 
 
-![](_images/progfun2_lec1_forexpr/pasted_image008.png)
+![](images/progfun2_lec1_forexpr/pasted_image008.png)
 
 
 Recap: Collections
@@ -63,7 +63,7 @@ Recap: Collections
 
 scala collections hirarchy: 
 
-![](_images/progfun2_lec1_forexpr/pasted_image009.png)
+![](images/progfun2_lec1_forexpr/pasted_image009.png)
 
 collections *share* some general methods (**core methods**): 
 
@@ -76,19 +76,19 @@ collections *share* some general methods (**core methods**):
 (idealized) implementation of ``map`` and ``flatMap`` on Lists: 
 
 
-![](_images/progfun2_lec1_forexpr/pasted_image011.png)
+![](images/progfun2_lec1_forexpr/pasted_image011.png)
 
-![](_images/progfun2_lec1_forexpr/pasted_image013.png)
+![](images/progfun2_lec1_forexpr/pasted_image013.png)
 
 ### For expressions
 
 for-expr can *simplify combinations of core methods*. 
 
-![](_images/progfun2_lec1_forexpr/pasted_image014.png)
+![](images/progfun2_lec1_forexpr/pasted_image014.png)
 
 **the** **lhs of a generator can also be a pattern!**
 
-![](_images/progfun2_lec1_forexpr/pasted_image015.png)
+![](images/progfun2_lec1_forexpr/pasted_image015.png)
 
 pat <- expr 
 
@@ -146,7 +146,7 @@ for expressions → higer order functions
 
 map, flatMap, filter can all be implemented with for expression:
  
-![](_images/progfun2_lec1_forexpr/pasted_image016.png)
+![](images/progfun2_lec1_forexpr/pasted_image016.png)
  
 In reality: scala translates for expr to map/flatMap/filter. 
 
@@ -284,7 +284,7 @@ which is the initial implementation...
 
 ### other base Generators
 
-![](_images/progfun2_lec1_forexpr/pasted_image017.png)
+![](images/progfun2_lec1_forexpr/pasted_image017.png)
 
 (The ``T*`` syntax is variable parameter)
 
@@ -422,11 +422,11 @@ we can write ``Try(expr)`` to give a computation a try, by implementing the ``ap
 
 if Try is a Monad ⇒ can be written in for expr: 
 
-![](_images/progfun2_lec1_forexpr/pasted_image018.png)
+![](images/progfun2_lec1_forexpr/pasted_image018.png)
 
 ⇒ define map and flatMap on ``Try`` type. 
 
-![](_images/progfun2_lec1_forexpr/pasted_image019.png)
+![](images/progfun2_lec1_forexpr/pasted_image019.png)
 
 question: is Try a monad with ``unit(x)=Try(x)``?
 ⇒ no, left-unit fails: ``Try(expr) flatMap f != f(expr)``

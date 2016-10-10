@@ -15,25 +15,25 @@ imperative programming:
   
 ~~~> Von Neumann computer:  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image.png)   
+![](images/progfun1_lec1_fun_and_eval/pasted_image.png)   
   
 *conceptualize data structures word-by-word. ⇒ need higher level abstractions (theories).*  
   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image001.png)   
+![](images/progfun1_lec1_fun_and_eval/pasted_image001.png)   
   
 **theory doesn't describe mutations!**  
 ex. theories of polynomials  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image002.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image002.png)  
   
 To implement high-level concepts following their math theories, **there's no place for mutation**.  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image003.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image003.png)  
   
 **Functional programming**  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image004.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image004.png)  
 functions in FP language are 1st-class citizens.  
   
 1.2 - Elements of Programming  
@@ -47,7 +47,7 @@ in a language:
   
 primitive types in scala are written capatilized:   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image005.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image005.png)  
   
 ### REPL  
 interactive shell: write expressions and respond its value  
@@ -72,9 +72,9 @@ ex. variable/return types are *after* their names, seperated by a ``:``
   
 **evaluate a parameterized function:**  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image006.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image006.png)  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image007.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image007.png)  
   
 This scheme is called "**substition model**" — formalized in the lambda calculus. This can be applied as long as there is no *side effects*(ex. modify variable ``c++``)*.*   
   
@@ -86,7 +86,7 @@ NO, ex.
 **change evaluation strategy**  
 do *not* reduce argument values before rewrite function application.  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image008.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image008.png)  
   
 call-by-name and call-by-value  
 ------------------------------  
@@ -103,15 +103,15 @@ of the function body.
   
 ex.  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image009.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image009.png)  
   
 1.3 - Evaluation Strategies and Termination  
 -------------------------------------------  
 CBV and CBN:  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image010.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image010.png)  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image011.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image011.png)  
   
 ex.   
   
@@ -170,7 +170,7 @@ exercice: implement ``and(x,y)``
 1.5 - Example: square roots with Newton's method  
 ------------------------------------------------  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image012.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image012.png)  
   
 ``def sqrt(x: Double): Double = ...``  
   
@@ -221,7 +221,7 @@ The last element of a block is an expression that defines its value.
 Blocks are themselves expressions; *a block may appear everywhere an expression can*.  
   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image013.png)   
+![](images/progfun1_lec1_fun_and_eval/pasted_image013.png)   
   
 ex.  
   
@@ -251,22 +251,22 @@ ex. eliminate the parameter ``x`` of helper functions inside the ``sqrt`` functi
   
 about multiline expressions: put the operator in the first line to avoid ambguity.   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image014.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image014.png)  
   
 1.7 - Tail Recursion  
 --------------------  
 review: evaluation of function application.   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image015.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image015.png)  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image016.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image016.png)  
   
 ex1. gcd  
   
 	def gcd(a:Int, b:Int): Int=  
 	  if(b==0) a else gcd(b, a%b)  
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image017.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image017.png)  
   
 ex2. factorial  
   
@@ -275,7 +275,7 @@ ex2. factorial
   
   
     
-![](_images/progfun1_lec1_fun_and_eval/pasted_image018.png)  
+![](images/progfun1_lec1_fun_and_eval/pasted_image018.png)  
   
 difference from the ``gcd`` case:   
   

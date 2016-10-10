@@ -7,7 +7,7 @@ Created samedi 31 mai 2014UML就是可以把程序的结构用图的形式表达
 
 废话不多说, 看看我最后生成的UML图:
 
-![](_images/./eclipse的UML插件/pasted_image.png)
+![](images/./eclipse的UML插件/pasted_image.png)
 
 这张图表示一个抽象类``Operration``有三个子类, 然后他们之间的关系... 如果用文字的话要解释半天吧...
 
@@ -18,12 +18,12 @@ Created samedi 31 mai 2014UML就是可以把程序的结构用图的形式表达
 * 如果老师显示pending, 可能是代理的问题(在X非常不爽的一点...哎...), 不过没事, 代理的设置在: ``window → preference → General → Network Connections``, 填上就应该好了...
 
 
-![](_images/./eclipse的UML插件/pasted_image001.png)
+![](images/./eclipse的UML插件/pasted_image001.png)
 
 
 * 用Green UML生成类图的时候, 在java文件上点击右键, 选项里有Green UML的选项:
 
-![](_images/./eclipse的UML插件/pasted_image002.png)
+![](images/./eclipse的UML插件/pasted_image002.png)
 
 
 * 然后就OK了...

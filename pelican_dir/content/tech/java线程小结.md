@@ -73,7 +73,7 @@ android上需要注意的一点
 "Android modifies the user interface and handles input events from **one single** user interface thread. This thread is also called **the main thread**."
 
 Android collects all events in a queue and processed an instance of the Looper class.
-![](_images/./java线程小结/pasted_image.png)
+![](images/./java线程小结/pasted_image.png)
 
 *所以注意要修改用户交互的组件(View, Toast, ect.)的时候, 需要在main Thread里面操作, 否则运行时会出错!!* 
 

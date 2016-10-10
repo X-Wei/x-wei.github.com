@@ -23,33 +23,33 @@ This week: string sort.
 operations: lengthe, ith char, substring, concatenate  
   
 implementation: using a ``char[]``, maintain a ``length`` and an ``offset.`` ⇒ substring methode is O(1) time.  
-![](_images/algoII_week3_2/pasted_image.png)  
-![](_images/algoII_week3_2/pasted_image001.png)  
+![](images/algoII_week3_2/pasted_image.png)  
+![](images/algoII_week3_2/pasted_image001.png)  
   
 ### StringBuilder data type  
 ``StringBuilder``: *mutable* data type.  
 implementation: using a resizing ``char[]`` array (ArrayList).   
 ⇒ contat in (amortized) constant time, *substring in linear time*!  
-![](_images/algoII_week3_2/pasted_image002.png)  
+![](images/algoII_week3_2/pasted_image002.png)  
   
 ex.   
   
 * reverse a string: linear using StringBuilder, quad using String.   
 * form an array of suffixes: quad (time&space) using StringBuilder, linear (time&space) using String.   
   
-![](_images/algoII_week3_2/pasted_image003.png)  
+![](images/algoII_week3_2/pasted_image003.png)  
 **Longest Common Prefix:**  
 runs in linear/subinear time ⇒ ``compareTo()`` for strings takes (sub)linear time!  
   
 ### Alphabet  
 alphabet different for different type of string (ex. binary numbers, DNA, ...)  
-![](_images/algoII_week3_2/pasted_image004.png)  
+![](images/algoII_week3_2/pasted_image004.png)  
 def. **Radix** ``R`` is number of digits  in alphabet.   
   
 2. Key-Indexed Counting  
 =======================  
 review of *compare-based* sorting algorithms:  
-![](_images/algoII_week3_2/pasted_image005.png)  
+![](images/algoII_week3_2/pasted_image005.png)  
 lower-bound for compare-based algorithms: ~*NlgN* (=Lg(N!))  
 ⇒ goal: do better by avoiding using compares.   
   
@@ -68,7 +68,7 @@ index range of key-i in sorted array is ``[cumsum[i], cumsum[i+1]]``
 * then get the sorted array by going through the array and using cumsum[] array  
   
   
-![](_images/algoII_week3_2/pasted_image007.png)⇒ ![](_images/algoII_week3_2/pasted_image006.png)  
+![](images/algoII_week3_2/pasted_image007.png)⇒ ![](images/algoII_week3_2/pasted_image006.png)  
   
 	public void keyIndexCounting(int[] a, int R){// entries in a[] are in range [0,R-1]  
 		int N = a.length;  
@@ -102,7 +102,7 @@ idea:
 * sort using dth character as key (using key-indexed counting)  
   
 important: the key-indexed counting should be stable.  
-![](_images/algoII_week3_2/pasted_image008.png)  
+![](images/algoII_week3_2/pasted_image008.png)  
   
 ### analysis  
 time: W * N (W=length of string)  
@@ -150,7 +150,7 @@ Idea.
   
   
 variable length: end-of-string are treated as before any char  
-![](_images/algoII_week3_2/pasted_image010.png)  
+![](images/algoII_week3_2/pasted_image010.png)  
   
 ### implementation  
 	private static void sort(String[] a, String[] aux, int lo, int hi, int d){  
@@ -178,7 +178,7 @@ improvement ⇒ cutoff to insertion sort...
 characteristics of MSD sort:   
 examines **just enough chars** to sort.   
 → can be sublinear in N.   
-![](_images/algoII_week3_2/pasted_image011.png)  
+![](images/algoII_week3_2/pasted_image011.png)  
   
 ### MSD vs. quicksort  
 disadvantages for MSD:  
@@ -198,15 +198,15 @@ disadvantages for qsort:
 5. 3-way Radix Quicksort  
 ========================  
 *⇒ combine benefits of qsort and MSD.*   
-![](_images/algoII_week3_2/pasted_image015.png)  
+![](images/algoII_week3_2/pasted_image015.png)  
 idea: do **3-way partition by the dth character**.   
-![](_images/algoII_week3_2/pasted_image013.png)  
+![](images/algoII_week3_2/pasted_image013.png)  
   
 * less overhead than *R-way* partitioning for MSD  
 * do not re-examine chars equal to the partitioning char  
   
   
-![](_images/algoII_week3_2/pasted_image014.png)  
+![](images/algoII_week3_2/pasted_image014.png)  
   
 ### Implementation  
 modification of the 3-way qsort.   
@@ -241,7 +241,7 @@ modification of the 3-way qsort.
 * in-place  
   
   
-![](_images/algoII_week3_2/pasted_image016.png)  
+![](images/algoII_week3_2/pasted_image016.png)  
   
 6. Suffix Arrays  
 ================  
@@ -254,7 +254,7 @@ given N chars (N huge), *preprocess* it to enable fast substring search.
 * generate suffix array (linear time & space )  
 * sort on the suffix ⇒ brings repeated suffixes together  
   
-![](_images/algoII_week3_2/pasted_image017.png)  
+![](images/algoII_week3_2/pasted_image017.png)  
   
 ### longest repeated substring  
   
@@ -285,7 +285,7 @@ java code:
   
 **lrs worst-case input**: *lrs very long* (say N/2).   
 ⇒ *quadratic* for lrs and for sorting.   
-![](_images/algoII_week3_2/pasted_image018.png)  
+![](images/algoII_week3_2/pasted_image018.png)  
   
 → *improvement of lrs for worst-case performance:*  
 **Manber-Myers algo**  

@@ -9,7 +9,7 @@ S01E02: 开发环境搭建
 * 直接去 developer.android.com/sdk/ 下载bundle解压即可, 里面包含eclipse
 * 新建一个模拟器: 内部存储一般64MB足矣:
 
-![](_images/./android开发教程第一季笔记/pasted_image002.png)
+![](images/./android开发教程第一季笔记/pasted_image002.png)
 
 
 
@@ -20,7 +20,7 @@ S01E03: android项目目录结构
 new-->android application
 
 #### 目录结构
-![](_images/./android开发教程第一季笔记/pasted_image003.png)
+![](images/./android开发教程第一季笔记/pasted_image003.png)
 
 * com.example.helloworld这个包名一般为网址倒着写, android是按照包名来区分不同APP的
 * src/目录下存放java程序
@@ -35,7 +35,7 @@ S01E04: 技术结构
 
 #### 四层结构图
 开发位于最上层application
-![](_images/./android开发教程第一季笔记/pasted_image004.png)
+![](images/./android开发教程第一季笔记/pasted_image004.png)
 
 #### 基于组件的应用程序开发
 搭积木
@@ -55,7 +55,7 @@ S01E05: activity初步
 
 #### Activity启动基本流程
 
-![](_images/./android开发教程第一季笔记/pasted_image006.png)
+![](images/./android开发教程第一季笔记/pasted_image006.png)
 
 * AndroidManifest.xml里面指定, 程序运行后执行MainActivity.java
 * MainActivity.java的onCreate()函数里setContentView(R.layout.activity_main); 读取activity_main.xml文件并显示
@@ -64,7 +64,7 @@ S01E05: activity初步
 #### Activity与布局文件
 一一对应 (eclipse编辑器里有图形化预览界面)
 
-![](_images/./android开发教程第一季笔记/pasted_image007.png)
+![](images/./android开发教程第一季笔记/pasted_image007.png)
 
 #### 在Activity当中获取代表控件对象
 
@@ -98,7 +98,7 @@ S01E06: View
 #### View的基本概念
 View是一个控件?...
 
-![](_images/./android开发教程第一季笔记/pasted_image008.png)
+![](images/./android开发教程第一季笔记/pasted_image008.png)
 
 #### 为一个View绑定监听器
 (我就认为View是一个控件了)
@@ -161,7 +161,7 @@ S01E08: 距离单位; 边距
 
 * dpi计算公式:
 
-![](_images/./android开发教程第一季笔记/pasted_image009.png)
+![](images/./android开发教程第一季笔记/pasted_image009.png)
 
 * **dp**=dip(Device Independent pixels) 是设备无关的像素单位
 
@@ -182,7 +182,7 @@ S01E08: 距离单位; 边距
 * margin: 控件离其他控件的距离
 * padding: 控件内容离控件边框的距离
 
-![](_images/./android开发教程第一季笔记/pasted_image010.png)
+![](images/./android开发教程第一季笔记/pasted_image010.png)
 
 * 设置内边距与外边距:
 
@@ -194,7 +194,7 @@ S01E09: CheckBox多选框
 -------------------
 
 效果: 
-![](_images/./android开发教程第一季笔记/pasted_image011.png)
+![](images/./android开发教程第一季笔记/pasted_image011.png)
 
 * 布局文件里使用<CheckBox/>标签
 * OnClickListener与OnCheckedChangeListener监听器
@@ -214,7 +214,7 @@ S01E10: 单选框RadioButton
 
 效果: 
 
-![](_images/./android开发教程第一季笔记/pasted_image013.png)
+![](images/./android开发教程第一季笔记/pasted_image013.png)
 
 #### RadioGroup
 单选按钮RadioButton需要放在一个RadioGroup中
@@ -358,7 +358,7 @@ S01E14: 相对布局II
 
 * 基准线:为了保证印刷字母的整齐而划定的线 
 
-![](_images/./android开发教程第一季笔记/pasted_image.png)
+![](images/./android开发教程第一季笔记/pasted_image.png)
 
 第三条线就是所谓的基准线(baseline)
 
@@ -367,7 +367,7 @@ S01E14: 相对布局II
 
 看图:
 
-![](_images/./android开发教程第一季笔记/pasted_image001.png)
+![](images/./android开发教程第一季笔记/pasted_image001.png)
 
 #### 和父控件对齐
 
@@ -387,7 +387,7 @@ S01E15: 相对布局III
 
 
 #### 相对布局小练习
-![](_images/./android开发教程第一季笔记/pasted_image014.png)
+![](images/./android开发教程第一季笔记/pasted_image014.png)
 
 **代码片段:** 
 
@@ -464,9 +464,9 @@ S01E17: 进度条ProgressBar
 
 #### 各种进度条
 
-![](_images/./android开发教程第一季笔记/pasted_image015.png)
+![](images/./android开发教程第一季笔记/pasted_image015.png)
 
-![](_images/./android开发教程第一季笔记/pasted_image016.png)
+![](images/./android开发教程第一季笔记/pasted_image016.png)
 
 
 #### 进度条的属性
@@ -484,7 +484,7 @@ S01E18: SeekBar和RatingBar
 
 #### SeekBar
 
-![](_images/./android开发教程第一季笔记/pasted_image017.png)
+![](images/./android开发教程第一季笔记/pasted_image017.png)
 
 * 属性: max/progress/
 * 监听器接口OnSeekBarChangeListener有三个函数要重写: 
@@ -518,7 +518,7 @@ S01E18: SeekBar和RatingBar
 
 #### RatingBar
 
-![](_images/./android开发教程第一季笔记/pasted_image018.png)
+![](images/./android开发教程第一季笔记/pasted_image018.png)
 
 * 属性: numStars(星星个数), progress, stepSize(步进)
 * 监听器代码:

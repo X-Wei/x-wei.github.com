@@ -77,7 +77,7 @@ ex. 多个条件, 比如dep是'PAR', dst是'BHM':
 
 文档里的一个表格:
 
-![](_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image001.png)
+![](images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image001.png)
 
 **设置小数精度**
 <http://pandas.pydata.org/pandas-docs/stable/options.html?highlight=precision>
@@ -216,14 +216,14 @@ ex.
 
 比如, 原来的dataframe是三层index的, column只有一列(名字叫做'0'):
 
-![](_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image002.png)
+![](images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image002.png)
 
 ``df.reset_index(level=2,inplace=True)``
 这样就可以把第三层的内容作为使用, 而不是作为index, 现在column有两列了, 再给两列命名一下:
 ``hist_hub.columns = ['hub','occurrence']``
 就得到了:
 
-![](_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image003.png)
+![](images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image003.png)
 
 关于level这个参数:
 level : int, str, tuple, or list, default None
@@ -240,7 +240,7 @@ Plotting
 	dd=g['dst'].count()
 	dd.plot(kind='bar')
 
-![](_images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image.png)
+![](images/./pandas%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/pasted_image.png)
 或者用pandas提供的:
 <http://pandas.pydata.org/pandas-docs/stable/basics.html#value-counts-histogramming-mode>
 nb=hk['#vol_hacker']

@@ -7,7 +7,7 @@ Tags: algorithm
 1. 1d Range Search   
 ==================   
 Goal: *intersections* of geometric objects.    
-![](_images/algoI_week5_2/pasted_image.png)   
+![](images/algoI_week5_2/pasted_image.png)   
 Solution: **BST**   
    
 1d range search   
@@ -21,13 +21,13 @@ operations required:
 * *range count*: how many keys are between k1 and k2   
    
 → find points on an interval    
-![](_images/algoI_week5_2/pasted_image001.png)   
+![](images/algoI_week5_2/pasted_image001.png)   
    
 implementation by BST   
 ---------------------   
 **range count**   
 using the ``rank()`` function for the BST (or use the size of a tree)   
-![](_images/algoI_week5_2/pasted_image002.png)   
+![](images/algoI_week5_2/pasted_image002.png)   
 注意什么时候要加1...   
    
 	public int size(Key hi, Key lo){   
@@ -43,14 +43,14 @@ using the ``rank()`` function for the BST (or use the size of a tree)
 * check current node   
 * find in right subtree   
    
-![](_images/algoI_week5_2/pasted_image003.png)   
+![](images/algoI_week5_2/pasted_image003.png)   
 running time: R+lgN (R=nb of nodes in range)   
    
 2. Line Segment Intersection   
 ============================   
 >*Orthognal line segment intersection search*:    
 find all intersections given N horizontal/vertical lines   
-![](_images/algoI_week5_2/pasted_image005.png)   
+![](images/algoI_week5_2/pasted_image005.png)   
    
 Non-degeneracy assumption: all x-coord and y-coord are distinct.    
    
@@ -58,8 +58,8 @@ naive algo: check all pairs...
    
 Sweep-line algorithm   
 --------------------   
-![](_images/algoI_week5_2/pasted_image006.png)   
-![](_images/algoI_week5_2/pasted_image007.png)   
+![](images/algoI_week5_2/pasted_image006.png)   
+![](images/algoI_week5_2/pasted_image007.png)   
    
    
 * sweep a vertical line from left to right.    
@@ -97,20 +97,20 @@ space: N + M^2
 time: 1 + N/M^2    
 → choose square to balance space and time.    
 problem: points are not uniformly distributed.    
-![](_images/algoI_week5_2/pasted_image008.png)   
+![](images/algoI_week5_2/pasted_image008.png)   
    
 2d tree   
 -------   
 Use a tree to represent the subdivision of the space.    
    
 **2d tree**: recursively divide the space into 2 halfplanes   
-![](_images/algoI_week5_2/pasted_image009.png)   
+![](images/algoI_week5_2/pasted_image009.png)   
    
 construct the 2d tree by adding points: *alternating between horizontal and vertical partitioning for each level of tree*.    
-![](_images/algoI_week5_2/pasted_image010.png)   
+![](images/algoI_week5_2/pasted_image010.png)   
    
 Data structure: BST alternating x and y-coords as key.    
-![](_images/algoI_week5_2/pasted_image011.png)   
+![](images/algoI_week5_2/pasted_image011.png)   
    
    
 Range search for 2d tree   
@@ -122,7 +122,7 @@ find all points lying in a rectangle.
 * find in left subtree (if could be in range — the rectangle *intersects* the splitting line)   
 * find in right subtree   
    
-![](_images/algoI_week5_2/pasted_image012.png)   
+![](images/algoI_week5_2/pasted_image012.png)   
    
 **analysis**   
 Typical case: R + lgN   
@@ -144,13 +144,13 @@ worst case: N
    
 **Flocking boids**   
 3 simple rules to get a simulation of flocking.    
-![](_images/algoI_week5_2/pasted_image013.png)   
+![](images/algoI_week5_2/pasted_image013.png)   
    
 Kd tree   
 -------   
 partition the k-dim space into 2 halfspaces.    
 cycle through k dimensions.   
-![](_images/algoI_week5_2/pasted_image014.png)   
+![](images/algoI_week5_2/pasted_image014.png)   
 (居然时一个本科生发现的!)   
    
 Nbody simulation:   
@@ -165,7 +165,7 @@ treat clusters as an aggregated node
 * delete interval   
 * intersection query: find all intervals that intersects (lo,hi)   
    
-![](_images/algoI_week5_2/pasted_image015.png)   
+![](images/algoI_week5_2/pasted_image015.png)   
 Nondegeneracy assumption: all left endpoint of intervals are distinct.    
    
 API:   
@@ -182,7 +182,7 @@ Interval search tree:
 * BST using left endpoint as key   
 * in each node: store the *max right endpoint of the subtree*   
    
-![](_images/algoI_week5_2/pasted_image016.png)   
+![](images/algoI_week5_2/pasted_image016.png)   
    
 **insert**   
 类似BST, 加上维护一下maxendpoint即可.   
@@ -196,7 +196,7 @@ search *any one* interval that intersects (lo,hi)
    
 *proof. *   
 主要证明一点: if no intersection to left ⇒ then no intersection to the right   
-![](_images/algoI_week5_2/pasted_image018.png)   
+![](images/algoI_week5_2/pasted_image018.png)   
    
 5. Rectangle intersection   
 =========================   
@@ -219,4 +219,4 @@ complexity:
 NlgN+RlgN   
    
 summery:    
-![](_images/algoI_week5_2/pasted_image019.png)   
+![](images/algoI_week5_2/pasted_image019.png)   

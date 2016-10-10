@@ -19,7 +19,7 @@ relationl database: a set of relations.
 
 * schema: name of relation, name and type of columns
 
-![](_images/sparkmooc_note_lec6//pasted_image.png)
+![](images/sparkmooc_note_lec6//pasted_image.png)
 
 * instance: 
 
@@ -32,7 +32,7 @@ LARGE DATABASES
 
 RELATIONAL DATABASE EXAMPLE AND DISCUSSION
 ------------------------------------------
-![](_images/sparkmooc_note_lec6//pasted_image001.png)   
+![](images/sparkmooc_note_lec6//pasted_image001.png)   
 cardinality=3
 degree=5
 
@@ -54,17 +54,17 @@ disadvantages:
 STRUCTURED QUERY LANGUAGE (SQL)
 -------------------------------
 supported by **DataFrame** of pyspark   
-![](_images/sparkmooc_note_lec6//pasted_image002.png)
+![](images/sparkmooc_note_lec6//pasted_image002.png)
 
 
 JOINS IN SQL
 ------------
-![](_images/sparkmooc_note_lec6//pasted_image003.png)
+![](images/sparkmooc_note_lec6//pasted_image003.png)
 cross join: carteian product
 
 EXPLICIT SQL JOINS
 ------------------
-![](_images/sparkmooc_note_lec6//pasted_image004.png)
+![](images/sparkmooc_note_lec6//pasted_image004.png)
 explicit version is preferred
 
 TYPES OF SQL JOINS
@@ -81,15 +81,15 @@ JOINS IN SPARK
 * for *pair RDDs*: support inner join(), leftOuterJoin(), fullOuterJoin()
 
 join ex:
-![](_images/sparkmooc_note_lec6//pasted_image005.png)
+![](images/sparkmooc_note_lec6//pasted_image005.png)
 	
-![](_images/sparkmooc_note_lec6//pasted_image006.png)
+![](images/sparkmooc_note_lec6//pasted_image006.png)
 	
 outerjoin ex:
-![](_images/sparkmooc_note_lec6//pasted_image007.png)
+![](images/sparkmooc_note_lec6//pasted_image007.png)
 	
 fullouterjoin ex:
-![](_images/sparkmooc_note_lec6//pasted_image008.png)
+![](images/sparkmooc_note_lec6//pasted_image008.png)
 	
 
 

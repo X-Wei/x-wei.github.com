@@ -21,13 +21,13 @@ Tags: tex, 中文乱码
 
 当然我最终发现了要用xelatex, 那么老是用命令行也不大方便... gummi里面找到了设置:
 
-![](_images/./xelatex_zh/pasted_image.png)
+![](images/./xelatex_zh/pasted_image.png)
 
 这样就好了...
 
 但是我现在已经非常喜欢geany了, 不想因为tex再单独用一个编辑环境... 还好找到了geany里面的设置: 生成-->设置生成命令, 在里面添加一个xelatex就行啦!~ 嗯 还是geany亲切~!
 
-![](_images/./xelatex_zh/pasted_image001.png)
+![](images/./xelatex_zh/pasted_image001.png)
 
 最后把源文件生成好的pdf也放进来吧...
 [./xelatex_test.tex](./xelatex_zh/xelatex_test.tex)

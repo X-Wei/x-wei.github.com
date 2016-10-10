@@ -123,11 +123,11 @@ written as ``(x, y)`` in scala. pair can be used as patterns :  similar for tupl
 	val pair = ("a", 2)
 	val (label, value) = pair
 
-![](_images/progfun1_lec5_lists/pasted_image.png)
+![](images/progfun1_lec5_lists/pasted_image.png)
 
 tuple implementation: 
 
-![](_images/progfun1_lec5_lists/pasted_image001.png)
+![](images/progfun1_lec5_lists/pasted_image001.png)
 
 ⇒ can use ``_1`` ``_2`` to access elements
 
@@ -168,7 +168,7 @@ pb: pass each time the function parameter is cumbersome... ⇒ use **implicite**
 
 ⇒ the function calls can ignore the implicite parameter, the compiler will figure it out. 
 
-![](_images/progfun1_lec5_lists/pasted_image002.png)
+![](images/progfun1_lec5_lists/pasted_image002.png)
 
 5.4 - Higher-Order List Functions
 =================================
@@ -200,11 +200,11 @@ apply an operation to every elements.
 
 other methods that extracts sublist: 
 
-![](_images/progfun1_lec5_lists/pasted_image003.png)
+![](images/progfun1_lec5_lists/pasted_image003.png)
 
 exercice: implement a function ``pack``: 
 
-![](_images/progfun1_lec5_lists/pasted_image004.png)
+![](images/progfun1_lec5_lists/pasted_image004.png)
 
 	def pack[T](xs: List[T]): List[List[T]] = xs match {
 		case Nil => Nil
@@ -216,7 +216,7 @@ exercice: implement a function ``pack``:
 
 exercice2: implement  a function ``encode``:
 
-![](_images/progfun1_lec5_lists/pasted_image005.png)
+![](images/progfun1_lec5_lists/pasted_image005.png)
 
 	def encode[T](xs: List[T]): List[(T, Int)] = xs match {
 		case Nil => Nil
@@ -241,7 +241,7 @@ fold/reduce: combine elements using an operator.
 (can apply only to non-empty lists) 
 inserts a binary operator between adj elements: 
 
-![](_images/progfun1_lec5_lists/pasted_image006.png)
+![](images/progfun1_lec5_lists/pasted_image006.png)
 
 ex. 
 
@@ -258,26 +258,26 @@ write shorter function values using underscore ``_``:  every ``_`` represents a 
 ### foldLeft
 foldLeft is like reduceLeft, but can apply on Nil, and takes an **accumulator** ``z`` => returns z when calling on Nil. 
 
-![](_images/progfun1_lec5_lists/pasted_image007.png)
+![](images/progfun1_lec5_lists/pasted_image007.png)
 
 	def sum(xs: List[Int]) = (xs foldleft 0) ( _+_ )
 	def prod(xs: List[Int]) = (xs foldleft 1) ( _*_ )
 
-![](_images/progfun1_lec5_lists/pasted_image008.png)
+![](images/progfun1_lec5_lists/pasted_image008.png)
 
 ### foldRight/reduceRight
 
 dual functions to ``foldLeft`` and ``reduceLeft``, but produce a tree leaned to right
 
-![](_images/progfun1_lec5_lists/pasted_image010.png)
+![](images/progfun1_lec5_lists/pasted_image010.png)
 
-![](_images/progfun1_lec5_lists/pasted_image011.png)
+![](images/progfun1_lec5_lists/pasted_image011.png)
 
 if the operation is associative and communitive, foldLeft and foldRight should give same results. Other times need to think. 
 
 ex. concat
 
-![](_images/progfun1_lec5_lists/pasted_image012.png)
+![](images/progfun1_lec5_lists/pasted_image012.png)
 if apply foldLeft ⇒ type error, because the ``::`` operator will be applied to 2 elements of type T.
 
 5.6 - Reasoning About Concat
@@ -288,11 +288,11 @@ proof of programs
 ### structural induction
 pb: prove some properties of concat:
 
-![](_images/progfun1_lec5_lists/pasted_image015.png)
+![](images/progfun1_lec5_lists/pasted_image015.png)
 
 类似数学归纳法: 
 
-![](_images/progfun1_lec5_lists/pasted_image016.png)
+![](images/progfun1_lec5_lists/pasted_image016.png)
 
 ex. prove ``(xs ++ ys) ++ zs = xs ++ (ys ++ zs)``: induction on ``xs``
 
@@ -308,7 +308,7 @@ ex. prove ``(xs ++ ys) ++ zs = xs ++ (ys ++ zs)``: induction on ``xs``
 
 * induction step: ``x::xs``
 
-![](_images/progfun1_lec5_lists/pasted_image017.png)
+![](images/progfun1_lec5_lists/pasted_image017.png)
 
 5.7 - A Larger Equational Proof on Lists
 ----------------------------------------
@@ -322,7 +322,7 @@ pb: want to prove that ``xs.reverse.revese == xs``
 pb: cannot advance 
 ⇒ generalize the argument. 
 
-![](_images/progfun1_lec5_lists/pasted_image018.png)
+![](images/progfun1_lec5_lists/pasted_image018.png)
 
 
 

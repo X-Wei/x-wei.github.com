@@ -59,7 +59,7 @@ high level命令: plot
         main="sample plot", 
         xlim=c(-1, 101), ylim=extendrange(y)　)
 
-![](_images/Rnotes-3-plot/pasted_image001.png)
+![](images/Rnotes-3-plot/pasted_image001.png)
 
 low level命令
 ===========
@@ -117,4 +117,4 @@ abline有多种用法:
 	                  lty=c(2, 1, 3, 4), col=c(rep("black",3), "blue"))
 
 
-![](_images/Rnotes-3-plot/pasted_image002.png)
+![](images/Rnotes-3-plot/pasted_image002.png)

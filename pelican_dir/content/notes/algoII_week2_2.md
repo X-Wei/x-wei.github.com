@@ -62,13 +62,13 @@ for single source shortest-path:
 goal: single-source shortest path   
 **prop**. a **shortest-path-tree** (SPT) exists.    
 这个结论以前没见过... 不太evident吧... 没有太想明白   
-![](_images/algoII_week2_2/pasted_image.png)   
+![](images/algoII_week2_2/pasted_image.png)   
 ⇒ consequence: can represent this SPT by 2 vertex-indexted arrays:   
    
 * ``double distTo[v]`` = shortest path length s → v   
 * ``DirectedEdge edgeTo[v]`` = last edge to v in shortest path, ``edgeTo[s] = null``   
 
-![](_images/algoII_week2_2/pasted_image001.png)   
+![](images/algoII_week2_2/pasted_image001.png)   
 
 	private int distTo[] = new int[V];   
 	private DirectedEdge edgeTo[] = new DirectedEdge[V];   
@@ -93,7 +93,7 @@ dynamic prog:
    
 (consider edges one by one)   
 **def**. edge e = v-->w **relaxes** if e.weight+distTo[v] < distTo[w]. → update distTo[w] and edgeTo[w].   
-![](_images/algoII_week2_2/pasted_image003.png)   
+![](images/algoII_week2_2/pasted_image003.png)   
 
 	private void relax(DirectedEdge e){   
 		int v = e.from(), w = e.to();   
@@ -114,7 +114,7 @@ distTo[] is the solution *iff*:
    
 ### Generic algo   
 just relax all edges...   
-![](_images/algoII_week2_2/pasted_image004.png)   
+![](images/algoII_week2_2/pasted_image004.png)   
 **prop**. the above generic algo gives the SPT from s.    
    
 implementations of the algo:    
@@ -178,7 +178,7 @@ Use an ``IndexMinPQ`` to store vertices.
 * in Prim: each time takes the vertex *closest to the tree *(and is for undirected graph).   
 * in Dijkstra: each time takes the vertex *closest to source s *(and is for directed graph).   
    
-![](_images/algoII_week2_2/pasted_image005.png)   
+![](images/algoII_week2_2/pasted_image005.png)   
 DFS BFS are also computing spanning tree!    
 ...NB!!   
    
@@ -190,7 +190,7 @@ DFS BFS are also computing spanning tree!
    
 → depends on the PQ implementation.    
 in our implementation, **O(ElogV)**   
-![](_images/algoII_week2_2/pasted_image006.png)   
+![](images/algoII_week2_2/pasted_image006.png)   
    
 4. Edge-Weighted DAGs   
 =====================   
@@ -230,35 +230,35 @@ simple algo:
 * *seam-carving*   
    
 Resizing images *non-uniformly* without distortion.    
-![](_images/algoII_week2_2/pasted_image008.png)   
+![](images/algoII_week2_2/pasted_image008.png)   
 好神奇!   
 Grid DAG of pixels, edges are pointed to 3 downward neighbors.   
 横向缩小: 删掉一个"seam"   
-![](_images/algoII_week2_2/pasted_image009.png)   
+![](images/algoII_week2_2/pasted_image009.png)   
    
 * longest path in DAG → *just negate all edge weights*, as this algo is OK for negative edges.    
    
 * parallel job scheduling   
-![](_images/algoII_week2_2/pasted_image010.png)   
+![](images/algoII_week2_2/pasted_image010.png)   
 感觉有点运筹的意思, 关键是建立一个DAG, 比较有技巧性:   
     * add source and sink    
     * split each job to 2 vertices (begin and end)   
    
-![](_images/algoII_week2_2/pasted_image011.png)   
+![](images/algoII_week2_2/pasted_image011.png)   
 ⇒ use longest path to schedule jobs   
    
    
 5. Negative Weights   
 ===================   
 只是给所有边增加weight并**不能**解决负权边问题.    
-![](_images/algoII_week2_2/pasted_image013.png)   
+![](images/algoII_week2_2/pasted_image013.png)   
 ⇒ need a different algo.   
    
 prop. SPT exists *iff* there is no *negative cycles.*   
    
 ### Bellman-Ford   
 一句话总结Bellman算法: 每次relax所有的边, 进行V次.   
-![](_images/algoII_week2_2/pasted_image014.png)   
+![](images/algoII_week2_2/pasted_image014.png)   
 (*因为relax k次以后, s到v的最短路径的长度小于等于k.*)   
    
 **prop**. Bellman-Ford works, complexity is **O(EV)**.    
@@ -292,7 +292,7 @@ add two method to SP:
 	Iterable<DirectedEdge> negCycle();   
    
    
-![](_images/algoII_week2_2/pasted_image016.png)   
+![](images/algoII_week2_2/pasted_image016.png)   
    
 **prop**.   
 >if a vertex u is updated in phase V, there exists a negative cycle, and can track edgeTo[u] to find the cycle.    
@@ -301,17 +301,17 @@ add two method to SP:
    
 ### negative cycle application   
 *arbitrage detection*   
-![](_images/algoII_week2_2/pasted_image018.png)   
+![](images/algoII_week2_2/pasted_image018.png)   
 建模: 
 graph of currencies, edge weight = exchange weight (complete graph).   
     ⇒ *find a cycle whose product of edge is >1.*    
         ⇒ **take logs** to make a shortest-path pb.   
             ⇒ take minus log, then try to find a negative cycle.    
-![](_images/algoII_week2_2/pasted_image020.png)   
+![](images/algoII_week2_2/pasted_image020.png)   
 NB!!   
    
    
 Summery   
 =======   
-![](_images/algoII_week2_2/pasted_image015.png)   
-![](_images/algoII_week2_2/pasted_image021.png)   
+![](images/algoII_week2_2/pasted_image015.png)   
+![](images/algoII_week2_2/pasted_image021.png)   

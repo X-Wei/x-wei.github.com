@@ -9,7 +9,7 @@ data model: collection of concepts for describing data
 schema: a description of a particular collection of data using a given data model
 
 structure spectrum:   
-![](_images/sparkmooc_note_lec5/pasted_image.png)
+![](images/sparkmooc_note_lec5/pasted_image.png)
 semi-structured data: apply schema **after** creating data. 
 
 FILES
@@ -22,22 +22,22 @@ table: a collection of rows and columns, each row has an *index*, each column ha
 cell: by a pair (row, col), values can be missing, types are *inffered* from content
 
 CSV:  
-![](_images/sparkmooc_note_lec5/pasted_image002.png)
+![](images/sparkmooc_note_lec5/pasted_image002.png)
 
 PDB:(filed name can be repeated on multuple lines)    
-![](_images/sparkmooc_note_lec5/pasted_image001.png) 
+![](images/sparkmooc_note_lec5/pasted_image001.png) 
 
 
 CHALLENGES WITH TABULAR DATA
 ----------------------------
 challenges:   
-![](_images/sparkmooc_note_lec5/pasted_image003.png)
+![](images/sparkmooc_note_lec5/pasted_image003.png)
 
 challenges for tabular data *from multiple source*:   
-![](_images/sparkmooc_note_lec5/pasted_image004.png)
+![](images/sparkmooc_note_lec5/pasted_image004.png)
 
 challenges for tabular data *from sensors*:   
-![](_images/sparkmooc_note_lec5/pasted_image005.png)
+![](images/sparkmooc_note_lec5/pasted_image005.png)
 
 
 PANDAS AND SEMI-STRUCTURED DATA IN PYSPARK
@@ -48,10 +48,10 @@ pandas ``Series``: 1D labeled array capable of holding any data type
 **spark DataFrame**: *Distributed* collection of data organized into named columns. 
 types of columns are inferred from values. 
 
-![](_images/sparkmooc_note_lec5/pasted_image006.png)
+![](images/sparkmooc_note_lec5/pasted_image006.png)
 
 Using dataframes can be 5 times faster than using RDDs:   
-![](_images/sparkmooc_note_lec5/pasted_image007.png)
+![](images/sparkmooc_note_lec5/pasted_image007.png)
 
 SEMI-STRUCTURED LOG FILES
 -------------------------
@@ -69,7 +69,7 @@ Data mining log files is a data exploration process that often involves searchin
 FILE PERFORMANCE
 ----------------
 binary/text performance benchmark:  
-![](_images/sparkmooc_note_lec5/pasted_image008.png)  
+![](images/sparkmooc_note_lec5/pasted_image008.png)  
 ⇒
 
 * read and write times are comparable 
@@ -77,7 +77,7 @@ binary/text performance benchmark:
 
 
 compression performance benchmark:  
-![](_images/sparkmooc_note_lec5/pasted_image009.png)  
+![](images/sparkmooc_note_lec5/pasted_image009.png)  
 ⇒ 
 
 * write times are much larger than read times 

@@ -9,33 +9,33 @@ Tags: deep learning
 Softmax function
 ----------------
 socres ``yi`` ⇒ probabilities ``pi``
-![](_images/dlMOOC_L1/pasted_image.png)
+![](images/dlMOOC_L1/pasted_image.png)
 
 property: **smaller scores ⇒ less certain about result**
-![](_images/dlMOOC_L1/pasted_image001.png)
+![](images/dlMOOC_L1/pasted_image001.png)
 
 Onehot encoding
 ---------------
-![](_images/dlMOOC_L1/pasted_image002.png)
+![](images/dlMOOC_L1/pasted_image002.png)
 
 Cross entropy
 -------------
 *measure how well the probability vector *``S``* corresponds to the label vector *``L``*.* 
 ⇒ cross entropy ``D(S,L) ``*( D>=0, the smaller the better)*
-![](_images/dlMOOC_L1/pasted_image003.png)
+![](images/dlMOOC_L1/pasted_image003.png)
 
 N.B. ``D(S,L)`` is not symmetric (never log 0 ) 
 
 recap ("multinominal logistic classificaton"): 
-![](_images/dlMOOC_L1/pasted_image004.png)
+![](images/dlMOOC_L1/pasted_image004.png)
 
 
 Minimizing cross entropy
 ------------------------
 take avg D as loss function: 
-![](_images/dlMOOC_L1/pasted_image008.png)
+![](images/dlMOOC_L1/pasted_image008.png)
 ⇒ optimization, for example, by grad-desc: 
-![](_images/dlMOOC_L1/pasted_image007.png)
+![](images/dlMOOC_L1/pasted_image007.png)
 
 for the moment, take the optimizer as black box. 
 
@@ -62,21 +62,21 @@ ex.
 ⇒ normalize input ! ⇒ **0 mean, 1 variance**
 
 this make optimizers easier to find optimum. 
-![](_images/dlMOOC_L1/pasted_image009.png)
+![](images/dlMOOC_L1/pasted_image009.png)
 
 normalization for images: 
-![](_images/dlMOOC_L1/pasted_image010.png)
+![](images/dlMOOC_L1/pasted_image010.png)
 
 weight initialization
 ---------------------
 draw init w/b from a ``Gaussian(0, sigma)``, sigma → magtitude of initial output. 
 small sigma means small outputs → uncertain about result. 
 ⇒ take small sigma for initialization 
-![](_images/dlMOOC_L1/pasted_image011.png)
+![](images/dlMOOC_L1/pasted_image011.png)
 
 recap: 
 
-![](_images/dlMOOC_L1/pasted_image012.png)
+![](images/dlMOOC_L1/pasted_image012.png)
 ⇒ feed this loss fcn to the optimizer 
 
 training, validation and test dataset
@@ -89,7 +89,7 @@ SGD
 ---
 rule of thumb: computing ``grad(L)`` takes 3x time than computing loss fcn ``L``. → pb for scaling.. 
 
-![](_images/dlMOOC_L1/pasted_image014.png)
+![](images/dlMOOC_L1/pasted_image014.png)
 SGD is the only fast enough model in practice. 
 
 tricks to help SGD: 
@@ -105,22 +105,22 @@ Momentum
 SGD: many small steps in random directions → general direction is more accurate. 
 ⇒ keep a running average of the gradients
 
-![](_images/dlMOOC_L1/pasted_image015.png)
+![](images/dlMOOC_L1/pasted_image015.png)
 
 Learning rate decay
 -------------------
 take smaller and smaller steps (alpha decays)
-e.g. alpha decays exponentially...![](_images/dlMOOC_L1/pasted_image016.png)
+e.g. alpha decays exponentially...![](images/dlMOOC_L1/pasted_image016.png)
 
 parameter tuning
 ----------------
 how quickly you learning != how well you train.. 
-![](_images/dlMOOC_L1/pasted_image017.png)
+![](images/dlMOOC_L1/pasted_image017.png)
 balck magics in deep learning: 
-![](_images/dlMOOC_L1/pasted_image018.png)
+![](images/dlMOOC_L1/pasted_image018.png)
 
 **Adagrad**
 variant of SGD, implicitly decays momentum and learning rate. 
 
 recap: 
-![](_images/dlMOOC_L1/pasted_image019.png)
+![](images/dlMOOC_L1/pasted_image019.png)

@@ -83,7 +83,7 @@ ex.
 
 另外, qtconsole和notebook一样, 指定了``inline``选项以后可以直接在窗口里画图:
 
-![](_images/IPython上手学习笔记/pasted_image004.png)
+![](images/IPython上手学习笔记/pasted_image004.png)
 
 后来发现inline的图片貌似不能放大看, 所以有时候还是单独一个窗口比较好, 换到非inline模式只需要再输入以下%pylab, 加上选项qt:
 ``%pylab qt``
@@ -102,11 +102,11 @@ IPython Notebook
 
 看到浏览器打开了, 很神奇: 
 
-![](_images/IPython上手学习笔记/pasted_image.png)
+![](images/IPython上手学习笔记/pasted_image.png)
 
 新建一个notebook, 用用看: 
 
-![](_images/IPython上手学习笔记/pasted_image001.png)
+![](images/IPython上手学习笔记/pasted_image001.png)
 
 
 
@@ -122,7 +122,7 @@ IPython Notebook
 
 * ...还有好多快捷键, 按Esc以后再按h就可以看到... 这个还分编辑模式和命令模式呢... 真不能小看了IPython了!
 
-![](_images/IPython上手学习笔记/pasted_image002.png)
+![](images/IPython上手学习笔记/pasted_image002.png)
 
 customizing IPython
 -------------------
@@ -247,7 +247,7 @@ Using the IPython notebook
 
 * 让plot的图片直接嵌入在notebook里面: 使用``ipython notebook --pylab inline``, 或者在notebook里面输入``%pylab inline``
 
-![](_images/IPython上手学习笔记/pasted_image003.png)
+![](images/IPython上手学习笔记/pasted_image003.png)
 
 ### notebook的一些快捷键
 

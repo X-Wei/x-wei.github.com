@@ -121,7 +121,7 @@ Python中，对匿名函数提供了有限支持。
   
 问题: 定义了函数, 想在运行时增加函数功能同时不改动函数代码.  
 ex. 希望函数调用时打印调用日志  
-![](_images/imooc_py_functional/pasted_image.png)  
+![](images/imooc_py_functional/pasted_image.png)  
 ⇒ 方法: 高阶函数: **接收要修改的函数, 进行包装后返回包装过的新函数.**    
   
 	def new_f(f):  
@@ -131,10 +131,10 @@ ex. 希望函数调用时打印调用日志
 		return fn  
   
 函数``new_fn``就是所谓装饰器函数. python的@语法可以简化装饰器调用:   
-![](_images/imooc_py_functional/pasted_image001.png)  
+![](images/imooc_py_functional/pasted_image001.png)  
 (注意: 右边代码, 原本未装饰的f1函数已经被彻底隐藏了. )  
 优点: 极大简化代码.    
-![](_images/imooc_py_functional/pasted_image002.png)  
+![](images/imooc_py_functional/pasted_image002.png)  
   
 ### 无参数decorator  
 上面例子里面的``new_fn``函数只能装饰接收一个参数x的函数, 想要处理接收任意参数的函数 ⇒ 利用Python的 ``*args`` 和 ``**kw``  

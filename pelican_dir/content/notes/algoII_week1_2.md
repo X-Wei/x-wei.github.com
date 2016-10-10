@@ -53,7 +53,7 @@ use the same DFS as for undirected graphs.
    
 * multiple source shortest path:    
    
-![](_images/algoII_week1_2/pasted_image.png)   
+![](images/algoII_week1_2/pasted_image.png)   
 ⇒ use DFS but *enque all vertices in the set*.    
 → application: web crawler(DFS not suitable for crawling)   
    
@@ -126,7 +126,7 @@ linear time DFS solution: Tarjan (1972)
 Intuition: *scc for G is the same for G.reverse().*   
    
 **Kernel DAG**: contract each scc into a single vertex.    
-![](_images/algoII_week1_2/pasted_image001.png)   
+![](images/algoII_week1_2/pasted_image001.png)   
    
 Idea:    
    
@@ -140,7 +140,7 @@ Idea:
    
 ⇒ **each time we finish a dfs from a vertex, we get a scc!**     
 太精彩了!!!   
-![](_images/algoII_week1_2/pasted_image002.png)   
+![](images/algoII_week1_2/pasted_image002.png)   
    
 proof: tricky, cf book...(貌似Werner课上讲过..)   
    

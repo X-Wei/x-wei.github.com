@@ -10,7 +10,7 @@ pb: reduce the size of a file, to save space/time for storing/transmitting.
 applications: generic file compression(gzip), multimedia (mp3), communication(skype).   
   
 From binary data ``B``, ⇒ generate a compressed representation ``C(B)``.   
-![](_images/algoII_week5_2/pasted_image.png)  
+![](images/algoII_week5_2/pasted_image.png)  
 **lossless compression**: get exactly ``B`` from ``C(B)``  
 **compression ratio**: ``|C(B)|/|B|``(||means number of *bits*)  
   
@@ -36,7 +36,7 @@ extension to stdio libraries: read/write *bits*
 	}  
   
 usage example: store a date 12/31/1999  
-![](_images/algoII_week5_2/pasted_image001.png)  
+![](images/algoII_week5_2/pasted_image001.png)  
   
 universal date compression?  
 **prop**. NO algorithm can compress every bitstring.  
@@ -46,7 +46,7 @@ pf. by contradiction: repeatedly compress the bitstring ⇒ bit length goes to 0
 ====================  
 one simple type of redundancy in bitstream: long runs of repeated bits.   
 ⇒ use *4-bit counts* to represent alternating 1s and 0s.   
-![](_images/algoII_week5_2/pasted_image002.png)  
+![](images/algoII_week5_2/pasted_image002.png)  
   
   
 * question1: how many bits to represent counts ? ⇒ pick 8 bits (just tradeoff)  
@@ -104,7 +104,7 @@ ex. Morse code, more freq chars use less chars.
 → need to use *prefix-free code*  
   
 ⇒ use a trie to represent the prefix-free code, in bitstream, use a binary trie:   
-![](_images/algoII_week5_2/pasted_image003.png)  
+![](images/algoII_week5_2/pasted_image003.png)  
   
 ### Huffman Trie Node  
 define trie nodes having frequences:   
@@ -143,7 +143,7 @@ define trie nodes having frequences:
 ie. to serialize a trie.   
 ⇒ use *preorder traversal*:   
 0 for internal nodes, and 1 for leaf (followed by the corresponding char)  
-![](_images/algoII_week5_2/pasted_image004.png)  
+![](images/algoII_week5_2/pasted_image004.png)  
 recursive method:   
   
 	private static void writeTrie(Node x){  
@@ -192,7 +192,7 @@ Shannon-Fano algo:
 * repeat until we get only 1 trie  
   
   
-![](_images/algoII_week5_2/pasted_image005.png)  
+![](images/algoII_week5_2/pasted_image005.png)  
   
 application: jpeg, pdf, mp3, ...  
   
@@ -221,7 +221,7 @@ decoder will do the same thing.
   
 build a table of not only mapping chars to codes, but also mapping >=2-char combinations to codes(of fixed width).   
 when encoding strings, look for the longest prefix that is in our table.   
-![](_images/algoII_week5_2/pasted_image006.png)  
+![](images/algoII_week5_2/pasted_image006.png)  
   
 ### LZW compression  
   
@@ -266,14 +266,14 @@ Use a trie for representing the code table → because support longest prefix ma
 to represent the table: just an array.   
   
 *note* when add new entries: add key = ``s+c``, where ``s`` is the last decoded string, ``c`` is the first char of the currently decoded string.  
-![](_images/algoII_week5_2/pasted_image008.png)  
+![](images/algoII_week5_2/pasted_image008.png)  
 example: when decoded ABR, s = BR, currently decoded string = ABR, so we add BRA.   
   
 **tricky case**: ABABABA  
 compression  
-![](_images/algoII_week5_2/pasted_image009.png)  
+![](images/algoII_week5_2/pasted_image009.png)  
 problem in expansion when reading the "83":   
-![](_images/algoII_week5_2/pasted_image011.png)  
+![](images/algoII_week5_2/pasted_image011.png)  
   
 → need to be able to update the table when encountering a code not yet defined...   
   
@@ -286,6 +286,6 @@ Summary
   
   
 theoretical limit:   
-![](_images/algoII_week5_2/pasted_image012.png)  
+![](images/algoII_week5_2/pasted_image012.png)  
   
 还剩下一周的内容, 可能要等到二月底考完以后有时间再看了, 现在先复习备考...
