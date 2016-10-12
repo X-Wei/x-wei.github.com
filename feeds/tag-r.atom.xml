@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-r.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2016-07-29T00:00:00+02:00</updated><entry><title>R语言从入门到放弃 (4). 统计回归</title><link href="http://x-wei.github.io/Rnotes-4-regression.html" rel="alternate"></link><published>2016-07-29T00:00:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2016-07-29:Rnotes-4-regression.html</id><summary type="html">&lt;p&gt;R里面的统计函数有很多, 这里只用线性模型&lt;code&gt;lm&lt;/code&gt;以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(&lt;strong&gt;NW, &lt;/strong&gt;&lt;code&gt;ksmooth&lt;/code&gt;), Local Polynomial(&lt;strong&gt;LP, &lt;/strong&gt;&lt;code&gt;loess&lt;/code&gt;), Smoothing Spline(&lt;strong&gt;SS, &lt;/strong&gt;&lt;code&gt;smooth.spline&lt;/code&gt;). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. &lt;/p&gt;
 &lt;p&gt;数据的形式是:　&lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image002.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image002.png"/&gt;&lt;/p&gt;
 &lt;p&gt;目标是估计函数m(). 例子使用R自带的&lt;code&gt;cars&lt;/code&gt;数据集, 它包含两列: 汽车速度speed和刹车距离dist. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;&amp;gt; data(cars)&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="x"&gt;&amp;gt; summary(cars)&lt;/span&gt;&lt;/span&gt;
@@ -15,25 +15,25 @@
 &lt;span class="code-line"&gt;&lt;span class="x"&gt;&amp;gt; ?cars&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="x"&gt;&amp;gt; plot(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;dist&lt;/span&gt;&lt;span class="x"&gt;)&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image003.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image003.png"/&gt;&lt;/p&gt;
 &lt;h1 id="theory"&gt;Theory&lt;/h1&gt;
 &lt;p&gt;首先简单介绍一下这4个smoother的原理: &lt;/p&gt;
 &lt;h3 id="linear-model"&gt;linear model&lt;/h3&gt;
 &lt;p&gt;认为m是线性形式(包含intercept): &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image008.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image008.png"/&gt;&lt;/p&gt;
 &lt;h3 id="nadaraya-watson-kernel-smoother"&gt;Nadaraya-Watson kernel smoother&lt;/h3&gt;
 &lt;p&gt;m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image.png"/&gt;&lt;/p&gt;
 &lt;p&gt;另外m_NW(x)还可以看做是最小化加权的square-error: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image001.png"/&gt;&lt;/p&gt;
 &lt;h3 id="local-polynomial-smoother"&gt;Local Polynomial smoother&lt;/h3&gt;
 &lt;p&gt;m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个&lt;em&gt;常数函数&lt;/em&gt;mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image004.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image004.png"/&gt;&lt;/p&gt;
 &lt;p&gt;最后m_LP在x处的取值为: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image005.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image005.png"/&gt;&lt;/p&gt;
 &lt;h3 id="smoothing-spline"&gt;Smoothing Spline&lt;/h3&gt;
 &lt;p&gt;设定m的形式为knot在xi的spline, 加上penalize项: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image006.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image006.png"/&gt;&lt;/p&gt;
 &lt;p&gt;另外SS可以看作是bandwidth随x变化的kernel smoother. &lt;/p&gt;
 &lt;h1 id="fit-model"&gt;fit model&lt;/h1&gt;
 &lt;h3 id="formula"&gt;formula&lt;/h3&gt;
@@ -79,15 +79,15 @@
 &lt;span class="code-line"&gt;lines(newspeed, pred.ss, lty=4, col=4)&lt;/span&gt;
 &lt;span class="code-line"&gt;legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image009.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image009.png"/&gt;&lt;/p&gt;
 &lt;h1 id="bandwidthdf-hat-matrix"&gt;bandwidth&amp;amp;df: Hat Matrix&lt;/h1&gt;
 &lt;p&gt;三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. &lt;/p&gt;
 &lt;p&gt;自由度df是带宽的函数, smoother的df可以用它的&lt;strong&gt;hat matrix&lt;/strong&gt; S计算出来. &lt;/p&gt;
 &lt;p&gt;一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image010.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image010.png"/&gt;&lt;/p&gt;
 &lt;p&gt;而df则是S的迹: df = tr(S). df的&lt;/p&gt;
 &lt;p&gt;根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image012.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image012.png"/&gt;&lt;/p&gt;
 &lt;p&gt;所以计算S可以用下面的代码: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;n &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kp"&gt;nrow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;cars&lt;span class="p"&gt;)&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;Snw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Slp &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Sss &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;matrix&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; nrow&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;,&lt;/span&gt; ncol&lt;span class="o"&gt;=&lt;/span&gt;n&lt;span class="p"&gt;)&lt;/span&gt;&lt;/span&gt;
@@ -125,7 +125,7 @@
 &lt;span class="code-line"&gt;chosen_span &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; uniroot&lt;span class="p"&gt;(&lt;/span&gt;dflp&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; val &lt;span class="o"&gt;=&lt;/span&gt; df.nw&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;root&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;如果不用这个循环计算的话, 可以用&lt;code&gt;sfsmisc&lt;/code&gt;包里的&lt;code&gt;hatMat&lt;/code&gt;函数: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image013.png"/&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"/&gt; &lt;/p&gt;
 &lt;p&gt;参数&lt;code&gt;trace&lt;/code&gt;取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;hatMat(cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;speed&lt;/span&gt;&lt;span class="x"&gt;, T, &lt;/span&gt;&lt;/span&gt;
@@ -167,7 +167,7 @@
 &lt;span class="code-line"&gt;loocv&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;data.frame&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;x&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;speed&lt;span class="p"&gt;,&lt;/span&gt; y&lt;span class="o"&gt;=&lt;/span&gt;cars&lt;span class="o"&gt;$&lt;/span&gt;dist&lt;span class="p"&gt;),&lt;/span&gt; regfcn.nw&lt;span class="p"&gt;)&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image014.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image014.png"/&gt;&lt;/p&gt;
 &lt;p&gt;试一下: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# compute CV using shortcut euqation&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;yhat.nw &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; Snw &lt;span class="o"&gt;%*%&lt;/span&gt; cars&lt;span class="o"&gt;$&lt;/span&gt;y &lt;span class="c1"&gt;# or use regfcn.nw(cars$speed, cars$dist, cars$speed)&lt;/span&gt;&lt;/span&gt;
@@ -175,7 +175,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;得到的结果和之前用loocv一样, 都是253.9128 !~ &lt;/p&gt;
 &lt;p&gt;或者只用df, 计算generalized CV, 公式为: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image015.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image015.png"/&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;compute&lt;/span&gt;&lt;span class="x"&gt; GCV&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="x"&gt;mean( (cars&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;dist&lt;/span&gt;&lt;span class="x"&gt;-yhat.nw)^2 ) / ( 1 - df.nw/n )^2&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -219,7 +219,7 @@
 &lt;span class="code-line"&gt;    main="sample plot", &lt;/span&gt;
 &lt;span class="code-line"&gt;    xlim=c(-1, 101), ylim=extendrange(y)　)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-3-plot/pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-3-plot/pasted_image001.png"/&gt;&lt;/p&gt;
 &lt;h1 id="low-level"&gt;low level命令&lt;/h1&gt;
 &lt;h3 id="points"&gt;points&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;points(x, y)&lt;/code&gt;&lt;/p&gt;
@@ -259,7 +259,7 @@
 &lt;span class="code-line"&gt;legend&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"topleft"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"data"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"linear fit"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"lines example"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"vertical line"&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;/span&gt;
 &lt;span class="code-line"&gt;                  lty&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="m"&gt;4&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; col&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kt"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;rep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"black"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"blue"&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-3-plot/pasted_image002.png"/&gt;&lt;/p&gt;</summary><category term="R"></category></entry><entry><title>R语言从入门到放弃 (2). 向量(列表)及函数</title><link href="http://x-wei.github.io/Rnotes-2-seq_func.html" rel="alternate"></link><published>2016-07-26T23:48:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2016-07-26:Rnotes-2-seq_func.html</id><summary type="html">&lt;p&gt;首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以&lt;code&gt;1&lt;/code&gt;等价于&lt;code&gt;c(1)&lt;/code&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-3-plot/pasted_image002.png"/&gt;&lt;/p&gt;</summary><category term="R"></category></entry><entry><title>R语言从入门到放弃 (2). 向量(列表)及函数</title><link href="http://x-wei.github.io/Rnotes-2-seq_func.html" rel="alternate"></link><published>2016-07-26T23:48:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2016-07-26:Rnotes-2-seq_func.html</id><summary type="html">&lt;p&gt;首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以&lt;code&gt;1&lt;/code&gt;等价于&lt;code&gt;c(1)&lt;/code&gt;.  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a &lt;span class="o"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; a&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;&lt;/span&gt;
@@ -474,7 +474,7 @@
 &lt;ul&gt;
 &lt;li&gt;默认有四个窗口:  编辑器, 变量, 命令行, 画图/帮助. &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-1-basics/pasted_image.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-1-basics/pasted_image.png"/&gt;&lt;/p&gt;
 &lt;h2 id="_1"&gt;快捷键&lt;/h2&gt;
 &lt;p&gt;一些常用的快捷键: &lt;/p&gt;
 &lt;ul&gt;
@@ -491,9 +491,9 @@
 &lt;span class="code-line"&gt;example("plot")&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;下面是一个R文档的例子(运行&lt;code&gt;?lm&lt;/code&gt;得到): &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-1-basics/pasted_image002.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-1-basics/pasted_image002.png"/&gt;&lt;/p&gt;
 &lt;p&gt;章节Arguments里介绍了每个参数的意义和用法, 然后往下翻还有一个Values章节: &lt;/p&gt;
-&lt;p&gt;&lt;img alt="" class="img-responsive" src="images/Rnotes-1-basics/pasted_image003.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Rnotes-1-basics/pasted_image003.png"/&gt;&lt;/p&gt;
 &lt;p&gt;Values里的每一项是这个函数的返回值(object)的内容, 比如要获得一个lm object的参数, 只需要: &lt;code&gt;lm_obj$coefficients&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id="r-101"&gt;R 101&lt;/h2&gt;
 &lt;p&gt;首先, R非常让我非常不习惯的一点是: 在R里面, dot&lt;code&gt;.&lt;/code&gt;&lt;strong&gt;只是一个普通的字符&lt;/strong&gt;, 它的用法和python里的下划线&lt;code&gt;_&lt;/code&gt;类似, 只是起到分割函数名里的单词而已... 在其他语言里, dot&lt;code&gt;.&lt;/code&gt;一般都是用来调用函数或者获取field的. 所以见到&lt;code&gt;cv.ss&lt;/code&gt;之类的名字的时候别以为是变量cv的一个field... 这个就相当于python里一个叫&lt;code&gt;cv_ss&lt;/code&gt;的变量...&lt;/p&gt;

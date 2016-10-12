@@ -5,7 +5,7 @@
 &lt;p&gt;首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    &lt;/p&gt;
 &lt;p&gt;关于swap分区应该多大, 根据&lt;a href="http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space"&gt;这个帖子&lt;/a&gt;, 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   &lt;/p&gt;
 &lt;p&gt;我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  &lt;br/&gt;
-&lt;img alt="" class="img-responsive" src="images/linux-swap/pasted_image.png"/&gt; &lt;/p&gt;
+&lt;img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"/&gt; &lt;/p&gt;
 &lt;h2 id="step2-fstab"&gt;step2. 编辑fstab&lt;/h2&gt;
 &lt;p&gt;建立好了swap分区以后, 打开终端, 输入&lt;code&gt;sudo blkid&lt;/code&gt;查看所有的磁盘分区.    &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;$ sudo blkid   &lt;/span&gt;
@@ -17,7 +17,7 @@
 &lt;p&gt;然后看到了swap分区的UUID以后, 将其复制, 然后编辑fstab文件: &lt;code&gt;sudo leafpad /etc/fstab&lt;/code&gt;:   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;UUID=put-the-uud-here       none            swap            defaults  0 0&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;然后重启, 就可以看到swap分区了!  &lt;br/&gt;
-&lt;img alt="" class="img-responsive" src="images/linux-swap/pasted_image001.png"/&gt; &lt;/p&gt;
+&lt;img alt="" class="img-responsive" src="../images/linux-swap/pasted_image001.png"/&gt; &lt;/p&gt;
 &lt;h2 id="step3-swapness"&gt;step3. 调整swapness&lt;/h2&gt;
 &lt;p&gt;&lt;a href="http://askubuntu.com/questions/103915/how-do-i-configure-swappiness"&gt;swapness&lt;/a&gt;是一个在0到100之间的数, 当系统的内存剩余不到百分之swapness的时候, 开始使用swap分区. 默认的系统swapness是60, 就是内存占用超过40%的时候就开始使用swap分区了.    &lt;/p&gt;
 &lt;p&gt;使用&lt;code&gt;cat /proc/sys/vm/swappiness&lt;/code&gt;可以查看当前的swapness.    &lt;/p&gt;

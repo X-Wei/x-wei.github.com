@@ -31,7 +31,7 @@
 
     <link href="http://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="http://x-wei.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="http://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
     <link href="http://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
     <link rel="stylesheet" href="http://x-wei.github.io/theme/css/style.css" type="text/css"/>
 
@@ -163,6 +163,164 @@ mx's blog            </a>
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="http://x-wei.github.io/Rnotes-3-plot.html" class="btn btn-primary btn-lg"><h2>R语言从入门到放弃 (3). 绘图
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-07-28T00:00:00+02:00"><i class="fa fa-calendar"></i> Thu, 28 Jul 2016</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/r.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> R</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>R关于绘图应该可以写很多, 不过这里只列举在compstat这门课里最经常用的几个函数. 关于R的绘图, 详细了解可以运行 <code>demo(graphics)</code>或者 <code>example("plot")</code>.</p>
+<p>R里面的绘图命令分为两类: 一类是"high-level"的"创建新图片"命令, 运行以后会新画一个图; 另一类则是"low-level"的命令, 不会创建新图片, 而只会在当前图片中修改添加(例如添加线条, 添加点等). 下面分别简单介绍, 最后再介绍其他一些绘图配置的命令. </p>
+<h1 id="configurationsparameters">configurations/parameters</h1>
+<p>介绍一下常用的参数意义, 以及画图的配置. 详细文档见<code>?par</code>. 这些参数可以放在绘图命令中. </p>
+<ul>
+<li><code>par(mfrow=c(1,2))</code>: 这个命令是设定画图的布局, 把放置图片的区域分为一行两列, 第一个plot的图片在左边, 第二个在右边. </li>
+<li><code>col</code>: 设定画图(线段/点)的颜色, 可以用数字(col=1, 2 ...</li></ul>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="http://x-wei.github.io/Rnotes-2-seq_func.html" class="btn btn-primary btn-lg"><h2>R语言从入门到放弃 (2). 向量(列表)及函数
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-07-26T23:48:00+02:00"><i class="fa fa-calendar"></i> Tue, 26 Jul 2016</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/r.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> R</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以<code>1</code>等价于<code>c(1)</code>.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;</span> a <span class="o">&lt;-</span> <span class="m">1</span></span>
+<span class="code-line"><span class="o">&gt;</span> a</span>
+<span class="code-line"><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span></span>
+<span class="code-line"><span class="o">&gt;</span> <span class="kp">length</span><span class="p">(</span>a<span class="p">)</span></span>
+<span class="code-line"><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span></span>
+<span class="code-line"><span class="o">&gt;</span> a<span class="p">[</span><span class="m">1</span><span class="p">]</span></span>
+<span class="code-line"><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span></span>
+<span class="code-line"><span class="o">&gt;</span> <span class="kp">typeof</span><span class="p">(</span>a<span class="p">)</span></span>
+<span class="code-line"><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s">"double"</span> <span class="c1"># means "double vector" (I think)</span></span>
+<span class="code-line"><span class="o">&gt;</span> <span class="m">1</span> <span class="o">==</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">)</span></span>
+<span class="code-line"><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="kc">TRUE</span></span>
+</pre></div>
+<h2 id="fancy-indexing">fancy indexing</h2>
+<p>R的vector/list/matrix支持类似numpy(稍有不同)的fancy indexing, 以下是例子: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;</span> v <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span></span>
+<span class="code-line"><span class="o">&gt;</span> v<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">3 ...</span></span></pre></div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="http://x-wei.github.io/Rnotes-1-basics.html" class="btn btn-primary btn-lg"><h2>R语言从入门到放弃 (1). 基础
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-07-26T00:00:00+02:00"><i class="fa fa-calendar"></i> Tue, 26 Jul 2016</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/r.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> R</a>
+</span>
+
+
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>这个"从入门到放弃"系列是为了应付eth的<a href="https://stat.ethz.ch/education/semesters/ss2016/CompStat">computational statistics</a>这门课... 对R无爱... </p>
+<h2 id="terminology">terminology</h2>
+<p>首先在stat里面有一些叫法和以前不太一样: </p>
+<ul>
+<li><code>predictor variable</code>: 就是机器学习里面说的feature (Xi)</li>
+<li><code>design points</code>: 是机器学习里的训练数据(X1...Xn)</li>
+<li><code>response variable</code>: 要预测的变量(y)</li>
+</ul>
+<h2 id="rstudio">Rstudio</h2>
+<p>这个是用R编程的标配, 确实很方便, 不用可惜. 另外R markdown也不错, 可以边写markdown边运行代码, 建议编辑器窗口里新建rmd文件. </p>
+<ul>
+<li>默认有四个窗口:  编辑器, 变量, 命令行, 画图/帮助. </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-1-basics/pasted_image.png"/></p>
+<h2 id="_1">快捷键</h2>
+<p>一些常用的快捷键: </p>
+<ul>
+<li><code>alt+-</code>: 用于输入赋值符号<code>&lt;-</code></li>
+<li>(编辑器窗口中) <code>ctrl+enter</code>: (在console里)执行光标所在的行, 等同于按钮"run"</li>
+<li>(r markdown编辑器窗口中) <code>ctrl ...</code></li></ul>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
                             <a href="http://x-wei.github.io/double-hop-ssh.html" class="btn btn-primary btn-lg"><h2>两层ssh连接(2-hop ssh connection)代理配置
                             </h2></a>
                         </div>
@@ -250,7 +408,7 @@ mx's blog            </a>
 <p>scala is <em>pure</em> OO: every value is an obj, every operation is a method of obj.  </p>
 <p><code>scala.Int</code> <code>scala.Boolean</code> maps to JVM standard primitive types.  </p>
 <p>Implement <code>Boolean</code> withous primitive type in scala:  </p>
-<p><img alt="" class="img-responsive" src="images/progfun1_lec4_pattern_matching/pasted_image.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image.png"/> </p>
 <p>Then defin <code>false</code> and <code>true</code> as objects, give implementation for <code>ifThenElse()</code> funciton:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>object ...</span></pre></div>
                     </div>
@@ -384,7 +542,7 @@ mx's blog            </a>
 <li>control structures: if-else, loops, break, continue, return, etc.  </li>
 </ul>
 <p>~~~&gt; Von Neumann computer:  </p>
-<p><img alt="" class="img-responsive" src="images/progfun1_lec1_fun_and_eval/pasted_image.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec1_fun_and_eval/pasted_image.png"/> </p>
 <p><em>conceptualize data ...</em></p>
                     </div>
                 </div>
@@ -480,159 +638,11 @@ mx's blog            </a>
 ⇒ <strong>unsupervised learning</strong> </p>
 <p>similar words appear in similar context. <br/>
 embedding: map words to small vectors<br/>
-<img alt="" class="img-responsive" src="images/dlMOOC_L4/pasted_image.png"/><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image.png"/><br/>
 measure the closeness by cosine distance: <br/>
-<img alt="" class="img-responsive" src="images/dlMOOC_L4/pasted_image003.png"/> </p>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image003.png"/> </p>
 <h2 id="word2vec">word2vec</h2>
 <p>initial: random vector ...</p>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="http://x-wei.github.io/dlMOOC_L3.html" class="btn btn-primary btn-lg"><h2>(DeepLearning MOOC) Lesson 3: Convolutional Neural Networks
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2016-06-06T00:00:00+02:00"><i class="fa fa-calendar"></i> Mon, 06 Jun 2016</time>
-    </span>
-
-
-
-
-
-<span class="btn-group">
-	<a href="http://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
-</span>
-
-
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><p>statistical invariance → <strong>weight sharing</strong><br/>
-e.g. image colors, translation invariance...   </p>
-<h2 id="convnet">convnet</h2>
-<p>is NNs that share their weights across space.   </p>
-<p>convolution: slide a small patch of NN over the image to produce a new "image"<br/>
-<img alt="" class="img-responsive" src="images/dlMOOC_L3/pasted_image.png"/> </p>
-<p>convnet forms a pyramid, each "stack of pincake" get larger depth and smaller area. <br/>
-<img alt="" class="img-responsive" src="images/dlMOOC_L3/pasted_image001.png"/> </p>
-<h2 id="convolutional-lingo">convolutional lingo ...</h2>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="http://x-wei.github.io/dlMOOC_L2.html" class="btn btn-primary btn-lg"><h2>(DeepLearning MOOC) Lesson 2: Deep Neural Networks
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2016-06-05T18:00:00+02:00"><i class="fa fa-calendar"></i> Sun, 05 Jun 2016</time>
-    </span>
-
-
-
-
-
-<span class="btn-group">
-	<a href="http://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
-</span>
-
-
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><h2 id="linear-models">Linear models</h2>
-<p>matrix multiplication: fast with GPU<br/>
-numerically stable<br/>
-cannot cocatenate linear units → equivalent to one big matrix...  </p>
-<p>⇒ add non-linear units in between   </p>
-<h2 id="rectified-linear-units-relu">rectified linear units (RELU)</h2>
-<p><img alt="" class="img-responsive" src="images/dlMOOC_L2/pasted_image.png"/> </p>
-<p><img alt="" class="img-responsive" src="images/dlMOOC_L2/pasted_image002.png"/> </p>
-<p>chain rule: efficient computationally<br/>
-<img alt="" class="img-responsive" src="images/dlMOOC_L2/pasted_image003.png"/> </p>
-<p><img alt="" class="img-responsive" src="images/dlMOOC_L2/pasted_image004.png"/> </p>
-<h2 id="back-propagation">back propagation</h2>
-<p>easy to compute the gradient as long as the function Y(X) is made of simple blocks ...</p>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="http://x-wei.github.io/dlMOOC_L1.html" class="btn btn-primary btn-lg"><h2>(DeepLearning MOOC) Lesson 1: From Machine Learning to Deep Learning
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2016-06-05T00:00:00+02:00"><i class="fa fa-calendar"></i> Sun, 05 Jun 2016</time>
-    </span>
-
-
-
-
-
-<span class="btn-group">
-	<a href="http://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
-</span>
-
-
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><p>这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... 
-<a href="https://www.udacity.com/course/deep-learning--ud730">https://www.udacity.com/course/deep-learning--ud730</a></p>
-<h2 id="softmax-function">Softmax function</h2>
-<p>socres <code>yi</code> ⇒ probabilities <code>pi</code>
-<img alt="" class="img-responsive" src="images/dlMOOC_L1/pasted_image.png"/></p>
-<p>property: <strong>smaller scores ⇒ less certain about result</strong>
-<img alt="" class="img-responsive" src="images/dlMOOC_L1/pasted_image001.png"/></p>
-<h2 id="onehot-encoding">Onehot encoding</h2>
-<p><img alt="" class="img-responsive" src="images/dlMOOC_L1/pasted_image002.png"/></p>
-<h2 id="cross-entropy">Cross entropy</h2>
-<p><em>measure how well the probability vector </em><code>S</code><em> corresponds to the label vector </em><code>L</code><em>.</em> 
-⇒ cross entropy <code>D(S,L)</code><em>( D&gt;=0, the smaller the better ...</em></p>
                     </div>
                 </div>
             </article>
@@ -668,6 +678,8 @@ cannot cocatenate linear units → equivalent to one big matrix...  </p>
                             href="http://x-wei.github.io/index12.html">12</a></li>
                     <li class=""><a
                             href="http://x-wei.github.io/index13.html">13</a></li>
+                    <li class=""><a
+                            href="http://x-wei.github.io/index14.html">14</a></li>
                 <li class="next"><a
                         href="http://x-wei.github.io/index3.html">&raquo;</a></li>
         </ul>
@@ -713,7 +725,7 @@ cannot cocatenate linear units → equivalent to one big matrix...  </p>
 <h4 class="widget-title">推荐文章</h4>
 <div class="textwidget">
 <li class="widget-container widget_text">
-<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
 <li class="widget-container widget_text">
 <a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
 <li class="widget-container widget_text">
@@ -773,9 +785,9 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
                     google <sup> 6</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
+            <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/torch.html">
-                    torch <sup> 3</sup>
+                    torch <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -811,11 +823,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             <li class="list-group-item tag-4">
                 <a href="http://x-wei.github.io/tag/regex.html">
                     regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="http://x-wei.github.io/tag/suan-fa.html">
-                    算法 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -945,7 +952,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-1">
                 <a href="http://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 34</sup>
+                    algorithm <sup> 35</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
