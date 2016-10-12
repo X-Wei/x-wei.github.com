@@ -9,7 +9,7 @@ Tags: algorithm
 Given: undirected connecte graph ``G`` with positive edge weights.    
 def. **Spanning tree **``T``   
 is a subgraph of ``G``, that is both tree (*connected, acyclic*) and spanning(*all vertices are included*).    
-![](images/algoII_week2_1/pasted_image-0.png)   
+![](../images/algoII_week2_1/pasted_image-0.png)   
 ⇒ Goal: find a spanning tree with minimum weight sum.   
    
 2. Greedy Algorithm   
@@ -25,10 +25,10 @@ cut property
 ------------   
 def. a **cut** of a graph is a partition of its vertices into 2 non-empty sets.   
 def. a **crossing-edge** (wrt a cut) is an edge connecting vertex from one set to another.   
-![](images/algoII_week2_1/pasted_image001-0.png)   
+![](../images/algoII_week2_1/pasted_image001-0.png)   
    
 **prop. **Given any cut, the crossing edges with minimum weight *is in the MST*.    
-![](images/algoII_week2_1/pasted_image002-0.png)   
+![](../images/algoII_week2_1/pasted_image002-0.png)   
 *proof.*   
 Given a cut. {S1,S2} are the two set of vertices,  let ``e`` be the min-weighted edge among all crossing-edges.   
  
@@ -80,7 +80,7 @@ Edge API
 		double weight();   
 	}   
    
-![](images/algoII_week2_1/pasted_image.png)   
+![](../images/algoII_week2_1/pasted_image.png)   
    
 Edge-weighted Graph API   
 -----------------------   
@@ -174,7 +174,7 @@ if ``find(v)==find(w)``, then we know adding e will create a cycle.
 complexity   
 ----------   
 running time: O(ElogE)   
-![](images/algoII_week2_1/pasted_image001.png)   
+![](../images/algoII_week2_1/pasted_image001.png)   
    
 5. Prim's Algorithm   
 ===================   
@@ -233,7 +233,7 @@ challenge: how to find such an edge (connect T and other vertex, with min weight
    
    
 Running time: **O(ElgE)**   
-![](images/algoII_week2_1/pasted_image002.png)   
+![](../images/algoII_week2_1/pasted_image002.png)   
 space: **O(E)** in worst time.   
    
 ### "eager" implementation   
@@ -250,7 +250,7 @@ Update pq -- consider ``v``'s incident edge ``e=v-w:``
 		* else → if `v-w` has smaller weight than the current priority, update `w`'s priority.      
 * repeat till get V-1 edges.    
    
-![](images/algoII_week2_1/pasted_image003.png)   
+![](../images/algoII_week2_1/pasted_image003.png)   
    
 key implementation component: a [MinPQ](file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_part_II/MinPQ.txt) that supports priority(key) update.    
    
@@ -274,9 +274,9 @@ maintain 3 parallel arrays: ``keys[], pq[], qp[]``:
    
 to ``decreaseKey(i,key)``: change `keys[i]`, then call `siftup(qp[i])`   
    
-![](images/algoII_week2_1/pasted_image004.png)   
+![](../images/algoII_week2_1/pasted_image004.png)   
 summery of pq implementations:    
-![](images/algoII_week2_1/pasted_image005.png)   
+![](../images/algoII_week2_1/pasted_image005.png)   
    
 6. MST Context   
 ==============   
@@ -286,7 +286,7 @@ summery of pq implementations:
    
 (recap: for UF, tarjan has *prooved* that linear algo doesn't exist — although Nlg*N is fast enough...)   
 @_@...   
-![](images/algoII_week2_1/pasted_image007.png)   
+![](../images/algoII_week2_1/pasted_image007.png)   
 (这个Yao是清华那个Yao吧?)   
    
    

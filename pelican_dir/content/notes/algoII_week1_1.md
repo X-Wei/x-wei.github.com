@@ -50,7 +50,7 @@ graph representation
 
    
 print all edges:    
-![](images/algoII_week1_1/pasted_image.png)   
+![](../images/algoII_week1_1/pasted_image.png)   
    
 basic functions:   
 
@@ -75,7 +75,7 @@ edge representation
 * adj-matrix implementation: maintain a 2d (V*V) boolean array ⇒ space complexity too heavy   
 * adj-list implementation: vertex-indexed array, each array entry is a ``Bag`` (类似桶bucket) ⇒ sutable for sparse graphs   
    
-![](images/algoII_week1_1/pasted_image001.png)   
+![](../images/algoII_week1_1/pasted_image001.png)   
 adj-list implementation:   
 
 	private final int V;   
@@ -90,7 +90,7 @@ adj-list implementation:
         adj[w].add(v);// if undirected graph   
     }    
 
-![](images/algoII_week1_1/pasted_image002.png)   
+![](../images/algoII_week1_1/pasted_image002.png)   
    
 3. Depth-First Search   
 =====================   
@@ -106,7 +106,7 @@ DFS goal: systematically search through a graph.
 	}   
 
 algo:    
-![](images/algoII_week1_1/pasted_image003.png)   
+![](../images/algoII_week1_1/pasted_image003.png)   
 注意每次访问节点以前就将其mark.    
    
 implementation   
@@ -115,7 +115,7 @@ implementation
 * 用一个boolean数组``visited[]``作为标记   
 * 为了找到一条具体的路径(ie, 一系列节点), 维护一个``prev[]``数组, 存放当前节点是从哪个节点走过来的.    
    
-![](images/algoII_week1_1/pasted_image004.png)  
+![](../images/algoII_week1_1/pasted_image004.png)  
 
     //public class DFSpaths extends Paths...   
     boolean[] visited = new boolean[V];   

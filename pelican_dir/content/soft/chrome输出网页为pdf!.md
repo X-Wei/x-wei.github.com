@@ -7,7 +7,7 @@ Slug: chrome输出网页为pdf!
 
 太方便了! 关键是pdf分页很合理, 效果超好!
 
-![](images/./chrome%E8%BE%93%E5%87%BA%E7%BD%91%E9%A1%B5%E4%B8%BApdf!/pasted_image.png)
+![](../images/./chrome%E8%BE%93%E5%87%BA%E7%BD%91%E9%A1%B5%E4%B8%BApdf!/pasted_image.png)
 
 **03/05/2012续**
 打印前需要把网页缩放足够小, 否则打印的文件只是一部分网页.

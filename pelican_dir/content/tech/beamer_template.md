@@ -15,7 +15,7 @@ github项目地址:
 
 效果截图:
 
-![](images/./beamer_template/Screenshot.png)
+![](../images/./beamer_template/Screenshot.png)
  
 **注意**
 

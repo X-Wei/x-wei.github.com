@@ -7,7 +7,7 @@ Tags: algorithm
 fundamental data types: stacks and queues
 operations: 
 **insert, remove, test empy, iterate,**...    
-![](images/algoI_week2_1/pasted_image.png)  
+![](../images/algoI_week2_1/pasted_image.png)  
 
 module programming: seperate interface and implementation
 
@@ -141,13 +141,13 @@ N+(2+4+8+...+N) ~3N
 
 ⇒ shrink the array by half when array is **1/4 full**
 not half full → *thrashing* will happen if push-pop-push-pop when array is full   
-![](images/algoI_week2_1/pasted_image001.png)      
+![](../images/algoI_week2_1/pasted_image001.png)      
 
 * **[invariant]**: array always 20%~100% full
 * complexity:
 
 *in an amortized sense*, will be constant   
-![](images/algoI_week2_1/pasted_image002.png)    
+![](../images/algoI_week2_1/pasted_image002.png)    
 **proposition**: from empty stack, M operations of push/pop taked time propotional to M
 
 
@@ -182,7 +182,7 @@ API
 ### linked list implementation
 maintain ``first`` and ``last`` node pointers: 
 pointing to 2 points of queue (``first`` for dequeue, ``last`` for enqueue )   
-![](images/algoI_week2_1/pasted_image003.png)     
+![](../images/algoI_week2_1/pasted_image003.png)     
 → *take care of corner cases*: 
 - empty queue: first is null (and last is also null) 
 - just one item in queue: first and last *point to the same node*
@@ -222,7 +222,7 @@ pointing to 2 points of queue (``first`` for dequeue, ``last`` for enqueue )
 maintain ``head`` and ``tail``: 
 ``head`` is the queue head, ``tail`` is the *next empty position* for the next element to enqueue
 → trick: head and tail should take *mod capacity + *resizing array   
-![](images/algoI_week2_1/pasted_image004.png)   
+![](../images/algoI_week2_1/pasted_image004.png)   
 不知道写的对不对: 
 
         public class ArrayQueueOfStrings implements QueueOfStrings{
@@ -288,7 +288,7 @@ generic array creation is not allowed. 不可以new 一个泛型数组!
 each primitive type has a *wrapper class*
 ex. int ↔ Integer
 autoboxing: automatic cast between a primitive type and its wrapper class.   
-![](images/algoI_week2_1/pasted_image005.png)   
+![](../images/algoI_week2_1/pasted_image005.png)   
 (syntactic sugar 语法糖 i.e. 对语言功能没有影响只是方便使用)  
 btw: <https://zh.wikipedia.org/wiki/%E8%AF%AD%E6%B3%95%E7%B3%96> (居然还有语法盐和语法糖精......)
 
@@ -316,14 +316,14 @@ support iteration over stacks and queues, *without revealing the internal repres
 
 * to make a data structure Interable → elegant client code   
 
-![](images/algoI_week2_1/pasted_image006.png)   
+![](../images/algoI_week2_1/pasted_image006.png)   
 **how-to:**
 
 1. implement ``Iterable`` interface
 2. write a *private inner class* XXIterator that implment the ``Iterator`` interface.
 
 ex.   
-![](images/algoI_week2_1/pasted_image007.png)   
+![](../images/algoI_week2_1/pasted_image007.png)   
 
 
 ### Bag data structure
@@ -342,7 +342,7 @@ can be implemented by stack or queue(without pop/dequeue)
 
 ### Java collections library
 List interface: ``java.util.List``   
-![](images/algoI_week2_1/pasted_image008.png)     
+![](../images/algoI_week2_1/pasted_image008.png)     
 implementations: ``ArrayList``, ``LinkedList``. 
 
 * pb with the java's implementation of stacks and queues:  
@@ -355,15 +355,15 @@ implementations: ``ArrayList``, ``LinkedList``.
 
 * function calls: 
   
-![](images/algoI_week2_1/pasted_image009.png)    
+![](../images/algoI_week2_1/pasted_image009.png)    
 recursion: can always use an explicit stack to remove recursion
 
 * arithemic evaluation (Dijkstra)  
 
 四种类型: 左括号, 右括号, 数字, 算子    
-![](images/algoI_week2_1/pasted_image010.png)  
+![](../images/algoI_week2_1/pasted_image010.png)  
 最后一行应该是value stack.    
-![](images/algoI_week2_1/pasted_image011.png)   
+![](../images/algoI_week2_1/pasted_image011.png)   
 	
 ⇒ 后缀表达式, 逆波兰式......
 	

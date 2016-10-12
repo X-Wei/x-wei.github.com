@@ -70,7 +70,7 @@ DISPLAY_ARTICLE_INFO_ON_INDEX = True
 #~ SHOW_ARTICLE_CATEGORY = True
 
 TYPOGRIFY = False
-PYGMENTS_STYLE = 'native'
+PYGMENTS_STYLE = 'manni'
 GITHUB_USER = 'x-wei'
 GITHUB_SHOW_USER_LINK = True
 DISPLAY_BREADCRUMBS = True
@@ -94,7 +94,7 @@ ABOUT_ME = ur"""
 <h4 class="widget-title">推荐文章</h4>
 <div class="textwidget">
 <li class="widget-container widget_text">
-<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
 <li class="widget-container widget_text">
 <a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
 <li class="widget-container widget_text">

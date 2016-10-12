@@ -20,14 +20,14 @@ logical structure of PQ
   
   
 一张图可以直观说明, 完全二叉树其实就是长得像这样:  
-![](images/heap-summary/pasted_image.png)  
+![](../images/heap-summary/pasted_image.png)  
   
   
 一个完全二叉树能被成为PQ的话, 要满足的条件就是:   
 >对于任何一个节点, 它的优先级都大于左右子节点的优先级.   
   
 比如下图(圆圈里数字代表优先级):  
-![](images/heap-summary/pasted_image001.png)  
+![](../images/heap-summary/pasted_image001.png)  
   
 这样看上去的话, 确实像是"一堆"东西的形状(码的还挺整齐的), 而且我们知道在这一堆节点里, 优先级最高的就是最顶上的那个节点了.   
   
@@ -161,7 +161,7 @@ PQ application
 这个操作的时间复杂度是O(N)的 ! 为什么呢?  
 → 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式:   
 ``Sigma( 2^k * (h-k) ) for k=0,...,h-1``  
-![](images/heap-summary/pasted_image002.png)  
+![](../images/heap-summary/pasted_image002.png)  
 (具体见 <http://algs4.cs.princeton.edu/24pq/> 里面Q20的答案)  
   
 ### top K elements of a stream  

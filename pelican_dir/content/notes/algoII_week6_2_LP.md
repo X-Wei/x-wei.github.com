@@ -10,7 +10,7 @@ what is linear programming:
 *a general problem-solving model* that works for:    
 shortest-path, maxflow, MST, matching, assignment, ...   
    
-![](images/algoII_week6_2_LP/pasted_image.png)   
+![](../images/algoII_week6_2_LP/pasted_image.png)   
    
    
 1. Brewer-'s Problem   
@@ -18,7 +18,7 @@ shortest-path, maxflow, MST, matching, assignment, ...
 toy example: choose products to maximize profit.    
 ...   
 *feasible region*: a convex polygon.    
-![](images/algoII_week6_2_LP/pasted_image002.png)   
+![](../images/algoII_week6_2_LP/pasted_image002.png)   
    
 ⇒ optimum solution appears at an extreme point.    
    
@@ -29,9 +29,9 @@ standard form of LP
 * input: a_ij, c_j, b_i   
 * output: x_j   
    
-![](images/algoII_week6_2_LP/pasted_image003.png)   
+![](../images/algoII_week6_2_LP/pasted_image003.png)   
 to convert *inequality* to *equality (as in the standard form above)*: add slack var!    
-![](images/algoII_week6_2_LP/pasted_image004.png)   
+![](../images/algoII_week6_2_LP/pasted_image004.png)   
    
 >def. convex set   
 for any a and b in set ⇒ 1/2(a+b) is also in set.    
@@ -49,7 +49,7 @@ if there exists an potimal solution, then there exists one that is an extreme po
    
 greedy property:    
 *extreme point is optimal iff no better adj extreme points.*    
-![](images/algoII_week6_2_LP/pasted_image005.png)   
+![](../images/algoII_week6_2_LP/pasted_image005.png)   
    
    
 2. Simplex Algorithm   
@@ -81,7 +81,7 @@ algo:
    
    
 ex. pick B as pivot var using constraint 2 (2nd equation):   
-![](images/algoII_week6_2_LP/pasted_image006.png)   
+![](../images/algoII_week6_2_LP/pasted_image006.png)   
    
    
 * why picking var B? → its obj coeff is positive   
@@ -95,7 +95,7 @@ stop when no obj-coeff is positive
 3. Simplex Implementations   
 ==========================   
 encode standard LP formulation into java 2d array:    
-![](images/algoII_week6_2_LP/pasted_image007.png)   
+![](../images/algoII_week6_2_LP/pasted_image007.png)   
    
 	public class Simplex{   
 		private double[][] a;   
@@ -174,7 +174,7 @@ so the simplex algo is:
     }   
    
 final solution is just in the array:   
-![](images/algoII_week6_2_LP/pasted_image008.png)   
+![](../images/algoII_week6_2_LP/pasted_image008.png)   
    
    
 **remarkable property**   
@@ -182,26 +182,26 @@ final solution is just in the array:
 ie. LINEAR time in practice!!   
    
 other pivot rules:    
-![](images/algoII_week6_2_LP/pasted_image009.png)   
+![](../images/algoII_week6_2_LP/pasted_image009.png)   
    
 ### degeneracy   
 when choosing new basis, still stay in the same extreme point...    
-![](images/algoII_week6_2_LP/pasted_image010.png)   
+![](../images/algoII_week6_2_LP/pasted_image010.png)   
 → might cause cycling   
 → bland's rule guarantees finite number of pivots   
    
 further improvement:    
-![](images/algoII_week6_2_LP/pasted_image012.png)   
+![](../images/algoII_week6_2_LP/pasted_image012.png)   
    
 Best practice. *Don't implement it yourself......*   
    
-![](images/algoII_week6_2_LP/pasted_image013.png)   
+![](../images/algoII_week6_2_LP/pasted_image013.png)   
 (AMPL是个好东西...)   
    
 算法的力量:    
-![](images/algoII_week6_2_LP/pasted_image014.png)   
+![](../images/algoII_week6_2_LP/pasted_image014.png)   
    
-![](images/algoII_week6_2_LP/pasted_image015.png)   
+![](../images/algoII_week6_2_LP/pasted_image015.png)   
    
 4. Linear Programming Reductions   
 ================================   
@@ -228,14 +228,14 @@ Best practice. *Don't implement it yourself......*
 * obj: net flow to t   
    
    
-![](images/algoII_week6_2_LP/pasted_image016.png)   
+![](../images/algoII_week6_2_LP/pasted_image016.png)   
    
 can use LP to solve mincost maxflow easily...   
    
 ### max cardinality bipartite matching by LP   
 input: bipartite graph   
 goal: max cardinatlity matching (set of vertex-disjoint edges)   
-![](images/algoII_week6_2_LP/pasted_image017.png)   
+![](../images/algoII_week6_2_LP/pasted_image017.png)   
 can be reduced to maxflow (见algolab...)   
    
    
@@ -244,7 +244,7 @@ can be reduced to maxflow (见algolab...)
 * obj: sum of all x_ij   
    
    
-![](images/algoII_week6_2_LP/pasted_image018.png)   
+![](../images/algoII_week6_2_LP/pasted_image018.png)   
    
 non-trival: cause this is an INTEGER LP...    
    
@@ -253,7 +253,7 @@ if all RHS=1 ⇒ *all extreme points of the polyhedron have integer coord*.
     
    
 ### and many others...   
-![](images/algoII_week6_2_LP/pasted_image019.png)   
+![](../images/algoII_week6_2_LP/pasted_image019.png)   
    
    
 **the profound question: Is there a universal problem-solving model ?**   

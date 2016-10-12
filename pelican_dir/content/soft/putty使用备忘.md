@@ -9,7 +9,7 @@ Tags: ssh
 ---------
 打开putty.exe以后, 输入服务器ip, 之后先别点击登录, 先保存一下session下一次就不用再输入了: 
 
-![](images/putty使用备忘/pasted_image.png)
+![](../images/putty使用备忘/pasted_image.png)
 
 之后点击登录就好了. 
 

@@ -22,7 +22,7 @@ Rstudio
 
 * 默认有四个窗口:  编辑器, 变量, 命令行, 画图/帮助. 
 
-![](images/Rnotes-1-basics/pasted_image.png)
+![](../images/Rnotes-1-basics/pasted_image.png)
 
 快捷键
 ---
@@ -51,11 +51,11 @@ R 文档
 
 下面是一个R文档的例子(运行``?lm``得到): 
 
-![](images/Rnotes-1-basics/pasted_image002.png)
+![](../images/Rnotes-1-basics/pasted_image002.png)
 
 章节Arguments里介绍了每个参数的意义和用法, 然后往下翻还有一个Values章节: 
 
-![](images/Rnotes-1-basics/pasted_image003.png)
+![](../images/Rnotes-1-basics/pasted_image003.png)
 
 Values里的每一项是这个函数的返回值(object)的内容, 比如要获得一个lm object的参数, 只需要: ``lm_obj$coefficients``
 

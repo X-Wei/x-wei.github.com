@@ -3,7 +3,7 @@ Date: 2013-01-29 21:41
 Slug: aurevoir-cherbourg
 Tags: fr
 
-![](images/./aurevoir-cherbourg/pasted_image.png)
+![](../images/./aurevoir-cherbourg/pasted_image.png)
 
 `任何一种环境或一个人, 初次见面就预感到离别的隐痛时, 你必定爱上他了.`
 
@@ -11,7 +11,7 @@ Tags: fr
 
 那天是29-09-2012, 在德先生和赛先生的带领下, 我们在Cherbourg市中心悠闲地溜达了一个下午, 那天阳光很好. 
 
-![](images/./aurevoir-cherbourg/pasted_image003.png)
+![](../images/./aurevoir-cherbourg/pasted_image003.png)
 
 时间过得好快, 四个月过去了, 明天早上就是道别的时候了. 四个月留下了不尽的回忆......
 
@@ -27,19 +27,19 @@ Tags: fr
 * Foule de la press长跑
 * 窗外的海滩, 悠闲的奶牛, 远处小丘上的教堂...
 
-![](images/./aurevoir-cherbourg/pasted_image002.png)
+![](../images/./aurevoir-cherbourg/pasted_image002.png)
 
 * 几乎每周的体育课都不一样
 * 餐桌礼仪介绍, 葡萄酒介绍, 布列塔尼风情介绍...
 * 数不清的sorties: Mont-Saint-Michel, 出海, Manche的城堡, Hague, AREVA, 报社......
 
-![](images/./aurevoir-cherbourg/pasted_image001.png)
+![](../images/./aurevoir-cherbourg/pasted_image001.png)
 
 * Florence和她的孩子们, 圣诞和新年的美好回忆
 * Atelier Théâtre, 以及许多的spectacle
 * Atelier Cinéma, <<瑟堡的雨伞>>
 
-![](images/./aurevoir-cherbourg/pasted_image004.png)
+![](../images/./aurevoir-cherbourg/pasted_image004.png)
 
 AND THAT'S THE END......
 

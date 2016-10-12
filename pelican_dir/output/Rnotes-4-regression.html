@@ -39,7 +39,7 @@
 
     <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/css/pygments/manni.css" rel="stylesheet">
     <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
     <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
 
@@ -200,7 +200,7 @@ mx's blog            </a>
             <div class="entry-content jumbotron" id="article-content">
                 <p>R里面的统计函数有很多, 这里只用线性模型<code>lm</code>以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(<strong>NW, </strong><code>ksmooth</code>), Local Polynomial(<strong>LP, </strong><code>loess</code>), Smoothing Spline(<strong>SS, </strong><code>smooth.spline</code>). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. </p>
 <p>数据的形式是:　</p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image002.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image002.png"/></p>
 <p>目标是估计函数m(). 例子使用R自带的<code>cars</code>数据集, 它包含两列: 汽车速度speed和刹车距离dist. </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="x">&gt; data(cars)</span></span>
 <span class="code-line"><span class="x">&gt; summary(cars)</span></span>
@@ -214,25 +214,25 @@ mx's blog            </a>
 <span class="code-line"><span class="x">&gt; ?cars</span></span>
 <span class="code-line"><span class="x">&gt; plot(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">)</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image003.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image003.png"/></p>
 <h1 id="theory">Theory</h1>
 <p>首先简单介绍一下这4个smoother的原理: </p>
 <h3 id="linear-model">linear model</h3>
 <p>认为m是线性形式(包含intercept): </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image008.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image008.png"/></p>
 <h3 id="nadaraya-watson-kernel-smoother">Nadaraya-Watson kernel smoother</h3>
 <p>m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image.png"/></p>
 <p>另外m_NW(x)还可以看做是最小化加权的square-error: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image001.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image001.png"/></p>
 <h3 id="local-polynomial-smoother">Local Polynomial smoother</h3>
 <p>m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个<em>常数函数</em>mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image004.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image004.png"/></p>
 <p>最后m_LP在x处的取值为: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image005.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image005.png"/></p>
 <h3 id="smoothing-spline">Smoothing Spline</h3>
 <p>设定m的形式为knot在xi的spline, 加上penalize项: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image006.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image006.png"/></p>
 <p>另外SS可以看作是bandwidth随x变化的kernel smoother. </p>
 <h1 id="fit-model">fit model</h1>
 <h3 id="formula">formula</h3>
@@ -278,15 +278,15 @@ mx's blog            </a>
 <span class="code-line">lines(newspeed, pred.ss, lty=4, col=4)</span>
 <span class="code-line">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image009.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image009.png"/></p>
 <h1 id="bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</h1>
 <p>三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. </p>
 <p>自由度df是带宽的函数, smoother的df可以用它的<strong>hat matrix</strong> S计算出来. </p>
 <p>一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image010.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image010.png"/></p>
 <p>而df则是S的迹: df = tr(S). df的</p>
 <p>根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image012.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image012.png"/></p>
 <p>所以计算S可以用下面的代码: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>n <span class="o">&lt;-</span> <span class="kp">nrow</span><span class="p">(</span>cars<span class="p">)</span></span>
 <span class="code-line">Snw <span class="o">&lt;-</span> Slp <span class="o">&lt;-</span> Sss <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> nrow<span class="o">=</span>n<span class="p">,</span> ncol<span class="o">=</span>n<span class="p">)</span></span>
@@ -324,7 +324,7 @@ mx's blog            </a>
 <span class="code-line">chosen_span <span class="o">&lt;-</span> uniroot<span class="p">(</span>dflp<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> val <span class="o">=</span> df.nw<span class="p">)</span><span class="o">$</span>root</span>
 </pre></div>
 <p>如果不用这个循环计算的话, 可以用<code>sfsmisc</code>包里的<code>hatMat</code>函数: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image013.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"/> </p>
 <p>参数<code>trace</code>取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span></span>
@@ -366,7 +366,7 @@ mx's blog            </a>
 <span class="code-line">loocv<span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span>x<span class="o">=</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="o">=</span>cars<span class="o">$</span>dist<span class="p">),</span> regfcn.nw<span class="p">)</span></span>
 </pre></div>
 <p>不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image014.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image014.png"/></p>
 <p>试一下: </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># compute CV using shortcut euqation</span></span>
 <span class="code-line">yhat.nw <span class="o">&lt;-</span> Snw <span class="o">%*%</span> cars<span class="o">$</span>y <span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span></span>
@@ -374,7 +374,7 @@ mx's blog            </a>
 </pre></div>
 <p>得到的结果和之前用loocv一样, 都是253.9128 !~ </p>
 <p>或者只用df, 计算generalized CV, 公式为: </p>
-<p><img alt="" class="img-responsive" src="images/Rnotes-4-regression/pasted_image015.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image015.png"/></p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="cp">#</span><span class="nf">compute</span><span class="x"> GCV</span></span>
 <span class="code-line"><span class="x">mean( (cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span></span>
 </pre></div>
@@ -494,7 +494,7 @@ mx's blog            </a>
 <h4 class="widget-title">推荐文章</h4>
 <div class="textwidget">
 <li class="widget-container widget_text">
-<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
 <li class="widget-container widget_text">
 <a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
 <li class="widget-container widget_text">
@@ -554,9 +554,9 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
                     google <sup> 6</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
+            <li class="list-group-item tag-2">
                 <a href="./tag/torch.html">
-                    torch <sup> 3</sup>
+                    torch <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -592,11 +592,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             <li class="list-group-item tag-4">
                 <a href="./tag/regex.html">
                     regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="./tag/suan-fa.html">
-                    算法 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -726,7 +721,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-1">
                 <a href="./tag/algorithm.html">
-                    algorithm <sup> 34</sup>
+                    algorithm <sup> 35</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">

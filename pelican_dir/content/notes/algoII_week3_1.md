@@ -12,7 +12,7 @@ Tags: algorithm
 * **def**. an **st-cut **``(A,B)`` is a partition of vertices into 2 disjoint sets A and B, with ``s`` in set ``A`` and ``t`` in set ``B``.    
 * **def**. the **capacity** of a cut ``(A,B)`` is sum of capacities of edges going *from A to B* *(not considering B to A)*.    
    
-![](images/algoII_week3_1/pasted_image.png)   
+![](../images/algoII_week3_1/pasted_image.png)   
 ⇒ min-cut pb: find the cut **(A,B)** with min-capacity.    
    
 ### Max-flow pb   
@@ -23,7 +23,7 @@ Tags: algorithm
 	* local equilibrium: for any vertex v (other than s or t), *inflow=outflow*;   
 * **def.** the **value** of a flow ``f`` is the inflow at ``t``. (assume no ingoing edge to s or outgoing edge to t)   
    
-![](images/algoII_week3_1/pasted_image001.png)   
+![](../images/algoII_week3_1/pasted_image001.png)   
 ⇒ max-flow pb: find ``f`` with max value.    
    
 remark: max-flow and min-cut are dual problems.    
@@ -35,7 +35,7 @@ remark: max-flow and min-cut are dual problems.
 * for forward edges e: can augment flow by ``df`` (not full: ``f[e]+df<=c[e]``)   
 * for backward edges: can decrease flow by ``df`` (not empty: ``f[e]-df>=0``)   
    
-![](images/algoII_week3_1/pasted_image002.png)   
+![](../images/algoII_week3_1/pasted_image002.png)   
    
    
 * def. **residual capacity**   
@@ -52,10 +52,10 @@ remark: max-flow and min-cut are dual problems.
 * find an augment path (and the corresponding ``df``) in graph, and change the flows along the path by ``+/-df``.   
 * loop until no augment path exists. (ie. all path s→t are blocked either by a *full forward edge* or an *empty backward edge, *ie. by an edge with 0 residual capacity)   
    
-![](images/algoII_week3_1/pasted_image003.png)   
+![](../images/algoII_week3_1/pasted_image003.png)   
    
 FF is a gernel algorithm:    
-![](images/algoII_week3_1/pasted_image004.png)   
+![](../images/algoII_week3_1/pasted_image004.png)   
    
 3. Maxflow-Mincut Theorem   
 =========================   
@@ -73,7 +73,7 @@ induction on the size of set B.
    
    
 ex. (A: gray vertices, B: white vertices)   
-![](images/algoII_week3_1/pasted_image005.png)   
+![](../images/algoII_week3_1/pasted_image005.png)   
    
 [cor] *outflow(s)=inflow(t)=value(f)*   
    
@@ -107,14 +107,14 @@ suppose there is an aug-path from s to t, of bottleneck capacity=df,
 suppose there is no aug-path, ie, *all path from s to t are blocked by some full-forward edge or empty backward edge.*   
 ⇒ let A:=vertices connected with s by a path with no blocking edges, and B := the rest   
 (*so* *once we get a maxflow, we can ***compute the mincut*** in this way*)   
-![](images/algoII_week3_1/pasted_image006.png)   
+![](../images/algoII_week3_1/pasted_image006.png)   
 → for all edges across A and B, all forward edges are full, all backward edges are empty   
 ⇒ capacity(A,B) = netflow(A,B) = value(f) by flow-value lemma   
 CQFD... 过瘾...   
    
 4. Running Time Analysis   
 ========================   
-![](images/algoII_week3_1/pasted_image007.png)   
+![](../images/algoII_week3_1/pasted_image007.png)   
    
 * getting a mincut form maxflow? → easy (as discussed in the pf above)   
 * computing an aug-path? → **BFS**   
@@ -134,12 +134,12 @@ pf. each augmentation will add flow by >=1.
 ### Bad case for FF   
 nb of augmentation == value of maxflow   
 (each time, the path through the middle edge is chosen as aug-path)   
-![](images/algoII_week3_1/pasted_image008.png)   
+![](../images/algoII_week3_1/pasted_image008.png)   
 **can be easily avoided**⇒  by using shortest(nb of edges)/fastest(biggest df) path    
-![](images/algoII_week3_1/pasted_image010.png)   
+![](../images/algoII_week3_1/pasted_image010.png)   
    
 Performance of FF depends on the algo for choosing aug-path:   
-![](images/algoII_week3_1/pasted_image009.png)   
+![](../images/algoII_week3_1/pasted_image009.png)   
    
 5. Java Implementation   
 ======================   
@@ -170,7 +170,7 @@ put e in both v and w's adj-list.
    
 [prop] **Augment path in **``G``** is equivalent to a path in **``Gr`` (``df`` of aug-path in ``G`` = min edge weight in ``Gr``)**.**   
 (但是实现的时候其实不用显式构造Gr, 只需BFS的时候修改一下即可)   
-![](images/algoII_week3_1/pasted_image011.png)   
+![](../images/algoII_week3_1/pasted_image011.png)   
    
 ### APIs   
 这里的API设计的非常合理... 导致每一部分的代码量都不大... NB   
@@ -257,14 +257,14 @@ code:
 6. Maxflow Applications   
 =======================   
 关键是建模很巧妙...   
-![](images/algoII_week3_1/pasted_image012.png)   
+![](../images/algoII_week3_1/pasted_image012.png)   
    
 ### ex1. bipartite matching pb   
 二分图的最大匹配问题. (有点像marriage stable问题...但是不一样 因为没有preference order)   
-![](images/algoII_week3_1/pasted_image013.png)   
+![](../images/algoII_week3_1/pasted_image013.png)   
 ⇒ is there a way to match all students to a job?   
 ie. *given a bipartite graph, find a perfect matching.*    
-![](images/algoII_week3_1/pasted_image014.png)   
+![](../images/algoII_week3_1/pasted_image014.png)   
 **modeling**   
 >* add source ``s`` and target ``t``   
 * all edges from ``s`` to students: capacity=1   
@@ -272,10 +272,10 @@ ie. *given a bipartite graph, find a perfect matching.*
 * all edges from student to company: capacity=INF   
    
 ⇒ find maxflow in the graph   
-![](images/algoII_week3_1/pasted_image015.png)   
+![](../images/algoII_week3_1/pasted_image015.png)   
    
 **when no perfect matching: mincut can explain why**    
-![](images/algoII_week3_1/pasted_image016.png)   
+![](../images/algoII_week3_1/pasted_image016.png)   
 in the above case, student 2,4,5 can only be matched to 7,10   
 ⇒ mincut can help us find such cases!   
    
@@ -286,7 +286,7 @@ B := the rest
 (*blocking edges: full forward edge or empty backward edge on path*)   
    
 ex.   
-![](images/algoII_week3_1/pasted_image017.png)   
+![](../images/algoII_week3_1/pasted_image017.png)   
    
 * let S=students on s side of mincut (in above case, *S={2,4,5}*)   
 * let T=companies on s side of mincut (in above case, T*={7,10}*)   
@@ -294,16 +294,16 @@ ex.
    
    
 ### ex2. baseball elimination   
-![](images/algoII_week3_1/pasted_image018.png)   
+![](../images/algoII_week3_1/pasted_image018.png)   
 (前三列是目前成绩, 后面四列是接下来赛程矩阵)   
 Montreal is mathematically eliminated → easy to see   
 → Philly is mathematically eliminated also !   
    
 * another case:   
    
-![](images/algoII_week3_1/pasted_image019.png)   
+![](../images/algoII_week3_1/pasted_image019.png)   
 Detroit is mathematically eliminated !   
-![](images/algoII_week3_1/pasted_image020.png)   
+![](../images/algoII_week3_1/pasted_image020.png)   
 whether team-4 still has a chance to win?   
 **modelling**   
    
@@ -311,6 +311,6 @@ whether team-4 still has a chance to win?
 * use team-pairs ans teams as vertices   
 * *carefully chosen capacities*(see below)   
    
-![](images/algoII_week3_1/pasted_image021.png)   
+![](../images/algoII_week3_1/pasted_image021.png)   
 ⇒ team 4 could win iff all flow from s are full (ie. all match points can be repartitioned over other teams *without depassing team 4's maximum wins*).   
 总之很巧妙....   

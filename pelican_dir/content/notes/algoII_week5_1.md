@@ -8,7 +8,7 @@ Tags: algorithm
 ======================  
   
 pb: pattern matching.   
-![](images/algoII_week5_1/pasted_image.png)  
+![](../images/algoII_week5_1/pasted_image.png)  
   
 ### regular expression  
 Is a notation to specify a set of strings.   
@@ -19,13 +19,13 @@ basic operations:
 * closure: "0 or more appearances of chars"  
 * parentheses  
   
-![](images/algoII_week5_1/pasted_image001.png)  
+![](../images/algoII_week5_1/pasted_image001.png)  
 additional operations (*added for convinence*):  
-![](images/algoII_week5_1/pasted_image002.png)  
+![](../images/algoII_week5_1/pasted_image002.png)  
 ex. ``[A-C]+`` is equivalent to ``(A|B|C)(A|B|C)*``.  
   
 吐槽名句:   
-![](images/algoII_week5_1/pasted_image003.png)  
+![](../images/algoII_week5_1/pasted_image003.png)  
   
 2. REs and NFAs  
 ===============  
@@ -40,7 +40,7 @@ ex. ``[A-C]+`` is equivalent to ``(A|B|C)(A|B|C)*``.
 > For any DFA, there exists a RE that describes the same set of strings;  
 For any RE, there exists a DFA that recognizes the same set of strings.  
   
-![](images/algoII_week5_1/pasted_image004.png)   
+![](../images/algoII_week5_1/pasted_image004.png)   
   
 ### first attempt of pattern matching  
 (Ken Tompson) same as KMP — no backup.  
@@ -64,11 +64,11 @@ bad news: DFA may have exponential nb of states.
   
   
 亦可理解为, DFA是每一条边对应一个可能的(字母表内的)char, 而NFA只有match-transition对应于pattern里的(alphabetic) char, 其他epsilon transition的边对应空字符串(也就是epsilon string).   
-![](images/algoII_week5_1/pasted_image005.png)  
+![](../images/algoII_week5_1/pasted_image005.png)  
 example:  
 is "AAAABD" a match ?  
 → yes. (和上一节substring的插图进行一下比对, 还是有很大不同)  
-![](images/algoII_week5_1/pasted_image006.png)  
+![](../images/algoII_week5_1/pasted_image006.png)  
   
 pb: non-determinism  
 How to determine whether a string is a match of a NFA (ie. *how to select the right sequence* of transition) ?   
@@ -86,10 +86,10 @@ idea:
 >maintain a *set* of all state that NFA could be in after reading first i chars in text.   
   
 at each iteration: check all reachable state wrt the transitions, then update reachable states.   
-![](images/algoII_week5_1/pasted_image007.png)  
+![](../images/algoII_week5_1/pasted_image007.png)  
   
 ### algorithm  
-![](images/algoII_week5_1/pasted_image008.png)  
+![](../images/algoII_week5_1/pasted_image008.png)  
 (for the NFA above, 注意为了方便已经加了 必要的括号)  
   
 **[Algo]**  
@@ -107,24 +107,24 @@ at each iteration: check all reachable state wrt the transitions, then update re
   
 * init:  
   
-![](images/algoII_week5_1/pasted_image010.png)  
+![](../images/algoII_week5_1/pasted_image010.png)  
   
 * when *matching A* from text: state 2 or 6  
   
-![](images/algoII_week5_1/pasted_image011.png)  
+![](../images/algoII_week5_1/pasted_image011.png)  
 using match transition of A, we can get to state 3 or 7  
-![](images/algoII_week5_1/pasted_image012.png)  
+![](../images/algoII_week5_1/pasted_image012.png)  
 if we add epsilon transitions:   
-![](images/algoII_week5_1/pasted_image013.png)  
+![](../images/algoII_week5_1/pasted_image013.png)  
 so reachable states after reading 1st A are: 2, 3, 4, 7  
-![](images/algoII_week5_1/pasted_image014.png)  
+![](../images/algoII_week5_1/pasted_image014.png)  
   
 * matching 2nd A from text: state 2  
   
 using match transition we can only get to state 3.   
-![](images/algoII_week5_1/pasted_image015.png)  
+![](../images/algoII_week5_1/pasted_image015.png)  
 using epsilon transitions from state 3:   
-![](images/algoII_week5_1/pasted_image016.png)  
+![](../images/algoII_week5_1/pasted_image016.png)  
  (*the only state after matching A is state 2 3 4*)  
   
 * etc...   
@@ -132,13 +132,13 @@ using epsilon transitions from state 3:
   
 或者直接看这张图:   
   
-![](images/algoII_week5_1/pasted_image017.png)  
-![](images/algoII_week5_1/pasted_image018.png)  
+![](../images/algoII_week5_1/pasted_image017.png)  
+![](../images/algoII_week5_1/pasted_image018.png)  
   
 ### reachability  
 All reachable vertices from *a set of* source vertices → just DFS.   
 ⇒ directly use the API from the digraph section:   
-![](images/algoII_week5_1/pasted_image019.png)  
+![](../images/algoII_week5_1/pasted_image019.png)  
 running time linear to E+V  
   
 ### Java implementation  
@@ -197,26 +197,26 @@ pf. N chars in text, each char can go through <= M states (DFS), and in the digr
 * **paretheses **``( )``  
   
 simply put a epsilon-transition to the next state  
-![](images/algoII_week5_1/pasted_image020.png)  
+![](../images/algoII_week5_1/pasted_image020.png)  
   
 * **closure **``*``  
   
 星号前面只可能是字母(包括``.``)或者右括号``)``, 所以分两种情况讨论一下, 需要向前看一位, 这里就比较subtle  
 for each ``*`` state, add 3 transitions as below:   
-![](images/algoII_week5_1/pasted_image021.png)  
-![](images/algoII_week5_1/pasted_image022.png)  
+![](../images/algoII_week5_1/pasted_image021.png)  
+![](../images/algoII_week5_1/pasted_image022.png)  
   
 * **or** ``|``  
   
 or符号肯定在一个括号里面  
 add 2 epsilon transitions wrt parethese:   
-![](images/algoII_week5_1/pasted_image023.png)  
-![](images/algoII_week5_1/pasted_image024.png)  
+![](../images/algoII_week5_1/pasted_image023.png)  
+![](../images/algoII_week5_1/pasted_image024.png)  
   
 以上就是NFA建立G的时候要处理的三种情形, 这三种情形都要知道一个左括号(``lp``)的位置 ⇒ use a stack !   
   
 ### implementation  
-![](images/algoII_week5_1/pasted_image025.png)   
+![](../images/algoII_week5_1/pasted_image025.png)   
   
 * for alphabetic chars: do one-char *lookahead* → if next is ``*``, add transitions.   
 * for left parenthese ``(``: add transition to next state, and push to stack  
@@ -290,31 +290,31 @@ print out all lines (from stdin) having a substring of an RE.
 the grep has NM worst case running time — same as brute force substring search — amazing...  
   
 grep application: crossword puzzles  
-![](images/algoII_week5_1/pasted_image026.png)  
-![](images/algoII_week5_1/pasted_image027.png)  
+![](../images/algoII_week5_1/pasted_image026.png)  
+![](../images/algoII_week5_1/pasted_image027.png)  
   
 ### regexp in other languages  
   
 * unix: grep, awk  
 * script: python, *perl*  
   
-![](images/algoII_week5_1/pasted_image028.png)  
+![](../images/algoII_week5_1/pasted_image028.png)  
   
 * java: ``String.matches(regexp)``  
   
-![](images/algoII_week5_1/pasted_image029.png)  
+![](../images/algoII_week5_1/pasted_image029.png)  
   
 ### Harvesting information  
 goal: print *all substrings* of input that match an RE.   
 use ``Pattern`` and ``Matcher`` class in ``java.util.regexp``.   
 first compile the regexp, then build the matcher  
 → so that we can iterate through all matches of the input using ``find()`` and ``group()`` of the matcher   
-![](images/algoII_week5_1/pasted_image030.png)  
+![](../images/algoII_week5_1/pasted_image030.png)  
   
 *Caveat*: performance NOT guaranteed !   
-![](images/algoII_week5_1/pasted_image031.png)  
+![](../images/algoII_week5_1/pasted_image031.png)  
 → exponential time growth!   
-![](images/algoII_week5_1/pasted_image032.png)  
+![](../images/algoII_week5_1/pasted_image032.png)  
   
 ### Not-so-regular expressions  
 "not rugular" means Kleene's Th doesn't hold   
@@ -322,11 +322,11 @@ first compile the regexp, then build the matcher
 **back-reference**  
 ``\1`` matches *subexpressions* that was matched earliser  
 limitations of regular languages:   
-![](images/algoII_week5_1/pasted_image034.png)  
+![](../images/algoII_week5_1/pasted_image034.png)  
   
 ### Summary  
 the substring and regexp are examples of compilers ! (from string to a NFA/DFA/bytecode)  
-![](images/algoII_week5_1/pasted_image033.png)  
+![](../images/algoII_week5_1/pasted_image033.png)  
   
-![](images/algoII_week5_1/pasted_image035.png)  
+![](../images/algoII_week5_1/pasted_image035.png)  
   

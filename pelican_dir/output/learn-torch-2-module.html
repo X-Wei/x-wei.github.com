@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="torch" />
-        <meta name="description" content="Module is an abstract class which defines fundamental methods necessary for a Layer. https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from last call ..." />
+        <meta name="description" content="Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from last ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[learning torch] 2. Module (layers)"/>
         <meta property="og:url" content="./learn-torch-2-module.html"/>
-        <meta property="og:description" content="Module is an abstract class which defines fundamental methods necessary for a Layer. https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from last call ..."/>
+        <meta property="og:description" content="Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from last ..."/>
         <meta property="article:published_time" content="2016-10-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="torch" />
@@ -39,7 +39,7 @@
 
     <link href="./theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="./theme/css/pygments/native.css" rel="stylesheet">
+    <link href="./theme/css/pygments/manni.css" rel="stylesheet">
     <link href="./theme/tipuesearch/tipuesearch.css" rel="stylesheet">
     <link rel="stylesheet" href="./theme/css/style.css" type="text/css"/>
 
@@ -198,94 +198,94 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                <p><code>Module</code> is an abstract class which defines fundamental methods necessary for a <em>Layer</em>.</p>
-<p><a href="https://github.com/torch/nn/blob/master/doc/module.md">https://github.com/torch/nn/blob/master/doc/module.md</a></p>
+                <p><code>Module</code> is an abstract class which defines fundamental methods necessary for a <em>Layer</em>. </p>
+<p>doc: <a href="https://github.com/torch/nn/blob/master/doc/module.md">https://github.com/torch/nn/blob/master/doc/module.md</a> </p>
 <h2 id="module-class">Module class</h2>
-<p>variables in <code>Module</code>: </p>
+<p>variables in <code>Module</code>:  </p>
 <ul>
-<li><code>output</code>: Tensor, the ouput computed from last call of <code>forward(input)</code></li>
-<li><code>gradInput</code>: Tensor, gradient wrt input of module, computed from last call of <code>updateGradInput(input, gradOutput)</code></li>
+<li><code>output</code>: Tensor, the ouput computed from last call of <code>forward(input)</code> </li>
+<li><code>gradInput</code>: Tensor, gradient wrt input of module, computed from last call of <code>updateGradInput(input, gradOutput)</code> </li>
 </ul>
-<p>important methods in <code>Module</code>: </p>
+<p>important methods in <code>Module</code>:  </p>
 <ul>
-<li><code>forward(input)</code>: return corresponding output of layer</li>
-<li><code>backward(input, gradOutput)</code>: return gradInput wrt the given input</li>
+<li><code>forward(input)</code>: return corresponding output of layer </li>
+<li><code>backward(input, gradOutput)</code>: return gradInput wrt the given input </li>
 </ul>
 <h2 id="linear">Linear</h2>
-<p><a href="https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear">https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear</a></p>
-<p><code>Linear</code> extends <code>Module</code>, it's just linear transformation of input: <code>y=Ax+b</code> (parameters/variables: <code>weight</code>, <code>bias</code>)</p>
-<p><code>gradWeight</code>, <code>gradBias</code> are respectively the gradient of each parameter. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span> <span class="o">=</span> <span class="nt">nn</span><span class="nc">.Linear</span><span class="o">(</span><span class="nt">3</span><span class="o">,</span> <span class="nt">2</span><span class="o">)</span> <span class="nt">--</span> <span class="nt">3</span> <span class="nt">input</span><span class="o">,</span> <span class="nt">2</span> <span class="nt">output</span></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.weight</span><span class="nd">:fill</span><span class="o">(</span><span class="nt">1</span><span class="o">);</span> <span class="nt">ln</span><span class="nc">.bias</span><span class="nd">:zero</span><span class="o">();</span></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">x</span> <span class="o">=</span> <span class="nt">torch</span><span class="nc">.Tensor</span><span class="o">(</span><span class="p">{</span><span class="m">1</span><span class="o">,</span><span class="m">2</span><span class="o">,</span><span class="m">3</span><span class="p">}</span><span class="o">)</span></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">y</span> <span class="o">=</span> <span class="nt">ln</span><span class="nd">:forward</span><span class="o">(</span><span class="nt">x</span><span class="o">)</span></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">gradinput</span> <span class="o">=</span> <span class="nt">ln</span><span class="nd">:backward</span><span class="o">(</span><span class="nt">x</span><span class="o">,</span><span class="nt">y</span><span class="o">)</span></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">gradinput</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
+<p><a href="https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear">https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear</a> </p>
+<p><code>Linear</code> extends <code>Module</code>, it's just linear transformation of input: <code>y=Ax+b</code> (parameters/variables: <code>weight</code>, <code>bias</code>) </p>
+<p><code>gradWeight</code>, <code>gradBias</code> are respectively the gradient of each parameter.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span> <span class="o">=</span> <span class="nt">nn</span><span class="nc">.Linear</span><span class="o">(</span><span class="nt">3</span><span class="o">,</span> <span class="nt">2</span><span class="o">)</span> <span class="nt">--</span> <span class="nt">3</span> <span class="nt">input</span><span class="o">,</span> <span class="nt">2</span> <span class="nt">output</span> </span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.weight</span><span class="nd">:fill</span><span class="o">(</span><span class="nt">1</span><span class="o">);</span> <span class="nt">ln</span><span class="nc">.bias</span><span class="nd">:zero</span><span class="o">();</span> </span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">x</span> <span class="o">=</span> <span class="nt">torch</span><span class="nc">.Tensor</span><span class="o">(</span><span class="p">{</span><span class="m">1</span><span class="o">,</span><span class="m">2</span><span class="o">,</span><span class="m">3</span><span class="p">}</span><span class="o">)</span> </span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">y</span> <span class="o">=</span> <span class="nt">ln</span><span class="nd">:forward</span><span class="o">(</span><span class="nt">x</span><span class="o">)</span> </span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">gradinput</span> <span class="o">=</span> <span class="nt">ln</span><span class="nd">:backward</span><span class="o">(</span><span class="nt">x</span><span class="o">,</span><span class="nt">y</span><span class="o">)</span> </span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">gradinput</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
 <span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span> <span class="nx">of</span> <span class="nx">size</span> <span class="mi">3</span><span class="cp">]</span></span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradInput</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
-<span class="code-line"> <span class="nt">12</span></span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradInput</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
+<span class="code-line"> <span class="nt">12</span> </span>
 <span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span> <span class="nx">of</span> <span class="nx">size</span> <span class="mi">3</span><span class="cp">]</span></span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradWeight</span></span>
-<span class="code-line"><span class="nt">1</span><span class="nc">.1132e</span><span class="o">+</span><span class="nt">171</span>  <span class="nt">1</span><span class="nc">.2000e</span><span class="o">+</span><span class="nt">01</span> <span class="nt">7</span><span class="nc">.3587e</span><span class="o">+</span><span class="nt">223</span></span>
-<span class="code-line"><span class="nt">1</span><span class="nc">.7112e</span><span class="o">+</span><span class="nt">243</span> <span class="nt">2</span><span class="nc">.3276e</span><span class="o">+</span><span class="nt">251</span> <span class="nt">5</span><span class="nc">.0404e</span><span class="o">+</span><span class="nt">180</span></span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradWeight</span> </span>
+<span class="code-line"><span class="nt">1</span><span class="nc">.1132e</span><span class="o">+</span><span class="nt">171</span>  <span class="nt">1</span><span class="nc">.2000e</span><span class="o">+</span><span class="nt">01</span> <span class="nt">7</span><span class="nc">.3587e</span><span class="o">+</span><span class="nt">223</span> </span>
+<span class="code-line"><span class="nt">1</span><span class="nc">.7112e</span><span class="o">+</span><span class="nt">243</span> <span class="nt">2</span><span class="nc">.3276e</span><span class="o">+</span><span class="nt">251</span> <span class="nt">5</span><span class="nc">.0404e</span><span class="o">+</span><span class="nt">180</span> </span>
 <span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span> <span class="nx">of</span> <span class="nx">size</span> <span class="mi">2</span><span class="nx">x3</span><span class="cp">]</span></span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span> </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradBias</span></span>
-<span class="code-line"> <span class="nt">6</span></span>
-<span class="code-line"> <span class="nt">6</span></span>
+<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">ln</span><span class="nc">.gradBias</span> </span>
+<span class="code-line"> <span class="nt">6</span> </span>
+<span class="code-line"> <span class="nt">6</span> </span>
 <span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span> <span class="nx">of</span> <span class="nx">size</span> <span class="mi">2</span><span class="cp">]</span></span>
 <span class="code-line"></span>
 <span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span></span>
 </pre></div>
 <h2 id="identity">Identity</h2>
-<p>output reproduces input, this layer can be used to model the input layer of a neural network. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>th&gt; id = nn.Identity()</span>
-<span class="code-line">                                                                      [0.0000s] </span>
-<span class="code-line">th&gt; y = id:forward(x)</span>
-<span class="code-line">                                                                      [0.0000s] </span>
-<span class="code-line">th&gt; y</span>
-<span class="code-line"> 1</span>
-<span class="code-line"> 2</span>
-<span class="code-line"> 3</span>
+<p>output reproduces input, this layer can be used to model the input layer of a neural network.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>th&gt; id = nn.Identity() </span>
+<span class="code-line">                                                                      [0.0000s]  </span>
+<span class="code-line">th&gt; y = id:forward(x) </span>
+<span class="code-line">                                                                      [0.0000s]  </span>
+<span class="code-line">th&gt; y </span>
+<span class="code-line"> 1 </span>
+<span class="code-line"> 2 </span>
+<span class="code-line"> 3 </span>
 <span class="code-line">[torch.DoubleTensor of size 3]</span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      [0.0001s] </span>
-<span class="code-line">th&gt; id:backward(x,y)</span>
-<span class="code-line"> 1</span>
-<span class="code-line"> 2</span>
-<span class="code-line"> 3</span>
+<span class="code-line">                                                                      [0.0001s]  </span>
+<span class="code-line">th&gt; id:backward(x,y) </span>
+<span class="code-line"> 1 </span>
+<span class="code-line"> 2 </span>
+<span class="code-line"> 3 </span>
 <span class="code-line">[torch.DoubleTensor of size 3]</span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      [0.0001s] </span>
-<span class="code-line">th&gt; id.gradInput</span>
-<span class="code-line"> 1</span>
-<span class="code-line"> 2</span>
-<span class="code-line"> 3</span>
+<span class="code-line">                                                                      [0.0001s]  </span>
+<span class="code-line">th&gt; id.gradInput </span>
+<span class="code-line"> 1 </span>
+<span class="code-line"> 2 </span>
+<span class="code-line"> 3 </span>
 <span class="code-line">[torch.DoubleTensor of size 3]</span>
 </pre></div>
 <h2 id="other-modules">Other modules</h2>
-<p><a href="https://github.com/torch/nn/blob/master/doc/simple.md">https://github.com/torch/nn/blob/master/doc/simple.md</a></p>
-<p>some examples:</p>
+<p><a href="https://github.com/torch/nn/blob/master/doc/simple.md">https://github.com/torch/nn/blob/master/doc/simple.md</a> </p>
+<p>some examples: </p>
 <ul>
-<li><code>Add</code></li>
-<li><code>Mul</code></li>
-<li><code>CMul</code></li>
-<li><code>Reshape</code></li>
+<li><code>Add</code> </li>
+<li><code>Mul</code> </li>
+<li><code>CMul</code> </li>
+<li><code>Reshape</code> </li>
 </ul>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -402,7 +402,7 @@ mx's blog            </a>
 <h4 class="widget-title">推荐文章</h4>
 <div class="textwidget">
 <li class="widget-container widget_text">
-<a href="http://x-wei.github.io/%E8%BF%90%E7%AD%B9%E7%9A%84%E5%8A%9B%E9%87%8F:%20%E7%94%A8%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E8%A7%A3%E5%86%B3Google%202014%20HashCode%E9%97%AE%E9%A2%98.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
 <li class="widget-container widget_text">
 <a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
 <li class="widget-container widget_text">
@@ -462,9 +462,9 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
                     google <sup> 6</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
+            <li class="list-group-item tag-2">
                 <a href="./tag/torch.html">
-                    torch <sup> 3</sup>
+                    torch <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -500,11 +500,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             <li class="list-group-item tag-4">
                 <a href="./tag/regex.html">
                     regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="./tag/suan-fa.html">
-                    算法 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -634,7 +629,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-1">
                 <a href="./tag/algorithm.html">
-                    algorithm <sup> 34</sup>
+                    algorithm <sup> 35</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">

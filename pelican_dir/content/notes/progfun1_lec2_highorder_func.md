@@ -11,7 +11,7 @@ Tags: scala
 higher order functions: functions that takes functions as parameter or returns functions.  
  
 example:  
-![](images/progfun1_lec2_highorder_func/pasted_image.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image.png) 
 ⇒ put the ``f`` as a parameter 
  
 	def sum(f:Int => Int, a: Int, b: Int):Int = { 
@@ -78,11 +78,11 @@ note: functional types are *associated to the right*,
 ``Int => Int => Int`` is equivalent to ``Int => (Int => Int)`` 
  
 ### "currying" 
-![](images/progfun1_lec2_highorder_func/pasted_image002.png) 
-![](images/progfun1_lec2_highorder_func/pasted_image003.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image002.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image003.png) 
  
 exercice:  
-![](images/progfun1_lec2_highorder_func/pasted_image005.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image005.png) 
  
 	def product(f: Int => Int)(a: Int, b: Int): Int = { 
 	  if (a > b) 1 
@@ -90,12 +90,12 @@ exercice:
 	} 
 	product(x=>x)(1,10) 
  
-![](images/progfun1_lec2_highorder_func/pasted_image006.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image006.png) 
  
 	def fact(n:Int) = product(x=>x)(1,n) 
 	fact(10) 
  
-![](images/progfun1_lec2_highorder_func/pasted_image007.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image007.png) 
 	def more_general(op: (Int,Int) => Int, default: Int) 
 	                (f: Int=> Int)(a:Int, b:Int):Int = { 
 	  if(a>b) default 
@@ -116,7 +116,7 @@ exercice:
 2.3 - Example: Finding Fixed Points 
 ----------------------------------- 
 find the fix point of a function: x = f(x) 
-![](images/progfun1_lec2_highorder_func/pasted_image008.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image008.png) 
  
 	val tol = 0.001 
 	def isCloseEnough(x:Double, y:Double):Boolean = 
@@ -167,13 +167,13 @@ notations(EBNF):
  
  
 **Types** 
-![](images/progfun1_lec2_highorder_func/pasted_image009.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image009.png) 
  
 **Expressions** 
-![](images/progfun1_lec2_highorder_func/pasted_image010.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image010.png) 
  
 **Definitions** 
-![](images/progfun1_lec2_highorder_func/pasted_image011.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image011.png) 
  
 2.5 - Functions and Data 
 ------------------------ 
@@ -249,7 +249,7 @@ to add another constructor:
 ``def this(x:Int) = this(x,1)`` 
  
 exercice:  
-![](images/progfun1_lec2_highorder_func/pasted_image012.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image012.png) 
  
 	override def toString = { 
 	  val g = gcd(numer, denom) 
@@ -263,25 +263,25 @@ exercice:
 evaluation for class/object 
 --------------------------- 
 extend the substitution model to classes and objects 
-![](images/progfun1_lec2_highorder_func/pasted_image014.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image014.png) 
  
-![](images/progfun1_lec2_highorder_func/pasted_image015.png) 
-![](images/progfun1_lec2_highorder_func/pasted_image016.png) 
-![](images/progfun1_lec2_highorder_func/pasted_image017.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image015.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image016.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image017.png) 
  
 examples:  
  
-![](images/progfun1_lec2_highorder_func/pasted_image019.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image019.png) 
  
 operator overloading 
 -------------------- 
  
 ### infix ops 
 **any method with one parameter can be used as an infix operator.** 
-![](images/progfun1_lec2_highorder_func/pasted_image020.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image020.png) 
  
 *scala identifiers can bu symbolic:* 
-![](images/progfun1_lec2_highorder_func/pasted_image021.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image021.png) 
  
 ⇒ change names to ``+, <, -,`` use in this way: 
  
@@ -301,7 +301,7 @@ now change the ``neg`` method: prefix operator, and might be confused with the s
 **the precedence of an op is defined by its first letter** 
 order (by increasing precedence): 
  
-![](images/progfun1_lec2_highorder_func/pasted_image022.png) 
+![](../images/progfun1_lec2_highorder_func/pasted_image022.png) 
 quite the same as in java 
  
  

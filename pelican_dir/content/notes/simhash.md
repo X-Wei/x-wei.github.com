@@ -5,9 +5,9 @@ Tags: ml
    
 除了上次介绍的[minhash](http://x-wei.github.io/minhash.html)方法以外, 还有一种常见的hash方法, 叫做simHash. 这里做简要介绍.    
 这个hash函数的背景和上次一样, 还是考虑把文本抽象为ngram的集合:    
-![](images/simhash/pasted_image.png)   
+![](../images/simhash/pasted_image.png)   
 然后相似度依旧是Jaccard similarity:    
-![](images/simhash/pasted_image001.png)   
+![](../images/simhash/pasted_image001.png)   
    
 simHash   
 -------   
@@ -18,7 +18,7 @@ simHash的方法听上去比minHash还要简单:
    
    
 写成数学表达式很吓人, 其实只不过不断在{0,1}和{-1,+1}之间变而已, 总之就是对所有hash(t)的每一位进行统计, 如果1多就放1, 否则就放0...    
-![](images/simhash/pasted_image002.png)   
+![](../images/simhash/pasted_image002.png)   
    
 关于为什么simHash可以满足近邻hash的条件(即两个文档jacccard sim越大, 其simhash相等的可能性越大), 不知道... 不过可以参考这个链接: <http://matpalm.com/resemblance/simhash/>    
    

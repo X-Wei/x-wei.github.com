@@ -24,11 +24,11 @@ quick partition
 如果允许新建一个临时数组的话, 那么这个就不是什么问题, 但是为了节约空间占用, 现在需要直接修改(in-place)使得a[lo] 到, 而且希望可以用尽量少的交换(``swap(int[]a, int i, int j)``)操作, 就不是很evident了.   
   
 这个函数的写法是用两个指针i和j分别从两端向中间走, 如果两个指针指向的元素一个小于pivot一个大于pivot那么就进行交换, 当两个指针碰面的时候结束(最后把pivot和指针元素交换). 请看下面这个萌萌的图(图片来自<<啊哈!算法>>):   
-![](images/quick-sort-and-more/pasted_image003.png)  
+![](../images/quick-sort-and-more/pasted_image003.png)  
 选取第一个元素(6)为pivot, 然后j向左走直到遇到一个小于pivot(6)的数停止, i向右走直到遇到一个大于pivot的数停止(*注意要让j先移动*), 此时二者交换:   
-![](images/quick-sort-and-more/pasted_image004.png)  
+![](../images/quick-sort-and-more/pasted_image004.png)  
 只要重复这个过程, 直到i>=j为止, 此时只要最后把pivot和j(*注意是j而不是i*)指向的元素交换即可:   
-![](images/quick-sort-and-more/pasted_image005.png)  
+![](../images/quick-sort-and-more/pasted_image005.png)  
 所以pivot的位置就是j, 函数返回j即可.    
   
 java实现:   
@@ -125,9 +125,9 @@ qsort之前有个bug: 在数组里很多重复元素的时候, 效率会下降�
 * a[i,gt] = unseen  
 * a[gt+1, hi] > pivot  
   
-![](images/quick-sort-and-more/pasted_image006.png)  
+![](../images/quick-sort-and-more/pasted_image006.png)  
 这个图很有助于写代码:   
-![](images/quick-sort-and-more/pasted_image007.png)  
+![](../images/quick-sort-and-more/pasted_image007.png)  
   
 	void qsort3way(int[] a, int lo, int hi){  
 		if(hi<=lo) return;  

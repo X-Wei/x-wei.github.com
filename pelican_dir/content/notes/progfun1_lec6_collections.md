@@ -14,7 +14,7 @@ Vector: better rand access performance.
 
 represented as very shallow trees(32-split at each node)
 
-![](images/progfun1_lec6_collections/pasted_image.png)
+![](../images/progfun1_lec6_collections/pasted_image.png)
 
 ``Vector`` support similar operations as List (head, tail,map, fold) , except concat ``::``, instead Vectors have ``+:`` and ``:+``:
 
@@ -24,14 +24,14 @@ represented as very shallow trees(32-split at each node)
 
 implementation of ``:+``: create copies
 
-![](images/progfun1_lec6_collections/pasted_image002.png)
+![](../images/progfun1_lec6_collections/pasted_image002.png)
 
 ### Seq
 ``Seq`` is base class for ``Vector`` and ``List``, ``Seq`` itself is subclass of ``Iterable``.
 
 Hierarchy of Iterables: 
 
-![](images/progfun1_lec6_collections/pasted_image005.png)
+![](../images/progfun1_lec6_collections/pasted_image005.png)
 
 ### Array ans String
 
@@ -331,7 +331,7 @@ two useful SQL queries.
 ### map Example: polynomials
 can be seen as map from exponents to coefficients:
 
-![](images/progfun1_lec6_collections/pasted_image006.png)
+![](../images/progfun1_lec6_collections/pasted_image006.png)
 
 ⇒ represent polynm as maps
 
@@ -454,12 +454,12 @@ Step 5: return strings (instead of List[String])
 
 
 summary: 
-![](images/progfun1_lec6_collections/pasted_image007.png)
+![](../images/progfun1_lec6_collections/pasted_image007.png)
 
 Conclusion
 ==========
 
-![](images/progfun1_lec6_collections/pasted_image009.png)
+![](../images/progfun1_lec6_collections/pasted_image009.png)
 
 <https://www.scala-exercises.org/>
 

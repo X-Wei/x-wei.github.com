@@ -21,31 +21,31 @@ simhash
 Jaccard similarity   
 ------------------   
 明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term(term可以是单词, 也可以是n-gram或叫shingle):   
-![](images/minhash/pasted_image.png)   
+![](../images/minhash/pasted_image.png)   
    
 一段文本(document i)可以用binary vectorization变为一个binary的向量:    
-![](images/minhash/pasted_image001.png)   
+![](../images/minhash/pasted_image001.png)   
 (这里没有用TF或者TFIDF, 只用一个简单的binary向量化, 因为只有binary的时候才适合我们接下来的推导...)   
    
 每个document可以看作一些term的*集合*, 集合之间的相似度有一个经典的度量: jaccard similarity.   
 对集合S1和S2, 他们的相似度定义为:    
-![](images/minhash/pasted_image003.png)   
+![](../images/minhash/pasted_image003.png)   
 也很好理解, 重合部分比例越高相似度就越高, 另外jaccard-sim取值在0到1之间.    
    
 对于document i和j, 他们的向量形式分别是di和dj. 现在我们希望计算hash(di)和hash(dj), 使得:    
    
-![](images/minhash/pasted_image004.png)   
+![](../images/minhash/pasted_image004.png)   
    
 minHash   
 -------   
 min hash的思路是这样的, 首先生成一个随机的(1...M)的排序(permutation)π:    
-![](images/minhash/pasted_image005.png)   
+![](../images/minhash/pasted_image005.png)   
    
 然后, 对于每个document d, 都按照这个permutation, 把d的分量从新排列:    
-![](images/minhash/pasted_image006.png)   
+![](../images/minhash/pasted_image006.png)   
    
 然后定义``minHash(di)``为permutation以后的di里的第一个不为0的位置:    
-![](images/minhash/pasted_image008.png)   
+![](../images/minhash/pasted_image008.png)   
 (上面个公式里d的下标只是代表第i个文本, 并不代表分量... 我应该写上标的..)   
 所以``minHash()``返回1到M之间的一个数.    
    
@@ -54,12 +54,12 @@ proof
 现在证明一下为什么这样选择minHash函数可以保证两个文本的哈希值相等的概率为他们的jaccard similarity.    
    
 对于d2和d2, 我们分别查看π(d1)和π(d2)的每个分量, 这两个数有(11), (10), (01), (00)这四种可能, 分别记每种可能性的出现次数为a,b,c,d:    
-![](images/minhash/pasted_image009.png)   
+![](../images/minhash/pasted_image009.png)   
 那么jaccard similarity可以表示为:    
-![](images/minhash/pasted_image010.png)   
+![](../images/minhash/pasted_image010.png)   
 再看``minHash()``是如何计算的, 当π(d1)_k和π(d2)_k都为0的时候会继续增加k, 一直到π(d1)_k和π(d2)_k中某一个为1.    
 那么``minHash(d1)==minHash(d2)``的情况就是二者都为1的情况, 这种情况的可能性为:    
-![](images/minhash/pasted_image011.png)   
+![](../images/minhash/pasted_image011.png)   
 这个概率恰好就是jaccard similarity.    
    
    

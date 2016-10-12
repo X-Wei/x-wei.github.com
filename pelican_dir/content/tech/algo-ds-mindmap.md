@@ -5,7 +5,7 @@ Tags: algorithm
 
 Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    
 
-![](images/algo-ds-mindmap/Algo%20%26%20DS.png)   
+![](../images/algo-ds-mindmap/Algo%20%26%20DS.png)   
 
 I shall update its content later on. And maybe write some blog entries on some of the items.   
 

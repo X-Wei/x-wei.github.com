@@ -69,4 +69,4 @@ see [here](https://github.com/X-Wei/fcitx-table-french)
 I haven't made the mac version yet...
 
 
-![](images/./fr-input/doge.jpg)
+![](../images/./fr-input/doge.jpg)

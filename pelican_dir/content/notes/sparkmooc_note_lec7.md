@@ -24,7 +24,7 @@ data quality problems:
 EXAMPLE: AGES OF STUDENTS IN THIS COURSE
 ----------------------------------------
 (students' ages are self-reported...)  
-![](images/sparkmooc_note_lec7/pasted_image.png)
+![](../images/sparkmooc_note_lec7/pasted_image.png)
 
 DATA CLEANING MAKES EVERYTHING OKAY?
 ------------------------------------
@@ -32,10 +32,10 @@ ex. the appearance of a hole in the ozone layer.
 
 DIRTY DATA PROBLEMS
 -------------------
-![](images/sparkmooc_note_lec7/pasted_image001.png)
+![](../images/sparkmooc_note_lec7/pasted_image001.png)
 
 Data Quality Continuum:  
-![](images/sparkmooc_note_lec7/pasted_image002.png)
+![](../images/sparkmooc_note_lec7/pasted_image002.png)
 
 DATA GATHERING
 --------------
@@ -53,7 +53,7 @@ duplicate removal
 DATA DELIVERY
 -------------
 solutions:   
-![](images/sparkmooc_note_lec7/pasted_image003.png)
+![](../images/sparkmooc_note_lec7/pasted_image003.png)
 
 DATA STORAGE
 ------------
@@ -77,7 +77,7 @@ static constraints:
 ex. nulls not allowed, field domains
 
 data constraints follow a 80-20 rule:   
-![](images/sparkmooc_note_lec7/pasted_image004.png)
+![](../images/sparkmooc_note_lec7/pasted_image004.png)
 
 **Data quality metrics**: ...
 ex. in lab2, examine log lines that are not correctly parsed.

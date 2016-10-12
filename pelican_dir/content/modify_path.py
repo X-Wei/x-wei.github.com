@@ -11,7 +11,7 @@ for folder in folders:
         print fpath
         with open(fpath, 'r') as f:
             content = ''.join( f.readlines() )
-        new_content = content.replace('![](_images', '![](images'  )
+        new_content = content.replace('![](images', '![](../images'  )
         with open(fpath, 'w') as f:
             f.write(new_content)
     

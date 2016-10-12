@@ -12,7 +12,7 @@ bootstrap2模板里提供了很丰富的内容(可以看farseerfc学长的页面
 
 要登录google[自定义搜索](http://www.google.com/cse/?hl=zh-CN), 的页面, 用google帐号登录, 然后选择新建一个自定义搜索引擎, 会看到这样的界面: 
 
-![](images/./add-google-custom-search/pasted_image.png)
+![](../images/./add-google-custom-search/pasted_image.png)
 
 第一项的名称和描述啥的随便填就行, 关键是第二项"要搜索的网站", 可以点击"了解详情"看一下应该怎么写. 比如我的网站是`x-wei.github.com`, 而且我想是在这个网站的所有子页面中搜索, 于是这里就填写: `x-wei.github.com/*`即可~ 第三项当然是免费版, 然后下一步.
 
@@ -26,7 +26,7 @@ bootstrap2模板里提供了很丰富的内容(可以看farseerfc学长的页面
 `GOOGLE_CUSTOM_SEARCH_SIDEBAR = "001578481551708017171:axpo6yvtdyg"`
 注意, 引号里的那一串字符是你刚才申请的自定义搜索引擎的id, 这个id在哪里? 再次登录google自定义搜索, 这次点"管理现有引擎", 点击你刚才创建的那个引擎的"控制面板":
 
-![](images/./add-google-custom-search/pasted_image001.png)
+![](../images/./add-google-custom-search/pasted_image001.png)
 
 在基本信息里面就会看到"搜索引擎的唯一 ID", 把那一串数字赋值给GOOGLE_CUSTOM_SEARCH_SIDEBAR即可~
 

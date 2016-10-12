@@ -24,9 +24,9 @@ suppose we could (not) solve pb X efficiently
 >def. reduction  
 Pb X **reduces to** pb Y if you can use an algo that solves Y to solve X.   
   
-![](images/algoII_week6_1_reductions/pasted_image.png)  
+![](../images/algoII_week6_1_reductions/pasted_image.png)  
 for an instance of pb X → transform it into an instance of pb Y → translate the solution for Y to solution for X.  
-![](images/algoII_week6_1_reductions/pasted_image001.png)  
+![](../images/algoII_week6_1_reductions/pasted_image001.png)  
   
 ex1. finding median can reduce to sorting... cost = NlogN+1  
 ex1. element distinctness can reduce to sorting... cost = NlogN + N  
@@ -35,7 +35,7 @@ ex1. element distinctness can reduce to sorting... cost = NlogN + N
 =======================  
 algo design: by reduction to problems that we know how to solve (sorting/shortest path/flow/...)  
   
-![](images/algoII_week6_1_reductions/pasted_image002.png)  
+![](../images/algoII_week6_1_reductions/pasted_image002.png)  
   
 ### ex1. convex hull reduces to sorting  
 Gram scan algo... (discussed in algo-I course)  
@@ -45,14 +45,14 @@ algo. Gram scan
 * sort all points by polar angle wrt the picked point   
 * consider points in this order, discard points that creates clockwise turn   
   
-![](images/algoII_week6_1_reductions/pasted_image003.png)  
+![](../images/algoII_week6_1_reductions/pasted_image003.png)  
   
 ### ex2. undirected shortest path (nonneg weights) reduces to directed shortest path  
 cost: ElogV + E  
 algo. replace each undir-edge by 2 dir-edge...  
   
-![](images/algoII_week6_1_reductions/pasted_image004.png)  
-![](images/algoII_week6_1_reductions/pasted_image005.png)  
+![](../images/algoII_week6_1_reductions/pasted_image004.png)  
+![](../images/algoII_week6_1_reductions/pasted_image005.png)  
   
 3. Establishing Lower Bounds  
 ============================  
@@ -78,12 +78,12 @@ prop. sorting linear-time reduces to convex hull
 pf.   
 for an instance of sorting: x1 ... xn  
 ⇒ convert to convex hull instance: *(x1, x1^2), ... , (xn, xn^2)*  
-![](images/algoII_week6_1_reductions/pasted_image006.png)  
+![](../images/algoII_week6_1_reductions/pasted_image006.png)  
   
 ⇒ implication: all (ccw-based) convex hull algo cannot be easier than NlgN ! (otherwise sorting would be easier..)   
   
 lesson: Establishing lower bounds through reduction is an important tool in guiding algorithm design efforts.  
-![](images/algoII_week6_1_reductions/pasted_image007.png)  
+![](../images/algoII_week6_1_reductions/pasted_image007.png)  
   
 4. Classifying Problems  
 =======================  
@@ -96,25 +96,25 @@ prove that pb X and pb Y have the same complexity:
   
 ex. sorting and convex hull...   
 一个囧囧的脑洞:   
-![](images/algoII_week6_1_reductions/pasted_image008.png)  
+![](../images/algoII_week6_1_reductions/pasted_image008.png)  
   
 ### ex. integer arithmetic reductions: integer multiplication  
 integer multiplication: of two N-bit integers.   
 Its complexity (unknown) is denoted as M(N)  
 brute force: N^2 ops  → so M(N) = Omega(N2)  
 many other integer ops can reduce to integer multiplication:   
-![](images/algoII_week6_1_reductions/pasted_image009.png)  
+![](../images/algoII_week6_1_reductions/pasted_image009.png)  
 what is M(N)?  
-![](images/algoII_week6_1_reductions/pasted_image010.png)  
+![](../images/algoII_week6_1_reductions/pasted_image010.png)  
   
 ### ex. linear-algebra reductions: matrix multiplication  
 compute product of 2 N*N matrices.   
 Its complexity (unknown) is denoted as MM(N)  
 brute force: N^3  
 operations that can reduce to matrix-multiplication:  
-![](images/algoII_week6_1_reductions/pasted_image011.png)  
+![](../images/algoII_week6_1_reductions/pasted_image011.png)  
 what is MM(N)?  
-![](images/algoII_week6_1_reductions/pasted_image012.png)  
+![](../images/algoII_week6_1_reductions/pasted_image012.png)  
   
 ### summary  
-![](images/algoII_week6_1_reductions/pasted_image013.png)  
+![](../images/algoII_week6_1_reductions/pasted_image013.png)  

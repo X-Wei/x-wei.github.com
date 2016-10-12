@@ -11,7 +11,7 @@ scala is *pure* OO: every value is an obj, every operation is a method of obj.
  
 Implement ``Boolean`` withous primitive type in scala:  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image.png) 
  
 Then defin ``false`` and ``true`` as objects, give implementation for ``ifThenElse()`` funciton:  
  
@@ -30,7 +30,7 @@ Function values are treated as objects in scala.
 the type ``A => B`` is an abbrevation for ``scala.Function1[A, B]`` 
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image001.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image001.png) 
  
 **Functions are objects with **``apply``** methods.** 
  
@@ -50,7 +50,7 @@ function call ``f(a,b)`` is expanded to:  ``f.apply(a,b)``
  
 ### Type Bounds 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image003.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image003.png) 
 ``assertAllPos`` taks either ``EmptySet`` or ``NonEmptySet``, the return type is EmptySet (when para=EmptySet) or NonEmptySet (when para=NonEmpty).  
 To express this situation:  
  
@@ -58,7 +58,7 @@ To express this situation:
  
 Here ``<: IntSet`` means IntSet is an upper bound of the type parameter.  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image004.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image004.png) 
 and we can mix the two notations:  
  
 ``[S >: NonEmpty <: IntSet]`` 
@@ -72,7 +72,7 @@ In this case the typse are called *covariant. *
 In java, arrays are covariant: ``NonEmpty[] <: IntSet[]`` 
 but this might cause problems:  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image005.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image005.png) 
  
 will get ArrayStoreException in 3rd line.  
  
@@ -88,9 +88,9 @@ ex: arithmetic expression interpreter: a tree of numbers and sums, both are subt
 1st try: test and accessor methods 
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image006.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image006.png) 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image007.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image007.png) 
 
 → tedious... And to add more operands need to add many more methods...  
  
@@ -99,7 +99,7 @@ type testing and type casting
 ``isinstantceof``, ``asinstanceof`` 
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image008.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image008.png) 
 
 discouraged in scala. 
  
@@ -107,12 +107,12 @@ discouraged in scala.
 add ``eval`` method to class Expr. 
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image009.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image009.png) 
 
 limitation: if we want to simplify an expression,  
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image010.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image010.png) 
 
 ⇒ there is no local simplification ! 
  
@@ -137,7 +137,7 @@ ex.
  
 adding ``case`` adds *companion objects* with ``apply`` methods:  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image011.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image011.png) 
 
 according to the expansion, ``Number(2)`` is equal to ``Number.apply(2)`` which is actaully ``new Numver(2)`` 
  
@@ -151,7 +151,7 @@ according to the expansion, ``Number(2)`` is equal to ``Number.apply(2)`` which 
  
  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image012.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image012.png) 
  
 patterns include:  
  
@@ -176,9 +176,9 @@ exercice: implement a ``show`` function.
 ----------- 
 example:  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image013.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image013.png) 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image014.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image014.png) 
 
 difference between List and Array:  
  
@@ -194,7 +194,7 @@ All ``List``s in scala are constructed with:
  
  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image015.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image015.png) 
  
 convention in scala: operators ending with ``:``  
  
@@ -212,12 +212,12 @@ operations on lists:
 list in pattern matching: 
  
 
-![](images/progfun1_lec4_pattern_matching/pasted_image016.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image016.png) 
 
 ex. insertion sort of lists 
 
 
-![](images/progfun1_lec4_pattern_matching/pasted_image017.png) 
+![](../images/progfun1_lec4_pattern_matching/pasted_image017.png) 
  
 
 	def isort(xs: List[Int]): List[Int] = xs match{ 

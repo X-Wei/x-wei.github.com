@@ -8,10 +8,10 @@ More efficient version of symbol-table where the keys are strings.
 1. R-way Tries  
 ==============  
 Two implementations of symbol tables that we've seen:   
-![](images/algoII_week4_1/pasted_image.png)  
+![](../images/algoII_week4_1/pasted_image.png)  
 when keys are strings:  
 (``L``=string length, ``N``=number of strings, ``R``=radix)  
-![](images/algoII_week4_1/pasted_image001.png)  
+![](../images/algoII_week4_1/pasted_image001.png)  
   
 for string keys ⇒ do better by avoiding examing the entire key.  
   
@@ -35,7 +35,7 @@ A trie is a tree where:
 * store *value* in node if the node corresponds to the* last char* in key.   
   
 example: (*a trie<Integer>)*  
-![](images/algoII_week4_1/pasted_image002.png)  
+![](../images/algoII_week4_1/pasted_image002.png)  
   
 * **search in a trie **``get()``  
   
@@ -107,7 +107,7 @@ delete node in trie:
 * find the node and set the val to null  
 * if a node has 0 links(leaf)  and val==null: delete it and recursivly go up.   
   
-![](images/algoII_week4_1/pasted_image003.png)  
+![](../images/algoII_week4_1/pasted_image003.png)  
   
 analysis  
 --------  
@@ -116,7 +116,7 @@ search hit —  L nodes examined.
 serach miss —  sublinear in L  
 **space:**   
 each node has R links (possibly null) — *too much memory for large R* !  
-![](images/algoII_week4_1/pasted_image004.png)  
+![](../images/algoII_week4_1/pasted_image004.png)  
 **Application**  
 interview question: data structure for spell checking.   
   
@@ -132,7 +132,7 @@ TST:
 	* (所以除了用smaller/larger连接的节点在Rway trie里属于同一层  
   
   
-![](images/algoII_week4_1/pasted_image005.png)  
+![](../images/algoII_week4_1/pasted_image005.png)  
 类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   
   
 **searching** in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  
@@ -191,14 +191,14 @@ Hybrid of TST and Rway trie
 * at root: do *R^2 branching*  
 * other nodes are TSTs   
   
-![](images/algoII_week4_1/pasted_image007.png)  
+![](../images/algoII_week4_1/pasted_image007.png)  
   
   
 analysis  
 --------  
 space cost: linear in N.  
 time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)  
-![](images/algoII_week4_1/pasted_image008.png)  
+![](../images/algoII_week4_1/pasted_image008.png)  
   
 Hashing vs. TST  
 ---------------  
@@ -238,7 +238,7 @@ API
 keys(): ordered iteration  
 -------------------------  
 ``keys()``: just an inorder-traversal of the *Rway trie* →dfs, + maintain the chars in the path (root to current node).   
-![](images/algoII_week4_1/pasted_image009.png)  
+![](../images/algoII_week4_1/pasted_image009.png)  
 
 	public Iterable<String> keys(){  
 		Queue<String> q = new Queue<String>();  
@@ -297,7 +297,7 @@ Other Variants
   
 ### Patricia trie  
 improvement: remove the one-eay branching (put >1 chars in a node).  
-![](images/algoII_week4_1/pasted_image010.png)  
+![](../images/algoII_week4_1/pasted_image010.png)  
   
 ### suffix tree  
   
@@ -308,4 +308,4 @@ improvement: remove the one-eay branching (put >1 chars in a node).
   
 Summery  
 -------  
-![](images/algoII_week4_1/pasted_image011.png)  
+![](../images/algoII_week4_1/pasted_image011.png)  

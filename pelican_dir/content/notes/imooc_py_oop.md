@@ -129,7 +129,7 @@ Python对属性权限的控制是通过**属性名**来实现的.
 类的继承  
 ====  
 代码复用  
-![](images/imooc_py_oop/pasted_image.png)  
+![](../images/imooc_py_oop/pasted_image.png)  
 python的继承:  
   
 * 总是从某个类继承(最上层是``object``)  
@@ -194,7 +194,7 @@ super(SubCls, self)将返回当前类继承的父类, 注意self参数已在supe
 	        print 'init D...'  
   
   
-![](images/imooc_py_oop/pasted_image001.png)  
+![](../images/imooc_py_oop/pasted_image001.png)  
 D 同时继承自 B 和 C，也就是 D 拥有了 A、B、C 的全部功能。多重继承通过 super()调用__init__()方法时，A 虽然被继承了两次，但``__init__()``只调用一次：  
   
 	>>> d = D('d')  

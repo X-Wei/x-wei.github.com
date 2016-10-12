@@ -7,17 +7,17 @@ Tags: google
 
 后来, 发现cbl同学没有安装插件也实现了这样的效果, 如下图:
 
-![](images/./chrome_flashblock/pasted_image.png)
+![](../images/./chrome_flashblock/pasted_image.png)
 
 cbl教我把chrome设置成插件点击播放, 个人感觉这样挺有用的~
 大概是两步:
 
 **第一步**, 扳手菜单-->首选项-->高级选项-->隐私设置-->内容设置
 
-![](images/./chrome_flashblock/pasted_image001.png)
+![](../images/./chrome_flashblock/pasted_image001.png)
 
 然后找到"插件"这一项, 选择"点后运行"
-![](images/./chrome_flashblock/pasted_image002.png)
+![](../images/./chrome_flashblock/pasted_image002.png)
 
 这样设置之后, chrome就不会自动播放flash, 然后再设置点击运行flash.
 

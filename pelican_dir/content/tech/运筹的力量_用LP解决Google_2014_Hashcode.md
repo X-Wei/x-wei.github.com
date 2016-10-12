@@ -1,7 +1,7 @@
 Title: 运筹的力量: 用线性规划解决Google 2014 HashCode问题
 date: 2015-02-02
-Slug: 运筹的力量: 用线性规划解决Google 2014 HashCode问题
-Tags: LP, 算法
+Slug: hashcode2014-solved-by-LP
+Tags: LP, algorithm
 
 INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. 
 
@@ -25,7 +25,7 @@ I. 初步建模
 ----------
 站在一个更高的角度上考虑这个问题, 从一个线性规划的角度看, 给定一个图``G(V,E)``, 目标是最大化走过的街道长度, 如果用对每条街道``e``, 定义一个``x_e``,: 当一条街被经过的时候使它为1, 否则为0, 那么目标函数就是一个x的线性组合(系数就是对应街道的长度). 
 
-但是如果一条街被经过了大于一次, ``x_e``也只能是1, 所以再引入一个变量``y_e``: 用来表示一条街被经过的**次数**. 所以``x_e``可以看成是``y_e``的indicatrice函数: ![](images/./运筹的力量_用LP解决Google_2014_Hashcode/equation.png), 这一点可以通过增加线性约束: ``x_e<=y_e`` 即可实现, 因为``x_e``的取值范围是{0,1}. 
+但是如果一条街被经过了大于一次, ``x_e``也只能是1, 所以再引入一个变量``y_e``: 用来表示一条街被经过的**次数**. 所以``x_e``可以看成是``y_e``的indicatrice函数: ![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/equation.png), 这一点可以通过增加线性约束: ``x_e<=y_e`` 即可实现, 因为``x_e``的取值范围是{0,1}. 
 
 不过一条街可能从两个方向被经过(``G``里面的边是有向的), 如果``e``'代表反方向的``e``, 那么还应该增加约束:  ``x_e+x_e'<=1`` 就好了. 
 
@@ -37,7 +37,7 @@ I. 初步建模
 
 以上的目标函数以及约束, 虽然数目庞大, 但是都是线性的, 所以是一个整数线性规划问题, 写成数学形式就是: 
 
-![](images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image001.png)
+![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image001.png)
 
 从solution得到路径
 -------------
@@ -86,7 +86,7 @@ III. subtour问题的"解决"
 ----
 在一次PC上有一道题目介绍了TSP subtour问题的一种建模方式, "potentiel"建模, 可以防止加入2^n个约束: 为每个节点``v``引入新的变量``u_v``,``u_v``代表了节点``v``被访问的顺序, 约束做的非常巧妙, 是这样的: 
 
-![](images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image002.png)
+![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image002.png)
 
 这样, 当``x_ij``是1的时候, 就保证``u_j``比``u_i``大1, 而当``x_ij``是0的时候, 这个约束则非常松弛, 几乎相当于没有. 
 
@@ -121,13 +121,13 @@ IV. 进一步优化
 
 所以新的目标函数是: 
 
-![](images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image003.png)
+![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image003.png)
 
 这样一运行, 我们的big path居然剩下了六千多秒的时间!!! 这些时间足够八辆车跑到各段的起点了!! 我们这样, 八辆车走完了big path所有的路程得到的结果离满分只差了7米, 而最后一辆车还有两千多秒没有走! 
 
 检查了一下, 发现有一个7米长的路是唯一剩下没走过的路: 于是只要再让最后一辆车去走一下就好了(因为时间够用), 最终我们的方案走完了整个巴黎:
 
-![](images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image005.png)
+![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image005.png)
 
 
 等一下, 这里有点奇怪: 为什么优化得到的结果并不是最优的(没有走完所有的路程)? 我们通过后来手动走那条剩下的路都没有超时, 所以说其实肯定可以在8T的时间走遍所有街道的! 后来查了一下才发现, 原来Gurobi并不是返回最优解, 而是当当前可行解与最优解足够接近的时候就直接停止, 这个参数的名字叫mipgap, 更多参数可以参考这里: <http://www.gurobi.com/documentation/6.0/ampl-gurobi-guide/parameters> .
@@ -148,7 +148,7 @@ IV. 进一步优化
 
 LP模型表达为: 
 
-![](images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image004.png)
+![](../images/./运筹的力量_用LP解决Google_2014_Hashcode/pasted_image004.png)
 
 
 

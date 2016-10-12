@@ -8,7 +8,7 @@ Tags: tips, 快捷键
 
 于是打开编辑键盘快捷键窗口, 新建一个快捷键如下图:
 
-![](images/./scrshot-shortcut/pasted_image.png)
+![](../images/./scrshot-shortcut/pasted_image.png)
 
 这样, 按下Ctrl+Alt+s快捷键后即可启动抓图, 且是抓取一个区域. 不过不知为什么, 反应比较慢, 需要按下一段时间  (一秒钟?)才会有反应.
 
@@ -20,7 +20,7 @@ Tags: tips, 快捷键
 
 我非常无语...
 
-![](images/./scrshot-shortcut/pasted_image001.png)
+![](../images/./scrshot-shortcut/pasted_image001.png)
 
 嗯 就这样吧~...
 

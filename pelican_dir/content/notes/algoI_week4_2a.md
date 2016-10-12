@@ -43,7 +43,7 @@ conventions:
 Assume keys to be comparable: ``class ST<Key implements Comparable<Key>, Value> ``— can thus use ``compareTo()`` method.    
 Else →  we can only use the ``equals()`` method...    
 Be careful when implementing the equals method: 坑不少...    
-![](images/algoI_week4_2a/pasted_image.png)   
+![](../images/algoI_week4_2a/pasted_image.png)   
    
    
 2. Elementary implementations   
@@ -57,7 +57,7 @@ using unordered linked list
 * search: scan through all keys ~N   
 * insert: scan through, if not found, add to front ~N   
    
-![](images/algoI_week4_2a/pasted_image001.png)   
+![](../images/algoI_week4_2a/pasted_image001.png)   
    
 using ordered array   
 -------------------   
@@ -94,7 +94,7 @@ Using rank() to implement the get() method:
 Like insertion sort, time complexity is ~N for each insert.    
    
 summery:    
-![](images/algoI_week4_2a/pasted_image002.png)   
+![](../images/algoI_week4_2a/pasted_image002.png)   
    
 3. Ordered Opeartions   
 =====================   
@@ -109,7 +109,7 @@ for example:
 * ``Iterator<Key> keys(lo, hi)``: iterates through [lo, hi]   
    
    
-![](images/algoI_week4_2a/pasted_image004.png)   
+![](../images/algoI_week4_2a/pasted_image004.png)   
    
-![](images/algoI_week4_2a/pasted_image003.png)   
+![](../images/algoI_week4_2a/pasted_image003.png)   
    

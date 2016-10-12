@@ -78,7 +78,7 @@ every call to ``union`` is on a *smaller* IntSet !
 写成这样就会stackoverflow: ``other.incl(elem).union(left).union(right)``  
 讨论见: <https://www.coursera.org/learn/progfun1/discussions/weeks/3/threads/AzJ-4CLYEeag6wpD-92Rcw> 
 (需要点"view earlier replies"才有) 
-![](images/progfun1_lec3_data_abstraction/pasted_image012.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image012.png) 
  
 ### Dynamic Binding 
 behavior depends on the runtime type of the object.  
@@ -100,9 +100,9 @@ Lecture 3.2 - How Classes Are Organized
  can import either from a package or from an object 
  
 automatically imported in scala:  
-![](images/progfun1_lec3_data_abstraction/pasted_image001.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image001.png) 
 ex: 
-![](images/progfun1_lec3_data_abstraction/pasted_image002.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image002.png) 
  
 scaladoc: <http://www.scala-lang.org/files/archive/api/current/#package> 
  
@@ -113,14 +113,14 @@ have several supertypes? ⇒ trait!
  
 * one class can extend many traits (concated by ``with``)  — like java ``interface`` 
  
-![](images/progfun1_lec3_data_abstraction/pasted_image003.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image003.png) 
  
 * traits can contain fileds and concrete methods 
 * on the other hand, traits cannot have (value) parameters, but classes can 
  
  
 ### scala class hierchy 
-![](images/progfun1_lec3_data_abstraction/pasted_image004.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image004.png) 
  
 * ``Any``: base class of all 
 * ``AnyVal``: primitive types (``Int, Unit, Boolean,...``) 
@@ -138,16 +138,16 @@ Lecture 3.3 - Polymorphism
  
 ### cons-list 
 immutable linked list 
-![](images/progfun1_lec3_data_abstraction/pasted_image005.png) 
-![](images/progfun1_lec3_data_abstraction/pasted_image006.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image005.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image006.png) 
 implement this in scala: 
-![](images/progfun1_lec3_data_abstraction/pasted_image007.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image007.png) 
  
 the ``val`` in the class definition: **defines at the same time parameter and field of a class**, equivalent to:  
-![](images/progfun1_lec3_data_abstraction/pasted_image008.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image008.png) 
  
 **type parameters** (generic) 
-![](images/progfun1_lec3_data_abstraction/pasted_image009.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image009.png) 
  
 	trait List[T]{ 
 	  def isEmpty : Boolean 
@@ -171,7 +171,7 @@ use nothing as return type, and throw an exception.
  
 ### generic functions 
 type parameters can be applied to functions.  
-![](images/progfun1_lec3_data_abstraction/pasted_image011.png) 
+![](../images/progfun1_lec3_data_abstraction/pasted_image011.png) 
 sometime the type parameter can be deduced by scala compiler.  
 ex. ``singleton(2); singleton(true)`` 
  

@@ -15,7 +15,7 @@ weka的文档在解压缩的文件里有, 另外在线文档在: <http://weka.so
   
 ### about libsvm...  
 关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里:   
-![](images/java-use-weka/pasted_image002.png)  
+![](../images/java-use-weka/pasted_image002.png)  
 在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, ``wekafiles/packages/LibSVM/``目录下就是libsvm的内容.   
   
 需要指出的一点是, 要使用libsvm的话, [需要同时引用两个jar文件](http://stackoverflow.com/questions/30821926/solved-weka-api-libsvm-classpath-not-found), 而且都叫libsvm.jar!!   
@@ -122,7 +122,7 @@ Classifier是一个Interface, 可以在文档里看到有很多类都实现了�
 之前讲的是在程序里得到数据, 在程序里储存结果的方法, 而如果可以保存数据到文件的话, 在GUI界面下调试模型应该更加放方便.   
   
 预先已经得到了数据的话, 可以先把数据保存问arff格式, 然后用GUI的weka训练和调试参数. 当得到满意的结果以后可以在GUI界面里选择保存训练好的模型(一个.model文件):   
-![](images/java-use-weka/pasted_image001.png)  
+![](../images/java-use-weka/pasted_image001.png)  
   
   
   

@@ -18,14 +18,14 @@ no smaller entry to the right of pivot
 3. sort each subarray recursively     
    
    
-![](images/algoI_week3_2/pasted_image.png)      
+![](../images/algoI_week3_2/pasted_image.png)      
    
 Implemetation   
 -------------   
 **The partition process:**      
 这个方法也比较巧妙.    
 Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :      
-![](images/algoI_week3_2/pasted_image001.png)      
+![](../images/algoI_week3_2/pasted_image001.png)      
 → a[i]>=a[lo], a[j]<**=**a[lo] (注意是大于**等于**/小于**等于**)      
 ⇒ exchange i and j      
 → Scan until i and j cross (ie. j<=i)      
@@ -53,7 +53,7 @@ Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :
    
    
 invariance:      
-![](images/algoI_week3_2/pasted_image002.png)      
+![](../images/algoI_week3_2/pasted_image002.png)      
    
 **Quicksort:   **   
 使用partition函数和辅助sort函数(recursive).  注意在整个流程开始以前先shuffle一下.     
@@ -93,9 +93,9 @@ On average, for array with N distinct keys, the #compares =  ~2NlnN, #exchanges 
 C(N) := # compares for N entries     
 pivot 在N个数离的排名是uniform的      
 接下来的数学推到很漂亮(不过可能没啥用..)       
-![](images/algoI_week3_2/pasted_image003.png)         
-![](images/algoI_week3_2/pasted_image004.png)        
-![](images/algoI_week3_2/pasted_image006.png)         
+![](../images/algoI_week3_2/pasted_image003.png)         
+![](../images/algoI_week3_2/pasted_image004.png)        
+![](../images/algoI_week3_2/pasted_image006.png)         
    
 (上面最后一行写错了... 是2NlnN...orz)
 random shuffle: probalistic guarantee against worst case.    
@@ -110,7 +110,7 @@ implementations will get *quadratic* performance if array:
 **Staility  **   
 Quicksort is **NOT** stable.     
 partitionning can make long range exchanges     
-![](images/algoI_week3_2/pasted_image007.png)      
+![](../images/algoI_week3_2/pasted_image007.png)      
    
 Practical improvements   
 ----------------------   
@@ -122,7 +122,7 @@ Or we can leave the small subarrays unsorted and sort them at last using inserti
    
 * estimate median by sampling 3 items       
    
-  ![](images/algoI_week3_2/pasted_image008.png)   
+  ![](../images/algoI_week3_2/pasted_image008.png)   
  → 10% improvement     
 	   
    
@@ -179,7 +179,7 @@ formal analysis 略...
 **worst case**: quadratic (but very rare to happen)   
    
 **Theoretical results**     
-![](images/algoI_week3_2/pasted_image009.png)         
+![](../images/algoI_week3_2/pasted_image009.png)         
    
 3. Duplicate keys   
 =================   
@@ -197,14 +197,14 @@ Will get *quadratic* time if not stop on equal keys. (found in 1990s)
 mistake: put all items equal to pivot *to just one side   *   
 → N^2 compares if all keys are equal from lo to hi.    
 correct: put all items equal to pivot in their final place.      
-![](images/algoI_week3_2/pasted_image010.png)      
+![](../images/algoI_week3_2/pasted_image010.png)      
    
    
 3-way partitionning   
 -------------------   
 (by Dijkstra)     
 partition the array into 3 parts:       
-![](images/algoI_week3_2/pasted_image011.png)       
+![](../images/algoI_week3_2/pasted_image011.png)       
     
 Dijkstra's 3-way partition algo:    
 使用3个指针: lt指向中间部分的左边界, gt指向右边界;  i指针从左向右扫描, 算法很subtle:     
@@ -222,14 +222,14 @@ Dijkstra's 3-way partition algo:
 * ``[lt, i)`` ***all == v***
 * ``(gt, hi]`` ***all >v***
    
-![](images/algoI_week3_2/pasted_image012.png)      
+![](../images/algoI_week3_2/pasted_image012.png)      
    
-![](images/algoI_week3_2/pasted_image013.png)      
+![](../images/algoI_week3_2/pasted_image013.png)      
    
 Implementation: 3-way quick sort   
 --------------------------------   
 不必再写partition函数, 直接在sort递归函数里面.       
-![](images/algoI_week3_2/pasted_image014.png)        
+![](../images/algoI_week3_2/pasted_image014.png)        
    
 	private static void sort(Comparable[] a, int lo, int hi){   
 		if(hi<=lo) return; // 递归函数别忘了先写终止条件...   
@@ -248,11 +248,11 @@ Implementation: 3-way quick sort
 	}   
 
 
-![](images/algoI_week3_2/pasted_image015.png)      
+![](../images/algoI_week3_2/pasted_image015.png)      
 当N个数有很多重复的时候, lower bound可以变小于NlgN:       
-![](images/algoI_week3_2/pasted_image016.png)         
+![](../images/algoI_week3_2/pasted_image016.png)         
 And Sedgewick proved that the 3-wy partition is propotional to the lower bound....       
-![](images/algoI_week3_2/pasted_image017.png)      
+![](../images/algoI_week3_2/pasted_image017.png)      
    
 4. System Sorts   
 ===============   
@@ -260,16 +260,16 @@ Arrays.sort() in java:
    
 ``import java.util.Arrays;``   
    
-![](images/algoI_week3_2/pasted_image018.png)      
+![](../images/algoI_week3_2/pasted_image018.png)      
 quicksort for primitive arrays, mergesort for objects: java设计者认为如果用obj array表示空间不是问题...   
    
 Pb in java's system sort: killer input exsit (havn't shuffle)...    
    
-![](images/algoI_week3_2/pasted_image020.png)      
+![](../images/algoI_week3_2/pasted_image020.png)      
      
-![](images/algoI_week3_2/pasted_image021.png)        
+![](../images/algoI_week3_2/pasted_image021.png)        
 总结一下学过的5/6种排序:       
-![](images/algoI_week3_2/pasted_image022.png)      
+![](../images/algoI_week3_2/pasted_image022.png)      
    
    
    

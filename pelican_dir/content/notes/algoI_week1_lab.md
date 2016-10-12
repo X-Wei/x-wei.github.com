@@ -11,10 +11,10 @@ A system using an N-by-N grid of sites.
 → A **full** site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)  
 → We say the system **percolates** if there is a path of connected open sites form the top row to the bottom row.   
 
-![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png)   
+![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png)   
 
 ⇒ pb: if sites are independently set to be open with probability **p**, what is the probability that the system percolates?   
-![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png)   
+![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png)   
 → When N is sufficiently large, there is a threshold value **p*** such that when p < p* a random N-by-N grid almost never percolates, and when p > p*, a random N-by-N grid almost always percolates.   
 → No mathematical solution for determining the percolation threshold p* has yet been derived.   
 ⇒ Your task is to *write a computer program to estimate p**.   
@@ -54,16 +54,16 @@ if N<=0 in constructor: ``java.lang.IllegalArgumentException``
 
 * ex. 20*20 grid, when percolated: 
 
-![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image002.png)   
+![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image002.png)   
 ⇒ estimated p* = 204/400=0.51
 	
 
 * repeat the estimation for T times, get T estimations 
 
     → get mean and std:    
-    ![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image003.png)   
+    ![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image003.png)   
     → 95% 置信区间:   
-    ![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image004.png) 
+    ![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image004.png) 
 	
 
 * create API for this simulation: 
@@ -97,7 +97,7 @@ shuffle, mean, stddev什么的直接用他们的函数库就可以做到.
 
 ### backwash问题  
 这次题目有一点比较困难就是, 需要实现isFull()函数, 这个函数判断一个格子(i,j)是否和顶部相连. 这里如果直接用UF的connected()判断是否和顶部虚拟节点相连的话是有问题的, 如下图:   
-![](images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image005.png)   
+![](../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image005.png)   
 白色格子表示格子是open的, 蓝色格子表示格子是open并且是*full*的(i.e. 和顶部相连的), 左边图片里的状态是对的, 右边图片里底下部分的格子状态则不对: 如左下角的格子, 其实是没有和顶部联通的, 如果我们用两个虚拟节点的话, 由于底部虚拟节点和顶部虚拟节点相连, 所以和底部虚拟节点相连的左下角部分就被判断成了full的. 
 
 这个问题一开始我以为可以很简单解决, 后来发现没那么容易... (注意题目还要求isFull()也要在常数时间给出结果).  
