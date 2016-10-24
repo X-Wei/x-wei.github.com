@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-ocaml.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2016-10-23T00:00:00+02:00</updated><entry><title>[Introduction to Functional Programming in OCaml] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS</title><link href="http://x-wei.github.io/ocamlMOOC_wk1_basics.html" rel="alternate"></link><published>2016-10-23T00:00:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2016-10-23:ocamlMOOC_wk1_basics.html</id><summary type="html">
+&lt;h1 id="1-basic-data-types-int-bool"&gt;1. BASIC DATA TYPES: int, bool&lt;/h1&gt;
+&lt;p&gt;Rich type system and polymorphism in ocaml. Types are &lt;em&gt;infered&lt;/em&gt; not declared.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Basic types&lt;/strong&gt;: int, bool, float, string, char, ... &lt;/p&gt;
+&lt;h3 id="int"&gt;int&lt;/h3&gt;
+&lt;p&gt;value: &lt;span class="math"&gt;\(-2^{62}\)&lt;/span&gt; ~ &lt;span class="math"&gt;\(2^{62}-1\)&lt;/span&gt; on 64-bit machines.&lt;br/&gt;
+ops: &lt;code&gt;+, -, *, /, mod&lt;/code&gt; (reminder: &lt;code&gt;/&lt;/code&gt; is integer division) &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="ow"&gt;mod&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="bool"&gt;bool&lt;/h3&gt;
+&lt;p&gt;values: &lt;code&gt;true, false&lt;/code&gt; 
+ops: &lt;code&gt;&amp;amp;&amp;amp;,||, not&lt;/code&gt; 
+comparison ops: &lt;code&gt;&amp;lt;, &amp;gt;, =, &amp;lt;=, =&amp;gt;, &amp;lt;&amp;gt;&lt;/code&gt;&lt;br/&gt;
+note 1: comparisons must have the &lt;em&gt;same type&lt;/em&gt; of operands) 
+note 2: equal test is &lt;code&gt;=&lt;/code&gt; , &lt;code&gt;=&lt;/code&gt; is NOT assigment.  &lt;code&gt;==&lt;/code&gt; exists but is for something else... &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;float&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"hello"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="2-more-data-types-float-char-string"&gt;2. MORE DATA TYPES: float, char, string&lt;/h1&gt;
+&lt;h3 id="float"&gt;float&lt;/h3&gt;
+&lt;p&gt;value: must written with a dot (&lt;code&gt;5.0&lt;/code&gt;, &lt;code&gt;5.&lt;/code&gt;), or exponential (&lt;code&gt;5e3&lt;/code&gt;, &lt;code&gt;6e-9&lt;/code&gt;) 
+ops: &lt;em&gt;also have a dot in the end&lt;/em&gt; &lt;code&gt;+.&lt;/code&gt;, &lt;code&gt;-.&lt;/code&gt;, &lt;code&gt;*.&lt;/code&gt;, &lt;code&gt;/.&lt;/code&gt; 
+functions: &lt;code&gt;sqrt, sin, cos, ceil, floor, ...&lt;/code&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="o"&gt;+.&lt;/span&gt; &lt;span class="mf"&gt;1e10&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10000000003&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="o"&gt;+.&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;All basic types are disjoint&lt;/strong&gt;: no value belongs to 2 different basic types, &lt;strong&gt;no implicit conversion. &lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;conversion functions in both directions:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;float_of_int&lt;/code&gt;: int -&amp;gt; float &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;int_of_float&lt;/code&gt;: float -&amp;gt; int &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;float_of_int&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;int_of_float&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;float_of_int&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;int_of_float&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Parentheses only necessary to indicate structure&lt;/strong&gt;.  &lt;/p&gt;
+&lt;h3 id="char"&gt;char&lt;/h3&gt;
+&lt;p&gt;values: 256 chars (0~255), can be written as '&lt;code&gt;a&lt;/code&gt;' or '&lt;code&gt;\087&lt;/code&gt;' 
+conversion functions (char ↔ int):  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Char.chr&lt;/code&gt;: int -&amp;gt;char &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Char.code&lt;/code&gt;: char -&amp;gt; int &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;65&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="sc"&gt;'\122'&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;122&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chr&lt;/span&gt; &lt;span class="mi"&gt;233&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'\233'&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chr&lt;/span&gt; &lt;span class="mi"&gt;65&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'A'&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chr&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nn"&gt;Char&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'B'&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="string"&gt;string&lt;/h3&gt;
+&lt;p&gt;values: written between &lt;code&gt;""&lt;/code&gt; 
+ops: &lt;code&gt;^&lt;/code&gt; for string concatenation 
+functions: &lt;code&gt;String.length, int_of_string, float_of_string, String.get(s,i) ...&lt;/code&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"abc"&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="s2"&gt;"def"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"abcdef"&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="s2"&gt;"1234"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;int_of_string&lt;/span&gt; &lt;span class="s2"&gt;"123"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;123&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;int_of_string&lt;/span&gt; &lt;span class="s2"&gt;"123a"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Exception&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Failure&lt;/span&gt; &lt;span class="s2"&gt;"int_of_string"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;string_of_int&lt;/span&gt; &lt;span class="mi"&gt;123&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"123"&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="s2"&gt;"abc"&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'b'&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="3-expressions-if-then-else-func-applications-and-operators"&gt;3. EXPRESSIONS: if-then-else, func-applications and operators&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;expressions&lt;/strong&gt; are used to compute values.  &lt;/p&gt;
+&lt;h3 id="conditional-expr"&gt;conditional expr&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;if... then... else...&lt;/code&gt; 
+⇒ this gives an &lt;strong&gt;expression&lt;/strong&gt;, not an &lt;strong&gt;instruction&lt;/strong&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;An expression always have a type&lt;/em&gt;, type of the if-then-else expression is the type of the expressions in then and else, &lt;em&gt;which must be the same&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;If the &lt;code&gt;else&lt;/code&gt; is missing → there is a default value, to be discussed later  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="o"&gt;.;;&lt;/span&gt;        &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="function-application"&gt;function application&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk1_basics/pasted_image001.png"/&gt; &lt;/p&gt;
+&lt;p&gt;again, &lt;code&gt;()&lt;/code&gt; are &lt;strong&gt;not needed&lt;/strong&gt; unless indicate structure, and &lt;strong&gt;parentheses are NOT function applications...&lt;/strong&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="s2"&gt;"abcde"&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'c'&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Hello"&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="s2"&gt;"world"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'w'&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;string_of_int&lt;/span&gt; &lt;span class="mi"&gt;65&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;int_of_string&lt;/span&gt; &lt;span class="s2"&gt;"0"&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sc"&gt;'6'&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="nn"&gt;String&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"hello"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="k"&gt;'&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="k"&gt;'&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;       &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="polymorphic-operators"&gt;Polymorphic operators&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk1_basics/pasted_image002.png"/&gt; 
+Some ops have polymorphic(generic) types, like &lt;code&gt;&amp;gt;&lt;/code&gt;:  '&lt;code&gt;a → 'a → bool&lt;/code&gt; 
+Here the '&lt;code&gt;a&lt;/code&gt; is a &lt;em&gt;type variable, &lt;/em&gt;can be instantiated by any type&lt;em&gt;.&lt;/em&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="mi"&gt;12&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;23&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;float&lt;/span&gt; &lt;span class="n"&gt;but&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;expression&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;         &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="sc"&gt;'a'&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="sc"&gt;'b'&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"hello"&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;"world"&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="4-definitions"&gt;4. DEFINITIONS&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;definition&lt;/strong&gt;s are used to give names to values, in ocaml there are &lt;em&gt;global&lt;/em&gt; defs and &lt;em&gt;local&lt;/em&gt; defs.  &lt;/p&gt;
+&lt;h3 id="global-definition"&gt;global definition&lt;/h3&gt;
+&lt;p&gt;effective for rest of session 
+syntax: &lt;code&gt;let name = expr&lt;/code&gt; 
+once set, the value of the identifier never changes.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt; &lt;span class="n"&gt;definition&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;will&lt;/span&gt; &lt;span class="n"&gt;be&lt;/span&gt; &lt;span class="n"&gt;shadowed&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="local-definition"&gt;local definition&lt;/h3&gt;
+&lt;p&gt;naming within a delimited scope 
+syntax: &lt;code&gt;let name = expr1 in expr2&lt;/code&gt; 
+the scope of the identifier is &lt;code&gt;expr2&lt;/code&gt;, the result's value is also &lt;em&gt;expr2's value&lt;/em&gt;. &lt;em&gt;So the identifier should appear in expr2&lt;/em&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;global&lt;/span&gt; &lt;span class="n"&gt;scope&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Unbound&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Unbound&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;global&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt;           &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;local defs can be nested: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Syntax&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;                    &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;17&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;22&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk1_basics/pasted_image003.png"/&gt; &lt;/p&gt;
+&lt;h3 id="simultaneous-definitions"&gt;Simultaneous Definitions&lt;/h3&gt;
+&lt;p&gt;can assign 2 identifiers in the same line:  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x1&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;x2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x1&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x2&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;code&gt;expr&lt;/code&gt; is  evaluated w.r.t. the value bindings &lt;em&gt;before&lt;/em&gt; the &lt;code&gt;let&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;     &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="c"&gt;(*y=2+1*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;     &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="c"&gt;(*y=1+1 because the binding for x before the let is 1!*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;    &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="5-functions"&gt;5. FUNCTIONS&lt;/h1&gt;
+&lt;h3 id="func-definition"&gt;func definition&lt;/h3&gt;
+&lt;p&gt;global function (with 1 argument) def : &lt;code&gt;let f x = expr&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;local def: &lt;code&gt;let f x = expr1 in expr2&lt;/code&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;18&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;84&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="c"&gt;(* interpreted as apply 2 argments to f, need parentheses here*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;This&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="n"&gt;has&lt;/span&gt; &lt;span class="k"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;       &lt;span class="nc"&gt;It&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;applied&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;too&lt;/span&gt; &lt;span class="n"&gt;many&lt;/span&gt; &lt;span class="n"&gt;arguments&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt; &lt;span class="n"&gt;maybe&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;forgot&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;`;&lt;/span&gt;&lt;span class="k"&gt;'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="lexical-scoping"&gt;lexical scoping&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;def. &lt;strong&gt;lexical scoping&lt;/strong&gt; 
+identifiers(names) used in function body refers to the names &lt;em&gt;that &lt;/em&gt;are visible &lt;em&gt;at the moment of function definition&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;def. &lt;strong&gt;dynamic scoping&lt;/strong&gt; 
+names refer to names that are visible &lt;em&gt;at the moment of function invocation&lt;/em&gt;.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="c"&gt;(*here f is the f defined above, which is visible at the moment of g's declaration*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="c"&gt;(*this f is visible after g's declaration, it is visible when g is invocated*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="c"&gt;(*g uses the first f*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Warning&lt;/span&gt; &lt;span class="mi"&gt;26&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;unused&lt;/span&gt; &lt;span class="n"&gt;variable&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="c"&gt;(*the same is true for global scoping*)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="identifiers-are-not-variables"&gt;identifiers are NOT variables&lt;/h3&gt;
+&lt;p&gt;A name(identifier) can be &lt;em&gt;hidden&lt;/em&gt; (the value is NOT &lt;em&gt;changed&lt;/em&gt;) by a new definition of the same name.  &lt;/p&gt;
+&lt;p&gt;The hidden identifier can be accessed with static(lexical) binding:  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;73&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;73&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;span class="c"&gt;(*f still uses a's value as 2, the old value of a is NOT changed, it's hidden --closure? *)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="6-recursion"&gt;6. RECURSION&lt;/h1&gt;
+&lt;p&gt;rec functions are natural on recursively defined data structures.  &lt;/p&gt;
+&lt;p&gt;example: fact(n) &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk1_basics/pasted_image004.png"/&gt; &lt;/p&gt;
+&lt;h3 id="recursive-definition"&gt;recursive definition&lt;/h3&gt;
+&lt;p&gt;using the &lt;code&gt;f&lt;/code&gt; in let's &lt;code&gt;expr&lt;/code&gt; will cause pb as &lt;code&gt;f&lt;/code&gt; refers to the previous value of &lt;code&gt;f&lt;/code&gt;. ⇒ use key word &lt;code&gt;rec&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;fact&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;fact&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nc"&gt;Unbound&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="n"&gt;fact&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;fact&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;fact&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;fact&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;fact&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3628800&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="mutually-recursive-function"&gt;mutually recursive function&lt;/h3&gt;
+&lt;p&gt;ex. 2 funcs calling each other recursively &lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk1_basics/pasted_image005.png"/&gt; &lt;/p&gt;
+&lt;p&gt;⇒ &lt;em&gt;use simultaneous defs&lt;/em&gt; (&lt;code&gt;let...and...&lt;/code&gt;):  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;even&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;odd&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;odd&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;even&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;even&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;odd&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;even&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;odd&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id="exercices"&gt;exercices&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;multiple_of&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="ow"&gt;mod&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;integer_square_root&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;sqr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sqrt&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;float_of_int&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="n"&gt;int_of_float&lt;/span&gt; &lt;span class="n"&gt;sqr&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;gcd&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;big&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;max&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;small&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;big&lt;/span&gt; &lt;span class="ow"&gt;mod&lt;/span&gt; &lt;span class="n"&gt;small&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="n"&gt;small&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;gcd&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="n"&gt;small&lt;/span&gt;&lt;span class="o"&gt;;;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;multiple_upto&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;multiple_of&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="bp"&gt;true&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;multiple_upto&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;is_prime&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="bp"&gt;false&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;multiple_upto&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;));;&lt;/span&gt; &lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+    
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' &amp;&amp; location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript'; 
+    mathjaxscript.src = location_protocol + '//cdnjscn.b0.upaiyun.com/libs/mathjax/2.4.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</summary><category term="ocaml"></category></entry><entry><title>[Introduction to Functional Programming in OCaml] week0: intro and overview</title><link href="http://x-wei.github.io/ocamlMOOC_wk0_intro.html" rel="alternate"></link><published>2016-10-04T00:00:00+02:00</published><author><name>mx</name></author><id>tag:x-wei.github.io,2016-10-04:ocamlMOOC_wk0_intro.html</id><summary type="html">
+&lt;h1 id="intro"&gt;Intro&lt;/h1&gt;
+&lt;h3 id="ml-lang-family"&gt;ML lang family&lt;/h3&gt;
+&lt;p&gt;statically strongly typed languages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;fisrt-class functions&lt;/li&gt;
+&lt;li&gt;type inference &lt;/li&gt;
+&lt;li&gt;pattern matching&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="highlights-of-ocaml"&gt;highlights of ocaml&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;safty: static typing, pattern matching&lt;/li&gt;
+&lt;li&gt;efficiency: high performance&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;expressiveness: functional+type inference+polymorphism&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;package manager: opam&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;debugger&lt;/li&gt;
+&lt;li&gt;profiler&lt;/li&gt;
+&lt;li&gt;REPL: "toplevel"&lt;/li&gt;
+&lt;li&gt;bytecode compiler: ccamlc&lt;/li&gt;
+&lt;li&gt;native compiler: ocamlopt&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;programming environment &lt;strong&gt;fully online:&lt;/strong&gt;
+&lt;a href="https://try.ocamlpro.com/fun-demo/tryocaml_index.html"&gt;https://try.ocamlpro.com/fun-demo/tryocaml_index.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;note: the local REPL &lt;code&gt;ocaml&lt;/code&gt; (toplevel)  is not very good, either use &lt;code&gt;ledit ocaml&lt;/code&gt;, or use &lt;code&gt;utop&lt;/code&gt;. &lt;/p&gt;
+&lt;h1 id="quick-tour-of-the-language"&gt;Quick tour of the language&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;list&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[]&lt;/code&gt; is empty list&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;a::l&lt;/code&gt; element &lt;code&gt;a&lt;/code&gt; in head and &lt;code&gt;l&lt;/code&gt; as remaining tail.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[1;2;3;4]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;function&lt;/strong&gt;: sum of list
+write with pattern matching: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;sumlist&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;        &lt;span class="bp"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sumlist&lt;/span&gt; &lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This func has auto-inferred as of type: &lt;code&gt;int list -&amp;gt;int&lt;/code&gt;. all types are &lt;em&gt;computed and enforced&lt;/em&gt; at compile time. &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;polymorphism and higher order&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;note: polymorphism ~= generic in java/template in cpp&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;turn the &lt;code&gt;0&lt;/code&gt; and &lt;code&gt;+&lt;/code&gt; in previous function into parameters, call this function &lt;code&gt;fold&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="k"&gt;fun&lt;/span&gt; &lt;span class="n"&gt;fold&lt;/span&gt; &lt;span class="n"&gt;op&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;function&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;        &lt;span class="bp"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;op&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fold&lt;/span&gt; &lt;span class="n"&gt;op&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;infered the most general type: &lt;code&gt;val fold : ('a -&amp;gt; 'b -&amp;gt; 'b) -&amp;gt; 'b -&amp;gt; 'a list -&amp;gt; 'b = &amp;lt;fun&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pattern matching&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;write a function to remove all consecutive duplicates from a list: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;destutter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;function&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="bp"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="bp"&gt;[]&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="n"&gt;destutter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;destutter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/ocamlMOOC_wk0_intro/pasted_image.png"/&gt;&lt;/p&gt;
+&lt;p&gt;⇒ compiler tell us we forgot to add the case when only one element is in list !! And this case: &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;rec&lt;/span&gt; &lt;span class="n"&gt;destutter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="k"&gt;function&lt;/span&gt;  &lt;/span&gt;
+&lt;span class="code-line"&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="bp"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="bp"&gt;[]&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="bp"&gt;[]&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="bp"&gt;[]&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt; &lt;span class="n"&gt;destutter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;                &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;destutter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rest&lt;/span&gt;&lt;span class="o"&gt;);;&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="ocaml"></category></entry></feed>

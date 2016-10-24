@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 3-1 Mergesort
 Date: 2015-08-21   
 Slug:  algoI_week3_1   
 Tags: algorithm   
-   
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]   
    
 Two classical sorting algorithms: mergesort, quicksort.    
    

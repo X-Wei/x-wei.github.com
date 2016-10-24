@@ -2,6 +2,9 @@ Title: 深度优先搜索(DFS)小结
 date: 2015-10-18      
 Slug: dfs-summary      
 Tags: algorithm      
+Series: 算法笔记
+ 
+[TOC] 
    
 今天总结一下也许是搜索问题里最重要的算法: DFS !    
    

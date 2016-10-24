@@ -2,10 +2,12 @@ Title: [learning torch] 5. nngraph (another way to construct nn)
 Date: 2016-10-08  15:00 
 Slug: learn-torch-5-nngraph 
 Tags: torch   
+Series: torch学习笔记 
  
+[TOC]
+      
  
-ref: <http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/> 
- 
+ref: <http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/>   
 doc: <https://github.com/torch/nngraph/> 
  
 The aim of this library is to provide users of nn package with tools to easily create complicated architectures.  

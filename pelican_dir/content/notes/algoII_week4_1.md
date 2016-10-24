@@ -2,6 +2,10 @@ Title: [Algorithms II] Week 4-1 Tries
 Date: 2015-12-05      
 Slug:  algoII_week4_1  
 Tags: algorithm       
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC] 
+
   
 More efficient version of symbol-table where the keys are strings.   
   

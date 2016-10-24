@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 2-2 Shortest Paths
 Date: 2015-11-15      
 Slug:  algoII_week2_2         
 Tags: algorithm      
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+    
 1. Shortest Paths APIs   
 ======================   
 context: *directe, weighted graphs*.     

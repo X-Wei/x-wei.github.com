@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 1-2 Directed Graphs
 Date: 2015-11-09   
 Slug:  algoII_week1_2      
 Tags: algorithm      
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+    
 1. Intro to digraphs   
 ====================   
    

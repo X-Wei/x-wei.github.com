@@ -1,11 +1,12 @@
 Title: [learning torch] 6. optim (optimization tools)    
 Date: 2016-10-10   
 Slug: learn-torch-6-optim  
-Tags: torch    
+Tags: torch
+Series: torch学习笔记 
  
-6. optim 
-======== 
-Created Sunday 10 October 2016 
+[TOC]
+     
+ 
  
 ref: <http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/>    
 doc: <https://github.com/torch/optim/blob/master/doc/intro.md>    

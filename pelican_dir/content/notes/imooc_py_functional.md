@@ -2,7 +2,10 @@ Title: [python进阶课程] 函数式编程
 Date: 2016-02-17   
 Slug:  imooc_py_functional  
 Tags: python  
-  
+Series: python进阶课程
+ 
+[TOC]  
+   
 <http://www.imooc.com/learn/317>
   
   

@@ -2,7 +2,10 @@ Title: [Functional Programming Principles in Scala] Lec0: Getting Started
 Date: 2016-06-20
 Slug:  progfun1_lec0_setup   
 Tags: scala
-
+Series: Scala MOOC I 
+ 
+[TOC]
+ 
 >Get up and running with Scala on your computer. Complete an example assignment to familiarize yourself with our unique way of submitting assignments.
 
 Tool setup

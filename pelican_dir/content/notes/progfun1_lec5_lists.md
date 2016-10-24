@@ -2,7 +2,9 @@ Title: [Functional Programming Principles in Scala] Lec5: Lists
 Date: 2016-07-29 21:30   
 Slug:  progfun1_lec5_lists
 Tags: scala 
-
+Series: Scala MOOC I
+ 
+[TOC]
 
 
 5.1 - More Functions on Lists

@@ -2,7 +2,10 @@ Title: [learning torch] 3. Container (models)
 Date: 2016-10-07 20:20 
 Slug:  learn-torch-3-container 
 Tags: torch 
+Series: torch学习笔记 
  
+[TOC]
+      
  
 doc: <https://github.com/torch/nn/blob/master/doc/containers.md>     
 ref: <http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/>   

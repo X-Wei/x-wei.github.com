@@ -2,7 +2,9 @@ Title: [Algorithms II] Week 5-2 Data Compression
 Date: 2016-01-04    
 Slug:  algoII_week5_2        
 Tags: algorithm             
-  
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]  
   
 1. Introduction to Data Compression  
 ===================================  

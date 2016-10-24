@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 1-1 Undirected Graphs
 Date: 2015-11-08   
 Slug:  algoII_week1_1   
 Tags: algorithm   
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+    
    
 1. Intro to graphs   
 ==================   

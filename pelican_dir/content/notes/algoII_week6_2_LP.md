@@ -2,7 +2,9 @@ Title: [Algorithms II] Week 6-2 Linear Programming
 Date: 2016-02-21 17:00     
 Slug:  algoII_week6_2_LP    
 Tags: algorithm         
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]   
    
 simplex algo: top 10 algo of the 20th century (ever?).   
    

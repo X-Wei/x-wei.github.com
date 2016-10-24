@@ -2,6 +2,9 @@ Title: [Spark MOOC note] Lec4. Spark Essentials
 Date: 2015-06-16
 Slug: sparkmooc_note_lec4
 Tags: spark
+Series: spark MOOC
+ 
+[TOC]  
 
 
 PYTHON SPARK (PYSPARK)

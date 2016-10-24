@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 3-2 Radix Sorts
 Date: 2015-11-23           
 Slug:  algoII_week3_2     
 Tags: algorithm           
-  
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+   
 This week: string sort.  
   
 1. Strings in Java  

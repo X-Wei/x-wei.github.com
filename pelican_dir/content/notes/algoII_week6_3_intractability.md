@@ -2,7 +2,9 @@ Title: [Algorithms II] Week 6-3 Intractability
 Date: 2016-02-23         
 Slug:  algoII_week6_3_intractability     
 Tags: algorithm            
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
  
 # 1. Introduction to Intractability   
      

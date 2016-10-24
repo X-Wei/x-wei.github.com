@@ -2,7 +2,9 @@ Title: 用pelican在github上创建自己的博客!
 Date: 2012-04-13
 Slug: pelican_github_blog
 Tags: pelican, git
-
+ 
+[TOC] 
+ 
 折腾了许久, 终于把[我的博客](http://x-wei.github.com)搞得差不多了, 在此写一个总结, 以免自己以后忘了, 并且给和我一样菜的人提供一点参考....
 
 先扯点别的

@@ -3,6 +3,8 @@ date: 2015-02-02
 Slug: hashcode2014-solved-by-LP
 Tags: LP, algorithm
 
+[TOC]
+
 INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. 
 
 这门课的projet是去年巴黎谷歌举行的一个比赛的题目: 最优化谷歌街景拍照小车的路线. 做这个projet的三周里, 我和Manu从一开始信心满满, 到中间一筹莫展, 再到后来柳暗花明, 以及最后乘胜追击终于在今晚得到了近乎完美的解答, 非常精彩, 这里特意一记.

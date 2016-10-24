@@ -2,7 +2,10 @@ Title: [Algorithms I] Week 4-2a Elementry Symbol Tables
 Date: 2015-08-25   
 Slug:  algoI_week4_2a      
 Tags: algorithm   
-   
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
+    
 1. Symbol Table API   
 ===================   
    

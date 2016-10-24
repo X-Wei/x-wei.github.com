@@ -2,7 +2,9 @@ title: 在java程序里使用weka进行机器学习
 Date: 2016-05-21  
 Slug: java-use-weka  
 Tags: ml, weka, java  
-  
+ 
+[TOC] 
+   
   
 之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   
   

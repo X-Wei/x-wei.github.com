@@ -2,7 +2,9 @@ Title: [Functional Programming Principles in Scala] Lec6: Collections
 Date: 2016-07-30
 Slug:  progfun1_lec6_collections
 Tags: scala 
-
+Series: Scala MOOC I
+ 
+[TOC]
 
 6.1 - Other Collections
 =======================

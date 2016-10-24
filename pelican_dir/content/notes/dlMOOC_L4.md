@@ -2,6 +2,10 @@ title: (DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences
 Date: 2016-06-07           
 Slug: dlMOOC_L4          
 Tags: deep learning    
+Series: Deep Learning udacity MOOC
+ 
+[TOC]
+
   
 problems with text:   
   

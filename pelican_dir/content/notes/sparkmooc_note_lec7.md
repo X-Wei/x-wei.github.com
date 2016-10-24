@@ -2,6 +2,9 @@ Title: [Spark MOOC note] Lec7. Data Quality
 Date: 2015-06-22
 Slug: sparkmooc_note_lec7
 Tags: spark
+Series: spark MOOC
+ 
+[TOC]  
 
 DATA CLEANING
 -------------

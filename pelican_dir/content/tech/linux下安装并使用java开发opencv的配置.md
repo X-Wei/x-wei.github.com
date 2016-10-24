@@ -2,6 +2,8 @@ Title: linux下安装并使用java开发opencv的配置
 Date: 2014-02-10
 Tags: eclipse, java, opencv
 Slug: linux下安装并使用java开发opencv的配置
+ 
+[TOC] 
 
 
 今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... 

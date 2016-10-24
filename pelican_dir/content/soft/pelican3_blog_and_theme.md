@@ -3,6 +3,8 @@ Date: 2016-10-12
 Slug: pelican3_blog_and_theme 
 Tags: pelican 
  
+[TOC] 
+  
  
 上次捣鼓pelican博客系统还是在2012年, 那时[farseerfc](https://farseerfc.me/)学长就提供了无私的帮助, 当时非常兴奋写了这么一篇简单的[教程](http://x-wei.github.io/pelican_github_blog.html).  
  

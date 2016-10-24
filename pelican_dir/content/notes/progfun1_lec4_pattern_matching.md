@@ -1,7 +1,10 @@
 Title: [Functional Programming Principles in Scala] Lec4: Types and Pattern Matching 
 Date: 2016-07-17   
 Slug:  progfun1_lec4_pattern_matching  
-Tags: scala     
+Tags: scala    
+Series: Scala MOOC I 
+ 
+[TOC]
  
 4.1 - Objects Everywhere 
 ------------------------ 

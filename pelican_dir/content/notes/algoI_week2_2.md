@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 2-2 Elementary Sorts
 Date: 2015-08-18
 Slug:  algoI_week2_2
 Tags: algorithm
-
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
 
 1. Introduction
 ===============

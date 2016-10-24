@@ -2,6 +2,9 @@ Title: [Functional Programming Principles in Scala] Lec3: Data and Abstraction
 Date: 2016-06-28    
 Slug:  progfun1_lec3_data_abstraction 
 Tags: scala    
+Series: Scala MOOC I 
+ 
+[TOC]
  
 This week, we'll cover traits, and we'll learn how to organize classes into hierarchies. We'll cover the hierarchy of standard Scala types, and see how to organize classes and traits into packages. Finally, we'll touch upon the different sorts of polymorphism in Scala. 
  

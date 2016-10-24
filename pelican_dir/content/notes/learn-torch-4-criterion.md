@@ -2,10 +2,12 @@ Title: [learning torch] 4. Criterion (loss function)
 Date: 2016-10-08 14:00 
 Slug:  learn-torch-4-criterion  
 Tags: torch  
-  
+Series: torch学习笔记 
+ 
+[TOC]
+       
   
 ref: <http://rnduja.github.io/2015/10/05/deep_learning_with_torch_step_3_nn_criterions/>   
-  
 doc: <https://github.com/torch/nn/blob/master/doc/criterion.md>   
   
 ``Criterion``: abstract class, given input and target(true label), a ``Criterion`` can compute the gradient according to a certain loss function.   

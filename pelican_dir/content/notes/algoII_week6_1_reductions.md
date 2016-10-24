@@ -2,7 +2,9 @@ Title: [Algorithms II] Week 6-1 Reductions
 Date: 2016-02-19 9:00  
 Slug:  algoII_week6_1_reductions      
 Tags: algorithm         
-  
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]  
   
   
 Goal: classify problems according to computational requirements.   

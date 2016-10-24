@@ -3,6 +3,8 @@ Date: 2015-11-22
 Slug:  TeXmacs_intro    
 Tags: tex, TeXmacs             
     
+[TOC] 
+
   
 今天介绍一个论文写作的神器: TeXmacs !   
   

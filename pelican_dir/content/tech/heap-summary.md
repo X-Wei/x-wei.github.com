@@ -2,6 +2,9 @@ Title: Priority Queue/Heap (优先队列/堆)小结
 Date: 2015-12-09  
 Slug:  heap-summary    
 Tags: algorithm         
+Series: 算法笔记
+ 
+[TOC] 
   
   
   

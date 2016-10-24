@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 4-2 Substring Search
 Date: 2015-12-07    
 Slug:  algoII_week4_2    
 Tags: algorithm         
-  
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC] 
+   
 1. Introduction to substring search  
 ===================================  
 "most ingenious algorithm we've seen so far"  

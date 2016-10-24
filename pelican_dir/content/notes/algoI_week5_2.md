@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 5-2 Geometric Applications of BSTs
 Date: 2015-08-29   
 Slug:  algoI_week5_2    
 Tags: algorithm       
-   
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]   
    
 1. 1d Range Search   
 ==================   

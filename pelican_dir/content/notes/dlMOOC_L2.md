@@ -2,6 +2,9 @@ title: (DeepLearning MOOC) Lesson 2: Deep Neural Networks
 Date: 2016-06-05 18:00     
 Slug: dlMOOC_L2      
 Tags: deep learning   
+Series: Deep Learning udacity MOOC
+ 
+[TOC]
   
   
 Linear models  

@@ -2,6 +2,9 @@ Title: [Spark MOOC note] Lec5. Semi-structured Data
 Date: 2015-06-17
 Slug: sparkmooc_note_lec5
 Tags: spark
+Series: spark MOOC
+ 
+[TOC]  
 
 KEY DATA MANAGEMENT CONCEPTS
 ----------------------------

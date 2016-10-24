@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 2-1 Stacks and Queues
 Date: 2015-07-09
 Slug:  algoI_week2_1
 Tags: algorithm
-
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
 
 fundamental data types: stacks and queues
 operations: 

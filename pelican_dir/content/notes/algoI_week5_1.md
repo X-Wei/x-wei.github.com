@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 5-1 Balanced Search Trees
 Date: 2015-08-26   16:00     
 Slug:  algoI_week5_1         
 Tags: algorithm        
-   
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]   
    
 goal: lgN for insert/search/delete operations (not necessarily *binary* trees..)   
 3 algo: 2-3 tree, (left leaning) red-black tree, B-tree   

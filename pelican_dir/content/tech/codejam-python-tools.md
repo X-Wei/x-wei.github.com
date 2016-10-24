@@ -2,6 +2,8 @@ title: codejam常用(python)解题工具
 Date: 2016-05-27 18:00        
 Slug: codejam-python-tools   
 Tags: algorithm, codejam, python      
+ 
+[TOC] 
    
 总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    
    

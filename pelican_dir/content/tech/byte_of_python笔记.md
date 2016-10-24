@@ -2,6 +2,8 @@ Title: A byte of Python 笔记
 Date: 2014-04-10
 Tags: python
 Slug: byte_of_python笔记
+ 
+[TOC] 
 
 
 

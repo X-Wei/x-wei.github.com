@@ -2,7 +2,9 @@ Title: A French Input Method
 Date: 2014-05-23
 Slug: fr-input
 Tags: fr
-
+ 
+[TOC] 
+ 
 Well, to be brief...
 -----------------
 I made a french input method, if you got annoyed by the freaking french keyboard when typing accented words (i.e.  **é, û, ü, î,...** ), or you are using a QWERTY keyboard, this will be quite useful !

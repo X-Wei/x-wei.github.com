@@ -2,6 +2,9 @@ Title: [Spark MOOC note] lab4. Predicting Movie Ratings
 Date: 2015-06-30
 Slug: sparkmooc_notelab4
 Tags: spark
+Series: spark MOOC
+ 
+[TOC]  
 
 Part 0: Preliminaries
 =====================

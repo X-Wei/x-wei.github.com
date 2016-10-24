@@ -2,7 +2,9 @@ Title: [Algorithms II] Week 5-1 Regular Expressions
 Date: 2015-12-27  
 Slug:  algoII_week5_1      
 Tags: algorithm           
-  
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]  
   
 1. Regular Expressions  
 ======================  

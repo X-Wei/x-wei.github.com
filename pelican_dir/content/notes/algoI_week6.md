@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 6 Hash Tables
 Date: 2015-09-01   
 Slug:  algoI_week6       
 Tags: algorithm     
-   
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
    
 *Can we do better than BST if we do not need ordered operations ?*   
    

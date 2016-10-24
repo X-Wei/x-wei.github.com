@@ -2,6 +2,10 @@ Title: [Algorithms I] Week 3-2 Quicksort
 Date: 2015-08-22      
 Slug:  algoI_week3_2      
 Tags: algorithm      
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
+
    
 (maybe best algorithm for sorting.)   
    

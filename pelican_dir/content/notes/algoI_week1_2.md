@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 1-2 Analysis of Algorithms
 Date: 2015-07-02
 Slug:  algoI_week1_2
 Tags: algorithm
-
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
 
 1. Introduction
 ===============   

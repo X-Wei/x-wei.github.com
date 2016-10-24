@@ -2,7 +2,9 @@ Title: [Algorithms I] Week 1-1 Union-Find
 Date: 2015-06-27
 Slug:  algoI_week1_1
 Tags: algorithm
-
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
 
 1. Dynamic Connectivity pb
 ==========================

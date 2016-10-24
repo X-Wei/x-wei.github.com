@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 3-1 Maximum Flow
 Date: 2015-11-17         
 Slug:  algoII_week3_1   
 Tags: algorithm         
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+    
 1. Introduction to Maxflow   
 ==========================   
    

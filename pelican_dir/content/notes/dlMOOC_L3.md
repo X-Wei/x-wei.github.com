@@ -2,6 +2,9 @@ title: (DeepLearning MOOC) Lesson 3: Convolutional Neural Networks
 Date: 2016-06-06         
 Slug: dlMOOC_L3        
 Tags: deep learning  
+Series: Deep Learning udacity MOOC
+ 
+[TOC]
   
   
 statistical invariance → **weight sharing**  

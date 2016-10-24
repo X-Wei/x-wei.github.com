@@ -2,6 +2,9 @@ Title: quick sort and more: 快速排序算法总结
 Date: 2015-12-07  
 Slug:  quick-sort-and-more  
 Tags: algorithm    
+Series: 算法笔记
+ 
+[TOC] 
   
   
 今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   

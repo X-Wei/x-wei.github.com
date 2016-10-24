@@ -2,6 +2,8 @@ Title: C++ STL小结&代码片段
 Slug: cpp-demo-snippets
 Tags: C++
 Date: 2016-01-09
+ 
+[TOC] 
   
 总结了一下C++ STL里面用的比较频繁的一些代码片段. (地址: <https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL>)  
 cpp文档: <http://en.cppreference.com/w/cpp>  

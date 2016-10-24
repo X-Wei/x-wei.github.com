@@ -2,7 +2,10 @@ Title: [Algorithms II] Week 2-1 Minimum Spanning Trees
 Date: 2015-11-11   
 Slug:  algoII_week2_1   
 Tags: algorithm   
-   
+Series: Algorithms Princeton MOOC II 
+ 
+[TOC]
+    
    
 1. Introduction to MSTs   
 =======================   

@@ -2,7 +2,10 @@ Title: [Algorithms I] Week1-Lab: Percolation
 Date: 2015-07-07
 Slug:  algoI_week1_lab
 Tags: algorithm
-
+Series: Algorithms Princeton MOOC I 
+ 
+[TOC]
+ 
 model & problem
 ===============
 (原文描述太啰嗦了)  

@@ -2,7 +2,10 @@ Title: [python进阶课程] 面向对象编程
 Date: 2016-02-19 14:00   
 Slug:  imooc_py_oop  
 Tags: python  
-  
+Series: python进阶课程
+ 
+[TOC]  
+
 <http://www.imooc.com/learn/317>
   
 
