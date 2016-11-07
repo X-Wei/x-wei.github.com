@@ -1,4 +1,6 @@
-# pelican blog
+# my pelican blog
+
+[![Build Status](https://travis-ci.org/X-Wei/x-wei.github.com.svg?branch=master)](https://travis-ci.org/X-Wei/x-wei.github.com)
 
 a fork from farseerfc: http://farseerfc.me/
 
