@@ -1,0 +1,30 @@
+language: python
+
+python:
+    - "2.7"
+
+before_install:
+    - sudo apt-add-repository ppa:chris-lea/node.js -y
+    - sudo apt-get update
+    - sudo apt-get install nodejs ditaa doxygen parallel
+
+install:
+    - sudo pip install pelican jinja2 py3babel babel beautifulsoup4 markdown
+    - sudo npm install -g less
+    - wget "http://downloads.sourceforge.net/project/plantuml/plantuml.jar?r=&ts=1424308684&use_mirror=jaist" -O plantuml.jar
+    - sudo mkdir -p /opt/plantuml
+    - sudo cp plantuml.jar /opt/plantuml
+    - echo "#! /bin/sh" > plantuml
+    - echo 'exec java -jar /opt/plantuml/plantuml.jar "$@"' >> plantuml
+    - sudo install -m 755 -D plantuml /usr/bin/plantuml
+    - wget https://bintray.com/artifact/download/byvoid/opencc/opencc-1.0.2.tar.gz
+    - tar xf opencc-1.0.2.tar.gz
+    - cd opencc-1.0.2 && make && sudo make install && cd ..
+    - sudo locale-gen zh_CN.UTF-8
+    - sudo locale-gen zh_HK.UTF-8
+    - sudo locale-gen en_US.UTF-8
+    - sudo locale-gen ja_JP.UTF-8
+
+script:
+    - cd pelican_dir
+    - make publish
