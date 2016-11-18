@@ -9,7 +9,7 @@ Tags: 中文乱码
 
 今天看到了ubuntu论坛上的[帖子](http://forum.ubuntu.org.cn/viewtopic.php?f=122&t=301951), 六楼给出了终极的解决方案. 
 
-见附件: [./zip乱码解决.zip](./zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3/zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3.zip) 
+见附件: [zip乱码解决.zip](../images/zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3/zip%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3.zip) 
 这个压缩包中的5个 7z* 文件拷贝覆盖到/usr/lib/p7zip/
 
 代码:
