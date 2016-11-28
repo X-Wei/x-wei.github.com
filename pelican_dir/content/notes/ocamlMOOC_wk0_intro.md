@@ -1,8 +1,8 @@
-Title: [Introduction to Functional Programming in OCaml] week0: intro and overview
+Title: [Ocaml MOOC] week0: intro and overview
 Date: 2016-10-04 
 Slug: ocamlMOOC_wk0_intro
 Tags: ocaml  
-Series: Ocaml MOOC 
+Series: Introduction to Functional Programming in OCaml 
 
 [TOC]
 

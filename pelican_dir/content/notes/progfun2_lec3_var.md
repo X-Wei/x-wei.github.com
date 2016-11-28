@@ -1,8 +1,8 @@
-Title: [Functional Program Design in Scala] Lec 3: Functions and State   
+Title: [Scala MOOC II] Lec 3: Functions and State   
 Date: 2016-10-31   
 Slug: progfun2_lec3_var   
 Tags: scala    
-Series: Scala MOOC II  
+Series: Functional Program Design in Scala 
    
 [TOC]   
   

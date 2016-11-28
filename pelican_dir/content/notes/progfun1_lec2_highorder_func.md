@@ -1,8 +1,8 @@
-Title: [Functional Programming Principles in Scala] Lec2: Higher Order Functions 
+Title: [Scala MOOC I] Lec2: Higher Order Functions 
 Date: 2016-06-23   
 Slug:  progfun1_lec2_highorder_func  
 Tags: scala   
-Series: Scala MOOC I 
+Series: Functional Programming Principles in Scala
  
 [TOC] 
  

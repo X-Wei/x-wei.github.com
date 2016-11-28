@@ -1,8 +1,8 @@
-Title: [Functional Programming Principles in Scala] Lec3: Data and Abstraction 
+Title: [Scala MOOC I] Lec3: Data and Abstraction 
 Date: 2016-06-28    
 Slug:  progfun1_lec3_data_abstraction 
 Tags: scala    
-Series: Scala MOOC I 
+Series: Functional Programming Principles in Scala 
  
 [TOC]
  

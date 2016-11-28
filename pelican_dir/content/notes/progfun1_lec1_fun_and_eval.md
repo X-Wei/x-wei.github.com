@@ -1,8 +1,8 @@
-Title: [Functional Programming Principles in Scala] Lec1: Functions & Evaluation  
+Title: [Scala MOOC I] Lec1: Functions & Evaluation  
 Date: 2016-06-21  
 Slug:  progfun1_lec1_fun_and_eval  
 Tags: scala  
-Series: Scala MOOC I 
+Series: Functional Programming Principles in Scala
  
 [TOC]
    

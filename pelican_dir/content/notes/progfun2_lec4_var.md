@@ -1,8 +1,8 @@
-Title: [Functional Program Design in Scala] Lec4 - Timely Effects  
+Title: [Scala MOOC II] Lec4 - Timely Effects  
 Date: 2016-11-09  
 Slug: progfun2_lec4_var  
 Tags: scala     
-Series: Scala MOOC II   
+Series: Functional Program Design in Scala  
     
 [TOC]    
  

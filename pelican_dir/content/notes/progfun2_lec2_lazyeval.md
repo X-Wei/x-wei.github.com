@@ -1,8 +1,8 @@
-Title: [Functional Program Design in Scala] Lec2: Lazy Evaluation 
+Title: [Scala MOOC II] Lec2: Lazy Evaluation 
 Date: 2016-10-22 
 Slug:  progfun2_lec2_lazyeval 
 Tags: scala  
-Series: Scala MOOC II
+Series: Functional Program Design in Scala 
  
 [TOC] 
  

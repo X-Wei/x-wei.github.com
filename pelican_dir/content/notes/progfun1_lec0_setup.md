@@ -1,8 +1,8 @@
-Title: [Functional Programming Principles in Scala] Lec0: Getting Started
+Title: [Scala MOOC I] Lec0: Getting Started
 Date: 2016-06-20
 Slug:  progfun1_lec0_setup   
 Tags: scala
-Series: Scala MOOC I 
+Series: Functional Programming Principles in Scala
  
 [TOC]
  

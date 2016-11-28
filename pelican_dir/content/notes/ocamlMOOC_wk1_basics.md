@@ -1,8 +1,8 @@
-Title: [Introduction to Functional Programming in OCaml] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS 
+Title: [Ocaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS 
 Date: 2016-10-23  
 Slug: ocamlMOOC_wk1_basics 
 Tags: ocaml 
-Series: Ocaml MOOC
+Series: Introduction to Functional Programming in OCaml 
  
 
 [TOC]

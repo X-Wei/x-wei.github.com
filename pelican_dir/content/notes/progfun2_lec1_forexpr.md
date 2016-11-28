@@ -1,8 +1,8 @@
-Title: [Functional Program Design in Scala] Lec1: For Expressions and Monads
+Title: [Scala MOOC II] Lec1: For Expressions and Monads
 Date: 2016-08-12
 Slug:  progfun2_lec1_forexpr
 Tags: scala 
-Series: Scala MOOC II 
+Series: Functional Program Design in Scala 
 
 [TOC] 
 
