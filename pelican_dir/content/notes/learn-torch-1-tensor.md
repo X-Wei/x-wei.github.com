@@ -92,7 +92,7 @@ By default the elements of a newly allocated memory are **not initialized**, mig
 ```lua 
 	th> y = torch.Tensor(x) -- note: y is just a reference of x!!! 
 	                                                                      [0.0001s] 
-	th> y = torch.Tensor({{2,3,4},{1,2,3}}) 
+	th> y = torch.Tensor({ {2,3,4},{1,2,3} }) 
 	                                                                      [0.0000s] 
 	th> y 
 	 2  3  4 
