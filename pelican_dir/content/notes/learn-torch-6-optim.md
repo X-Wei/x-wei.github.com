@@ -1,4 +1,4 @@
-Title: [learning torch] 6. optim (optimization tools)    
+{ {: [learning torch] 6. optim (optimization tools)    
 Date: 2016-10-10   
 Slug: learn-torch-6-optim  
 Tags: torch

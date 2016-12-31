@@ -152,7 +152,7 @@ Slicing
  
  
  
-* Or use slicing/indexing **shortcut**: ``[{{dim1start, dim1end},...}] [dim1, dim2,...]`` 
+* Or use slicing/indexing **shortcut**: ``[{ {dim1start, dim1end},...}] [dim1, dim2,...]`` 
  
 ```lua
 	th> x 
@@ -178,7 +178,7 @@ Slicing
 	[torch.DoubleTensor of size 4] 
 	 
 	                                                                      [0.0001s] 
-	th> x[{{}, 3}] 
+	th> x[{ {}, 3}] 
 	  3 
 	  9 
 	 15 
