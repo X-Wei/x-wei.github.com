@@ -1,7 +1,7 @@
-Title: [Ocaml MOOC] week4: HIGHER ORDER FUNCTIONS  
+Title: [OCaml MOOC] week4: HIGHER ORDER FUNCTIONS  
 Date: 2016-11-22    
 Slug: ocamlMOOC_wk4_higher_order_fun  
-Tags: ocaml   
+Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
 [TOC]  

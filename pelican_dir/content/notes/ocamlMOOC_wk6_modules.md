@@ -1,7 +1,7 @@
-Title: [Ocaml MOOC] week6: MODULES AND DATA ABSTRACTION  
+Title: [OCaml MOOC] week6: MODULES AND DATA ABSTRACTION  
 Date: 2016-11-26    
 Slug: ocamlMOOC_wk6_modules  
-Tags: ocaml   
+Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
 [TOC]  

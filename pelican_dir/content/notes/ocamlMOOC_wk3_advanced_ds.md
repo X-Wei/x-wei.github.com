@@ -1,7 +1,7 @@
-Title: [Ocaml MOOC] week3: MORE ADVANCED DATA STRUCTURES  
+Title: [OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES  
 Date: 2016-11-21    
 Slug: ocamlMOOC_wk3_advanced_ds  
-Tags: ocaml   
+Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml   
    
 [TOC]  

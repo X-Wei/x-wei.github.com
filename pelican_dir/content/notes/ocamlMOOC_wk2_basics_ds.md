@@ -1,7 +1,7 @@
-Title: [Ocaml MOOC] week2: BASIC DATA STRUCTURES  
+Title: [OCaml MOOC] week2: BASIC DATA STRUCTURES  
 Date: 2016-11-12    
 Slug: ocamlMOOC_wk2_basics_ds  
-Tags: ocaml   
+Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml  
    
   

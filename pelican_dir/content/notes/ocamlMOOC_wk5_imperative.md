@@ -1,7 +1,7 @@
-Title: [Ocaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS  
+Title: [OCaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS  
 Date: 2016-11-23    
 Slug: ocamlMOOC_wk5_imperative  
-Tags: ocaml   
+Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
 [TOC]  
