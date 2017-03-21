@@ -1,4 +1,4 @@
-Title: Scala/Ocaml初体验  
+Title: Scala/OCaml初体验  
 Date: 2016-12-31  
 Slug:  scala-ocaml-impression  
 Tags: scala, OCaml  
@@ -36,10 +36,8 @@ Scala算是比较亲民的FP语言了(和Java有点像...), 也是我最早接�
 ```scala  
 def factorial(n:Int): Int =    
   if(n==0) 1 else n*factorial(n-1)  
-```  
-  
-    改成尾递归以后:   
-  
+```    
+改成尾递归以后:   
 ```scala  
 def factorialTR(n:Int):Int = {    
   @tailrec    

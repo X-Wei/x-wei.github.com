@@ -75,8 +75,8 @@ SERIES_TEXT = 'Part %(index)s of the %(name)s series'
 
 TYPOGRIFY = False
 PYGMENTS_STYLE = 'manni'
-GITHUB_USER = 'x-wei'
-GITHUB_SHOW_USER_LINK = True
+# GITHUB_USER = 'x-wei'
+# GITHUB_SHOW_USER_LINK = True
 
 DISPLAY_BREADCRUMBS = True
 DISPLAY_CATEGORY_IN_BREADCRUMBS = True

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Android Dev] 1.3 RecyclerView - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="http://x-wei.github.io/andev_p1e3_recyclerview.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="android" />
+        <meta name="description" content="Recycler View, Adaper, ViewHolder rather than creating list items as we scroll, keep them in a queue (recycling bin) → when scrolling, the list items are recycled and re-bind to new content. RecyclerView is better version of ListView. Adaper: bind data from data source, and provide the RecyclerView with new views ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Android Dev] 1.3 RecyclerView"/>
+        <meta property="og:url" content="http://x-wei.github.io/andev_p1e3_recyclerview.html"/>
+        <meta property="og:description" content="Recycler View, Adaper, ViewHolder rather than creating list items as we scroll, keep them in a queue (recycling bin) → when scrolling, the list items are recycled and re-bind to new content. RecyclerView is better version of ListView. Adaper: bind data from data source, and provide the RecyclerView with new views ..."/>
+        <meta property="article:published_time" content="2017-02-07" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="android" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="http://x-wei.github.io/andev_p1e3_recyclerview.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="http://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="http://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="http://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="http://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="http://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="http://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Android Dev] 1.3 RecyclerView - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="http://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="http://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="http://x-wei.github.io/category/notes.html" title="notes">notes</a></li>
+                <li class="active">[Android Dev] 1.3 RecyclerView</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Android Dev] 1.3 RecyclerView
+                        <a href="http://x-wei.github.io/andev_p1e3_recyclerview.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Android Dev] 1.3 RecyclerView 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2017-02-07T00:00:00+01:00"><i class="fa fa-calendar"></i> Tue, 07 Feb 2017</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/android.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> android</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 3 of «Associate Android Developer Fast Track» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div class="toc">
+<ul>
+<li><a href="#recycler-view-adaper-viewholder">Recycler View, Adaper, ViewHolder</a></li>
+<li><a href="#recyclerview-code-example-a-list-of-numbers">RecyclerView code example: a list of numbers</a><ul>
+<li><a href="#1-add-gradle-dependency">1. add gradle dependency</a></li>
+<li><a href="#2-create-item-layout">2. create item layout</a></li>
+<li><a href="#3-subclass-recyclerviewviewholder">3. subclass RecyclerView.ViewHolder</a></li>
+<li><a href="#4-subclass-recyclerviewadapter">4. subclass RecyclerView.Adapter</a></li>
+<li><a href="#5-use-layoutmanager-putting-things-together">5. use LayoutManager, putting things together</a></li>
+<li><a href="#6-handle-item-click-reciept">6. handle item click reciept</a></li>
+</ul>
+</li>
+</ul>
+</div>
+                        </div>
+                    </div>
+                
+<h2 id="recycler-view-adaper-viewholder">Recycler View, Adaper, ViewHolder</h2>
+<p>rather than creating list items as we scroll, keep them in a queue (recycling bin)
+→ when scrolling, the list items are <em>recycled and re-bind</em> to new content. RecyclerView is better version of ListView. </p>
+<p><strong>Adaper</strong>: bind data from data source, and provide the RecyclerView with new views when needed. 
+Adapter uses a <strong>ViewHolder</strong> to send views to RecyclerView. — each <code>findViewById</code> wil be only called once, and <em>cached</em> in the ViewHolder. 
+And the RecyclerView uses a <strong>LayoutManager</strong> to manage the appearance of the items. </p>
+<p><img alt="" class="img-responsive" src="../images/andev_p1e3_recyclerview/pasted_image.png"/></p>
+<h2 id="recyclerview-code-example-a-list-of-numbers">RecyclerView code example: a list of numbers</h2>
+<h3 id="1-add-gradle-dependency">1. add gradle dependency</h3>
+<p>in build.gradle file, add in dependencies: </p>
+<p><code>compile 'com.android.support:recyclerview-v7:25.1.0</code>'</p>
+<p>and re-sync project, now we can use <code>android.support.v7.widget.RecyclerView</code> in the layout files. </p>
+<h3 id="2-create-item-layout">2. create item layout</h3>
+<p>This is what each of the items in RecyclerView should like. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">&lt;FrameLayout</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span></span>
+<span class="code-line">    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span></span>
+<span class="code-line">    <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span></span>
+<span class="code-line">    <span class="na">android:padding=</span><span class="s">"16dp"</span></span>
+<span class="code-line">    <span class="na">android:orientation=</span><span class="s">"vertical"</span><span class="nt">&gt;</span></span>
+<span class="code-line"></span>
+<span class="code-line">    <span class="c">&lt;!--// TODO (8) Align the TextView to the start of the parent--&gt;</span></span>
+<span class="code-line">    <span class="c">&lt;!--// TODO (9) Center the TextView vertically in the layout--&gt;</span></span>
+<span class="code-line">    <span class="nt">&lt;TextView</span></span>
+<span class="code-line">        <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span></span>
+<span class="code-line">        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span></span>
+<span class="code-line">        <span class="na">android:id=</span><span class="s">"@+id/tv_item"</span></span>
+<span class="code-line">        <span class="na">style=</span><span class="s">"@style/TextAppearance.AppCompat.Caption"</span></span>
+<span class="code-line">        <span class="na">android:fontFamily=</span><span class="s">"monospace"</span></span>
+<span class="code-line">        <span class="na">android:textSize=</span><span class="s">"42sp"</span></span>
+<span class="code-line">        <span class="na">android:layout_gravity=</span><span class="s">"center_vertical|start"</span></span>
+<span class="code-line">        <span class="nt">/&gt;</span></span>
+<span class="code-line"><span class="nt">&lt;/FrameLayout&gt;</span></span>
+</pre></div>
+<h3 id="3-subclass-recyclerviewviewholder">3. subclass RecyclerView.ViewHolder</h3>
+<p>Create an inner class (<strong>inside the Adapter class</strong>), define class variables, override the <strong>constructor</strong>(takes a <code>View</code> as parameter), and add functions.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>// TODO (12) Create a class called NumberViewHolder that extends RecyclerView.ViewHolder</span>
+<span class="code-line">class NumberViewHolder extends RecyclerView.ViewHolder {</span>
+<span class="code-line">    // TODO (13) Within NumberViewHolder, create a TextView variable called listItemNumberView</span>
+<span class="code-line">    TextView listItemNumverView;</span>
+<span class="code-line"></span>
+<span class="code-line">    // TODO (14) Create a constructor for NumberViewHolder that accepts a View called itemView as a parameter</span>
+<span class="code-line">    // TODO (15) Within the constructor, call super(itemView) and then find listItemNumberView by ID</span>
+<span class="code-line">    public NumberViewHolder(View itemView) {</span>
+<span class="code-line">        super(itemView);</span>
+<span class="code-line">        listItemNumverView = (TextView) itemView.findViewById(R.id.tv_item); // this view is cached in ViewHolder</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    // TODO (16) Within the NumberViewHolder class, create a void method called bind that accepts an int parameter called listIndex</span>
+<span class="code-line">    // TODO (17) Within bind, set the text of listItemNumberView to the listIndex</span>
+<span class="code-line">    // TODO (18) Be careful to get the String representation of listIndex, as using setText with an int does something different</span>
+<span class="code-line">    // calling setText() with an integer, android will use the int as a string resource id</span>
+<span class="code-line">    void bind(int listIndex) {</span>
+<span class="code-line">        listItemNumverView.setText(String.valueOf(listIndex));</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+</pre></div>
+<h3 id="4-subclass-recyclerviewadapter">4. subclass RecyclerView.Adapter</h3>
+<p>The <code>Adapter</code> will</p>
+<ul>
+<li>create a viewholder for each recycler view item (<code>onCreateViewHolder</code>)</li>
+<li>inflat each item that will be displayed (<code>onCreateViewHolder</code>)</li>
+<li>bind data from data source to each item (<code>getItemCount</code>)</li>
+<li>return the number of items in data source (<code>onBindViewHolder)</code></li>
+</ul>
+<p>⇒ create a class that extends <code>RecyclerView.Adapter&lt;MyViewHolder&gt;</code>, and implement methods.</p>
+<div class="highlight"><pre><span class="code-line"><span></span>public class GreenAdapter extends RecyclerView.Adapter&lt;GreenAdapter.NumberViewHolder&gt; {</span>
+<span class="code-line"></span>
+<span class="code-line">    int mNumberItems;</span>
+<span class="code-line">    public GreenAdapter(int nitems){</span>
+<span class="code-line">        this.mNumberItems = nitems;</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    // TODO (5) Override the onCreateViewHolder method</span>
+<span class="code-line">    // TODO (6) Create and return a new NumberViewHolder within this method</span>
+<span class="code-line">    @Override</span>
+<span class="code-line">    public NumberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {</span>
+<span class="code-line">        Context context = parent.getContext();</span>
+<span class="code-line">        LayoutInflater inflater = LayoutInflater.from(context);</span>
+<span class="code-line">        boolean shouldAttachToParentImmediatelly = false;</span>
+<span class="code-line">        View view = inflater.inflate(R.layout.number_list_item, parent, shouldAttachToParentImmediatelly);</span>
+<span class="code-line">        return new NumberViewHolder(view);</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    // TODO (7) Override onBindViewHolder</span>
+<span class="code-line">    // TODO (8) Within onBindViewHolder, call holder.bind and pass in the position</span>
+<span class="code-line">    @Override</span>
+<span class="code-line">    public void onBindViewHolder(NumberViewHolder holder, int position) {</span>
+<span class="code-line">        holder.bind(position);</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    // TODO (9) Override getItemCount and return the number of items to display</span>
+<span class="code-line">    @Override</span>
+<span class="code-line">    public int getItemCount() {</span>
+<span class="code-line">        return mNumberItems;</span>
+<span class="code-line">    }</span>
+<span class="code-line"></span>
+<span class="code-line">    /**</span>
+<span class="code-line">        * Cache of the children views for a list item.</span>
+<span class="code-line">        */</span>
+<span class="code-line">    class NumberViewHolder extends RecyclerView.ViewHolder {</span>
+<span class="code-line"></span>
+<span class="code-line">        // Will display the position in the list, ie 0 through getItemCount() - 1</span>
+<span class="code-line">        TextView listItemNumberView;</span>
+<span class="code-line"></span>
+<span class="code-line">        /**</span>
+<span class="code-line">            * Constructor for our ViewHolder. Within this constructor, we get a reference to our</span>
+<span class="code-line">            * TextViews and set an onClickListener to listen for clicks. Those will be handled in the</span>
+<span class="code-line">            * onClick method below.</span>
+<span class="code-line">            * @param itemView The View that you inflated in</span>
+<span class="code-line">            *                 {@link GreenAdapter#onCreateViewHolder(ViewGroup, int)}</span>
+<span class="code-line">            */</span>
+<span class="code-line">        public NumberViewHolder(View itemView) {</span>
+<span class="code-line">            super(itemView);</span>
+<span class="code-line"></span>
+<span class="code-line">            listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);</span>
+<span class="code-line">        }</span>
+<span class="code-line"></span>
+<span class="code-line">        /**</span>
+<span class="code-line">            * A method we wrote for convenience. This method will take an integer as input and</span>
+<span class="code-line">            * use that integer to display the appropriate text within a list item.</span>
+<span class="code-line">            * @param listIndex Position of the item in the list</span>
+<span class="code-line">            */</span>
+<span class="code-line">        void bind(int listIndex) {</span>
+<span class="code-line">            listItemNumberView.setText(String.valueOf(listIndex));</span>
+<span class="code-line">        }</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+</pre></div>
+<p><a href="https://www.youtube.com/watch?v=ns3WC8HFx90">https://www.youtube.com/watch?v=ns3WC8HFx90</a></p>
+<p><a href="https://github.com/udacity/ud851-Exercises/blob/student/Lesson03-Green-Recycler-View/T03.03-Solution-RecyclerViewAdapter/app/src/main/java/com/example/android/recyclerview/GreenAdapter.java">https://github.com/udacity/ud851-Exercises/blob/student/Lesson03-Green-Recycler-View/T03.03-Solution-RecyclerViewAdapter/app/src/main/java/com/example/android/recyclerview/GreenAdapter.java</a></p>
+<p><img alt="" class="img-responsive" src="../images/andev_p1e3_recyclerview/pasted_image001.png"/></p>
+<h3 id="5-use-layoutmanager-putting-things-together">5. use LayoutManager, putting things together</h3>
+<p>layoutmanager determines when an item is recycled. </p>
+<p>3 implementation of LayoutManager: <code>LinearLayoutManager, GridLayoutManager, StaggeredGridLayoutManager</code>. </p>
+<p>In the MainActivity, create a LinearLayoutManager, and set the recycler view's manager to it. Then create an Adapter, and set recycler's adapter to it. </p>
+<p>In the onCreate method: </p>
+<div class="highlight"><pre><span class="code-line"><span></span>mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);</span>
+<span class="code-line">// TODO (5) Create a LinearLayoutManager variable called layoutManager</span>
+<span class="code-line">// TODO (6) Use setLayoutManager on mNumbersList with the LinearLayoutManager we created above</span>
+<span class="code-line">LinearLayoutManager layoutManager = new LinearLayoutManager(this);</span>
+<span class="code-line">mNumbersList.setLayoutManager(layoutManager);</span>
+<span class="code-line"></span>
+<span class="code-line">// TODO (7) Use setHasFixedSize(true) to designate that the contents of the RecyclerView won't change an item's size</span>
+<span class="code-line">mNumbersList.setHasFixedSize(true);</span>
+<span class="code-line">// TODO (8) Store a new GreenAdapter in mAdapter and pass it NUM_LIST_ITEMS</span>
+<span class="code-line">mAdapter = new GreenAdapter(NUM_LIST_ITEMS);</span>
+<span class="code-line">// TODO (9) Set the GreenAdapter you created on mNumbersList</span>
+<span class="code-line">mNumbersList.setAdapter(mAdapter);</span>
+</pre></div>
+<h3 id="6-handle-item-click-reciept">6. handle item click reciept</h3>
+<p>To handle the click on items: </p>
+<p>a. define a Listener interface</p>
+<div class="highlight"><pre><span class="code-line"><span></span>// TODO (1) Add an interface called ListItemClickListener</span>
+<span class="code-line">// TODO (2) Within that interface, define a void method called onListItemClick that takes an int as a parameter</span>
+<span class="code-line">interface ListItemClickListener{</span>
+<span class="code-line">    void onListItemClick(int index);</span>
+<span class="code-line">}</span>
+</pre></div>
+<p>b. make this Listener a private meber of the <code>Adapter</code> class, passed as constructor parameter. 
+c. make the <code>Adapter</code>'s inner <code>ViewHolder</code> to implement <code>View.OnClickListener</code> interface, and override the onClick method:</p>
+<div class="highlight"><pre><span class="code-line"><span></span>// TODO (6) Override onClick, passing the clicked item's position (getAdapterPosition()) to mOnClickListener via its onListItemClick method</span>
+<span class="code-line">@Override</span>
+<span class="code-line">public void onClick(View v) {</span>
+<span class="code-line">    int pos = this.getAdapterPosition();</span>
+<span class="code-line">    mOnClickListener.onListItemClick(pos);</span>
+<span class="code-line">}</span>
+</pre></div>
+<p>d. in the inner <code>ViewHolder</code> class' constructor, set onclicklistner of the passed item to the viewholder itself: </p>
+<div class="highlight"><pre><span class="code-line"><span></span>public NumberViewHolder(View itemView) {</span>
+<span class="code-line">    super(itemView);</span>
+<span class="code-line">    listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);</span>
+<span class="code-line">    viewHolderIndex = (TextView) itemView.findViewById(R.id.tv_view_holder_instance);</span>
+<span class="code-line">    // TODO (7) Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)</span>
+<span class="code-line">    itemView.setOnClickListener(this);</span>
+<span class="code-line">}</span>
+</pre></div>
+<p>e. make <code>MainActivity</code> implments the Adapter.ItemClickListener, and provide the onclick method: </p>
+<div class="highlight"><pre><span class="code-line"><span></span>public class MainActivity extends AppCompatActivity implements GreenAdapter.ListItemClickListener {</span>
+<span class="code-line">    //...</span>
+<span class="code-line">    // TODO (10) Override ListItemClickListener's onListItemClick method</span>
+<span class="code-line">    // TODO (11) In the beginning of the method, cancel the Toast if it isn't null</span>
+<span class="code-line">    // TODO (12) Show a Toast when an item is clicked, displaying that item number that was clicked</span>
+<span class="code-line">    @Override</span>
+<span class="code-line">    public void onListItemClick(int index) {</span>
+<span class="code-line">        if(mToast!=null) mToast.cancel();</span>
+<span class="code-line">        mToast.setText(String.format("item %d is clicked!", index));</span>
+<span class="code-line">        mToast.show();</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+</pre></div>
+<p>f. when creating Adapter in MainActivity, pass this as second constructor parameter</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/andev_p1e4_intents.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Android Dev] 1.4 Intents
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/andev_p1e2_internet.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Android Dev] 1.2 Connect to the Internet<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 3 of series «Associate Android Developer Fast Track»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/andev_p1e1_basics.html' style="text-align:left">[Android Dev] 1.1 Create Project Sunshine</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/andev_p1e2_internet.html' style="text-align:left">[Android Dev] 1.2 Connect to the Internet</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='http://x-wei.github.io/andev_p1e3_recyclerview.html' style="text-align:left">[Android Dev] 1.3 RecyclerView</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/andev_p1e4_intents.html' style="text-align:left">[Android Dev] 1.4 Intents</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/andev_p2e1_lifecycle.html' style="text-align:left">[Android Dev] 2.1 Lifecycles</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/andev_p2e2_pref.html' style="text-align:left">[Android Dev] 2.2 Preference</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'andev_p1e3_recyclerview';
+                        var disqus_url = '/andev_p1e3_recyclerview.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="http://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="http://x-wei.github.io/about.html"><img width="100%" src="http://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="http://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="http://x-wei.github.io/andev_p1e2_internet.html">[Android Dev] 1.2 Connect to the Internet</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="http://x-wei.github.io/andev_p1e4_intents.html">[Android Dev] 1.4 Intents</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div class="toc">
+<ul>
+<li><a href="#recycler-view-adaper-viewholder">Recycler View, Adaper, ViewHolder</a></li>
+<li><a href="#recyclerview-code-example-a-list-of-numbers">RecyclerView code example: a list of numbers</a><ul>
+<li><a href="#1-add-gradle-dependency">1. add gradle dependency</a></li>
+<li><a href="#2-create-item-layout">2. create item layout</a></li>
+<li><a href="#3-subclass-recyclerviewviewholder">3. subclass RecyclerView.ViewHolder</a></li>
+<li><a href="#4-subclass-recyclerviewadapter">4. subclass RecyclerView.Adapter</a></li>
+<li><a href="#5-use-layoutmanager-putting-things-together">5. use LayoutManager, putting things together</a></li>
+<li><a href="#6-handle-item-click-reciept">6. handle item click reciept</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2017 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="http://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="http://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>
