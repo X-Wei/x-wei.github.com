@@ -122,15 +122,15 @@ EP的申请除了网申还需要邮寄, 具体的材料清单可以看[EP的网�
 
 高科的笔试安排在同济的瑞安楼, 交大同学过去要俩小时...... 所以打好提前量...... 笔试的内容是数学物理以及专业课, 全部是选择题, 对一道得3分, 错一道扣1分...... 
 
-这里是高科的笔试考试范围: [巴黎高科笔试范围参考.pdf](./PT-summery/%E5%B7%B4%E9%BB%8E%E9%AB%98%E7%A7%91%E7%AC%94%E8%AF%95%E8%8C%83%E5%9B%B4%E5%8F%82%E8%80%83.pdf) 
+这里是高科的笔试考试范围: [巴黎高科笔试范围参考.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E5%B7%B4%E9%BB%8E%E9%AB%98%E7%A7%91%E7%AC%94%E8%AF%95%E8%8C%83%E5%9B%B4%E5%8F%82%E8%80%83.pdf) 
 
 第一场是数学, 分数学1和数学2, 要申EP的同学需要做数学2. 难度大概比GRE sub稍难一些吧, 但应该超不过交大高数考试的难度...... 高数内容比较简单, 线代当时我是下了比较大功夫复习的(因为忘的比较干净...), 记得考试时有好几道关于特征值特征向量和矩阵对角化的题目... 数学2比较难, 有好多没学过的内容就直接没做......
 
 第二场是物理和专业课, 物理我感觉蛮难的, 一共十几道题, 每一题的题干都很长...... 而且算出来结果没有出现在选项里的话就很崩溃...... 物理做完后选择自己的专业课, EE的题目比较简单, 有一些信号的内容, 还有些编程以及数电模电的东西, 但都是很简单的, 这些课程不必费太大力气复习.
 
-准备笔试时拿了点GRE sub做了两套: [sub.zip](./PT-summery/sub.zip) 
+准备笔试时拿了点GRE sub做了两套: [sub.zip](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/sub.zip) 
 
-我觉得词汇才是重点, 英语的题干要是看不懂就囧了, 可以带词典, 我嫌词典太重, 就自己打印了份sub词汇表, 用那种一页两面的打印, 刚刚好... [sub词汇.zip](./PT-summery/sub%E8%AF%8D%E6%B1%87.zip) 
+我觉得词汇才是重点, 英语的题干要是看不懂就囧了, 可以带词典, 我嫌词典太重, 就自己打印了份sub词汇表, 用那种一页两面的打印, 刚刚好... [sub词汇.zip](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/sub%E8%AF%8D%E6%B1%87.zip) 
 
 
 btw, 在同济监场的是俩帅哥, 后来才知道他们是Telecom来交大交流的学生...
@@ -143,9 +143,9 @@ btw, 在同济监场的是俩帅哥, 后来才知道他们是Telecom来交大交
 
 面试在同济的中法中心进行, 一共有三四个房间, 基本上是你报了哪几所学校, 这几所学校的老师就回来面试你. 不过EP的人一个也没来, 因为他们有专门的面试... 面试时拿着纸质版简历和推荐信以及护照什么的. 
 
-建议面试前把动机信再好好看看, 另外再了解下各个学校的特点, 那些方面比较强, 这样面试的时候显得你已经对他们研究很久了... 这里有个简单的介绍: [Relations_domains_schools_ParisTech.pdf](./PT-summery/Relations_domains_schools_ParisTech.pdf) 
+建议面试前把动机信再好好看看, 另外再了解下各个学校的特点, 那些方面比较强, 这样面试的时候显得你已经对他们研究很久了... 这里有个简单的介绍: [Relations_domains_schools_ParisTech.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/Relations_domains_schools_ParisTech.pdf) 
 
-另外我把BBS上学长学姐们的面试回忆放在了一起打印了出来: [ 面经.pdf](./PT-summery/%E9%9D%A2%E7%BB%8F.pdf) 
+另外我把BBS上学长学姐们的面试回忆放在了一起打印了出来: [ 面经.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E9%9D%A2%E7%BB%8F.pdf) 
 
 面我的是一个ENSTA的老师(帅哥), 一个Mines的老师(大胡子, Julien), 还有一个Telecom的老师(大鼻子...). 主要是ENSTA的老师在问问题(难道是看到我是自动化系的所以比较亲切??...). Juien询问了我选择高科的原因, 这是面试时都会问的一个问题, 最好能够有条理地说出来, 我说我进行了一个简单的SWAT分析啊, 觉得高科最适合我啊, blablabla...... 他们听了笑而不语...... 
 
@@ -179,13 +179,13 @@ Mines的面试题目可以参见学长的文章. 面试持续半小时, 感觉Mi
 
 EP的入学竞考是法国历史最久, 难度最大的竞考之一. EP的面试分三场, 一场数学一场物理一场综合知识(比重貌似是6:4:4?), 大概会持续四个半小时...... 会有三个教授对你进行面试, 他们期望在这四个半小时里全面地了解你, 不仅是考察数理基础, 还包括言谈举止(比如主动擦黑板...)各个方面.
 
-EP的考试范围: [EP-考试范围.zip](./PT-summery/EP-%E8%80%83%E8%AF%95%E8%8C%83%E5%9B%B4.zip) 
+EP的考试范围: [EP-考试范围.zip](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/EP-%E8%80%83%E8%AF%95%E8%8C%83%E5%9B%B4.zip) 
 
-个人感觉EP的面试难度比Mines高很多!! 比如这是EP网上提供的面试题样题: [examples-eng.pdf](./PT-summery/examples-eng.pdf)  这个题我和zbf同学在自习室捣鼓了很久才差不多搞出来......
+个人感觉EP的面试难度比Mines高很多!! 比如这是EP网上提供的面试题样题: [examples-eng.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/examples-eng.pdf)  这个题我和zbf同学在自习室捣鼓了很久才差不多搞出来......
 
 而且EP的老师会根据你动机信里的内容, 对每个人出不同的题目. 比如有学长写他的试验能力很强, 教授就给他出了一道基于实验的题目. zbf说他电子方面很感兴趣结果老师给出了道电子模型的题目, 瞎了...... 对于数学系物理系的同学, 他们的题目必然要难很多, 工科学生的话题目就简单一些... 幸亏我没在SOP里写我有什么特长, 他们给的题目还算中规中矩, 否则肯定跪了...... 
 
-准备EP的面试的过程非常痛苦, 不知道他们会出什么难度的题目, 又把高数线代大物好好看了一遍. 并且我把BBS上学长们的考试题回忆全部打印下来做了做: [EP面经.pdf](./PT-summery/EP%E9%9D%A2%E7%BB%8F.pdf) 
+准备EP的面试的过程非常痛苦, 不知道他们会出什么难度的题目, 又把高数线代大物好好看了一遍. 并且我把BBS上学长们的考试题回忆全部打印下来做了做: [EP面经.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/EP%E9%9D%A2%E7%BB%8F.pdf) 
 
 EP的面试会持续一星期, 因为他们一上午只能面试四个人(两组老师). 我是12月2号下午面试, 先是数学, 老师给了两道题, 自己做30分钟. 一道是数列的极限以及收敛的速度, 前两问比较简单可以用数学归纳法做出来, 第三问收敛速度不知道咋做就跳过了. 第二道是线代的题目, 定义了两个矩阵的一种运算(非常SORRY没带日记本来, 所以题目的内容忘了!!...), 然后让你证明一些结论... 由于我理解有误所以也不大会做...
 
@@ -235,7 +235,7 @@ EP给学生提供720欧/月的奖学金(由La Fondation提供), 足够生活的�
 ----
 **签证**
 
-GEM项目有时会有签证悲剧的情况, 但是高科项目的历史签证通过率是100%...... 按照campusfrance上的通知一步步走即可. 关于签证的材料见附件: [签证材料.zip](./PT-summery/%E7%AD%BE%E8%AF%81%E6%9D%90%E6%96%99.zip) 
+GEM项目有时会有签证悲剧的情况, 但是高科项目的历史签证通过率是100%...... 按照campusfrance上的通知一步步走即可. 关于签证的材料见附件: [签证材料.zip](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E7%AD%BE%E8%AF%81%E6%9D%90%E6%96%99.zip) 
 
 **疫苗**
 
@@ -243,11 +243,11 @@ EP会发一封邮件通知你去接种疫苗以及体检, 在上海出入境检�
 
 九. 法国留学参考资料
 ========
-+ [交大法国留学手册.pdf](./PT-summery/%E4%BA%A4%E5%A4%A7%E6%B3%95%E5%9B%BD%E7%95%99%E5%AD%A6%E6%89%8B%E5%86%8C.pdf)  
++ [交大法国留学手册.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E4%BA%A4%E5%A4%A7%E6%B3%95%E5%9B%BD%E7%95%99%E5%AD%A6%E6%89%8B%E5%86%8C.pdf)  
 这个手册很给力, 介绍了交大所有法国项目的情况, 强烈推荐认真阅读...
-+ [交大欧洲留学手册.pdf](./PT-summery/%E4%BA%A4%E5%A4%A7%E6%AC%A7%E6%B4%B2%E7%95%99%E5%AD%A6%E6%89%8B%E5%86%8C.pdf)  
++ [交大欧洲留学手册.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E4%BA%A4%E5%A4%A7%E6%AC%A7%E6%B4%B2%E7%95%99%E5%AD%A6%E6%89%8B%E5%86%8C.pdf)  
 这个是比较早的一个手册了, 介绍了交大的欧洲项目
-+ [上海交通大学goabroad2012大型出国留学讲座PPT汇总.pdf](./PT-summery/%E4%B8%8A%E6%B5%B7%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6goabroad2012%E5%A4%A7%E5%9E%8B%E5%87%BA%E5%9B%BD%E7%95%99%E5%AD%A6%E8%AE%B2%E5%BA%A7PPT%E6%B1%87%E6%80%BB.pdf)  
++ [上海交通大学goabroad2012大型出国留学讲座PPT汇总.pdf](https://github.com/X-Wei/x-wei.github.com/blob/master/images//PT-summery/%E4%B8%8A%E6%B5%B7%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6goabroad2012%E5%A4%A7%E5%9E%8B%E5%87%BA%E5%9B%BD%E7%95%99%E5%AD%A6%E8%AE%B2%E5%BA%A7PPT%E6%B1%87%E6%80%BB.pdf)  
 GAUnion的PPT很给力, 让你发现美国之外的其他选择~ 另外强烈建议大家加入GAUnion, 氛围很好帮助很大!
 + 饮水思源BBS-french版精华区 
 有很多学长的总结贴, 推荐认真看一看.
