@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="statistical invariance → weight sharing e.g. image colors, translation invariance... convnet is NNs that share their weights across space. convolution: slide a small patch of NN over the image to produce a new &#34;image&#34; convnet forms a pyramid, each &#34;stack of pincake&#34; get larger depth and smaller area. convolutional lingo ..." />
+        <meta name="description" content="[TOC] statistical invariance → weight sharing e.g. image colors, translation invariance... convnet is NNs that share their weights across space. convolution: slide a small patch of NN over the image to produce a new &#34;image&#34; convnet forms a pyramid, each &#34;stack of pincake&#34; get larger depth and smaller area. convolutional …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="(DeepLearning MOOC) Lesson 3: Convolutional Neural Networks"/>
         <meta property="og:url" content="http://x-wei.github.io/dlMOOC_L3.html"/>
-        <meta property="og:description" content="statistical invariance → weight sharing e.g. image colors, translation invariance... convnet is NNs that share their weights across space. convolution: slide a small patch of NN over the image to produce a new &#34;image&#34; convnet forms a pyramid, each &#34;stack of pincake&#34; get larger depth and smaller area. convolutional lingo ..."/>
+        <meta property="og:description" content="[TOC] statistical invariance → weight sharing e.g. image colors, translation invariance... convnet is NNs that share their weights across space. convolution: slide a small patch of NN over the image to produce a new &#34;image&#34; convnet forms a pyramid, each &#34;stack of pincake&#34; get larger depth and smaller area. convolutional …"/>
         <meta property="article:published_time" content="2016-06-06" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -202,70 +202,54 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#convnet">convnet</a></li>
-<li><a href="#convolutional-lingo">convolutional lingo</a></li>
-<li><a href="#pooling">pooling</a></li>
-<li><a href="#1x1-convolution">1x1 convolution</a></li>
-<li><a href="#inception-module">inception module</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<p>statistical invariance → <strong>weight sharing</strong><br/>
-e.g. image colors, translation invariance...   </p>
-<h2 id="convnet">convnet</h2>
+                <p>[TOC]</p>
+<p>statistical invariance → <strong>weight sharing</strong><br>
+e.g. image colors, translation invariance...   </br></p>
+<h2>convnet</h2>
 <p>is NNs that share their weights across space.   </p>
-<p>convolution: slide a small patch of NN over the image to produce a new "image"<br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image.png"/> </p>
-<p>convnet forms a pyramid, each "stack of pincake" get larger depth and smaller area. <br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image001.png"/> </p>
-<h2 id="convolutional-lingo">convolutional lingo</h2>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image002.png"/> </p>
-<p>def. <strong>patch (kernel)</strong><br/>
-small NN that slides over the image.   </p>
-<p>def. <strong>depth</strong><br/>
-number of pincakes in stack.   </p>
-<p>def. <strong>feature map</strong><br/>
-each "pincake" in stack.   </p>
-<p>def. <strong>stride</strong><br/>
-nb of pixels that you shift each time you move your filter. <br/>
-e.g. stride=1 → output almost the same size as the input; stride=2 → output about half size  </p>
-<p>def. <strong>padding</strong><br/>
-the way you treat the edge of image.   </p>
+<p>convolution: slide a small patch of NN over the image to produce a new "image"<br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image.png"> </img></br></p>
+<p>convnet forms a pyramid, each "stack of pincake" get larger depth and smaller area. <br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image001.png"> </img></br></p>
+<h2>convolutional lingo</h2>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image002.png"> </img></p>
+<p>def. <strong>patch (kernel)</strong><br>
+small NN that slides over the image.   </br></p>
+<p>def. <strong>depth</strong><br>
+number of pincakes in stack.   </br></p>
+<p>def. <strong>feature map</strong><br>
+each "pincake" in stack.   </br></p>
+<p>def. <strong>stride</strong><br>
+nb of pixels that you shift each time you move your filter. <br>
+e.g. stride=1 → output almost the same size as the input; stride=2 → output about half size  </br></br></p>
+<p>def. <strong>padding</strong><br>
+the way you treat the edge of image.   </br></p>
 <ul>
 <li><em>valid padding</em>: don't go pass the edge  </li>
 <li><em>same padding</em>: go off the image and pad with 0s (output size=input size)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image003.png"/> </p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image004.png"/> </p>
-<p>once got "deep and narrow" representation by convolution, connect to a normal (regular) fully-conncected NN. <br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image005.png"/> </p>
-<h2 id="pooling">pooling</h2>
-<p>better way to reduce the spatial extend (i.e. size) of the feature map. <br/>
-simple convnet: use large stride to reduce the feature map size. ⇒ <em>aggressive</em><br/>
-<strong>pooling</strong>: use small stride (ex. stride=1), then <em>take convolutions in neighbourhood and combine them</em>.<br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image006.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image004.png"> </img></p>
+<p>once got "deep and narrow" representation by convolution, connect to a normal (regular) fully-conncected NN. <br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image005.png"> </img></br></p>
+<h2>pooling</h2>
+<p>better way to reduce the spatial extend (i.e. size) of the feature map. <br>
+simple convnet: use large stride to reduce the feature map size. ⇒ <em>aggressive</em><br>
+<strong>pooling</strong>: use small stride (ex. stride=1), then <em>take convolutions in neighbourhood and combine them</em>.<br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image006.png"> </img></br></br></br></p>
 <p><strong>max pooling</strong> </p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image007.png"/> </p>
-<p><strong>average pooling</strong><br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image008.png"/> </p>
-<h2 id="1x1-convolution">1x1 convolution</h2>
-<p>classic convolution = <em>linear</em> classifier over a small patch of image<br/>
-<strong>add a 1x1 convolution in the middle</strong> ⇒ a mini-dnn over the patch. <br/>
-cheap: not convolution, just matrix multiplication. <br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image009.png"/> </p>
-<h2 id="inception-module">inception module</h2>
-<p>between each layers, just do both pooling and 1x1 conv, and 3x3 and 5x5.. conv, and concatenate them together. <br/>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image010.png"/><br/>
-benefit: total number of parameters is small, yet performance better.   </p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image007.png"> </img></p>
+<p><strong>average pooling</strong><br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image008.png"> </img></br></p>
+<h2>1x1 convolution</h2>
+<p>classic convolution = <em>linear</em> classifier over a small patch of image<br>
+<strong>add a 1x1 convolution in the middle</strong> ⇒ a mini-dnn over the patch. <br>
+cheap: not convolution, just matrix multiplication. <br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image009.png"> </img></br></br></br></p>
+<h2>inception module</h2>
+<p>between each layers, just do both pooling and 1x1 conv, and 3x3 and 5x5.. conv, and concatenate them together. <br>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image010.png"><br>
+benefit: total number of parameters is small, yet performance better.   </br></img></br></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -613,7 +597,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -683,22 +667,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#convnet">convnet</a></li>
-<li><a href="#convolutional-lingo">convolutional lingo</a></li>
-<li><a href="#pooling">pooling</a></li>
-<li><a href="#1x1-convolution">1x1 convolution</a></li>
-<li><a href="#inception-module">inception module</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

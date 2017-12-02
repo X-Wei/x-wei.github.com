@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String ..." />
+        <meta name="description" content="[TOC] 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 4-2 Substring Search"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week4_2.html"/>
-        <meta property="og:description" content="1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String ..."/>
+        <meta property="og:description" content="[TOC] 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String …"/>
         <meta property="article:published_time" content="2015-12-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -202,47 +202,14 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#1-introduction-to-substring-search">1. Introduction to substring search</a></li>
-<li><a href="#2-brute-force-substring-search">2. Brute-Force Substring Search</a></li>
-<li><a href="#3-knuth-morris-pratt">3. Knuth-Morris-Pratt</a><ul>
-<li><a href="#intuition">intuition</a></li>
-<li><a href="#deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</a></li>
-<li><a href="#dfa-construction">DFA construction</a></li>
-</ul>
-</li>
-<li><a href="#4-boyer-moore">4. Boyer-Moore</a><ul>
-<li><a href="#intuition_1">intuition</a></li>
-<li><a href="#mismatch-character-heuristic">mismatch character heuristic</a></li>
-<li><a href="#implementation">implementation</a></li>
-<li><a href="#analysis">analysis</a></li>
-</ul>
-</li>
-<li><a href="#5-rabin-karp">5. Rabin-Karp</a><ul>
-<li><a href="#intuition_2">intuition</a></li>
-<li><a href="#computing-the-hash-function-efficiently">computing the hash function efficiently</a></li>
-<li><a href="#analysis_1">analysis</a></li>
-</ul>
-</li>
-<li><a href="#summery">Summery</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h1 id="1-introduction-to-substring-search">1. Introduction to substring search</h1>
-<p>"most ingenious algorithm we've seen so far"<br/>
-<strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </p>
+                <p>[TOC] </p>
+<h1>1. Introduction to substring search</h1>
+<p>"most ingenious algorithm we've seen so far"<br>
+<strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </br></p>
 <p>ex. <code>indexOf</code> method of String in java.   </p>
-<h1 id="2-brute-force-substring-search">2. Brute-Force Substring Search</h1>
-<p>function signature: <br/>
-<code>public static int search(String pat, String txt);</code> </p>
+<h1>2. Brute-Force Substring Search</h1>
+<p>function signature: <br>
+<code>public static int search(String pat, String txt);</code> </br></p>
 <p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public static int search(String pat, String txt){  </span>
 <span class="code-line">    int N=txt.length(), M=pat.length();  </span>
@@ -254,11 +221,11 @@ mx's blog            </a>
 <span class="code-line">    return N;// not found  </span>
 <span class="code-line">}</span>
 </pre></div>
-<p><strong>worst case: </strong>when txt/pat are repetitive → MN compares. <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image.png"/><br/>
-problem with brute-force: always <em>backup</em> when mismatch. <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image001.png"/><br/>
-<strong>brute-force alternative</strong> </p>
+<p><strong>worst case: </strong>when txt/pat are repetitive → MN compares. <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image.png"><br>
+problem with brute-force: always <em>backup</em> when mismatch. <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image001.png"><br>
+<strong>brute-force alternative</strong> </br></img></br></br></img></br></p>
 <ul>
 <li>j := number of matched chars in pattern  </li>
 <li>i := index of the end of matched char in text  </li>
@@ -276,23 +243,23 @@ problem with brute-force: always <em>backup</em> when mismatch. <br/>
 <span class="code-line">}</span>
 </pre></div>
 <p>challenge: want linear-time guarantee, and want to avoid backup.   </p>
-<h1 id="3-knuth-morris-pratt">3. Knuth-Morris-Pratt</h1>
+<h1>3. Knuth-Morris-Pratt</h1>
 <p><em>"one of the coolest/trickiest algorithm covered in this course"</em> </p>
-<h3 id="intuition">intuition</h3>
-<p>suppose pattern = "BAAAAA", <br/>
-if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </p>
+<h3>intuition</h3>
+<p>suppose pattern = "BAAAAA", <br>
+if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </br></p>
 <p>KMP algorithm: clever method that <em>always</em> avoid backup !  </p>
-<h3 id="deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</h3>
+<h3>Deterministic finite state automaton (DFA)</h3>
 <ul>
 <li>finite states ,including start and halt state, indexed by j in the subtring pb  </li>
 <li>for each state: exactly one transition for each char in alphabet  </li>
 </ul>
-<p>ex. <br/>
-states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   </p>
+<p>ex. <br>
+states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   </br></p>
 <blockquote>
 <p><code>dfa[c][i]</code> = the next state if we are currently in state-i and encoutered char-c.  </p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image002.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image002.png"> </img></p>
 <p><strong>interpretation of DFA for KMP algo</strong> </p>
 <blockquote>
 <p>in the DFA after reading <code>txt[i]</code>, the index of state is the <strong>number of matched chars</strong> in pattern, or length of *longest prefix of pat that is a suffix of txt[0:i]. *  </p>
@@ -309,16 +276,16 @@ states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,
 <span class="code-line">    return j==M ? i-M : N;  </span>
 <span class="code-line">}</span>
 </pre></div>
-<p>running time: linear.<br/>
-→ key pb: <em>how to build dfa efficiently</em> ?  </p>
-<h3 id="dfa-construction">DFA construction</h3>
+<p>running time: linear.<br>
+→ key pb: <em>how to build dfa efficiently</em> ?  </br></p>
+<h3>DFA construction</h3>
 <ul>
 <li><strong>match transition </strong>(easy part)  </li>
 </ul>
-<p>when at state j, for the char <code>c0==pat.charAt(j+1)</code>, just go on matching: <code>dfa[c0][j] = j+1</code><br/>
-ex. (<em>pat="ABABAC"</em>)<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image003.png"/><br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image004.png"/> </p>
+<p>when at state j, for the char <code>c0==pat.charAt(j+1)</code>, just go on matching: <code>dfa[c0][j] = j+1</code><br>
+ex. (<em>pat="ABABAC"</em>)<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image003.png"><br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image004.png"> </img></br></img></br></br></p>
 <ul>
 <li><strong>mismatch transition</strong> (hard part)  </li>
 </ul>
@@ -331,8 +298,8 @@ ex. (<em>pat="ABABAC"</em>)<br/>
 <li>if we go back to set j=0, and set i = i-j+1, then i is pointing at <code>pat[1]</code>, the text become <code>pat[1...j-1]+c</code>. We then let this string go through our dfa, the state that it achieves is the value of <code>dfa[c][j]</code>.   </li>
 </ul>
 </blockquote>
-<p><em>here is</em> <em>a concrete example:</em> <br/>
-pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'  </p>
+<p><em>here is</em> <em>a concrete example:</em> <br>
+pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'  </br></p>
 <blockquote>
 <ul>
 <li>we know the last 6 chars of the input = <code>pat[0...j-1]+c="ABABA"+"B"="ABABAB"</code> </li>
@@ -341,14 +308,14 @@ pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'
 <li>so we know <code>dfa['B'][5]=4</code> </li>
 </ul>
 </blockquote>
-<p>similarly we can get <code>dfa['A'][5]=1</code>, as indicated below: <br/>
-(<em>pat="ABABAC"</em>)<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image005.png"/> </p>
-<p>one concern: seems this simulation needs <code>j</code> steps ?<br/>
-⇒ can be changed to be constant time if we maintain a <strong>state X := the state of simulating of input=pat[1...j-1]</strong><br/>
-we maintain this state <code>X</code>, then for each <em>mismatched</em> char c, we just need to look at <code>dfa[c][X]</code>. <br/>
-(<em>pat="ABABAC"</em>)<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image006.png"/> </p>
+<p>similarly we can get <code>dfa['A'][5]=1</code>, as indicated below: <br>
+(<em>pat="ABABAC"</em>)<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image005.png"> </img></br></br></p>
+<p>one concern: seems this simulation needs <code>j</code> steps ?<br>
+⇒ can be changed to be constant time if we maintain a <strong>state X := the state of simulating of input=pat[1...j-1]</strong><br>
+we maintain this state <code>X</code>, then for each <em>mismatched</em> char c, we just need to look at <code>dfa[c][X]</code>. <br>
+(<em>pat="ABABAC"</em>)<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image006.png"> </img></br></br></br></br></p>
 <p><strong>[Algo]</strong> </p>
 <blockquote>
 <ul>
@@ -383,40 +350,40 @@ we maintain this state <code>X</code>, then for each <em>mismatched</em> char c,
 <span class="code-line">}</span>
 </pre></div>
 <p>running time and space: <strong>O(M*R)</strong>.  </p>
-<p><strong>prop.</strong> <br/>
-KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   </p>
+<p><strong>prop.</strong> <br>
+KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   </br></p>
 <p>这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  </p>
-<p>八卦时间: <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image007.png"/> </p>
-<h1 id="4-boyer-moore">4. Boyer-Moore</h1>
-<p>Heuristic in practice.<br/>
-i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </p>
-<h3 id="intuition_1">intuition</h3>
+<p>八卦时间: <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image007.png"> </img></br></p>
+<h1>4. Boyer-Moore</h1>
+<p>Heuristic in practice.<br>
+i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </br></p>
+<h3>intuition</h3>
 <ul>
 <li>for matching: scan chars <em>from right to left</em> (j will decrease when checking)  </li>
 <li>when encoutered a mismatch: we can skip &lt;= M chars (if the char is not in pattern)  </li>
 </ul>
-<p>ex. (pat="NEEDLE")<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image008.png"/> </p>
+<p>ex. (pat="NEEDLE")<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image008.png"> </img></br></p>
 <p>→ pb: how to skip?   </p>
-<h3 id="mismatch-character-heuristic">mismatch character heuristic</h3>
+<h3>mismatch character heuristic</h3>
 <p><em>note</em>: the <code>i</code> always points to the <em>beginning</em> of the substring (<code>txt[i,...,i+M-1]</code>) to be checked for match.  </p>
-<p><strong>case 1. mismatched char not in pattern</strong><br/>
-easy case → just move i to the right of this char. <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image009.png"/> </p>
+<p><strong>case 1. mismatched char not in pattern</strong><br>
+easy case → just move i to the right of this char. <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image009.png"> </img></br></br></p>
 <p><strong>case 2. mismatched char in pattern</strong> </p>
 <blockquote>
-<p><strong>heuristic:</strong> line up i with the <strong>rightmost</strong><em> char in pattern</em>.<br/>
-<code>i += skip</code><br/>
-where <em>skip length = j - index of rightmost char in pattern</em> </p>
+<p><strong>heuristic:</strong> line up i with the <strong>rightmost</strong><em> char in pattern</em>.<br>
+<code>i += skip</code><br>
+where <em>skip length = j - index of rightmost char in pattern</em> </br></br></p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image010.png"/> </p>
-<p>note: this does not always help, in the example below, i even <em>backups</em>: <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image011.png"/><br/>
-to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </p>
-<h3 id="implementation">implementation</h3>
-<p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image012.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image010.png"> </img></p>
+<p>note: this does not always help, in the example below, i even <em>backups</em>: <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image011.png"><br>
+to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </br></img></br></p>
+<h3>implementation</h3>
+<p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image012.png"> </img></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>int[] right = new int[M];  </span>
 <span class="code-line">for(int i=0;i&lt;R;i++) right[i] = -1;//value for chars not in pattern  </span>
 <span class="code-line">for(int j=0;j&lt;M;j++){  </span>
@@ -440,34 +407,34 @@ to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn
 <span class="code-line">    return N;// pattern not found  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3 id="analysis">analysis</h3>
+<h3>analysis</h3>
 <p><strong>property</strong>. the Boyer-Moore heuristic (in practice) takes about <strong>N/M</strong> (sublinear!) compares to search.   </p>
 <p>好神奇, 比KMP还要简单的算法, 实际效率这么高...  </p>
-<p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image013.png"/><br/>
-→ can be improved...   </p>
-<h1 id="5-rabin-karp">5. Rabin-Karp</h1>
+<p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image013.png"><br>
+→ can be improved...   </br></img></br></p>
+<h1>5. Rabin-Karp</h1>
 <p>两个图灵奖的大神发明的算法..   </p>
-<h3 id="intuition_2">intuition</h3>
-<p>basic idea: <strong>modular hashing</strong><br/>
-ex. for strings of numbers   </p>
+<h3>intuition</h3>
+<p>basic idea: <strong>modular hashing</strong><br>
+ex. for strings of numbers   </br></p>
 <ul>
 <li>compute hash fcn (for number strings is easy: take the string and treat it as a number, then %Q where Q is a big prime number).   </li>
 <li>for a pointer i →corresponds to the substring <code>txt[i, ..., i+M-1]</code>  → check hash for match  </li>
 </ul>
-<p>(below: text=3141592653589793, pattern=26535)<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image014.png"/> </p>
-<h3 id="computing-the-hash-function-efficiently">computing the hash function efficiently</h3>
-<p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image015.png"/><br/>
-⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </p>
+<p>(below: text=3141592653589793, pattern=26535)<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image014.png"> </img></br></p>
+<h3>computing the hash function efficiently</h3>
+<p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image015.png"><br>
+⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </br></img></br></p>
 <ul>
 <li><strong>Honor's method</strong> </li>
 </ul>
-<p>linear time algorithm for evaluating polynomial. <br/>
-recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </p>
-<p>ex. (R=10, M=5)<br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image016.png"/> </p>
+<p>linear time algorithm for evaluating polynomial. <br>
+recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </br></p>
+<p>ex. (R=10, M=5)<br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image016.png"> </img></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>private long hash(String key, int M){  </span>
 <span class="code-line">    long h=0;  </span>
 <span class="code-line">    for(int i=0;i&lt;M;i++)  </span>
@@ -478,10 +445,10 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </p>
 <ul>
 <li>if we know x_i, the x_i+1 can be infered:   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image017.png"/><br/>
-⇒ x_i+1 can be computed in constant time: <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image018.png"/><br/>
-⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image017.png"><br>
+⇒ x_i+1 can be computed in constant time: <br>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image018.png"><br>
+⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </br></img></br></br></img></p>
 <div class="highlight"><pre><span class="code-line"><span></span>public static int search(String txt, String pat){  </span>
 <span class="code-line">    int N=txt.length(), M=pat.length();  </span>
 <span class="code-line">    long pathash = hash(pat, M);      </span>
@@ -496,12 +463,12 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </p>
 </pre></div>
 <p>更新txthash的地方可能会有modulo造成的问题... 不过先这样写吧..   </p>
 <p>for collisions: <em>Monte Carlo</em> vs. <em>Las Vegas</em> </p>
-<h3 id="analysis_1">analysis</h3>
-<p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br/>
-<strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image019.png"/> </p>
-<h1 id="summery">Summery</h1>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image020.png"/> </p>
+<h3>analysis</h3>
+<p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br>
+<strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </br></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image019.png"> </img></p>
+<h1>Summery</h1>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image020.png"> </img></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -858,7 +825,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -928,39 +895,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#1-introduction-to-substring-search">1. Introduction to substring search</a></li>
-<li><a href="#2-brute-force-substring-search">2. Brute-Force Substring Search</a></li>
-<li><a href="#3-knuth-morris-pratt">3. Knuth-Morris-Pratt</a><ul>
-<li><a href="#intuition">intuition</a></li>
-<li><a href="#deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</a></li>
-<li><a href="#dfa-construction">DFA construction</a></li>
-</ul>
-</li>
-<li><a href="#4-boyer-moore">4. Boyer-Moore</a><ul>
-<li><a href="#intuition_1">intuition</a></li>
-<li><a href="#mismatch-character-heuristic">mismatch character heuristic</a></li>
-<li><a href="#implementation">implementation</a></li>
-<li><a href="#analysis">analysis</a></li>
-</ul>
-</li>
-<li><a href="#5-rabin-karp">5. Rabin-Karp</a><ul>
-<li><a href="#intuition_2">intuition</a></li>
-<li><a href="#computing-the-hash-function-efficiently">computing the hash function efficiently</a></li>
-<li><a href="#analysis_1">analysis</a></li>
-</ul>
-</li>
-<li><a href="#summery">Summery</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

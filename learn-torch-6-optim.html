@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="torch" />
-        <meta name="description" content="ref: http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/ doc: https://github.com/torch/optim/blob/master/doc/intro.md Before we implement the gd update step by defining a gradientUpdate function and calling it in a loop. function gradientUpdate(model, x, y, criterion, learningRate) local pred = model:forward(x ..." />
+        <meta name="description" content="[TOC] ref: http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/ doc: https://github.com/torch/optim/blob/master/doc/intro.md Before we implement the gd update step by defining a gradientUpdate function and calling it in a loop. function gradientUpdate(model, x, y, criterion, learningRate) local pred = model:forward …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[learning torch] 6. optim (optimization tools)"/>
         <meta property="og:url" content="http://x-wei.github.io/learn-torch-6-optim.html"/>
-        <meta property="og:description" content="ref: http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/ doc: https://github.com/torch/optim/blob/master/doc/intro.md Before we implement the gd update step by defining a gradientUpdate function and calling it in a loop. function gradientUpdate(model, x, y, criterion, learningRate) local pred = model:forward(x ..."/>
+        <meta property="og:description" content="[TOC] ref: http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/ doc: https://github.com/torch/optim/blob/master/doc/intro.md Before we implement the gd update step by defining a gradientUpdate function and calling it in a loop. function gradientUpdate(model, x, y, criterion, learningRate) local pred = model:forward …"/>
         <meta property="article:published_time" content="2016-10-10" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="torch" />
@@ -202,39 +202,21 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#interface">Interface</a></li>
-<li><a href="#example-sgd-to-train-mlp-the-xor-function">Example: sgd to train mlp the XOR function</a><ul>
-<li><a href="#model-criterion">model, criterion</a></li>
-<li><a href="#data">data</a></li>
-<li><a href="#feval-closure">feval() closure</a></li>
-</ul>
-</li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<p>ref: <a href="http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/">http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/</a> <br/>
-doc: <a href="https://github.com/torch/optim/blob/master/doc/intro.md">https://github.com/torch/optim/blob/master/doc/intro.md</a> </p>
+                <p>[TOC]</p>
+<p>ref: <a href="http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/">http://rnduja.github.io/2015/10/26/deep_learning_with_torch_step_7_optim/</a> <br>
+doc: <a href="https://github.com/torch/optim/blob/master/doc/intro.md">https://github.com/torch/optim/blob/master/doc/intro.md</a> </br></p>
 <p>Before we implement the gd update step by defining a <code>gradientUpdate</code> function and calling it in a loop.  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>function gradientUpdate(model, x, y, criterion, learningRate) </span>
-<span class="code-line">    local pred = model:forward(x) -- assumes pred is what criterion expects as input </span>
-<span class="code-line">    local loss = criterion:forward(pred, y) </span>
-<span class="code-line">    model:zeroGradParameters() </span>
-<span class="code-line">    local grad_cri = criterion:backward(pred, y) </span>
-<span class="code-line">    model:backward(x, grad_cri) </span>
-<span class="code-line">    model:updateParameters(learningRate) </span>
-<span class="code-line">end</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">function</span> <span class="nx">gradientUpdate</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">learningRate</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">pred</span> <span class="o">=</span> <span class="nx">model</span>:<span class="kt">forward</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">--</span> <span class="nx">assumes</span> <span class="nx">pred</span> <span class="nx">is</span> <span class="nx">what</span> <span class="nx">criterion</span> <span class="nx">expects</span> <span class="kr">as</span> <span class="nx">input</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">loss</span> <span class="o">=</span> <span class="nx">criterion</span>:<span class="kt">forward</span><span class="p">(</span><span class="nx">pred</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">model</span>:<span class="kt">zeroGradParameters</span><span class="p">()</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">grad_cri</span> <span class="o">=</span> <span class="nx">criterion</span>:<span class="kt">backward</span><span class="p">(</span><span class="nx">pred</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">model</span>:<span class="kt">backward</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">grad_cri</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">model</span>:<span class="kt">updateParameters</span><span class="p">(</span><span class="nx">learningRate</span><span class="p">)</span> </span>
+<span class="code-line"><span class="nx">end</span></span>
 </pre></div>
 <p>But this is functionality is implemented in the <code>optim</code> module. In addition to just grad-descent, it has more complicated optimization algorithms implemented.  </p>
-<h2 id="interface">Interface</h2>
+<h2>Interface</h2>
 <p>The interface for all optimization algos are: </p>
 <p><code>params_new, fs, ... = optim._method_(feval, params[, config][, state])</code> </p>
 <p>explination:  </p>
@@ -246,13 +228,13 @@ doc: <a href="https://github.com/torch/optim/blob/master/doc/intro.md">https://g
 <li><code>params_new</code>: the resulting new parameter (in a 1D tensor), which minimizes the function f </li>
 <li><code>fs</code>: a table of f values evaluated during the optimization, <code>fs[#fs]</code> is the optimized function value </li>
 </ul>
-<p><strong>note:</strong><br/>
-As optim expects the input to be 1D tensors, we need to <strong>flatten</strong> the parameters in our model, this can be achieved via:  </p>
+<p><strong>note:</strong><br>
+As optim expects the input to be 1D tensors, we need to <strong>flatten</strong> the parameters in our model, this can be achieved via:  </br></p>
 <p><code>params, gradParams = model:getParameters()</code> </p>
 <p>the reuslting <code>params</code> and <code>gradParams</code> are all flattened into 1D tensor.  </p>
-<h2 id="example-sgd-to-train-mlp-the-xor-function">Example: sgd to train mlp the XOR function</h2>
+<h2>Example: sgd to train mlp the XOR function</h2>
 <p>Here is an example for learning an XOR using a mlp with one hidden layer.  </p>
-<h3 id="model-criterion">model, criterion</h3>
+<h3>model, criterion</h3>
 <p>First, define the model and criterion (use MSE here, see it as a regression problem):  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>require 'nn' </span>
 <span class="code-line">inputs = 2; outputs = 1; HUs = 20 -- parameters</span>
@@ -264,7 +246,7 @@ As optim expects the input to be 1D tensors, we need to <strong>flatten</strong>
 <span class="code-line"></span>
 <span class="code-line">criterion = nn.MSECriterion()</span>
 </pre></div>
-<h3 id="data">data</h3>
+<h3>data</h3>
 <p>Then generate dataset of XORs: sample 2d inputs, and lables are -1 if the samples are of the sign, otherwise +1. Generate 128 training samples: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>batchSize = 128 </span>
 <span class="code-line">batchInputs = torch.DoubleTensor(batchSize, inputs)  </span>
@@ -282,16 +264,16 @@ As optim expects the input to be 1D tensors, we need to <strong>flatten</strong>
 <span class="code-line">   batchLabels[i] = label </span>
 <span class="code-line">end</span>
 </pre></div>
-<h3 id="feval-closure">feval() closure</h3>
+<h3>feval() closure</h3>
 <p>Then define the feval function that returns the loss and the gradient wrt the loss:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>function feval(params) </span>
-<span class="code-line">    gradParams:zero() </span>
-<span class="code-line">    local outputs = model:forward(batchInputs) </span>
-<span class="code-line">    local loss = criterion:forward(outputs, batchLabels) </span>
-<span class="code-line">    local dloss_doutputs = criterion:backward(outputs, batchLabels) </span>
-<span class="code-line">    model:backward(batchInputs, dloss_doutputs) </span>
-<span class="code-line">    return loss, gradParams </span>
-<span class="code-line">end</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">function</span> <span class="nx">feval</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">gradParams</span>:<span class="kt">zero</span><span class="p">()</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">outputs</span> <span class="o">=</span> <span class="nx">model</span>:<span class="kt">forward</span><span class="p">(</span><span class="nx">batchInputs</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">loss</span> <span class="o">=</span> <span class="nx">criterion</span>:<span class="kt">forward</span><span class="p">(</span><span class="nx">outputs</span><span class="p">,</span> <span class="nx">batchLabels</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">local</span> <span class="nx">dloss_doutputs</span> <span class="o">=</span> <span class="nx">criterion</span>:<span class="kt">backward</span><span class="p">(</span><span class="nx">outputs</span><span class="p">,</span> <span class="nx">batchLabels</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="nx">model</span>:<span class="kt">backward</span><span class="p">(</span><span class="nx">batchInputs</span><span class="p">,</span> <span class="nx">dloss_doutputs</span><span class="p">)</span> </span>
+<span class="code-line">    <span class="k">return</span> <span class="nx">loss</span><span class="p">,</span> <span class="nx">gradParams</span> </span>
+<span class="code-line"><span class="nx">end</span></span>
 </pre></div>
 <p>finally, apply <code>optim.sgd</code> to the batch for 500 epochs:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>require 'optim' </span>
@@ -664,7 +646,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -732,24 +714,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#interface">Interface</a></li>
-<li><a href="#example-sgd-to-train-mlp-the-xor-function">Example: sgd to train mlp the XOR function</a><ul>
-<li><a href="#model-criterion">model, criterion</a></li>
-<li><a href="#data">data</a></li>
-<li><a href="#feval-closure">feval() closure</a></li>
-</ul>
-</li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

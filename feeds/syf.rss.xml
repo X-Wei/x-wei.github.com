@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>mx's blog</title><link>http://x-wei.github.io/</link><description></description><lastBuildDate>Tue, 26 Jul 2016 00:00:00 +0200</lastBuildDate><item><title>两层ssh连接(2-hop ssh connection)代理配置</title><link>http://x-wei.github.io/double-hop-ssh.html</link><description>&lt;p&gt;问题: 
+<rss version="2.0"><channel><title>mx's blog - syf</title><link>http://x-wei.github.io/</link><description></description><lastBuildDate>Tue, 26 Jul 2016 00:00:00 +0200</lastBuildDate><item><title>两层ssh连接(2-hop ssh connection)代理配置</title><link>http://x-wei.github.io/double-hop-ssh.html</link><description>&lt;p&gt;问题: 
 现在本地ssh连接eth的daint服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到daint. 现在配置本地的ssh代理使之可以一次完成. &lt;/p&gt;
-&lt;h1 id="sshkey"&gt;第一步: 生成sshkey&lt;/h1&gt;
+&lt;h1&gt;第一步: 生成sshkey&lt;/h1&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;ssh-keygen&lt;/span&gt;
 &lt;span class="code-line"&gt;cat ~/.ssh/id_rsa.pub | ssh your_username@ela.cscs.ch 'cat &amp;gt;&amp;gt; ~/.ssh/authorized_keys'&lt;/span&gt;
 &lt;span class="code-line"&gt;ssh your_username@ela.cscs.ch&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1 id="sshconfig"&gt;第二步: 修改.ssh/config文件内容&lt;/h1&gt;
+&lt;h1&gt;第二步: 修改.ssh/config文件内容&lt;/h1&gt;
 &lt;p&gt;用文本编辑器打开&lt;code&gt;.ssh/config&lt;/code&gt;文件, 添加如下内容: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;Host daint&lt;/span&gt;
 &lt;span class="code-line"&gt;    Hostname daint101&lt;/span&gt;
@@ -14,13 +14,4 @@
 &lt;span class="code-line"&gt;    ForwardAgent yes&lt;/span&gt;
 &lt;span class="code-line"&gt;    ForwardX11 yes&lt;/span&gt;
 &lt;span class="code-line"&gt;    Port 22&lt;/span&gt;
-&lt;span class="code-line"&gt;    IdentityFile ~/.ssh/id_rsa&lt;/span&gt;
-&lt;span class="code-line"&gt;    ProxyCommand ssh -q -Y your_username@ela.cscs.ch netcat %h %p -w 10&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;h1 id="ssh"&gt;直连第二层ssh&lt;/h1&gt;
-&lt;p&gt;进行了以上配置以后, 连接到cscs就不再需要两层ssh的命令了, 直接:  &lt;/p&gt;
-&lt;p&gt;&lt;code&gt;$ssh daint&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;即可 !&lt;/p&gt;
-&lt;h1 id="rsync"&gt;用rsync同步远程文件夹&lt;/h1&gt;
-&lt;p&gt;例子: 把本地文件夹同步到第二层ssh的目录下.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;rsync -a --progress ~/Downloads/nn_coref-master daint:/scratch/daint/your_username/code&lt;/code&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">syf</dc:creator><pubDate>Tue, 26 Jul 2016 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:x-wei.github.io,2016-07-26:double-hop-ssh.html</guid><category>ssh</category></item></channel></rss>
+&lt;span class="code-line"&gt;    IdentityFile ~/.ssh/id_rsa …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">syf</dc:creator><pubDate>Tue, 26 Jul 2016 00:00:00 +0200</pubDate><guid isPermaLink="false">tag:x-wei.github.io,2016-07-26:/double-hop-ssh.html</guid><category>ssh</category></item></channel></rss>

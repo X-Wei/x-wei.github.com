@@ -166,6 +166,53 @@ mx's blog            </a>
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="http://x-wei.github.io/minhash.html" class="btn btn-primary btn-lg"><h2>minHash: 一种快速approximate retrieval方法
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-09-27T11:00:00+02:00"><i class="fa fa-calendar"></i> Sun, 27 Sep 2015</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/ml.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> ml</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p><strong>approximate retrieval</strong>(相似搜索)这个问题之前实习的时候就经常遇到: 如何快速在大量数据中如何找出相近的数据.    </p>
+<p>问题描述: 假设有N个数据, 并且对于他们有一个相似度(或距离)的度量函数<code>sim(i,j)</code>, 我们的问题就是如何快速找出所有N个点中相似度较大的i和j组合.    </p>
+<p>乍一看这个问题必须要对所有的(i,j)计算相似度, 但是N^2的复杂度在N太大的情况下是不能够忍受的.    </p>
+<h2>kdtree</h2>
+<p>之前在algo-note里面遇到过<a href="http://x-wei.github.io/algoI_week5_2.html">kdtree</a>, 用它可以使得寻找nearest neighbor的复杂度减少到logN. 但是这种情况对于维度低一点(比如二三维)的情况合适, 维度到了成千上万的时候并不是很好的选择, 所以这里不多讨论.    </p>
+<h2>simhash</h2>
+<p>另一个思路是, 使用某个hash函数, 对于每一个数据计算一个哈希值. 这个hash函数要满足: <strong>当i和j的相似度很高的时候, hash(i)和hash(j)的值(很可能)相同.</strong> 这次介绍的minHash就是这样的一种方法.    </p>
+<h2>Jaccard similarity</h2>
+<p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term …</p>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
                             <a href="http://x-wei.github.io/linux-swap.html" class="btn btn-primary btn-lg"><h2>linux系统添加swap分区&调整swapness
                             </h2></a>
                         </div>
@@ -197,15 +244,15 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   </p>
 <p>然后就看到chrome这几年来吃内存越来越严重, 导致我开多几个标签页再开eclipse的话电脑就很有可能直接卡死... 郁闷啊 ! 于是决定给系统增加一个swap分区. 之前给<a href="http://thealternative.ch/index.php?view=linuxdays">thealternative</a>写邮件询问这件事, Sandro Kalbermatter同学热情回复了我告诉我怎么做, 按照他说的果然成功了, 特此一记.    </p>
-<h2 id="step1-swap">step1. 建立swap分区</h2>
+<h2>step1. 建立swap分区</h2>
 <p>首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    </p>
 <p>关于swap分区应该多大, 根据<a href="http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space">这个帖子</a>, 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   </p>
-<p>我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  <br/>
-<img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"/> </p>
-<h2 id="step2-fstab">step2. 编辑fstab</h2>
+<p>我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  <br>
+<img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"> </img></br></p>
+<h2>step2. 编辑fstab</h2>
 <p>建立好了swap分区以后, 打开终端, 输入<code>sudo blkid</code>查看所有的磁盘分区.    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>$ sudo blkid   </span>
-<span class="code-line">/dev/sda1: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">"FILES"</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">"ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3"</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext2 ...</span></span></pre></div>
+<span class="code-line">/dev/sda1: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">"FILES"</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">"ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3"</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext2 …</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -245,27 +292,27 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>几乎所有的ml课都是从线性回归讲起, ETH的课也不例外. 不过这次老师用了贝叶斯的视角讲这个问题, 自从高中接触丁老师讲的线性回归以来 第一次听到一个不同于最小二乘的解读, 感觉很有意思. 又想起来刘未鹏那篇非常棒的<a href="http://mindhacks.cn/2008/09/21/the-magical-bayesian-method/">博客</a>, 于是想记录一下.    </p>
-<h2 id="notation">notation</h2>
-<p>首先有n个数据点:  <br/>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"/> <br/>
-其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br/>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"/> <br/>
-例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </p>
-<h2 id="least-square-viewpoint">least square viewpoint</h2>
-<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br/>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"/> <br/>
-使得拟合结果和观测结果的误差尽量小.  <br/>
-不过这次不说最小二乘, 所以接下来不讨论这个思路...   </p>
-<h2 id="assumptions-in-bayes-viewpoint">assumptions in Bayes viewpoint</h2>
-<p>在贝叶斯视角里, 我们假设: <br/>
-<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br/>
-即:  <br/>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"/> <br/>
-其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br/>
-另外再有一个比较强的假设: <br/>
-<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br/>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"/> <br/>
-(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 ...</br/></br/></br/></br/></br/></br/></br/></br/></p>
+<h2>notation</h2>
+<p>首先有n个数据点:  <br>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"> <br>
+其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"> <br>
+例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </br></img></br></br></img></br></p>
+<h2>least square viewpoint</h2>
+<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"> <br>
+使得拟合结果和观测结果的误差尽量小.  <br>
+不过这次不说最小二乘, 所以接下来不讨论这个思路...   </br></br></img></br></p>
+<h2>assumptions in Bayes viewpoint</h2>
+<p>在贝叶斯视角里, 我们假设: <br>
+<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br>
+即:  <br>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"> <br>
+其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br>
+另外再有一个比较强的假设: <br>
+<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"> <br>
+(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 …</p>
                     </div>
                 </div>
             </article>
@@ -305,13 +352,13 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>python科学计算包的基础是numpy, 里面的array类型经常遇到. 一开始可能把这个array和python内建的列表(list)混淆, 这里简单总结一下列表(list), 多维数组(np.ndarray)和矩阵(np.matrix)的区别.    </p>
-<h2 id="list">list列表</h2>
+<h2>list列表</h2>
 <p>列表属于python的三种基本集合类型之一, 其他两种是元组(tuple)和字典(dict). tuple和list区别主要在于是不是mutable的.    </p>
 <p>list和java里的数组不同之处在于, python的list可以包含任意类型的对象, 一个list里可以包含int, string或者其他任何对象, 另外list是可变长度的(list有<code>append</code>, <code>extend</code>和<code>pop</code>等方法).   </p>
 <p>所以, python内建的所谓"列表"其实是功能很强大的数组, 类比一下可以说它对应于java里面的<code>ArrayList&lt;Object&gt;</code> .    </p>
-<h2 id="ndarray">ndarray多维数组</h2>
+<h2>ndarray多维数组</h2>
 <p>ndarray是numpy的基石, 其实它更像一个java里面的标准数组: 所有元素有一个相同数据类型(dtype), 不过大小不是固定的.    </p>
-<p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ ...</code></p>
+<p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ …</code></p>
                     </div>
                 </div>
             </article>
@@ -352,11 +399,11 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
+                    <div class="summary"><p>[TOC]</p>
 <p><em>Can we do better than BST if we do not need ordered operations ?</em> </p>
 <p>(No compare methods, use equals method)   </p>
-<p>Idea: save items in an array.  <br/>
-<strong>Hash function</strong>: method for calclulating the array index of  a key.    </p>
+<p>Idea: save items in an array.  <br>
+<strong>Hash function</strong>: method for calclulating the array index of  a key.    </br></p>
 <p>Issues:    </p>
 <ul>
 <li>computing hash function   </li>
@@ -364,7 +411,7 @@ mx's blog            </a>
 <li>collision resolution   </li>
 </ul>
 <p><em>Classic space-time tradeoff.</em> </p>
-<h1 id="1-hash-functions">1. Hash Functions ...</h1>
+<h1>1. Hash …</h1>
                     </div>
                 </div>
             </article>
@@ -405,12 +452,12 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
-<h1 id="1-1d-range-search">1. 1d Range Search</h1>
-<p>Goal: <em>intersections</em> of geometric objects.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image.png"/> <br/>
-Solution: <strong>BST</strong> </p>
-<h2 id="1d-range-search">1d range search</h2>
+                    <div class="summary"><p>[TOC]   </p>
+<h1>1. 1d Range Search</h1>
+<p>Goal: <em>intersections</em> of geometric objects.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image.png"> <br>
+Solution: <strong>BST</strong> </br></img></br></p>
+<h2>1d range search</h2>
 <p>operations required:    </p>
 <ul>
 <li>insert   </li>
@@ -419,11 +466,11 @@ Solution: <strong>BST</strong> </p>
 <li><em>range search</em>: all keys between k1 and k2   </li>
 <li><em>range count</em>: how many keys are between k1 and k2   </li>
 </ul>
-<p>→ find points on an interval  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image001.png"/> </p>
-<h2 id="implementation-by-bst">implementation by BST</h2>
-<p><strong>range count</strong> <br/>
-using the <code>rank ...</code></br/></p>
+<p>→ find points on an interval  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image001.png"> </img></br></p>
+<h2>implementation by BST</h2>
+<p><strong>range count</strong> <br>
+using the …</p>
                     </div>
                 </div>
             </article>
@@ -464,15 +511,15 @@ using the <code>rank ...</code></br/></p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
-<p>goal: lgN for insert/search/delete operations (not necessarily <em>binary</em> trees..) <br/>
-3 algo: 2-3 tree, (left leaning) red-black tree, B-tree   </p>
-<h1 id="1-2-3-search-trees">1. 2-3 Search Trees</h1>
+                    <div class="summary"><p>[TOC]   </p>
+<p>goal: lgN for insert/search/delete operations (not necessarily <em>binary</em> trees..) <br>
+3 algo: 2-3 tree, (left leaning) red-black tree, B-tree   </br></p>
+<h1>1. 2-3 Search Trees</h1>
 <p>def. <strong>2-3 tree</strong> </p>
 <ul>
 <li>allow 1 or 2 keys per node, &amp; 2 or 3 children per node:    <ul>
 <li>2-node: one key, 2 children (ordinary BST node)   </li>
-<li>3-node: 2 ...</li></ul></li></ul>
+<li>3-node …</li></ul></li></ul>
                     </div>
                 </div>
             </article>
@@ -513,17 +560,17 @@ using the <code>rank ...</code></br/></p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
+                    <div class="summary"><p>[TOC]</p>
 <p>(BST是锻炼递归代码的好题目)   </p>
-<h1 id="1-binary-search-trees">1. Binary Search Trees</h1>
-<p>def. <strong>BST</strong> <br/>
-A binary tree where each node has a key:  <br/>
-for every node, the key is larger than <em>all nodes in left</em> subtree, smaller than <em>all nodes in right</em> subtree.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week4_2b/pasted_image.png"/> <br/>
-Fields: key, val, left, right   </p>
-<h2 id="implementation">Implementation</h2>
+<h1>1. Binary Search Trees</h1>
+<p>def. <strong>BST</strong> <br>
+A binary tree where each node has a key:  <br>
+for every node, the key is larger than <em>all nodes in left</em> subtree, smaller than <em>all nodes in right</em> subtree.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week4_2b/pasted_image.png"> <br>
+Fields: key, val, left, right   </br></img></br></br></br></p>
+<h2>Implementation</h2>
 <p>An inner class of BST nodes:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private class ...</span></pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span>private …</span></pre></div>
                     </div>
                 </div>
             </article>
@@ -564,17 +611,17 @@ Fields: key, val, left, right   </p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
-<h1 id="1-symbol-table-api">1. Symbol Table API</h1>
+                    <div class="summary"><p>[TOC]</p>
+<h1>1. Symbol Table API</h1>
 <p>key-value pair abstraction    </p>
 <ul>
 <li><strong>insert</strong> a value with a key   </li>
 <li>given a key, <strong>search</strong> for its value   </li>
 </ul>
-<h2 id="association-array-abstraction">Association array abstraction</h2>
+<h2>Association array abstraction</h2>
 <p>Associate a value to a key — generalized array: <em>a[key]=val</em>.    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class ST&lt;Key, Value&gt;{   </span>
-<span class="code-line">    void put(Key k, Value v);//remove key if value=null ...</span></pre></div>
+<span class="code-line">    void put(Key k, Value v);//remove key if value …</span></pre></div>
                     </div>
                 </div>
             </article>
@@ -615,69 +662,16 @@ Fields: key, val, left, right   </p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary">
-<h1 id="1-api-and-elementary-implementations">1. API and elementary implementations</h1>
-<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br/>
-Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </p>
+                    <div class="summary"><p>[TOC]  </p>
+<h1>1. API and elementary implementations</h1>
+<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br>
+Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </br></p>
 <p>API:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class Max&lt;Kye implements Comparable&lt;Key&gt;&gt;{   </span>
 <span class="code-line">    public MaxPQ();    </span>
 <span class="code-line">    public void insert(Key k);   </span>
 <span class="code-line">    public Key delMax();    </span>
-<span class="code-line">    public boolean isEmpty();     </span>
-<span class="code-line">    public ...</span></pre></div>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="http://x-wei.github.io/algoI_week3_2.html" class="btn btn-primary btn-lg"><h2>[Algorithms I] Week 3-2 Quicksort
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2015-08-22T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 22 Aug 2015</time>
-    </span>
-
-
-
-
-
-<span class="btn-group">
-	<a href="http://x-wei.github.io/tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
-</span>
-    
-            <span class="label label-default">Series</span>
-            Part 7 of «Algorithms Princeton MOOC I» 
-    
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary">
-<p>(maybe best algorithm for sorting.)   </p>
-<h1 id="1-quicksort">1. Quicksort</h1>
-<p><strong>Idea:</strong> </p>
-<ol>
-<li>shuffle the array     </li>
-<li><em>Partition</em> the array into two subarrays to left and right of pivot  (*now pivot is <strong>*in its final position</strong>)   </li>
-</ol>
-<p>no larger entry to the left of pivot   <br/>
-no smaller entry to the right of pivot     </p>
-<ol>
-<li>sort each subarray recursively ...</li></ol>
+<span class="code-line">    public boolean isEmpty …</span></pre></div>
                     </div>
                 </div>
             </article>
@@ -983,7 +977,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">

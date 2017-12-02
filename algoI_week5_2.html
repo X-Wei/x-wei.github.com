@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="1. 1d Range Search Goal: intersections of geometric objects. Solution: BST 1d range search operations required: insert search delete range search: all keys between k1 and k2 range count: how many keys are between k1 and k2 → find points on an interval implementation by BST range count using the rank ..." />
+        <meta name="description" content="[TOC] 1. 1d Range Search Goal: intersections of geometric objects. Solution: BST 1d range search operations required: insert search delete range search: all keys between k1 and k2 range count: how many keys are between k1 and k2 → find points on an interval implementation by BST range count using the …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week 5-2 Geometric Applications of BSTs"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week5_2.html"/>
-        <meta property="og:description" content="1. 1d Range Search Goal: intersections of geometric objects. Solution: BST 1d range search operations required: insert search delete range search: all keys between k1 and k2 range count: how many keys are between k1 and k2 → find points on an interval implementation by BST range count using the rank ..."/>
+        <meta property="og:description" content="[TOC] 1. 1d Range Search Goal: intersections of geometric objects. Solution: BST 1d range search operations required: insert search delete range search: all keys between k1 and k2 range count: how many keys are between k1 and k2 → find points on an interval implementation by BST range count using the …"/>
         <meta property="article:published_time" content="2015-08-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -202,45 +202,12 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#1-1d-range-search">1. 1d Range Search</a><ul>
-<li><a href="#1d-range-search">1d range search</a></li>
-<li><a href="#implementation-by-bst">implementation by BST</a></li>
-</ul>
-</li>
-<li><a href="#2-line-segment-intersection">2. Line Segment Intersection</a><ul>
-<li><a href="#sweep-line-algorithm">Sweep-line algorithm</a></li>
-</ul>
-</li>
-<li><a href="#3-kd-trees">3. Kd-trees</a><ul>
-<li><a href="#gird-implementation">gird implementation</a></li>
-<li><a href="#2d-tree">2d tree</a></li>
-<li><a href="#range-search-for-2d-tree">Range search for 2d tree</a></li>
-<li><a href="#nearest-neighbour-seach">Nearest Neighbour seach</a></li>
-<li><a href="#kd-tree">Kd tree</a></li>
-</ul>
-</li>
-<li><a href="#4-interval-search-tree">4. Interval search tree</a><ul>
-<li><a href="#interval-search-tree">Interval search tree:</a></li>
-</ul>
-</li>
-<li><a href="#5-rectangle-intersection">5. Rectangle intersection</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h1 id="1-1d-range-search">1. 1d Range Search</h1>
-<p>Goal: <em>intersections</em> of geometric objects.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image.png"/> <br/>
-Solution: <strong>BST</strong> </p>
-<h2 id="1d-range-search">1d range search</h2>
+                <p>[TOC]   </p>
+<h1>1. 1d Range Search</h1>
+<p>Goal: <em>intersections</em> of geometric objects.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image.png"> <br>
+Solution: <strong>BST</strong> </br></img></br></p>
+<h2>1d range search</h2>
 <p>operations required:    </p>
 <ul>
 <li>insert   </li>
@@ -249,38 +216,38 @@ Solution: <strong>BST</strong> </p>
 <li><em>range search</em>: all keys between k1 and k2   </li>
 <li><em>range count</em>: how many keys are between k1 and k2   </li>
 </ul>
-<p>→ find points on an interval  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image001.png"/> </p>
-<h2 id="implementation-by-bst">implementation by BST</h2>
-<p><strong>range count</strong> <br/>
-using the <code>rank()</code> function for the BST (or use the size of a tree) <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image002.png"/> <br/>
-注意什么时候要加1...   </p>
+<p>→ find points on an interval  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image001.png"> </img></br></p>
+<h2>implementation by BST</h2>
+<p><strong>range count</strong> <br>
+using the <code>rank()</code> function for the BST (or use the size of a tree) <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image002.png"> <br>
+注意什么时候要加1...   </br></img></br></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>public int size(Key hi, Key lo){   </span>
 <span class="code-line">    if(contains(hi)) return rank(hi)-rank(lo)+1;   </span>
 <span class="code-line">    else return rank(hi) - rank(lo);   </span>
 <span class="code-line">}</span>
 </pre></div>
-<p><strong>range search</strong> <br/>
-类似inorder traversal的方式:    </p>
+<p><strong>range search</strong> <br>
+类似inorder traversal的方式:    </br></p>
 <ul>
 <li>find in left subtree (if could fall into range)   </li>
 <li>check current node   </li>
 <li>find in right subtree   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image003.png"/> <br/>
-running time: R+lgN (R=nb of nodes in range)   </p>
-<h1 id="2-line-segment-intersection">2. Line Segment Intersection</h1>
+<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image003.png"> <br>
+running time: R+lgN (R=nb of nodes in range)   </br></img></p>
+<h1>2. Line Segment Intersection</h1>
 <blockquote>
-<p><em>Orthognal line segment intersection search</em>:  <br/>
-find all intersections given N horizontal/vertical lines <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image005.png"/> </p>
+<p><em>Orthognal line segment intersection search</em>:  <br>
+find all intersections given N horizontal/vertical lines <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image005.png"> </img></br></br></p>
 </blockquote>
 <p>Non-degeneracy assumption: all x-coord and y-coord are distinct.    </p>
 <p>naive algo: check all pairs...   </p>
-<h2 id="sweep-line-algorithm">Sweep-line algorithm</h2>
-<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image006.png"/> <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image007.png"/> </p>
+<h2>Sweep-line algorithm</h2>
+<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image006.png"> <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image007.png"> </img></br></img></p>
 <ul>
 <li>sweep a vertical line from left to right.    <ul>
 <li>when hit the left end of horizontal-segment (h-seg) → insert into a BST   </li>
@@ -289,17 +256,17 @@ find all intersections given N horizontal/vertical lines <br/>
 </ul>
 </li>
 </ul>
-<p><strong>关于怎么sweep的:</strong> <br/>
-没有仔细讲, 不过我觉得就是把所有的x坐标排好序, 有个<a href="https://leetcode.com/problems/the-skyline-problem/">skyline问题</a>也是涉及如何sweep的.   </p>
-<p><strong>proposition</strong> <br/>
-running time is NlgN+R (R=nb of intersections).  <br/>
-<em>proof.</em> </p>
+<p><strong>关于怎么sweep的:</strong> <br>
+没有仔细讲, 不过我觉得就是把所有的x坐标排好序, 有个<a href="https://leetcode.com/problems/the-skyline-problem/">skyline问题</a>也是涉及如何sweep的.   </br></p>
+<p><strong>proposition</strong> <br>
+running time is NlgN+R (R=nb of intersections).  <br>
+<em>proof.</em> </br></br></p>
 <ul>
 <li>Sort by x-coord (or use PQ) → NlgN   </li>
 <li>insert/delete y-coord to BST → NlgN   </li>
 <li>range search → NlgN + R   </li>
 </ul>
-<h1 id="3-kd-trees">3. Kd-trees</h1>
+<h1>3. Kd-trees</h1>
 <p>An extension of BST: <em>2d-keys</em>.    </p>
 <ul>
 <li>insert: insert 2d points   </li>
@@ -307,55 +274,55 @@ running time is NlgN+R (R=nb of intersections).  <br/>
 <li>range search: <em>find all keys lying in a 2d rectangle (h-v rectangle)</em> </li>
 <li>range count   </li>
 </ul>
-<h2 id="gird-implementation">gird implementation</h2>
-<p>divide space into a M-by-M grid (uniform squares). <br/>
-space: N + M^2 <br/>
-time: 1 + N/M^2  <br/>
-→ choose square to balance space and time.  <br/>
-problem: points are not uniformly distributed.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image008.png"/> </p>
-<h2 id="2d-tree">2d tree</h2>
+<h2>gird implementation</h2>
+<p>divide space into a M-by-M grid (uniform squares). <br>
+space: N + M^2 <br>
+time: 1 + N/M^2  <br>
+→ choose square to balance space and time.  <br>
+problem: points are not uniformly distributed.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image008.png"> </img></br></br></br></br></br></p>
+<h2>2d tree</h2>
 <p>Use a tree to represent the subdivision of the space.    </p>
-<p><strong>2d tree</strong>: recursively divide the space into 2 halfplanes <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image009.png"/> </p>
-<p>construct the 2d tree by adding points: <em>alternating between horizontal and vertical partitioning for each level of tree</em>.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image010.png"/> </p>
-<p>Data structure: BST alternating x and y-coords as key.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image011.png"/> </p>
-<h2 id="range-search-for-2d-tree">Range search for 2d tree</h2>
-<p>find all points lying in a rectangle.  <br/>
-依然类似tree traversal算法:   </p>
+<p><strong>2d tree</strong>: recursively divide the space into 2 halfplanes <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image009.png"> </img></br></p>
+<p>construct the 2d tree by adding points: <em>alternating between horizontal and vertical partitioning for each level of tree</em>.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image010.png"> </img></br></p>
+<p>Data structure: BST alternating x and y-coords as key.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image011.png"> </img></br></p>
+<h2>Range search for 2d tree</h2>
+<p>find all points lying in a rectangle.  <br>
+依然类似tree traversal算法:   </br></p>
 <ul>
 <li>check point in node   </li>
 <li>find in left subtree (if could be in range — the rectangle <em>intersects</em> the splitting line)   </li>
 <li>find in right subtree   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image012.png"/> </p>
-<p><strong>analysis</strong> <br/>
-Typical case: R + lgN <br/>
-worst case: R+ sqrt(N) (even if tree is balanced) <br/>
-(proof is hard)   </p>
-<h2 id="nearest-neighbour-seach">Nearest Neighbour seach</h2>
+<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image012.png"> </img></p>
+<p><strong>analysis</strong> <br>
+Typical case: R + lgN <br>
+worst case: R+ sqrt(N) (even if tree is balanced) <br>
+(proof is hard)   </br></br></br></p>
+<h2>Nearest Neighbour seach</h2>
 <p>find closest point to a query point.    </p>
 <ul>
 <li>check dist from query point to node   </li>
 <li>check in left tree (<em>if could contain a closer point — 和两点连线与splitting line的角度有关系</em>)   </li>
 <li>check in right tree   </li>
 </ul>
-<p><strong>analysis</strong> <br/>
-typical case: lgN <br/>
-worst case: N   </p>
-<p><strong>Flocking boids</strong> <br/>
-3 simple rules to get a simulation of flocking.  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image013.png"/> </p>
-<h2 id="kd-tree">Kd tree</h2>
-<p>partition the k-dim space into 2 halfspaces.  <br/>
-cycle through k dimensions. <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image014.png"/> <br/>
-(居然时一个本科生发现的!)   </p>
-<p>Nbody simulation: <br/>
-treat clusters as an aggregated node   </p>
-<h1 id="4-interval-search-tree">4. Interval search tree</h1>
+<p><strong>analysis</strong> <br>
+typical case: lgN <br>
+worst case: N   </br></br></p>
+<p><strong>Flocking boids</strong> <br>
+3 simple rules to get a simulation of flocking.  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image013.png"> </img></br></br></p>
+<h2>Kd tree</h2>
+<p>partition the k-dim space into 2 halfspaces.  <br>
+cycle through k dimensions. <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image014.png"> <br>
+(居然时一个本科生发现的!)   </br></img></br></br></p>
+<p>Nbody simulation: <br>
+treat clusters as an aggregated node   </br></p>
+<h1>4. Interval search tree</h1>
 <p>1d interval search:　data are intervals   </p>
 <ul>
 <li>insert interval    </li>
@@ -363,48 +330,48 @@ treat clusters as an aggregated node   </p>
 <li>delete interval   </li>
 <li>intersection query: find all intervals that intersects (lo,hi)   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image015.png"/> <br/>
-Nondegeneracy assumption: all left endpoint of intervals are distinct.    </p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image015.png"> <br>
+Nondegeneracy assumption: all left endpoint of intervals are distinct.    </br></img></p>
 <p>API:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>put(Key lo, Key hi, Value val)   </span>
 <span class="code-line">get(Key lo, Key hi)   </span>
 <span class="code-line">delete(Key lo, Key hi)   </span>
 <span class="code-line">Iterable&lt;Key&gt; intersects(Key lo, Key hi)</span>
 </pre></div>
-<h2 id="interval-search-tree">Interval search tree:</h2>
+<h2>Interval search tree:</h2>
 <ul>
 <li>BST using left endpoint as key   </li>
 <li>in each node: store the <em>max right endpoint of the subtree</em> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image016.png"/> </p>
-<p><strong>insert</strong> <br/>
-类似BST, 加上维护一下maxendpoint即可.   </p>
-<p><strong>search</strong> <br/>
-search <em>any one</em> interval that intersects (lo,hi)   </p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image016.png"> </img></p>
+<p><strong>insert</strong> <br>
+类似BST, 加上维护一下maxendpoint即可.   </br></p>
+<p><strong>search</strong> <br>
+search <em>any one</em> interval that intersects (lo,hi)   </br></p>
 <ul>
 <li>if node intersects, return   </li>
 <li>if left.maxendpoint &lt; lo: go right   </li>
 <li>else: go left   </li>
 </ul>
-<p>*proof. * <br/>
-主要证明一点: if no intersection to left ⇒ then no intersection to the right <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image018.png"/> </p>
-<h1 id="5-rectangle-intersection">5. Rectangle intersection</h1>
-<p>Goal:  find all intersection among N rectangles.  <br/>
-(non degeneracy assumption: all x and y are distinct)    </p>
+<p>*proof. * <br>
+主要证明一点: if no intersection to left ⇒ then no intersection to the right <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image018.png"> </img></br></br></p>
+<h1>5. Rectangle intersection</h1>
+<p>Goal:  find all intersection among N rectangles.  <br>
+(non degeneracy assumption: all x and y are distinct)    </br></p>
 <p>bottom line: linearithmic algo.    </p>
-<p><strong>sweep-line algorithm:</strong> <br/>
-sweep vertical line from left to right.    </p>
+<p><strong>sweep-line algorithm:</strong> <br>
+sweep vertical line from left to right.    </br></p>
 <ul>
 <li>when hit left part of a rect ⇒ put into an interval search tree   </li>
 <li>when hit right part of a rect ⇒ remove interval   </li>
 <li>every time befor adding ⇒ check intersection   </li>
 </ul>
 <p><em>reduces the 2d rect intersection pb to 1d interval search pb.</em> </p>
-<p>complexity:  <br/>
-NlgN+RlgN   </p>
-<p>summery:  <br/>
-<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image019.png"/> </p>
+<p>complexity:  <br>
+NlgN+RlgN   </br></p>
+<p>summery:  <br>
+<img alt="" class="img-responsive" src="../images/algoI_week5_2/pasted_image019.png"> </img></br></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -761,7 +728,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -831,39 +798,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#1-1d-range-search">1. 1d Range Search</a><ul>
-<li><a href="#1d-range-search">1d range search</a></li>
-<li><a href="#implementation-by-bst">implementation by BST</a></li>
-</ul>
-</li>
-<li><a href="#2-line-segment-intersection">2. Line Segment Intersection</a><ul>
-<li><a href="#sweep-line-algorithm">Sweep-line algorithm</a></li>
-</ul>
-</li>
-<li><a href="#3-kd-trees">3. Kd-trees</a><ul>
-<li><a href="#gird-implementation">gird implementation</a></li>
-<li><a href="#2d-tree">2d tree</a></li>
-<li><a href="#range-search-for-2d-tree">Range search for 2d tree</a></li>
-<li><a href="#nearest-neighbour-seach">Nearest Neighbour seach</a></li>
-<li><a href="#kd-tree">Kd tree</a></li>
-</ul>
-</li>
-<li><a href="#4-interval-search-tree">4. Interval search tree</a><ul>
-<li><a href="#interval-search-tree">Interval search tree:</a></li>
-</ul>
-</li>
-<li><a href="#5-rectangle-intersection">5. Rectangle intersection</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android" />
-        <meta name="description" content="Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume note ..." />
+        <meta name="description" content="[TOC] Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Android Dev] 2.1 Lifecycles"/>
         <meta property="og:url" content="http://x-wei.github.io/andev_p2e1_lifecycle.html"/>
-        <meta property="og:description" content="Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume note ..."/>
+        <meta property="og:description" content="[TOC] Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume …"/>
         <meta property="article:published_time" content="2017-02-11" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="android" />
@@ -202,27 +202,7 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#onsavedinstancestate">onSavedInstanceState()</a></li>
-<li><a href="#asynctasks-and-loader">AsyncTasks and Loader</a></li>
-<li><a href="#using-loaders">Using Loaders</a><ul>
-<li><a href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</a></li>
-<li><a href="#implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</a></li>
-<li><a href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li>
-</ul>
-</li>
-<li><a href="#caching-with-loaders">Caching with loaders</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
+                <p>[TOC]</p>
 <p>Android kills background apps !! </p>
 <p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image001.png"/></p>
 <p>→ <code>onCreate()</code> → <strong>Created</strong> →<code>onStart()</code> →  <strong>Visible(</strong>can be seen on screen) → <code>onResume()</code> → <strong>Active</strong>(get focus, can interact with)</p>
@@ -230,7 +210,7 @@ mx's blog            </a>
 <p>when rotate screen, the function calling is: </p>
 <p><code>onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume</code></p>
 <p>note: activity will be <strong>destroyed</strong> when device configuration is changed ! </p>
-<h2 id="onsavedinstancestate">onSavedInstanceState()</h2>
+<h2>onSavedInstanceState()</h2>
 <p>so that the app states can be saved when device configuration changes (ex. rotate). </p>
 <p>parameter: a <code>Bundle</code> to keep state into key-value pairs. 
 to pass objects via Bundle: implement the <code>Parcelble</code> interface. </p>
@@ -269,22 +249,22 @@ to pass objects via Bundle: implement the <code>Parcelble</code> interface. </p>
 <span class="code-line">        mSearchResultsTextView.setText(savedInstanceState.getString(RAW_JSON_KEY));</span>
 <span class="code-line">}</span>
 </pre></div>
-<h2 id="asynctasks-and-loader">AsyncTasks and Loader</h2>
+<h2>AsyncTasks and Loader</h2>
 <p>edgecase: rotate when async task is performing → asynctask runs on separate thread → the zombie activities will not be killed !!
 ⇒ <code>Loader</code>
 Loader is identified by a loader ID, thus preventing several loaders running in the same time. 
-<img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image002.png"/>
+<img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image002.png">
 <code>AsyncTaskLoader</code> lifecycle: 
-it is bounded to an Activity instead of an async task ⇒ when device rotates, the loader will feed the results of tasks to the right activity. </p>
+it is bounded to an Activity instead of an async task ⇒ when device rotates, the loader will feed the results of tasks to the right activity. </img></p>
 <p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image003.png"/></p>
-<h2 id="using-loaders">Using Loaders</h2>
+<h2>Using Loaders</h2>
 <ol>
 <li>create loader id: <code>private static final GITHUB_SEARCH_LOADER = 22;</code></li>
 <li>implement <code>LoaderCallbacks</code> interface functions in <code>MainActivity</code></li>
 <li>init loader with a <code>LoaderManager</code>, and start the loader</li>
 </ol>
 <p>let <code>MainActivty</code> implement <code>LoaderManager.LoaderCallbacks&lt;String&gt;</code></p>
-<h3 id="implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</h3>
+<h3>implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>// TODO (3) Override onCreateLoader</span>
 <span class="code-line">@Override</span>
 <span class="code-line">public Loader&lt;String&gt; onCreateLoader(int id, final Bundle bundle) {// !make bundle final so that can access it below</span>
@@ -325,7 +305,7 @@ it is bounded to an Activity instead of an async task ⇒ when device rotates, t
 <span class="code-line">    };</span>
 <span class="code-line">}</span>
 </pre></div>
-<h3 id="implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</h3>
+<h3>implement onLoadFinished — onPostExecute for AsyncTask</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>// TODO (13) Override onLoadFinished</span>
 <span class="code-line">@Override</span>
 <span class="code-line">public void onLoadFinished(Loader&lt;String&gt; loader, String githubSearchResults) {</span>
@@ -345,7 +325,7 @@ it is bounded to an Activity instead of an async task ⇒ when device rotates, t
 <span class="code-line"></span>
 <span class="code-line">}</span>
 </pre></div>
-<h3 id="in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</h3>
+<h3>in makeGithubSearchQuery(): create bundle, create a loder, start it</h3>
 <p>instead of staring an <code>AsyncTask</code>, we get a Loader and re-run it via a loader manager. </p>
 <div class="highlight"><pre><span class="code-line"><span></span>// TODO (19) Create a bundle called queryBundle</span>
 <span class="code-line">Bundle queryBundle = new Bundle();</span>
@@ -359,7 +339,7 @@ it is bounded to an Activity instead of an async task ⇒ when device rotates, t
 <span class="code-line">if(loader==null) loader = loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span>
 <span class="code-line">else loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span>
 </pre></div>
-<h2 id="caching-with-loaders">Caching with loaders</h2>
+<h2>Caching with loaders</h2>
 <p>Loaders will reload if activity is destroyed and re-created. This overhead can be avoided by caching the results in the <code>AsyncTaskLoader</code> (created in <code>onCreateLoader()</code>). </p>
 <div class="highlight"><pre><span class="code-line"><span></span>// TODO (1) Create a String member variable called mGithubJson that will store the raw JSON</span>
 <span class="code-line">String mGithubJson; // cached results</span>
@@ -737,7 +717,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -807,26 +787,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#onsavedinstancestate">onSavedInstanceState()</a></li>
-<li><a href="#asynctasks-and-loader">AsyncTasks and Loader</a></li>
-<li><a href="#using-loaders">Using Loaders</a><ul>
-<li><a href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</a></li>
-<li><a href="#implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</a></li>
-<li><a href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li>
-</ul>
-</li>
-<li><a href="#caching-with-loaders">Caching with loaders</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1)&amp;...&amp;P ..." />
+        <meta name="description" content="[TOC] Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC II] Lec2: Lazy Evaluation"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun2_lec2_lazyeval.html"/>
-        <meta property="og:description" content="Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1)&amp;...&amp;P ..."/>
+        <meta property="og:description" content="[TOC] Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1 …"/>
         <meta property="article:published_time" content="2016-10-22" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -202,42 +202,15 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#lecture-21-structural-induction-on-trees-optional">Lecture 2.1 - Structural Induction on Trees (optional)</a><ul>
-<li><a href="#example-prove-correctness-for-intsets">Example: Prove correctness for IntSets</a></li>
-</ul>
-</li>
-<li><a href="#lecture-22-streams">Lecture 2.2 - Streams</a><ul>
-<li><a href="#stream-class">Stream class</a></li>
-<li><a href="#implementation-of-streams">Implementation of Streams</a></li>
-</ul>
-</li>
-<li><a href="#lecture-23-lazy-evaluation">Lecture 2.3 - Lazy Evaluation</a></li>
-<li><a href="#lecture-24-computing-with-infinite-sequences">Lecture 2.4 - Computing with Infinite Sequences</a><ul>
-<li><a href="#example2-square-root">example2: square root</a></li>
-</ul>
-</li>
-<li><a href="#lecture-25-case-study-the-water-pouring-problem">Lecture 2.5 - Case Study: the Water Pouring Problem</a></li>
-<li><a href="#programming-assignment-bloxorz">Programming Assignment: Bloxorz</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h1 id="lecture-21-structural-induction-on-trees-optional">Lecture 2.1 - Structural Induction on Trees (optional)</h1>
+                <p>[TOC] </p>
+<h1>Lecture 2.1 - Structural Induction on Trees (optional)</h1>
 <p>Generalize the structural induction on list to general structures like trees.  </p>
 <blockquote>
-<p>To prove a property <code>P(t)</code> for all trees <code>t</code>: <br/>
-    * show for any leave l, <code>P(l)</code> holds<br/>
-    * for each internal node <code>t</code> with subtrees <code>s1...sn</code>, show <code>P(s1)&amp;...&amp;P(sn)</code> holds  </p>
+<p>To prove a property <code>P(t)</code> for all trees <code>t</code>: <br>
+    * show for any leave l, <code>P(l)</code> holds<br>
+    * for each internal node <code>t</code> with subtrees <code>s1...sn</code>, show <code>P(s1)&amp;...&amp;P(sn)</code> holds  </br></br></p>
 </blockquote>
-<h2 id="example-prove-correctness-for-intsets">Example: Prove correctness for IntSets</h2>
+<h2>Example: Prove correctness for IntSets</h2>
 <p>recall the <code>IntSet</code> def: empty set or non-empty set organized in a binary (search) tree structure. </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="nc">IntSet</span><span class="o">{</span> </span>
 <span class="code-line">    <span class="k">def</span> <span class="n">incl</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntSet</span> </span>
@@ -304,14 +277,14 @@ so: </p>
 </ul>
 </li>
 </ul>
-<h1 id="lecture-22-streams">Lecture 2.2 - Streams</h1>
+<h1>Lecture 2.2 - Streams</h1>
 <p>motivation: 2nd prime number between 1000 and 10000:  </p>
-<p>elegant, but not efficient solution:<br/>
-<code>( (1000 to 10000) filter isPrime) (1)</code> </p>
+<p>elegant, but not efficient solution:<br>
+<code>( (1000 to 10000) filter isPrime) (1)</code> </br></p>
 <p>→ ALL prime numbers are constructed in the code, only use the first 2 elements...  </p>
 <p>⇒ *avoid computing the tail of a seq until necessary * </p>
 <p>→ new data structure: <code>Stream</code>s, like lists, but <em>tail is eval only on demand</em> </p>
-<h2 id="stream-class">Stream class</h2>
+<h2>Stream class</h2>
 <p><strong>constructor</strong> 
 Streams defined from either constant <code>Stream.empty</code> and constructor <code>Stream.cons</code> 
 ex: <code>val xs = Stream.cons(1, Stram.cons(2, Stream.empty))</code> </p>
@@ -334,7 +307,7 @@ ex: <code>val xs = Stream.cons(1, Stram.cons(2, Stream.empty))</code> </p>
 <p>Exception: concat operator <code>::</code> will always return a list instead of a stream. 
 → alternative: <code>#::</code> returns a stream 
 <code>x#::xs == Stream.cons(x,xs)</code> </p>
-<h2 id="implementation-of-streams">Implementation of Streams</h2>
+<h2>Implementation of Streams</h2>
 <p>similar to the implementation of lists.  </p>
 <p><code>scala
 trait Stream[+A] extends Seq[A]{ 
@@ -357,8 +330,8 @@ trait Stream[+A] extends Seq[A]{
 <span class="code-line">    <span class="o">}</span> </span>
 <span class="code-line"><span class="o">}</span></span>
 </pre></div>
-<p>all other methods are implemented similar to list counterparts...<br/>
-ex:  </p>
+<p>all other methods are implemented similar to list counterparts...<br>
+ex:  </br></p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+T</span><span class="o">]{</span> </span>
 <span class="code-line"><span class="c1">//... </span></span>
 <span class="code-line">  <span class="k">def</span> <span class="n">filter</span><span class="o">(</span><span class="n">p</span><span class="k">:</span> <span class="kt">T</span><span class="o">=&gt;</span><span class="nc">Boolean</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">]</span> <span class="k">=</span>  </span>
@@ -368,14 +341,14 @@ ex:  </p>
 <span class="code-line">    <span class="c1">//... </span></span>
 <span class="code-line"><span class="o">}</span> </span>
 </pre></div>
-<h1 id="lecture-23-lazy-evaluation">Lecture 2.3 - Lazy Evaluation</h1>
+<h1>Lecture 2.3 - Lazy Evaluation</h1>
 <p>pb with the last implementation of Streams: if tail is called several times, the corresponding stram will be re-computed each time.  </p>
 <p>→ can store the 1st result of the eval and use it later. (As in FP, the eval result never change) </p>
 <p>⇒ this scheme is called <strong>lazy evaluation</strong>, as opposed to both by-name evaluation (<code>def x</code>) and strict-evaluation (<code>val x</code>). avoids both unnessary and repeated eval.  </p>
 <p><code>lazy val x = expr</code> </p>
 <p>exercice:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image.png"/> 
-→ this will print: "xzyz" </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image.png"> 
+→ this will print: "xzyz" </img></p>
 <p>adapt the lazy scheme for Stream implementation:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="n">cons</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">hd</span><span class="k">:</span> <span class="kt">T</span><span class="o">,</span> <span class="n">tl</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span>  </span>
 <span class="code-line"><span class="k">new</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">]{</span> </span>
@@ -384,16 +357,16 @@ ex:  </p>
 <span class="code-line">    <span class="c1">//... </span></span>
 <span class="code-line">    <span class="o">}</span> </span>
 </pre></div>
-<h1 id="lecture-24-computing-with-infinite-sequences">Lecture 2.4 - Computing with Infinite Sequences</h1>
+<h1>Lecture 2.4 - Computing with Infinite Sequences</h1>
 <p>with lazyness, can deal with inf seqs. ⇒ <em>infinite Streams</em> </p>
 <p>example: the stream of all integers starting from a given number:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>def from(n: Int): Stream[Int] =  </span>
 <span class="code-line">n #:: from(n+1) // non-terminating recursive call here</span>
 </pre></div>
-<p>all natural numbers:<br/>
+<p>all natural numbers:<br>
 <code>val nats = from(0)</code> 
-all multiples of 4:<br/>
-<code>nats map (_ * 4)</code> </p>
+all multiples of 4:<br>
+<code>nats map (_ * 4)</code> </br></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">n</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">n</span> <span class="o">#::</span> <span class="n">from</span><span class="o">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span> </span>
 <span class="code-line"><span class="n">from</span><span class="k">:</span> <span class="o">(</span><span class="kt">n:</span> <span class="kt">Int</span><span class="o">)</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> </span>
 <span class="code-line"></span>
@@ -424,7 +397,7 @@ all multiples of 4:<br/>
 <span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="n">primes</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="mi">100</span><span class="o">).</span><span class="n">toList</span> </span>
 <span class="code-line"><span class="n">res0</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">13</span><span class="o">,</span> <span class="mi">17</span><span class="o">,</span> <span class="mi">19</span><span class="o">,</span> <span class="mi">23</span><span class="o">,</span> <span class="mi">29</span><span class="o">,</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">37</span><span class="o">,</span> <span class="mi">41</span><span class="o">,</span> <span class="mi">43</span><span class="o">,</span> <span class="mi">47</span><span class="o">,</span> <span class="mi">53</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">61</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">71</span><span class="o">,</span> <span class="mi">73</span><span class="o">,</span> <span class="mi">79</span><span class="o">,</span> <span class="mi">83</span><span class="o">,</span> <span class="mi">89</span><span class="o">,</span> <span class="mi">97</span><span class="o">,</span> <span class="mi">101</span><span class="o">,</span> <span class="mi">103</span><span class="o">,</span> <span class="mi">107</span><span class="o">,</span> <span class="mi">109</span><span class="o">,</span> <span class="mi">113</span><span class="o">,</span> <span class="mi">127</span><span class="o">,</span> <span class="mi">131</span><span class="o">,</span> <span class="mi">137</span><span class="o">,</span> <span class="mi">139</span><span class="o">,</span> <span class="mi">149</span><span class="o">,</span> <span class="mi">151</span><span class="o">,</span> <span class="mi">157</span><span class="o">,</span> <span class="mi">163</span><span class="o">,</span> <span class="mi">167</span><span class="o">,</span> <span class="mi">173</span><span class="o">,</span> <span class="mi">179</span><span class="o">,</span> <span class="mi">181</span><span class="o">,</span> <span class="mi">191</span><span class="o">,</span> <span class="mi">193</span><span class="o">,</span> <span class="mi">197</span><span class="o">,</span> <span class="mi">199</span><span class="o">,</span> <span class="mi">211</span><span class="o">,</span> <span class="mi">223</span><span class="o">,</span> <span class="mi">227</span><span class="o">,</span> <span class="mi">229</span><span class="o">,</span> <span class="mi">233</span><span class="o">,</span> <span class="mi">239</span><span class="o">,</span> <span class="mi">241</span><span class="o">,</span> <span class="mi">251</span><span class="o">,</span> <span class="mi">257</span><span class="o">,</span> <span class="mi">263</span><span class="o">,</span> <span class="mi">269</span><span class="o">,</span> <span class="mi">271</span><span class="o">,</span> <span class="mi">277</span><span class="o">,</span> <span class="mi">281</span><span class="o">,</span> <span class="mi">283</span><span class="o">,</span> <span class="mi">293</span><span class="o">,</span> <span class="mi">307</span><span class="o">,</span> <span class="mi">311</span><span class="o">,</span> <span class="mi">313</span><span class="o">,</span> <span class="mi">317</span><span class="o">,</span> <span class="mi">331</span><span class="o">,</span> <span class="mi">337</span><span class="o">,</span> <span class="mi">347</span><span class="o">,</span> <span class="mi">349</span><span class="o">,</span> <span class="mi">353</span><span class="o">,</span> <span class="mi">359</span><span class="o">,</span> <span class="mi">367</span><span class="o">,</span> <span class="mi">373</span><span class="o">,</span> <span class="mi">379</span><span class="o">,</span> <span class="mi">383</span><span class="o">,</span> <span class="mi">389</span><span class="o">,</span> <span class="mi">397</span><span class="o">,</span> <span class="mi">401</span><span class="o">,</span> <span class="mi">409</span><span class="o">,</span> <span class="mi">419</span><span class="o">,</span> <span class="mi">421</span><span class="o">,</span> <span class="mi">431</span><span class="o">,</span> <span class="mi">433</span><span class="o">,</span> <span class="mi">439</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="mi">449</span><span class="o">,</span> <span class="mi">457</span><span class="o">,</span> <span class="mi">461</span><span class="o">,</span> <span class="mi">463</span><span class="o">,</span> <span class="mi">467</span><span class="o">,</span> <span class="mi">479</span><span class="o">,</span> <span class="mi">487</span><span class="o">,</span> <span class="mi">491</span><span class="o">,</span> <span class="mi">499</span><span class="o">,</span> <span class="mi">503</span><span class="o">,</span> <span class="mi">509</span><span class="o">,</span> <span class="mi">521</span><span class="o">,</span> <span class="mi">523</span><span class="o">,</span> <span class="mi">541</span><span class="o">)</span> </span>
 </pre></div>
-<h2 id="example2-square-root">example2: square root</h2>
+<h2>example2: square root</h2>
 <p>previous implementation: use <code>isGoodEnough</code> test termination. 
 now: express the converging seq without having to worry about when to terminate:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="n">sqrtStream</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span> </span>
@@ -436,19 +409,19 @@ now: express the converging seq without having to worry about when to terminate:
 <span class="code-line">    <span class="n">math</span><span class="o">.</span><span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span> <span class="o">/</span> <span class="n">x</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mf">0.0001</span> </span>
 <span class="code-line"><span class="o">(</span><span class="n">sqrtStream</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span> <span class="n">filter</span> <span class="o">(</span><span class="n">isGoodEnough</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="mi">4</span><span class="o">))</span> <span class="o">)</span> <span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// get the 1st guess that is good enough </span></span>
 </pre></div>
-<h1 id="lecture-25-case-study-the-water-pouring-problem">Lecture 2.5 - Case Study: the Water Pouring Problem</h1>
+<h1>Lecture 2.5 - Case Study: the Water Pouring Problem</h1>
 <p><strong>task: "water pouring problem"</strong> 
-given: source, sink, glasses of different sizes, target size...<br/>
+given: source, sink, glasses of different sizes, target size...<br>
 goal: fill/empty/move water from 1 glass to another 
-<img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image002.png"/> </p>
+<img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image002.png"> </img></br></p>
 <p><strong>Model</strong> 
 Glass: <code>Int</code> 
 State: <code>Vector[Int]</code> one entry per glass 
-Moves:<br/>
-<code>Empty(glass), Fill(glass), Pour(from, to)</code> </p>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image004.png"/> 
-question: how to find the correct sequence of moves ?<br/>
-⇒ BFS, generate all possible paths (from initial state where all glasses are empty) of length=1,2,3,...  </p>
+Moves:<br>
+<code>Empty(glass), Fill(glass), Pour(from, to)</code> </br></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image004.png"> 
+question: how to find the correct sequence of moves ?<br>
+⇒ BFS, generate all possible paths (from initial state where all glasses are empty) of length=1,2,3,...  </br></img></p>
 <p><strong>Implementation</strong> </p>
 <p>first: define Move classes, they have a change method, take one state as param and return a state:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Pouring</span><span class="o">(</span><span class="n">capacity</span><span class="k">:</span><span class="kt">Vector</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="o">{</span> </span>
@@ -516,8 +489,8 @@ question: how to find the correct sequence of moves ?<br/>
 <span class="code-line">    <span class="o">}</span> <span class="k">yield</span> <span class="n">path</span></span>
 </pre></div>
 <p>pb: too slow for some case 
-→ we generate ALL paths of a certain length in the stream, but in the paths, we should avoid returning to a preivous state !<br/>
-→ re-define the <code>from</code> function: add a param of explored set of states.  </p>
+→ we generate ALL paths of a certain length in the stream, but in the paths, we should avoid returning to a preivous state !<br>
+→ re-define the <code>from</code> function: add a param of explored set of states.  </br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>  <span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">paths</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">],</span> <span class="n">explored</span><span class="k">:</span><span class="kt">Set</span><span class="o">[</span><span class="kt">State</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">]]</span> <span class="o">={</span></span>
 <span class="code-line">    <span class="k">if</span><span class="o">(</span><span class="n">paths</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span></span>
 <span class="code-line">    <span class="k">else</span> <span class="o">{</span></span>
@@ -540,8 +513,8 @@ question: how to find the correct sequence of moves ?<br/>
 <span class="code-line">    <span class="o">(</span> <span class="n">history</span><span class="o">.</span><span class="n">reverse</span> <span class="n">mkString</span> <span class="s">" "</span> <span class="o">)</span> <span class="o">+</span> <span class="s">"--&gt;"</span> <span class="o">+</span> <span class="n">endState</span> </span>
 <span class="code-line"><span class="o">}</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image005.png"/> </p>
-<h1 id="programming-assignment-bloxorz">Programming Assignment: Bloxorz</h1>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image005.png"> </img></p>
+<h1>Programming Assignment: Bloxorz</h1>
 <p>https://github.com/X-Wei/Coursera-progfun2/tree/master/hw2-stream-bloxorz/streams</p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -890,7 +863,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -960,33 +933,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#lecture-21-structural-induction-on-trees-optional">Lecture 2.1 - Structural Induction on Trees (optional)</a><ul>
-<li><a href="#example-prove-correctness-for-intsets">Example: Prove correctness for IntSets</a></li>
-</ul>
-</li>
-<li><a href="#lecture-22-streams">Lecture 2.2 - Streams</a><ul>
-<li><a href="#stream-class">Stream class</a></li>
-<li><a href="#implementation-of-streams">Implementation of Streams</a></li>
-</ul>
-</li>
-<li><a href="#lecture-23-lazy-evaluation">Lecture 2.3 - Lazy Evaluation</a></li>
-<li><a href="#lecture-24-computing-with-infinite-sequences">Lecture 2.4 - Computing with Infinite Sequences</a><ul>
-<li><a href="#example2-square-root">example2: square root</a></li>
-</ul>
-</li>
-<li><a href="#lecture-25-case-study-the-water-pouring-problem">Lecture 2.5 - Case Study: the Water Pouring Problem</a></li>
-<li><a href="#programming-assignment-bloxorz">Programming Assignment: Bloxorz</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

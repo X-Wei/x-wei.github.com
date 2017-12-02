@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="4.1 - Objects Everywhere scala is pure OO: every value is an obj, every operation is a method of obj. scala.Int scala.Boolean maps to JVM standard primitive types. Implement Boolean withous primitive type in scala: Then defin false and true as objects, give implementation for ifThenElse() funciton: object ..." />
+        <meta name="description" content="[TOC] 4.1 - Objects Everywhere scala is pure OO: every value is an obj, every operation is a method of obj. scala.Int scala.Boolean maps to JVM standard primitive types. Implement Boolean withous primitive type in scala: Then defin false and true as objects, give implementation for ifThenElse() funciton …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC I] Lec4: Types and Pattern Matching"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun1_lec4_pattern_matching.html"/>
-        <meta property="og:description" content="4.1 - Objects Everywhere scala is pure OO: every value is an obj, every operation is a method of obj. scala.Int scala.Boolean maps to JVM standard primitive types. Implement Boolean withous primitive type in scala: Then defin false and true as objects, give implementation for ifThenElse() funciton: object ..."/>
+        <meta property="og:description" content="[TOC] 4.1 - Objects Everywhere scala is pure OO: every value is an obj, every operation is a method of obj. scala.Int scala.Boolean maps to JVM standard primitive types. Implement Boolean withous primitive type in scala: Then defin false and true as objects, give implementation for ifThenElse() funciton …"/>
         <meta property="article:published_time" content="2016-07-17" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -202,37 +202,12 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#41-objects-everywhere">4.1 - Objects Everywhere</a></li>
-<li><a href="#42-functions-as-objects">4.2 - Functions as Objects</a></li>
-<li><a href="#43-subtyping-and-generics">4.3 - Subtyping and Generics</a><ul>
-<li><a href="#type-bounds">Type Bounds</a></li>
-<li><a href="#covariance">Covariance</a></li>
-</ul>
-</li>
-<li><a href="#45-decomposition">4.5 - Decomposition</a></li>
-<li><a href="#46-pattern-matching">4.6 - Pattern Matching</a><ul>
-<li><a href="#case-classes">case classes</a></li>
-<li><a href="#pattern-matching">pattern matching</a></li>
-</ul>
-</li>
-<li><a href="#47-lists">4.7 - Lists</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h2 id="41-objects-everywhere">4.1 - Objects Everywhere</h2>
+                <p>[TOC]</p>
+<h2>4.1 - Objects Everywhere</h2>
 <p>scala is <em>pure</em> OO: every value is an obj, every operation is a method of obj.  </p>
 <p><code>scala.Int</code> <code>scala.Boolean</code> maps to JVM standard primitive types.  </p>
 <p>Implement <code>Boolean</code> withous primitive type in scala:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image.png"> </img></p>
 <p>Then defin <code>false</code> and <code>true</code> as objects, give implementation for <code>ifThenElse()</code> funciton:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>object true extends Boolean{ </span>
 <span class="code-line">    def ifThenElse[T](t: =&gt;T, e: =&gt;T) = t </span>
@@ -241,10 +216,10 @@ mx's blog            </a>
 <span class="code-line">    def ifThenElse[T](t: =&gt;T, e: =&gt;T) = e </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2 id="42-functions-as-objects">4.2 - Functions as Objects</h2>
-<p>Function values are treated as objects in scala.<br/>
-the type <code>A =&gt; B</code> is an abbrevation for <code>scala.Function1[A, B]</code> </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image001.png"/> </p>
+<h2>4.2 - Functions as Objects</h2>
+<p>Function values are treated as objects in scala.<br>
+the type <code>A =&gt; B</code> is an abbrevation for <code>scala.Function1[A, B]</code> </br></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image001.png"> </img></p>
 <p><strong>Functions are objects with </strong><code>apply</code><strong> methods.</strong> </p>
 <p>anonymous function <code>(x: Int) =&gt; x*x</code> is expanded to :  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>new Function1[Int, Int]{ </span>
@@ -253,71 +228,71 @@ the type <code>A =&gt; B</code> is an abbrevation for <code>scala.Function1[A, B
 </pre></div>
 <p>function call <code>f(a,b)</code> is expanded to:  <code>f.apply(a,b)</code>
 <code>List(1,2)</code> is expanded to : <code>List.apply(1,2)</code> </p>
-<h2 id="43-subtyping-and-generics">4.3 - Subtyping and Generics</h2>
+<h2>4.3 - Subtyping and Generics</h2>
 <p>2 forms of polymorphism: <em>subtyping and generics</em> </p>
-<h3 id="type-bounds">Type Bounds</h3>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image003.png"/>
-<code>assertAllPos</code> taks either <code>EmptySet</code> or <code>NonEmptySet</code>, the return type is EmptySet (when para=EmptySet) or NonEmptySet (when para=NonEmpty).<br/>
-To express this situation:  </p>
+<h3>Type Bounds</h3>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image003.png">
+<code>assertAllPos</code> taks either <code>EmptySet</code> or <code>NonEmptySet</code>, the return type is EmptySet (when para=EmptySet) or NonEmptySet (when para=NonEmpty).<br>
+To express this situation:  </br></img></p>
 <p><code>def assertAllPos[S &lt;: IntSet](r: S): S = ...</code> </p>
 <p>Here <code>&lt;: IntSet</code> means IntSet is an upper bound of the type parameter.  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image004.png"/> 
-and we can mix the two notations:  </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image004.png"> 
+and we can mix the two notations:  </img></p>
 <p><code>[S &gt;: NonEmpty &lt;: IntSet]</code> </p>
-<h3 id="covariance">Covariance</h3>
-<p>Given <code>NonEmpty &lt;: IntSet</code>,<br/>
-should we have: <code>List[NonEmpty] &lt;: List[IntSet]</code> ? </p>
+<h3>Covariance</h3>
+<p>Given <code>NonEmpty &lt;: IntSet</code>,<br>
+should we have: <code>List[NonEmpty] &lt;: List[IntSet]</code> ? </br></p>
 <p>In this case the typse are called *covariant. * </p>
 <p>In java, arrays are covariant: <code>NonEmpty[] &lt;: IntSet[]</code> 
 but this might cause problems:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image005.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image005.png"> </img></p>
 <p>will get ArrayStoreException in 3rd line.  </p>
 <p><strong>Liskov substitution principle</strong>: when a type can be a subtype of another  </p>
 <blockquote>
 <p><em>If A&lt;:B, then everything one can do with an object of type B, one should also be able to do it with object of type A.</em> </p>
 </blockquote>
 <p>In scala the Array is not covariant: <code>Array[IntSet]</code> is not supertype of <code>Array[NonEmpty]</code> </p>
-<h2 id="45-decomposition">4.5 - Decomposition</h2>
+<h2>4.5 - Decomposition</h2>
 <p>ex: arithmetic expression interpreter: a tree of numbers and sums, both are subtype of <code>Expr</code>.  </p>
 <p>1st try: test and accessor methods </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image006.png"/> </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image007.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image006.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image007.png"> </img></p>
 <p>→ tedious... And to add more operands need to add many more methods...  </p>
 <p>2nd try: (non-solution) 
 type testing and type casting 
 <code>isinstantceof</code>, <code>asinstanceof</code> </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image008.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image008.png"> </img></p>
 <p>discouraged in scala. </p>
 <p>1st solution: <strong>OO decomposition</strong> 
 add <code>eval</code> method to class Expr. </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image009.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image009.png"> </img></p>
 <p>limitation: if we want to simplify an expression,  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image010.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image010.png"> </img></p>
 <p>⇒ there is no local simplification ! </p>
 <p>⇒ <strong>pattern matching</strong> </p>
-<h2 id="46-pattern-matching">4.6 - Pattern Matching</h2>
+<h2>4.6 - Pattern Matching</h2>
 <p>goal: <em>reverse</em> the construction process.  </p>
 <ul>
 <li>which subclass it is? </li>
 <li>what were the arguments? </li>
 </ul>
-<h3 id="case-classes">case classes</h3>
+<h3>case classes</h3>
 <p>add <code>case</code> in class definition. 
 ex. </p>
 <div class="highlight"><pre><span class="code-line"><span></span>case class Number(n: Int) extends Expr </span>
 <span class="code-line">case class Sum(e1: Expr, e2: Expr) extends Expr</span>
 </pre></div>
 <p>adding <code>case</code> adds <em>companion objects</em> with <code>apply</code> methods:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image011.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image011.png"> </img></p>
 <p>according to the expansion, <code>Number(2)</code> is equal to <code>Number.apply(2)</code> which is actaully <code>new Numver(2)</code> </p>
-<h3 id="pattern-matching">pattern matching</h3>
+<h3>pattern matching</h3>
 <p><code>match</code>: extension of <code>switch</code> in java, ex:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>def eval(e: Expr): Int = e match{ </span>
 <span class="code-line">    case Number(n) =&gt; n </span>
 <span class="code-line">    case Sum(e1, e2) =&gt; e1 + e2 </span>
 <span class="code-line">}</span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image012.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image012.png"> </img></p>
 <p>patterns include:  </p>
 <ul>
 <li>constructor, ex. <code>Number(n)</code> </li>
@@ -333,10 +308,10 @@ ex. </p>
 <span class="code-line">    case Sum(l, r) =&gt; show(l) + "+" + show(r) </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2 id="47-lists">4.7 - Lists</h2>
+<h2>4.7 - Lists</h2>
 <p>example:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image013.png"/> </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image014.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image013.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image014.png"> </img></p>
 <p>difference between List and Array:  </p>
 <ul>
 <li>Lists are immutable, elements cannot change </li>
@@ -348,7 +323,7 @@ ex. </p>
 <li>Empty list <code>Nil</code> </li>
 <li>construction op <code>::</code>(pronunced: cons), <code>x::xs</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image015.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image015.png"> </img></p>
 <p>convention in scala: operators ending with <code>:</code> </p>
 <ul>
 <li>are <em>right-associative</em>. <code>a::b::c</code> is equal to <code>a::(b::c)</code> </li>
@@ -361,9 +336,9 @@ ex. </p>
 <li>isEmpty </li>
 </ul>
 <p>list in pattern matching: </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image016.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image016.png"> </img></p>
 <p>ex. insertion sort of lists </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image017.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec4_pattern_matching/pasted_image017.png"> </img></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def isort(xs: List[Int]): List[Int] = xs match{ </span>
 <span class="code-line">    case List() =&gt; List() </span>
 <span class="code-line">    case y::ys =&gt; insert(y, isort(ys)) </span>
@@ -723,7 +698,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -793,31 +768,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#41-objects-everywhere">4.1 - Objects Everywhere</a></li>
-<li><a href="#42-functions-as-objects">4.2 - Functions as Objects</a></li>
-<li><a href="#43-subtyping-and-generics">4.3 - Subtyping and Generics</a><ul>
-<li><a href="#type-bounds">Type Bounds</a></li>
-<li><a href="#covariance">Covariance</a></li>
-</ul>
-</li>
-<li><a href="#45-decomposition">4.5 - Decomposition</a></li>
-<li><a href="#46-pattern-matching">4.6 - Pattern Matching</a><ul>
-<li><a href="#case-classes">case classes</a></li>
-<li><a href="#pattern-matching">pattern matching</a></li>
-</ul>
-</li>
-<li><a href="#47-lists">4.7 - Lists</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

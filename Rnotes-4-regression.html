@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="R" />
-        <meta name="description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median :15 ..." />
+        <meta name="description" content="[TOC] R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="R语言从入门到放弃 (4). 统计回归"/>
         <meta property="og:url" content="http://x-wei.github.io/Rnotes-4-regression.html"/>
-        <meta property="og:description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median :15 ..."/>
+        <meta property="og:description" content="[TOC] R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median …"/>
         <meta property="article:published_time" content="2016-07-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="R" />
@@ -202,71 +202,45 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#theory">Theory</a><ul>
-<li><a href="#linear-model">linear model</a></li>
-<li><a href="#nadaraya-watson-kernel-smoother">Nadaraya-Watson kernel smoother</a></li>
-<li><a href="#local-polynomial-smoother">Local Polynomial smoother</a></li>
-<li><a href="#smoothing-spline">Smoothing Spline</a></li>
-</ul>
-</li>
-<li><a href="#fit-model">fit model</a><ul>
-<li><a href="#formula">formula</a></li>
-<li><a href="#fit-models">fit models</a></li>
-</ul>
-</li>
-<li><a href="#predict-fittedresiduals">predict, fitted/residuals</a></li>
-<li><a href="#bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</a></li>
-<li><a href="#cv-and-hat-matrix">CV and Hat Matrix</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
+                <p>[TOC]</p>
 <p>R里面的统计函数有很多, 这里只用线性模型<code>lm</code>以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(<strong>NW, </strong><code>ksmooth</code>), Local Polynomial(<strong>LP, </strong><code>loess</code>), Smoothing Spline(<strong>SS, </strong><code>smooth.spline</code>). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. </p>
 <p>数据的形式是:　</p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image002.png"/></p>
 <p>目标是估计函数m(). 例子使用R自带的<code>cars</code>数据集, 它包含两列: 汽车速度speed和刹车距离dist. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="x">&gt; data(cars)</span></span>
-<span class="code-line"><span class="x">&gt; summary(cars)</span></span>
-<span class="code-line"><span class="x">     speed           dist       </span></span>
-<span class="code-line"><span class="x"> Min.   : 4.0   Min.   :  2.00  </span></span>
-<span class="code-line"><span class="x"> 1st Qu.:12.0   1st Qu.: 26.00  </span></span>
-<span class="code-line"><span class="x"> Median :15.0   Median : 36.00  </span></span>
-<span class="code-line"><span class="x"> Mean   :15.4   Mean   : 42.98  </span></span>
-<span class="code-line"><span class="x"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span></span>
-<span class="code-line"><span class="x"> Max.   :25.0   Max.   :120.00  </span></span>
-<span class="code-line"><span class="x">&gt; ?cars</span></span>
-<span class="code-line"><span class="x">&gt; plot(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span>&gt; data(cars)</span>
+<span class="code-line">&gt; summary(cars)</span>
+<span class="code-line">     speed           dist       </span>
+<span class="code-line"> Min.   : 4.0   Min.   :  2.00  </span>
+<span class="code-line"> 1st Qu.:12.0   1st Qu.: 26.00  </span>
+<span class="code-line"> Median :15.0   Median : 36.00  </span>
+<span class="code-line"> Mean   :15.4   Mean   : 42.98  </span>
+<span class="code-line"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span>
+<span class="code-line"> Max.   :25.0   Max.   :120.00  </span>
+<span class="code-line">&gt; ?cars</span>
+<span class="code-line">&gt; plot(cars$speed, cars$dist)</span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image003.png"/></p>
-<h1 id="theory">Theory</h1>
+<h1>Theory</h1>
 <p>首先简单介绍一下这4个smoother的原理: </p>
-<h3 id="linear-model">linear model</h3>
+<h3>linear model</h3>
 <p>认为m是线性形式(包含intercept): </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image008.png"/></p>
-<h3 id="nadaraya-watson-kernel-smoother">Nadaraya-Watson kernel smoother</h3>
+<h3>Nadaraya-Watson kernel smoother</h3>
 <p>m_NW 在x处的取值为Yi的加权平均, 权重是按照kernel K()确定的. </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image.png"/></p>
 <p>另外m_NW(x)还可以看做是最小化加权的square-error: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image001.png"/></p>
-<h3 id="local-polynomial-smoother">Local Polynomial smoother</h3>
+<h3>Local Polynomial smoother</h3>
 <p>m_NW(x)最小化加权sq-err那个表达式里, 可以是用一个<em>常数函数</em>mx来估计在x处的取值, LP将它泛化为p-1阶多项式的形式, m在x附近是多项式形式. m(u)=poly(x-u), 这个多项式的系数为beta(x): </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image004.png"/></p>
 <p>最后m_LP在x处的取值为: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image005.png"/></p>
-<h3 id="smoothing-spline">Smoothing Spline</h3>
+<h3>Smoothing Spline</h3>
 <p>设定m的形式为knot在xi的spline, 加上penalize项: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image006.png"/></p>
 <p>另外SS可以看作是bandwidth随x变化的kernel smoother. </p>
-<h1 id="fit-model">fit model</h1>
-<h3 id="formula">formula</h3>
+<h1>fit model</h1>
+<h3>formula</h3>
 <p><code>lm</code>和<code>loess</code>的文档里都提到参数为formula, 它大概是指示要fit的表达式形式. 这里面的加减号不是算数意义上的加减. 看例子: </p>
 <ul>
 <li><code>dist ~ speed</code>: 表示dist是speed的函数</li>
@@ -274,14 +248,14 @@ mx's blog            </a>
 <li><code>y ~　x1+x2</code>: y 是x1和x2的函数</li>
 <li><code>y ~ x - 1</code>: y是x的函数, 且没有intercept项</li>
 </ul>
-<h3 id="fit-models">fit models</h3>
+<h3>fit models</h3>
 <p>这几个函数的fit写法各不相同, 有的要提供formula, 有的要提供x和y值, 需要看文档: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>fit.lm <span class="o">&lt;-</span> lm<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span></span>
 <span class="code-line">fit.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">)</span></span>
 <span class="code-line">fit.lp <span class="o">&lt;-</span> loess<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span></span>
 <span class="code-line">fit.ss <span class="o">&lt;-</span> smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">)</span></span>
 </pre></div>
-<h1 id="predict-fittedresiduals">predict, fitted/residuals</h1>
+<h1>predict, fitted/residuals</h1>
 <p>predict的写法也是各不相同, 一般都是用<code>predict</code>函数, 然而这个函数在作用到不同smoother上面, 参数和返回值也都不一样......orz 关于<code>xx</code>smoother的predict函数用法参考?<code>predict.xx</code>. 最奇葩的是NW, 它不能用<code>predict</code>函数, 而要fit的时候在<code>skmooth</code>函数里传入<code>x.points</code>参数... </p>
 <p>看predict例子: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>newspeed <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">26</span></span>
@@ -310,7 +284,7 @@ mx's blog            </a>
 <span class="code-line">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image009.png"/></p>
-<h1 id="bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</h1>
+<h1>bandwidth&amp;df: Hat Matrix</h1>
 <p>三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. </p>
 <p>自由度df是带宽的函数, smoother的df可以用它的<strong>hat matrix</strong> S计算出来. </p>
 <p>一个smoother的hat matrix S, 是把训练值Y映射到估计值Yhat的矩阵: </p>
@@ -355,18 +329,18 @@ mx's blog            </a>
 <span class="code-line">chosen_span <span class="o">&lt;-</span> uniroot<span class="p">(</span>dflp<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> val <span class="o">=</span> df.nw<span class="p">)</span><span class="o">$</span>root</span>
 </pre></div>
 <p>如果不用这个循环计算的话, 可以用<code>sfsmisc</code>包里的<code>hatMat</code>函数: </p>
-<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"> </img></p>
 <p>参数<code>trace</code>取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span></span>
-<span class="code-line"><span class="x">       pred.sm = function(x,y) </span></span>
-<span class="code-line"><span class="x">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)</span><span class="p">$</span><span class="nv">y</span><span class="x"> )</span></span>
-<span class="code-line"><span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span></span>
-<span class="code-line"><span class="x">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span></span>
-<span class="code-line"><span class="x">hatMat(cars</span><span class="p">$</span><span class="nv">speed</span><span class="x">, T, </span></span>
-<span class="code-line"><span class="x">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span>hatMat(cars$speed, T, </span>
+<span class="code-line">       pred.sm = function(x,y) </span>
+<span class="code-line">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)$y )</span>
+<span class="code-line">hatMat(cars$speed, T, </span>
+<span class="code-line">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span>
+<span class="code-line">hatMat(cars$speed, T, </span>
+<span class="code-line">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span>
 </pre></div>
-<h1 id="cv-and-hat-matrix">CV and Hat Matrix</h1>
+<h1>CV and Hat Matrix</h1>
 <p>为了预测smoother的performance, 用loo CV来估计MSE(mean sq err)的值. </p>
 <p>loo CV可以用下面这个通用函数得到(注意看对于参数的要求): </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="c1">##' Calculates the LOO CV score for given data and regression prediction function</span></span>
@@ -406,8 +380,8 @@ mx's blog            </a>
 <p>得到的结果和之前用loocv一样, 都是253.9128 !~ </p>
 <p>或者只用df, 计算generalized CV, 公式为: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image015.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="cp">#</span><span class="nf">compute</span><span class="x"> GCV</span></span>
-<span class="code-line"><span class="x">mean( (cars</span><span class="p">$</span><span class="nv">dist</span><span class="x">-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span>#compute GCV</span>
+<span class="code-line">mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span>
 </pre></div>
 <p>得到gcv=269.3911, 和looCV也比较接近. </p>
             </div>
@@ -757,7 +731,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -825,32 +799,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#theory">Theory</a><ul>
-<li><a href="#linear-model">linear model</a></li>
-<li><a href="#nadaraya-watson-kernel-smoother">Nadaraya-Watson kernel smoother</a></li>
-<li><a href="#local-polynomial-smoother">Local Polynomial smoother</a></li>
-<li><a href="#smoothing-spline">Smoothing Spline</a></li>
-</ul>
-</li>
-<li><a href="#fit-model">fit model</a><ul>
-<li><a href="#formula">formula</a></li>
-<li><a href="#fit-models">fit models</a></li>
-</ul>
-</li>
-<li><a href="#predict-fittedresiduals">predict, fitted/residuals</a></li>
-<li><a href="#bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</a></li>
-<li><a href="#cv-and-hat-matrix">CV and Hat Matrix</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

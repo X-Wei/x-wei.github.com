@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs(n ..." />
+        <meta name="description" content="[TOC] 5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC I] Lec5: Lists"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun1_lec5_lists.html"/>
-        <meta property="og:description" content="5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs(n ..."/>
+        <meta property="og:description" content="[TOC] 5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs …"/>
         <meta property="article:published_time" content="2016-07-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -202,41 +202,8 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#51-more-functions-on-lists">5.1 - More Functions on Lists</a></li>
-<li><a href="#52-pairs-and-tuples">5.2 - Pairs and Tuples</a><ul>
-<li><a href="#pairtuple">Pair/Tuple</a></li>
-</ul>
-</li>
-<li><a href="#53-implicit-parameters">5.3 - Implicit Parameters</a></li>
-<li><a href="#54-higher-order-list-functions">5.4 - Higher-Order List Functions</a><ul>
-<li><a href="#map">map</a></li>
-<li><a href="#filtering">filtering</a></li>
-</ul>
-</li>
-<li><a href="#55-reduction-of-lists">5.5 - Reduction of Lists</a><ul>
-<li><a href="#reduceleft">reduceLeft</a></li>
-<li><a href="#foldleft">foldLeft</a></li>
-<li><a href="#foldrightreduceright">foldRight/reduceRight</a></li>
-</ul>
-</li>
-<li><a href="#56-reasoning-about-concat">5.6 - Reasoning About Concat</a><ul>
-<li><a href="#structural-induction">structural induction</a></li>
-<li><a href="#57-a-larger-equational-proof-on-lists">5.7 - A Larger Equational Proof on Lists</a></li>
-</ul>
-</li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h1 id="51-more-functions-on-lists">5.1 - More Functions on Lists</h1>
+                <p>[TOC]</p>
+<h1>5.1 - More Functions on Lists</h1>
 <p>already known methods: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>xs.head</span>
 <span class="code-line">xs.tail</span>
@@ -295,7 +262,7 @@ head, tail: simple to implement
 <div class="highlight"><pre><span class="code-line"><span></span>def removeAt[T](n:Int, xs: List[T]): List[T] = </span>
 <span class="code-line">(xs take n ) ++ (xs drop n+1)</span>
 </pre></div>
-<h1 id="52-pairs-and-tuples">5.2 - Pairs and Tuples</h1>
+<h1>5.2 - Pairs and Tuples</h1>
 <p>example: sort list faster than insertion sort → merge sort. </p>
 <p>sort 2 sublist, merge them ⇒ list is sorted</p>
 <div class="highlight"><pre><span class="code-line"><span></span>def msort(xs: List[Int]): List[Int] = {</span>
@@ -320,7 +287,7 @@ head, tail: simple to implement
 <span class="code-line">    }</span>
 <span class="code-line">}</span>
 </pre></div>
-<h3 id="pairtuple">Pair/Tuple</h3>
+<h3>Pair/Tuple</h3>
 <p>written as <code>(x, y)</code> in scala. pair can be used as patterns :  similar for tuples. </p>
 <div class="highlight"><pre><span class="code-line"><span></span>val pair = ("a", 2)</span>
 <span class="code-line">val (label, value) = pair</span>
@@ -339,7 +306,7 @@ head, tail: simple to implement
 <span class="code-line">        else y::merge(xs, ws)</span>
 <span class="code-line">}</span>
 </pre></div>
-<h1 id="53-implicit-parameters">5.3 - Implicit Parameters</h1>
+<h1>5.3 - Implicit Parameters</h1>
 <p>pb: how to apply msort to list of other element types. </p>
 <p>using type parameters ? <code>msort[T]</code>⇒ the compare operator is not always defined ! </p>
 <p>⇒ <em>pass the lt function as a parameter</em>: </p>
@@ -354,14 +321,14 @@ head, tail: simple to implement
 </pre></div>
 <p>⇒ the function calls can ignore the implicite parameter, the compiler will figure it out. </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image002.png"/></p>
-<h1 id="54-higher-order-list-functions">5.4 - Higher-Order List Functions</h1>
+<h1>5.4 - Higher-Order List Functions</h1>
 <p>functions over list have similar pattern: </p>
 <ul>
 <li>transform each element </li>
 <li>retrive elements that satisfy some cretirion</li>
 <li>combing elements using an operator</li>
 </ul>
-<h3 id="map">map</h3>
+<h3>map</h3>
 <p>apply an operation to every elements. </p>
 <div class="highlight"><pre><span class="code-line"><span></span>abstract class List[T]{</span>
 <span class="code-line">    def map[U](f: T=&gt;U): List[U] = this match {</span>
@@ -370,7 +337,7 @@ head, tail: simple to implement
 <span class="code-line">    }</span>
 <span class="code-line">}</span>
 </pre></div>
-<h3 id="filtering">filtering</h3>
+<h3>filtering</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>def filter(p: T=&gt;Boolean): List[T] = this match {</span>
 <span class="code-line">    case Nil =&gt; this</span>
 <span class="code-line">    case x:xs =&gt; f(p(x)) x::xs.filter(p) else xs.filter(p)</span>
@@ -402,9 +369,9 @@ head, tail: simple to implement
 <div class="highlight"><pre><span class="code-line"><span></span>def encode[T](xs: List[T]): List[(T, Int)] = </span>
 <span class="code-line">    pack(xs) map (l =&gt; (l.head, l.length))</span>
 </pre></div>
-<h1 id="55-reduction-of-lists">5.5 - Reduction of Lists</h1>
+<h1>5.5 - Reduction of Lists</h1>
 <p>fold/reduce: combine elements using an operator. </p>
-<h3 id="reduceleft">reduceLeft</h3>
+<h3>reduceLeft</h3>
 <p>(can apply only to non-empty lists) 
 inserts a binary operator between adj elements: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image006.png"/></p>
@@ -416,24 +383,24 @@ inserts a binary operator between adj elements: </p>
 <div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (0::xs) reduceLeft ( _+_ )</span>
 <span class="code-line">def prod(xs: List[Int]) = (1::xs) reduceLeft ( _*_ )</span>
 </pre></div>
-<h3 id="foldleft">foldLeft</h3>
+<h3>foldLeft</h3>
 <p>foldLeft is like reduceLeft, but can apply on Nil, and takes an <strong>accumulator</strong> <code>z</code> =&gt; returns z when calling on Nil. </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image007.png"/></p>
 <div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (xs foldleft 0) ( _+_ )</span>
 <span class="code-line">def prod(xs: List[Int]) = (xs foldleft 1) ( _*_ )</span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image008.png"/></p>
-<h3 id="foldrightreduceright">foldRight/reduceRight</h3>
+<h3>foldRight/reduceRight</h3>
 <p>dual functions to <code>foldLeft</code> and <code>reduceLeft</code>, but produce a tree leaned to right</p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image010.png"/></p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image011.png"/></p>
 <p>if the operation is associative and communitive, foldLeft and foldRight should give same results. Other times need to think. </p>
 <p>ex. concat</p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image012.png"/>
-if apply foldLeft ⇒ type error, because the <code>::</code> operator will be applied to 2 elements of type T.</p>
-<h1 id="56-reasoning-about-concat">5.6 - Reasoning About Concat</h1>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image012.png">
+if apply foldLeft ⇒ type error, because the <code>::</code> operator will be applied to 2 elements of type T.</img></p>
+<h1>5.6 - Reasoning About Concat</h1>
 <p>proof of programs</p>
-<h3 id="structural-induction">structural induction</h3>
+<h3>structural induction</h3>
 <p>pb: prove some properties of concat:</p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image015.png"/></p>
 <p>类似数学归纳法: </p>
@@ -452,7 +419,7 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
 <li>induction step: <code>x::xs</code></li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image017.png"/></p>
-<h2 id="57-a-larger-equational-proof-on-lists">5.7 - A Larger Equational Proof on Lists</h2>
+<h2>5.7 - A Larger Equational Proof on Lists</h2>
 <p>pb: want to prove that <code>xs.reverse.revese == xs</code></p>
 <ul>
 <li>base case: <code>Nil.reverse.revers = Nil</code></li>
@@ -811,7 +778,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -881,39 +848,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#51-more-functions-on-lists">5.1 - More Functions on Lists</a></li>
-<li><a href="#52-pairs-and-tuples">5.2 - Pairs and Tuples</a><ul>
-<li><a href="#pairtuple">Pair/Tuple</a></li>
-</ul>
-</li>
-<li><a href="#53-implicit-parameters">5.3 - Implicit Parameters</a></li>
-<li><a href="#54-higher-order-list-functions">5.4 - Higher-Order List Functions</a><ul>
-<li><a href="#map">map</a></li>
-<li><a href="#filtering">filtering</a></li>
-</ul>
-</li>
-<li><a href="#55-reduction-of-lists">5.5 - Reduction of Lists</a><ul>
-<li><a href="#reduceleft">reduceLeft</a></li>
-<li><a href="#foldleft">foldLeft</a></li>
-<li><a href="#foldrightreduceright">foldRight/reduceRight</a></li>
-</ul>
-</li>
-<li><a href="#56-reasoning-about-concat">5.6 - Reasoning About Concat</a><ul>
-<li><a href="#structural-induction">structural induction</a></li>
-<li><a href="#57-a-larger-equational-proof-on-lists">5.7 - A Larger Equational Proof on Lists</a></li>
-</ul>
-</li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>

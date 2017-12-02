@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification: edge ..." />
+        <meta name="description" content="[TOC] 1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 2-1 Minimum Spanning Trees"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week2_1.html"/>
-        <meta property="og:description" content="1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification: edge ..."/>
+        <meta property="og:description" content="[TOC] 1. Introduction to MSTs Given: undirected connecte graph G with positive edge weights. def. Spanning tree T is a subgraph of G, that is both tree (connected, acyclic) and spanning(all vertices are included). ⇒ Goal: find a spanning tree with minimum weight sum. 2. Greedy Algorithm assumptions for simplification …"/>
         <meta property="article:published_time" content="2015-11-11" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -202,74 +202,35 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                        目录
-                        </div>
-                        <div class="panel-boy">
-                        <div class="toc">
-<ul>
-<li><a href="#1-introduction-to-msts">1. Introduction to MSTs</a></li>
-<li><a href="#2-greedy-algorithm">2. Greedy Algorithm</a><ul>
-<li><a href="#cut-property">cut property</a></li>
-<li><a href="#greedy-mst-algo">Greedy MST algo</a></li>
-</ul>
-</li>
-<li><a href="#3-edge-weighted-graph-api">3. Edge-Weighted Graph API</a><ul>
-<li><a href="#edge-api">Edge API</a></li>
-<li><a href="#edge-weighted-graph-api">Edge-weighted Graph API</a></li>
-<li><a href="#mst-api">MST API</a></li>
-</ul>
-</li>
-<li><a href="#4-kruskals-algorithm">4.  Kruskal's Algorithm</a><ul>
-<li><a href="#correctness">correctness</a></li>
-<li><a href="#implementation">implementation</a></li>
-<li><a href="#complexity">complexity</a></li>
-</ul>
-</li>
-<li><a href="#5-prims-algorithm">5. Prim's Algorithm</a><ul>
-<li><a href="#correctness_1">Correctness</a></li>
-<li><a href="#implementation_1">implementation</a><ul>
-<li><a href="#lazy-implementation">"lazy" implementation</a></li>
-<li><a href="#eager-implementation">"eager" implementation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#6-mst-context">6. MST Context</a></li>
-</ul>
-</div>
-                        </div>
-                    </div>
-                
-<h1 id="1-introduction-to-msts">1. Introduction to MSTs</h1>
-<p>Given: undirected connecte graph <code>G</code> with positive edge weights.  <br/>
-def. <strong>Spanning tree </strong><code>T</code> <br/>
-is a subgraph of <code>G</code>, that is both tree (<em>connected, acyclic</em>) and spanning(<em>all vertices are included</em>).  <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image-0.png"/> <br/>
-⇒ Goal: find a spanning tree with minimum weight sum.   </p>
-<h1 id="2-greedy-algorithm">2. Greedy Algorithm</h1>
+                <p>[TOC]</p>
+<h1>1. Introduction to MSTs</h1>
+<p>Given: undirected connecte graph <code>G</code> with positive edge weights.  <br>
+def. <strong>Spanning tree </strong><code>T</code> <br>
+is a subgraph of <code>G</code>, that is both tree (<em>connected, acyclic</em>) and spanning(<em>all vertices are included</em>).  <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image-0.png"> <br>
+⇒ Goal: find a spanning tree with minimum weight sum.   </br></img></br></br></br></p>
+<h1>2. Greedy Algorithm</h1>
 <p>assumptions for simplification:    </p>
 <ul>
 <li>edge weights are distinct   </li>
 <li>graph is connected   </li>
 </ul>
 <p>→ MST uniquely exists.   </p>
-<h2 id="cut-property">cut property</h2>
-<p>def. a <strong>cut</strong> of a graph is a partition of its vertices into 2 non-empty sets. <br/>
-def. a <strong>crossing-edge</strong> (wrt a cut) is an edge connecting vertex from one set to another. <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001-0.png"/> </p>
-<p><strong>prop. </strong>Given any cut, the crossing edges with minimum weight <em>is in the MST</em>.  <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image002-0.png"/> <br/>
-<em>proof.</em> <br/>
-Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min-weighted edge among all crossing-edges.   </p>
-<p>If <code>e</code> is not in the MST <br/>
-   → exist another crossing-edge, <code>f</code>, in the MST (otherwise not connected) <br/>
-    → adding <code>e</code> to the MST will create a cycle (tree property) <br/>
-        → the edge <code>f</code> will be in this cycle <br/>
-        → removing <code>f</code> and adding <code>e</code> will give us another spanning tree (!) <br/>
-                → this new spanning tree has smaller weight sum ⇒ contradiction, CQFD.   </p>
-<h2 id="greedy-mst-algo">Greedy MST algo</h2>
+<h2>cut property</h2>
+<p>def. a <strong>cut</strong> of a graph is a partition of its vertices into 2 non-empty sets. <br>
+def. a <strong>crossing-edge</strong> (wrt a cut) is an edge connecting vertex from one set to another. <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001-0.png"> </img></br></br></p>
+<p><strong>prop. </strong>Given any cut, the crossing edges with minimum weight <em>is in the MST</em>.  <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image002-0.png"> <br>
+<em>proof.</em> <br>
+Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min-weighted edge among all crossing-edges.   </br></br></img></br></p>
+<p>If <code>e</code> is not in the MST <br>
+   → exist another crossing-edge, <code>f</code>, in the MST (otherwise not connected) <br>
+    → adding <code>e</code> to the MST will create a cycle (tree property) <br>
+        → the edge <code>f</code> will be in this cycle <br>
+        → removing <code>f</code> and adding <code>e</code> will give us another spanning tree (!) <br>
+                → this new spanning tree has smaller weight sum ⇒ contradiction, CQFD.   </br></br></br></br></br></p>
+<h2>Greedy MST algo</h2>
 <p>[<strong>algo</strong> ] Greedy MST  </p>
 <blockquote>
 <ul>
@@ -279,8 +240,8 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <li>repeat V-1 times.    </li>
 </ul>
 </blockquote>
-<p><strong>prop.</strong> the greedy algorithm gets the MST.  <br/>
-<em>pf.</em> </p>
+<p><strong>prop.</strong> the greedy algorithm gets the MST.  <br>
+<em>pf.</em> </br></p>
 <ul>
 <li>any selected (black) edges are in the MST (according to the cut property)   </li>
 <li>If we haven't selected V-1 edges → there is always a cut with all crossing-edges gray. (证明algo不会卡死)   </li>
@@ -292,8 +253,8 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <li>how to find min-weighted crossing-edge?    </li>
 </ul>
 <p>⇒ Kruskal &amp; Prim   </p>
-<h1 id="3-edge-weighted-graph-api">3. Edge-Weighted Graph API</h1>
-<h2 id="edge-api">Edge API</h2>
+<h1>3. Edge-Weighted Graph API</h1>
+<h2>Edge API</h2>
 <p>→ <em>Edge abstraction</em>: make Edge comparable.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class Edge implements Comparable&lt;Edge&gt;{   </span>
 <span class="code-line">    Edge(int v, int w, double weight);   </span>
@@ -303,8 +264,8 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <span class="code-line">    double weight();   </span>
 <span class="code-line">}</span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image.png"/> </p>
-<h2 id="edge-weighted-graph-api">Edge-weighted Graph API</h2>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image.png"> </img></p>
+<h2>Edge-weighted Graph API</h2>
 <p>adj-list implementation: <code>Bag&lt;Edge&gt;[] adj;</code>(for undirected graph, each edge appears twice in adj)   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class EdgeWeightedGraph{   </span>
 <span class="code-line">    private final int V;   </span>
@@ -326,14 +287,14 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <span class="code-line">}</span>
 </pre></div>
 <p>(allow self-loops and parallel edges)   </p>
-<h2 id="mst-api">MST API</h2>
+<h2>MST API</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class MST{   </span>
 <span class="code-line">    MST(EdgeWeightedGraph G);//compute the MST   </span>
 <span class="code-line">    Iterable&lt;Edge&gt; edges();// selected edges in the MST   </span>
 <span class="code-line">    double weight();// sum of all edge weights in MST   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h1 id="4-kruskals-algorithm">4.  Kruskal's Algorithm</h1>
+<h1>4.  Kruskal's Algorithm</h1>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
@@ -342,50 +303,50 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 </ul>
 </blockquote>
 <p>In the running of Kruskal: we have several small connect components and they merge with each other until we get MST.    </p>
-<h2 id="correctness">correctness</h2>
-<p><strong>prop. </strong>Kruskal's algo works. <br/>
-<em>pf</em> <br/>
-(idea: proove that Kruskal is a special case of the greedy algorithm, ie. how to select the specific cut) <br/>
-suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br/>
-→ select a cut = vertices connected to v in the (constructing) MST; and the rest vertices.  <br/>
-    → for this cut, there is no black crossing edges <br/>
-        → moreover among all crossing edges of the cut the edge e has the smallest weight!! (by def of Kruskal) CQFD   </p>
-<h2 id="implementation">implementation</h2>
+<h2>correctness</h2>
+<p><strong>prop. </strong>Kruskal's algo works. <br>
+<em>pf</em> <br>
+(idea: proove that Kruskal is a special case of the greedy algorithm, ie. how to select the specific cut) <br>
+suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br>
+→ select a cut = vertices connected to v in the (constructing) MST; and the rest vertices.  <br>
+    → for this cut, there is no black crossing edges <br>
+        → moreover among all crossing edges of the cut the edge e has the smallest weight!! (by def of Kruskal) CQFD   </br></br></br></br></br></br></p>
+<h2>implementation</h2>
 <ul>
 <li>how to test if adding an edge will create a cycle ?    </li>
 </ul>
-<p>DFS from v to w? → O(V) <br/>
-⇒ <strong>Union-Find</strong> !  O(lg*V) ☺ (almost constant time)   </p>
+<p>DFS from v to w? → O(V) <br>
+⇒ <strong>Union-Find</strong> !  O(lg*V) ☺ (almost constant time)   </br></p>
 <p>if <code>find(v)==find(w)</code>, then we know adding e will create a cycle.    </p>
 <ul>
 <li>considering edges in order? → use a prority queue.    <div class="highlight"><pre><span class="code-line"><span></span><span class="nt">public</span> <span class="nt">class</span> <span class="nt">KruskalMST</span> <span class="nt">extends</span> <span class="nt">MST</span><span class="p">{</span>   </span>
-<span class="code-line">    <span class="n">private</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">mst</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Bag</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   </span>
-<span class="code-line">    <span class="n">public</span> <span class="n">KruskalMST</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="n">G</span><span class="p">)</span><span class="err">{</span>   </span>
-<span class="code-line">        <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">pq</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MinPQ</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span><span class="p">();</span>   </span>
-<span class="code-line">        <span class="o">//</span> <span class="n">build</span> <span class="n">pq</span> <span class="o">--&gt;</span> <span class="n">can</span> <span class="n">be</span> <span class="n">optimized</span> <span class="n">to</span> <span class="n">O</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="n">if</span> <span class="n">build</span> <span class="nb">bottom</span><span class="o">-</span><span class="n">up</span>   </span>
-<span class="code-line">        <span class="n">for</span><span class="p">(</span><span class="n">Edge</span> <span class="n">e</span><span class="o">:</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="n">pq</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   </span>
-<span class="code-line">        <span class="n">UF</span> <span class="n">uf</span> <span class="o">=</span> <span class="n">new</span> <span class="n">UF</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">());</span><span class="o">//</span> <span class="n">build</span> <span class="n">a</span> <span class="n">UF</span> <span class="n">of</span> <span class="n">V</span> <span class="n">elements</span>   </span>
-<span class="code-line">        <span class="n">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">mst</span><span class="o">.</span><span class="nb">size</span><span class="p">()</span><span class="o">&lt;</span><span class="n">G</span><span class="o">.</span><span class="n">V</span><span class="p">()</span><span class="m">-1</span><span class="p">)</span><span class="err">{</span>   </span>
-<span class="code-line">            <span class="n">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">delMin</span><span class="p">();</span>   </span>
-<span class="code-line">            <span class="n">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">either</span><span class="p">()</span><span class="o">,</span><span class="n">w</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">other</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>   </span>
-<span class="code-line">            <span class="n">if</span><span class="p">(</span> <span class="n">uf</span><span class="o">.</span><span class="n">connecte</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">)</span> <span class="p">)</span> <span class="n">continue</span><span class="p">;</span>   </span>
-<span class="code-line">            <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">v</span><span class="o">,</span><span class="n">w</span><span class="p">);</span>   </span>
-<span class="code-line">            <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>           </span>
+<span class="code-line">    <span class="err">private</span> <span class="err">Bag&lt;Edge&gt;</span> <span class="err">mst</span> <span class="err">=</span> <span class="err">new</span> <span class="err">Bag&lt;Edge&gt;()</span><span class="p">;</span>   </span>
+<span class="code-line">    <span class="err">public</span> <span class="err">KruskalMST(EdgeWeightedGraph</span> <span class="err">G){</span>   </span>
+<span class="code-line">        <span class="err">MinPQ&lt;Edge&gt;</span> <span class="err">pq</span> <span class="err">=</span> <span class="err">new</span> <span class="err">MinPQ&lt;Edge&gt;()</span><span class="p">;</span>   </span>
+<span class="code-line">        <span class="err">//</span> <span class="err">build</span> <span class="err">pq</span> <span class="err">--&gt;</span> <span class="err">can</span> <span class="err">be</span> <span class="err">optimized</span> <span class="err">to</span> <span class="err">O(n)</span> <span class="err">if</span> <span class="err">build</span> <span class="err">bottom-up</span>   </span>
+<span class="code-line">        <span class="err">for(Edge</span> <span class="n">e</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="nf">edges</span><span class="p">())</span> <span class="n">pq</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   </span>
+<span class="code-line">        <span class="err">UF</span> <span class="err">uf</span> <span class="err">=</span> <span class="err">new</span> <span class="err">UF(G.V())</span><span class="p">;</span><span class="err">//</span> <span class="err">build</span> <span class="err">a</span> <span class="err">UF</span> <span class="err">of</span> <span class="err">V</span> <span class="err">elements</span>   </span>
+<span class="code-line">        <span class="err">while(!pq.isEmpty()</span> <span class="err">&amp;&amp;</span> <span class="err">mst.size()&lt;G.V()-1){</span>   </span>
+<span class="code-line">            <span class="err">Edge</span> <span class="err">e</span> <span class="err">=</span> <span class="err">pq.delMin()</span><span class="p">;</span>   </span>
+<span class="code-line">            <span class="err">int</span> <span class="err">v</span> <span class="err">=</span> <span class="err">e.either(),w=e.other(v)</span><span class="p">;</span>   </span>
+<span class="code-line">            <span class="err">if(</span> <span class="err">uf.connecte(v,w)</span> <span class="err">)</span> <span class="err">continue</span><span class="p">;</span>   </span>
+<span class="code-line">            <span class="err">uf.union(v,w)</span><span class="p">;</span>   </span>
+<span class="code-line">            <span class="err">this.mst.add(e)</span><span class="p">;</span>           </span>
 <span class="code-line">        <span class="p">}</span>   </span>
 <span class="code-line">    <span class="err">}</span>   </span>
 <span class="code-line">    <span class="nt">public</span> <span class="nt">Iterable</span><span class="o">&lt;</span><span class="nt">Edge</span><span class="o">&gt;</span> <span class="nt">edges</span><span class="o">()</span><span class="p">{</span>   </span>
-<span class="code-line">        <span class="n">return</span> <span class="n">this</span><span class="o">.</span><span class="n">mst</span><span class="p">;</span>   </span>
+<span class="code-line">        <span class="err">return</span> <span class="err">this.mst</span><span class="p">;</span>   </span>
 <span class="code-line">    <span class="p">}</span>   </span>
 <span class="code-line"><span class="err">}</span></span>
 </pre></div>
 </li>
 </ul>
-<h2 id="complexity">complexity</h2>
-<p>running time: O(ElogE) <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001.png"/> </p>
-<h1 id="5-prims-algorithm">5. Prim's Algorithm</h1>
-<p>since 1930...  <br/>
-Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.</em> </p>
+<h2>complexity</h2>
+<p>running time: O(ElogE) <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001.png"> </img></br></p>
+<h1>5. Prim's Algorithm</h1>
+<p>since 1930...  <br>
+Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.</em> </br></p>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
@@ -394,17 +355,17 @@ Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.
 </ul>
 </blockquote>
 <p>In the running of Prim: there is always ONE connnected component .    </p>
-<h2 id="correctness_1">Correctness</h2>
-<p><strong>prop</strong>. Prim's algo works. <br/>
-<em>pf.</em> <br/>
-suppose edge e is the min-weighted edge connect a vertex in T with a vertex out of T.  <br/>
-→ select the cut = vertices in the tree T; vertices out of T <br/>
-→ by def, there is no black crossing edge <br/>
-→ e is the min-weighed edge by def of Prim. CQFD   </p>
-<h2 id="implementation_1">implementation</h2>
-<p>challenge: how to find such an edge (connect T and other vertex, with min weight) ? <br/>
-⇒ priority queue    </p>
-<h3 id="lazy-implementation">"lazy" implementation</h3>
+<h2>Correctness</h2>
+<p><strong>prop</strong>. Prim's algo works. <br>
+<em>pf.</em> <br>
+suppose edge e is the min-weighted edge connect a vertex in T with a vertex out of T.  <br>
+→ select the cut = vertices in the tree T; vertices out of T <br>
+→ by def, there is no black crossing edge <br>
+→ e is the min-weighed edge by def of Prim. CQFD   </br></br></br></br></br></p>
+<h2>implementation</h2>
+<p>challenge: how to find such an edge (connect T and other vertex, with min weight) ? <br>
+⇒ priority queue    </br></p>
+<h3>"lazy" implementation</h3>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
@@ -436,10 +397,10 @@ suppose edge e is the min-weighted edge connect a vertex in T with a vertex out 
 <span class="code-line">    }   </span>
 <span class="code-line">}</span>
 </pre></div>
-<p>Running time: <strong>O(ElgE)</strong> <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image002.png"/> <br/>
-space: <strong>O(E)</strong> in worst time.   </p>
-<h3 id="eager-implementation">"eager" implementation</h3>
+<p>Running time: <strong>O(ElgE)</strong> <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image002.png"> <br>
+space: <strong>O(E)</strong> in worst time.   </br></img></br></p>
+<h3>"eager" implementation</h3>
 <p>Idea:    </p>
 <blockquote>
 <p>use a <strong>PQ of vertices</strong><em>, priority of vertex v := min-weight of edge that connects v to T.</em> </p>
@@ -447,7 +408,7 @@ space: <strong>O(E)</strong> in worst time.   </p>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
-<li>Get from pq the vertex <code>v</code> that is closest to T, add it to T. <br/>
+<li>Get from pq the vertex <code>v</code> that is closest to T, add it to T. <br>
 Update pq -- consider <code>v</code>'s incident edge <code>e=v-w:</code> <ul>
 <li>if w in T → ignore   </li>
 <li>else:   <ul>
@@ -456,25 +417,25 @@ Update pq -- consider <code>v</code>'s incident edge <code>e=v-w:</code> <ul>
 </ul>
 </li>
 </ul>
-</li>
+</br></li>
 <li>repeat till get V-1 edges.    </li>
 </ul>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image003.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image003.png"> </img></p>
 <p>key implementation component: a <a href="file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_part_II/MinPQ.txt">MinPQ</a> that supports priority(key) update.    </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="n">IndexMinPQ</span><span class="s">&lt;Key extends Comparable&lt;Key&gt;</span>&gt;{   </span>
-<span class="code-line">    <span class="n">IndexMinPQ</span>(<span class="nb">int</span> <span class="n">N</span>);// <span class="n">indices</span> <span class="k">of</span> <span class="n">elements:</span> <span class="mi">0</span>...<span class="n">N-1</span>   </span>
-<span class="code-line">    <span class="nb">void</span> <span class="n">insert</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);   </span>
-<span class="code-line">    <span class="nb">void</span> <span class="n">decreaseKey</span>(<span class="nb">int</span> <span class="n">i</span>, <span class="n">Key</span> <span class="nb">key</span>);// <span class="n">update</span> <span class="n">the</span> <span class="nb">key</span>(<span class="n">priority</span>) <span class="k">of</span> <span class="n">element-i</span>   </span>
-<span class="code-line">    <span class="nb">int</span> <span class="n">delMin</span>();   </span>
-<span class="code-line">    <span class="nb">int</span> <span class="n">size</span>();   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">class</span> <span class="nx">IndexMinPQ</span><span class="o">&lt;</span><span class="nx">Key</span> <span class="kr">extends</span> <span class="nx">Comparable</span><span class="o">&lt;</span><span class="nx">Key</span><span class="o">&gt;&gt;</span><span class="p">{</span>   </span>
+<span class="code-line">    <span class="nx">IndexMinPQ</span><span class="p">(</span><span class="kr">int</span> <span class="nx">N</span><span class="p">);</span><span class="c1">// indices of elements: 0...N-1   </span></span>
+<span class="code-line">    <span class="k">void</span> <span class="nx">insert</span><span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">Key</span> <span class="nx">key</span><span class="p">);</span>   </span>
+<span class="code-line">    <span class="k">void</span> <span class="nx">decreaseKey</span><span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">Key</span> <span class="nx">key</span><span class="p">);</span><span class="c1">// update the key(priority) of element-i   </span></span>
+<span class="code-line">    <span class="kr">int</span> <span class="nx">delMin</span><span class="p">();</span>   </span>
+<span class="code-line">    <span class="kr">int</span> <span class="nx">size</span><span class="p">();</span>   </span>
+<span class="code-line"><span class="p">}</span></span>
 </pre></div>
 <p>implementation of such a PQ:   </p>
 <blockquote>
-<p>Use same code as standart PQ (maintain a heap[] array). <br/>
+<p>Use same code as standart PQ (maintain a heap[] array). <br>
 Elements are always accessed by "index", in range 0...N-1.
-maintain 3 parallel arrays: <code>keys[], pq[], qp[]</code>:   </p>
+maintain 3 parallel arrays: <code>keys[], pq[], qp[]</code>:   </br></p>
 <ul>
 <li><code>keys[i]</code>: is the priority of element i (the element with index=i)   </li>
 <li><code>pq[i]</code>: is the index of the element in the heap position i (ie. in heap[i] is pq[i]th element  )   </li>
@@ -482,28 +443,28 @@ maintain 3 parallel arrays: <code>keys[], pq[], qp[]</code>:   </p>
 </ul>
 </blockquote>
 <p>to <code>decreaseKey(i,key)</code>: change <code>keys[i]</code>, then call <code>siftup(qp[i])</code> </p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image004.png"/> <br/>
-summery of pq implementations:  <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image005.png"/> </p>
-<h1 id="6-mst-context">6. MST Context</h1>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image004.png"> <br>
+summery of pq implementations:  <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image005.png"> </img></br></br></img></p>
+<h1>6. MST Context</h1>
 <ul>
 <li>unsolved pb: does a linear MST algo exists?   </li>
 </ul>
-<p>(recap: for UF, tarjan has <em>prooved</em> that linear algo doesn't exist — although Nlg*N is fast enough...) <br/>
-@_@... <br/>
-<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image007.png"/> <br/>
-(这个Yao是清华那个Yao吧?)   </p>
+<p>(recap: for UF, tarjan has <em>prooved</em> that linear algo doesn't exist — although Nlg*N is fast enough...) <br>
+@_@... <br>
+<img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image007.png"> <br>
+(这个Yao是清华那个Yao吧?)   </br></img></br></br></p>
 <ul>
 <li>Euclidean MST   </li>
 </ul>
-<p>Given N points in plane, edge weight := Euclidean distance. (<em>dense graph, E = V2</em>) <br/>
-→ exploit geomerty, O(NlgN)   </p>
+<p>Given N points in plane, edge weight := Euclidean distance. (<em>dense graph, E = V2</em>) <br>
+→ exploit geomerty, O(NlgN)   </br></p>
 <ul>
 <li>clustering   </li>
 </ul>
-<p>k-clustering (~ dist-fcn) <br/>
-single-link clustering (def. dist of clusters = dist of 2 closest elements in each cluster) <br/>
-→ Kruskal...   </p>
+<p>k-clustering (~ dist-fcn) <br>
+single-link clustering (def. dist of clusters = dist of 2 closest elements in each cluster) <br>
+→ Kruskal...   </br></br></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -860,7 +821,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 4</sup>
+                    deep learning <sup> 5</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -930,45 +891,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
-        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
-            <div class="panel-heading"><h4>
-            目录</h4>
-            </div>
-            <div class="panel-boy">
-            <div class="toc">
-<ul>
-<li><a href="#1-introduction-to-msts">1. Introduction to MSTs</a></li>
-<li><a href="#2-greedy-algorithm">2. Greedy Algorithm</a><ul>
-<li><a href="#cut-property">cut property</a></li>
-<li><a href="#greedy-mst-algo">Greedy MST algo</a></li>
-</ul>
-</li>
-<li><a href="#3-edge-weighted-graph-api">3. Edge-Weighted Graph API</a><ul>
-<li><a href="#edge-api">Edge API</a></li>
-<li><a href="#edge-weighted-graph-api">Edge-weighted Graph API</a></li>
-<li><a href="#mst-api">MST API</a></li>
-</ul>
-</li>
-<li><a href="#4-kruskals-algorithm">4.  Kruskal's Algorithm</a><ul>
-<li><a href="#correctness">correctness</a></li>
-<li><a href="#implementation">implementation</a></li>
-<li><a href="#complexity">complexity</a></li>
-</ul>
-</li>
-<li><a href="#5-prims-algorithm">5. Prim's Algorithm</a><ul>
-<li><a href="#correctness_1">Correctness</a></li>
-<li><a href="#implementation_1">implementation</a><ul>
-<li><a href="#lazy-implementation">"lazy" implementation</a></li>
-<li><a href="#eager-implementation">"eager" implementation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#6-mst-context">6. MST Context</a></li>
-</ul>
-</div>
-            </div>
-        </div>
             </aside>
         </div>
     </div>
