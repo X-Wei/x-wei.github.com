@@ -200,14 +200,22 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="minHash: 一种快速approximate retrieval方法">minHash: 一种快速approximate retrieval方法</a><ul><li><a class="toc-href" href="#kdtree" title="kdtree">kdtree</a></li><li><a class="toc-href" href="#simhash" title="simhash">simhash</a></li><li><a class="toc-href" href="#jaccard-similarity" title="Jaccard similarity">Jaccard similarity</a></li><li><a class="toc-href" href="#minhash" title="minHash">minHash</a></li><li><a class="toc-href" href="#proof" title="proof">proof</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p><strong>approximate retrieval</strong>(相似搜索)这个问题之前实习的时候就经常遇到: 如何快速在大量数据中如何找出相近的数据.    </p>
 <p>问题描述: 假设有N个数据, 并且对于他们有一个相似度(或距离)的度量函数<code>sim(i,j)</code>, 我们的问题就是如何快速找出所有N个点中相似度较大的i和j组合.    </p>
 <p>乍一看这个问题必须要对所有的(i,j)计算相似度, 但是N^2的复杂度在N太大的情况下是不能够忍受的.    </p>
-<h2>kdtree</h2>
+<h2 id="kdtree">kdtree</h2>
 <p>之前在algo-note里面遇到过<a href="http://x-wei.github.io/algoI_week5_2.html">kdtree</a>, 用它可以使得寻找nearest neighbor的复杂度减少到logN. 但是这种情况对于维度低一点(比如二三维)的情况合适, 维度到了成千上万的时候并不是很好的选择, 所以这里不多讨论.    </p>
-<h2>simhash</h2>
+<h2 id="simhash">simhash</h2>
 <p>另一个思路是, 使用某个hash函数, 对于每一个数据计算一个哈希值. 这个hash函数要满足: <strong>当i和j的相似度很高的时候, hash(i)和hash(j)的值(很可能)相同.</strong> 这次介绍的minHash就是这样的一种方法.    </p>
-<h2>Jaccard similarity</h2>
+<h2 id="jaccard-similarity">Jaccard similarity</h2>
 <p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term(term可以是单词, 也可以是n-gram或叫shingle): <br>
 <img alt="" class="img-responsive" src="../images/minhash/pasted_image.png"> </img></br></p>
 <p>一段文本(document i)可以用binary vectorization变为一个binary的向量:  <br>
@@ -219,7 +227,7 @@ mx's blog            </a>
 也很好理解, 重合部分比例越高相似度就越高, 另外jaccard-sim取值在0到1之间.    </br></img></br></br></p>
 <p>对于document i和j, 他们的向量形式分别是di和dj. 现在我们希望计算hash(di)和hash(dj), 使得:    </p>
 <p><img alt="" class="img-responsive" src="../images/minhash/pasted_image004.png"> </img></p>
-<h2>minHash</h2>
+<h2 id="minhash">minHash</h2>
 <p>min hash的思路是这样的, 首先生成一个随机的(1...M)的排序(permutation)π:  <br>
 <img alt="" class="img-responsive" src="../images/minhash/pasted_image005.png"> </img></br></p>
 <p>然后, 对于每个document d, 都按照这个permutation, 把d的分量从新排列:  <br>
@@ -228,7 +236,7 @@ mx's blog            </a>
 <img alt="" class="img-responsive" src="../images/minhash/pasted_image008.png"> <br>
 (上面个公式里d的下标只是代表第i个文本, 并不代表分量... 我应该写上标的..) <br>
 所以<code>minHash()</code>返回1到M之间的一个数.    </br></br></img></br></p>
-<h2>proof</h2>
+<h2 id="proof">proof</h2>
 <p>现在证明一下为什么这样选择minHash函数可以保证两个文本的哈希值相等的概率为他们的jaccard similarity.    </p>
 <p>对于d2和d2, 我们分别查看π(d1)和π(d2)的每个分量, 这两个数有(11), (10), (01), (00)这四种可能, 分别记每种可能性的出现次数为a,b,c,d:  <br>
 <img alt="" class="img-responsive" src="../images/minhash/pasted_image009.png"> <br>
@@ -572,7 +580,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -630,6 +638,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="minHash: 一种快速approximate retrieval方法">minHash: 一种快速approximate retrieval方法</a><ul><li><a class="toc-href" href="#kdtree" title="kdtree">kdtree</a></li><li><a class="toc-href" href="#simhash" title="simhash">simhash</a></li><li><a class="toc-href" href="#jaccard-similarity" title="Jaccard similarity">Jaccard similarity</a></li><li><a class="toc-href" href="#minhash" title="minHash">minHash</a></li><li><a class="toc-href" href="#proof" title="proof">proof</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

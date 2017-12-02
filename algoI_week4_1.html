@@ -202,8 +202,16 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 4-1 Priority Queue">[Algorithms I] Week 4-1 Priority Queue</a><ul><li><a class="toc-href" href="#1-api-and-elementary-implementations" title="1. API and elementary implementations">1. API and elementary implementations</a><ul><li><a class="toc-href" href="#pq-client-example" title="PQ client example">PQ client example</a></li><li><a class="toc-href" href="#elementarynaive-implementations" title="elementary(naive) implementations">elementary(naive) implementations</a></li></ul></li><li><a class="toc-href" href="#2-binary-heaps_1" title="2. Binary Heaps">2. Binary Heaps</a><ul><li><a class="toc-href" href="#array-representation-of-binary-heap" title="Array representation of binary heap">Array representation of binary heap</a></li><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#3-heapsort_1" title="3. Heapsort">3. Heapsort</a><ul><li><a class="toc-href" href="#implementation_1" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-event-driven-simulation_1" title="4. Event-driven simulation">4. Event-driven simulation</a><ul><li><a class="toc-href" href="#model" title="model">model</a></li><li><a class="toc-href" href="#event-driven-simulation" title="Event driven simulation">Event driven simulation</a></li><li><a class="toc-href" href="#implementation_2" title="Implementation">Implementation</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
-<h1>1. API and elementary implementations</h1>
+<h1 id="1-api-and-elementary-implementations">1. API and elementary implementations</h1>
 <p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br>
 Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </br></p>
 <p>API:    </p>
@@ -217,11 +225,11 @@ Priority queue: a special kind of collection — remove <em>largest/smallest</em
 <span class="code-line"></span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>PQ client example</h2>
+<h2 id="pq-client-example">PQ client example</h2>
 <p>find <em>M largest</em> elements from N items. (N is too huge to store) <br>
 ⇒ 思路: 用 <strong>Min</strong><em>PQ</em>, 当size&gt;M时删掉最小元素 — 最后剩下的就是最大的M个元素了.  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image.png"> </img></br></br></p>
-<h2>elementary(naive) implementations</h2>
+<h2 id="elementarynaive-implementations">elementary(naive) implementations</h2>
 <p><strong>unordered array implementation</strong> <br>
 insert ~1,  <br>
 remove ~N   </br></br></p>
@@ -230,7 +238,7 @@ insert ~N — ~ insertion sort, <br>
 remove ~1   </br></br></p>
 <p><strong>goal</strong>:  <br>
 insert O(lgN) &amp; remove max O(lgN)   </br></p>
-<h1>2. Binary Heaps</h1>
+<h1 id="2-binary-heaps_1">2. Binary Heaps</h1>
 <p>binary heap: a special kind of <em>complete binary tree</em>.    </p>
 <p>def. "<strong>complete binary tree"</strong> <br>
 All level except the last level are full, all nodes in the last level are as far left as possible.   <br>
@@ -245,7 +253,7 @@ Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of
 <li>height is lgN   </li>
 <li><em>each node still makes a heap</em> (use this property to construct heap from bottom up)   </li>
 </ul>
-<h2>Array representation of binary heap</h2>
+<h2 id="array-representation-of-binary-heap">Array representation of binary heap</h2>
 <p>Use an array <code>a[]</code> to represent a complete binary tree: very easy to get children and parent.    </p>
 <ul>
 <li><strong>index starting from 1</strong> (root = a[1], do not use a[0])    </li>
@@ -253,7 +261,7 @@ Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of
 <li>for node at index <code>i</code> (i&gt;1), its parent is: <code>i/2</code> </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image002.png"> </img></p>
-<h2>Implementation</h2>
+<h2 id="implementation">Implementation</h2>
 <p>简言之就是:  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image003.png"> </img></br></p>
 <p>内部成员变量:    </p>
@@ -300,7 +308,7 @@ First put a[N] to the position of root, then sink. (注意要防止loitering)   
 <span class="code-line">    return ret;   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>Analysis</h2>
+<h2 id="analysis">Analysis</h2>
 <p>insert: ~lgN <br>
 remove max: ~lgN   </br></p>
 <p>improvements:    </p>
@@ -315,13 +323,13 @@ remove max: ~lgN   </br></p>
 <li>underflow/overflow: throw exceptions for delMax() when empty, use resizing array for implementation.   </li>
 <li>expand the API with other operations: remove an arbitrary item, change the prority of an item (like handling an array)...   </li>
 </ul>
-<h1>3. Heapsort</h1>
+<h1 id="3-heapsort_1">3. Heapsort</h1>
 <p>Basic idea:    </p>
 <ul>
 <li>create a max heap with all N entries <strong>("heap-construction")</strong> </li>
 <li>then repeatedly remove all N items <strong>("sortdown")</strong> </li>
 </ul>
-<h2>Implementation</h2>
+<h2 id="implementation_1">Implementation</h2>
 <p><strong>heap construction</strong> <br>
 Construct the heap using a <strong>bottom-up</strong> method: build the heaps with small size first.    </br></p>
 <ul>
@@ -340,7 +348,7 @@ now that we have a max-heap, to get the sorted array <em>in-place,</em> simply d
 <span class="code-line">sink(1);   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>Analysis</h2>
+<h2 id="analysis_1">Analysis</h2>
 <p><strong>proposition</strong> <br>
 Heap construction uses <strong>&lt;2N</strong> compares and exchanges.  <br>
 <em>proof</em> <br>
@@ -361,10 +369,10 @@ Heapsort use &lt; 2NlgN compares and exchanges.    </br></p>
 </ul>
 <p>Summary:  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image006.png"> </img></br></p>
-<h1>4. Event-driven simulation</h1>
+<h1 id="4-event-driven-simulation_1">4. Event-driven simulation</h1>
 <p>Goal: simulating the motion of N particles in elastic collision (using a priority queue).  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image008.png"> </img></br></p>
-<h2>model</h2>
+<h2 id="model">model</h2>
 <p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image009.png"> <br>
 bouncing balls (without collision) <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image010.png"> </img></br></br></img></p>
@@ -382,7 +390,7 @@ bouncing balls (without collision) <br>
 <li>if dt small: too much calculation   </li>
 <li>if dt too large: might miss collisions   </li>
 </ul>
-<h2>Event driven simulation</h2>
+<h2 id="event-driven-simulation">Event driven simulation</h2>
 <p>change state only when something happens   </p>
 <ul>
 <li>particles move in straight line before collision   </li>
@@ -394,7 +402,7 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image013.png"> <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image014.png"> <br>
 (美国高中物理这么凶残?...)   </br></img></br></img></br></br></p>
-<h2>Implementation</h2>
+<h2 id="implementation_2">Implementation</h2>
 <p>anyway, 这个是封装好的类: <br>
 <img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image015.png"> <br>
 注意, 使用了count记录一个particle到目前为止的碰撞次数.    </br></img></br></p>
@@ -775,7 +783,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -845,6 +853,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 4-1 Priority Queue">[Algorithms I] Week 4-1 Priority Queue</a><ul><li><a class="toc-href" href="#1-api-and-elementary-implementations" title="1. API and elementary implementations">1. API and elementary implementations</a><ul><li><a class="toc-href" href="#pq-client-example" title="PQ client example">PQ client example</a></li><li><a class="toc-href" href="#elementarynaive-implementations" title="elementary(naive) implementations">elementary(naive) implementations</a></li></ul></li><li><a class="toc-href" href="#2-binary-heaps_1" title="2. Binary Heaps">2. Binary Heaps</a><ul><li><a class="toc-href" href="#array-representation-of-binary-heap" title="Array representation of binary heap">Array representation of binary heap</a></li><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#3-heapsort_1" title="3. Heapsort">3. Heapsort</a><ul><li><a class="toc-href" href="#implementation_1" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-event-driven-simulation_1" title="4. Event-driven simulation">4. Event-driven simulation</a><ul><li><a class="toc-href" href="#model" title="model">model</a></li><li><a class="toc-href" href="#event-driven-simulation" title="Event driven simulation">Event driven simulation</a></li><li><a class="toc-href" href="#implementation_2" title="Implementation">Implementation</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

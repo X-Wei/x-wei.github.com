@@ -202,21 +202,29 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 2-1 Minimum Spanning Trees">[Algorithms II] Week 2-1 Minimum Spanning Trees</a><ul><li><a class="toc-href" href="#1-introduction-to-msts" title="1. Introduction to MSTs">1. Introduction to MSTs</a></li><li><a class="toc-href" href="#2-greedy-algorithm" title="2. Greedy Algorithm">2. Greedy Algorithm</a><ul><li><a class="toc-href" href="#cut-property" title="cut property">cut property</a></li><li><a class="toc-href" href="#greedy-mst-algo" title="Greedy MST algo">Greedy MST algo</a></li></ul></li><li><a class="toc-href" href="#3-edge-weighted-graph-api_1" title="3. Edge-Weighted Graph API">3. Edge-Weighted Graph API</a><ul><li><a class="toc-href" href="#edge-api" title="Edge API">Edge API</a></li><li><a class="toc-href" href="#edge-weighted-graph-api" title="Edge-weighted Graph API">Edge-weighted Graph API</a></li><li><a class="toc-href" href="#mst-api" title="MST API">MST API</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#4-kruskals-algorithm_1" s="" title="4.  Kruskal">4.  Kruskal's Algorithm</a><ul><li><a class="toc-href" href="#correctness" title="correctness">correctness</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#5-prims-algorithm_1" s="" title="5. Prim">5. Prim's Algorithm</a><ul><li><a class="toc-href" href="#correctness_1" title="Correctness">Correctness</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a><ul><li><a class="toc-href" href="#lazy-implementation" title='"lazy" implementation'>"lazy" implementation</a></li><li><a class="toc-href" href="#eager-implementation" title='"eager" implementation'>"eager" implementation</a></li></ul></li></ul></li><li><a class="toc-href" href="#6-mst-context_2" title="6. MST Context">6. MST Context</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
-<h1>1. Introduction to MSTs</h1>
+<h1 id="1-introduction-to-msts">1. Introduction to MSTs</h1>
 <p>Given: undirected connecte graph <code>G</code> with positive edge weights.  <br>
 def. <strong>Spanning tree </strong><code>T</code> <br>
 is a subgraph of <code>G</code>, that is both tree (<em>connected, acyclic</em>) and spanning(<em>all vertices are included</em>).  <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image-0.png"> <br>
 ⇒ Goal: find a spanning tree with minimum weight sum.   </br></img></br></br></br></p>
-<h1>2. Greedy Algorithm</h1>
+<h1 id="2-greedy-algorithm">2. Greedy Algorithm</h1>
 <p>assumptions for simplification:    </p>
 <ul>
 <li>edge weights are distinct   </li>
 <li>graph is connected   </li>
 </ul>
 <p>→ MST uniquely exists.   </p>
-<h2>cut property</h2>
+<h2 id="cut-property">cut property</h2>
 <p>def. a <strong>cut</strong> of a graph is a partition of its vertices into 2 non-empty sets. <br>
 def. a <strong>crossing-edge</strong> (wrt a cut) is an edge connecting vertex from one set to another. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001-0.png"> </img></br></br></p>
@@ -230,7 +238,7 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
         → the edge <code>f</code> will be in this cycle <br>
         → removing <code>f</code> and adding <code>e</code> will give us another spanning tree (!) <br>
                 → this new spanning tree has smaller weight sum ⇒ contradiction, CQFD.   </br></br></br></br></br></p>
-<h2>Greedy MST algo</h2>
+<h2 id="greedy-mst-algo">Greedy MST algo</h2>
 <p>[<strong>algo</strong> ] Greedy MST  </p>
 <blockquote>
 <ul>
@@ -253,8 +261,8 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <li>how to find min-weighted crossing-edge?    </li>
 </ul>
 <p>⇒ Kruskal &amp; Prim   </p>
-<h1>3. Edge-Weighted Graph API</h1>
-<h2>Edge API</h2>
+<h1 id="3-edge-weighted-graph-api_1">3. Edge-Weighted Graph API</h1>
+<h2 id="edge-api">Edge API</h2>
 <p>→ <em>Edge abstraction</em>: make Edge comparable.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class Edge implements Comparable&lt;Edge&gt;{   </span>
 <span class="code-line">    Edge(int v, int w, double weight);   </span>
@@ -265,7 +273,7 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <span class="code-line">}</span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image.png"> </img></p>
-<h2>Edge-weighted Graph API</h2>
+<h2 id="edge-weighted-graph-api">Edge-weighted Graph API</h2>
 <p>adj-list implementation: <code>Bag&lt;Edge&gt;[] adj;</code>(for undirected graph, each edge appears twice in adj)   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class EdgeWeightedGraph{   </span>
 <span class="code-line">    private final int V;   </span>
@@ -287,14 +295,14 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 <span class="code-line">}</span>
 </pre></div>
 <p>(allow self-loops and parallel edges)   </p>
-<h2>MST API</h2>
+<h2 id="mst-api">MST API</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class MST{   </span>
 <span class="code-line">    MST(EdgeWeightedGraph G);//compute the MST   </span>
 <span class="code-line">    Iterable&lt;Edge&gt; edges();// selected edges in the MST   </span>
 <span class="code-line">    double weight();// sum of all edge weights in MST   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h1>4.  Kruskal's Algorithm</h1>
+<h1 id="4-kruskals-algorithm_1">4.  Kruskal's Algorithm</h1>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
@@ -303,7 +311,7 @@ Given a cut. {S1,S2} are the two set of vertices,  let <code>e</code> be the min
 </ul>
 </blockquote>
 <p>In the running of Kruskal: we have several small connect components and they merge with each other until we get MST.    </p>
-<h2>correctness</h2>
+<h2 id="correctness">correctness</h2>
 <p><strong>prop. </strong>Kruskal's algo works. <br>
 <em>pf</em> <br>
 (idea: proove that Kruskal is a special case of the greedy algorithm, ie. how to select the specific cut) <br>
@@ -311,7 +319,7 @@ suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br>
 → select a cut = vertices connected to v in the (constructing) MST; and the rest vertices.  <br>
     → for this cut, there is no black crossing edges <br>
         → moreover among all crossing edges of the cut the edge e has the smallest weight!! (by def of Kruskal) CQFD   </br></br></br></br></br></br></p>
-<h2>implementation</h2>
+<h2 id="implementation">implementation</h2>
 <ul>
 <li>how to test if adding an edge will create a cycle ?    </li>
 </ul>
@@ -341,10 +349,10 @@ suppose Kruskal's algo selects(colored black) an edge <code>e=v-w</code> <br>
 </pre></div>
 </li>
 </ul>
-<h2>complexity</h2>
+<h2 id="complexity">complexity</h2>
 <p>running time: O(ElogE) <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image001.png"> </img></br></p>
-<h1>5. Prim's Algorithm</h1>
+<h1 id="5-prims-algorithm_1">5. Prim's Algorithm</h1>
 <p>since 1930...  <br>
 Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.</em> </br></p>
 <p><strong>[algo]</strong> </p>
@@ -355,17 +363,17 @@ Idea: start from a vertex and <em>grows the tree </em><code>T</code><em> to MST.
 </ul>
 </blockquote>
 <p>In the running of Prim: there is always ONE connnected component .    </p>
-<h2>Correctness</h2>
+<h2 id="correctness_1">Correctness</h2>
 <p><strong>prop</strong>. Prim's algo works. <br>
 <em>pf.</em> <br>
 suppose edge e is the min-weighted edge connect a vertex in T with a vertex out of T.  <br>
 → select the cut = vertices in the tree T; vertices out of T <br>
 → by def, there is no black crossing edge <br>
 → e is the min-weighed edge by def of Prim. CQFD   </br></br></br></br></br></p>
-<h2>implementation</h2>
+<h2 id="implementation_1">implementation</h2>
 <p>challenge: how to find such an edge (connect T and other vertex, with min weight) ? <br>
 ⇒ priority queue    </br></p>
-<h3>"lazy" implementation</h3>
+<h3 id="lazy-implementation">"lazy" implementation</h3>
 <p><strong>[algo]</strong> </p>
 <blockquote>
 <ul>
@@ -400,7 +408,7 @@ suppose edge e is the min-weighted edge connect a vertex in T with a vertex out 
 <p>Running time: <strong>O(ElgE)</strong> <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image002.png"> <br>
 space: <strong>O(E)</strong> in worst time.   </br></img></br></p>
-<h3>"eager" implementation</h3>
+<h3 id="eager-implementation">"eager" implementation</h3>
 <p>Idea:    </p>
 <blockquote>
 <p>use a <strong>PQ of vertices</strong><em>, priority of vertex v := min-weight of edge that connects v to T.</em> </p>
@@ -446,7 +454,7 @@ maintain 3 parallel arrays: <code>keys[], pq[], qp[]</code>:   </br></p>
 <p><img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image004.png"> <br>
 summery of pq implementations:  <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_1/pasted_image005.png"> </img></br></br></img></p>
-<h1>6. MST Context</h1>
+<h1 id="6-mst-context_2">6. MST Context</h1>
 <ul>
 <li>unsolved pb: does a linear MST algo exists?   </li>
 </ul>
@@ -821,7 +829,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -891,6 +899,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 2-1 Minimum Spanning Trees">[Algorithms II] Week 2-1 Minimum Spanning Trees</a><ul><li><a class="toc-href" href="#1-introduction-to-msts" title="1. Introduction to MSTs">1. Introduction to MSTs</a></li><li><a class="toc-href" href="#2-greedy-algorithm" title="2. Greedy Algorithm">2. Greedy Algorithm</a><ul><li><a class="toc-href" href="#cut-property" title="cut property">cut property</a></li><li><a class="toc-href" href="#greedy-mst-algo" title="Greedy MST algo">Greedy MST algo</a></li></ul></li><li><a class="toc-href" href="#3-edge-weighted-graph-api_1" title="3. Edge-Weighted Graph API">3. Edge-Weighted Graph API</a><ul><li><a class="toc-href" href="#edge-api" title="Edge API">Edge API</a></li><li><a class="toc-href" href="#edge-weighted-graph-api" title="Edge-weighted Graph API">Edge-weighted Graph API</a></li><li><a class="toc-href" href="#mst-api" title="MST API">MST API</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#4-kruskals-algorithm_1" s="" title="4.  Kruskal">4.  Kruskal's Algorithm</a><ul><li><a class="toc-href" href="#correctness" title="correctness">correctness</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#5-prims-algorithm_1" s="" title="5. Prim">5. Prim's Algorithm</a><ul><li><a class="toc-href" href="#correctness_1" title="Correctness">Correctness</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a><ul><li><a class="toc-href" href="#lazy-implementation" title='"lazy" implementation'>"lazy" implementation</a></li><li><a class="toc-href" href="#eager-implementation" title='"eager" implementation'>"eager" implementation</a></li></ul></li></ul></li><li><a class="toc-href" href="#6-mst-context_2" title="6. MST Context">6. MST Context</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

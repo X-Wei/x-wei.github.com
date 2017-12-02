@@ -202,9 +202,17 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 1-1 Union-Find">[Algorithms I] Week 1-1 Union-Find</a><ul><li><a class="toc-href" href="#1-dynamic-connectivity-pb" title="1. Dynamic Connectivity pb">1. Dynamic Connectivity pb</a><ul><li><a class="toc-href" href="#pb-statement" title="pb statement">pb statement</a></li><li><a class="toc-href" href="#uf-api" title="UF API">UF API</a></li></ul></li><li><a class="toc-href" href="#2-quick-find_1" title="2. Quick Find">2. Quick Find</a><ul><li><a class="toc-href" href="#data-structure" title="data structure">data structure</a></li><li><a class="toc-href" href="#uf-operations" title="UF operations">UF operations</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li></ul></li><li><a class="toc-href" href="#3-quick-union_1" title="3. Quick Union">3. Quick Union</a><ul><li><a class="toc-href" href="#data-structure_1" title="data structure">data structure</a></li><li><a class="toc-href" href="#uf-operations_1" title="UF operations">UF operations</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#4-quick-union-improvements_1" title="4. Quick Union Improvements">4. Quick Union Improvements</a><ul><li><a class="toc-href" href="#improvement1-weighting" title="improvement1: weighting">improvement1: weighting</a><ul><li><a class="toc-href" href="#implementation_2" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity_1" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#improvement-2-path-compression_1" title="improvement 2: path compression">improvement 2: path compression</a><ul><li><a class="toc-href" href="#complexity_2" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="summery">summery</a></li></ul></li><li><a class="toc-href" href="#5-union-find-application_1" title="5. Union Find Application">5. Union Find Application</a><ul><li><a class="toc-href" href="#percolation" title="percolation">percolation</a></li><li><a class="toc-href" href="#implementation_3" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
-<h1>1. Dynamic Connectivity pb</h1>
-<h3>pb statement</h3>
+<h1 id="1-dynamic-connectivity-pb">1. Dynamic Connectivity pb</h1>
+<h3 id="pb-statement">pb statement</h3>
 <p>a set of N obj, <em>indexed by 0,1,...,N-1</em>
 ⇒ 
 <em> UNION: connect objects <code>void union(int p, int q)</code>
@@ -212,7 +220,7 @@ mx's blog            </a>
 <p>ex: <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image.png"/></br></p>
 <p><strong>connect components</strong>(联通分支): max set of obj that are mutually connected. </p>
-<h3>UF API</h3>
+<h3 id="uf-api">UF API</h3>
 <ul>
 <li>union(p,q): connect 2 obj</li>
 <li>connected(p,q): test if p and q are connected </li>
@@ -232,16 +240,16 @@ mx's blog            </a>
 </pre></div>
 <p>测试client: <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image003.png"/></br></p>
-<h1>2. Quick Find</h1>
+<h1 id="2-quick-find_1">2. Quick Find</h1>
 <p><em>"eager approach"</em></p>
-<h3>data structure</h3>
+<h3 id="data-structure">data structure</h3>
 <p>⇒ an int array <code>id[]</code>
 initialized to <em>id[p]=p for all p</em>
 interpretation: <em>id[p] = <strong><em>component id of obj p</em></strong>
 ⇒ p and q are connected </em>iff* id[p]==id[q] (ie. find very fast)
 没有用find()函数  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image002.png"> </img></br></p>
-<h3>UF operations</h3>
+<h3 id="uf-operations">UF operations</h3>
 <ul>
 <li>FIND:</li>
 </ul>
@@ -253,7 +261,7 @@ interpretation: <em>id[p] = <strong><em>component id of obj p</em></strong>
 <code>union(p,q)</code>: <code>id[p]=id[q]</code>(总是让第一个参数p的id变为第二个参数q的id), <br>
 ⇒ then have to modify <em>all entries</em> with id equal to <code>id[p]</code> !<br>
 ⇒ too many entries to change  </br></br></p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p><em>(class  QuickFindUF implements UF)</em><br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image004.png"/></br></p>
 <p>complexity: </p>
@@ -263,15 +271,15 @@ interpretation: <em>id[p] = <strong><em>component id of obj p</em></strong>
 </ul>
 <p>if N obj + N unions ⇒ <em>quad time !</em><br>
 btw, 程序运行速度: <strong>~10^9/s</strong></br></p>
-<h1>3. Quick Union</h1>
+<h1 id="3-quick-union_1">3. Quick Union</h1>
 <p><em>"lazy approach"</em></p>
-<h3>data structure</h3>
+<h3 id="data-structure_1">data structure</h3>
 <p>⇒ also an int array <code>id[]</code>
 considering a set of <em>trees, </em>此时每个联通分支都是一个tree<br>
 interpretation: <em>id[p] = <em><strong>parent index of obj p </strong>(觉得这个数组叫做father更好....)<br>
 ⇒ p is a root node </br></em>iff</em> id[p]==p</br></p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image005.png"/></p>
-<h3>UF operations</h3>
+<h3 id="uf-operations_1">UF operations</h3>
 <ul>
 <li>FIND:</li>
 </ul>
@@ -290,9 +298,9 @@ interpretation: <em>id[p] = <em><strong>parent index of obj p </strong>(觉得�
 <span class="code-line">    return p;</span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>implementation</h3>
+<h3 id="implementation_1">implementation</h3>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image007.png"/></p>
-<h3>complexity</h3>
+<h3 id="complexity">complexity</h3>
 <p>in the worst case (all elements is in a list form), root() is ~N, so:</p>
 <ul>
 <li>FIND: lin</li>
@@ -300,13 +308,13 @@ interpretation: <em>id[p] = <em><strong>parent index of obj p </strong>(觉得�
 </ul>
 <p>quick find和quick union的问题: <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image009.png"/></br></p>
-<h1>4. Quick Union Improvements</h1>
-<h2>improvement1: weighting</h2>
+<h1 id="4-quick-union-improvements_1">4. Quick Union Improvements</h1>
+<h2 id="improvement1-weighting">improvement1: weighting</h2>
 <p><em>keep track of tree size</em> ⇒ balance by taking the small tree be a child of the large tree  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image010.png"/></br></p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image011.png"/></p>
 <p>⇒ add an extra array: <code>sz[]</code> sz[i] is the size of the tree with root i</p>
-<h3>implementation</h3>
+<h3 id="implementation_2">implementation</h3>
 <p>(数组<code>int  sz[]</code> 初始全部为1)</p>
 <ul>
 <li>
@@ -335,7 +343,7 @@ interpretation: <em>id[p] = <em><strong>parent index of obj p </strong>(觉得�
 }</p>
 </li>
 </ul>
-<h3>complexity</h3>
+<h3 id="complexity_1">complexity</h3>
 <p>FIND: proportional to <em>depth of p and</em> q in their tree
 UNION: const if p and q are root</p>
 <ul>
@@ -351,7 +359,7 @@ at first dep(x)=1, if dep(x) increases lgN times, the size of the tree will be &
 CQFD.</br></br></br></br></img></br></p>
 <p>so the <code>root()</code> function takes only lgN time. 
 <strong>conclusion</strong>: both UNION and FIND will be in <strong>lgN </strong>time. </p>
-<h2>improvement 2: path compression</h2>
+<h2 id="improvement-2-path-compression_1">improvement 2: path compression</h2>
 <ul>
 <li>imporve the root() function: </li>
 </ul>
@@ -386,7 +394,7 @@ just one extra line of code:
         }
         return p;
     }</br></p>
-<h3>complexity</h3>
+<h3 id="complexity_2">complexity</h3>
 <p>(for weighet quick union with path compression — <em>WQUPC</em>)<br>
 very very small: <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image013.png"/></br></br></p>
@@ -399,13 +407,13 @@ because: lg(65536)=16 ; lg(16) = 4; lg(4)=2; lg(2)=1. <br>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image015.png"> <br>
 (有人证明了不存在<em>理论上</em>linear的算法. )</br></img></p>
 <p><strong>conclusion</strong>: both UNION and FIND will be in <strong>constant time</strong>.</p>
-<h2>summery</h2>
+<h2 id="summery_1">summery</h2>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image017.png"> <br>
 上面这个表格好像quick union的部分有问题? 最坏情况下应该是N+MN吧??<br>
 书上是这么写的:  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image016.png"/></br></br></br></img></p>
 <p>WQUCF reduce 30 years to 6 seconds. </p>
-<h1>5. Union Find Application</h1>
+<h1 id="5-union-find-application_1">5. Union Find Application</h1>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image018.png"/></p>
 <ul>
 <li>percolation</li>
@@ -414,7 +422,7 @@ because: lg(65536)=16 ; lg(16) = 4; lg(4)=2; lg(2)=1. <br>
 <li>Games (GO)</li>
 <li>.......</li>
 </ul>
-<h3>percolation</h3>
+<h3 id="percolation">percolation</h3>
 <ul>
 <li>model: </li>
 </ul>
@@ -435,7 +443,7 @@ nobody knows how to get the threshold mathematically<br>
 → randomly open sites <em>one by one</em> <br>
 → when the sys percolates, the <em>vacancy percentage</em> is an estimate of <em>p</em> <br>
 *(run above simulation for millions of times)   </br></br></br></p>
-<h3>implementation</h3>
+<h3 id="implementation_3">implementation</h3>
 <ul>
 <li>N^2 sites, named 0 to N^2-1  </li>
 </ul>
@@ -803,7 +811,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -871,6 +879,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 1-1 Union-Find">[Algorithms I] Week 1-1 Union-Find</a><ul><li><a class="toc-href" href="#1-dynamic-connectivity-pb" title="1. Dynamic Connectivity pb">1. Dynamic Connectivity pb</a><ul><li><a class="toc-href" href="#pb-statement" title="pb statement">pb statement</a></li><li><a class="toc-href" href="#uf-api" title="UF API">UF API</a></li></ul></li><li><a class="toc-href" href="#2-quick-find_1" title="2. Quick Find">2. Quick Find</a><ul><li><a class="toc-href" href="#data-structure" title="data structure">data structure</a></li><li><a class="toc-href" href="#uf-operations" title="UF operations">UF operations</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li></ul></li><li><a class="toc-href" href="#3-quick-union_1" title="3. Quick Union">3. Quick Union</a><ul><li><a class="toc-href" href="#data-structure_1" title="data structure">data structure</a></li><li><a class="toc-href" href="#uf-operations_1" title="UF operations">UF operations</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#4-quick-union-improvements_1" title="4. Quick Union Improvements">4. Quick Union Improvements</a><ul><li><a class="toc-href" href="#improvement1-weighting" title="improvement1: weighting">improvement1: weighting</a><ul><li><a class="toc-href" href="#implementation_2" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity_1" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#improvement-2-path-compression_1" title="improvement 2: path compression">improvement 2: path compression</a><ul><li><a class="toc-href" href="#complexity_2" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="summery">summery</a></li></ul></li><li><a class="toc-href" href="#5-union-find-application_1" title="5. Union Find Application">5. Union Find Application</a><ul><li><a class="toc-href" href="#percolation" title="percolation">percolation</a></li><li><a class="toc-href" href="#implementation_3" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

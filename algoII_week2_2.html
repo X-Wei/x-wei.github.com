@@ -202,10 +202,18 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 2-2 Shortest Paths">[Algorithms II] Week 2-2 Shortest Paths</a><ul><li><a class="toc-href" href="#1-shortest-paths-apis" title="1. Shortest Paths APIs">1. Shortest Paths APIs</a><ul><li><a class="toc-href" href="#shortest-path-variants" title="shortest path variants">shortest path variants</a></li><li><a class="toc-href" href="#apis" title="APIs">APIs</a></li></ul></li><li><a class="toc-href" href="#2-shortest-path-properties_1" title="2. Shortest path properties">2. Shortest path properties</a><ul><li><a class="toc-href" href="#edge-relaxation" title="Edge relaxation">Edge relaxation</a></li><li><a class="toc-href" href="#optimality-conditions" title="optimality conditions">optimality conditions</a></li><li><a class="toc-href" href="#generic-algo" title="Generic algo">Generic algo</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#3-dijkstras-algorithm_1" s="" title="3. Dijkstra">3. Dijkstra's Algorithm</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#4-edge-weighted-dags_1" title="4. Edge-Weighted DAGs">4. Edge-Weighted DAGs</a><ul><li><a class="toc-href" href="#correctness" title="correctness">correctness</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#application" title="application">application</a></li></ul></li><li><a class="toc-href" href="#5-negative-weights_1" title="5. Negative Weights">5. Negative Weights</a><ul><li><a class="toc-href" href="#bellman-ford" title="Bellman-Ford">Bellman-Ford</a></li><li><a class="toc-href" href="#improvement" title="improvement">improvement</a></li><li><a class="toc-href" href="#finding-negative-cycle" title="Finding negative cycle">Finding negative cycle</a></li><li><a class="toc-href" href="#negative-cycle-application" title="negative cycle application">negative cycle application</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
-<h1>1. Shortest Paths APIs</h1>
+<h1 id="1-shortest-paths-apis">1. Shortest Paths APIs</h1>
 <p>context: <em>directe, weighted graphs</em>.     </p>
-<h3>shortest path variants</h3>
+<h3 id="shortest-path-variants">shortest path variants</h3>
 <p>in terms of vertices:    </p>
 <ul>
 <li>source-sink: form one vertex to another   </li>
@@ -223,7 +231,7 @@ mx's blog            </a>
 <li>no directed cycles   </li>
 <li>no negative cycles   </li>
 </ul>
-<h3>APIs</h3>
+<h3 id="apis">APIs</h3>
 <p>for weighted directed edge:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class DirectedEdge{   </span>
 <span class="code-line">    DirectedEdge(int v, int w, double weight);   </span>
@@ -248,7 +256,7 @@ mx's blog            </a>
 <span class="code-line">    Iterable&lt;DirectedEdge&gt; pathTo(int v);// shortest path from s to v   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h1>2. Shortest path properties</h1>
+<h1 id="2-shortest-path-properties_1">2. Shortest path properties</h1>
 <p>goal: single-source shortest path <br>
 <strong>prop</strong>. a <strong>shortest-path-tree</strong> (SPT) exists.  <br>
 这个结论以前没见过... 不太evident吧... 没有太想明白 <br>
@@ -271,7 +279,7 @@ mx's blog            </a>
 <span class="code-line">    return path;   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>Edge relaxation</h3>
+<h3 id="edge-relaxation">Edge relaxation</h3>
 <p>dynamic prog:   </p>
 <ul>
 <li>distTo[v] = length of <strong>known</strong> shortest path from s to v   </li>
@@ -289,7 +297,7 @@ mx's blog            </a>
 <span class="code-line">    }   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>optimality conditions</h3>
+<h3 id="optimality-conditions">optimality conditions</h3>
 <p><strong>prop</strong>. optimality conditions <br>
 distTo[] is the solution <em>iff</em>:   </br></p>
 <blockquote>
@@ -299,7 +307,7 @@ distTo[] is the solution <em>iff</em>:   </br></p>
 <li>for any edge e = v → w, distTo[w] &lt;= distTo[v]+e.weight()   </li>
 </ul>
 </blockquote>
-<h3>Generic algo</h3>
+<h3 id="generic-algo">Generic algo</h3>
 <p>just relax all edges... <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image004.png"> <br>
 <strong>prop</strong>. the above generic algo gives the SPT from s.    </br></img></br></p>
@@ -309,7 +317,7 @@ distTo[] is the solution <em>iff</em>:   </br></p>
 <li>Topological sort (!) (no directed cycles)   </li>
 <li>Bellman-Ford (no negative directed cycles)   </li>
 </ul>
-<h1>3. Dijkstra's Algorithm</h1>
+<h1 id="3-dijkstras-algorithm_1">3. Dijkstra's Algorithm</h1>
 <p><em>(non-negative edges)</em> </p>
 <blockquote>
 <ul>
@@ -325,7 +333,7 @@ pf.  <br>
     * distTo[w] decrease monotonely, <br>
     * distTo[v] will not change because each time we choose distTo[v] smallest, and all edges non-negative.  <br>
 * CQFD by optimality condition.   </br></br></br></br></br></p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p>Use an <code>IndexMinPQ</code> to store vertices.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class DijkstraSP{   </span>
 <span class="code-line">    private int dist[];   </span>
@@ -364,7 +372,7 @@ pf.  <br>
 <p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image005.png"> <br>
 DFS BFS are also computing spanning tree!  <br>
 ...NB!!   </br></br></img></p>
-<h3>complexity</h3>
+<h3 id="complexity">complexity</h3>
 <ul>
 <li>V insertions to PQ (each vertex is added to the SPT)   </li>
 <li>V delMin from PQ    </li>
@@ -373,7 +381,7 @@ DFS BFS are also computing spanning tree!  <br>
 <p>→ depends on the PQ implementation.  <br>
 in our implementation, <strong>O(ElogV)</strong> <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image006.png"> </img></br></br></p>
-<h1>4. Edge-Weighted DAGs</h1>
+<h1 id="4-edge-weighted-dags_1">4. Edge-Weighted DAGs</h1>
 <p>in a DAG, it's easier to find the shortest path ? <br>
 ⇒ yes!  <br>
 simple algo:    </br></br></p>
@@ -383,7 +391,7 @@ simple algo:    </br></br></p>
 <li>relax outgoing edges form this vertex.    </li>
 </ul>
 </blockquote>
-<h3>correctness</h3>
+<h3 id="correctness">correctness</h3>
 <p><strong>prop</strong>.   </p>
 <blockquote>
 <p>topo-sort algo computes SPT in any DAG (<em>even with negative weights</em>) in time <strong>O(E+V) </strong><em>(linear time!)</em>.    </p>
@@ -394,7 +402,7 @@ simple algo:    </br></br></p>
     * distTo[w] decrease monotonely, <br>
     * distTo[v] will not change because of topo-order, no edge pointing to v after v is relaxed.  <br>
 * CQFD   </br></br></br></br></p>
-<h3>implementation</h3>
+<h3 id="implementation_1">implementation</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>public class AsyclicSP{   </span>
 <span class="code-line">    AsyclicSP(EdgeWeightedDigraph G, int s){   </span>
 <span class="code-line">        // init dist[] and edgeTo[]...   </span>
@@ -405,7 +413,7 @@ simple algo:    </br></br></p>
 <span class="code-line">    }   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>application</h3>
+<h3 id="application">application</h3>
 <ul>
 <li><em>seam-carving</em> </li>
 </ul>
@@ -431,12 +439,12 @@ Grid DAG of pixels, edges are pointed to 3 downward neighbors. <br>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image011.png"> <br>
 ⇒ use longest path to schedule jobs   </br></img></p>
-<h1>5. Negative Weights</h1>
+<h1 id="5-negative-weights_1">5. Negative Weights</h1>
 <p>只是给所有边增加weight并<strong>不能</strong>解决负权边问题.  <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image013.png"> <br>
 ⇒ need a different algo.   </br></img></br></p>
 <p>prop. SPT exists <em>iff</em> there is no <em>negative cycles.</em> </p>
-<h3>Bellman-Ford</h3>
+<h3 id="bellman-ford">Bellman-Ford</h3>
 <p>一句话总结Bellman算法: 每次relax所有的边, 进行V次. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image014.png"> <br>
 (<em>因为relax k次以后, s到v的最短路径的长度小于等于k.</em>)   </br></img></br></p>
@@ -454,11 +462,11 @@ after i passes, found shortest path contain at most i edges.    </br></br></p>
 <span class="code-line"></span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>improvement</h3>
+<h3 id="improvement">improvement</h3>
 <p><em>if dist[v] is not changed during one pasee → no need to relax incoming edges any more.</em> <br>
     → much faster in practice.    </br></p>
 <p>FIFO implementation: maintain a queue of vertices whoses dist is changed.    </p>
-<h3>Finding negative cycle</h3>
+<h3 id="finding-negative-cycle">Finding negative cycle</h3>
 <p>add two method to SP:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>boolean hasNegCycle();   </span>
 <span class="code-line">Iterable&lt;DirectedEdge&gt; negCycle();</span>
@@ -469,7 +477,7 @@ after i passes, found shortest path contain at most i edges.    </br></br></p>
 <p>if a vertex u is updated in phase V, there exists a negative cycle, and can track edgeTo[u] to find the cycle.    </p>
 </blockquote>
 <p>原因是最短路径的长度小于V, 如果大于V则说明存在negative cycle.  </p>
-<h3>negative cycle application</h3>
+<h3 id="negative-cycle-application">negative cycle application</h3>
 <p><em>arbitrage detection</em> <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image018.png"> <br>
 建模: 
@@ -479,7 +487,7 @@ graph of currencies, edge weight = exchange weight (complete graph). <br>
             ⇒ take minus log, then try to find a negative cycle.  <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image020.png"> <br>
 NB!!   </br></img></br></br></br></br></br></img></br></p>
-<h1>Summery</h1>
+<h1 id="summery_1">Summery</h1>
 <p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image015.png"> <br>
 <img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image021.png"> </img></br></img></p>
             </div>
@@ -838,7 +846,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -908,6 +916,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 2-2 Shortest Paths">[Algorithms II] Week 2-2 Shortest Paths</a><ul><li><a class="toc-href" href="#1-shortest-paths-apis" title="1. Shortest Paths APIs">1. Shortest Paths APIs</a><ul><li><a class="toc-href" href="#shortest-path-variants" title="shortest path variants">shortest path variants</a></li><li><a class="toc-href" href="#apis" title="APIs">APIs</a></li></ul></li><li><a class="toc-href" href="#2-shortest-path-properties_1" title="2. Shortest path properties">2. Shortest path properties</a><ul><li><a class="toc-href" href="#edge-relaxation" title="Edge relaxation">Edge relaxation</a></li><li><a class="toc-href" href="#optimality-conditions" title="optimality conditions">optimality conditions</a></li><li><a class="toc-href" href="#generic-algo" title="Generic algo">Generic algo</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#3-dijkstras-algorithm_1" s="" title="3. Dijkstra">3. Dijkstra's Algorithm</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#4-edge-weighted-dags_1" title="4. Edge-Weighted DAGs">4. Edge-Weighted DAGs</a><ul><li><a class="toc-href" href="#correctness" title="correctness">correctness</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#application" title="application">application</a></li></ul></li><li><a class="toc-href" href="#5-negative-weights_1" title="5. Negative Weights">5. Negative Weights</a><ul><li><a class="toc-href" href="#bellman-ford" title="Bellman-Ford">Bellman-Ford</a></li><li><a class="toc-href" href="#improvement" title="improvement">improvement</a></li><li><a class="toc-href" href="#finding-negative-cycle" title="Finding negative cycle">Finding negative cycle</a></li><li><a class="toc-href" href="#negative-cycle-application" title="negative cycle application">negative cycle application</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

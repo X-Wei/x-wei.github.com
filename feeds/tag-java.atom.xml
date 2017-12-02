@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog - java</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-java.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2016-05-21T00:00:00+02:00</updated><entry><title>在java程序里使用weka进行机器学习</title><link href="http://x-wei.github.io/java-use-weka.html" rel="alternate"></link><published>2016-05-21T00:00:00+02:00</published><updated>2016-05-21T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-05-21:/java-use-weka.html</id><summary type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   &lt;/p&gt;
-&lt;h1&gt;1. Include jars into project&lt;/h1&gt;
+&lt;h1 id="1-include-jars-into-project"&gt;1. Include jars into project&lt;/h1&gt;
 &lt;p&gt;weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...).   &lt;/p&gt;
 &lt;p&gt;weka的文档在解压缩的文件里有, 另外在线文档在: &lt;a href="http://weka.sourceforge.net/doc.stable-3-8/"&gt;http://weka.sourceforge.net/doc.stable-3-8/&lt;/a&gt; &lt;/p&gt;
-&lt;h3&gt;about libsvm...&lt;/h3&gt;
+&lt;h3 id="about-libsvm"&gt;about libsvm...&lt;/h3&gt;
 &lt;p&gt;关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image002.png"&gt;&lt;br&gt;
 在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, &lt;code&gt;wekafiles/packages/LibSVM/&lt;/code&gt;目录下就是libsvm的内容.   &lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;需要指出的一点是, 要使用libsvm的话, &lt;a href="http://stackoverflow.com/questions/30821926/solved-weka-api-libsvm-classpath-not-found"&gt;需要同时引用两个jar文件&lt;/a&gt;, 而且都叫libsvm.jar …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   &lt;/p&gt;
-&lt;h1&gt;1. Include jars into project&lt;/h1&gt;
+&lt;h1 id="1-include-jars-into-project"&gt;1. Include jars into project&lt;/h1&gt;
 &lt;p&gt;weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...).   &lt;/p&gt;
 &lt;p&gt;weka的文档在解压缩的文件里有, 另外在线文档在: &lt;a href="http://weka.sourceforge.net/doc.stable-3-8/"&gt;http://weka.sourceforge.net/doc.stable-3-8/&lt;/a&gt; &lt;/p&gt;
-&lt;h3&gt;about libsvm...&lt;/h3&gt;
+&lt;h3 id="about-libsvm"&gt;about libsvm...&lt;/h3&gt;
 &lt;p&gt;关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image002.png"&gt;&lt;br&gt;
 在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, &lt;code&gt;wekafiles/packages/LibSVM/&lt;/code&gt;目录下就是libsvm的内容.   &lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;需要指出的一点是, 要使用libsvm的话, &lt;a href="http://stackoverflow.com/questions/30821926/solved-weka-api-libsvm-classpath-not-found"&gt;需要同时引用两个jar文件&lt;/a&gt;, 而且都叫libsvm.jar!!   &lt;/p&gt;
 &lt;p&gt;这两个jar, 一个叫&lt;code&gt;LibSVM.jar&lt;/code&gt;, 在&lt;code&gt;wekafiles/packages/LibSVM/&lt;/code&gt;下, 另一个叫&lt;code&gt;libsvm.jar&lt;/code&gt;, 在&lt;code&gt;wekafiles/packages/LibSVM/lib/&lt;/code&gt;下...orz  &lt;/p&gt;
 &lt;p&gt;如果只include第一个jar的话, 就会报错: "java.lang.Exception: libsvm classes not in CLASSPATH! ".   &lt;/p&gt;
-&lt;h1&gt;2. terminology&lt;/h1&gt;
+&lt;h1 id="2-terminology_1"&gt;2. terminology&lt;/h1&gt;
 &lt;p&gt;首先统一一下各种东西的叫法...  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Instances&lt;/code&gt;: 就是dataset, 比如training set或者test set, Instances实际上就是一个Instance的集合  &lt;/li&gt;
@@ -29,9 +29,9 @@
 &lt;li&gt;&lt;code&gt;Classifier&lt;/code&gt;: weka里的Classifer其实是也包含了regressor或者cluster... 后面都称之为model  &lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Evaluation&lt;/code&gt;: 给定一个model和一个dataset, 给出evaluation的数据, 类似GUI界面给出的那些内容  &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;3. 在程序里构建数据&lt;/h1&gt;
+&lt;h1 id="3-zai-cheng-xu-li-gou-jian-shu-ju"&gt;3. 在程序里构建数据&lt;/h1&gt;
 &lt;p&gt;这也是为什么要在java里用weka的原因: 如果数据可以直接以csv或者arff文件的方式得到, 那么直接在GUI界面下就可以搞了...  &lt;/p&gt;
-&lt;h3&gt;新建Attribute&lt;/h3&gt;
+&lt;h3 id="xin-jian-attribute"&gt;新建Attribute&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html&lt;/a&gt; &lt;br&gt;
 新建numeric的attribue只要简单的在构造函数里传入一个attribute的名字即可:   &lt;/br&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;// Create numeric attributes "length" and "weight"   &lt;/span&gt;
@@ -47,7 +47,7 @@
 &lt;span class="code-line"&gt;// Create nominal attribute "position"   &lt;/span&gt;
 &lt;span class="code-line"&gt;Attribute position = new Attribute("position", my_nominal_values);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;新建Instances(dataset)&lt;/h3&gt;
+&lt;h3 id="xin-jian-instancesdataset"&gt;新建Instances(dataset)&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html&lt;/a&gt;&lt;br&gt;
 &lt;code&gt;Instances&lt;/code&gt;实际上就是一个&lt;code&gt;Instance&lt;/code&gt;的集合, Instances可以类比为pandas里面的DataFrame, 然后每个instance相当于一行. 另外&lt;code&gt;Instances&lt;/code&gt;比&lt;code&gt;Instance&lt;/code&gt;多的就是Attribute信息(类比为pandas里DataFrame的表头head).   &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Instances&lt;/code&gt;的构造函数有两种, 一种是直接在arff文件里读取, 这个后面再说. 另一种构造函数是在java函数里构建Instance时用的, 它构造一个空的Instance集合, 构造函数提供dataset的名字, attribute的集合(arraylist)以及初始的capacity:   &lt;/p&gt;
@@ -62,7 +62,7 @@
 &lt;p&gt;(上面代码里的&lt;code&gt;length&lt;/code&gt;, &lt;code&gt;weight&lt;/code&gt; 和&lt;code&gt;position&lt;/code&gt;都是前面声明的Attribute对象)  &lt;/p&gt;
 &lt;p&gt;Instances还可以指定哪一列对应的是class label (单个Instance则不能 — 因为单个Instance并没有表头信息attInfo):   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;void setClassIndex(int classIndex)&lt;/code&gt; &lt;/p&gt;
-&lt;h3&gt;新建Instance&lt;/h3&gt;
+&lt;h3 id="xin-jian-instance"&gt;新建Instance&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html&lt;/a&gt;&lt;br&gt;
 &lt;code&gt;Instance&lt;/code&gt;是一个接口而不是一个类, 一半常用的是&lt;code&gt;DenseInstance&lt;/code&gt;类(它又继承自&lt;code&gt;AbstractInstance&lt;/code&gt;抽象类)   &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;这里有一个坑: 一定要指定Instance所属的DataSet(既它属于哪一个Instances对象)再使用setValue函数, 否则在调用setValue的时候可能会有问题!!!   &lt;/p&gt;
@@ -76,7 +76,7 @@
 &lt;span class="code-line"&gt;inst.setValue(weight, 300);   &lt;/span&gt;
 &lt;span class="code-line"&gt;inst.setValue(position, "first");&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;4. 在程序里训练model&lt;/h1&gt;
+&lt;h1 id="4-zai-cheng-xu-li-xun-lian-model_1"&gt;4. 在程序里训练model&lt;/h1&gt;
 &lt;p&gt;这里只做classification的例子好了. &lt;br&gt;
 &lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html&lt;/a&gt; &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;Classifier是一个Interface, 可以在文档里看到有很多类都实现了这个interface, 主要是三个常用的函数:   &lt;/p&gt;
@@ -86,7 +86,7 @@
 &lt;li&gt;&lt;code&gt;double[] distributionForInstance(Instance instance)&lt;/code&gt; :对于每一个可能的类, 给一个probability, 返回一个double数组  &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;所以程序里训练model只需要调用&lt;code&gt;buildClassifier()&lt;/code&gt;函数即可.   &lt;/p&gt;
-&lt;h1&gt;5. 从文件读入数据和model&lt;/h1&gt;
+&lt;h1 id="5-cong-wen-jian-du-ru-shu-ju-he-model"&gt;5. 从文件读入数据和model&lt;/h1&gt;
 &lt;p&gt;之前讲的是在程序里得到数据, 在程序里储存结果的方法, 而如果可以保存数据到文件的话, 在GUI界面下调试模型应该更加放方便.   &lt;/p&gt;
 &lt;p&gt;预先已经得到了数据的话, 可以先把数据保存问arff格式, 然后用GUI的weka训练和调试参数. 当得到满意的结果以后可以在GUI界面里选择保存训练好的模型(一个.model文件): &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image001.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
@@ -95,7 +95,7 @@
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;Classifier clf = (Classifier) weka.core.SerializationHelper.read("/some/where/j48.model");  &lt;/span&gt;
 &lt;span class="code-line"&gt;Instances testset = new Instances(new BufferedReader(new FileReader("/some/where/test.arff")));``&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;6. 输出Evaluation统计&lt;/h1&gt;
+&lt;h1 id="6-shu-chu-evaluationtong-ji"&gt;6. 输出Evaluation统计&lt;/h1&gt;
 &lt;p&gt;当得到了训练好的模型&lt;code&gt;clf&lt;/code&gt;以及要使用的测试数据&lt;code&gt;testset&lt;/code&gt;以后, 可以在testset上测试模型, 并输出结果的统计数据. 这些是靠&lt;code&gt;Evaluation&lt;/code&gt;类完成的.&lt;br&gt;
 &lt;a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html"&gt;http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html&lt;/a&gt;&lt;br&gt;
 Evaluation的构造函数里提供的Instances应该为training set, 这个训练集的作用是"to get some header information and prior class distribution information", 如果构造时给的是testing set的话, 应该调用&lt;code&gt;useNoPriors()&lt;/code&gt;函数一下.   &lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
@@ -110,7 +110,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;span class="code-line"&gt;System.out.println(evaluation.toSummaryString());  &lt;/span&gt;
 &lt;span class="code-line"&gt;System.out.println(evaluation.toMatrixString());&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;7. 输出预测结果&lt;/h1&gt;
+&lt;h1 id="7-shu-chu-yu-ce-jie-guo"&gt;7. 输出预测结果&lt;/h1&gt;
 &lt;p&gt;对于每一个Instance, 只需要调用Classifier的&lt;code&gt;classifyInstance(Instance instance)&lt;/code&gt;或者&lt;code&gt;distributionForInstance(Instance instance)&lt;/code&gt;函数, 即可得到预测结果...   &lt;/p&gt;
 &lt;p&gt;Voila, 大概就是这样, weka这个工具还是蛮好用的(只要能忍受它界面的丑), 而且也算没有太多的坑...   &lt;/p&gt;</content><category term="ml"></category><category term="weka"></category><category term="java"></category></entry><entry><title>使用Eclipse的UML插件生成类图</title><link href="http://x-wei.github.io/%E4%BD%BF%E7%94%A8Eclipse%E7%9A%84UML%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90%E7%B1%BB%E5%9B%BE.html" rel="alternate"></link><published>2014-05-31T00:00:00+02:00</published><updated>2014-05-31T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2014-05-31:/使用Eclipse的UML插件生成类图.html</id><summary type="html">&lt;p&gt;Created samedi 31 mai 2014UML就是可以把程序的结构用图的形式表达出来的东西(好像叫类图), 虽然写程序的时候不大会用到这种东西来搞, 但是写报告的时候如果能够加上一张图的话, 就可以少费些口舌来解释代码了, 而且还有一种高大上的赶脚... 所以写完程序写报告的时候可以用一下. &lt;/p&gt;
 &lt;p&gt;废话不多说, 看看我最后生成的UML图:&lt;/p&gt;
@@ -140,7 +140,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;/ul&gt;
 &lt;p&gt;另外还在网上找到了&lt;a href="http://www.modelgoon.org/"&gt;model goon&lt;/a&gt;, 不过它生成的类图貌似没有把所有信息都标上, 而且不太好看...&lt;/p&gt;</content><category term="java"></category><category term="eclipse"></category></entry><entry><title>linux下安装并使用java开发opencv的配置</title><link href="http://x-wei.github.io/linux%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E4%BD%BF%E7%94%A8java%E5%BC%80%E5%8F%91opencv%E7%9A%84%E9%85%8D%E7%BD%AE.html" rel="alternate"></link><published>2014-02-10T00:00:00+01:00</published><updated>2014-02-10T00:00:00+01:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2014-02-10:/linux下安装并使用java开发opencv的配置.html</id><summary type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... &lt;/p&gt;
-&lt;h2&gt;linux编译安装opencv&lt;/h2&gt;
+&lt;h2 id="linuxbian-yi-an-zhuang-opencv"&gt;linux编译安装opencv&lt;/h2&gt;
 &lt;p&gt;首先, linux下安装opencv其实不麻烦的, 参考文档即可完成:
 &lt;a href="http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html"&gt;http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;大致有以下几个步骤:&lt;/p&gt;
@@ -156,7 +156,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;p&gt;4) 在终端里输入: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;cmake -D CMAKE_BUILD_TYPE=RELEASE -D …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;今天花了四个小时, 终于在linux下把eclipse下java开发opencv给搞定了... 至于为什么花这么久的时间... 且听我慢慢讲... &lt;/p&gt;
-&lt;h2&gt;linux编译安装opencv&lt;/h2&gt;
+&lt;h2 id="linuxbian-yi-an-zhuang-opencv"&gt;linux编译安装opencv&lt;/h2&gt;
 &lt;p&gt;首先, linux下安装opencv其实不麻烦的, 参考文档即可完成:
 &lt;a href="http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html"&gt;http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;大致有以下几个步骤:&lt;/p&gt;
@@ -177,7 +177,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;p&gt;make命令会花费几十分钟时间...
 然后&lt;strong&gt;理论上&lt;/strong&gt;就结束了... 如果不用java开发的话 就OK了 比如 可以运行sample文件夹下的python代码...&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;但是&lt;/strong&gt;, 如果要使用java开发的话 需要接着这样做.....&lt;/p&gt;
-&lt;h2&gt;安装opencv-java&lt;/h2&gt;
+&lt;h2 id="an-zhuang-opencv-java"&gt;安装opencv-java&lt;/h2&gt;
 &lt;p&gt;这一步非常DT, 因为官网上还有一个文档, 专门讲怎么用java开发的...
 &lt;a href="http://docs.opencv.org/doc/tutorials/introduction/desktop_java/java_dev_intro.html"&gt;http://docs.opencv.org/doc/tutorials/introduction/desktop_java/java_dev_intro.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;1) 首先, 需要安装ant: &lt;/p&gt;
@@ -200,22 +200,22 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;span class="code-line"&gt;sudo make install&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样就可以成功make了...&lt;/p&gt;
-&lt;h2&gt;如何判断是否安装成功?&lt;/h2&gt;
+&lt;h2 id="ru-he-pan-duan-shi-fou-an-zhuang-cheng-gong"&gt;如何判断是否安装成功?&lt;/h2&gt;
 &lt;p&gt;以上操作结束后, 看看build文件夹, bin目录下是不是有一个&lt;code&gt;opencv-248.jar&lt;/code&gt;文件:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/./linux下安装并使用java开发opencv的配置/pasted_image001.png"/&gt;&lt;/p&gt;
 &lt;p&gt;如果有的话 就说明成功安装了opencv的java组件... &lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;!!注意!!&lt;/strong&gt;
 &lt;strong&gt;不能用windows下opencv安装目录下的那个opencv-248.jar&lt;/strong&gt;!! 
 刚才生成那个jar和windows下的jar不一样的!! (我查了MD5码... 其实看文件大小也能看出来!!)&lt;/p&gt;
-&lt;h2&gt;Eclipse下的配置&lt;/h2&gt;
+&lt;h2 id="eclipsexia-de-pei-zhi"&gt;Eclipse下的配置&lt;/h2&gt;
 &lt;p&gt;这里有一篇非常好的帖子, 写的非常到位, 我就不重复了, 链接:&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/"&gt;http://exintopro.net/blog/2013/10/02/setting-up-eclipse-for-using-opencv-java-in-ubuntu/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;这个帖子虽然很好, 但是没有介绍编译的那一部分, 由于安装java组件时的编译过程和官网给的不一样, 所以才导致我废了半天的时间啊!......&lt;/p&gt;</content><category term="eclipse"></category><category term="java"></category><category term="opencv"></category></entry><entry><title>java线程小结</title><link href="http://x-wei.github.io/java%E7%BA%BF%E7%A8%8B%E5%B0%8F%E7%BB%93.html" rel="alternate"></link><published>2013-11-29T00:00:00+01:00</published><updated>2013-11-29T00:00:00+01:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2013-11-29:/java线程小结.html</id><summary type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. &lt;/p&gt;
-&lt;h2&gt;创建进程&lt;/h2&gt;
+&lt;h2 id="chuang-jian-jin-cheng"&gt;创建进程&lt;/h2&gt;
 &lt;p&gt;为了实现多线程, 需要定义一个新的class, 有两种方法: 
 &lt;strong&gt;或者继承自&lt;/strong&gt;&lt;code&gt;Thread&lt;/code&gt;&lt;strong&gt;类, 或者实现&lt;/strong&gt;&lt;code&gt;Runnable&lt;/code&gt;&lt;strong&gt;接口&lt;/strong&gt;(关键是重载run()方法). &lt;/p&gt;
-&lt;h3&gt;继承自Thread类&lt;/h3&gt;
+&lt;h3 id="ji-cheng-zi-threadlei"&gt;继承自Thread类&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;写法1: 定义一个继承自Thread的内部类--&lt;/p&gt;
@@ -237,10 +237,10 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;private Thread [实例名] = new Thread () {&lt;/span&gt;
 &lt;span class="code-line"&gt;    public void run …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC] &lt;/p&gt;
 &lt;p&gt;INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. &lt;/p&gt;
-&lt;h2&gt;创建进程&lt;/h2&gt;
+&lt;h2 id="chuang-jian-jin-cheng"&gt;创建进程&lt;/h2&gt;
 &lt;p&gt;为了实现多线程, 需要定义一个新的class, 有两种方法: 
 &lt;strong&gt;或者继承自&lt;/strong&gt;&lt;code&gt;Thread&lt;/code&gt;&lt;strong&gt;类, 或者实现&lt;/strong&gt;&lt;code&gt;Runnable&lt;/code&gt;&lt;strong&gt;接口&lt;/strong&gt;(关键是重载run()方法). &lt;/p&gt;
-&lt;h3&gt;继承自Thread类&lt;/h3&gt;
+&lt;h3 id="ji-cheng-zi-threadlei"&gt;继承自Thread类&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;写法1: 定义一个继承自Thread的内部类--&lt;/p&gt;
@@ -270,7 +270,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;p&gt;然后让进程开始, 就是: 
 &lt;code&gt;t.start();&lt;/code&gt;
 如果用&lt;code&gt;t.run()&lt;/code&gt;的话, 则依然是并行执行的, 可能达不到多线程效果...&lt;/p&gt;
-&lt;h3&gt;实现Runnable接口&lt;/h3&gt;
+&lt;h3 id="shi-xian-runnablejie-kou"&gt;实现Runnable接口&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;方法1, 代码: &lt;/p&gt;
@@ -297,7 +297,7 @@ Evaluation的构造函数里提供的Instances应该为training set, 这个训�
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;android上需要注意的一点&lt;/h2&gt;
+&lt;h2 id="androidshang-xu-yao-zhu-yi-de-yi-dian_1"&gt;android上需要注意的一点&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;blockquote&gt;
 &lt;p&gt;"Android modifies the user interface and handles input events from &lt;strong&gt;one single&lt;/strong&gt; user interface thread. This thread is also called &lt;strong&gt;the main thread&lt;/strong&gt;."&lt;/p&gt;
@@ -329,7 +329,7 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 &lt;p&gt;如果在Activity类的声明里声明handler为一个属性: 
 &lt;code&gt;private Handler handler = new Handler();&lt;/code&gt;
 这个构造函数没有参数, 根据文档, "Default constructor associates this handler with the Looper for the current thread." 所以这个handler关联到了current thread, 也就是main Thread.....&lt;/p&gt;
-&lt;h2&gt;例子&lt;/h2&gt;
+&lt;h2 id="li-zi"&gt;例子&lt;/h2&gt;
 &lt;p&gt;所以, 多线程计算, 计算结束后修改屏幕显示的话, 需要以下__三个步骤__(比上面的俩步骤多了一个, 不知道是否还可以简化): &lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;在主线程里声明handler, (声明成Activity的一个属性): &lt;/li&gt;
@@ -375,7 +375,7 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 &lt;span class="code-line"&gt;        }   &lt;/span&gt;
 &lt;span class="code-line"&gt;    }&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Process, Thread和Runnable的区别?&lt;/h2&gt;
+&lt;h2 id="process-threadhe-runnablede-qu-bie"&gt;Process, Thread和Runnable的区别?&lt;/h2&gt;
 &lt;p&gt;线程(Thread)是指进程(Process)中的一个执行流程，一个进程中可以运行多个线程。比如java.exe进程中可以运行很多线程。线程总是属于某个进程，进程中的多个线程共享进程的内存。&lt;/p&gt;
 &lt;p&gt;参考链接: 
 &lt;a href="http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html"&gt;http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html&lt;/a&gt;

@@ -202,9 +202,17 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-1 Tries">[Algorithms II] Week 4-1 Tries</a><ul><li><a class="toc-href" href="#1-r-way-tries" title="1. R-way Tries">1. R-way Tries</a><ul><li><a class="toc-href" href="#string-symbol-table-api" title="String Symbol Table API">String Symbol Table API</a></li><li><a class="toc-href" href="#r-way-tries" title="R-way tries">R-way tries</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#2-ternary-search-tries_1" title="2. Ternary Search Tries">2. Ternary Search Tries</a><ul><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#hybrid-of-tst-and-rway-trie" title="Hybrid of TST and Rway trie">Hybrid of TST and Rway trie</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#hashing-vs-tst" title="Hashing vs. TST">Hashing vs. TST</a></li></ul></li><li><a class="toc-href" href="#3-character-based-operations_1" title="3. Character-Based Operations">3. Character-Based Operations</a><ul><li><a class="toc-href" href="#api" title="API">API</a></li><li><a class="toc-href" href="#keys-ordered-iteration" title="keys(): ordered iteration">keys(): ordered iteration</a></li><li><a class="toc-href" href="#prefix-match" title="prefix match">prefix match</a></li><li><a class="toc-href" href="#longest-prefix" title="longest prefix">longest prefix</a><ul><li><a class="toc-href" href="#application-t9-texting" title="application: T9 texting">application: T9 texting</a></li></ul></li><li><a class="toc-href" href="#other-variants_1" title="Other Variants">Other Variants</a><ul><li><a class="toc-href" href="#patricia-trie" title="Patricia trie">Patricia trie</a></li><li><a class="toc-href" href="#suffix-tree" title="suffix tree">suffix tree</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC] </p>
 <p>More efficient version of symbol-table where the keys are strings.   </p>
-<h1>1. R-way Tries</h1>
+<h1 id="1-r-way-tries">1. R-way Tries</h1>
 <p>Two implementations of symbol tables that we've seen: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image.png"><br>
 when keys are strings:<br>
@@ -212,14 +220,14 @@ when keys are strings:<br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image001.png"> </img></br></br></br></img></br></p>
 <p>for string keys ⇒ do better by avoiding examing the entire key.  </p>
 <p>goal: faster than hashtable, more flexible than BST !  </p>
-<h2>String Symbol Table API</h2>
+<h2 id="string-symbol-table-api">String Symbol Table API</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class StringST&lt;V&gt;{// implements ST&lt;String, V&gt;  </span>
 <span class="code-line">    public void put(String key, V val);  </span>
 <span class="code-line">    public V get(String key);  </span>
 <span class="code-line">    public void delete(String key);  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>R-way tries</h2>
+<h2 id="r-way-tries">R-way tries</h2>
 <p>A trie is a tree where:   </p>
 <ul>
 <li>except the root, each node store <em>characters</em> (instead of string keys) — in fact the chars are stored in <em>links</em> </li>
@@ -239,7 +247,7 @@ when keys are strings:<br>
 <p>follow the links as the chars indicate in the key<br>
 → if meet null links: create new node<br>
 → when reach last char in key: set the value of the node  </br></br></p>
-<h2>Java implementation</h2>
+<h2 id="java-implementation">Java implementation</h2>
 <p>trie node class:<br>
 in each node use an array of size R to store links...  </br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>private static class Node{  </span>
@@ -295,7 +303,7 @@ in each node use an array of size R to store links...  </br></p>
 <li>if a node has 0 links(leaf)  and val==null: delete it and recursivly go up.   </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image003.png"> </img></p>
-<h2>analysis</h2>
+<h2 id="analysis">analysis</h2>
 <p><strong>time:</strong><br>
 search hit —  L nodes examined. <br>
 serach miss —  sublinear in L<br>
@@ -304,7 +312,7 @@ each node has R links (possibly null) — <em>too much memory for large R</em> !
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image004.png"><br>
 <strong>Application</strong><br>
 interview question: data structure for spell checking.   </br></br></img></br></br></br></br></br></p>
-<h1>2. Ternary Search Tries</h1>
+<h1 id="2-ternary-search-tries_1">2. Ternary Search Tries</h1>
 <p>Solution to the memory issue of R-way tries —  much fewer null links. ternery=tuple of 3...<br>
 TST:  </br></p>
 <ul>
@@ -319,7 +327,7 @@ TST:  </br></p>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image005.png"><br>
 类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   </br></img></p>
 <p><strong>searching</strong> in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  </p>
-<h2>Implementation</h2>
+<h2 id="implementation">Implementation</h2>
 <p>Node class:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>private class Node{  </span>
 <span class="code-line">    private Value val;  </span>
@@ -363,17 +371,17 @@ TST:  </br></p>
 <span class="code-line">    }  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>Hybrid of TST and Rway trie</h2>
+<h2 id="hybrid-of-tst-and-rway-trie">Hybrid of TST and Rway trie</h2>
 <ul>
 <li>at root: do <em>R^2 branching</em> </li>
 <li>other nodes are TSTs   </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image007.png"> </img></p>
-<h2>analysis</h2>
+<h2 id="analysis_1">analysis</h2>
 <p>space cost: linear in N.<br>
 time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)<br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image008.png"> </img></br></br></p>
-<h2>Hashing vs. TST</h2>
+<h2 id="hashing-vs-tst">Hashing vs. TST</h2>
 <p>Hashing:   </p>
 <ul>
 <li>need to check entire key no matter hit or miss  </li>
@@ -385,14 +393,14 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <li>examines just enough chars  </li>
 <li>support ordered operations  </li>
 </ul>
-<h1>3. Character-Based Operations</h1>
+<h1 id="3-character-based-operations_1">3. Character-Based Operations</h1>
 <p>some very useful char-based operations:   </p>
 <ul>
 <li><strong>prefix match</strong> </li>
 <li><strong>wildcard match</strong>: use a dot to represent any char  </li>
 <li><strong>longest prefix</strong>: find the key that is the longest prefix of a string  </li>
 </ul>
-<h2>API</h2>
+<h2 id="api">API</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class TrieST&lt;Value&gt;{  </span>
 <span class="code-line">    // functions decalred before..  </span>
 <span class="code-line">    Iterable&lt;String&gt; keys;  </span>
@@ -401,7 +409,7 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <span class="code-line">    Iterable&lt;String&gt; longestPrefixOf(String s);</span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>keys(): ordered iteration</h2>
+<h2 id="keys-ordered-iteration">keys(): ordered iteration</h2>
 <p><code>keys()</code>: just an inorder-traversal of the <em>Rway trie</em> →dfs, + maintain the chars in the path (root to current node). <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image009.png"> </img></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>public Iterable&lt;String&gt; keys(){  </span>
@@ -417,7 +425,7 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <span class="code-line">        collect(x.next[c], pathstr+c, q);  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>prefix match</h2>
+<h2 id="prefix-match">prefix match</h2>
 <p>very useful: ex. autocomplete, search bar, ...<br>
 implementation⇒ just find the end of that prefix, then call <code>keys()</code> on the <em>subtrie</em>.<br>
 之前写的俩helper function这里发挥作用了:   </br></br></p>
@@ -428,7 +436,7 @@ implementation⇒ just find the end of that prefix, then call <code>keys()</code
 <span class="code-line">    return q;  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>longest prefix</h2>
+<h2 id="longest-prefix">longest prefix</h2>
 <p>⇒ just do a search and keep track of the longest key that we encounterd.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public String longestPrefixOf(String s){  </span>
 <span class="code-line">    int len = search(root, s, 0, 0);  </span>
@@ -442,23 +450,23 @@ implementation⇒ just find the end of that prefix, then call <code>keys()</code
 <span class="code-line">    return search(x.next[c], s, d+1, len);  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>application: T9 texting</h3>
+<h3 id="application-t9-texting">application: T9 texting</h3>
 <p>classique... G面试以及X的TP里都有涉及过...   </p>
 <ul>
 <li>first: generate all string combinations  </li>
 <li>second: call get() on the trie of dictionaries.  </li>
 </ul>
-<h2>Other Variants</h2>
-<h3>Patricia trie</h3>
+<h2 id="other-variants_1">Other Variants</h2>
+<h3 id="patricia-trie">Patricia trie</h3>
 <p>improvement: remove the one-eay branching (put &gt;1 chars in a node).<br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image010.png"> </img></br></p>
-<h3>suffix tree</h3>
+<h3 id="suffix-tree">suffix tree</h3>
 <ul>
 <li>patricia tree of the suffix  </li>
 <li>linear time construction  </li>
 <li>ongest repeated substring, longest common substring, longest palindromic substring, substring search, tandem repeats... 好有用!!...   </li>
 </ul>
-<h2>Summery</h2>
+<h2 id="summery_1">Summery</h2>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image011.png"> </img></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -816,7 +824,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -886,6 +894,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-1 Tries">[Algorithms II] Week 4-1 Tries</a><ul><li><a class="toc-href" href="#1-r-way-tries" title="1. R-way Tries">1. R-way Tries</a><ul><li><a class="toc-href" href="#string-symbol-table-api" title="String Symbol Table API">String Symbol Table API</a></li><li><a class="toc-href" href="#r-way-tries" title="R-way tries">R-way tries</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#2-ternary-search-tries_1" title="2. Ternary Search Tries">2. Ternary Search Tries</a><ul><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#hybrid-of-tst-and-rway-trie" title="Hybrid of TST and Rway trie">Hybrid of TST and Rway trie</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#hashing-vs-tst" title="Hashing vs. TST">Hashing vs. TST</a></li></ul></li><li><a class="toc-href" href="#3-character-based-operations_1" title="3. Character-Based Operations">3. Character-Based Operations</a><ul><li><a class="toc-href" href="#api" title="API">API</a></li><li><a class="toc-href" href="#keys-ordered-iteration" title="keys(): ordered iteration">keys(): ordered iteration</a></li><li><a class="toc-href" href="#prefix-match" title="prefix match">prefix match</a></li><li><a class="toc-href" href="#longest-prefix" title="longest prefix">longest prefix</a><ul><li><a class="toc-href" href="#application-t9-texting" title="application: T9 texting">application: T9 texting</a></li></ul></li><li><a class="toc-href" href="#other-variants_1" title="Other Variants">Other Variants</a><ul><li><a class="toc-href" href="#patricia-trie" title="Patricia trie">Patricia trie</a></li><li><a class="toc-href" href="#suffix-tree" title="suffix tree">suffix tree</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

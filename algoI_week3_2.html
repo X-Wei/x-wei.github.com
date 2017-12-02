@@ -202,9 +202,17 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 3-2 Quicksort">[Algorithms I] Week 3-2 Quicksort</a><ul><li><a class="toc-href" href="#1-quicksort" title="1. Quicksort">1. Quicksort</a><ul><li><a class="toc-href" href="#implemetation" title="Implemetation">Implemetation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#compares-nlgn_1" title="compares = NlgN">compares = NlgN</a></li><li><a class="toc-href" href="#compares-12n2" title="compares = 1/2*N^2">compares = 1/2*N^2</a><ul><li><a class="toc-href" href="#practical-improvements" title="Practical improvements">Practical improvements</a></li></ul></li><li><a class="toc-href" href="#2-selection_1" title="2. Selection">2. Selection</a><ul><li><a class="toc-href" href="#quick-select" title="Quick select">Quick select</a></li><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#3-duplicate-keys_1" title="3. Duplicate keys">3. Duplicate keys</a><ul><li><a class="toc-href" href="#3-way-partitionning" title="3-way partitionning">3-way partitionning</a></li><li><a class="toc-href" href="#implementation-3-way-quick-sort" title="Implementation: 3-way quick sort">Implementation: 3-way quick sort</a></li></ul></li><li><a class="toc-href" href="#4-system-sorts_1" title="4. System Sorts">4. System Sorts</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
 <p>(maybe best algorithm for sorting.)   </p>
-<h1>1. Quicksort</h1>
+<h1 id="1-quicksort">1. Quicksort</h1>
 <p><strong>Idea:</strong> </p>
 <ol>
 <li>shuffle the array     </li>
@@ -216,7 +224,7 @@ no smaller entry to the right of pivot     </br></p>
 <li>sort each subarray recursively     </li>
 </ol>
 <p><img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image.png"> </img></p>
-<h2>Implemetation</h2>
+<h2 id="implemetation">Implemetation</h2>
 <p><strong>The partition process:</strong> <br>
 这个方法也比较巧妙.  <br>
 Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :    <br>
@@ -260,13 +268,13 @@ Use 2 pointers i and j (个人觉得用hi, lo, pivot更好...) :    <br>
 <span class="code-line">}</span>
 </pre></div>
 <p>The randomness is preserved: the subarrays after partitionning is still randomly ordered.      </p>
-<h2>Analysis</h2>
+<h2 id="analysis">Analysis</h2>
 <p>Performance: ~40% faster than mergesort.      </p>
 <p><strong>Best case</strong> </p>
-<h1>compares = NlgN</h1>
+<h1 id="compares-nlgn_1">compares = NlgN</h1>
 <p>(each partition will divide the array in half)     </p>
 <p><strong>Worst case  </strong> </p>
-<h1>compares = 1/2*N^2</h1>
+<h1 id="compares-12n2">compares = 1/2*N^2</h1>
 <p>N+(N-1)+...+1 <br>
 if the array is already in order, <em>each partition will have one subarray of length=0</em> </br></p>
 <p><strong>Average case  </strong> </p>
@@ -293,7 +301,7 @@ implementations will get <em>quadratic</em> performance if array:    </br></p>
 Quicksort is <strong>NOT</strong> stable.   <br>
 partitionning can make long range exchanges   <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image007.png"> </img></br></br></br></p>
-<h2>Practical improvements</h2>
+<h2 id="practical-improvements">Practical improvements</h2>
 <ul>
 <li>cutoff to insertion sort for &lt;10 items    </li>
 </ul>
@@ -304,14 +312,14 @@ Or we can leave the small subarrays unsorted and sort them at last using inserti
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image008.png"> <br>
  → 10% improvement     </br></img></p>
-<h1>2. Selection</h1>
+<h1 id="2-selection_1">2. Selection</h1>
 <p>Goal: <em>given un array, find the kth largest item.</em> </p>
 <ul>
 <li>Upper bound for this problem: NlgN (just sort the array)    </li>
 <li>for small k (ex k=1,2,3), the upper bound is N (one-pass/two-pass)     </li>
 <li>Lower bound is N: at least have to look at everything     </li>
 </ul>
-<h2>Quick select</h2>
+<h2 id="quick-select">Quick select</h2>
 <p>Algo proposed also by Hoare:      </p>
 <ol>
 <li>partition the array into two arrays left of pivot and right of pivot.      </li>
@@ -320,7 +328,7 @@ Or we can leave the small subarrays unsorted and sort them at last using inserti
 </ol>
 <p>类似于二分查找的过程....  <br>
 注意这里<strong>是不用递归的</strong>! 因为partition函数返回的直接就是pivot<em>在整个数组里的</em>位置!    </br></p>
-<h2>Implementation</h2>
+<h2 id="implementation">Implementation</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>privater static int partition(Comparable[] a, int lo, int hi){...}</span>
 <span class="code-line"></span>
 <span class="code-line">public static Comparable select(Comparable[] a, int k){   </span>
@@ -336,7 +344,7 @@ Or we can leave the small subarrays unsorted and sort them at last using inserti
 <span class="code-line">    return a[k];//这里不太理解为什么会在hi&lt;lo的时候直接返回a[k]   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>Analysis</h2>
+<h2 id="analysis_1">Analysis</h2>
 <p><strong>Proposition  </strong> <br>
 Quick selection takes <strong>linear</strong> time on average.   <br>
 *proof  * <br>
@@ -346,7 +354,7 @@ formal analysis 略...   </br></br></br></br></br></p>
 <p><strong>worst case</strong>: quadratic (but very rare to happen)   </p>
 <p><strong>Theoretical results</strong> <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image009.png"> </img></br></p>
-<h1>3. Duplicate keys</h1>
+<h1 id="3-duplicate-keys_1">3. Duplicate keys</h1>
 <p>if array contains many duplicate keys.    </p>
 <ul>
 <li>huge array     </li>
@@ -360,7 +368,7 @@ mistake: put all items equal to pivot *to just one side   * <br>
 → N^2 compares if all keys are equal from lo to hi.  <br>
 correct: put all items equal to pivot in their final place.    <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image010.png"> </img></br></br></br></br></br></p>
-<h2>3-way partitionning</h2>
+<h2 id="3-way-partitionning">3-way partitionning</h2>
 <p>(by Dijkstra)   <br>
 partition the array into 3 parts:     <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image011.png"> </img></br></br></p>
@@ -381,7 +389,7 @@ partition the array into 3 parts:     <br>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image012.png"> </img></p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image013.png"> </img></p>
-<h2>Implementation: 3-way quick sort</h2>
+<h2 id="implementation-3-way-quick-sort">Implementation: 3-way quick sort</h2>
 <p>不必再写partition函数, 直接在sort递归函数里面.     <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image014.png"> </img></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>private static void sort(Comparable[] a, int lo, int hi){   </span>
@@ -405,7 +413,7 @@ partition the array into 3 parts:     <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image016.png"> <br>
 And Sedgewick proved that the 3-wy partition is propotional to the lower bound....     <br>
 <img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image017.png"> </img></br></br></img></br></br></img></p>
-<h1>4. System Sorts</h1>
+<h1 id="4-system-sorts_1">4. System Sorts</h1>
 <p>Arrays.sort() in java:   </p>
 <p><code>import java.util.Arrays;</code> </p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week3_2/pasted_image018.png"> <br>
@@ -771,7 +779,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -841,6 +849,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 3-2 Quicksort">[Algorithms I] Week 3-2 Quicksort</a><ul><li><a class="toc-href" href="#1-quicksort" title="1. Quicksort">1. Quicksort</a><ul><li><a class="toc-href" href="#implemetation" title="Implemetation">Implemetation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#compares-nlgn_1" title="compares = NlgN">compares = NlgN</a></li><li><a class="toc-href" href="#compares-12n2" title="compares = 1/2*N^2">compares = 1/2*N^2</a><ul><li><a class="toc-href" href="#practical-improvements" title="Practical improvements">Practical improvements</a></li></ul></li><li><a class="toc-href" href="#2-selection_1" title="2. Selection">2. Selection</a><ul><li><a class="toc-href" href="#quick-select" title="Quick select">Quick select</a></li><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#3-duplicate-keys_1" title="3. Duplicate keys">3. Duplicate keys</a><ul><li><a class="toc-href" href="#3-way-partitionning" title="3-way partitionning">3-way partitionning</a></li><li><a class="toc-href" href="#implementation-3-way-quick-sort" title="Implementation: 3-way quick sort">Implementation: 3-way quick sort</a></li></ul></li><li><a class="toc-href" href="#4-system-sorts_1" title="4. System Sorts">4. System Sorts</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

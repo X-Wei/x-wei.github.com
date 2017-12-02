@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog - spark</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-spark.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2015-06-30T00:00:00+02:00</updated><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="http://x-wei.github.io/sparkmooc_notelab4.html" rel="alternate"></link><published>2015-06-30T00:00:00+02:00</published><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-30:/sparkmooc_notelab4.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h1&gt;Part 0: Preliminaries&lt;/h1&gt;
+&lt;h1 id="part-0-preliminaries"&gt;Part 0: Preliminaries&lt;/h1&gt;
 &lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as: &lt;br&gt;
 &lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;br&gt;
 Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as: &lt;br&gt;
 &lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;487650 ratings and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h1&gt;Part 0: Preliminaries&lt;/h1&gt;
+&lt;h1 id="part-0-preliminaries"&gt;Part 0: Preliminaries&lt;/h1&gt;
 &lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as: &lt;br&gt;
 &lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;br&gt;
 Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as: &lt;br&gt;
 &lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;487650 ratings and 3883 movies&lt;/p&gt;
 &lt;p&gt;⇒ Since the key is an integer and the value is a unicode string, we can use a function to combine them into a single unicode string (e.g., &lt;code&gt;unicode('%.3f' % key) + ' ' + value&lt;/code&gt;) before sorting the RDD using &lt;code&gt;sortBy()&lt;/code&gt;.&lt;/p&gt;
-&lt;h1&gt;Part 1: Basic Recommendations&lt;/h1&gt;
+&lt;h1 id="part-1-basic-recommendations"&gt;Part 1: Basic Recommendations&lt;/h1&gt;
 &lt;p&gt;naive method: &lt;em&gt;always recommend the movies with the highest average rating...&lt;/em&gt;
 ⇒ 20 movies with the highest average rating and more than 500 reviews&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;movieNameWithAvgRatingsRDD&lt;/em&gt;: &lt;code&gt;(avgRating, Title, nbRatings)&lt;/code&gt;&lt;/p&gt;
-&lt;h1&gt;Part 2: Collaborative Filtering&lt;/h1&gt;
+&lt;h1 id="part-2-collaborative-filtering"&gt;Part 2: Collaborative Filtering&lt;/h1&gt;
 &lt;p&gt;MLlib: &lt;a href="https://spark.apache.org/mllib/"&gt;https://spark.apache.org/mllib/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Collaborative filtering&lt;/em&gt; is a method of making automatic predictions (filtering) about the interests of a user by collecting preferences or taste information from many users (collaborating). The underlying assumption of the collaborative filtering approach is that if a person A has the same opinion as a person B on an issue, A is more likely to have B's opinion on a different issue x than to have the opinion on x of a person chosen randomly. &lt;/p&gt;
 &lt;p&gt;一图胜千言: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lab4/Collaborative_filtering.gif"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h3&gt;Matrix Factorization&lt;/h3&gt;
+&lt;h3 id="matrix-factorization"&gt;Matrix Factorization&lt;/h3&gt;
 &lt;p&gt;CF问题实际上是矩阵分解的问题: 
 We have a matrix whose entries are movie ratings by users (shown in red in the diagram below). Each column represents a user (shown in green) and each row represents a particular movie (shown in blue).&lt;/p&gt;
 &lt;p&gt;其中&lt;em&gt;rating矩阵&lt;/em&gt;(用户/电影矩阵)只有一些项的值存在(即用户打分的那些项), 所以要用分解后的两个矩阵之乘积来估计rating矩阵中的缺失项.&lt;/p&gt;
@@ -35,7 +35,7 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 (后面加上的那一项是正则项: 不希望f[i]的模过大)&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;不过前面的假设, "f[j]已知"这个条件其实并不成立 ⇒ &lt;strong&gt;Alternating Least Squares algorithm&lt;/strong&gt;: 交替优化f[i]和f[j]的取值, 每次固定一个, 而优化另一个, 交替进行, 直到收敛(好像Kmeans也是利用的这种方法). &lt;/p&gt;
 &lt;p&gt;&lt;em&gt;first randomly filling the users matrix with values and then optimizing the value of the movies such that the error is minimized. Then, it holds the movies matrix constrant and optimizes the value of the user's matrix.&lt;/em&gt;&lt;/p&gt;
-&lt;h3&gt;train-test-validation split&lt;/h3&gt;
+&lt;h3 id="train-test-validation-split"&gt;train-test-validation split&lt;/h3&gt;
 &lt;p&gt;⇒ break up the ratingsRDD dataset into three pieces:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A training set (RDD), which we will use to train models&lt;/li&gt;
@@ -43,11 +43,11 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 &lt;li&gt;A test set (RDD), which we will use for our experiments&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;trainingRDD, validationRDD, testRDD = ratingsRDD.randomSplit([6, 2, 2], seed=0L)&lt;/code&gt;&lt;/p&gt;
-&lt;h3&gt;Root Mean Square Error (RMSE)&lt;/h3&gt;
+&lt;h3 id="root-mean-square-error-rmse"&gt;Root Mean Square Error (RMSE)&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lab4/pasted_image003.png"&gt; &lt;br&gt;
 compute the sum of squared error given predictedRDD and actualRDD RDDs. 
 Both RDDs consist of tuples of the form (UserID, MovieID, Rating)&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
-&lt;h3&gt;alternating least square of MLllib&lt;/h3&gt;
+&lt;h3 id="alternating-least-square-of-mlllib"&gt;alternating least square of MLllib&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS"&gt;https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS&lt;/a&gt;
 ALS takes a training dataset (RDD) and several parameters that control the model creation process.&lt;/p&gt;
 &lt;p&gt;The most important parameter to ALS.train() is the &lt;em&gt;rank&lt;/em&gt;, which is the number of rows in the Users matrix (green in the diagram above) or the number of columns in the Movies matrix (blue in the diagram above). (In general, a lower rank will mean higher error on the training dataset, but a high rank may lead to overfitting.)&lt;/p&gt;
@@ -57,7 +57,7 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 &lt;span class="code-line"&gt;predictedRatingsRDD = model.predictAll(validationForPredictRDD)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;可以在这里查看job详情: &lt;a href="http://localhost:4040/jobs/"&gt;http://localhost:4040/jobs/&lt;/a&gt;&lt;/p&gt;
-&lt;h3&gt;compare model&lt;/h3&gt;
+&lt;h3 id="compare-model"&gt;compare model&lt;/h3&gt;
 &lt;p&gt;Looking at the RMSE for the results predicted by the model versus the values in the test set is one way to evalute the quality of our model. &lt;em&gt;Another way to evaluate the model is to evaluate the error from a test set where every rating is the average rating for the training set.&lt;/em&gt;
 ⇒ 这里没有太理解, 难道是说test set 的平均rating预测结果和training set的平均rating应该比较接近么?? 
 ⇒ 终于明白了: "&lt;em&gt;Your model more accurately predicts the ratings than using just the average rating, as the model's RMSE is significantly lower than the RMSE when using the average rating.&lt;/em&gt;"&lt;/p&gt;
@@ -66,7 +66,7 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;trainingRDD.map(lambda x:x[-1]).reduce(lambda x,y:x+y)&lt;/code&gt;&lt;br&gt;
 直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/br&gt;&lt;/p&gt;</content><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="http://x-wei.github.io/sparkmooc_note_lec8.html" rel="alternate"></link><published>2015-06-23T00:00:00+02:00</published><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-23:/sparkmooc_note_lec8.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+&lt;h2 id="statistics-business-questions-and-learning-techniques"&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
 &lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;descriptive statistics&lt;/li&gt;
@@ -79,7 +79,7 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 techniques leveraged for machine learning and prediction&lt;/p&gt;
 &lt;p&gt;supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
  → UL often used in …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+&lt;h2 id="statistics-business-questions-and-learning-techniques"&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
 &lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;descriptive statistics&lt;/li&gt;
@@ -93,7 +93,7 @@ techniques leveraged for machine learning and prediction&lt;/p&gt;
 &lt;p&gt;supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
  → UL often used in a larger SL pb (ex. &lt;em&gt;auto-encoder&lt;/em&gt;)&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec8/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;EXPLORATORY DATA ANALYSIS&lt;/h2&gt;
+&lt;h2 id="exploratory-data-analysis"&gt;EXPLORATORY DATA ANALYSIS&lt;/h2&gt;
 &lt;p&gt;5-number summary:&lt;/p&gt;
 &lt;p&gt;The five-number summary is a descriptive statistic that provides information about a set of observations. It consists of the five most important sample percentiles:&lt;/p&gt;
 &lt;ul&gt;
@@ -106,19 +106,19 @@ techniques leveraged for machine learning and prediction&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec8/pasted_image001.png"/&gt;&lt;/p&gt;
 &lt;p&gt;→ box plot: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec8/pasted_image004.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;THE R LANGUAGE AND NORMAL DISTRIBUTIONS&lt;/h2&gt;
+&lt;h2 id="the-r-language-and-normal-distributions"&gt;THE R LANGUAGE AND NORMAL DISTRIBUTIONS&lt;/h2&gt;
 &lt;p&gt;R: intractive exploration and visulization of data + statistical models and distributions + CRAN&lt;/p&gt;
 &lt;p&gt;Central Limit Th: sum/mean of n iid random variables 
 many statistical test assume data to be normally distributed&lt;/p&gt;
-&lt;h2&gt;DISTRIBUTIONS&lt;/h2&gt;
+&lt;h2 id="distributions"&gt;DISTRIBUTIONS&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;poissons distribution: accurrence freq&lt;/li&gt;
 &lt;li&gt;exponential distribution: interval between 2 (poissons) events&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Zipf/Pareto/Yule distributions&lt;/em&gt;: frequencies of different terms in a document, or web site visits&lt;/li&gt;
 &lt;li&gt;binomial/multinomial distribution: nb of count of events&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;RHINE PARADOX&lt;/h2&gt;
-&lt;h2&gt;SPARK'S MACHINE LEARNING TOOLKIT&lt;/h2&gt;
+&lt;h2 id="rhine-paradox"&gt;RHINE PARADOX&lt;/h2&gt;
+&lt;h2 id="sparks-machine-learning-toolkit"&gt;SPARK'S MACHINE LEARNING TOOLKIT&lt;/h2&gt;
 &lt;p&gt;mllib: scalable, distributed ML library, &lt;em&gt;sklearn-like&lt;/em&gt; ML toolkit
 &lt;a href="https://spark.apache.org/docs/latest/mllib-guide.html"&gt;https://spark.apache.org/docs/latest/mllib-guide.html&lt;/a&gt;
 lab: &lt;em&gt;collaborative filtering — &lt;/em&gt;matrix factorisation&lt;br&gt;
@@ -133,7 +133,7 @@ lab: &lt;em&gt;collaborative filtering — &lt;/em&gt;matrix factorisation&lt;br
 &lt;strong&gt;Takeaways&lt;/strong&gt;:&lt;br&gt;
 &lt;em&gt;•  Important to look at data graphically before analyzing it   &lt;/em&gt;
 &lt;em&gt;•  Basic statistics properties often fail to capture real-world complexities&lt;/em&gt; &lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;Lab3. Text Analysis and Entity Resolution&lt;/h2&gt;
+&lt;h2 id="lab3-text-analysis-and-entity-resolution"&gt;Lab3. Text Analysis and Entity Resolution&lt;/h2&gt;
 &lt;p&gt;Entity Resolution (ER) refers to the task of finding records in a data set that refer to the same entity across different data sources (e.g., data files, books, websites, databases). ER is necessary when joining data sets based on entities that may or may not share a common identifier (e.g., database key, URI, National identification number), as may be the case due to differences in record shape, storage location, and/or curator style or preference. A data set that has undergone ER may be referred to as being cross-linked.&lt;/p&gt;
 &lt;p&gt;The file format of an Amazon line is:
 "id","title","description","manufacturer","price"
@@ -183,21 +183,21 @@ The file format of a Google line is:
 &lt;li&gt;groupByKey(): 这个也用上了&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;lab4前后做了四个小时 不过很有意思... 第五部分出现out of memory error就没办法了...&lt;/p&gt;</content><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec7. Data Quality</title><link href="http://x-wei.github.io/sparkmooc_note_lec7.html" rel="alternate"></link><published>2015-06-22T00:00:00+02:00</published><updated>2015-06-22T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-22:/sparkmooc_note_lec7.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;DATA CLEANING&lt;/h2&gt;
+&lt;h2 id="data-cleaning"&gt;DATA CLEANING&lt;/h2&gt;
 &lt;p&gt;ex. 
 deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
 &lt;p&gt;deal with non-ideal samples ⇒ tradeoff between simplicity and accuracy. &lt;/p&gt;
-&lt;h2&gt;DATA QUALITY PROBLEMS&lt;/h2&gt;
+&lt;h2 id="data-quality-problems"&gt;DATA QUALITY PROBLEMS&lt;/h2&gt;
 &lt;p&gt;data quality problems: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Conversions in complex pipelines can mess up data &lt;/li&gt;
 &lt;li&gt;Combining multiple datasets can result in errrors&lt;/li&gt;
 &lt;li&gt;Data degrades in accuracy or loses value over …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;DATA CLEANING&lt;/h2&gt;
+&lt;h2 id="data-cleaning"&gt;DATA CLEANING&lt;/h2&gt;
 &lt;p&gt;ex. 
 deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
 &lt;p&gt;deal with non-ideal samples ⇒ tradeoff between simplicity and accuracy. &lt;/p&gt;
-&lt;h2&gt;DATA QUALITY PROBLEMS&lt;/h2&gt;
+&lt;h2 id="data-quality-problems"&gt;DATA QUALITY PROBLEMS&lt;/h2&gt;
 &lt;p&gt;data quality problems: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Conversions in complex pipelines can mess up data &lt;/li&gt;
@@ -205,16 +205,16 @@ deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
 &lt;li&gt;Data degrades in accuracy or loses value over time&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;还提供了一些工具帮助cleaning data: &lt;a href="http://vis.stanford.edu/wrangler/"&gt;http://vis.stanford.edu/wrangler/&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;EXAMPLE: AGES OF STUDENTS IN THIS COURSE&lt;/h2&gt;
+&lt;h2 id="example-ages-of-students-in-this-course"&gt;EXAMPLE: AGES OF STUDENTS IN THIS COURSE&lt;/h2&gt;
 &lt;p&gt;(students' ages are self-reported...)&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec7/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;DATA CLEANING MAKES EVERYTHING OKAY?&lt;/h2&gt;
+&lt;h2 id="data-cleaning-makes-everything-okay"&gt;DATA CLEANING MAKES EVERYTHING OKAY?&lt;/h2&gt;
 &lt;p&gt;ex. the appearance of a hole in the ozone layer. &lt;/p&gt;
-&lt;h2&gt;DIRTY DATA PROBLEMS&lt;/h2&gt;
+&lt;h2 id="dirty-data-problems"&gt;DIRTY DATA PROBLEMS&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec7/pasted_image001.png"/&gt;&lt;/p&gt;
 &lt;p&gt;Data Quality Continuum:&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec7/pasted_image002.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;DATA GATHERING&lt;/h2&gt;
+&lt;h2 id="data-gathering"&gt;DATA GATHERING&lt;/h2&gt;
 &lt;p&gt;solutions in the data gathering stage: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;re-emptive (先发制人) &lt;/li&gt;
@@ -224,10 +224,10 @@ deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
 &lt;li&gt;retrospective&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;duplicate removal&lt;/p&gt;
-&lt;h2&gt;DATA DELIVERY&lt;/h2&gt;
+&lt;h2 id="data-delivery"&gt;DATA DELIVERY&lt;/h2&gt;
 &lt;p&gt;solutions: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec7/pasted_image003.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;DATA STORAGE&lt;/h2&gt;
+&lt;h2 id="data-storage"&gt;DATA STORAGE&lt;/h2&gt;
 &lt;p&gt;physical pb: storage is cheap → use data redundancy 
 logical pb: poor metadata, etc&lt;/p&gt;
 &lt;p&gt;⇒ solutions:&lt;/p&gt;
@@ -235,21 +235,21 @@ logical pb: poor metadata, etc&lt;/p&gt;
 &lt;li&gt;publish &lt;em&gt;data specifications&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;data mining tools&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;DATA RETRIEVAL&lt;/h2&gt;
+&lt;h2 id="data-retrieval"&gt;DATA RETRIEVAL&lt;/h2&gt;
 &lt;p&gt;...总之就是各种方面都会引起data quality pb... &lt;/p&gt;
-&lt;h2&gt;DATA QUALITY CONSTRAINTS&lt;/h2&gt;
+&lt;h2 id="data-quality-constraints"&gt;DATA QUALITY CONSTRAINTS&lt;/h2&gt;
 &lt;p&gt;static constraints: 
 ex. nulls not allowed, field domains&lt;/p&gt;
 &lt;p&gt;data constraints follow a 80-20 rule: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec7/pasted_image004.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Data quality metrics&lt;/strong&gt;: ...
 ex. in lab2, examine log lines that are not correctly parsed.&lt;/p&gt;
-&lt;h2&gt;TECHNICAL APPROACHES TO DATA QUALITY&lt;/h2&gt;
+&lt;h2 id="technical-approaches-to-data-quality"&gt;TECHNICAL APPROACHES TO DATA QUALITY&lt;/h2&gt;
 &lt;p&gt;ex. entity resolution in lab3&lt;/p&gt;
-&lt;h2&gt;EXAMPLE: DEDUP/CLEANING&lt;/h2&gt;
+&lt;h2 id="example-dedupcleaning"&gt;EXAMPLE: DEDUP/CLEANING&lt;/h2&gt;
 &lt;p&gt;bing shopping被黑了
 convert to &lt;em&gt;canonical form &lt;/em&gt;(ex. mailing address)&lt;/p&gt;</content><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec6. Structured Data</title><link href="http://x-wei.github.io/sparkmooc_note_lec6.html" rel="alternate"></link><published>2015-06-18T00:00:00+02:00</published><updated>2015-06-18T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-18:/sparkmooc_note_lec6.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;RELATIONAL DATABASE&lt;/h2&gt;
+&lt;h2 id="relational-database"&gt;RELATIONAL DATABASE&lt;/h2&gt;
 &lt;p&gt;review: key data management concepts:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;data model &lt;/li&gt;
@@ -268,7 +268,7 @@ convert to &lt;em&gt;canonical form &lt;/em&gt;(ex. mailing address)&lt;/p&gt;</
 &lt;/ul&gt;
 &lt;p&gt;any data at given time 
 (&lt;em&gt;cardinality …&lt;/em&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;RELATIONAL DATABASE&lt;/h2&gt;
+&lt;h2 id="relational-database"&gt;RELATIONAL DATABASE&lt;/h2&gt;
 &lt;p&gt;review: key data management concepts:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;data model &lt;/li&gt;
@@ -287,8 +287,8 @@ convert to &lt;em&gt;canonical form &lt;/em&gt;(ex. mailing address)&lt;/p&gt;</
 &lt;/ul&gt;
 &lt;p&gt;any data at given time 
 (&lt;em&gt;cardinality&lt;/em&gt;:=nb of rows, &lt;em&gt;degree&lt;/em&gt;:=nb of fields)&lt;/p&gt;
-&lt;h2&gt;LARGE DATABASES&lt;/h2&gt;
-&lt;h2&gt;RELATIONAL DATABASE EXAMPLE AND DISCUSSION&lt;/h2&gt;
+&lt;h2 id="large-databases"&gt;LARGE DATABASES&lt;/h2&gt;
+&lt;h2 id="relational-database-example-and-discussion"&gt;RELATIONAL DATABASE EXAMPLE AND DISCUSSION&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image001.png"&gt; &lt;br&gt;
 cardinality=3
 degree=5&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
@@ -305,20 +305,20 @@ degree=5&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
 &lt;li&gt;transactions are slow&lt;/li&gt;
 &lt;li&gt;poor support for &lt;em&gt;sparse data&lt;/em&gt;(which is common)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;STRUCTURED QUERY LANGUAGE (SQL)&lt;/h2&gt;
+&lt;h2 id="structured-query-language-sql"&gt;STRUCTURED QUERY LANGUAGE (SQL)&lt;/h2&gt;
 &lt;p&gt;supported by &lt;strong&gt;DataFrame&lt;/strong&gt; of pyspark &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image002.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;JOINS IN SQL&lt;/h2&gt;
+&lt;h2 id="joins-in-sql"&gt;JOINS IN SQL&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image003.png"&gt;
 cross join: carteian product&lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;EXPLICIT SQL JOINS&lt;/h2&gt;
+&lt;h2 id="explicit-sql-joins"&gt;EXPLICIT SQL JOINS&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image004.png"&gt;
 explicit version is preferred&lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;TYPES OF SQL JOINS&lt;/h2&gt;
+&lt;h2 id="types-of-sql-joins"&gt;TYPES OF SQL JOINS&lt;/h2&gt;
 &lt;p&gt;⇒ controls how &lt;em&gt;unmatched&lt;/em&gt; keys are handled&lt;/p&gt;
 &lt;p&gt;LEFT OUTER JOIN: 
 keys appearring in left table but not in right table will be included with NULL as value&lt;/p&gt;
-&lt;h2&gt;JOINS IN SPARK&lt;/h2&gt;
+&lt;h2 id="joins-in-spark"&gt;JOINS IN SPARK&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;for spark DataFrame: support inner/left outer/semi-join&lt;/li&gt;
 &lt;li&gt;for &lt;em&gt;pair RDDs&lt;/em&gt;: support inner join(), leftOuterJoin(), fullOuterJoin()&lt;/li&gt;
@@ -330,7 +330,7 @@ keys appearring in left table but not in right table will be included with NULL 
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image007.png"/&gt;&lt;/p&gt;
 &lt;p&gt;fullouterjoin ex:
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image008.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Lab 2 - Web Server Log Analysis with Apache Spark&lt;/h2&gt;
+&lt;h2 id="lab-2-web-server-log-analysis-with-apache-spark"&gt;Lab 2 - Web Server Log Analysis with Apache Spark&lt;/h2&gt;
 &lt;p&gt;Apache Common Log Format (CLF):&lt;br&gt;
 &lt;code&gt;127.0.0.1 - - [01/Aug/1995:00:00:01 -0400] "GET /images/launch-logo.gif HTTP/1.0" 200 1839&lt;/code&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Row(
@@ -350,37 +350,37 @@ content_size  = size
 &lt;p&gt;一个pair RDD按照key来distinct不知道有没有distinctByKey之类的东西, 只好写成这样, 不知是不是对的: 
 &lt;code&gt;dayHostCount = dayGroupedHosts.map(lambda group : (group[0], len(set(group[1])) ) )&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;...总体来说很有意思的一个lab...&lt;/p&gt;</content><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec5. Semi-structured Data</title><link href="http://x-wei.github.io/sparkmooc_note_lec5.html" rel="alternate"></link><published>2015-06-17T00:00:00+02:00</published><updated>2015-06-17T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-17:/sparkmooc_note_lec5.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
+&lt;h2 id="key-data-management-concepts"&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
 &lt;p&gt;data model: collection of concepts for describing data
 schema: a description of a particular collection of data using a given data model&lt;/p&gt;
 &lt;p&gt;structure spectrum: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image.png"&gt;
 semi-structured data: apply schema &lt;strong&gt;after&lt;/strong&gt; creating data. &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;FILES&lt;/h2&gt;
+&lt;h2 id="files"&gt;FILES&lt;/h2&gt;
 &lt;p&gt;files: named collection of bytes, in hierarchical namespace (but: In a Content-Addressable Storage …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
+&lt;h2 id="key-data-management-concepts"&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
 &lt;p&gt;data model: collection of concepts for describing data
 schema: a description of a particular collection of data using a given data model&lt;/p&gt;
 &lt;p&gt;structure spectrum: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image.png"&gt;
 semi-structured data: apply schema &lt;strong&gt;after&lt;/strong&gt; creating data. &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;FILES&lt;/h2&gt;
+&lt;h2 id="files"&gt;FILES&lt;/h2&gt;
 &lt;p&gt;files: named collection of bytes, in hierarchical namespace (but: In a Content-Addressable Storage system files are stored, arranged, and accessed based on their content or metadata, not in hierarchy)&lt;/p&gt;
-&lt;h2&gt;SEMI-STRUCTURED TABULAR DATA&lt;/h2&gt;
+&lt;h2 id="semi-structured-tabular-data"&gt;SEMI-STRUCTURED TABULAR DATA&lt;/h2&gt;
 &lt;p&gt;table: a collection of rows and columns, each row has an &lt;em&gt;index&lt;/em&gt;, each column has a &lt;em&gt;name&lt;/em&gt;. 
 cell: by a pair (row, col), values can be missing, types are &lt;em&gt;inffered&lt;/em&gt; from content&lt;/p&gt;
 &lt;p&gt;CSV:&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image002.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;PDB:(filed name can be repeated on multuple lines)  &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image001.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;CHALLENGES WITH TABULAR DATA&lt;/h2&gt;
+&lt;h2 id="challenges-with-tabular-data"&gt;CHALLENGES WITH TABULAR DATA&lt;/h2&gt;
 &lt;p&gt;challenges: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image003.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;challenges for tabular data &lt;em&gt;from multiple source&lt;/em&gt;: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image004.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;challenges for tabular data &lt;em&gt;from sensors&lt;/em&gt;: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image005.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;PANDAS AND SEMI-STRUCTURED DATA IN PYSPARK&lt;/h2&gt;
+&lt;h2 id="pandas-and-semi-structured-data-in-pyspark"&gt;PANDAS AND SEMI-STRUCTURED DATA IN PYSPARK&lt;/h2&gt;
 &lt;p&gt;pandas &lt;code&gt;DataFrame&lt;/code&gt;: represented as python dict (colname → series)
 pandas &lt;code&gt;Series&lt;/code&gt;: 1D labeled array capable of holding any data type&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;spark DataFrame&lt;/strong&gt;: &lt;em&gt;Distributed&lt;/em&gt; collection of data organized into named columns. 
@@ -388,14 +388,14 @@ types of columns are inferred from values. &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image006.png"/&gt;&lt;/p&gt;
 &lt;p&gt;Using dataframes can be 5 times faster than using RDDs: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image007.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;SEMI-STRUCTURED LOG FILES&lt;/h2&gt;
+&lt;h2 id="semi-structured-log-files"&gt;SEMI-STRUCTURED LOG FILES&lt;/h2&gt;
 &lt;p&gt;ex. Apache web server log format&lt;/p&gt;
-&lt;h2&gt;EXPLORING A WEB SERVER ACCESS LOG&lt;/h2&gt;
+&lt;h2 id="exploring-a-web-server-access-log"&gt;EXPLORING A WEB SERVER ACCESS LOG&lt;/h2&gt;
 &lt;p&gt;NASA http server access log&lt;br&gt;
 &lt;a href="http://ita.ee.lbl.gov/html/contrib/NASA-HTTP.html"&gt;http://ita.ee.lbl.gov/html/contrib/NASA-HTTP.html&lt;/a&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;DATA MINING LOG FILES&lt;/h2&gt;
+&lt;h2 id="data-mining-log-files"&gt;DATA MINING LOG FILES&lt;/h2&gt;
 &lt;p&gt;Data mining log files is a data exploration process that often involves searching through the data for unusual events, a task that can be done using dashboards for visualizing anomalies. The data being analyzed usually includes machine resource usage data and application queue information.&lt;/p&gt;
-&lt;h2&gt;FILE PERFORMANCE&lt;/h2&gt;
+&lt;h2 id="file-performance"&gt;FILE PERFORMANCE&lt;/h2&gt;
 &lt;p&gt;binary/text performance benchmark:&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image008.png"&gt;&lt;br&gt;
 ⇒&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
@@ -412,7 +412,7 @@ types of columns are inferred from values. &lt;/p&gt;
 &lt;li&gt;binary still much faster than text &lt;/li&gt;
 &lt;li&gt;LZ4 compression ~= raw IO speed&lt;/li&gt;
 &lt;/ul&gt;</content><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec4. Spark Essentials</title><link href="http://x-wei.github.io/sparkmooc_note_lec4.html" rel="alternate"></link><published>2015-06-16T00:00:00+02:00</published><updated>2015-06-16T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-16:/sparkmooc_note_lec4.html</id><summary type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
+&lt;h2 id="python-spark-pyspark"&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;a spark prog has 2 programs:&lt;/strong&gt; &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;dirver program: runs on driver machine&lt;/li&gt;
@@ -423,7 +423,7 @@ types of columns are inferred from values. &lt;/p&gt;
 &lt;li&gt;tells how and where to access a cluster&lt;/li&gt;
 &lt;li&gt;shell will automatically create &lt;strong&gt;the sc varible&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;in iPython …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]  &lt;/p&gt;
-&lt;h2&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
+&lt;h2 id="python-spark-pyspark"&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;a spark prog has 2 programs:&lt;/strong&gt; &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;dirver program: runs on driver machine&lt;/li&gt;
@@ -439,7 +439,7 @@ types of columns are inferred from values. &lt;/p&gt;
 &lt;p&gt;Master:&lt;br&gt;
 The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines which type and size of cluster to use
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;RDDs&lt;/h2&gt;
+&lt;h2 id="rdds"&gt;RDDs&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Resilient Distributed Dataset&lt;/strong&gt;:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;immutable once created&lt;/li&gt;
@@ -470,25 +470,25 @@ The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines wh
 &lt;span class="code-line"&gt;rDD = sc.paralize(data, 4)&lt;/span&gt;
 &lt;span class="code-line"&gt;distFile = sc.textFile("readme.txt", 4) // elements are lines in the file&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;SPARK TRANSFORMATIONS&lt;/h2&gt;
+&lt;h2 id="spark-transformations"&gt;SPARK TRANSFORMATIONS&lt;/h2&gt;
 &lt;p&gt;to create new dataset from existing one (lazy)&lt;/p&gt;
 &lt;p&gt;examples of transformations: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image003.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;PYTHON LAMBDA FUNCTIONS&lt;/h2&gt;
+&lt;h2 id="python-lambda-functions"&gt;PYTHON LAMBDA FUNCTIONS&lt;/h2&gt;
 &lt;p&gt;single expression&lt;/p&gt;
-&lt;h2&gt;TRANSFORMATIONS&lt;/h2&gt;
+&lt;h2 id="transformations"&gt;TRANSFORMATIONS&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image004.png"/&gt;&lt;/p&gt;
 &lt;p&gt;⇒ spark truns the function litral into a cloture, balck code runs in driver, green code in workers&lt;/p&gt;
-&lt;h2&gt;SPARK ACTIONS&lt;/h2&gt;
+&lt;h2 id="spark-actions"&gt;SPARK ACTIONS&lt;/h2&gt;
 &lt;p&gt;cause spark to execute recipe to transform source. 
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image006.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;SPARK PROGRAMMING MODEL&lt;/h2&gt;
-&lt;h2&gt;CACHING RDDS&lt;/h2&gt;
+&lt;h2 id="spark-programming-model"&gt;SPARK PROGRAMMING MODEL&lt;/h2&gt;
+&lt;h2 id="caching-rdds"&gt;CACHING RDDS&lt;/h2&gt;
 &lt;p&gt;to avoid having to reload data: &lt;code&gt;rdd.cache()&lt;/code&gt;⇒ read from memory instead of disk&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image007.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;SPARK PROGRAM LIFECYCLE&lt;/h2&gt;
+&lt;h2 id="spark-program-lifecycle"&gt;SPARK PROGRAM LIFECYCLE&lt;/h2&gt;
 &lt;p&gt;create/paralise ⇒ transform ⇒ [cache] ⇒ action&lt;/p&gt;
-&lt;h2&gt;SPARK KEY-VALUE RDDS&lt;/h2&gt;
+&lt;h2 id="spark-key-value-rdds"&gt;SPARK KEY-VALUE RDDS&lt;/h2&gt;
 &lt;p&gt;each element of a &lt;em&gt;pair RDD&lt;/em&gt; is a pair tuple&lt;/p&gt;
 &lt;p&gt;key-value transformations: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image008.png"/&gt;&lt;/br&gt;&lt;/p&gt;
@@ -496,7 +496,7 @@ The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines wh
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image009.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image010.png"/&gt;&lt;/p&gt;
 &lt;p&gt;careful using &lt;code&gt;groupByKey&lt;/code&gt;: create lots of data traffic and iterables at works&lt;/p&gt;
-&lt;h2&gt;PYSPARK CLOSURES&lt;/h2&gt;
+&lt;h2 id="pyspark-closures"&gt;PYSPARK CLOSURES&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;one closure per worker is sent &lt;em&gt;with every task&lt;/em&gt; &lt;/li&gt;
 &lt;li&gt;no communication between workers&lt;/li&gt;
@@ -521,14 +521,14 @@ The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines wh
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;SPARK BROADCAST VARIABLES&lt;/h2&gt;
+&lt;h2 id="spark-broadcast-variables"&gt;SPARK BROADCAST VARIABLES&lt;/h2&gt;
 &lt;p&gt;ex. give every worker a large dataset &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image011.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;SPARK ACCUMULATORS&lt;/h2&gt;
+&lt;h2 id="spark-accumulators"&gt;SPARK ACCUMULATORS&lt;/h2&gt;
 &lt;p&gt;can only be "add" to by associative operation &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image012.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;careful to use accumulators in transformations: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image013.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;Lab1&lt;/h2&gt;
+&lt;h2 id="lab1"&gt;Lab1&lt;/h2&gt;
 &lt;p&gt;VB更新以后虚拟机打不开了, 解决办法在: &lt;br&gt;
 &lt;a href="http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001"&gt;http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001&lt;/a&gt;&lt;/br&gt;&lt;/p&gt;</content><category term="spark"></category></entry></feed>

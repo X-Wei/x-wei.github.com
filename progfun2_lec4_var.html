@@ -202,9 +202,17 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC II] Lec4 - Timely Effects">[Scala MOOC II] Lec4 - Timely Effects</a><ul><li><a class="toc-href" href="#lecture-41-imperative-event-handling-the-observer-pattern" title="Lecture 4.1 - Imperative Event Handling: The Observer Pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</a></li><li><a class="toc-href" href="#lecture-42-functional-reactive-programming" title="Lecture 4.2 - Functional Reactive Programming">Lecture 4.2 - Functional Reactive Programming</a><ul><li><a class="toc-href" href="#signal-opeartions" title="Signal opeartions">Signal opeartions</a></li><li><a class="toc-href" href="#example-bank-account" title="example: bank account">example: bank account</a></li></ul></li><li><a class="toc-href" href="#lecture-43-a-simple-frp-implementation_1" title="Lecture 4.3 - A Simple FRP Implementation">Lecture 4.3 - A Simple FRP Implementation</a><ul><li><a class="toc-href" href="#implemention-idea" title="implemention idea">implemention idea</a><ul><li><a class="toc-href" href="#signal" title="Signal">Signal</a></li><li><a class="toc-href" href="#caller" title="caller">caller</a></li></ul></li></ul></li><li><a class="toc-href" href="#lecture-4445-latency-as-an-effect_2" title="Lecture 4.4/4.5 - Latency as an Effect">Lecture 4.4/4.5 - Latency as an Effect</a></li><li><a class="toc-href" href="#lecture-46474849410-combinators-on-futurescomposing-futures" title="Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures">Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</a></li><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li><li><a class="toc-href" href="#exercice-calculator" title="exercice: calculator">exercice: calculator</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]    </p>
 <p>this week: discuss how to handle events in user-interface — MVC, functional reactive programming.  </p>
-<h1>Lecture 4.1 - Imperative Event Handling: The Observer Pattern</h1>
+<h1 id="lecture-41-imperative-event-handling-the-observer-pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</h1>
 <p>Traditional way of handling events: <em>observer Pattern (MVC)</em>. Used when views need to react to change in a model.  </p>
 <p>MVC: model-view-controller for user interface </p>
 <ul>
@@ -238,7 +246,7 @@ mx's blog            </a>
 <li>concurrency will be more complicated (ex. 2 models update one view at the same time) </li>
 <li>Views are tightly bound to one state, view updates immediately </li>
 </ul>
-<h1>Lecture 4.2 - Functional Reactive Programming</h1>
+<h1 id="lecture-42-functional-reactive-programming">Lecture 4.2 - Functional Reactive Programming</h1>
 <p>FRP:  </p>
 <ul>
 <li>reactive programming: react to seq of <em>events</em> that happen in <em>time</em>.  </li>
@@ -256,7 +264,7 @@ mx's blog            </a>
 whenever mouse moves, an event <code>MouseMoved(toPos: Position)</code> is fired </br></p>
 <p><strong>FRP view:</strong><br>
 use a signal(function): <code>mousePosition: Signal[Position]</code> , which at any point represents a current mouse position </br></p>
-<h3>Signal opeartions</h3>
+<h3 id="signal-opeartions">Signal opeartions</h3>
 <p>2 fundamental ops on signals:  </p>
 <ul>
 <li>obtain value of signal at current time (the <code>apply</code> function): <code>mousePosition()</code> </li>
@@ -278,7 +286,7 @@ use a signal(function): <code>mousePosition: Signal[Position]</code> , which at 
 <blockquote>
 <p>Difference between <code>Var</code>s and mutable <code>var</code>s: we can <em>map over signals</em>, i.e. maintain a relation between 2 signals forever in the future, whereas using mutable <code>var</code>s have to propagate all updates manually.  </p>
 </blockquote>
-<h3>example: bank account</h3>
+<h3 id="example-bank-account">example: bank account</h3>
 <p>add a signal <code>balance</code> to <code>BankAccount</code>s, define a <em>function</em> <code>consolidated</code> which takes sum of all balances of accounts in list.  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">BankAccount</span> <span class="o">{</span> </span>
 <span class="code-line">  <span class="k">val</span> <span class="n">balance</span> <span class="k">=</span> <span class="nc">Var</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="c1">// a Var signal </span></span>
@@ -305,7 +313,7 @@ use a signal(function): <code>mousePosition: Signal[Position]</code> , which at 
 <li><code>v = v+1</code>: the new value is old value + 1 </li>
 <li><code>s() = s() + 1</code>: the s is a function that is always 1 larger than itself (cyclic definitions) </li>
 </ul>
-<h1>Lecture 4.3 - A Simple FRP Implementation</h1>
+<h1 id="lecture-43-a-simple-frp-implementation_1">Lecture 4.3 - A Simple FRP Implementation</h1>
 <p>implementation of <code>Singal</code> and <code>Var</code>.  </p>
 <p>class API:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Signal</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">expr</span><span class="k">:</span> <span class="o">=&gt;</span><span class="n">T</span><span class="o">){</span> </span>
@@ -329,8 +337,8 @@ use a signal(function): <code>mousePosition: Signal[Position]</code> , which at 
 <li>use <code>sig()</code> get the signal's (current) value </li>
 <li>use <code>sig() = {new_expr}</code> to update the signal's expression </li>
 </ul>
-<h2>implemention idea</h2>
-<h3>Signal</h3>
+<h2 id="implemention-idea">implemention idea</h2>
+<h3 id="signal">Signal</h3>
 <p>each <code>sig: Signal[T]</code> maintains:  </p>
 <ul>
 <li>
@@ -361,7 +369,7 @@ use a signal(function): <code>mousePosition: Signal[Position]</code> , which at 
 <li>if <code>this.myValue</code> changes (when calling <code>computeValue()</code>), all caller signals in <code>this.observers</code> are re-evaluated (<code>callersig.computeValue()</code>); and <code>this.observers</code> is <strong>cleared(!! see next item)</strong>.  </li>
 <li>when <code>callersig</code>s re-evaluate their expression, the <code>apply()</code> method will add the <code>callersig</code> again to <code>this.observers</code> </li>
 </ul>
-<h3>caller</h3>
+<h3 id="caller">caller</h3>
 <p>How to find out <em>who is calling</em> so that a signal is evaluated ? 
 simplistic way: maintain a <em>global</em> data structure (stack-fashion) referring to current <code>caller: StackableVariable[Signal[T]]</code>.  </p>
 <p><code>caller</code> is a global "stack" of <code>callersig</code>s that get poped/pushed.  </p>
@@ -405,7 +413,7 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 </pre></div>
 <p>problem: global stack is not good... especially for concurrency  ⇒ replace global state by <em>thread-local state</em>.  </p>
 <p>Or use <em>implicit parameteres</em>: pass current value of the thread-local variable into a signal expr as implicit parameter.  </p>
-<h1>Lecture 4.4/4.5 - Latency as an Effect</h1>
+<h1 id="lecture-4445-latency-as-an-effect_2">Lecture 4.4/4.5 - Latency as an Effect</h1>
 <p>(I didn't quite get the point from this lecture on...) </p>
 <p>when computation takes a lot of time: register a <strong>callback</strong> when computation terminates (either success or failure).  </p>
 <p><code>Future[T]</code>: a <strong>monad</strong> that handles both exceptions and latency </p>
@@ -421,14 +429,14 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 </pre></div>
 <p>another option: give 2 callbacks, one for success, one for failure.  </p>
 <p><code>def onCompelet(success: T=&gt;Unit, failed: Throwable =&gt; Unit): Unit</code> </p>
-<h1>Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</h1>
+<h1 id="lecture-46474849410-combinators-on-futurescomposing-futures">Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</h1>
 <p>higher-order funcitons on <code>Future</code>s: map/filter/flatMap/... </p>
 <p>recover/recoverWith for Error case ⇔ map/flatMap for Future. </p>
 <p>fallbackTo:  </p>
 <p>retry: deal with failure...  </p>
 <p>turn recursion to foldleft/foldright...  </p>
 <p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image009.png"> </img></p>
-<h1>Conclusion</h1>
+<h1 id="conclusion">Conclusion</h1>
 <ul>
 <li>lazy evaluation: infinite data structure </li>
 <li>distinction between computations and values: random/signal are computations </li>
@@ -441,7 +449,7 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 <li>monads </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image010.png"> </img></p>
-<h1>exercice: calculator</h1>
+<h1 id="exercice-calculator">exercice: calculator</h1>
 <p>Use Function Reactive Programming (FRP), with the Signal[A] class that you have seen in the lectures, to implement a spreadsheet-like calculator. In this calculator, cells can depend on the value of other cells, and are recomputed automatically when the latter change.  </p>
 <p><a href="https://github.com/X-Wei/Coursera-progfun2/tree/master/hw4-calculator">https://github.com/X-Wei/Coursera-progfun2/tree/master/hw4-calculator</a> </p>
             </div>
@@ -791,7 +799,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -859,6 +867,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC II] Lec4 - Timely Effects">[Scala MOOC II] Lec4 - Timely Effects</a><ul><li><a class="toc-href" href="#lecture-41-imperative-event-handling-the-observer-pattern" title="Lecture 4.1 - Imperative Event Handling: The Observer Pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</a></li><li><a class="toc-href" href="#lecture-42-functional-reactive-programming" title="Lecture 4.2 - Functional Reactive Programming">Lecture 4.2 - Functional Reactive Programming</a><ul><li><a class="toc-href" href="#signal-opeartions" title="Signal opeartions">Signal opeartions</a></li><li><a class="toc-href" href="#example-bank-account" title="example: bank account">example: bank account</a></li></ul></li><li><a class="toc-href" href="#lecture-43-a-simple-frp-implementation_1" title="Lecture 4.3 - A Simple FRP Implementation">Lecture 4.3 - A Simple FRP Implementation</a><ul><li><a class="toc-href" href="#implemention-idea" title="implemention idea">implemention idea</a><ul><li><a class="toc-href" href="#signal" title="Signal">Signal</a></li><li><a class="toc-href" href="#caller" title="caller">caller</a></li></ul></li></ul></li><li><a class="toc-href" href="#lecture-4445-latency-as-an-effect_2" title="Lecture 4.4/4.5 - Latency as an Effect">Lecture 4.4/4.5 - Latency as an Effect</a></li><li><a class="toc-href" href="#lecture-46474849410-combinators-on-futurescomposing-futures" title="Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures">Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</a></li><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li><li><a class="toc-href" href="#exercice-calculator" title="exercice: calculator">exercice: calculator</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

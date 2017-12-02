@@ -202,11 +202,19 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 5-1 Regular Expressions">[Algorithms II] Week 5-1 Regular Expressions</a><ul><li><a class="toc-href" href="#1-regular-expressions" title="1. Regular Expressions">1. Regular Expressions</a><ul><li><a class="toc-href" href="#regular-expression" title="regular expression">regular expression</a></li></ul></li><li><a class="toc-href" href="#2-res-and-nfas_1" title="2. REs and NFAs">2. REs and NFAs</a><ul><li><a class="toc-href" href="#first-attempt-of-pattern-matching" title="first attempt of pattern matching">first attempt of pattern matching</a></li><li><a class="toc-href" href="#nfa" title="NFA">NFA</a></li></ul></li><li><a class="toc-href" href="#3-nfa-simulation_1" title="3. NFA Simulation">3. NFA Simulation</a><ul><li><a class="toc-href" href="#algorithm" title="algorithm">algorithm</a></li><li><a class="toc-href" href="#concrete-example" title="concrete example">concrete example</a></li><li><a class="toc-href" href="#reachability" title="reachability">reachability</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-nfa-construction_1" title="4. NFA Construction">4. NFA Construction</a><ul><li><a class="toc-href" href="#buiding-a-nfa-from-a-re-parsing" title="buiding a NFA from a re (parsing)">buiding a NFA from a re (parsing)</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#5-regular-expression-applications_1" title="5. Regular Expression Applications">5. Regular Expression Applications</a><ul><li><a class="toc-href" href="#grep" title="grep">grep</a></li><li><a class="toc-href" href="#regexp-in-other-languages" title="regexp in other languages">regexp in other languages</a></li><li><a class="toc-href" href="#harvesting-information" title="Harvesting information">Harvesting information</a></li><li><a class="toc-href" href="#not-so-regular-expressions" title="Not-so-regular expressions">Not-so-regular expressions</a></li><li><a class="toc-href" href="#summary" title="Summary">Summary</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
-<h1>1. Regular Expressions</h1>
+<h1 id="1-regular-expressions">1. Regular Expressions</h1>
 <p>pb: pattern matching. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image.png"> </img></br></p>
-<h3>regular expression</h3>
+<h3 id="regular-expression">regular expression</h3>
 <p>Is a notation to specify a set of strings. <br>
 basic operations:   </br></p>
 <ul>
@@ -221,7 +229,7 @@ additional operations (<em>added for convinence</em>):<br>
 ex. <code>[A-C]+</code> is equivalent to <code>(A|B|C)(A|B|C)*</code>.  </br></img></br></br></img></p>
 <p>吐槽名句: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image003.png"> </img></br></p>
-<h1>2. REs and NFAs</h1>
+<h1 id="2-res-and-nfas_1">2. REs and NFAs</h1>
 <p><strong>duality</strong> between RE and DFA:   </p>
 <ul>
 <li>RE: to decribe a set of strings.  </li>
@@ -233,7 +241,7 @@ ex. <code>[A-C]+</code> is equivalent to <code>(A|B|C)(A|B|C)*</code>.  </br></i
 For any RE, there exists a DFA that recognizes the same set of strings.  </br></p>
 </blockquote>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image004.png"> </img></p>
-<h3>first attempt of pattern matching</h3>
+<h3 id="first-attempt-of-pattern-matching">first attempt of pattern matching</h3>
 <p>(Ken Tompson) same as KMP — no backup.<br>
 basic plan:  </br></p>
 <ul>
@@ -242,7 +250,7 @@ basic plan:  </br></p>
 </ul>
 <p>bad news: DFA may have exponential nb of states. <br>
 ⇒ change to <strong>NFA</strong> (nondeterministic finite automaton).  </br></p>
-<h3>NFA</h3>
+<h3 id="nfa">NFA</h3>
 <blockquote></blockquote>
 <ul>
 <li>put RE into parentheses  </li>
@@ -260,7 +268,7 @@ is "AAAABD" a match ?<br>
 <p>pb: non-determinism<br>
 How to determine whether a string is a match of a NFA (ie. <em>how to select the right sequence</em> of transition) ? <br>
 ⇒ sysematically  consider <em>all</em> possible transition sequences.   </br></br></p>
-<h1>3. NFA Simulation</h1>
+<h1 id="3-nfa-simulation_1">3. NFA Simulation</h1>
 <ul>
 <li>state names: 0 to M. (M+1 states in total, M=length of RE string).   </li>
 <li>match-transitions: store in array <code>re[]</code> (the match transitions are naturally in order of the array).  </li>
@@ -272,7 +280,7 @@ How to determine whether a string is a match of a NFA (ie. <em>how to select the
 </blockquote>
 <p>at each iteration: check all reachable state wrt the transitions, then update reachable states. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image007.png"> </img></br></p>
-<h3>algorithm</h3>
+<h3 id="algorithm">algorithm</h3>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image008.png"><br>
 (for the NFA above, 注意为了方便已经加了 必要的括号)  </br></img></p>
 <p><strong>[Algo]</strong> </p>
@@ -291,7 +299,7 @@ How to determine whether a string is a match of a NFA (ie. <em>how to select the
 <li>accept if at the end the state M is in <code>rs</code> </li>
 </ul>
 </blockquote>
-<h3>concrete example</h3>
+<h3 id="concrete-example">concrete example</h3>
 <ul>
 <li>init:  </li>
 </ul>
@@ -320,12 +328,12 @@ using epsilon transitions from state 3: <br>
 <p>或者直接看这张图:   </p>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image017.png"><br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image018.png"> </img></br></img></p>
-<h3>reachability</h3>
+<h3 id="reachability">reachability</h3>
 <p>All reachable vertices from <em>a set of</em> source vertices → just DFS. <br>
 ⇒ directly use the API from the digraph section: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image019.png"><br>
 running time linear to E+V  </br></img></br></br></p>
-<h3>Java implementation</h3>
+<h3 id="java-implementation">Java implementation</h3>
 <p>API:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class NFA{  </span>
 <span class="code-line">    private int M;  </span>
@@ -355,12 +363,12 @@ running time linear to E+V  </br></img></br></br></p>
 <span class="code-line">    }</span>
 </pre></div>
 <p>(代码虽然短但是这个过程我理解了好久.. 另外上面的代码有点伪).   </p>
-<h3>Analysis</h3>
+<h3 id="analysis">Analysis</h3>
 <p><strong>prop</strong>. the matches() method takes <code>O(MN)</code> time in worst case.   </p>
 <p>pf. N chars in text, each char can go through &lt;= M states (DFS), and in the digraph, no node has &gt;3 degree ⇒ <em>number of edges &lt;= 3M</em>, so the time for each dfs is O(M), in total we have O(MN).   </p>
-<h1>4. NFA Construction</h1>
+<h1 id="4-nfa-construction_1">4. NFA Construction</h1>
 <p>→ construct the epsilon transition digraph.   </p>
-<h3>buiding a NFA from a re (parsing)</h3>
+<h3 id="buiding-a-nfa-from-a-re-parsing">buiding a NFA from a re (parsing)</h3>
 <ul>
 <li>states in a NFA: one state per char, plus an  accept state (state M)  </li>
 <li>alphabet state: chars in alphabet (<code>A, B, C, D</code>)  → (implicitly) put a match transition to next state  </li>
@@ -387,7 +395,7 @@ add 2 epsilon transitions wrt parethese: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image023.png"><br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image024.png"> </img></br></img></br></br></p>
 <p>以上就是NFA建立G的时候要处理的三种情形, 这三种情形都要知道一个左括号(<code>lp</code>)的位置 ⇒ use a stack !   </p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image025.png"> </img></p>
 <ul>
 <li>for alphabetic chars: do one-char <em>lookahead</em> → if next is <code>*</code>, add transitions.   </li>
@@ -430,12 +438,12 @@ add 2 epsilon transitions wrt parethese: <br>
 <span class="code-line">    return G;  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>Analysis</h3>
+<h3 id="analysis_1">Analysis</h3>
 <p><strong>prop</strong>. building an NFA takes linear time and space in M. <br>
 pf. for each char, the nb of operations is const.   </br></p>
 <p>真不愧是most ingenius algorithm we met in this course......   </p>
-<h1>5. Regular Expression Applications</h1>
-<h3>grep</h3>
+<h1 id="5-regular-expression-applications_1">5. Regular Expression Applications</h1>
+<h3 id="grep">grep</h3>
 <p>"<strong>G</strong>eneralized <strong>R</strong>egular <strong>E</strong>xpression <strong>P</strong>rint"<br>
 print out all lines (from stdin) having a substring of an RE.<br>
 ⇒ equal to adding a <code>.*</code> to the beginning and end of the RE to make a match.   </br></br></p>
@@ -454,7 +462,7 @@ print out all lines (from stdin) having a substring of an RE.<br>
 <p>grep application: crossword puzzles<br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image026.png"><br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image027.png"> </img></br></img></br></p>
-<h3>regexp in other languages</h3>
+<h3 id="regexp-in-other-languages">regexp in other languages</h3>
 <ul>
 <li>unix: grep, awk  </li>
 <li>script: python, <em>perl</em> </li>
@@ -464,7 +472,7 @@ print out all lines (from stdin) having a substring of an RE.<br>
 <li>java: <code>String.matches(regexp)</code> </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image029.png"> </img></p>
-<h3>Harvesting information</h3>
+<h3 id="harvesting-information">Harvesting information</h3>
 <p>goal: print <em>all substrings</em> of input that match an RE. <br>
 use <code>Pattern</code> and <code>Matcher</code> class in <code>java.util.regexp</code>. <br>
 first compile the regexp, then build the matcher<br>
@@ -474,14 +482,14 @@ first compile the regexp, then build the matcher<br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image031.png"><br>
 → exponential time growth! <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image032.png"> </img></br></br></img></br></p>
-<h3>Not-so-regular expressions</h3>
+<h3 id="not-so-regular-expressions">Not-so-regular expressions</h3>
 <p>"not rugular" means Kleene's Th doesn't hold <br>
 → efficient performance not tractable......<br>
 <strong>back-reference</strong><br>
 <code>\1</code> matches <em>subexpressions</em> that was matched earliser<br>
 limitations of regular languages: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image034.png"> </img></br></br></br></br></br></p>
-<h3>Summary</h3>
+<h3 id="summary">Summary</h3>
 <p>the substring and regexp are examples of compilers ! (from string to a NFA/DFA/bytecode)<br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image033.png"> </img></br></p>
 <p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image035.png"> </img></p>
@@ -841,7 +849,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -911,6 +919,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 5-1 Regular Expressions">[Algorithms II] Week 5-1 Regular Expressions</a><ul><li><a class="toc-href" href="#1-regular-expressions" title="1. Regular Expressions">1. Regular Expressions</a><ul><li><a class="toc-href" href="#regular-expression" title="regular expression">regular expression</a></li></ul></li><li><a class="toc-href" href="#2-res-and-nfas_1" title="2. REs and NFAs">2. REs and NFAs</a><ul><li><a class="toc-href" href="#first-attempt-of-pattern-matching" title="first attempt of pattern matching">first attempt of pattern matching</a></li><li><a class="toc-href" href="#nfa" title="NFA">NFA</a></li></ul></li><li><a class="toc-href" href="#3-nfa-simulation_1" title="3. NFA Simulation">3. NFA Simulation</a><ul><li><a class="toc-href" href="#algorithm" title="algorithm">algorithm</a></li><li><a class="toc-href" href="#concrete-example" title="concrete example">concrete example</a></li><li><a class="toc-href" href="#reachability" title="reachability">reachability</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-nfa-construction_1" title="4. NFA Construction">4. NFA Construction</a><ul><li><a class="toc-href" href="#buiding-a-nfa-from-a-re-parsing" title="buiding a NFA from a re (parsing)">buiding a NFA from a re (parsing)</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#5-regular-expression-applications_1" title="5. Regular Expression Applications">5. Regular Expression Applications</a><ul><li><a class="toc-href" href="#grep" title="grep">grep</a></li><li><a class="toc-href" href="#regexp-in-other-languages" title="regexp in other languages">regexp in other languages</a></li><li><a class="toc-href" href="#harvesting-information" title="Harvesting information">Harvesting information</a></li><li><a class="toc-href" href="#not-so-regular-expressions" title="Not-so-regular expressions">Not-so-regular expressions</a></li><li><a class="toc-href" href="#summary" title="Summary">Summary</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

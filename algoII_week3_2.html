@@ -202,10 +202,18 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 3-2 Radix Sorts">[Algorithms II] Week 3-2 Radix Sorts</a><ul><li><a class="toc-href" href="#1-strings-in-java" title="1. Strings in Java">1. Strings in Java</a><ul><li><a class="toc-href" href="#char-data-type" title="char data type">char data type</a></li><li><a class="toc-href" href="#string-data-type" title="String data type">String data type</a></li><li><a class="toc-href" href="#stringbuilder-data-type" title="StringBuilder data type">StringBuilder data type</a></li><li><a class="toc-href" href="#alphabet" title="Alphabet">Alphabet</a></li></ul></li><li><a class="toc-href" href="#2-key-indexed-counting_1" title="2. Key-Indexed Counting">2. Key-Indexed Counting</a><ul><li><a class="toc-href" href="#key-indexed-counting" title="Key-indexed counting">Key-indexed counting</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-lsd-radix-sort_1" title="3. LSD Radix Sort">3. LSD Radix Sort</a><ul><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li></ul></li><li><a class="toc-href" href="#4-msd-radix-sort_1" title="4. MSD Radix Sort">4. MSD Radix Sort</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_2" title="analysis">analysis</a></li><li><a class="toc-href" href="#msd-vs-quicksort" title="MSD vs. quicksort">MSD vs. quicksort</a></li></ul></li><li><a class="toc-href" href="#5-3-way-radix-quicksort_1" title="5. 3-way Radix Quicksort">5. 3-way Radix Quicksort</a><ul><li><a class="toc-href" href="#implementation_2" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_3" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#6-suffix-arrays_1" title="6. Suffix Arrays">6. Suffix Arrays</a><ul><li><a class="toc-href" href="#keyword-in-context-search" title="keyword-in-context search">keyword-in-context search</a></li><li><a class="toc-href" href="#longest-repeated-substring" title="longest repeated substring">longest repeated substring</a></li><li><a class="toc-href" href="#string-sorting-summery_1" title="String sorting summery">String sorting summery</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
 <p>This week: string sort.  </p>
-<h1>1. Strings in Java</h1>
-<h3>char data type</h3>
+<h1 id="1-strings-in-java">1. Strings in Java</h1>
+<h3 id="char-data-type">char data type</h3>
 <ul>
 <li><strong>char in C</strong> </li>
 </ul>
@@ -214,13 +222,13 @@ mx's blog            </a>
 <li><strong>char in Java</strong> </li>
 </ul>
 <p><em>16-bit Unicode</em> </p>
-<h3>String data type</h3>
+<h3 id="string-data-type">String data type</h3>
 <p><code>String</code>: <em>immutable</em> sequence of characters<br>
 operations: lengthe, ith char, substring, concatenate  </br></p>
 <p>implementation: using a <code>char[]</code>, maintain a <code>length</code> and an <code>offset.</code> ⇒ substring methode is O(1) time.<br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image.png"><br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image001.png"> </img></br></img></br></p>
-<h3>StringBuilder data type</h3>
+<h3 id="stringbuilder-data-type">StringBuilder data type</h3>
 <p><code>StringBuilder</code>: <em>mutable</em> data type.<br>
 implementation: using a resizing <code>char[]</code> array (ArrayList). <br>
 ⇒ contat in (amortized) constant time, <em>substring in linear time</em>!<br>
@@ -233,16 +241,16 @@ implementation: using a resizing <code>char[]</code> array (ArrayList). <br>
 <p><img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image003.png"><br>
 <strong>Longest Common Prefix:</strong><br>
 runs in linear/subinear time ⇒ <code>compareTo()</code> for strings takes (sub)linear time!  </br></br></img></p>
-<h3>Alphabet</h3>
+<h3 id="alphabet">Alphabet</h3>
 <p>alphabet different for different type of string (ex. binary numbers, DNA, ...)<br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image004.png"><br>
 def. <strong>Radix</strong> <code>R</code> is number of digits  in alphabet.   </br></img></br></p>
-<h1>2. Key-Indexed Counting</h1>
+<h1 id="2-key-indexed-counting_1">2. Key-Indexed Counting</h1>
 <p>review of <em>compare-based</em> sorting algorithms:<br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image005.png"><br>
 lower-bound for compare-based algorithms: ~<em>NlgN</em> (=Lg(N!))<br>
 ⇒ goal: do better by avoiding using compares.   </br></br></img></br></p>
-<h3>Key-indexed counting</h3>
+<h3 id="key-indexed-counting">Key-indexed counting</h3>
 <p>is an algorithm to sort <em>by character(ex. sort array of string by their 1st character).</em> <br>
 Assumption: keys are integers between 0 and R-1 (&lt;&lt;N, small integer).<br>
 ⇒ use keys as array index, to sort an <em>array of N integers between 0 and R-1</em>.   </br></br></p>
@@ -274,12 +282,12 @@ Assumption: keys are integers between 0 and R-1 (&lt;&lt;N, small integer).<br>
 <span class="code-line">    a = aux;      </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>analysis</h3>
+<h3 id="analysis">analysis</h3>
 <ul>
 <li>running time: <strong>linear</strong> in time and in space.   </li>
 <li><strong>stable</strong> sorting: that's why we need the cumsum and aux array...  </li>
 </ul>
-<h1>3. LSD Radix Sort</h1>
+<h1 id="3-lsd-radix-sort_1">3. LSD Radix Sort</h1>
 <p>LSD = least significant digit (for string sorting)<br>
 (assume strings all of same length)<br>
 idea:  </br></br></p>
@@ -289,13 +297,13 @@ idea:  </br></br></p>
 </ul>
 <p>important: the key-indexed counting should be stable.<br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image008.png"> </img></br></p>
-<h3>analysis</h3>
+<h3 id="analysis_1">analysis</h3>
 <p>time: W * N (W=length of string)  </p>
 <p>correctness:<br>
 <strong>prop</strong>. LSD sorting works<br>
 pf. by induction on i<br>
 prove that: after pass i, strings are sorted by last i characters.   </br></br></br></p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>public static LSDsort(String[] a, int W){//W=fixed width  </span>
 <span class="code-line">    int R = 256;//for ASCII chars  </span>
 <span class="code-line">    int N = a.length;  </span>
@@ -319,7 +327,7 @@ prove that: after pass i, strings are sorted by last i characters.   </br></br><
 <li>if not fixed length → some fix..  </li>
 <li>sort 1 million 32-bit integers? (Google/Obama interview) ⇒ LSD string sort~   </li>
 </ul>
-<h1>4. MSD Radix Sort</h1>
+<h1 id="4-msd-radix-sort_1">4. MSD Radix Sort</h1>
 <p>most-significant-digit first (from left to right)<br>
 Idea.  </br></p>
 <ul>
@@ -328,7 +336,7 @@ Idea.  </br></p>
 </ul>
 <p>variable length: end-of-string are treated as before any char<br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image010.png"> </img></br></p>
-<h3>implementation</h3>
+<h3 id="implementation_1">implementation</h3>
 <div class="highlight"><pre><span class="code-line"><span></span>private static void sort(String[] a, String[] aux, int lo, int hi, int d){  </span>
 <span class="code-line">    if(hi&lt;=lo) return;  </span>
 <span class="code-line">    //sort by dth character  </span>
@@ -342,7 +350,7 @@ Idea.  </br></p>
 <span class="code-line">        sort(a, aux,lo+count[r], lo+count[r+1]-1, d+1);  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>analysis</h3>
+<h3 id="analysis_2">analysis</h3>
 <ul>
 <li>can recycle <code>aux[]</code>, but <em>not</em> <code>count[]</code>.   </li>
 <li>too slow for small subarrays (if len(subarray)&lt;&lt;R)  </li>
@@ -353,7 +361,7 @@ Idea.  </br></p>
 examines <strong>just enough chars</strong> to sort. <br>
 → can be sublinear in N. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image011.png"> </img></br></br></br></p>
-<h3>MSD vs. quicksort</h3>
+<h3 id="msd-vs-quicksort">MSD vs. quicksort</h3>
 <p>disadvantages for MSD:  </p>
 <ul>
 <li>random access of memory (cache inefficient)  </li>
@@ -366,7 +374,7 @@ examines <strong>just enough chars</strong> to sort. <br>
 <li>NlgN nb of string compares  </li>
 <li>has to rescan many chars for keys with <em>long prefix matches</em> </li>
 </ul>
-<h1>5. 3-way Radix Quicksort</h1>
+<h1 id="5-3-way-radix-quicksort_1">5. 3-way Radix Quicksort</h1>
 <p><em>⇒ combine benefits of qsort and MSD.</em> <br>
 <img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image015.png"><br>
 idea: do <strong>3-way partition by the dth character</strong>. <br>
@@ -376,7 +384,7 @@ idea: do <strong>3-way partition by the dth character</strong>. <br>
 <li>do not re-examine chars equal to the partitioning char  </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image014.png"> </img></p>
-<h3>Implementation</h3>
+<h3 id="implementation_2">Implementation</h3>
 <p>modification of the 3-way qsort.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="nt">private</span> <span class="nt">static</span> <span class="nt">sort</span><span class="o">(</span><span class="nt">String</span><span class="cp">[]</span> <span class="nt">a</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">lo</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">hi</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">d</span><span class="o">)</span><span class="p">{</span>  </span>
 <span class="code-line">    <span class="err">if(hi&lt;=lo)</span> <span class="err">return</span><span class="p">;</span>  </span>
@@ -393,7 +401,7 @@ idea: do <strong>3-way partition by the dth character</strong>. <br>
 <span class="code-line">    <span class="nt">sort</span><span class="o">(</span><span class="nt">a</span><span class="o">,</span><span class="nt">gt</span><span class="o">+</span><span class="nt">1</span><span class="o">,</span><span class="nt">hi</span><span class="o">,</span><span class="nt">d</span><span class="o">);</span>  </span>
 <span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<h3>analysis</h3>
+<h3 id="analysis_3">analysis</h3>
 <p><strong>wrt. qsort:</strong> </p>
 <ul>
 <li>from NlgN <strong>string</strong> compares to NlgN <strong>char</strong> compares.  </li>
@@ -406,9 +414,9 @@ idea: do <strong>3-way partition by the dth character</strong>. <br>
 <li>in-place  </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image016.png"> </img></p>
-<h1>6. Suffix Arrays</h1>
+<h1 id="6-suffix-arrays_1">6. Suffix Arrays</h1>
 <p>(<em>some applications of suffix array)</em> </p>
-<h3>keyword-in-context search</h3>
+<h3 id="keyword-in-context-search">keyword-in-context search</h3>
 <p>given N chars (N huge), <em>preprocess</em> it to enable fast substring search. <br>
 ⇒ suffix sort  </br></p>
 <ul>
@@ -416,7 +424,7 @@ idea: do <strong>3-way partition by the dth character</strong>. <br>
 <li>sort on the suffix ⇒ brings repeated suffixes together  </li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/algoII_week3_2/pasted_image017.png"> </img></p>
-<h3>longest repeated substring</h3>
+<h3 id="longest-repeated-substring">longest repeated substring</h3>
 <ul>
 <li>brute force algorithm  </li>
 </ul>
@@ -455,7 +463,7 @@ sketch:   </br></br></p>
 <p>each phase: double the nb of chars sorted on. <br>
 maintain an inverse[] array, to make comparisons constant time. <br>
 performance: NlgN  </br></br></p>
-<h2>String sorting summery</h2>
+<h2 id="string-sorting-summery_1">String sorting summery</h2>
 <ul>
 <li>can have linear sort: use chars as array index  </li>
 <li>sublinear sort: not all date need to be examined  </li>
@@ -817,7 +825,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -887,6 +895,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 3-2 Radix Sorts">[Algorithms II] Week 3-2 Radix Sorts</a><ul><li><a class="toc-href" href="#1-strings-in-java" title="1. Strings in Java">1. Strings in Java</a><ul><li><a class="toc-href" href="#char-data-type" title="char data type">char data type</a></li><li><a class="toc-href" href="#string-data-type" title="String data type">String data type</a></li><li><a class="toc-href" href="#stringbuilder-data-type" title="StringBuilder data type">StringBuilder data type</a></li><li><a class="toc-href" href="#alphabet" title="Alphabet">Alphabet</a></li></ul></li><li><a class="toc-href" href="#2-key-indexed-counting_1" title="2. Key-Indexed Counting">2. Key-Indexed Counting</a><ul><li><a class="toc-href" href="#key-indexed-counting" title="Key-indexed counting">Key-indexed counting</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-lsd-radix-sort_1" title="3. LSD Radix Sort">3. LSD Radix Sort</a><ul><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li></ul></li><li><a class="toc-href" href="#4-msd-radix-sort_1" title="4. MSD Radix Sort">4. MSD Radix Sort</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_2" title="analysis">analysis</a></li><li><a class="toc-href" href="#msd-vs-quicksort" title="MSD vs. quicksort">MSD vs. quicksort</a></li></ul></li><li><a class="toc-href" href="#5-3-way-radix-quicksort_1" title="5. 3-way Radix Quicksort">5. 3-way Radix Quicksort</a><ul><li><a class="toc-href" href="#implementation_2" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_3" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#6-suffix-arrays_1" title="6. Suffix Arrays">6. Suffix Arrays</a><ul><li><a class="toc-href" href="#keyword-in-context-search" title="keyword-in-context search">keyword-in-context search</a></li><li><a class="toc-href" href="#longest-repeated-substring" title="longest repeated substring">longest repeated substring</a></li><li><a class="toc-href" href="#string-sorting-summery_1" title="String sorting summery">String sorting summery</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

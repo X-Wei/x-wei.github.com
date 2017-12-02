@@ -202,8 +202,16 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 1-2 Directed Graphs">[Algorithms II] Week 1-2 Directed Graphs</a><ul><li><a class="toc-href" href="#1-intro-to-digraphs" title="1. Intro to digraphs">1. Intro to digraphs</a></li><li><a class="toc-href" href="#2-digraph-api" title="2. Digraph API">2. Digraph API</a></li><li><a class="toc-href" href="#3-digraph-search" title="3. Digraph Search">3. Digraph Search</a></li><li><a class="toc-href" href="#4-topological-sort" title="4. Topological Sort">4. Topological Sort</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#proof" title="proof">proof</a></li></ul></li><li><a class="toc-href" href="#5-strong-components_1" title="5. Strong Components">5. Strong Components</a><ul><li><a class="toc-href" href="#linear-time-dfs-solution-tarjan-1972" title="linear time DFS solution: Tarjan (1972)">linear time DFS solution: Tarjan (1972)</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
-<h1>1. Intro to digraphs</h1>
+<h1 id="1-intro-to-digraphs">1. Intro to digraphs</h1>
 <p>Has profound differences wrt undirected graphs.    </p>
 <p>def: digraph <br>
 <em> edges: have directions <br>
@@ -216,7 +224,7 @@ mx's blog            </a>
 <li>transit closure   </li>
 <li>PageRank   </li>
 </ul>
-<h1>2. Digraph API</h1>
+<h1 id="2-digraph-api">2. Digraph API</h1>
 <div class="highlight"><pre><span class="code-line"><span></span>public class Digraph{   </span>
 <span class="code-line">    Digraph(int V);   </span>
 <span class="code-line">    void addEdge(int v, int w);// edge is directed   </span>
@@ -227,7 +235,7 @@ mx's blog            </a>
 </pre></div>
 <p>representation: adj-list, ie. an array of bags.  <br>
 <code>Bag&lt;Integer&gt;[] adj;// prec vertices</code> </br></p>
-<h1>3. Digraph Search</h1>
+<h1 id="3-digraph-search">3. Digraph Search</h1>
 <p>BFS and DFS can be applied to digraphs.   </p>
 <ul>
 <li>reachability   </li>
@@ -246,7 +254,7 @@ use the same DFS as for undirected graphs.  <br>
 <p><img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image.png"> <br>
 ⇒ use DFS but <em>enque all vertices in the set</em>.  <br>
 → application: web crawler(DFS not suitable for crawling)   </br></br></img></p>
-<h1>4. Topological Sort</h1>
+<h1 id="4-topological-sort">4. Topological Sort</h1>
 <p>application. precedence schedule, java compiler (cycled inheritance), ...   </p>
 <p>def. <strong>topo-order</strong> <br>
 is a permutation of vertices, where for each vertice v→w, w is behind v in the permutation.    </br></p>
@@ -257,7 +265,7 @@ directed acyclic graph. <br>
 <em>reverse DFS postorder</em> </br></p>
 <p>def.    <strong>postorder</strong> <br>
 is the order of the vertices that we have <em>finished</em> (ie. we have visited all reachable vertices from this vertex).   </br></p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p>这个以前的blog写过...    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>private boolean[] visited;   </span>
 <span class="code-line">private Stack&lt;Integer&gt; revPostorder;// stores the vertices in reverse post order   </span>
@@ -275,7 +283,7 @@ is the order of the vertices that we have <em>finished</em> (ie. we have visited
 <span class="code-line">    return revPostorder;   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>proof</h3>
+<h3 id="proof">proof</h3>
 <p><strong>prop. </strong>reverse post-order of a DAG is in topological order.  <br>
 (这个证明蛮精彩) <br>
 <strong>pf.</strong> <br>
@@ -285,7 +293,7 @@ for any edge <strong>v→w</strong>, when <code>dfs(v)</code> is called:    </br
 <li>case 2: <code>dfs(w)</code> is not called, it will be (in)directly get called by <code>dfs(v)</code>, so <code>dfs(w)</code> finishes before <code>dfs(v)</code>;   </li>
 <li>case 3: <code>dfs(w)</code> is called but NOT returned (ie, w not <em>finished</em>) → exist path from w to v ⇒ graph is not a DAG! (cycle detection)   </li>
 </ul>
-<h1>5. Strong Components</h1>
+<h1 id="5-strong-components_1">5. Strong Components</h1>
 <p>For undirected graphs: connected components can be solved with dfs or UF.    </p>
 <p>def. <strong>Strongly-connected</strong> <br>
 v and w are strongly-connected if exist path from v to w and w to v.  <br>
@@ -293,7 +301,7 @@ v and w are strongly-connected if exist path from v to w and w to v.  <br>
 <p>def. <strong>Strong Component</strong> <br>
 subset of  V where each pair are strongly-connected.    </br></p>
 <p>Goal: compute all strong components(<em>scc</em>) in a digraph.    </p>
-<h2>linear time DFS solution: Tarjan (1972)</h2>
+<h2 id="linear-time-dfs-solution-tarjan-1972">linear time DFS solution: Tarjan (1972)</h2>
 <p>(developed version: a two-pass linear-time algorithm)   </p>
 <p>Intuition: <em>scc for G is the same for G.reverse().</em> </p>
 <p><strong>Kernel DAG</strong>: contract each scc into a single vertex.  <br>
@@ -312,7 +320,7 @@ subset of  V where each pair are strongly-connected.    </br></p>
 太精彩了!!! <br>
 <img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image002.png"> </img></br></br></p>
 <p>proof: tricky, cf book...(貌似Werner课上讲过..)   </p>
-<h2>implementation</h2>
+<h2 id="implementation_1">implementation</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>private int[] scc = new int[V]; // scc[v] is the index of the SCC that v belongs to   </span>
 <span class="code-line">private int sccCount = 0;   </span>
 <span class="code-line">private boolean[] visited = new boolean[V];   </span>
@@ -691,7 +699,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -761,6 +769,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 1-2 Directed Graphs">[Algorithms II] Week 1-2 Directed Graphs</a><ul><li><a class="toc-href" href="#1-intro-to-digraphs" title="1. Intro to digraphs">1. Intro to digraphs</a></li><li><a class="toc-href" href="#2-digraph-api" title="2. Digraph API">2. Digraph API</a></li><li><a class="toc-href" href="#3-digraph-search" title="3. Digraph Search">3. Digraph Search</a></li><li><a class="toc-href" href="#4-topological-sort" title="4. Topological Sort">4. Topological Sort</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#proof" title="proof">proof</a></li></ul></li><li><a class="toc-href" href="#5-strong-components_1" title="5. Strong Components">5. Strong Components</a><ul><li><a class="toc-href" href="#linear-time-dfs-solution-tarjan-1972" title="linear time DFS solution: Tarjan (1972)">linear time DFS solution: Tarjan (1972)</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

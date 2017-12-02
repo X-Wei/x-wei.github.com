@@ -202,6 +202,14 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#fa-1-qiong-ju-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#fa-2-zui-da-liu-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#fa-3-xian-xing-gui-hua-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC] </p>
 <p>昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记.    </p>
 <p>题目链接在这里:  <br>
@@ -246,9 +254,9 @@ Large dataset <br>
 <span class="code-line">    for i in xrange(T):   </span>
 <span class="code-line">        testcase(i+1)</span>
 </pre></div>
-<h1>法1: 穷举 bruteforce (for small testcase)</h1>
+<h1 id="fa-1-qiong-ju-bruteforce-for-small-testcase">法1: 穷举 bruteforce (for small testcase)</h1>
 <p>在small set(N=20) 中, 对于那18个未知语言的句子, 每句可能是英语或法语. 那么穷举所有可能性, 然后选择双语单词最少的即可. 2^18约等于几十万 , 按说python还是可以handle的 (2^10=1k, 2^ 20=1M, python每秒大约能循环几百万次).    </p>
-<h2>naive bruteforce</h2>
+<h2 id="naive-bruteforce">naive bruteforce</h2>
 <p>生成所有的可能性组合, python的<code>itertools</code>包里提供了<a href="https://docs.python.org/2/library/itertools.html#itertools.combinations">combinations</a>函数, <code>combinations(iterable, r)</code>返回所有在iterable中大小为r的子集(的迭代器):    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>   </span>
 <span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="s1">'ABCD'</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="k">print</span> <span class="n">c</span>   </span>
@@ -285,7 +293,7 @@ Large dataset <br>
 <span class="code-line">    print 'Case #%d: %d' % ( cas, res )</span>
 </pre></div>
 <p>然而, 下载了small testcase以后运行程序, 速度还是不够快, 大约要十分钟才有结果 — 而codejam的提交时间限制是4分钟啊... 程序每次检查2^18种可能性, 但是由于每次检查都要进行集合的union和intersection操作(这种操作的效率并不高, 甚至C++里也是一样), 这个操作太耗费时间了所以不行...    </p>
-<h2>bruteforce using bitmap</h2>
+<h2 id="bruteforce-using-bitmap">bruteforce using bitmap</h2>
 <p>需要更加聪明的穷举方法, 自然的想法就是用bitmap(或者叫bitvector?). 之前的两个基本操作都可以用bitmap完成:    </p>
 <ul>
 <li>枚举各个句子的语言种类: 如果每个句子用一位来表示的话(1代表英语, 0代表法语), 那么用N位的bitmap即可表示一种情形. 这个bitmap只需从0增加到2^N-1, 就把2^N个可能性都遍历了. (实际上是2^N-2个可能性, 因为前两个句子已经确定语言了).    </li>
@@ -317,7 +325,7 @@ Large dataset <br>
 <span class="code-line">    print 'Case #%d: %d' % ( cas, res )</span>
 </pre></div>
 <p>以上代码在我电脑上执行small的时候大约花费1分钟, 比最开始用set的速度提高了十倍. 当然, 对于large的case这种解法肯定就超时了...    </p>
-<h1>法2: 最大流 maxflow</h1>
+<h1 id="fa-2-zui-da-liu-maxflow_1">法2: 最大流 maxflow</h1>
 <p>这个方法也是官方<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=a&amp;a=2">analysis</a>里提供的答案. 如果将所有句子<code>S</code>以及所有单词<code>w</code>看作节点, 每个句子的节点<code>S</code>于它包含的单词的节点<code>w</code>相连, 问题转化成了从节点<code>S1</code>到节点<code>S2</code>的vertex cut问题 (选取最小的节点集合, 将该集合的节点去掉以后S1和S2不再联通).    </p>
 <p>然后这个问题又可以转为边的min cut问题: 只需要把每个单词节点w分成左右两个节点<code>w1</code>和<code>w2</code>, 并且这样添加边(假设w在句子S中):    </p>
 <ul>
@@ -344,7 +352,7 @@ Large dataset <br>
 <span class="code-line">    <span class="k">print</span> <span class="s1">'Case #</span><span class="si">%d</span><span class="s1">: </span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span> <span class="n">ind</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">flow_value</span><span class="p">)</span> <span class="p">)</span></span>
 </pre></div>
 <p>用这个代码即可轻松通过large case... maxflow的建模还真是艺术...orz   </p>
-<h1>法3: 线性规划 (integer) linear programming</h1>
+<h1 id="fa-3-xian-xing-gui-hua-integer-linear-programming">法3: 线性规划 (integer) linear programming</h1>
 <p>写完上面那个解法以后, 我又看了看<a href="https://www.go-hero.net/jam/15/name/linguo">大神</a>的解法, 发现他居然用的是<a href="https://pythonhosted.org/PuLP/pulp.html">pulp</a>(python线性规划的包), 于是自己想了一下, 这个问题确实可以用线性规划来建模 !    </p>
 <p>首先说一句pulp这个包, 它提供了非常好用的接口来构造LP问题, 增加约束或者定义objective只要用<code>prob+=[expression]</code>就好了, 可以说比AMPL好用不少... 下面是一个简单的例子:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pulp</span> <span class="kn">import</span> <span class="o">*</span>   </span>
@@ -755,7 +763,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -813,6 +821,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#fa-1-qiong-ju-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#fa-2-zui-da-liu-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#fa-3-xian-xing-gui-hua-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

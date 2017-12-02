@@ -18,7 +18,7 @@ doc: &lt;a href="https://github.com/torch/optim/blob/master/doc/intro.md"&gt;htt
 &lt;span class="code-line"&gt;&lt;span class="nx"&gt;end&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;But this is functionality is implemented in the &lt;code&gt;optim&lt;/code&gt; module. In addition to just grad-descent, it has more complicated optimization algorithms implemented.  &lt;/p&gt;
-&lt;h2&gt;Interface&lt;/h2&gt;
+&lt;h2 id="interface"&gt;Interface&lt;/h2&gt;
 &lt;p&gt;The interface for all optimization algos are: &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;params_new, fs, ... = optim._method_(feval, params[, config][, state])&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;explination:  &lt;/p&gt;
@@ -34,9 +34,9 @@ doc: &lt;a href="https://github.com/torch/optim/blob/master/doc/intro.md"&gt;htt
 As optim expects the input to be 1D tensors, we need to &lt;strong&gt;flatten&lt;/strong&gt; the parameters in our model, this can be achieved via:  &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;params, gradParams = model:getParameters()&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;the reuslting &lt;code&gt;params&lt;/code&gt; and &lt;code&gt;gradParams&lt;/code&gt; are all flattened into 1D tensor.  &lt;/p&gt;
-&lt;h2&gt;Example: sgd to train mlp the XOR function&lt;/h2&gt;
+&lt;h2 id="example-sgd-to-train-mlp-the-xor-function"&gt;Example: sgd to train mlp the XOR function&lt;/h2&gt;
 &lt;p&gt;Here is an example for learning an XOR using a mlp with one hidden layer.  &lt;/p&gt;
-&lt;h3&gt;model, criterion&lt;/h3&gt;
+&lt;h3 id="model-criterion"&gt;model, criterion&lt;/h3&gt;
 &lt;p&gt;First, define the model and criterion (use MSE here, see it as a regression problem):  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;require 'nn' &lt;/span&gt;
 &lt;span class="code-line"&gt;inputs = 2; outputs = 1; HUs = 20 -- parameters&lt;/span&gt;
@@ -48,7 +48,7 @@ As optim expects the input to be 1D tensors, we need to &lt;strong&gt;flatten&lt
 &lt;span class="code-line"&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;criterion = nn.MSECriterion()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;data&lt;/h3&gt;
+&lt;h3 id="data"&gt;data&lt;/h3&gt;
 &lt;p&gt;Then generate dataset of XORs: sample 2d inputs, and lables are -1 if the samples are of the sign, otherwise +1. Generate 128 training samples: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;batchSize = 128 &lt;/span&gt;
 &lt;span class="code-line"&gt;batchInputs = torch.DoubleTensor(batchSize, inputs)  &lt;/span&gt;
@@ -66,7 +66,7 @@ As optim expects the input to be 1D tensors, we need to &lt;strong&gt;flatten&lt
 &lt;span class="code-line"&gt;   batchLabels[i] = label &lt;/span&gt;
 &lt;span class="code-line"&gt;end&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;feval() closure&lt;/h3&gt;
+&lt;h3 id="feval-closure"&gt;feval() closure&lt;/h3&gt;
 &lt;p&gt;Then define the feval function that returns the loss and the gradient wrt the loss:  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;feval&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;/span&gt;
 &lt;span class="code-line"&gt;    &lt;span class="nx"&gt;gradParams&lt;/span&gt;:&lt;span class="kt"&gt;zero&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;/span&gt;
@@ -118,7 +118,7 @@ doc: &lt;a href="https://github.com/torch/nngraph/"&gt;https://github.com/torch/
 &lt;blockquote&gt;
 &lt;p&gt;The nngraph library provides a way to build any complex network focusing on the network graph and avoiding the use of Containers.  &lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2&gt;nngraph.Node&lt;/h2&gt;
+&lt;h2 id="nngraphnode"&gt;nngraph.Node&lt;/h2&gt;
 &lt;p&gt;Any &lt;code&gt;Module&lt;/code&gt; can be wrapped into a &lt;code&gt;nngraph.Node&lt;/code&gt;.  &lt;/p&gt;
 &lt;p&gt;For all &lt;code&gt;nn.Module&lt;/code&gt;, nngraph overrides the &lt;code&gt;__call__&lt;/code&gt; meta method (the function call operator &lt;code&gt;()&lt;/code&gt;), by &lt;em&gt;calling&lt;/em&gt; a module, a &lt;code&gt;Node&lt;/code&gt; is returned:  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; require 'nngraph'; &lt;/span&gt;
@@ -138,7 +138,7 @@ doc: &lt;a href="https://github.com/torch/nngraph/"&gt;https://github.com/torch/
 &lt;span class="code-line"&gt;th&amp;gt; h2 = nn.Linear(10, 1)(h1) -- h1 is input of h2  &lt;/span&gt;
 &lt;span class="code-line"&gt;                                                                      [0.0001s]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Simple sequential example&lt;/h2&gt;
+&lt;h2 id="simple-sequential-example"&gt;Simple sequential example&lt;/h2&gt;
 &lt;p&gt;We make a network by calling &lt;code&gt;nn.gModulet()&lt;/code&gt;, this takes 2 arguments: a table of &lt;code&gt;inputs&lt;/code&gt;, and a table of &lt;code&gt;outputs&lt;/code&gt;:  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; mlp = nn.gModule({h1}, {h2}) &lt;/span&gt;
 &lt;span class="code-line"&gt;                                                                      [0.0002s]&lt;/span&gt;
@@ -151,7 +151,7 @@ doc: &lt;a href="https://github.com/torch/nngraph/"&gt;https://github.com/torch/
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/learn-torch-5-nngraph/pasted_image.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;(The first and last nodes are dummy nodes and regroup all inputs and outputs of the graph.) &lt;/p&gt;
-&lt;h2&gt;DAG example&lt;/h2&gt;
+&lt;h2 id="dag-example"&gt;DAG example&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nngraph#a-network-with-2-inputs-and-2-outputs"&gt;https://github.com/torch/nngraph#a-network-with-2-inputs-and-2-outputs&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;Here is an example to build a model with 2 inputs and 2 outputs:  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;h1 = nn.Linear(20, 20)() &lt;/span&gt;
@@ -180,7 +180,7 @@ doc: &lt;a href="https://github.com/torch/nngraph/"&gt;https://github.com/torch/
 &lt;span class="code-line"&gt;oB = madd - nn.Tanh() &lt;/span&gt;
 &lt;span class="code-line"&gt;gmod = nn.gModule( {h1,h2}, {oA,oB} )&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Annotations of nodes&lt;/h2&gt;
+&lt;h2 id="annotations-of-nodes"&gt;Annotations of nodes&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nngraph#annotations"&gt;https://github.com/torch/nngraph#annotations&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;Use &lt;code&gt;node::annotate()&lt;/code&gt; to annotated nodes, can add name/description, or change node color. &lt;/p&gt;
 &lt;p&gt;WIth annotation, can enable debugging too:  &lt;/p&gt;
@@ -188,14 +188,14 @@ doc: &lt;a href="https://github.com/torch/nngraph/"&gt;https://github.com/torch/
 &lt;p&gt;ref: &lt;a href="http://rnduja.github.io/2015/10/05/deep_learning_with_torch_step_3_nn_criterions/"&gt;http://rnduja.github.io/2015/10/05/deep_learning_with_torch_step_3_nn_criterions/&lt;/a&gt; &lt;br&gt;
 doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md&lt;/a&gt; &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Criterion&lt;/code&gt;: abstract class, given input and target(true label), a &lt;code&gt;Criterion&lt;/code&gt; can compute the gradient according to a certain loss function.   &lt;/p&gt;
-&lt;h2&gt;Criterion class&lt;/h2&gt;
+&lt;h2 id="criterion-class"&gt;Criterion class&lt;/h2&gt;
 &lt;p&gt;important methods:   &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;forward(input, target)&lt;/code&gt;: compute …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;ref: &lt;a href="http://rnduja.github.io/2015/10/05/deep_learning_with_torch_step_3_nn_criterions/"&gt;http://rnduja.github.io/2015/10/05/deep_learning_with_torch_step_3_nn_criterions/&lt;/a&gt; &lt;br&gt;
 doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md&lt;/a&gt; &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Criterion&lt;/code&gt;: abstract class, given input and target(true label), a &lt;code&gt;Criterion&lt;/code&gt; can compute the gradient according to a certain loss function.   &lt;/p&gt;
-&lt;h2&gt;Criterion class&lt;/h2&gt;
+&lt;h2 id="criterion-class"&gt;Criterion class&lt;/h2&gt;
 &lt;p&gt;important methods:   &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;forward(input, target)&lt;/code&gt;: compute the loss function, the &lt;code&gt;input&lt;/code&gt; is usually the prediction/log-probability prediction of the network, &lt;code&gt;target&lt;/code&gt; is the truth label of training data.   &lt;/li&gt;
@@ -208,8 +208,8 @@ doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;ht
 &lt;li&gt;embedding criterions  &lt;/li&gt;
 &lt;li&gt;misc criterions  &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Classification criterion examples&lt;/h2&gt;
-&lt;h3&gt;ClassNLLCriterion&lt;/h3&gt;
+&lt;h2 id="classification-criterion-examples"&gt;Classification criterion examples&lt;/h2&gt;
+&lt;h3 id="classnllcriterion"&gt;ClassNLLCriterion&lt;/h3&gt;
 &lt;p&gt;negative log likelihood criterion  &lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md#nn.ClassNLLCriterion"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md#nn.ClassNLLCriterion&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;crt = nn.ClassNLLCriterion([weights])&lt;/code&gt; &lt;/p&gt;
@@ -218,25 +218,25 @@ doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;ht
 &lt;p&gt;The &lt;em&gt;probabilities&lt;/em&gt; of each class can be computed by applying softmax on &lt;em&gt;logits&lt;/em&gt;,  the log-proba is just to take the log of the probabilities. Can use directly &lt;a href="https://github.com/torch/nn/blob/master/doc/transfer.md#logsoftmax"&gt;logsoftmax&lt;/a&gt; layer to achieve this (ex. add &lt;code&gt;nn.LogSoftMax&lt;/code&gt; as last layer of a sequential container).   &lt;/p&gt;
 &lt;p&gt;If the input &lt;code&gt;x&lt;/code&gt; is log-proba of each class, the loss is just:   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;loss = forward(x, target) = -x[target_class]&lt;/code&gt; &lt;/p&gt;
-&lt;h3&gt;CrossEntropyCriterion&lt;/h3&gt;
+&lt;h3 id="crossentropycriterion"&gt;CrossEntropyCriterion&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md#nn.CrossEntropyCriterion"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md#nn.CrossEntropyCriterion&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;This combines a logsoftmax and a NLLcriterion, so the &lt;code&gt;input&lt;/code&gt; is expected to be &lt;em&gt;logits&lt;/em&gt; (scores)  &lt;/p&gt;
-&lt;h3&gt;MarginCriterion&lt;/h3&gt;
+&lt;h3 id="margincriterion"&gt;MarginCriterion&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md#margincriterion"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md#margincriterion&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;computes hinge loss of binary classification problem.   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;input&lt;/code&gt; x is expected to be svm scores, &lt;code&gt;target&lt;/code&gt; y is expected to be ±1 labels.   &lt;/p&gt;
-&lt;h2&gt;Regression criterion examples&lt;/h2&gt;
-&lt;h3&gt;MSECriterion&lt;/h3&gt;
+&lt;h2 id="regression-criterion-examples_1"&gt;Regression criterion examples&lt;/h2&gt;
+&lt;h3 id="msecriterion"&gt;MSECriterion&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md#nn.MSECriterion"&gt;https://github.com/torch/nn/blob/master/doc/criterion.md#nn.MSECriterion&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;criterion = nn.MSECriterion()&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;the loss is just MSE, input and target both have n elements:   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;loss = forward(x,y) = sum[ (xi-yi)^2 ] / n&lt;/code&gt; &lt;/p&gt;
-&lt;h3&gt;AbsCriterion&lt;/h3&gt;
+&lt;h3 id="abscriterion"&gt;AbsCriterion&lt;/h3&gt;
 &lt;p&gt;L1 distance between x and y.   &lt;/p&gt;
-&lt;h3&gt;DistKLDivCriterion&lt;/h3&gt;
+&lt;h3 id="distkldivcriterion"&gt;DistKLDivCriterion&lt;/h3&gt;
 &lt;p&gt;KL divergence for class probabilities   &lt;/p&gt;
-&lt;h2&gt;A Complete Example&lt;/h2&gt;
-&lt;h3&gt;updating function&lt;/h3&gt;
+&lt;h2 id="a-complete-example_1"&gt;A Complete Example&lt;/h2&gt;
+&lt;h3 id="updating-function"&gt;updating function&lt;/h3&gt;
 &lt;p&gt;First write a function for  grad-desc updating for a &lt;code&gt;model&lt;/code&gt;, input &lt;em&gt;to the model&lt;/em&gt; is &lt;code&gt;x&lt;/code&gt;, truth label is &lt;code&gt;y&lt;/code&gt;.   &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="kr"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;gradientUpdate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;criterion&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;learningRate&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;/span&gt;
 &lt;span class="code-line"&gt;        &lt;span class="kd"&gt;local&lt;/span&gt; &lt;span class="n"&gt;pred&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;forward&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;-- assumes pred is what criterion expects as input  &lt;/span&gt;&lt;/span&gt;
@@ -256,7 +256,7 @@ doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;ht
 &lt;li&gt;the model do a gradient descent step to modify its parameters by &lt;code&gt;model:updateParameters(learningRate)&lt;/code&gt; &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;em&gt;This is the function that we should pass to an optimizer.&lt;/em&gt; &lt;/p&gt;
-&lt;h3&gt;model, criterion and data&lt;/h3&gt;
+&lt;h3 id="model-criterion-and-data"&gt;model, criterion and data&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;the model is just a linear layer (5 inputs, 1 output ), output = Ax+b  &lt;/li&gt;
 &lt;/ul&gt;
@@ -275,14 +275,14 @@ doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;ht
     y1 = torch.Tensor({1})  
     x2 = torch.rand(5)  
     y2 = torch.Tensor({-1})&lt;/code&gt;&lt;/p&gt;
-&lt;h3&gt;training&lt;/h3&gt;
+&lt;h3 id="training"&gt;training&lt;/h3&gt;
 &lt;p&gt;To train the model, we run the update funcion on the data points 1000 times (&lt;em&gt;epochs&lt;/em&gt;):   &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;lua
     for i = 1,1000 do  
         gradientUpdate(model, x1, y1, criterion, 0.01)  
         gradientUpdate(model, x1, y1, criterion, 0.01)  
     end&lt;/code&gt;&lt;/p&gt;
-&lt;h3&gt;evaluating&lt;/h3&gt;
+&lt;h3 id="evaluating"&gt;evaluating&lt;/h3&gt;
 &lt;p&gt;to see the prediciton, just use &lt;code&gt;model:forward(x)&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;lua
     print('prediction for x1='..model:forward(x1)[1]..' expected value='..y1[1])  
@@ -294,7 +294,7 @@ doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/criterion.md"&gt;ht
 &lt;p&gt;doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/containers.md"&gt;https://github.com/torch/nn/blob/master/doc/containers.md&lt;/a&gt; &lt;br&gt;
 ref: &lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/"&gt;http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/&lt;/a&gt; &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. &lt;em&gt;Container contains modules (layers)&lt;/em&gt;.  &lt;/p&gt;
-&lt;h2&gt;Container class&lt;/h2&gt;
+&lt;h2 id="container-class"&gt;Container class&lt;/h2&gt;
 &lt;p&gt;important methods:  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;add(module)&lt;/code&gt; &lt;/li&gt;
@@ -302,7 +302,7 @@ ref: &lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_ste
 &lt;p&gt;doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/containers.md"&gt;https://github.com/torch/nn/blob/master/doc/containers.md&lt;/a&gt; &lt;br&gt;
 ref: &lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/"&gt;http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/&lt;/a&gt; &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. &lt;em&gt;Container contains modules (layers)&lt;/em&gt;.  &lt;/p&gt;
-&lt;h2&gt;Container class&lt;/h2&gt;
+&lt;h2 id="container-class"&gt;Container class&lt;/h2&gt;
 &lt;p&gt;important methods:  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;add(module)&lt;/code&gt; &lt;/li&gt;
@@ -315,7 +315,7 @@ ref: &lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_ste
 &lt;li&gt;&lt;code&gt;Parallel&lt;/code&gt; &lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Concat&lt;/code&gt; &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Sequential&lt;/h2&gt;
+&lt;h2 id="sequential"&gt;Sequential&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;Sequential&lt;/code&gt;&lt;strong&gt; is just a stack of layers&lt;/strong&gt;, add layer by &lt;code&gt;model:add()&lt;/code&gt;. Here is a simple 2-layer MLP example:  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt;  mlp = nn.Sequential() &lt;/span&gt;
 &lt;span class="code-line"&gt;                                                                      [0.0000s]  &lt;/span&gt;
@@ -329,7 +329,7 @@ ref: &lt;a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_ste
 &lt;span class="code-line"&gt; 1.2697 &lt;/span&gt;
 &lt;span class="code-line"&gt;[torch.DoubleTensor of size 1]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Parallel&lt;/h2&gt;
+&lt;h2 id="parallel"&gt;Parallel&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;module = Parallel(inputDimension,outputDimension)&lt;/code&gt; &lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;em&gt;Creates a container module that applies its ith child module to the ith slice of the input Tensor&lt;/em&gt; by using &lt;code&gt;select&lt;/code&gt; on dimension &lt;code&gt;inputDimension&lt;/code&gt;. It concatenates the results of its contained modules together along dimension &lt;code&gt;outputDimension&lt;/code&gt;.  &lt;/p&gt;
@@ -366,7 +366,7 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;span class="code-line"&gt;-0.6320 &lt;/span&gt;
 &lt;span class="code-line"&gt;[torch.DoubleTensor of size 5]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Concat&lt;/h2&gt;
+&lt;h2 id="concat"&gt;Concat&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;module = nn.Concat(dim)&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;Concat concatenates the output of its "parallel" children modules along &lt;code&gt;dim&lt;/code&gt;: these child modules &lt;em&gt;take the same inputs&lt;/em&gt;, and their output is concatenated. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;th&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;mlp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nt"&gt;nn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Concat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nt"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="nt"&gt;--&lt;/span&gt; &lt;span class="nt"&gt;ouput&lt;/span&gt; &lt;span class="nt"&gt;concat&lt;/span&gt; &lt;span class="nt"&gt;along&lt;/span&gt; &lt;span class="nt"&gt;dim&lt;/span&gt; &lt;span class="nt"&gt;1&lt;/span&gt; &lt;/span&gt;
@@ -387,14 +387,14 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;/pre&gt;&lt;/div&gt;</content><category term="torch"></category></entry><entry><title>[learning torch] 2. Module (layers)</title><link href="http://x-wei.github.io/learn-torch-2-module.html" rel="alternate"></link><published>2016-10-07T19:40:00+02:00</published><updated>2016-10-07T19:40:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-10-07:/learn-torch-2-module.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Module&lt;/code&gt; is an abstract class which defines fundamental methods necessary for a &lt;em&gt;Layer&lt;/em&gt;. &lt;/p&gt;
 &lt;p&gt;doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/module.md"&gt;https://github.com/torch/nn/blob/master/doc/module.md&lt;/a&gt; &lt;/p&gt;
-&lt;h2&gt;Module class&lt;/h2&gt;
+&lt;h2 id="module-class"&gt;Module class&lt;/h2&gt;
 &lt;p&gt;variables in &lt;code&gt;Module&lt;/code&gt;:  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;output&lt;/code&gt;: Tensor, the ouput computed from last call of &lt;code&gt;forward(input)&lt;/code&gt; &lt;/li&gt;
 &lt;li&gt;&lt;code&gt;gradInput&lt;/code&gt;: Tensor, gradient wrt input of module, computed from …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Module&lt;/code&gt; is an abstract class which defines fundamental methods necessary for a &lt;em&gt;Layer&lt;/em&gt;. &lt;/p&gt;
 &lt;p&gt;doc: &lt;a href="https://github.com/torch/nn/blob/master/doc/module.md"&gt;https://github.com/torch/nn/blob/master/doc/module.md&lt;/a&gt; &lt;/p&gt;
-&lt;h2&gt;Module class&lt;/h2&gt;
+&lt;h2 id="module-class"&gt;Module class&lt;/h2&gt;
 &lt;p&gt;variables in &lt;code&gt;Module&lt;/code&gt;:  &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;output&lt;/code&gt;: Tensor, the ouput computed from last call of &lt;code&gt;forward(input)&lt;/code&gt; &lt;/li&gt;
@@ -405,7 +405,7 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;li&gt;&lt;code&gt;forward(input)&lt;/code&gt;: return corresponding output of layer &lt;/li&gt;
 &lt;li&gt;&lt;code&gt;backward(input, gradOutput)&lt;/code&gt;: return gradInput wrt the given input &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Linear&lt;/h2&gt;
+&lt;h2 id="linear"&gt;Linear&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear"&gt;https://github.com/torch/nn/blob/master/doc/simple.md#nn.Linear&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Linear&lt;/code&gt; extends &lt;code&gt;Module&lt;/code&gt;, it's just linear transformation of input: &lt;code&gt;y=Ax+b&lt;/code&gt; (parameters/variables: &lt;code&gt;weight&lt;/code&gt;, &lt;code&gt;bias&lt;/code&gt;) &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;gradWeight&lt;/code&gt;, &lt;code&gt;gradBias&lt;/code&gt; are respectively the gradient of each parameter.  &lt;/p&gt;
@@ -446,7 +446,7 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;span class="code-line"&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;                                                                      &lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="nx"&gt;s&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Identity&lt;/h2&gt;
+&lt;h2 id="identity"&gt;Identity&lt;/h2&gt;
 &lt;p&gt;output reproduces input, this layer can be used to model the input layer of a neural network.  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;th&amp;gt; id = nn.Identity() &lt;/span&gt;
 &lt;span class="code-line"&gt;                                                                      [0.0000s]  &lt;/span&gt;
@@ -472,7 +472,7 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;span class="code-line"&gt; 3 &lt;/span&gt;
 &lt;span class="code-line"&gt;[torch.DoubleTensor of size 3]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Other modules&lt;/h2&gt;
+&lt;h2 id="other-modules"&gt;Other modules&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/nn/blob/master/doc/simple.md"&gt;https://github.com/torch/nn/blob/master/doc/simple.md&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;some examples: &lt;/p&gt;
 &lt;ul&gt;
@@ -483,7 +483,7 @@ and the parallel model should be: &lt;code&gt;torch.cat( out1, out2, ouputDimens
 &lt;/ul&gt;</content><category term="torch"></category></entry><entry><title>[learning torch] 1. Tensor</title><link href="http://x-wei.github.io/learn-torch-1-tensor.html" rel="alternate"></link><published>2016-10-07T15:30:00+02:00</published><updated>2016-10-07T15:30:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-10-07:/learn-torch-1-tensor.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;A &lt;code&gt;Tensor&lt;/code&gt; is the fondamental data type in torch, (similar to numpy for tensorflow), it's a potentially multi-dimensional matrix. &lt;/p&gt;
 &lt;p&gt;See doc: &lt;a href="https://github.com/torch/torch7/blob/master/doc/tensor.md"&gt;https://github.com/torch/torch7/blob/master/doc/tensor.md&lt;/a&gt; &lt;/p&gt;
-&lt;h2&gt;basic ops&lt;/h2&gt;
+&lt;h2 id="basic-ops"&gt;basic ops&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Indicate shape in constructor: &lt;/p&gt;
@@ -493,7 +493,7 @@ th&amp;gt; x
  3.7366e …&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;A &lt;code&gt;Tensor&lt;/code&gt; is the fondamental data type in torch, (similar to numpy for tensorflow), it's a potentially multi-dimensional matrix. &lt;/p&gt;
 &lt;p&gt;See doc: &lt;a href="https://github.com/torch/torch7/blob/master/doc/tensor.md"&gt;https://github.com/torch/torch7/blob/master/doc/tensor.md&lt;/a&gt; &lt;/p&gt;
-&lt;h2&gt;basic ops&lt;/h2&gt;
+&lt;h2 id="basic-ops"&gt;basic ops&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Indicate shape in constructor: &lt;/p&gt;
@@ -573,7 +573,7 @@ th&amp;gt; x
 &lt;span class="code-line"&gt;     &lt;span class="mi"&gt;1&lt;/span&gt;  &lt;span class="mi"&gt;2&lt;/span&gt;  &lt;span class="mi"&gt;3&lt;/span&gt; &lt;/span&gt;
 &lt;span class="code-line"&gt;    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DoubleTensor&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;x3&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Storage&lt;/h2&gt;
+&lt;h2 id="storage"&gt;Storage&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;One could say that a &lt;code&gt;Tensor&lt;/code&gt; is a particular way of viewing a &lt;code&gt;Storage&lt;/code&gt;: a &lt;code&gt;Storage&lt;/code&gt; only represents a chunk of memory, while the &lt;code&gt;Tensor&lt;/code&gt; interprets this chunk of memory as having dimensions.  &lt;/p&gt;
 &lt;/blockquote&gt;
@@ -588,7 +588,7 @@ th&amp;gt; x
 &lt;span class="code-line"&gt;    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DoubleTensor&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="n"&gt;x4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;short for range: torch.range(1,5) &lt;/p&gt;
-&lt;h2&gt;Slicing&lt;/h2&gt;
+&lt;h2 id="slicing"&gt;Slicing&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors"&gt;https://github.com/torch/torch7/blob/master/doc/tensor.md#extracting-sub-tensors&lt;/a&gt; &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Slicing using &lt;code&gt;sub()&lt;/code&gt; and &lt;code&gt;select()&lt;/code&gt;.  &lt;/li&gt;
@@ -644,7 +644,7 @@ th&amp;gt; x
 &lt;span class="code-line"&gt;     &lt;span class="mi"&gt;27&lt;/span&gt; &lt;/span&gt;
 &lt;span class="code-line"&gt;    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DoubleTensor&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;All are references&lt;/h2&gt;
+&lt;h2 id="all-are-references"&gt;All are references&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;All tensor operations in this class do not make any memory copy. &lt;strong&gt;All these methods transform the existing tensor, or return a new tensor referencing the same storage&lt;/strong&gt;.  &lt;/p&gt;
 &lt;/blockquote&gt;
@@ -695,7 +695,7 @@ th&amp;gt; x
 &lt;span class="code-line"&gt;      &lt;span class="mi"&gt;9&lt;/span&gt;  &lt;span class="mi"&gt;10&lt;/span&gt;  &lt;span class="mi"&gt;11&lt;/span&gt;  &lt;span class="mi"&gt;12&lt;/span&gt; &lt;/span&gt;
 &lt;span class="code-line"&gt;    &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;torch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DoubleTensor&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="n"&gt;x4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Matrix ops&lt;/h2&gt;
+&lt;h2 id="matrix-ops"&gt;Matrix ops&lt;/h2&gt;
 &lt;p&gt;Some matrix operations &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;random matrix: &lt;/li&gt;
@@ -740,7 +740,7 @@ th&amp;gt; x
 &lt;ul&gt;
 &lt;li&gt;inverse: &lt;code&gt;torch.inverse(sq_mat)&lt;/code&gt; &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;More operations&lt;/h2&gt;
+&lt;h2 id="more-operations"&gt;More operations&lt;/h2&gt;
 &lt;p&gt;can be found at:  &lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/torch/torch7/blob/master/doc/maths.md"&gt;https://github.com/torch/torch7/blob/master/doc/maths.md&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;example:  &lt;/p&gt;

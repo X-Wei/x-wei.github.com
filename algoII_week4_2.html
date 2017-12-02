@@ -202,12 +202,20 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-2 Substring Search">[Algorithms II] Week 4-2 Substring Search</a><ul><li><a class="toc-href" href="#1-introduction-to-substring-search" title="1. Introduction to substring search">1. Introduction to substring search</a></li><li><a class="toc-href" href="#2-brute-force-substring-search" title="2. Brute-Force Substring Search">2. Brute-Force Substring Search</a></li><li><a class="toc-href" href="#3-knuth-morris-pratt" title="3. Knuth-Morris-Pratt">3. Knuth-Morris-Pratt</a><ul><li><a class="toc-href" href="#intuition" title="intuition">intuition</a></li><li><a class="toc-href" href="#deterministic-finite-state-automaton-dfa" title="Deterministic finite state automaton (DFA)">Deterministic finite state automaton (DFA)</a></li><li><a class="toc-href" href="#dfa-construction" title="DFA construction">DFA construction</a></li></ul></li><li><a class="toc-href" href="#4-boyer-moore_1" title="4. Boyer-Moore">4. Boyer-Moore</a><ul><li><a class="toc-href" href="#intuition_1" title="intuition">intuition</a></li><li><a class="toc-href" href="#mismatch-character-heuristic" title="mismatch character heuristic">mismatch character heuristic</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#5-rabin-karp_1" title="5. Rabin-Karp">5. Rabin-Karp</a><ul><li><a class="toc-href" href="#intuition_2" title="intuition">intuition</a></li><li><a class="toc-href" href="#computing-the-hash-function-efficiently" title="computing the hash function efficiently">computing the hash function efficiently</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC] </p>
-<h1>1. Introduction to substring search</h1>
+<h1 id="1-introduction-to-substring-search">1. Introduction to substring search</h1>
 <p>"most ingenious algorithm we've seen so far"<br>
 <strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </br></p>
 <p>ex. <code>indexOf</code> method of String in java.   </p>
-<h1>2. Brute-Force Substring Search</h1>
+<h1 id="2-brute-force-substring-search">2. Brute-Force Substring Search</h1>
 <p>function signature: <br>
 <code>public static int search(String pat, String txt);</code> </br></p>
 <p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
@@ -243,13 +251,13 @@ problem with brute-force: always <em>backup</em> when mismatch. <br>
 <span class="code-line">}</span>
 </pre></div>
 <p>challenge: want linear-time guarantee, and want to avoid backup.   </p>
-<h1>3. Knuth-Morris-Pratt</h1>
+<h1 id="3-knuth-morris-pratt">3. Knuth-Morris-Pratt</h1>
 <p><em>"one of the coolest/trickiest algorithm covered in this course"</em> </p>
-<h3>intuition</h3>
+<h3 id="intuition">intuition</h3>
 <p>suppose pattern = "BAAAAA", <br>
 if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </br></p>
 <p>KMP algorithm: clever method that <em>always</em> avoid backup !  </p>
-<h3>Deterministic finite state automaton (DFA)</h3>
+<h3 id="deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</h3>
 <ul>
 <li>finite states ,including start and halt state, indexed by j in the subtring pb  </li>
 <li>for each state: exactly one transition for each char in alphabet  </li>
@@ -278,7 +286,7 @@ states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,
 </pre></div>
 <p>running time: linear.<br>
 → key pb: <em>how to build dfa efficiently</em> ?  </br></p>
-<h3>DFA construction</h3>
+<h3 id="dfa-construction">DFA construction</h3>
 <ul>
 <li><strong>match transition </strong>(easy part)  </li>
 </ul>
@@ -355,10 +363,10 @@ KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space. 
 <p>这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  </p>
 <p>八卦时间: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image007.png"> </img></br></p>
-<h1>4. Boyer-Moore</h1>
+<h1 id="4-boyer-moore_1">4. Boyer-Moore</h1>
 <p>Heuristic in practice.<br>
 i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </br></p>
-<h3>intuition</h3>
+<h3 id="intuition_1">intuition</h3>
 <ul>
 <li>for matching: scan chars <em>from right to left</em> (j will decrease when checking)  </li>
 <li>when encoutered a mismatch: we can skip &lt;= M chars (if the char is not in pattern)  </li>
@@ -366,7 +374,7 @@ i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some cha
 <p>ex. (pat="NEEDLE")<br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image008.png"> </img></br></p>
 <p>→ pb: how to skip?   </p>
-<h3>mismatch character heuristic</h3>
+<h3 id="mismatch-character-heuristic">mismatch character heuristic</h3>
 <p><em>note</em>: the <code>i</code> always points to the <em>beginning</em> of the substring (<code>txt[i,...,i+M-1]</code>) to be checked for match.  </p>
 <p><strong>case 1. mismatched char not in pattern</strong><br>
 easy case → just move i to the right of this char. <br>
@@ -381,7 +389,7 @@ where <em>skip length = j - index of rightmost char in pattern</em> </br></br></
 <p>note: this does not always help, in the example below, i even <em>backups</em>: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image011.png"><br>
 to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </br></img></br></p>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image012.png"> </img></br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>int[] right = new int[M];  </span>
@@ -407,15 +415,15 @@ to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn
 <span class="code-line">    return N;// pattern not found  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>analysis</h3>
+<h3 id="analysis">analysis</h3>
 <p><strong>property</strong>. the Boyer-Moore heuristic (in practice) takes about <strong>N/M</strong> (sublinear!) compares to search.   </p>
 <p>好神奇, 比KMP还要简单的算法, 实际效率这么高...  </p>
 <p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image013.png"><br>
 → can be improved...   </br></img></br></p>
-<h1>5. Rabin-Karp</h1>
+<h1 id="5-rabin-karp_1">5. Rabin-Karp</h1>
 <p>两个图灵奖的大神发明的算法..   </p>
-<h3>intuition</h3>
+<h3 id="intuition_2">intuition</h3>
 <p>basic idea: <strong>modular hashing</strong><br>
 ex. for strings of numbers   </br></p>
 <ul>
@@ -424,7 +432,7 @@ ex. for strings of numbers   </br></p>
 </ul>
 <p>(below: text=3141592653589793, pattern=26535)<br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image014.png"> </img></br></p>
-<h3>computing the hash function efficiently</h3>
+<h3 id="computing-the-hash-function-efficiently">computing the hash function efficiently</h3>
 <p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image015.png"><br>
 ⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </br></img></br></p>
@@ -463,11 +471,11 @@ recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </br></p>
 </pre></div>
 <p>更新txthash的地方可能会有modulo造成的问题... 不过先这样写吧..   </p>
 <p>for collisions: <em>Monte Carlo</em> vs. <em>Las Vegas</em> </p>
-<h3>analysis</h3>
+<h3 id="analysis_1">analysis</h3>
 <p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br>
 <strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </br></p>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image019.png"> </img></p>
-<h1>Summery</h1>
+<h1 id="summery_1">Summery</h1>
 <p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image020.png"> </img></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -825,7 +833,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -895,6 +903,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-2 Substring Search">[Algorithms II] Week 4-2 Substring Search</a><ul><li><a class="toc-href" href="#1-introduction-to-substring-search" title="1. Introduction to substring search">1. Introduction to substring search</a></li><li><a class="toc-href" href="#2-brute-force-substring-search" title="2. Brute-Force Substring Search">2. Brute-Force Substring Search</a></li><li><a class="toc-href" href="#3-knuth-morris-pratt" title="3. Knuth-Morris-Pratt">3. Knuth-Morris-Pratt</a><ul><li><a class="toc-href" href="#intuition" title="intuition">intuition</a></li><li><a class="toc-href" href="#deterministic-finite-state-automaton-dfa" title="Deterministic finite state automaton (DFA)">Deterministic finite state automaton (DFA)</a></li><li><a class="toc-href" href="#dfa-construction" title="DFA construction">DFA construction</a></li></ul></li><li><a class="toc-href" href="#4-boyer-moore_1" title="4. Boyer-Moore">4. Boyer-Moore</a><ul><li><a class="toc-href" href="#intuition_1" title="intuition">intuition</a></li><li><a class="toc-href" href="#mismatch-character-heuristic" title="mismatch character heuristic">mismatch character heuristic</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#5-rabin-karp_1" title="5. Rabin-Karp">5. Rabin-Karp</a><ul><li><a class="toc-href" href="#intuition_2" title="intuition">intuition</a></li><li><a class="toc-href" href="#computing-the-hash-function-efficiently" title="computing the hash function efficiently">computing the hash function efficiently</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

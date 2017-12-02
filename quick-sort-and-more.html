@@ -202,6 +202,14 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="quick sort and more: 快速排序算法总结">quick sort and more: 快速排序算法总结</a><ul><li><a class="toc-href" href="#quick-partition" title="quick partition">quick partition</a></li><li><a class="toc-href" href="#knuth-shuffle" title="Knuth shuffle">Knuth shuffle</a></li><li><a class="toc-href" href="#quick-sort" title="quick sort">quick sort</a></li><li><a class="toc-href" href="#quick-select" title="quick select">quick select</a></li><li><a class="toc-href" href="#3-way-qsort" title="3-way qsort">3-way qsort</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC] </p>
 <p>今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   </p>
 <p>快速排序的算法可以用三句话描述:<br>
@@ -214,7 +222,7 @@ mx's blog            </a>
 </ul>
 </blockquote>
 <p>由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: <code>void qsort(int[] a, int lo, int hi)</code>, 表示排序a[lo, hi]之间(闭区间)的所有元素.   </p>
-<h2>quick partition</h2>
+<h2 id="quick-partition">quick partition</h2>
 <p>由上面描述可以见, qsort最关键的是第二步: 把数组元素以pivot分为两部分. 这个操作就是quick partition.   </p>
 <p>函数声明为: <code>int partition(int[] a, int lo, int hi)</code>, 该函数返回pivot(即subarray的第一个元素<code>a[lo]</code>)所在的位置.   </p>
 <p>如果允许新建一个临时数组的话, 那么这个就不是什么问题, 但是为了节约空间占用, 现在需要直接修改(in-place)使得a[lo] 到, 而且希望可以用尽量少的交换(<code>swap(int[]a, int i, int j)</code>)操作, 就不是很evident了.   </p>
@@ -245,7 +253,7 @@ mx's blog            </a>
 <li>移动的时候别忘了需要加数组下标的边界检查(<code>i&lt;=hi</code>, <code>j&gt;=lo</code>)  </li>
 <li>partition()的复杂度是线性的<strong>O(n)</strong> </li>
 </ul>
-<h2>Knuth shuffle</h2>
+<h2 id="knuth-shuffle">Knuth shuffle</h2>
 <p>qsort之所以快, 是因为每次都能够按照pivot分为大致同样长度的两个子数组(所以每次子问题的规模除以二), 所以复杂度为<strong>O(NlogN)</strong>. 最坏情况下, 如果每次两个子数组中可能有一个长度为0, 那么每次子问题的规模只减少了1, 所以复杂度变成了quadratic <strong>O(N2)</strong>.  </p>
 <p>为了防止这种最坏情况的出现, 可以在一切开始之前把数组打乱顺序, 所以这一节讨论快速shuffle的算法. 最经典的就是Knuth的shuffle算法了, 算法很简答, 描述为: for(k=1 to n): 每次把第k个元素和前k个元素中的随机一个元素交换.  </p>
 <p>代码只有两行:  </p>
@@ -255,7 +263,7 @@ mx's blog            </a>
 <span class="code-line">}</span>
 </pre></div>
 <p>关于算法的正确性, 其实只要证明"元素i在shuffle后最终位于位置i"的概率为1/N即可, 不难证明.   </p>
-<h2>quick sort</h2>
+<h2 id="quick-sort">quick sort</h2>
 <p>好了 有了以上两个辅助函数就可以写qsort函数了:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>void qsort(int[] a, int lo, int hi){//recursive helper function  </span>
 <span class="code-line">    if(lo&gt;=hi) return;  </span>
@@ -269,7 +277,7 @@ mx's blog            </a>
 <span class="code-line">}</span>
 </pre></div>
 <p>其实qsort的主体就是那个partition函数, 单独把partition列出来是因为它不止可以用在排序, 还可以用来做quick select, 见quick select节.    </p>
-<h2>quick select</h2>
+<h2 id="quick-select">quick select</h2>
 <p><em>对于一个没有排序的数组, 如何快速找到它的中值(median)?</em><br>
 以上这个问题的答案就在<code>partition()</code>函数.   </br></p>
 <p>之前说过, <code>partition()</code>函数的返回值表示pivot在排序好的数组中的位置(rank), 这个消息非常有用: 中值只不过是rank等于长度除以2的元素而已.   </p>
@@ -288,7 +296,7 @@ mx's blog            </a>
 <span class="code-line">}</span>
 </pre></div>
 <p>该算法内层循环为O(hi-lo), 每次问题规模减少一半, 所以复杂度为N+N/2+N/4+...+1 = 2N, 复杂度为线性时间!  </p>
-<h2>3-way qsort</h2>
+<h2 id="3-way-qsort">3-way qsort</h2>
 <p>qsort之前有个bug: 在数组里很多重复元素的时候, 效率会下降为O(N2). 原因是qsort没有好好处理重复元素的问题.   </p>
 <p>于是Dijkstra提出了一个<strong>3-way partition</strong>的算法: 把数组分为三部分: 左边<code>[lo, lt)</code>严格小于pivot, 中间<code>[lt, gt]</code>等于pivot, 右边<code>(gt, hi]</code>严格大于pivot.   </p>
 <p>算法初始化<code>lt=lo, gt=hi, i=lo</code>, 用指针i向右扫描, [i,gt]为未处理到的部分. <br>
@@ -670,7 +678,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -740,6 +748,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="quick sort and more: 快速排序算法总结">quick sort and more: 快速排序算法总结</a><ul><li><a class="toc-href" href="#quick-partition" title="quick partition">quick partition</a></li><li><a class="toc-href" href="#knuth-shuffle" title="Knuth shuffle">Knuth shuffle</a></li><li><a class="toc-href" href="#quick-sort" title="quick sort">quick sort</a></li><li><a class="toc-href" href="#quick-select" title="quick select">quick select</a></li><li><a class="toc-href" href="#3-way-qsort" title="3-way qsort">3-way qsort</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

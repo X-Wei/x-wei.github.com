@@ -202,15 +202,23 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 5-2 Data Compression">[Algorithms II] Week 5-2 Data Compression</a><ul><li><a class="toc-href" href="#1-introduction-to-data-compression" title="1. Introduction to Data Compression">1. Introduction to Data Compression</a><ul><li><a class="toc-href" href="#tools" title="Tools">Tools</a></li></ul></li><li><a class="toc-href" href="#2-run-length-coding_1" title="2. Run-Length Coding">2. Run-Length Coding</a></li><li><a class="toc-href" href="#3-huffman-compression" title="3. Huffman Compression">3. Huffman Compression</a><ul><li><a class="toc-href" href="#huffman-trie-node" title="Huffman Trie Node">Huffman Trie Node</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#huffman-algorithm" title="Huffman algorithm">Huffman algorithm</a></li></ul></li><li><a class="toc-href" href="#4-lzw-compression_1" title="4. LZW Compression">4. LZW Compression</a><ul><li><a class="toc-href" href="#lzw-compression" title="LZW compression">LZW compression</a></li><li><a class="toc-href" href="#lzw-expansion" title="LZW expansion">LZW expansion</a></li></ul></li><li><a class="toc-href" href="#summary_1" title="Summary">Summary</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
-<h1>1. Introduction to Data Compression</h1>
+<h1 id="1-introduction-to-data-compression">1. Introduction to Data Compression</h1>
 <p>pb: reduce the size of a file, to save space/time for storing/transmitting. <br>
 applications: generic file compression(gzip), multimedia (mp3), communication(skype).   </br></p>
 <p>From binary data <code>B</code>, ⇒ generate a compressed representation <code>C(B)</code>. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_2/pasted_image.png"><br>
 <strong>lossless compression</strong>: get exactly <code>B</code> from <code>C(B)</code><br>
 <strong>compression ratio</strong>: <code>|C(B)|/|B|</code>(||means number of <em>bits</em>)  </br></br></img></br></p>
-<h3>Tools</h3>
+<h3 id="tools">Tools</h3>
 <p>extension to stdio libraries: read/write <em>bits</em> </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public class BinaryStdIn{  </span>
 <span class="code-line">    boolean readBoolean(); // read 1 bit and return as a boolean  </span>
@@ -235,7 +243,7 @@ applications: generic file compression(gzip), multimedia (mp3), communication(sk
 <p>universal date compression?<br>
 <strong>prop</strong>. NO algorithm can compress every bitstring.<br>
 pf. by contradiction: repeatedly compress the bitstring ⇒ bit length goes to 0.   </br></br></p>
-<h1>2. Run-Length Coding</h1>
+<h1 id="2-run-length-coding_1">2. Run-Length Coding</h1>
 <p>one simple type of redundancy in bitstream: long runs of repeated bits. <br>
 ⇒ use <em>4-bit counts</em> to represent alternating 1s and 0s. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_2/pasted_image002.png"> </img></br></br></p>
@@ -281,7 +289,7 @@ pf. by contradiction: repeatedly compress the bitstring ⇒ bit length goes to 0
 <span class="code-line">    }  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h1>3. Huffman Compression</h1>
+<h1 id="3-huffman-compression">3. Huffman Compression</h1>
 <p>classique...   </p>
 <p>idea: <em>variable length code</em>. <br>
 ex. Morse code, more freq chars use less chars. <br>
@@ -289,7 +297,7 @@ ex. Morse code, more freq chars use less chars. <br>
 → need to use <em>prefix-free code</em> </br></br></br></p>
 <p>⇒ use a trie to represent the prefix-free code, in bitstream, use a binary trie: <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_2/pasted_image003.png"> </img></br></p>
-<h3>Huffman Trie Node</h3>
+<h3 id="huffman-trie-node">Huffman Trie Node</h3>
 <p>define trie nodes having frequences:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span>public static class Node implements Comparable&lt;Node&gt;{  </span>
 <span class="code-line">    private char ch; // only used for leaves, null for internal nodes  </span>
@@ -302,7 +310,7 @@ ex. Morse code, more freq chars use less chars. <br>
 <span class="code-line">        return this.freq-that.freq;}  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>implementation</h3>
+<h3 id="implementation">implementation</h3>
 <p><strong>expansion</strong><br>
 <em>in the bitstream, we first put the (serialized) trie in the head.</em> </br></p>
 <div class="highlight"><pre><span class="code-line"><span></span>public void expand{  </span>
@@ -352,7 +360,7 @@ preorder(x) = x+preorder(x.left)+preorder(x.right) ⇒ recursive method...   </b
 <span class="code-line">    }  </span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>Huffman algorithm</h3>
+<h3 id="huffman-algorithm">Huffman algorithm</h3>
 <p>pb: how to find the best prefixless code?   </p>
 <p>Shannon-Fano algo:  </p>
 <blockquote>
@@ -387,14 +395,14 @@ preorder(x) = x+preorder(x.left)+preorder(x.right) ⇒ recursive method...   </b
 </pre></div>
 <p><strong>prop</strong>. Huffman algorithm produces the optimal prefixless code.   </p>
 <p>running time: <strong>N + RlgR</strong> </p>
-<h1>4. LZW Compression</h1>
+<h1 id="4-lzw-compression_1">4. LZW Compression</h1>
 <p>idea:<br>
 adaptive model: learn and <em>update</em> the model as you read the text. <br>
 decoder will do the same thing.   </br></br></p>
 <p>build a table of not only mapping chars to codes, but also mapping &gt;=2-char combinations to codes(of fixed width). <br>
 when encoding strings, look for the longest prefix that is in our table. <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_2/pasted_image006.png"> </img></br></br></p>
-<h3>LZW compression</h3>
+<h3 id="lzw-compression">LZW compression</h3>
 <p>LZW compression algo  </p>
 <ul>
 <li>create a symbol table mapping string keys to W-bit code, initialize as mapping only chars to codes  </li>
@@ -422,7 +430,7 @@ when encoding strings, look for the longest prefix that is in our table. <br>
 <span class="code-line"></span>
 <span class="code-line">}</span>
 </pre></div>
-<h3>LZW expansion</h3>
+<h3 id="lzw-expansion">LZW expansion</h3>
 <p><em>no need to get the codeword table</em>, the input is just the compressed bitstring.   </p>
 <ul>
 <li>maintain a (reverse)table mapping int(code) to strings.   </li>
@@ -438,7 +446,7 @@ compression<br>
 problem in expansion when reading the "83": <br>
 <img alt="" class="img-responsive" src="../images/algoII_week5_2/pasted_image011.png"> </img></br></br></img></br></br></p>
 <p>→ need to be able to update the table when encountering a code not yet defined...   </p>
-<h1>Summary</h1>
+<h1 id="summary_1">Summary</h1>
 <ul>
 <li>Huffman: fixed-length symbols, with variable-length codes.   </li>
 <li>LZW: variable-length symbols, with fixed-length codes.   </li>
@@ -802,7 +810,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -872,6 +880,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 5-2 Data Compression">[Algorithms II] Week 5-2 Data Compression</a><ul><li><a class="toc-href" href="#1-introduction-to-data-compression" title="1. Introduction to Data Compression">1. Introduction to Data Compression</a><ul><li><a class="toc-href" href="#tools" title="Tools">Tools</a></li></ul></li><li><a class="toc-href" href="#2-run-length-coding_1" title="2. Run-Length Coding">2. Run-Length Coding</a></li><li><a class="toc-href" href="#3-huffman-compression" title="3. Huffman Compression">3. Huffman Compression</a><ul><li><a class="toc-href" href="#huffman-trie-node" title="Huffman Trie Node">Huffman Trie Node</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#huffman-algorithm" title="Huffman algorithm">Huffman algorithm</a></li></ul></li><li><a class="toc-href" href="#4-lzw-compression_1" title="4. LZW Compression">4. LZW Compression</a><ul><li><a class="toc-href" href="#lzw-compression" title="LZW compression">LZW compression</a></li><li><a class="toc-href" href="#lzw-expansion" title="LZW expansion">LZW expansion</a></li></ul></li><li><a class="toc-href" href="#summary_1" title="Summary">Summary</a></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

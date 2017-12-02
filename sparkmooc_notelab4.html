@@ -202,24 +202,32 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Spark MOOC note] lab4. Predicting Movie Ratings">[Spark MOOC note] lab4. Predicting Movie Ratings</a><ul><li><a class="toc-href" href="#part-0-preliminaries" title="Part 0: Preliminaries">Part 0: Preliminaries</a></li><li><a class="toc-href" href="#part-1-basic-recommendations" title="Part 1: Basic Recommendations">Part 1: Basic Recommendations</a></li><li><a class="toc-href" href="#part-2-collaborative-filtering" title="Part 2: Collaborative Filtering">Part 2: Collaborative Filtering</a><ul><li><a class="toc-href" href="#matrix-factorization" title="Matrix Factorization">Matrix Factorization</a></li><li><a class="toc-href" href="#train-test-validation-split" title="train-test-validation split">train-test-validation split</a></li><li><a class="toc-href" href="#root-mean-square-error-rmse" title="Root Mean Square Error (RMSE)">Root Mean Square Error (RMSE)</a></li><li><a class="toc-href" href="#alternating-least-square-of-mlllib" title="alternating least square of MLllib">alternating least square of MLllib</a></li><li><a class="toc-href" href="#compare-model" title="compare model">compare model</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
-<h1>Part 0: Preliminaries</h1>
+<h1 id="part-0-preliminaries">Part 0: Preliminaries</h1>
 <p>Each line in the ratings dataset (<em>ratings.dat.gz</em>) is formatted as: <br>
 <code>UserID::MovieID::Rating::Timestamp</code> ⇒ tuples of <code>(UserID, MovieID, Rating)</code>in <em>ratingsRDD</em> <br>
 Each line in the movies (<em>movies.dat</em>) dataset is formatted as: <br>
 <code>MovieID::Title::Genres</code> ⇒ tuples of <code>(MovieID, Title)</code> in <em>ratingsRDD</em> </br></br></br></p>
 <p>487650 ratings and 3883 movies</p>
 <p>⇒ Since the key is an integer and the value is a unicode string, we can use a function to combine them into a single unicode string (e.g., <code>unicode('%.3f' % key) + ' ' + value</code>) before sorting the RDD using <code>sortBy()</code>.</p>
-<h1>Part 1: Basic Recommendations</h1>
+<h1 id="part-1-basic-recommendations">Part 1: Basic Recommendations</h1>
 <p>naive method: <em>always recommend the movies with the highest average rating...</em>
 ⇒ 20 movies with the highest average rating and more than 500 reviews</p>
 <p><em>movieNameWithAvgRatingsRDD</em>: <code>(avgRating, Title, nbRatings)</code></p>
-<h1>Part 2: Collaborative Filtering</h1>
+<h1 id="part-2-collaborative-filtering">Part 2: Collaborative Filtering</h1>
 <p>MLlib: <a href="https://spark.apache.org/mllib/">https://spark.apache.org/mllib/</a></p>
 <p><em>Collaborative filtering</em> is a method of making automatic predictions (filtering) about the interests of a user by collecting preferences or taste information from many users (collaborating). The underlying assumption of the collaborative filtering approach is that if a person A has the same opinion as a person B on an issue, A is more likely to have B's opinion on a different issue x than to have the opinion on x of a person chosen randomly. </p>
 <p>一图胜千言: <br>
 <img alt="" class="img-responsive" src="../images/sparkmooc_note_lab4/Collaborative_filtering.gif"/></br></p>
-<h3>Matrix Factorization</h3>
+<h3 id="matrix-factorization">Matrix Factorization</h3>
 <p>CF问题实际上是矩阵分解的问题: 
 We have a matrix whose entries are movie ratings by users (shown in red in the diagram below). Each column represents a user (shown in green) and each row represents a particular movie (shown in blue).</p>
 <p>其中<em>rating矩阵</em>(用户/电影矩阵)只有一些项的值存在(即用户打分的那些项), 所以要用分解后的两个矩阵之乘积来估计rating矩阵中的缺失项.</p>
@@ -232,7 +240,7 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 (后面加上的那一项是正则项: 不希望f[i]的模过大)</br></img></br></p>
 <p>不过前面的假设, "f[j]已知"这个条件其实并不成立 ⇒ <strong>Alternating Least Squares algorithm</strong>: 交替优化f[i]和f[j]的取值, 每次固定一个, 而优化另一个, 交替进行, 直到收敛(好像Kmeans也是利用的这种方法). </p>
 <p><em>first randomly filling the users matrix with values and then optimizing the value of the movies such that the error is minimized. Then, it holds the movies matrix constrant and optimizes the value of the user's matrix.</em></p>
-<h3>train-test-validation split</h3>
+<h3 id="train-test-validation-split">train-test-validation split</h3>
 <p>⇒ break up the ratingsRDD dataset into three pieces:</p>
 <ul>
 <li>A training set (RDD), which we will use to train models</li>
@@ -240,11 +248,11 @@ We have a matrix whose entries are movie ratings by users (shown in red in the d
 <li>A test set (RDD), which we will use for our experiments</li>
 </ul>
 <p><code>trainingRDD, validationRDD, testRDD = ratingsRDD.randomSplit([6, 2, 2], seed=0L)</code></p>
-<h3>Root Mean Square Error (RMSE)</h3>
+<h3 id="root-mean-square-error-rmse">Root Mean Square Error (RMSE)</h3>
 <p><img alt="" class="img-responsive" src="../images/sparkmooc_note_lab4/pasted_image003.png"> <br>
 compute the sum of squared error given predictedRDD and actualRDD RDDs. 
 Both RDDs consist of tuples of the form (UserID, MovieID, Rating)</br></img></p>
-<h3>alternating least square of MLllib</h3>
+<h3 id="alternating-least-square-of-mlllib">alternating least square of MLllib</h3>
 <p><a href="https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS">https://spark.apache.org/docs/latest/api/python/pyspark.mllib.html#pyspark.mllib.recommendation.ALS</a>
 ALS takes a training dataset (RDD) and several parameters that control the model creation process.</p>
 <p>The most important parameter to ALS.train() is the <em>rank</em>, which is the number of rows in the Users matrix (green in the diagram above) or the number of columns in the Movies matrix (blue in the diagram above). (In general, a lower rank will mean higher error on the training dataset, but a high rank may lead to overfitting.)</p>
@@ -254,7 +262,7 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 <span class="code-line">predictedRatingsRDD = model.predictAll(validationForPredictRDD)</span>
 </pre></div>
 <p>可以在这里查看job详情: <a href="http://localhost:4040/jobs/">http://localhost:4040/jobs/</a></p>
-<h3>compare model</h3>
+<h3 id="compare-model">compare model</h3>
 <p>Looking at the RMSE for the results predicted by the model versus the values in the test set is one way to evalute the quality of our model. <em>Another way to evaluate the model is to evaluate the error from a test set where every rating is the average rating for the training set.</em>
 ⇒ 这里没有太理解, 难道是说test set 的平均rating预测结果和training set的平均rating应该比较接近么?? 
 ⇒ 终于明白了: "<em>Your model more accurately predicts the ratings than using just the average rating, as the model's RMSE is significantly lower than the RMSE when using the average rating.</em>"</p>
@@ -612,7 +620,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -680,6 +688,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Spark MOOC note] lab4. Predicting Movie Ratings">[Spark MOOC note] lab4. Predicting Movie Ratings</a><ul><li><a class="toc-href" href="#part-0-preliminaries" title="Part 0: Preliminaries">Part 0: Preliminaries</a></li><li><a class="toc-href" href="#part-1-basic-recommendations" title="Part 1: Basic Recommendations">Part 1: Basic Recommendations</a></li><li><a class="toc-href" href="#part-2-collaborative-filtering" title="Part 2: Collaborative Filtering">Part 2: Collaborative Filtering</a><ul><li><a class="toc-href" href="#matrix-factorization" title="Matrix Factorization">Matrix Factorization</a></li><li><a class="toc-href" href="#train-test-validation-split" title="train-test-validation split">train-test-validation split</a></li><li><a class="toc-href" href="#root-mean-square-error-rmse" title="Root Mean Square Error (RMSE)">Root Mean Square Error (RMSE)</a></li><li><a class="toc-href" href="#alternating-least-square-of-mlllib" title="alternating least square of MLllib">alternating least square of MLllib</a></li><li><a class="toc-href" href="#compare-model" title="compare model">compare model</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

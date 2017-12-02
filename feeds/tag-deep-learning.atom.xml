@@ -1,26 +1,656 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog - deep learning</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-deep-learning.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2017-09-11T00:00:00+02:00</updated><entry><title>[Neural Networks and Deep Learning] week1. Introduction to deep learning</title><link href="http://x-wei.github.io/Ng_DLMooc_c1wk1.html" rel="alternate"></link><published>2017-09-11T00:00:00+02:00</published><updated>2017-09-11T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2017-09-11:/Ng_DLMooc_c1wk1.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2&gt;What is a neural network?&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog - deep learning</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-deep-learning.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2017-09-28T00:00:00+02:00</updated><entry><title>[Neural Networks and Deep Learning] week4. Deep Neural Network</title><link href="http://x-wei.github.io/Ng_DLMooc_c1wk4.html" rel="alternate"></link><published>2017-09-28T00:00:00+02:00</published><updated>2017-09-28T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2017-09-28:/Ng_DLMooc_c1wk4.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="deep-l-layer-neural-network"&gt;Deep L-layer neural network&lt;/h2&gt;
+&lt;p&gt;Layer counting:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;input layer is not counted as a layer, "layer 0"&lt;/li&gt;
+&lt;li&gt;last layer (layer L, output layer) is counted.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;notation:
+layer 0 = input layer
+&lt;code&gt;L&lt;/code&gt; = number of layers
+&lt;code&gt;n^[l]&lt;/code&gt; = size of layer l
+&lt;code&gt;a^[l]&lt;/code&gt; = activation of layer l = &lt;code&gt;g[l]( z[l …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="deep-l-layer-neural-network"&gt;Deep L-layer neural network&lt;/h2&gt;
+&lt;p&gt;Layer counting:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;input layer is not counted as a layer, "layer 0"&lt;/li&gt;
+&lt;li&gt;last layer (layer L, output layer) is counted.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;notation:
+layer 0 = input layer
+&lt;code&gt;L&lt;/code&gt; = number of layers
+&lt;code&gt;n^[l]&lt;/code&gt; = size of layer l
+&lt;code&gt;a^[l]&lt;/code&gt; = activation of layer l = &lt;code&gt;g[l]( z[l] )&lt;/code&gt; → a[L] = yhat, a[0] = x&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image002.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="forward-propagation-in-a-deep-network"&gt;Forward Propagation in a Deep Network&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image003.png"/&gt;&lt;/p&gt;
+&lt;p&gt;⇒ general rule:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image004.png"&gt;&lt;br&gt;
+vectorization over all training examples: 
+Z = [z(1),...,z(m)] one column per example ⇒ &lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;A[0] = X&lt;/span&gt;
+&lt;span class="code-line"&gt;for l = 1..L:&lt;/span&gt;
+&lt;span class="code-line"&gt;  Z[l] = W[l]A[l-1] + b[l]&lt;/span&gt;
+&lt;span class="code-line"&gt;  A[l] = g[l]( Z[l] )&lt;/span&gt;
+&lt;span class="code-line"&gt;Yhat = A[L]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="getting-your-matrix-dimensions-right"&gt;Getting your matrix dimensions right&lt;/h2&gt;
+&lt;p&gt;Debug: walk through matrix dimensions of NN, &lt;code&gt;W[l]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Single training example dimension:&lt;br&gt;
+&lt;code&gt;a[l-1].shape = (n[l-1], 1)&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;z[l].shape = (n[l], 1)&lt;/code&gt;&lt;br&gt;
+⇒ &lt;code&gt;z[l] = W[l] * a[l-1] + b[l], shape = (n[l],1)&lt;/code&gt;&lt;br&gt;
+⇒ &lt;strong&gt;W[l].shape = (n[l], n[l-1]), b[l].shape = (n[l],1)&lt;/strong&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image006.png"/&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;Vectorized (m examples) dimension:&lt;br&gt;
+Z = [z(1),...,z(m)] &lt;em&gt;stacking columns&lt;/em&gt;.&lt;br&gt;
+&lt;code&gt;Z[l].shape = (n[l], m)&lt;/code&gt;&lt;br&gt;
+Z[l] = W[l] * A[l-1] + b[l]&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image007.png"&gt;&lt;br&gt;
+&lt;strong&gt;Z[l].shape = A[l].shape = (n[l], m)&lt;/strong&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image008.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="why-deep-representations"&gt;Why deep representations?&lt;/h2&gt;
+&lt;p&gt;intuition: &lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image010.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;as layers grow: simple to complex representation / low to high level of abstraction.&lt;/p&gt;
+&lt;p&gt;Circuit theory: small deep NN is better than big shallow NN.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image011.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example&lt;/strong&gt;: representation of a XOR.join(x1..xn) function.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using deep NN ⇒ build an XOR binary tree&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image012.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using shallow NN: one single layer → enumerate all 2^n configurations of inputs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image013.png"/&gt;&lt;/p&gt;
+&lt;h2 id="building-blocks-of-deep-neural-networks"&gt;Building blocks of deep neural networks&lt;/h2&gt;
+&lt;p&gt;Fwdprop and backprop, for layer l.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Fwdprop: &lt;/strong&gt;from a[l-1] to a[l]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;note: &lt;em&gt;cache z[l] for backprop.&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Backprop: &lt;/strong&gt;from da[l] to da[l-1], dw[l] and db[l]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image014.png"/&gt;&lt;/p&gt;
+&lt;p&gt;Once the fwd and back functions are implemented, put layers together:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image015.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="forward-and-backward-propagation"&gt;Forward and Backward Propagation&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Fwd prop&lt;/strong&gt;&lt;br&gt;
+input = a[l-1], output = a[l], cache = z[l]  &lt;/br&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;Z[l] = W[l] * A[l-1] + b[l]&lt;/span&gt;
+&lt;span class="code-line"&gt;Z[l] = g[l]( Z[l] )&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Back prop&lt;/strong&gt;
+input = da[l], output = da[l-1], dW[1], db[l]&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image016.png"&gt;&lt;br&gt;
+note: &lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;remember &lt;/em&gt;&lt;code&gt;da = dL/da&lt;/code&gt;&lt;em&gt;, so here &lt;/em&gt;&lt;code&gt;da&lt;/code&gt;&lt;em&gt;~='1/da' mathematically.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;derivate of matrix multiplication = transposed matrix derivative: (A*B)' = B^T' * A^T'&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;initial paule&lt;/em&gt; of backprop: da[L] = dL/dyhat&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image018.png"&gt;&lt;br&gt;
+Vectorized version:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image017.png"/&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;h2 id="parameters-vs-hyperparameters"&gt;Parameters vs Hyperparameters&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;parameters: W[l] and b[l] → trained from data&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;hyperparams&lt;/strong&gt;: &lt;ul&gt;
+&lt;li&gt;alpha (learning_rate), number of iterations, L, n[l] size of each layer, g[l] at each layer...&lt;/li&gt;
+&lt;li&gt;momentum, minibatch, regularization...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;→ finally decides what params will be.&lt;/p&gt;
+&lt;p&gt;empirical: try out different hyperparams.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image019.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="what-does-this-have-to-do-with-the-brain"&gt;What does this have to do with the brain?&lt;/h2&gt;
+&lt;p&gt;logistic regression unit ~~~&amp;gt; neuron in brain&lt;/p&gt;
+&lt;h2 id="assignment-implementing-a-l-layer-nn"&gt;assignment: implementing a L-layer NN&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;params initialization:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;note: different signature for &lt;code&gt;np.random.randn&lt;/code&gt; and &lt;code&gt;np.zeros&lt;/code&gt;:  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;W = np.random.randn(d0, d1) * 0.01&lt;/span&gt;
+&lt;span class="code-line"&gt;b = np.zeros((d0, d1)) # Needs putting dims in a tuple!&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;function activation:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;np.maximum&lt;/code&gt; is element-wise comparison, whereas &lt;code&gt;np.max&lt;/code&gt; will apply on certain axis.
+so &lt;code&gt;ReLU(x) = np.maximum(0, x)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fwd prop:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image023.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;cost:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image022.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;backprop formula:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image020.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;initial paulse of backprop dA[L]: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4pasted_image021.png"&gt;&lt;br&gt;
+&lt;code&gt;dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL))&lt;/code&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>[Neural Networks and Deep Learning] week3. Shallow Neural Network</title><link href="http://x-wei.github.io/Ng_DLMooc_c1wk3.html" rel="alternate"></link><published>2017-09-19T00:00:00+02:00</published><updated>2017-09-19T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2017-09-19:/Ng_DLMooc_c1wk3.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="neural-networks-overview"&gt;Neural Networks Overview&lt;/h2&gt;
+&lt;p&gt;new notation: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;superscript &lt;code&gt;[i]&lt;/code&gt; for quantities in layer i. (compared to superscript &lt;code&gt;(i)&lt;/code&gt; for ith training example).&lt;/li&gt;
+&lt;li&gt;subscript &lt;code&gt;i&lt;/code&gt; for ith unit in a layer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="neural-network-representation"&gt;Neural Network Representation&lt;/h2&gt;
+&lt;p&gt;notation: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;a^[i]&lt;/code&gt;: activation at layer i.&lt;/li&gt;
+&lt;li&gt;input layer: x, layer 0.&lt;/li&gt;
+&lt;li&gt;hidden layer&lt;/li&gt;
+&lt;li&gt;output layer: prediction (yhat …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="neural-networks-overview"&gt;Neural Networks Overview&lt;/h2&gt;
+&lt;p&gt;new notation: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;superscript &lt;code&gt;[i]&lt;/code&gt; for quantities in layer i. (compared to superscript &lt;code&gt;(i)&lt;/code&gt; for ith training example).&lt;/li&gt;
+&lt;li&gt;subscript &lt;code&gt;i&lt;/code&gt; for ith unit in a layer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="neural-network-representation"&gt;Neural Network Representation&lt;/h2&gt;
+&lt;p&gt;notation: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;a^[i]&lt;/code&gt;: activation at layer i.&lt;/li&gt;
+&lt;li&gt;input layer: x, layer 0.&lt;/li&gt;
+&lt;li&gt;hidden layer&lt;/li&gt;
+&lt;li&gt;output layer: prediction (yhat)&lt;/li&gt;
+&lt;li&gt;don't count input layer as a layer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;a 2 layer NN:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="computing-a-neural-networks-output"&gt;Computing a Neural Network's Output&lt;/h2&gt;
+&lt;p&gt;each node in NN: 2 step computation&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;z = wx + b&lt;/li&gt;
+&lt;li&gt;a = sigmoid(z)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image001.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image002.png"&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image003.png"/&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;z^[1]&lt;/code&gt; = stacking &lt;code&gt;z[1]_i&lt;/code&gt;s vertically
+&lt;code&gt;a^[1]&lt;/code&gt; = sigmoid(&lt;code&gt;z^[1]&lt;/code&gt;)
+vectorize computing &lt;code&gt;z^[1]&lt;/code&gt;: W = &lt;em&gt;stacking rows of wi.T&lt;/em&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image005.png"&gt;&lt;br&gt;
+W.shape = (4,3)
+b.shape = (4,1)&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;input at layer i = &lt;code&gt;a^[i-1]&lt;/code&gt; (&lt;code&gt;x = a[0]&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;output of each layer: &lt;code&gt;a[i] = sigmoid(W[i] a^[i-1] + b[i])&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image006.png"/&gt;&lt;/p&gt;
+&lt;h2 id="vectorizing-across-multiple-examples"&gt;Vectorizing across multiple examples&lt;/h2&gt;
+&lt;p&gt;vectorize the computation acrosse m examples.
+training examples: x^(1)...x^(m)&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image007.png"&gt;&lt;br&gt;
+computing all yhat(i) using forloop:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image008.png"/&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;X = &lt;em&gt;stacking columns of x(i)&lt;/em&gt;, &lt;code&gt;X = [x(1)...x(m)]&lt;/code&gt;
+Z[1] = stacking columns of z&lt;a href="i"&gt;1&lt;/a&gt; = [z&lt;a href="1"&gt;1&lt;/a&gt;...z&lt;a href="m"&gt;1&lt;/a&gt;]
+A = stacking columns of a(i)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image010.png"&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image009.png"&gt;&lt;br&gt;
+&lt;strong&gt;horizontal index = training example&lt;/strong&gt; &lt;code&gt;^(i)&lt;/code&gt;&lt;br&gt;
+&lt;strong&gt;vertical index = nodes in layer &lt;/strong&gt;&lt;code&gt;_i&lt;/code&gt;&lt;strong&gt;/ input feature&lt;/strong&gt;&lt;code&gt;x_i&lt;/code&gt;
+⇒ &lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Z[1] = W[1] * X + b[1]&lt;/li&gt;
+&lt;li&gt;A[1] = sigmoid(Z[1])&lt;/li&gt;
+&lt;li&gt;Z[2] = W[2] * A[1] + b[2]&lt;/li&gt;
+&lt;li&gt;A[2] = sigmoid(Z[2]) = Yhat&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="explanation-for-vectorized-implementation"&gt;Explanation for Vectorized Implementation&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image012.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Recap&lt;/strong&gt;:
+stacking columns of training examples &lt;code&gt;x(i)&lt;/code&gt; and activations &lt;code&gt;a[l](i)&lt;/code&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image013.png"&gt;&lt;br&gt;
+⇒ &lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image014.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="activation-functions"&gt;Activation functions&lt;/h2&gt;
+&lt;p&gt;general case: &lt;code&gt;a = g(z)&lt;/code&gt;, where g() is a nonlinear function.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sigmoid: &lt;code&gt;a = 1 / (1 + exp(-z))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image018.png"&gt;&lt;br&gt;
+  a ∈ [0,1]&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;tanh: &lt;code&gt;a = (exp(z) - exp(-z)) / (exp(z) + exp(-z))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image019.png"&gt;&lt;br&gt;
+  a ∈ [-1, 1] — shifted sigmoid function 
+  ⇒ data is &lt;em&gt;centered, learning for next layer easier&lt;/em&gt;
+&lt;em&gt;almost always better than sigmoid&lt;/em&gt;, except for output layer (yhat = probability ∈[0,1])&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;downside of sigmoid and tanh: &lt;em&gt;slope very small when |z| is large&lt;/em&gt; — GD slow.
+⇒ ReLU&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ReLU &lt;code&gt;a = max(0, z)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;da/dz = 1 or 0
+  NN learns faster because slope is constant when |z| large
+  disadvantage: da/dz = 0 when z&amp;lt;0
+  → leaky ReLU: small slope when z&amp;lt;0&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image020.png"&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image021.png"/&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Rules of thumb&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;output layer: sigmoid for binary classification (output probability), &lt;em&gt;otherwise never use sigmoid&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;hidden layer: use ReLU activation by default&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="why-do-you-need-non-linear-activation-functions"&gt;Why do you need non-linear activation functions?&lt;/h2&gt;
+&lt;p&gt;use a linear activation function g(z) = z ?
+⇒ &lt;code&gt;yhat&lt;/code&gt; will just be a &lt;em&gt;linear function&lt;/em&gt; of &lt;code&gt;x&lt;/code&gt;. &lt;code&gt;yhat = Wx+b&lt;/code&gt;&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image022.png"&gt;&lt;br&gt;
+one single place when using linear activation: in output layer ( y∈R )when doing regression&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="derivatives-of-activation-functions"&gt;Derivatives of activation functions&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;formulas for g'(z)&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="g-sigmoid"&gt;g = sigmoid&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image023.png"&gt;&lt;br&gt;
+⇒ &lt;code&gt;g'(z) = g(z) * (1 - g(z)) = a * (1-a)&lt;/code&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;when z = +inf, g(z) = 1, g'(z) = 1*(1-1) = 0&lt;/li&gt;
+&lt;li&gt;when z = -inf, g(z) = 0, g'(z) = 0&lt;/li&gt;
+&lt;li&gt;when z = 0, g(z) = 0.5, g'(z) = 0.25&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="g-tanh"&gt;g = tanh&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image024.png"&gt;&lt;br&gt;
+⇒ &lt;code&gt;g'(z) = 1 - tanh(z)^2 = 1 - a^2&lt;/code&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;when z = +inf, tanh(z) = 1, g' = 0&lt;/li&gt;
+&lt;li&gt;when z = -inf, tanh(z) = -1, g' = 0&lt;/li&gt;
+&lt;li&gt;when z = 0, tanh(z) = 0, g' = 1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="g-relu-leaky-relu"&gt;g = ReLU / Leaky ReLU&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;ReLU&lt;/strong&gt;:
+g(z) = max(0, z)
+g' is &lt;em&gt;subgradient:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;g' = 0 when z&amp;lt;0&lt;/li&gt;
+&lt;li&gt;g' = 1 when z&amp;gt;=0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Leaky ReLU&lt;/strong&gt;:
+g(z) = max(0.01z, z)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;g' = 0.01 when z&amp;lt;0&lt;/li&gt;
+&lt;li&gt;g' = 1 when z&amp;gt;=0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="gradient-descent-for-neural-networks_1"&gt;Gradient descent for Neural Networks&lt;/h2&gt;
+&lt;p&gt;NN with single hidden layer: n[0] = nx, n[1] = hidden layer size, n[2] = 1
+params: w[1], b[1], w[2], b[2]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;w[1].shape=(n[1], n[0]), b[1].shape=(n[1], 1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;w[2].shape=(n[2], n[1]) , b[2].shape=(n[2],1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;output: yhat = a[2]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;cost function J(w[1],b[1],w[2],b[2]) = 1/m * sum(L(yhat, y))&lt;/p&gt;
+&lt;p&gt;Gradient descent:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;random initialization&lt;/li&gt;
+&lt;li&gt;repeat:&lt;ul&gt;
+&lt;li&gt;compute dw[1], db[1], dw[2], db[2]&lt;/li&gt;
+&lt;li&gt;w[1] := w[1] - alpha*dw[1], ...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Fwd prop:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image026.png"&gt;&lt;br&gt;
+general formular for &lt;code&gt;l&lt;/code&gt;th layer:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image034.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;Bck prop: 
+computing derivatives &lt;code&gt;dw&lt;/code&gt;, &lt;code&gt;db&lt;/code&gt;
+note: use &lt;code&gt;keepdims = True&lt;/code&gt; or  &lt;code&gt;.rehape()&lt;/code&gt; to avoid rank-1 arraies.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image027.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="backpropagation-intuition-optional"&gt;Backpropagation intuition (optional)&lt;/h2&gt;
+&lt;p&gt;Derive the formulas using computation graph + chain rule.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image028.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;gradient for a single example &lt;code&gt;x=x(i), y=y(i)&lt;/code&gt;:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image029.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;vectorized implementation for i=1,..,m:
+&lt;strong&gt;stacking columns&lt;/strong&gt;:&lt;code&gt;X = [x(1),..,x(m)]&lt;/code&gt;, &lt;code&gt;Z = [z(1)...z(m)]&lt;/code&gt;, &lt;code&gt;Y = [y(1)..y(m)]&lt;/code&gt;, 
+→ &lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image031.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="random-initialization"&gt;Random Initialization&lt;/h2&gt;
+&lt;p&gt;Unlike logistic regression, needs init params randomly.&lt;/p&gt;
+&lt;p&gt;If we init all &lt;code&gt;w&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt; to zeros: all activations &lt;code&gt;a_i&lt;/code&gt; and &lt;code&gt;a_j&lt;/code&gt; will be equal → &lt;code&gt;dz_i = dz_j&lt;/code&gt; → &lt;em&gt;all hidden units completely identical&lt;/em&gt;
+⇒ needs to init all params &lt;em&gt;random, small&lt;/em&gt; number (small because we want have larger derivatives for sigmoid, which is at small values, to speed up gd).
+when w is init to small rand, b don't need random init.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image033.png"/&gt;&lt;/br&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>[Neural Networks and Deep Learning] week2. Neural Networks Basics</title><link href="http://x-wei.github.io/Ng_DLMooc_c1wk2.html" rel="alternate"></link><published>2017-09-13T00:00:00+02:00</published><updated>2017-09-13T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2017-09-13:/Ng_DLMooc_c1wk2.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;p&gt;This week: &lt;strong&gt;logistic regression&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id="binary-classification-notation"&gt;Binary Classification &amp;amp; notation&lt;/h2&gt;
+&lt;p&gt;ex. cat classifier from image
+image pixels: 64x64x3 
+⇒ unroll(flatten) to a feature vector &lt;code&gt;x&lt;/code&gt; dim=64x64x3=12288:=&lt;code&gt;n&lt;/code&gt; (input dimension)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;notation&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;superscript &lt;code&gt;(i)&lt;/code&gt; for ith example, e.g. &lt;code&gt;x^(i)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;superscript &lt;code&gt;[l]&lt;/code&gt; for lth layer, e.g. &lt;code&gt;w^[l]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;m&lt;/code&gt;: number …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;p&gt;This week: &lt;strong&gt;logistic regression&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id="binary-classification-notation"&gt;Binary Classification &amp;amp; notation&lt;/h2&gt;
+&lt;p&gt;ex. cat classifier from image
+image pixels: 64x64x3 
+⇒ unroll(flatten) to a feature vector &lt;code&gt;x&lt;/code&gt; dim=64x64x3=12288:=&lt;code&gt;n&lt;/code&gt; (input dimension)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;notation&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;superscript &lt;code&gt;(i)&lt;/code&gt; for ith example, e.g. &lt;code&gt;x^(i)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;superscript &lt;code&gt;[l]&lt;/code&gt; for lth layer, e.g. &lt;code&gt;w^[l]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;m&lt;/code&gt;: number of data&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;n_x&lt;/code&gt;: input dimension, &lt;code&gt;n_y&lt;/code&gt;: output dimension.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;n_h^[l]&lt;/code&gt;: number of hidden units for layer l.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;L&lt;/code&gt;: number of layers&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;X&lt;/code&gt;: dim=(&lt;code&gt;n_x&lt;/code&gt;,&lt;code&gt;m&lt;/code&gt;), each &lt;em&gt;column&lt;/em&gt; is a training example x^(i).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Y&lt;/code&gt;: dim=(&lt;code&gt;1&lt;/code&gt;,&lt;code&gt;m&lt;/code&gt;), one single &lt;code&gt;row&lt;/code&gt; matrix.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image.png"/&gt;&lt;/p&gt;
+&lt;h1 id="logistic-regression-as-a-nueral-network_1"&gt;Logistic Regression as a Nueral Network&lt;/h1&gt;
+&lt;h2 id="logistic-regression"&gt;Logistic Regression&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image009.png"&gt;&lt;br&gt;
+dim(x) = n_x
+parameters: w (dim=n_x) , b (dim=1)
+(alternative notation: adding b to w → add x_0 = 1 to feature x. → will NOT use this notation here
+keeping w and b separate make implementation easier )&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;linear regression: &lt;code&gt;y_hat = w^T*x + b&lt;/code&gt;
+logistic regssion: &lt;code&gt;y_hat = sigmoid(w^T*x + b)&lt;/code&gt;
+sigmoid function: S-shaped function 
+&lt;code&gt;sigmoid(z) = 1 / ( 1 + e^-z)&lt;/code&gt;
+z large → sigmoid(z) ~= 1
+z small → sigmoid(z) ~= 0&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image001.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image025.png"/&gt;&lt;/p&gt;
+&lt;h2 id="logistic-regression-cost-function"&gt;Logistic Regression Cost Function&lt;/h2&gt;
+&lt;p&gt;To train model for best parameters (w, b), need to define loss function.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image010.png"&gt; &lt;br&gt;
+y_hat: between (0,1)
+training set: {(x^(i), y^(i)))), i = 1..m}
+want: y_hat(i) ~= y(i)&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Loss function&lt;/strong&gt; &lt;code&gt;L(y_hat, y)&lt;/code&gt;: on a &lt;em&gt;single&lt;/em&gt; training example (x, y)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;square error: &lt;code&gt;L(y_hat, y) = (y_hat - y)^2/2&lt;/code&gt; &lt;ul&gt;
+&lt;li&gt;⇒ &lt;em&gt;not convex&lt;/em&gt;, GD not work well, uneasy to optimize&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;loss function used in logistic regression: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;L(y_hat, y) = -[ylog(y_hat) + (1-y)log(1-y_hat)]&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;convex w.r.t. w and b&lt;/li&gt;
+&lt;li&gt;when y = 1, loss = -log(y_hat)  → want y_hat large → y_hat ~=1&lt;/li&gt;
+&lt;li&gt;when y = 0, loss = -log(1-y_hat) → want y_hat small → y_hat ~=0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cost function&lt;/strong&gt; &lt;code&gt;J(w,b)&lt;/code&gt;: average on all training sets, only depends on parameters w, b&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image003.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="gradient-descent"&gt;Gradient Descent&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image005.png"&gt;&lt;br&gt;
+⇒ minimize &lt;code&gt;J(w,b)&lt;/code&gt; wrt. w and b&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;J(w,b)&lt;/code&gt; is convex ⇒ gradient descent&lt;/li&gt;
+&lt;li&gt;Initialization: for logistic regression, any init works because of convexity of J, usually init as 0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Gradient descent: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;alpha&lt;/code&gt; = learning rate&lt;/li&gt;
+&lt;li&gt;derivative &lt;code&gt;dJ(w)/dw&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;~= slope of function &lt;code&gt;J&lt;/code&gt; at point &lt;code&gt;w&lt;/code&gt; 
+~= direction where &lt;code&gt;J&lt;/code&gt; &lt;em&gt;grows&lt;/em&gt; fastest at point &lt;code&gt;w&lt;/code&gt;
+&lt;em&gt;denote this as '&lt;/em&gt;&lt;code&gt;dw&lt;/code&gt;&lt;em&gt;' in code&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;algo: 'take steepest descent'&lt;ul&gt;
+&lt;li&gt;from an init value of w_0&lt;/li&gt;
+&lt;li&gt;repeatedly update w until converge &lt;code&gt;w := w - alpha*dw&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image006.png"&gt; &lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image007.png"&gt; &lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;In the case of logistic regression, &amp;gt;1 params (&lt;code&gt;w&lt;/code&gt; and &lt;code&gt;b&lt;/code&gt;) to update:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image008.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;Intuitions about derivatives: &lt;code&gt;f'(a)&lt;/code&gt; = slope of function &lt;code&gt;f&lt;/code&gt; at &lt;code&gt;a&lt;/code&gt; .&lt;/p&gt;
+&lt;h2 id="computation-graph"&gt;Computation Graph&lt;/h2&gt;
+&lt;p&gt;example: function &lt;code&gt;J(a,b,c) = 3(a+b*c)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Forward propagation&lt;/strong&gt;: compute J(a,b,c) value:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;internal u := b*c&lt;/li&gt;
+&lt;li&gt;internal v := a+u&lt;/li&gt;
+&lt;li&gt;J = 3 * v&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image011.png"/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Backward propagation&lt;/strong&gt;: compute derivatives dJ/da, dJ/db, dJ/dc:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;J = 3*v → compute dJ/dv&lt;/li&gt;
+&lt;li&gt;v = a + u → compute dv/da, dv/du&lt;/li&gt;
+&lt;li&gt;u = bc → compute du/db, du/dc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ chain rule&lt;em&gt;: dJ/da is multiplying the derivatives along the path from J back to a&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;dJ/da = dJ/dv * dv/da&lt;/li&gt;
+&lt;li&gt;dJ/db = dJ/dv * dv/du * du/db&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;dJ/dc = dJ/dv * dv/du * du/dc&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In code: &lt;em&gt;denote '&lt;/em&gt;&lt;code&gt;dvar&lt;/code&gt;&lt;em&gt;' as d(FinalOutput)/d(var) for simplicity. i.e. da = dJ/da, dv = dJ/dv, etc.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image014.png"/&gt;&lt;/p&gt;
+&lt;h2 id="logistic-regression-gradient-descent-computation-graph"&gt;Logistic Regression Gradient Descent (&amp;amp;computation graph)&lt;/h2&gt;
+&lt;p&gt;logistic regression loss(on a single training example x,y) L.
+as computation graph:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;z = wx + b&lt;/li&gt;
+&lt;li&gt;a := sigmoid(z) (=y_hat, 'logit'?)&lt;/li&gt;
+&lt;li&gt;loss function L(a,y) = - [y(loga) + (1-y)log(1-a)]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image015.png"/&gt;&lt;/p&gt;
+&lt;h2 id="gradient-descent-on-m-examples"&gt;Gradient Descent on m Examples&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;cost function&lt;/em&gt;, i.e. on all training sets.&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image016.png"&gt;&lt;br&gt;
+J(w,b) = avg{L(x,y), for all m examples}
+→ by linearity  of derivative: dJ/dw = avg(dL/dw), just average dw^(i) over all indices i.&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;In implementation: use &lt;strong&gt;vectorization&lt;/strong&gt; as much as possible, get rid of for loops.&lt;/p&gt;
+&lt;h1 id="python-and-vectorization_1"&gt;Python and Vectorization&lt;/h1&gt;
+&lt;h2 id="vectorization"&gt;Vectorization&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;avoid explicit for-loops whenever possible&lt;/em&gt;
+e.g. z = w^T * x + b
+in numpy:
+&lt;code&gt;z = np.dot(w, x) + b&lt;/code&gt;
+&lt;em&gt;~300 times faster than explicit for loop&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;more examples:
+u = A*v matrix multiplication
+→ &lt;code&gt;u =&lt;/code&gt; &lt;code&gt;np.dot(A, v)&lt;/code&gt;
+note: &lt;code&gt;A * v&lt;/code&gt; would element-wise multiply
+u = exp(v) element-wise operation: exponential/log/abs/...
+→ &lt;code&gt;u = np.exp(v)&lt;/code&gt; &lt;code&gt;/ np.log(v) / np.abs(v) / v**2 / 1/v&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="vectorizing-logistic-regression"&gt;Vectorizing Logistic Regression&lt;/h2&gt;
+&lt;p&gt;implementation before: two for-loops( 1 for each training set, 1 for each feature vector).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;training input &lt;code&gt;X = [x(1), ... , x(m)]&lt;/code&gt;, X.dim = (n_x, m)&lt;/li&gt;
+&lt;li&gt;weight &lt;code&gt;w^T = [w_1, ... , w_nx]&lt;/code&gt;, w.dim = (n_x, 1)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Fwd propagation&lt;/strong&gt;&lt;br&gt;
+z(i) = w^T * x(i) + b, i = 1..m,
+→ Z := [z(1)...z(m)] = w^T * X + [b...b], Z.dim = (1, m), stack horizentally
+→ &lt;code&gt;Z = np.dot(w.T, X) + b&lt;/code&gt; (scalar b &lt;em&gt;auto broadcasted&lt;/em&gt; to a row vector)
+a(i) = sigmoid( z(i) ) = y_hat(i)
+→ A := [a(1)...a(m)] = sigmoid(Z), sigmoid is vectorized&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bkwd propagation: gradient computation&lt;/strong&gt;&lt;br&gt;
+&lt;code&gt;dz(i)  = a(i) - y(i)&lt;/code&gt;
+→ stack horizentally:
+Y = [y(1)...y(m)]
+dZ := [dz(1)...dz(m)] = A - Y
+graidents:
+&lt;code&gt;dw = sum( x(i) * dz(i) ) / m&lt;/code&gt;, dw.dim = (nx, 1)
+&lt;code&gt;db = sum( dz(i) ) / m&lt;/code&gt;
+→ 
+db = 1/m * np.sum(dZ)
+dw = 1/m * X*dz^T&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image017.png"/&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;efficient back-prop implementation:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image018.png"/&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="broadcasting-in-python"&gt;Broadcasting in Python&lt;/h2&gt;
+&lt;p&gt;example: calculate percentage of calories from carb/protein/fat for each food — without fooloop&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image019.png"&gt;&lt;br&gt;
+two lines of numpy code:
+    A = np.array([[...]..]) # A.dim = (3,4)
+    cal = A.sum(axis=0) # total calories
+    percentage = 100 * A / cal.reshape(1,4) # percentage.dim = (1,4)&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;axis=0&lt;/code&gt;→ sum &lt;em&gt;vertically, &lt;/em&gt;&lt;code&gt;axis=1&lt;/code&gt;&lt;em&gt; → sum horizentally&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image020.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;reshape(a,b)&lt;/code&gt; → redundant here, just to make sure shape correct, &lt;em&gt;reshape call is cheap&lt;/em&gt;. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;A / cal&lt;/code&gt; → (3&lt;em&gt;4 matrix) / (1&lt;/em&gt;4 matrix) → &lt;strong&gt;broadcasting&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;more broadcasting examples:&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image021.png"&gt;&lt;br&gt;
+General principle: computing (m,n) matrix with (1,n) matrix 
+⇒ the (1,n) matrix is &lt;em&gt;auto expanded to a (m,n) matrix&lt;/em&gt; by copying the row m times, to match the shape, calculate element-wise&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image022.png"/&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="a-note-on-python-numpy-vectors"&gt;A note on python numpy vectors&lt;/h2&gt;
+&lt;p&gt;flexibility of broadcasting: both advantage and &lt;em&gt;weakness&lt;/em&gt;.
+example: adding column vec and a row vec → get a matrix instead of throwing exceptions.
+    &amp;gt;&amp;gt;&amp;gt; a
+    array([1, 2, 3])
+    &amp;gt;&amp;gt;&amp;gt; b
+    array([[1],
+           [2]])
+    &amp;gt;&amp;gt;&amp;gt; a + b
+    array([[2, 3, 4],
+           [3, 4, 5]])&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tips and trick to eliminate bugs&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;avoid&lt;/strong&gt; &lt;strong&gt;rank-1 array&lt;/strong&gt;: &lt;br&gt;
+&lt;code&gt;a.shape = (x,)&lt;/code&gt;
+this is &lt;em&gt;neither row nor column vector&lt;/em&gt;, have non-intuitive effects.
+    &amp;gt;&amp;gt;&amp;gt; a = np.array([1,2,3])
+    &amp;gt;&amp;gt;&amp;gt; a.shape
+    (3,)  # NOT (3,1)
+    &amp;gt;&amp;gt;&amp;gt; a.T
+    array([1, 2, 3])
+    &amp;gt;&amp;gt;&amp;gt; np.dot(a, a.T)  # Mathematically would expact a matrix, if a is column vec
+    14
+    &amp;gt;&amp;gt;&amp;gt; a.T.shape
+    (3,)&lt;/br&gt;&lt;/p&gt;
+&lt;p&gt;⇒ &lt;em&gt;do &lt;strong&gt;&lt;em&gt;not&lt;/em&gt;&lt;/strong&gt; use rank-1 arraies, use column/row vectors&lt;/em&gt;
+    &amp;gt;&amp;gt;&amp;gt; a2 = a.reshape((-1, 1))  # A column vector -- (5,1) matrix.
+    &amp;gt;&amp;gt;&amp;gt; a2
+    array([[1],
+           [2],
+           [3]])
+    &amp;gt;&amp;gt;&amp;gt; a2.T
+    array([[1, 2, 3]])  # Note: two brackets!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;add assertions&lt;/strong&gt;&lt;br&gt;
+&lt;code&gt;assert(a.shape == (3,1))&lt;/code&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h2 id="explanation-of-logistic-regression-cost-function-optional"&gt;Explanation of logistic regression cost function (optional)&lt;/h2&gt;
+&lt;p&gt;Justisfy why we use this form of cost function:
+y_hat ~= chance of y==1 given x
+want to express P(y|x) using y_hat and y
+P(y|x) as func(y, y_hat) at different values of y:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;if y = 1: P(y|x) = P(y=1|x) = y_hat&lt;/li&gt;
+&lt;li&gt;if y = 0: P(y|x) = P(y=0|x) = 1 - y_hat&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;⇒ wrap the two cases &lt;em&gt;in one single formula&lt;/em&gt;: using exponent of y and (1-y)&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image023.png"&gt;&lt;br&gt;
+⇒ take log of P(y|x) ⇒ loss function (for a single training example)&lt;br&gt;
+&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image024.png"&gt;&lt;br&gt;
+⇒ aggregate over all training examples i = 1..m:
+(assume: data are iid)
+P(labels in training set) = multiply( P(y(i)|x(i) )
+take log → log(P(labels in training set)) = sum( log P(y(i)|x(i) ) = - J
+&lt;strong&gt;maximizing likelihood = minimizing cost function&lt;/strong&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
+&lt;h1 id="assignments_1"&gt;Assignments&lt;/h1&gt;
+&lt;h2 id="python-numpy-basics"&gt;python / numpy basics&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;np.reshape() / np.shape&lt;/li&gt;
+&lt;li&gt;calculate norm: &lt;code&gt;np.linalg.norm()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image026.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;keepdims=True&lt;/code&gt;: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;axes that are reduced will be &lt;em&gt;kept&lt;/em&gt; (with size=1)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;  &amp;gt;&amp;gt;&amp;gt; a&lt;/span&gt;
+&lt;span class="code-line"&gt;  array([[ 0.01014617,  0.08222027, -0.59608242],&lt;/span&gt;
+&lt;span class="code-line"&gt;        [-0.18495204, -1.50409531, -1.03853663],&lt;/span&gt;
+&lt;span class="code-line"&gt;        [ 0.03995499, -0.67679544,  0.11513247]])&lt;/span&gt;
+&lt;span class="code-line"&gt;  &amp;gt;&amp;gt;&amp;gt; a.sum(keepdims=1)&lt;/span&gt;
+&lt;span class="code-line"&gt;  array([[-3.75300795]])&lt;/span&gt;
+&lt;span class="code-line"&gt;  &amp;gt;&amp;gt;&amp;gt; a.sum()&lt;/span&gt;
+&lt;span class="code-line"&gt;  -3.7530079538833663&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.scipy.org/doc/numpy/user/basics.broadcasting.html"&gt;broadcasting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;softmax: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;softmax for row vec:
+  x.shape = (1,n), x = [x1,...xn]
+  y = softmax(x), y.shape = (1,n), &lt;code&gt;yi = exp(xi) / sum( exp(xi) )&lt;/code&gt;
+  softmax for matrix
+  X.shape = (m,n)
+  Y = softmax(X) = [softmax(row-i of X)], Y.shape = (m, 1)&lt;/p&gt;
+&lt;h2 id="logistic-regression-with-a-neural-network-mindset"&gt;Logistic Regression with a Neural Network mindset&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;input preprocessing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;input dataset shape = (m, num_px, num_px, 3)
+  → &lt;em&gt;reshape&lt;/em&gt; to one column per example, shape = (num_px&lt;em&gt;num_px&lt;/em&gt;3, ~~m~~)
+  → &lt;em&gt;center &amp;amp; standardize&lt;/em&gt; data: &lt;code&gt;x' = (xi - x_mean) / std(x)&lt;/code&gt;, 
+  but &lt;em&gt;for images:&lt;/em&gt; just divide by 255.0 (max pixel value), convenient and works almost as well.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;params initialization&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For logistic regression (cost function convex), just init to zeros is OK. 
+    w = np.zeros((dim,1))
+    b = 0.0&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fwd prop: compute cost function&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image027.png"&gt;&lt;br&gt;
+  input &lt;code&gt;X&lt;/code&gt; (shape = nx*m, one column per example)→ logits &lt;code&gt;Z&lt;/code&gt; → activations &lt;code&gt;A=sigmoid(Z)&lt;/code&gt;→ cost &lt;code&gt;J&lt;/code&gt;&lt;/br&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Bkwd prop&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image028.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Optimization&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;gradient descent: w := w - alpha*dw&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Predict: using learned params&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Yhat = A = sigmoid(wT * X + b)&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>[Neural Networks and Deep Learning] week1. Introduction to deep learning</title><link href="http://x-wei.github.io/Ng_DLMooc_c1wk1.html" rel="alternate"></link><published>2017-09-11T00:00:00+02:00</published><updated>2017-09-11T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2017-09-11:/Ng_DLMooc_c1wk1.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="what-is-a-neural-network"&gt;What is a neural network?&lt;/h2&gt;
 &lt;p&gt;Example: housing price prediciton. &lt;/p&gt;
 &lt;p&gt;Each neuron: ReLU function&lt;/p&gt;
 &lt;p&gt;Stacking multiple layers of neurons: hidden layers are concepts more general than input layer — found automatically by NN.&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;Supervised Learning with Neural Networks&lt;/h2&gt;
+&lt;h2 id="supervised-learning-with-neural-networks"&gt;Supervised Learning with Neural Networks&lt;/h2&gt;
 &lt;p&gt;supervised learning: during training, always have output corresponding to input.&lt;/p&gt;
 &lt;p&gt;Different NN types …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2&gt;What is a neural network?&lt;/h2&gt;
+&lt;h2 id="what-is-a-neural-network"&gt;What is a neural network?&lt;/h2&gt;
 &lt;p&gt;Example: housing price prediciton. &lt;/p&gt;
 &lt;p&gt;Each neuron: ReLU function&lt;/p&gt;
 &lt;p&gt;Stacking multiple layers of neurons: hidden layers are concepts more general than input layer — found automatically by NN.&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image.png"/&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;Supervised Learning with Neural Networks&lt;/h2&gt;
+&lt;h2 id="supervised-learning-with-neural-networks"&gt;Supervised Learning with Neural Networks&lt;/h2&gt;
 &lt;p&gt;supervised learning: during training, always have output corresponding to input.&lt;/p&gt;
 &lt;p&gt;Different NN types are used for different problems:&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image002.png"/&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image003.png"/&gt;&lt;/p&gt;
 &lt;p&gt;structured data: database, each feature/column has a well-defined meaning.
 unstructured data: audio/image/text, no well-defined meaning for pixels/tokens&lt;/p&gt;
-&lt;h2&gt;Why is Deep Learning taking off?&lt;/h2&gt;
+&lt;h2 id="why-is-deep-learning-taking-off"&gt;Why is Deep Learning taking off?&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;scale&lt;/strong&gt; drives deep learning progress.
 (scale: both of NN and of data)&lt;/p&gt;
 &lt;p&gt;trandition methods: pleateaus as amount of data grows further. 
@@ -31,7 +661,7 @@ NN: grows with data.&lt;br&gt;
 &lt;li&gt;computation faster&lt;/li&gt;
 &lt;li&gt;new algorithms, e.g. from sigmoid to ReLU, which in turn speeds up computation too. &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;About this course&lt;/h2&gt;
+&lt;h2 id="about-this-course"&gt;About this course&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image007.png"/&gt;&lt;/p&gt;
 &lt;p&gt;This course: &lt;strong&gt;implementing&lt;/strong&gt; NN.&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk1/pasted_image006.png"/&gt;&lt;/br&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences</title><link href="http://x-wei.github.io/dlMOOC_L4.html" rel="alternate"></link><published>2016-06-07T00:00:00+02:00</published><updated>2016-06-07T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-06-07:/dlMOOC_L4.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
@@ -47,7 +677,7 @@ embedding: map words to small vectors&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image.png"&gt;&lt;br&gt;
 measure the closeness by cosine distance: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image003.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;word2vec&lt;/h2&gt;
+&lt;h2 id="word2vec"&gt;word2vec&lt;/h2&gt;
 &lt;p&gt;initial: random …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;problems with text:   &lt;/p&gt;
 &lt;ol&gt;
@@ -61,7 +691,7 @@ embedding: map words to small vectors&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image.png"&gt;&lt;br&gt;
 measure the closeness by cosine distance: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image003.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;word2vec&lt;/h2&gt;
+&lt;h2 id="word2vec"&gt;word2vec&lt;/h2&gt;
 &lt;p&gt;initial: random vector&lt;br&gt;
 → train model to predict nearby word. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image001.png"&gt;&lt;br&gt;
@@ -70,14 +700,14 @@ pb: too many words in dictionary → softmax too slow&lt;br&gt;
 ⇒ random sample the non-target words &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image005.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image006.png"&gt; &lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;tSNE&lt;/h2&gt;
+&lt;h2 id="tsne"&gt;tSNE&lt;/h2&gt;
 &lt;p&gt;dimension reduction (not PCA) that preserves the neighborhood structure (close vector → close in 2d as well). &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image002.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;RNN&lt;/h2&gt;
+&lt;h2 id="rnn"&gt;RNN&lt;/h2&gt;
 &lt;p&gt;treat varaible length sequences of words. &lt;br&gt;
 use the current word (Xi) and the last prediction as input. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image007.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;backprop for RNN&lt;/h2&gt;
+&lt;h2 id="backprop-for-rnn"&gt;backprop for RNN&lt;/h2&gt;
 &lt;p&gt;apply highly correlated derivatives to W → not good for SGD. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image008.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;pb if we use highly correlated updates: grad either explod or it disappear quickly.   &lt;/p&gt;
@@ -86,7 +716,7 @@ use the current word (Xi) and the last prediction as input. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image010.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;grad-vanishing: memory loss in RNN&lt;br&gt;
 ⇒ LSTM  &lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;LSTM&lt;/h2&gt;
+&lt;h2 id="lstm"&gt;LSTM&lt;/h2&gt;
 &lt;p&gt;in RNN: replace the NN by a LSTM cell&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image011.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image013.png"&gt;&lt;br&gt;
@@ -104,7 +734,7 @@ a logistic regression in each gate: controls when to remember and when to forget
 &lt;li&gt;L2 regularization: OK  &lt;/li&gt;
 &lt;li&gt;dropout: OK when used for input/output (X and Y), but NOT use to the recurrent in/out.  &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;beam search&lt;/h2&gt;
+&lt;h2 id="beam-search"&gt;beam search&lt;/h2&gt;
 &lt;p&gt;beam search is for &lt;em&gt;generating&lt;/em&gt; sequences by RNN.   &lt;/p&gt;
 &lt;p&gt;Greedy approach: at each step, &lt;em&gt;sample&lt;/em&gt; from the predicted distribution of the RNN. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image017.png"&gt;&lt;br&gt;
@@ -114,7 +744,7 @@ predict more steps and pick the seq with largest proba. &lt;br&gt;
 pb with this: the number of possible seq grows exponentially &lt;br&gt;
 ⇒ just keep the few most promising seqs → "&lt;strong&gt;Beam search"&lt;/strong&gt;&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image016.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;seq to seq&lt;/h2&gt;
+&lt;h2 id="seq-to-seq"&gt;seq to seq&lt;/h2&gt;
 &lt;p&gt;RNN: model to map vaiable length seq to fix-length vectors. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image021.png"&gt;&lt;br&gt;
 Beam search: sequence generation (map fix-length vectors to seq)&lt;br&gt;
@@ -125,22 +755,22 @@ Beam search: sequence generation (map fix-length vectors to seq)&lt;br&gt;
 translation, speech recognation, image captionning  &lt;/br&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>(DeepLearning MOOC) Lesson 3: Convolutional Neural Networks</title><link href="http://x-wei.github.io/dlMOOC_L3.html" rel="alternate"></link><published>2016-06-06T00:00:00+02:00</published><updated>2016-06-06T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-06-06:/dlMOOC_L3.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;statistical invariance → &lt;strong&gt;weight sharing&lt;/strong&gt;&lt;br&gt;
 e.g. image colors, translation invariance...   &lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;convnet&lt;/h2&gt;
+&lt;h2 id="convnet"&gt;convnet&lt;/h2&gt;
 &lt;p&gt;is NNs that share their weights across space.   &lt;/p&gt;
 &lt;p&gt;convolution: slide a small patch of NN over the image to produce a new "image"&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;convnet forms a pyramid, each "stack of pincake" get larger depth and smaller area. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image001.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;convolutional …&lt;/h2&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h2 id="convolutional-lingo"&gt;convolutional …&lt;/h2&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;statistical invariance → &lt;strong&gt;weight sharing&lt;/strong&gt;&lt;br&gt;
 e.g. image colors, translation invariance...   &lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;convnet&lt;/h2&gt;
+&lt;h2 id="convnet"&gt;convnet&lt;/h2&gt;
 &lt;p&gt;is NNs that share their weights across space.   &lt;/p&gt;
 &lt;p&gt;convolution: slide a small patch of NN over the image to produce a new "image"&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;convnet forms a pyramid, each "stack of pincake" get larger depth and smaller area. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image001.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;convolutional lingo&lt;/h2&gt;
+&lt;h2 id="convolutional-lingo"&gt;convolutional lingo&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image002.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;def. &lt;strong&gt;patch (kernel)&lt;/strong&gt;&lt;br&gt;
 small NN that slides over the image.   &lt;/br&gt;&lt;/p&gt;
@@ -161,7 +791,7 @@ the way you treat the edge of image.   &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image004.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;once got "deep and narrow" representation by convolution, connect to a normal (regular) fully-conncected NN. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image005.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;pooling&lt;/h2&gt;
+&lt;h2 id="pooling"&gt;pooling&lt;/h2&gt;
 &lt;p&gt;better way to reduce the spatial extend (i.e. size) of the feature map. &lt;br&gt;
 simple convnet: use large stride to reduce the feature map size. ⇒ &lt;em&gt;aggressive&lt;/em&gt;&lt;br&gt;
 &lt;strong&gt;pooling&lt;/strong&gt;: use small stride (ex. stride=1), then &lt;em&gt;take convolutions in neighbourhood and combine them&lt;/em&gt;.&lt;br&gt;
@@ -170,47 +800,47 @@ simple convnet: use large stride to reduce the feature map size. ⇒ &lt;em&gt;a
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image007.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;average pooling&lt;/strong&gt;&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image008.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;1x1 convolution&lt;/h2&gt;
+&lt;h2 id="1x1-convolution"&gt;1x1 convolution&lt;/h2&gt;
 &lt;p&gt;classic convolution = &lt;em&gt;linear&lt;/em&gt; classifier over a small patch of image&lt;br&gt;
 &lt;strong&gt;add a 1x1 convolution in the middle&lt;/strong&gt; ⇒ a mini-dnn over the patch. &lt;br&gt;
 cheap: not convolution, just matrix multiplication. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image009.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;inception module&lt;/h2&gt;
+&lt;h2 id="inception-module"&gt;inception module&lt;/h2&gt;
 &lt;p&gt;between each layers, just do both pooling and 1x1 conv, and 3x3 and 5x5.. conv, and concatenate them together. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L3/pasted_image010.png"&gt;&lt;br&gt;
 benefit: total number of parameters is small, yet performance better.   &lt;/br&gt;&lt;/img&gt;&lt;/br&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>(DeepLearning MOOC) Lesson 2: Deep Neural Networks</title><link href="http://x-wei.github.io/dlMOOC_L2.html" rel="alternate"></link><published>2016-06-05T18:00:00+02:00</published><updated>2016-06-05T18:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-06-05:/dlMOOC_L2.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2&gt;Linear models&lt;/h2&gt;
+&lt;h2 id="linear-models"&gt;Linear models&lt;/h2&gt;
 &lt;p&gt;matrix multiplication: fast with GPU&lt;br&gt;
 numerically stable&lt;br&gt;
 cannot cocatenate linear units → equivalent to one big matrix...  &lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;⇒ add non-linear units in between   &lt;/p&gt;
-&lt;h2&gt;rectified linear units (RELU)&lt;/h2&gt;
+&lt;h2 id="rectified-linear-units-relu"&gt;rectified linear units (RELU)&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image002.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;chain rule: efficient computationally&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image003.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image004.png"&gt; &lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;back propagation&lt;/h2&gt;
+&lt;h2 id="back-propagation"&gt;back propagation&lt;/h2&gt;
 &lt;p&gt;easy to compute the gradient as long as the function Y(X) is made of simple …&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h2&gt;Linear models&lt;/h2&gt;
+&lt;h2 id="linear-models"&gt;Linear models&lt;/h2&gt;
 &lt;p&gt;matrix multiplication: fast with GPU&lt;br&gt;
 numerically stable&lt;br&gt;
 cannot cocatenate linear units → equivalent to one big matrix...  &lt;/br&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;⇒ add non-linear units in between   &lt;/p&gt;
-&lt;h2&gt;rectified linear units (RELU)&lt;/h2&gt;
+&lt;h2 id="rectified-linear-units-relu"&gt;rectified linear units (RELU)&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image002.png"&gt; &lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;chain rule: efficient computationally&lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image003.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image004.png"&gt; &lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;back propagation&lt;/h2&gt;
+&lt;h2 id="back-propagation"&gt;back propagation&lt;/h2&gt;
 &lt;p&gt;easy to compute the gradient as long as the function Y(X) is made of simple blocks with simple deritivates. &lt;br&gt;
 most deep-learning framework can do it automatically for you.   &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;N.B. The backprop block takes 2x memory/compute wrt the forward prop blocks. &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image005.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;first neural network: RELU units between linear classifiers: &lt;br&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image001.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/p&gt;
-&lt;h2&gt;Tensor flow&lt;/h2&gt;
+&lt;h2 id="tensor-flow"&gt;Tensor flow&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;tensors&lt;/code&gt; define computations, and they are nodes in a computation &lt;code&gt;graph&lt;/code&gt;. &lt;br&gt;
 To actually run the optimization, use &lt;code&gt;sessions&lt;/code&gt;...  &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;define a computation graph:   &lt;/p&gt;
@@ -286,13 +916,13 @@ To actually run the optimization, use &lt;code&gt;sessions&lt;/code&gt;...  &lt;
 &lt;span class="code-line"&gt;        valid_prediction.eval(), valid_labels))  &lt;/span&gt;
 &lt;span class="code-line"&gt;  print("Test accuracy: %.1f%%" % accuracy(test_prediction.eval(), test_labels))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Regularization&lt;/h2&gt;
+&lt;h2 id="regularization"&gt;Regularization&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;early termination: stop when cannot improve in validation performance.   &lt;/li&gt;
 &lt;li&gt;L2 regularization: adding L2 norm of   &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image006.png"&gt; &lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;Dropout&lt;/h2&gt;
+&lt;h2 id="dropout"&gt;Dropout&lt;/h2&gt;
 &lt;p&gt;def. &lt;strong&gt;activation&lt;/strong&gt; is the output of last layer that flows into the next layer. &lt;br&gt;
 dropout: &lt;em&gt;randomly set half of activations to 0&lt;/em&gt;.  &lt;/br&gt;&lt;/p&gt;
 &lt;p&gt;rational: forcing your model to learn reduadant representations (consus over an ensemble of nns...)... &lt;br&gt;
@@ -302,33 +932,33 @@ for evaluation no longer dropout, &lt;code&gt;ye&lt;/code&gt; = average of activ
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L2/pasted_image008.png"&gt; &lt;/img&gt;&lt;/br&gt;&lt;/br&gt;&lt;/p&gt;</content><category term="deep learning"></category></entry><entry><title>(DeepLearning MOOC) Lesson 1: From Machine Learning to Deep Learning</title><link href="http://x-wei.github.io/dlMOOC_L1.html" rel="alternate"></link><published>2016-06-05T00:00:00+02:00</published><updated>2016-06-05T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2016-06-05:/dlMOOC_L1.html</id><summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... 
 &lt;a href="https://www.udacity.com/course/deep-learning--ud730"&gt;https://www.udacity.com/course/deep-learning--ud730&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;Softmax function&lt;/h2&gt;
+&lt;h2 id="softmax-function"&gt;Softmax function&lt;/h2&gt;
 &lt;p&gt;socres &lt;code&gt;yi&lt;/code&gt; ⇒ probabilities &lt;code&gt;pi&lt;/code&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image.png"/&gt;&lt;/p&gt;
 &lt;p&gt;property: &lt;strong&gt;smaller scores ⇒ less certain about result&lt;/strong&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image001.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Onehot encoding&lt;/h2&gt;
+&lt;h2 id="onehot-encoding"&gt;Onehot encoding&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image002.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Cross entropy&lt;/h2&gt;
+&lt;h2 id="cross-entropy"&gt;Cross entropy&lt;/h2&gt;
 &lt;p&gt;&lt;em&gt;measure how well the probability vector &lt;/em&gt;&lt;code&gt;S&lt;/code&gt;&lt;em&gt; corresponds to the label vector &lt;/em&gt;&lt;code&gt;L&lt;/code&gt;&lt;em&gt;.&lt;/em&gt; 
 ⇒ cross entropy &lt;code&gt;D(S,L)&lt;/code&gt;&lt;em&gt;( D&amp;gt;=0, the smaller the …&lt;/em&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
 &lt;p&gt;这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... 
 &lt;a href="https://www.udacity.com/course/deep-learning--ud730"&gt;https://www.udacity.com/course/deep-learning--ud730&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;Softmax function&lt;/h2&gt;
+&lt;h2 id="softmax-function"&gt;Softmax function&lt;/h2&gt;
 &lt;p&gt;socres &lt;code&gt;yi&lt;/code&gt; ⇒ probabilities &lt;code&gt;pi&lt;/code&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image.png"/&gt;&lt;/p&gt;
 &lt;p&gt;property: &lt;strong&gt;smaller scores ⇒ less certain about result&lt;/strong&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image001.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Onehot encoding&lt;/h2&gt;
+&lt;h2 id="onehot-encoding"&gt;Onehot encoding&lt;/h2&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image002.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Cross entropy&lt;/h2&gt;
+&lt;h2 id="cross-entropy"&gt;Cross entropy&lt;/h2&gt;
 &lt;p&gt;&lt;em&gt;measure how well the probability vector &lt;/em&gt;&lt;code&gt;S&lt;/code&gt;&lt;em&gt; corresponds to the label vector &lt;/em&gt;&lt;code&gt;L&lt;/code&gt;&lt;em&gt;.&lt;/em&gt; 
 ⇒ cross entropy &lt;code&gt;D(S,L)&lt;/code&gt;&lt;em&gt;( D&amp;gt;=0, the smaller the better)&lt;/em&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image003.png"/&gt;&lt;/p&gt;
 &lt;p&gt;N.B. &lt;code&gt;D(S,L)&lt;/code&gt; is not symmetric (never log 0 ) &lt;/p&gt;
 &lt;p&gt;recap ("multinominal logistic classificaton"): 
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image004.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Minimizing cross entropy&lt;/h2&gt;
+&lt;h2 id="minimizing-cross-entropy"&gt;Minimizing cross entropy&lt;/h2&gt;
 &lt;p&gt;take avg D as loss function: 
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image008.png"&gt;
 ⇒ optimization, for example, by grad-desc: 
@@ -339,7 +969,7 @@ for evaluation no longer dropout, &lt;code&gt;ye&lt;/code&gt; = average of activ
 &lt;li&gt;how to feed img pixels to classifiers &lt;/li&gt;
 &lt;li&gt;how to initialize the optimization&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2&gt;numerical stability&lt;/h2&gt;
+&lt;h2 id="numerical-stability"&gt;numerical stability&lt;/h2&gt;
 &lt;p&gt;adding very small values to very large values will introduce a lot of errors ! 
 ex. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; a = 1e9&lt;/span&gt;
@@ -354,7 +984,7 @@ ex. &lt;/p&gt;
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image009.png"/&gt;&lt;/p&gt;
 &lt;p&gt;normalization for images: 
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image010.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;weight initialization&lt;/h2&gt;
+&lt;h2 id="weight-initialization"&gt;weight initialization&lt;/h2&gt;
 &lt;p&gt;draw init w/b from a &lt;code&gt;Gaussian(0, sigma)&lt;/code&gt;, sigma → magtitude of initial output. 
 small sigma means small outputs → uncertain about result. 
 ⇒ take small sigma for initialization 
@@ -362,11 +992,11 @@ small sigma means small outputs → uncertain about result.
 &lt;p&gt;recap: &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image012.png"&gt;
 ⇒ feed this loss fcn to the optimizer &lt;/img&gt;&lt;/p&gt;
-&lt;h2&gt;training, validation and test dataset&lt;/h2&gt;
+&lt;h2 id="training-validation-and-test-dataset"&gt;training, validation and test dataset&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;rule of thumb (30)&lt;/strong&gt;: 
 a change that affects 30 examples in the validation set is statically significant. 
 ⇒ in most cases use &amp;gt;30000 samples in validation set → changes in 0.1% is significant. &lt;/p&gt;
-&lt;h2&gt;SGD&lt;/h2&gt;
+&lt;h2 id="sgd"&gt;SGD&lt;/h2&gt;
 &lt;p&gt;rule of thumb: computing &lt;code&gt;grad(L)&lt;/code&gt; takes 3x time than computing loss fcn &lt;code&gt;L&lt;/code&gt;. → pb for scaling.. &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image014.png"&gt;
 SGD is the only fast enough model in practice. &lt;/img&gt;&lt;/p&gt;
@@ -377,14 +1007,14 @@ SGD is the only fast enough model in practice. &lt;/img&gt;&lt;/p&gt;
 &lt;li&gt;&lt;strong&gt;momentum&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;learning rate decay&lt;/strong&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2&gt;Momentum&lt;/h2&gt;
+&lt;h2 id="momentum"&gt;Momentum&lt;/h2&gt;
 &lt;p&gt;SGD: many small steps in random directions → general direction is more accurate. 
 ⇒ keep a running average of the gradients&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image015.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;Learning rate decay&lt;/h2&gt;
+&lt;h2 id="learning-rate-decay"&gt;Learning rate decay&lt;/h2&gt;
 &lt;p&gt;take smaller and smaller steps (alpha decays)
 e.g. alpha decays exponentially...&lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image016.png"/&gt;&lt;/p&gt;
-&lt;h2&gt;parameter tuning&lt;/h2&gt;
+&lt;h2 id="parameter-tuning"&gt;parameter tuning&lt;/h2&gt;
 &lt;p&gt;how quickly you learning != how well you train.. 
 &lt;img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image017.png"&gt;
 balck magics in deep learning: 

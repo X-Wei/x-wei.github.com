@@ -202,16 +202,24 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION">[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION</a><ul><li><a class="toc-href" href="#1-structuring-software-with-modules" title="1. STRUCTURING SOFTWARE WITH MODULES">1. STRUCTURING SOFTWARE WITH MODULES</a><ul><li><a class="toc-href" href="#module-as-namespace" title="module as namespace">module as namespace</a></li><li><a class="toc-href" href="#hierachical-module-structure" title="hierachical module structure">hierachical module structure</a></li></ul></li><li><a class="toc-href" href="#2-information-hiding_1" title="2. INFORMATION HIDING">2. INFORMATION HIDING</a><ul><li><a class="toc-href" href="#module-signatures" title="module signatures">module signatures</a></li><li><a class="toc-href" href="#abstract-types" title="abstract types">abstract types</a></li></ul></li><li><a class="toc-href" href="#3-case-study-a-module-for-dictionaries_1" title="3. CASE STUDY: A MODULE FOR DICTIONARIES">3. CASE STUDY: A MODULE FOR DICTIONARIES</a></li><li><a class="toc-href" href="#4-functors" title="4. FUNCTORS">4. FUNCTORS</a><ul><li><a class="toc-href" href="#example-set-and-map" title="example: Set and Map">example: Set and Map</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
 <p>this week: programming-in-the-large using the module system of OCaml.  </p>
-<h1>1. STRUCTURING SOFTWARE WITH MODULES</h1>
+<h1 id="1-structuring-software-with-modules">1. STRUCTURING SOFTWARE WITH MODULES</h1>
 <p>in large project: mangage high number of definitions → abstractions built on top of other abstractions.   </p>
 <ul>
 <li>layers of abstractions: hide information  </li>
 <li>divide program into components  </li>
 <li>identifiers organised to avoid naming conflicts  </li>
 </ul>
-<h3>module as namespace</h3>
+<h3 id="module-as-namespace">module as namespace</h3>
 <p>dot-notation: access module component.   </p>
 <p>ex. <code>List.length</code> <br>
 or first <code>open List</code> then just call <code>length</code> <br>
@@ -253,7 +261,7 @@ if open 2 modules having identical identifiers, the last opened module will be u
 <span class="code-line"><span class="o">#</span> <span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="nn">Stack</span><span class="p">.</span><span class="n">pop</span> <span class="n">s</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">val</span> <span class="n">r</span> <span class="o">:</span> <span class="o">(</span><span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span> <span class="kt">list</span><span class="o">)</span> <span class="n">option</span> <span class="o">=</span> <span class="nc">None</span>   </span>
 </pre></div>
-<h3>hierachical module structure</h3>
+<h3 id="hierachical-module-structure">hierachical module structure</h3>
 <ul>
 <li>a module can contain other module definitions  </li>
 <li>a signature can also contain module signatures  </li>
@@ -270,7 +278,7 @@ if open 2 modules having identical identifiers, the last opened module will be u
 <span class="code-line"><span class="k">open</span> <span class="nn">Forest</span><span class="p">.</span><span class="nc">Tree</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">t</span> <span class="o">=</span> <span class="nc">Leaf</span> <span class="mi">42</span><span class="o">;;</span>   </span>
 </pre></div>
-<h1>2. INFORMATION HIDING</h1>
+<h1 id="2-information-hiding_1">2. INFORMATION HIDING</h1>
 <p>a module should come with some user manual ("contract") to indicate to clients:  </p>
 <ol>
 <li>function preconditions that must be verified  </li>
@@ -278,7 +286,7 @@ if open 2 modules having identical identifiers, the last opened module will be u
 <li>definitions that user must not rely on (cause they'll change in the future)  </li>
 </ol>
 <p>a module signature represents this contract, <em>the type checker will enforce point 2 and 3</em>.   </p>
-<h3>module signatures</h3>
+<h3 id="module-signatures">module signatures</h3>
 <ul>
 <li>a module's type is called <strong>signature</strong> or <strong>interface</strong> </li>
 <li>programmer <em>can</em> force a module to have a specific signature  </li>
@@ -313,7 +321,7 @@ if open 2 modules having identical identifiers, the last opened module will be u
 <span class="code-line"> <span class="o">|</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>  </span>
 <span class="code-line"><span class="k">end</span> <span class="o">;;</span>   </span>
 </pre></div>
-<h3>abstract types</h3>
+<h3 id="abstract-types">abstract types</h3>
 <p>we can use the module normally:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">open</span> <span class="nc">Naturals</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="k">rec</span> <span class="n">add</span><span class="o">:</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span> <span class="o">=</span>   </span>
@@ -339,7 +347,7 @@ if open 2 modules having identical identifiers, the last opened module will be u
 the sig don't publish t's implementation anymore, so the checker ensures clients can't use that fact<br>
 t is called an <strong>abstract type</strong>.  </br></br></p>
 <p>With abstract type, users can't do pattern matching, to allow pattern matching while forbidding the direct application of data constructors, OCaml provides a mechanism called <strong>private types</strong>. see <a href="http://caml.inria.fr/pub/docs/manual-ocaml-400/manual021.html#toc76">here</a>.  </p>
-<h1>3. CASE STUDY: A MODULE FOR DICTIONARIES</h1>
+<h1 id="3-case-study-a-module-for-dictionaries_1">3. CASE STUDY: A MODULE FOR DICTIONARIES</h1>
 <p>An example of using abstract types to increase the modularity of programs.   </p>
 <p>Define a dictionary signature:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">DictSig</span> <span class="o">=</span> <span class="k">sig</span>  </span>
@@ -372,7 +380,7 @@ t is called an <strong>abstract type</strong>.  </br></br></p>
 </pre></div>
 <p>→ change the signature of module to abstract type.   </p>
 <p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk6_modules/pasted_image.png"> </img></p>
-<h1>4. FUNCTORS</h1>
+<h1 id="4-functors">4. FUNCTORS</h1>
 <p><em>Functors are functions from modules to modules. In other words, a functor is a module parameterized by another module.</em> </p>
 <p>Continue the last example, we want to choose a Dict implementation externally. → <strong>module functor</strong> </p>
 <p>To declear a functor, add the Dict module in the parameter  </p>
@@ -404,7 +412,7 @@ t is called an <strong>abstract type</strong>.  </br></br></p>
 <li>signature of a functor:  </li>
 </ul>
 <p><code>functor (ModuleIdentifier: SomeSignature) -&gt; sig ... end</code> </p>
-<h3>example: Set and Map</h3>
+<h3 id="example-set-and-map">example: Set and Map</h3>
 <p>They expects a module satisfying the following signature:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">module</span> <span class="k">type</span> <span class="nc">OrderedType</span> <span class="o">=</span> <span class="k">sig</span>  </span>
 <span class="code-line">  <span class="k">type</span> <span class="n">t</span>  </span>
@@ -789,7 +797,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -857,6 +865,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION">[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION</a><ul><li><a class="toc-href" href="#1-structuring-software-with-modules" title="1. STRUCTURING SOFTWARE WITH MODULES">1. STRUCTURING SOFTWARE WITH MODULES</a><ul><li><a class="toc-href" href="#module-as-namespace" title="module as namespace">module as namespace</a></li><li><a class="toc-href" href="#hierachical-module-structure" title="hierachical module structure">hierachical module structure</a></li></ul></li><li><a class="toc-href" href="#2-information-hiding_1" title="2. INFORMATION HIDING">2. INFORMATION HIDING</a><ul><li><a class="toc-href" href="#module-signatures" title="module signatures">module signatures</a></li><li><a class="toc-href" href="#abstract-types" title="abstract types">abstract types</a></li></ul></li><li><a class="toc-href" href="#3-case-study-a-module-for-dictionaries_1" title="3. CASE STUDY: A MODULE FOR DICTIONARIES">3. CASE STUDY: A MODULE FOR DICTIONARIES</a></li><li><a class="toc-href" href="#4-functors" title="4. FUNCTORS">4. FUNCTORS</a><ul><li><a class="toc-href" href="#example-set-and-map" title="example: Set and Map">example: Set and Map</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

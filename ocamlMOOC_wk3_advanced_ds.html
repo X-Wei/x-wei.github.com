@@ -202,10 +202,18 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES">[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES</a><ul><li><a class="toc-href" href="#1-tagged-values" title="1. TAGGED VALUES">1. TAGGED VALUES</a><ul><li><a class="toc-href" href="#observing-tagged-values" title="observing tagged values">observing tagged values</a></li></ul></li><li><a class="toc-href" href="#2-recursive-types_1" title="2. RECURSIVE TYPES">2. RECURSIVE TYPES</a></li><li><a class="toc-href" href="#3-tree-like-values" title="3. TREE-LIKE VALUES">3. TREE-LIKE VALUES</a></li><li><a class="toc-href" href="#4-case-study-a-story-teller" title="4. CASE STUDY: A STORY TELLER">4. CASE STUDY: A STORY TELLER</a></li><li><a class="toc-href" href="#5-polymorphic-algebraic-datatypes" title="5. POLYMORPHIC ALGEBRAIC DATATYPES">5. POLYMORPHIC ALGEBRAIC DATATYPES</a></li><li><a class="toc-href" href="#6-advanced-topics" title="6. ADVANCED TOPICS">6. ADVANCED TOPICS</a><ul><li><a class="toc-href" href="#precise-typing" title="precise typing">precise typing</a></li><li><a class="toc-href" href="#disjunctive-patterns" title="disjunctive patterns">disjunctive patterns</a></li><li><a class="toc-href" href="#as-patterns" title="as-patterns">as-patterns</a></li><li><a class="toc-href" href="#guard-pattern-matching-branch-using-when" title="guard: pattern matching branch using when">guard: pattern matching branch using when</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]  </p>
 <p>Last week, we only defined <em>flat data structures</em> which are nice to aggregate values but quite limited when you try to structure values.   </p>
 <p>This week: <strong>algebraic datatypes</strong>.  </p>
-<h1>1. TAGGED VALUES</h1>
+<h1 id="1-tagged-values">1. TAGGED VALUES</h1>
 <p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk3_advanced_ds/pasted_image.png"> </img></p>
 <p>⇒ change the return type to a type <code>query_result</code>, which can be either of these:   </p>
 <ul>
@@ -229,7 +237,7 @@ mx's blog            </a>
 <p>Taga are also called <strong>conscturcors</strong>, grammar is like java constructors: <code>SomeTag (some_expr, ..., some_expr)</code> (the parenthesis can be omitted if only 1 expr is required)  </p>
 <p>enumeration:   </p>
 <p><code>type color = Black | Gray | White;;</code> </p>
-<h3>observing tagged values</h3>
+<h3 id="observing-tagged-values">observing tagged values</h3>
 <p>must prvide an expression <em>for each possible case</em> of the value. A <strong>case</strong> is described by a pattern: <br>
 <code>SomeTag (some_pattern, ..., some_pattern)</code> </br></p>
 <p>A branch is composed of a pattern an an expr separated by an arrow. <code>some_pattern -&gt; some_expr</code> </p>
@@ -254,7 +262,7 @@ mx's blog            </a>
 <li>non-exhaustive case analysis  </li>
 </ul>
 <p>These errors can be caught by the checker.   </p>
-<h1>2. RECURSIVE TYPES</h1>
+<h1 id="2-recursive-types_1">2. RECURSIVE TYPES</h1>
 <p>data structures with unbounded depth, ie, list/tree.   </p>
 <p>For example, an integer list can be defined as:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">type</span> <span class="n">int_list</span> <span class="o">=</span>   </span>
@@ -298,7 +306,7 @@ functions on such datastruct usually use pattern matching:   </br></img></p>
 <span class="code-line"><span class="o">#</span> <span class="k">let</span> <span class="n">rev</span> <span class="n">l</span> <span class="o">=</span> <span class="n">rev_aux</span> <span class="bp">[]</span> <span class="n">l</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">val</span> <span class="n">rev</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span> <span class="kt">list</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>   </span>
 </pre></div>
-<h1>3. TREE-LIKE VALUES</h1>
+<h1 id="3-tree-like-values">3. TREE-LIKE VALUES</h1>
 <p>the database type is formed in a (binary)tree-like fashion:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">type</span> <span class="n">database</span> <span class="o">=</span>   </span>
 <span class="code-line">  <span class="o">|</span> <span class="nc">NoContact</span>  </span>
@@ -308,7 +316,7 @@ functions on such datastruct usually use pattern matching:   </br></img></p>
 <p>impose the BST invariant:   </p>
 <p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk3_advanced_ds/pasted_image003.png"> </img></p>
 <p>Now the functions insert/search/delete is BST fashion:   </p>
-<h1>4. CASE STUDY: A STORY TELLER</h1>
+<h1 id="4-case-study-a-story-teller">4. CASE STUDY: A STORY TELLER</h1>
 <p><strong>type-directed</strong> programming: writing the right type declaration is half success.   </p>
 <p>define a story type (and other types:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">type</span> <span class="n">story</span> <span class="o">=</span> <span class="o">{</span>  </span>
@@ -336,7 +344,7 @@ functions on such datastruct usually use pattern matching:   </br></img></p>
 <span class="code-line"></span>
 <span class="code-line"><span class="ow">and</span> <span class="n">location</span> <span class="o">=</span> <span class="nc">Appartment</span> <span class="o">|</span> <span class="nc">Restaurant</span><span class="o">;;</span>   </span>
 </pre></div>
-<h1>5. POLYMORPHIC ALGEBRAIC DATATYPES</h1>
+<h1 id="5-polymorphic-algebraic-datatypes">5. POLYMORPHIC ALGEBRAIC DATATYPES</h1>
 <p>parametric programming: example — list is parametrized by the element type. <br>
 Hence in <code>List</code> module contains polymorphic functions.   </br></p>
 <p>Good for code reuse.   </p>
@@ -365,8 +373,8 @@ Hence in <code>List</code> module contains polymorphic functions.   </br></p>
 <span class="code-line">    <span class="k">else</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">y</span> <span class="k">then</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">insert</span> <span class="n">x</span> <span class="n">l</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">r</span><span class="o">)</span>  </span>
 <span class="code-line">    <span class="k">else</span> <span class="nc">Node</span> <span class="o">(</span><span class="n">l</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">insert</span> <span class="n">x</span> <span class="n">r</span><span class="o">);;</span>    </span>
 </pre></div>
-<h1>6. ADVANCED TOPICS</h1>
-<h3>precise typing</h3>
+<h1 id="6-advanced-topics">6. ADVANCED TOPICS</h1>
+<h3 id="precise-typing">precise typing</h3>
 <p>when 2 types have the same structure but different semantical meaning: a <strong>sum type with only one constructor</strong> can be useful to distinguish them.   </p>
 <p>example:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">type</span> <span class="n">euro</span> <span class="o">=</span> <span class="nc">Euro</span> <span class="k">of</span> <span class="kt">float</span><span class="o">;;</span>  </span>
@@ -376,7 +384,7 @@ Hence in <code>List</code> module contains polymorphic functions.   </br></p>
 <span class="code-line"><span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="nc">Euro</span> <span class="mi">5</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">valid_comparison</span> <span class="o">=</span> <span class="o">(</span><span class="n">euro</span> <span class="k">of</span> <span class="n">dollar</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="o">)</span>   </span>
 </pre></div>
-<h3>disjunctive patterns</h3>
+<h3 id="disjunctive-patterns">disjunctive patterns</h3>
 <p>Use or-patterns to factorize branches into a unique branch:   </p>
 <p><code>some_pattern_1 | some_pattern_2</code> means observation of either pattern 1 or pattern 2.   </p>
 <p>constraint: both must <em>contain the same identifiers</em>.   </p>
@@ -389,14 +397,14 @@ Hence in <code>List</code> module contains polymorphic functions.   </br></p>
 <span class="code-line"><span class="o">|</span> <span class="o">(</span><span class="mi">0</span><span class="o">|</span><span class="mi">1</span><span class="o">)::</span><span class="n">xs</span> <span class="o">-&gt;</span> <span class="n">xs</span>   </span>
 <span class="code-line"><span class="o">|</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">l</span>   </span>
 </pre></div>
-<h3>as-patterns</h3>
+<h3 id="as-patterns">as-patterns</h3>
 <p>convenient ot <em>name a matched component</em>: <code>some_pattern as x</code> ( if the value can be observed using some_pattern, name it x)  </p>
 <p>ex.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">duplicate_head_at_the_end</span> <span class="o">=</span> <span class="k">function</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">[]</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="o">(</span><span class="n">x</span><span class="o">::_)</span> <span class="k">as</span> <span class="n">l</span> <span class="o">-&gt;</span> <span class="n">l</span> <span class="o">@[</span><span class="n">x</span><span class="o">]</span>   </span>
 </pre></div>
-<h3>guard: pattern matching branch using <code>when</code></h3>
+<h3 id="guard-pattern-matching-branch-using-when">guard: pattern matching branch using <code>when</code></h3>
 <p>a <strong>guard</strong> (some bool-expression) can add an extra constraint to a pattern:  </p>
 <p>ex.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">push_max_at_the_end</span> <span class="o">=</span> <span class="k">function</span>  </span>
@@ -754,7 +762,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -824,6 +832,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES">[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES</a><ul><li><a class="toc-href" href="#1-tagged-values" title="1. TAGGED VALUES">1. TAGGED VALUES</a><ul><li><a class="toc-href" href="#observing-tagged-values" title="observing tagged values">observing tagged values</a></li></ul></li><li><a class="toc-href" href="#2-recursive-types_1" title="2. RECURSIVE TYPES">2. RECURSIVE TYPES</a></li><li><a class="toc-href" href="#3-tree-like-values" title="3. TREE-LIKE VALUES">3. TREE-LIKE VALUES</a></li><li><a class="toc-href" href="#4-case-study-a-story-teller" title="4. CASE STUDY: A STORY TELLER">4. CASE STUDY: A STORY TELLER</a></li><li><a class="toc-href" href="#5-polymorphic-algebraic-datatypes" title="5. POLYMORPHIC ALGEBRAIC DATATYPES">5. POLYMORPHIC ALGEBRAIC DATATYPES</a></li><li><a class="toc-href" href="#6-advanced-topics" title="6. ADVANCED TOPICS">6. ADVANCED TOPICS</a><ul><li><a class="toc-href" href="#precise-typing" title="precise typing">precise typing</a></li><li><a class="toc-href" href="#disjunctive-patterns" title="disjunctive patterns">disjunctive patterns</a></li><li><a class="toc-href" href="#as-patterns" title="as-patterns">as-patterns</a></li><li><a class="toc-href" href="#guard-pattern-matching-branch-using-when" title="guard: pattern matching branch using when">guard: pattern matching branch using when</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>

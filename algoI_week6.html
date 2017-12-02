@@ -202,6 +202,14 @@ mx's blog            </a>
             </header>
 
             <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 6 Hash Tables">[Algorithms I] Week 6 Hash Tables</a><ul><li><a class="toc-href" href="#1-hash-functions" title="1. Hash Functions">1. Hash Functions</a><ul><li><a class="toc-href" hashing'="" href="#javas-hashing" s="" title="Java">Java's hashing</a></li><li><a class="toc-href" href="#modeular-hasing" title="Modeular hasing">Modeular hasing</a></li><li><a class="toc-href" href="#uniform-hasing-assumption" title="uniform hasing assumption">uniform hasing assumption</a></li></ul></li><li><a class="toc-href" href="#2-separate-chaining_1" title="2. Separate Chaining">2. Separate Chaining</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-linear-probing_1" title="3. Linear Probing">3. Linear Probing</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#cluster" title="cluster">cluster</a></li></ul></li><li><a class="toc-href" href="#4-hash-table-context_1" title="4. Hash Table Context">4. Hash Table Context</a><ul><li><a class="toc-href" href="#seperate-chaining-vs-linear-probing" title="Seperate chaining VS linear probing">Seperate chaining VS linear probing</a></li><li><a class="toc-href" href="#variations" title="variations">variations</a></li><li><a class="toc-href" href="#st-choice-hash-tables-vs-balanced-search-trees" title="ST choice: hash tables VS balanced search trees">ST choice: hash tables VS balanced search trees</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
                 <p>[TOC]</p>
 <p><em>Can we do better than BST if we do not need ordered operations ?</em> </p>
 <p>(No compare methods, use equals method)   </p>
@@ -214,14 +222,14 @@ mx's blog            </a>
 <li>collision resolution   </li>
 </ul>
 <p><em>Classic space-time tradeoff.</em> </p>
-<h1>1. Hash Functions</h1>
+<h1 id="1-hash-functions">1. Hash Functions</h1>
 <p>Goal: scramble the keys uniformly to produce a table index.    </p>
 <ul>
 <li>effcient to compute   </li>
 <li>all indices are equally likely for any key   </li>
 </ul>
 <p>challenge: need different approach for different key types.    </p>
-<h2>Java's hashing</h2>
+<h2 id="javas-hashing">Java's hashing</h2>
 <p>All java object has a methode <code>int hashCode()</code> <br>
 requirement:    </br></p>
 <ul>
@@ -239,7 +247,7 @@ Strings: Horner's method — compute a polynome.  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image001.png"> <br>
 recipe for user-defined types:  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image002.png"> </img></br></br></img></br></br></img></p>
-<h2>Modeular hasing</h2>
+<h2 id="modeular-hasing">Modeular hasing</h2>
 <p>(hash code VS hash function)   </p>
 <ul>
 <li><em>Hash code</em>: 32-bit integer between -2^31 and 2^31-1 <em>(can be negative!!)</em> </li>
@@ -259,16 +267,16 @@ recipe for user-defined types:  <br>
 just take the first 31 bits: x&amp;0x7fffffff <br>
 <code>return k.hashCode()&amp;0x7fffffff % M;</code> </br></br></p>
 <p>另一个hash的思路是用random(用hashcode作为随机种子)   </p>
-<h2>uniform hasing assumption</h2>
+<h2 id="uniform-hasing-assumption">uniform hasing assumption</h2>
 <p>each key is equally likely to hash to an integer between 0 and M-1   </p>
 <p>一些数学结论:  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image004.png"> </img></br></p>
-<h1>2. Separate Chaining</h1>
+<h1 id="2-separate-chaining_1">2. Separate Chaining</h1>
 <p><em>one strategy for collision resolution.</em> <br>
 <img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image005.png"> </img></br></p>
 <p><strong>idea</strong>: Using a table of size M &lt; N,  build a list for each of the table positions.    </p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image006.png"> </img></p>
-<h2>implementation</h2>
+<h2 id="implementation">implementation</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class SeparateChainingHashST&lt;Key, Value&gt;{   </span>
 <span class="code-line">    private int M = 97;   </span>
 <span class="code-line">    private Node[] st = new Node[97];   </span>
@@ -296,14 +304,14 @@ just take the first 31 bits: x&amp;0x7fffffff <br>
 <span class="code-line">}</span>
 </pre></div>
 <p>注意内部类Node里用的是Object — 因为不能声明generic array.    </p>
-<h2>analysis</h2>
+<h2 id="analysis">analysis</h2>
 <p><strong>proposition</strong> <br>
 Under the assumption of uniform hashing, the number of keys in a list is within a constant factor to N/M.  <br>
 <em>proof.</em> <br>
 binominal distribution.   </br></br></br></p>
 <p>M times faster than sequential search <br>
 → typical choice: M ~ N/5   </br></p>
-<h1>3. Linear Probing</h1>
+<h1 id="3-linear-probing_1">3. Linear Probing</h1>
 <p>Another approch for collision resolution.    </p>
 <p>idea: <strong>open addressing</strong> <br>
 Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next open slot</em>.  <br>
@@ -314,7 +322,7 @@ Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next
 <li><em>delete</em>: set key to null, then for all items behind this key: set to null, then insert this key......   </li>
 </ul>
 <p>array M <em>must</em> be larger than N ⇒ array resizing is necessary.    </p>
-<h2>implementation</h2>
+<h2 id="implementation_1">implementation</h2>
 <div class="highlight"><pre><span class="code-line"><span></span>public class LinearProbingHashST&lt;Key, Value&gt;{   </span>
 <span class="code-line">    private int M, N;   </span>
 <span class="code-line">    private Object[] keys;//cannot use generic array   </span>
@@ -335,7 +343,7 @@ Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next
 <span class="code-line">    }   </span>
 <span class="code-line">}</span>
 </pre></div>
-<h2>cluster</h2>
+<h2 id="cluster">cluster</h2>
 <p>def. <strong>cluster</strong> <br>
 A contiguous block of items.    </br></p>
 <p>New keys are more likely to hash into a cluster.    </p>
@@ -346,7 +354,7 @@ A contiguous block of items.    </br></p>
 (当年Knuth就是在证明了这个以后决定写那套书)   </br></img></br></img></br></img></br></p>
 <p>Typical choice: <strong>N/M ~ 1/2</strong> (3/2 for search hit and 5/2 for search miss)   </p>
 <p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image011.png"> </img></p>
-<h1>4. Hash Table Context</h1>
+<h1 id="4-hash-table-context_1">4. Hash Table Context</h1>
 <p>widely used in applicataions.    </p>
 <p>cost for computing hash VS cost for searching:  <br>
 hashCode() for strings in java 1.1: exemain only 8-9 evenly spaced characters to save time. <br>
@@ -358,11 +366,11 @@ hashCode() for strings in java 1.1: exemain only 8-9 evenly spaced characters to
 Hard to find a key that hash to a desired value, or 2 keys having the same hash value.  <br>
 <img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image015.png"> <br>
 used for fingurprints or store passwords, but too expensive for ST implementations.    </br></img></br></br></p>
-<h2>Seperate chaining VS linear probing</h2>
+<h2 id="seperate-chaining-vs-linear-probing">Seperate chaining VS linear probing</h2>
 <p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image016.png"> </img></p>
-<h2>variations</h2>
+<h2 id="variations">variations</h2>
 <p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image017.png"> </img></p>
-<h2>ST choice: hash tables VS balanced search trees</h2>
+<h2 id="st-choice-hash-tables-vs-balanced-search-trees">ST choice: hash tables VS balanced search trees</h2>
 <p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image018.png"> </img></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -720,7 +728,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             </li>
             <li class="list-group-item tag-2">
                 <a href="http://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 5</sup>
+                    deep learning <sup> 8</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -788,6 +796,14 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 6 Hash Tables">[Algorithms I] Week 6 Hash Tables</a><ul><li><a class="toc-href" href="#1-hash-functions" title="1. Hash Functions">1. Hash Functions</a><ul><li><a class="toc-href" hashing'="" href="#javas-hashing" s="" title="Java">Java's hashing</a></li><li><a class="toc-href" href="#modeular-hasing" title="Modeular hasing">Modeular hasing</a></li><li><a class="toc-href" href="#uniform-hasing-assumption" title="uniform hasing assumption">uniform hasing assumption</a></li></ul></li><li><a class="toc-href" href="#2-separate-chaining_1" title="2. Separate Chaining">2. Separate Chaining</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-linear-probing_1" title="3. Linear Probing">3. Linear Probing</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#cluster" title="cluster">cluster</a></li></ul></li><li><a class="toc-href" href="#4-hash-table-context_1" title="4. Hash Table Context">4. Hash Table Context</a><ul><li><a class="toc-href" href="#seperate-chaining-vs-linear-probing" title="Seperate chaining VS linear probing">Seperate chaining VS linear probing</a></li><li><a class="toc-href" href="#variations" title="variations">variations</a></li><li><a class="toc-href" href="#st-choice-hash-tables-vs-balanced-search-trees" title="ST choice: hash tables VS balanced search trees">ST choice: hash tables VS balanced search trees</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>
