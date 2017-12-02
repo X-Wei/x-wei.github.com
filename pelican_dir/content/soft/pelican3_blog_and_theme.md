@@ -22,13 +22,33 @@ Tags: pelican
  
 ``pip install pelican jinja2 py3babel babel beautifulsoup4 markdown`` 
  
-其实安装了这些以后, 如果不用这个主题的话别的东西也不用安装了, 可以参考[这篇文章](https://www.notionsandnotes.org/tech/web-development/pelican-static-blog-setup.html)...  
- 
+其实安装了这些以后, 如果不用这个主题的话别的东西也不用安装了, 可以参考[这篇文章](https://www.notionsandnotes.org/tech/web-development/pelican-static-blog-setup.html)...
+
+
 不过说实话, 我看了一圈, 还只有学长这个主题既好看(meterial design)又实用(有标签云/搜索/自定义侧栏等功能).  
  
 为了安装接下来一些依赖, 需要有root权限, 这里可以参考silverchard的[文章](http://silverchard.me/yi-ge-fei-chang-mei-de-pelicanmo-ban.html)(ubuntu把``yum``改成``apt``就可以), 注意opencc需要用他提到的那种方法用github上的版本, 否则会报错...  
  
- 
+上面的博客链接失效了, 把安装的命令写在此处:  
+
+	sudo apt-add-repository ppa:chris-lea/node.js -y
+	sudo apt-get update
+	sudo apt-get install nodejs ditaa doxygen parallel
+	sudo pip install pelican jinja2 py3babel babel beautifulsoup4 markdown
+	sudo npm install -g less
+	wget "http://downloads.sourceforge.net/project/plantuml/plantuml.jar?r=&ts=1424308684&use_mirror=jaist" -O plantuml.jar
+	sudo mkdir -p /opt/plantuml
+	sudo cp plantuml.jar /opt/plantuml
+	echo "#! /bin/sh" > plantuml
+	echo 'exec java -jar /opt/plantuml/plantuml.jar "$@"' >> plantuml
+	sudo install -m 755 -D plantuml /usr/bin/plantuml
+	wget https://bintray.com/artifact/download/byvoid/opencc/opencc-1.0.2.tar.gz
+	tar xf opencc-1.0.2.tar.gz
+	cd opencc-1.0.2 && make && sudo make install && cd ..
+	sudo locale-gen zh_CN.UTF-8
+	sudo locale-gen zh_HK.UTF-8
+	sudo locale-gen en_US.UTF-8
+	sudo locale-gen ja_JP.UTF-8
  
 ### 2. clone repo 
  
