@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="http://x-wei.github.io/Ng_DLMooc_c2wk3.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="deep learning" />
+        <meta name="description" content="[TOC] Hyperparameter parameters Tips for hyperparam-tuning. Tuning process Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple): How to select set of values to explore ? Do NOT use grid search (grid of n * n) — this was OK in pre-DL era. try random values. reason: difficule to know which …" />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks"/>
+        <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c2wk3.html"/>
+        <meta property="og:description" content="[TOC] Hyperparameter parameters Tips for hyperparam-tuning. Tuning process Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple): How to select set of values to explore ? Do NOT use grid search (grid of n * n) — this was OK in pre-DL era. try random values. reason: difficule to know which …"/>
+        <meta property="article:published_time" content="2017-10-23" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="deep learning" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="http://x-wei.github.io/Ng_DLMooc_c2wk3.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="http://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="http://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="http://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="http://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="http://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="http://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="http://x-wei.github.io/category/misc.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/music.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="http://x-wei.github.io/category/notes.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/soft.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="http://x-wei.github.io/category/tech.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="http://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="http://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="http://x-wei.github.io/category/notes.html" title="notes">notes</a></li>
+                <li class="active">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks
+                        <a href="http://x-wei.github.io/Ng_DLMooc_c2wk3.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2017-10-23T00:00:00+02:00"><i class="fa fa-calendar"></i> Mon, 23 Oct 2017</time>
+    </span>
+
+
+
+
+
+<span class="btn-group">
+	<a href="http://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 7 of «Andrew Ng Deep Learning MOOC» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</a><ul><li><a class="toc-href" href="#hyperparameter-parameters" title="Hyperparameter parameters">Hyperparameter parameters</a><ul><li><a class="toc-href" href="#tuning-process" title="Tuning process">Tuning process</a></li><li><a class="toc-href" href="#using-an-appropriate-scale-to-pick-hyperparameters" title="Using an appropriate scale to pick hyperparameters">Using an appropriate scale to pick hyperparameters</a></li><li><a class="toc-href" href="#hyperparameters-tuning-in-practice-pandas-vs-caviar" title="Hyperparameters tuning in practice: Pandas vs. Caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</a></li></ul></li><li><a class="toc-href" href="#batch-normalization_1" title="Batch Normalization">Batch Normalization</a><ul><li><a class="toc-href" href="#normalizing-activations-in-a-network" title="Normalizing activations in a network">Normalizing activations in a network</a></li><li><a class="toc-href" href="#fitting-batch-norm-into-a-neural-network" title="Fitting Batch Norm into a neural network">Fitting Batch Norm into a neural network</a></li><li><a class="toc-href" href="#why-does-batch-norm-work" title="Why does Batch Norm work?">Why does Batch Norm work?</a></li><li><a class="toc-href" href="#batch-norm-at-test-time" title="Batch Norm at test time">Batch Norm at test time</a></li></ul></li><li><a class="toc-href" href="#multiclass-classification_1" title="Multiclass classification">Multiclass classification</a><ul><li><a class="toc-href" href="#softmax-regression" title="Softmax Regression">Softmax Regression</a></li><li><a class="toc-href" href="#training-a-softmax-classifier" title="Training a softmax classifier">Training a softmax classifier</a></li></ul></li><li><a class="toc-href" href="#introduction-to-programming-frameworks_1" title="Introduction to programming frameworks">Introduction to programming frameworks</a><ul><li><a class="toc-href" href="#deep-learning-frameworks" title="Deep learning frameworks">Deep learning frameworks</a></li><li><a class="toc-href" href="#tensorflow" title="TensorFlow">TensorFlow</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <p>[TOC]  </p>
+<h2 id="hyperparameter-parameters">Hyperparameter parameters</h2>
+<p>Tips for hyperparam-tuning.  </p>
+<h3 id="tuning-process">Tuning process</h3>
+<p>Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple):<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image.png"> </img></br></p>
+<p>How to select set of values to explore ?  </p>
+<ul>
+<li>Do <strong>NOT</strong> use grid search (grid of n * n)  </li>
+</ul>
+<p>— this was OK in pre-DL era.  </p>
+<ul>
+<li><strong>try random values.</strong> </li>
+</ul>
+<p>reason: difficule to know which hyperparam is most important, by randomization, <em>can try out n</em>n distinct values for each hyperparam.*<br>
+In extreme case, one is <code>alpha</code>, the other is <code>epislon</code>.  </br></p>
+<ul>
+<li>in grid search: only n distinct values of alpha are tried  </li>
+<li>in random choice: can have n*n distinct values of alpha  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image001.png"> </img></p>
+<ul>
+<li><strong>Coarse to fine</strong> sample scheme: zoom in to smaller regions of hyperparam space and re-sample more densely.  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image002.png"> </img></p>
+<h3 id="using-an-appropriate-scale-to-pick-hyperparameters">Using an appropriate scale to pick hyperparameters</h3>
+<p>"Sampling at random", but at <em>appropriate scale, not uniformly.</em><br>
+example: choice of alpha in [0.001, 1]<br>
+→ <em>sample uniformly at log scale</em> is more resonable: equal resources are used to search at each scale.  </br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image003.png"> </img></p>
+<p>implementation:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>r = -4 * np.random.rand()  # -4 &lt;= r &lt;= 0, uniformly at randome  </span>
+<span class="code-line">alpha = np.exp(10, r) # 10e-4 &lt;= alpha &lt;= 1.0</span>
+</pre></div>
+<p><em>sampling beta for exp-weighted-avg: </em>sample in the range of [0.9, 0.999]<br>
+→ convert to sampling 1-beta, which is in range [0.0001, 0.1]  </br></p>
+<h3 id="hyperparameters-tuning-in-practice-pandas-vs-caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</h3>
+<p>Tricks on how to <em>organize</em> hyper-param-tuning process.  </p>
+<p><em>re-test hyperparams occasionally:</em> intuitions get stale, re-evaluate hyperparams every several months.  </p>
+<p>Two major schools of training  </p>
+<ul>
+<li><strong>Panda approach</strong>: <em>babysitting one model</em> </li>
+</ul>
+<p>Huge dataset, limited computing resources, can only train one model → babysit the model as it's training. Watch learning curve, try changing hyparams once a day.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image004.png"> </img></br></p>
+<ul>
+<li><strong>Caviar approach</strong>: <em>train many models in parallel</em> </li>
+</ul>
+<p>Have enough computation power.<br>
+  Different model/hyperparams being trained at the same time in parallel, pick the best one.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image005.png"> </img></br></br></p>
+<h2 id="batch-normalization_1">Batch Normalization</h2>
+<p><strong>Batch normalization</strong>:<br>
+(in some cases) <em>makes NN much more robust, and DNN much easier to train.</em> </br></p>
+<h3 id="normalizing-activations-in-a-network">Normalizing activations in a network</h3>
+<p>In pre-DL: normalize inputs to speedup learning. "make contours round"<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image007.png"><br>
+In NN: normalize the activation <code>a[l-1]</code> from previous layer could help (in practice, usually normalize <code>z[l-1]</code>.)<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image009.png"> </img></br></br></img></br></p>
+<p><strong>BatchNorm algo</strong>:<br>
+intermediate values at each layer: <code>z[l]</code><br>
+→ compute mean &amp; variance<br>
+⇒ get normalized <code>z[l]_normed</code>. (mean=0, std=1)<br>
+→ <strong>trasform</strong> <code>z[l]_normed</code> to <code>z_tilde[l]</code> (mean=<code>beta</code>, std=<code>gamma</code>, <em>beta and gamma are learnable params</em>),<br>
+reason: for hidden units, want to move/stretch the support of hidden inputs, so as to profit from non-linearity of activation function.  </br></br></br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image011.png"> </img></p>
+<h3 id="fitting-batch-norm-into-a-neural-network">Fitting Batch Norm into a neural network</h3>
+<p>Add batchnorm to NN: replace z[l] to z_tilde[l] at each layer before activation g[l].<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image012.png"> </img></br></p>
+<p>Extra params to learn: <code>gamma[l]</code> and <code>beta[l]</code> at each layer.  </p>
+<p>In practice: no need to implement all details of BN, use DL framework.  </p>
+<p><strong>No bias term (b) in BN</strong>:<br>
+z[l] = W[l] * a[l-1] + b[l]<br>
+but z[l] will be centered anyway → <code>b[l]</code> is not useful.<br>
+→ <code>b[l]</code> is replaced by <code>beta[l]</code><br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image014.png"><br>
+Dimension of beta[l], gamma[l]: the same as b[l] ( = n[l] * 1).  </br></img></br></br></br></br></p>
+<h3 id="why-does-batch-norm-work">Why does Batch Norm work?</h3>
+<p><strong>intuition 1</strong>: similar to normalizing input ("make contours round")  </p>
+<p><strong>intuition 2</strong>: weights in deeper layers are more robust to changes in ealier layer weights.<br>
+i.e. Robost to <em>data distribution changing</em>. ("<strong>covariant shift</strong>")  </br></p>
+<p>motivating example:<br>
+cat-classification, <em>trained all with black cats, but applied to colored cats</em>.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image016.png"> </img></br></br></p>
+<p>For NN, consider the 3rd layer's units:<br>
+input features: a[2],<br>
+if cover the first 2 layers, this is a NN to map from a[2] to y_hat<br>
+⇒ but when weights w[2],b[2] are updated in GD, <em>a[2]'s distribution is always changing</em>.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image017.png"><br>
+<strong>intuition</strong>: With BN, a[2] are ensured to <em>always have the same mean/variance</em><br>
+  → "data distribution" is unchanged → later layers can learn more easily, independent of previous layer's weights' change.  </br></br></img></br></br></br></br></p>
+<p><strong>intuition 2</strong>: BN as <em>regularization</em><br>
+  each minibatch is scaled by mean/var of just that minibatch<br>
+  → <em>add noise</em> to the transformation from z[l] to z_tilde[l].<br>
+  ⇒ similar to dropout, add noise to each layer's activations.<br>
+  therefore BN have (<em>slight</em>) regularization effect (thie regularization effect gets smaller as minibatch size grows).<br>
+  (This is an unintended side effect.)  </br></br></br></br></br></p>
+<h3 id="batch-norm-at-test-time">Batch Norm at test time</h3>
+<p><em>At training time</em>, z[l] is standarlized <em>over each minibatch</em>.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image018.png"><br>
+⇒ But at test time needs to treat examples one at a time.<br>
+→ estimate the value of meu/sigma2<br>
+⇒ using<em> exp-weighted-avg</em> estimator across minibatchs (with beta close to 1 → ~running average).<br>
+at test time, just use the latest value of this exp-weighted-avg estimation as meu/sigma2.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image019.png"> </img></br></br></br></br></br></img></br></p>
+<h2 id="multiclass-classification_1">Multiclass classification</h2>
+<h3 id="softmax-regression">Softmax Regression</h3>
+<p>So far: only binary classification<br>
+generalize logistic regression to &gt;2 classes ⇒ <em>softmax regression</em>.  </br></p>
+<p><code>C</code> = #classes, = #units in output layer<br>
+each component in y_hat is probability of one class, y_hat is normalized.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image021.png"> </img></br></br></p>
+<p><strong>softmax layer</strong>:  </p>
+<ul>
+<li>z[L] = W[L] * a[l-1] + b[L] — same as before  </li>
+<li>a[L] = y_hat = g(z[L])  </li>
+</ul>
+<p>activation function: <em>softmax</em><br>
+take exp(z[L]) --element-wise, and then normalize:<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image023.png"> </img></br></br></p>
+<p>The softmax activation function is unusual because it takes a <em>vector</em> instead of scalar.<br>
+Softmax is generalization of logistic regression: decision boundary of a <em>single-layer (no hidden layer)</em> softmax is also <em>linear</em>:<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image025.png"> </img></br></br></p>
+<h3 id="training-a-softmax-classifier">Training a softmax classifier</h3>
+<p><strong>understanding softmax</strong> </p>
+<ul>
+<li>"softmax" is in contrast to "<em>hardmax</em>":  </li>
+</ul>
+<p>hardmax[i]= 1 if z_i=max else 0.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image026.png"> </img></br></p>
+<ul>
+<li>When C = 2, softmax reduces to logistic regression.  </li>
+</ul>
+<p>softmax(C=2) = [logistic-reg(), 1-logistic-reg]  </p>
+<p><strong>loss function</strong><br>
+recall: loss function in logistic regression<br>
+L(y, y_hat) = -1 * sum( y_i * log yhat_i + (1-y_i) * log(yhat_i) )<br>
+→ want y_hat big when y_i=1, small when y_i=0  </br></br></br></p>
+<ul>
+<li>training label y: one-hot encoding.  </li>
+<li>prediciton y_hat: probability vector  </li>
+</ul>
+<p>loss function:  </p>
+<ul>
+<li>if y_k=1, want to make yhat_k big  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image027.png"><br>
+→ max-likelihood estimation.  </br></img></p>
+<p><strong>GD with softmax</strong><br>
+fwdprop:<br>
+Z[L] --(softmax)--&gt; a[L]=y_hat → L(y_hat, y)<br>
+backprop:<br>
+<em>dZ[L] = y_hat - y</em> </br></br></br></br></p>
+<h2 id="introduction-to-programming-frameworks_1">Introduction to programming frameworks</h2>
+<h3 id="deep-learning-frameworks">Deep learning frameworks</h3>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image029.png"> </img></p>
+<h3 id="tensorflow">TensorFlow</h3>
+<p>motivating problem: minimize cost function <code>J(w) = (w-5)^2</code> </p>
+<ul>
+<li><code>import tensorflow as tf</code> </li>
+<li>
+<p>define <em>parameter</em> to optimize:<br>
+<code>w = tf.Variable(0, dtype=tf.float32)</code> </br></p>
+</li>
+<li>
+<p>define cost function:<br>
+<code>cost = tf.add(tf.add(w**2), tf.multiply(-10., w)), 25)  # w^2 - 10w + 25  
+  # also possible to use tf-reloaded operators:  
+  cost = w**2 - 10 * w + 25</code></br></p>
+</li>
+<li>
+<p>tells tf to minimize the cost with GD optimizer:  </p>
+</li>
+</ul>
+<p><code>train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)</code><br>
+till now the <em>computation graph</em> is defined → backward derivatives are auto-computed.<br>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image030.png"> </img></br></br></p>
+<ul>
+<li>start the training  </li>
+</ul>
+<p>Quite idiomatic process:<br>
+initialize vars → create session → run operations in session  </br></p>
+<div class="highlight"><pre><span class="code-line"><span></span>init = tf.global_variables_initializer()  </span>
+<span class="code-line">session = tf.Session()  </span>
+<span class="code-line">session.run(init)  </span>
+<span class="code-line">session.run(train) # run 1 iteration of training</span>
+</pre></div>
+<p>alternative format:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>with tf.Session() as session:  </span>
+<span class="code-line">  session.run(init)  </span>
+<span class="code-line">  session.run(train)</span>
+</pre></div>
+<ul>
+<li>To inspect the value of a parameter: <code>print(session.run(w))</code> </li>
+<li>
+<p>Run 1000 iters of GD:  </p>
+<p><code>for i in range(1000):  
+  session.run(train)</code></p>
+</li>
+</ul>
+<p><strong>Let loss function depends on training data:</strong> </p>
+<ul>
+<li>
+<p>define training data as <em>placer holder</em>.<br>
+  a placerholder is a variable whose value will be assigned later.<br>
+<code>x = tf.placeholder(tf.float32, [3,1])  
+    cost = x[0][0] * w**2 + x[1][0] * w + x[2][0]</code></br></br></p>
+</li>
+<li>
+<p>feed actual data value to placerholder: use <em>feed_dict</em> in session.run()  </p>
+<p><code>data = np.array([1., -10., 25.]).reshape((3,1)  
+session.run(train, feed_dict={x: data})</code></p>
+</li>
+</ul>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/Ng_DLMooc_c2wk1.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Improving Deep Neural Networks] week1. Practical aspects of Deep Learning
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="http://x-wei.github.io/Ng_DLMooc_c2wk2.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Improving Deep Neural Networks] week2. Optimization algorithms<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 7 of series «Andrew Ng Deep Learning MOOC»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c1wk1.html' style="text-align:left">[Neural Networks and Deep Learning] week1. Introduction to deep learning</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c1wk2.html' style="text-align:left">[Neural Networks and Deep Learning] week2. Neural Networks Basics</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c1wk3.html' style="text-align:left">[Neural Networks and Deep Learning] week3. Shallow Neural Network</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c1wk4.html' style="text-align:left">[Neural Networks and Deep Learning] week4. Deep Neural Network</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c2wk1.html' style="text-align:left">[Improving Deep Neural Networks] week1. Practical aspects of Deep Learning</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c2wk2.html' style="text-align:left">[Improving Deep Neural Networks] week2. Optimization algorithms</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='http://x-wei.github.io/Ng_DLMooc_c2wk3.html' style="text-align:left">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c3wk1.html' style="text-align:left">[Structuring Machine Learning Projects] week1. ML Strategy (1)</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c3wk2.html' style="text-align:left">[Structuring Machine Learning Projects] week2. ML Strategy (2)</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c4wk1.html' style="text-align:left">[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c4wk2.html' style="text-align:left">[Convolutional Neural Networks] week2. Deep convolutional models: case studies</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c4wk3.html' style="text-align:left">[Convolutional Neural Networks] week3. Object detection</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='http://x-wei.github.io/Ng_DLMooc_c4wk4.html' style="text-align:left">[Convolutional Neural Networks] week4. Special applications: Face recognition & Neural style transfer</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'Ng_DLMooc_c2wk3';
+                        var disqus_url = '/Ng_DLMooc_c2wk3.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="http://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="http://x-wei.github.io/about.html"><img width="100%" src="http://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="http://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="http://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="http://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="http://www.sjtu.edu.cn/">
+<img src="http://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Who are visiting</h4>
+<div class="textwidget" >
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
+</script></div>
+
+<!-- hitwebcounter Code START -->
+<a href="http://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="http://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="http://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 17</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="http://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="http://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="http://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="http://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="http://x-wei.github.io/Ng_DLMooc_c2wk2.html">[Improving Deep Neural Networks] week2. Optimization algorithms</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="http://x-wei.github.io/Ng_DLMooc_c3wk1.html">[Structuring Machine Learning Projects] week1. ML Strategy (1)</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</a><ul><li><a class="toc-href" href="#hyperparameter-parameters" title="Hyperparameter parameters">Hyperparameter parameters</a><ul><li><a class="toc-href" href="#tuning-process" title="Tuning process">Tuning process</a></li><li><a class="toc-href" href="#using-an-appropriate-scale-to-pick-hyperparameters" title="Using an appropriate scale to pick hyperparameters">Using an appropriate scale to pick hyperparameters</a></li><li><a class="toc-href" href="#hyperparameters-tuning-in-practice-pandas-vs-caviar" title="Hyperparameters tuning in practice: Pandas vs. Caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</a></li></ul></li><li><a class="toc-href" href="#batch-normalization_1" title="Batch Normalization">Batch Normalization</a><ul><li><a class="toc-href" href="#normalizing-activations-in-a-network" title="Normalizing activations in a network">Normalizing activations in a network</a></li><li><a class="toc-href" href="#fitting-batch-norm-into-a-neural-network" title="Fitting Batch Norm into a neural network">Fitting Batch Norm into a neural network</a></li><li><a class="toc-href" href="#why-does-batch-norm-work" title="Why does Batch Norm work?">Why does Batch Norm work?</a></li><li><a class="toc-href" href="#batch-norm-at-test-time" title="Batch Norm at test time">Batch Norm at test time</a></li></ul></li><li><a class="toc-href" href="#multiclass-classification_1" title="Multiclass classification">Multiclass classification</a><ul><li><a class="toc-href" href="#softmax-regression" title="Softmax Regression">Softmax Regression</a></li><li><a class="toc-href" href="#training-a-softmax-classifier" title="Training a softmax classifier">Training a softmax classifier</a></li></ul></li><li><a class="toc-href" href="#introduction-to-programming-frameworks_1" title="Introduction to programming frameworks">Introduction to programming frameworks</a><ul><li><a class="toc-href" href="#deep-learning-frameworks" title="Deep learning frameworks">Deep learning frameworks</a></li><li><a class="toc-href" href="#tensorflow" title="TensorFlow">TensorFlow</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="http://farseerfc.github.com/">farseerfc</a>
+                <a href="http://hyhx2008.github.com/">H.Y.</a>
+                <a href="http://reginald1787.github.io/">reginald1787</a>
+                <a href="http://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2017 mx
+            &middot; 通过
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="http://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="http://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="http://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>
