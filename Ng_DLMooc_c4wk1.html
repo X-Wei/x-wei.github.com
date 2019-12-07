@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding box of objects neural style transfer input features could be very high dimension: e.g. 1000x1000 image → 3 million dim input ⇒ if 1st layer has 1000 hidden units → 3 billion params …" />
+        <meta name="description" content="Computer Vision Edge Detection Example More Edge Detection Padding Strided Convolutions Convolutions Over Volume filters = n_c&#39; One Layer of a Convolutional Network Simple Convolutional Network Example Pooling Layers CNN Example Why Convolutions? Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c4wk1.html"/>
-        <meta property="og:description" content="[TOC] Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding box of objects neural style transfer input features could be very high dimension: e.g. 1000x1000 image → 3 million dim input ⇒ if 1st layer has 1000 hidden units → 3 billion params …"/>
+        <meta property="og:description" content="Computer Vision Edge Detection Example More Edge Detection Padding Strided Convolutions Convolutions Over Volume filters = n_c&#39; One Layer of a Convolutional Network Simple Convolutional Network Example Pooling Layers CNN Example Why Convolutions? Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding ..."/>
         <meta property="article:published_time" content="2017-11-19" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,24 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks">[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks</a><ul><li><a class="toc-href" href="#computer-vision" title="Computer Vision">Computer Vision</a></li><li><a class="toc-href" href="#edge-detection-example" title="Edge Detection Example">Edge Detection Example</a></li><li><a class="toc-href" href="#more-edge-detection" title="More Edge Detection">More Edge Detection</a></li><li><a class="toc-href" href="#padding" title="Padding">Padding</a></li><li><a class="toc-href" href="#strided-convolutions" title="Strided Convolutions">Strided Convolutions</a></li><li><a class="toc-href" href="#convolutions-over-volume" title="Convolutions Over Volume">Convolutions Over Volume</a></li><li><a '="" class="toc-href" href="#filters-n_c_1" title="filters = n_c">filters = n_c'</a><ul><li><a class="toc-href" href="#one-layer-of-a-convolutional-network" title="One Layer of a Convolutional Network">One Layer of a Convolutional Network</a></li><li><a class="toc-href" href="#simple-convolutional-network-example" title="Simple Convolutional Network Example">Simple Convolutional Network Example</a></li><li><a class="toc-href" href="#pooling-layers" title="Pooling Layers">Pooling Layers</a></li><li><a class="toc-href" href="#cnn-example" title="CNN Example">CNN Example</a></li><li><a class="toc-href" href="#why-convolutions" title="Why Convolutions?">Why Convolutions?</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#computer-vision">Computer Vision</a></li>
+<li><a href="#edge-detection-example">Edge Detection Example</a></li>
+<li><a href="#more-edge-detection">More Edge Detection</a></li>
+<li><a href="#padding">Padding</a></li>
+<li><a href="#strided-convolutions">Strided Convolutions</a></li>
+<li><a href="#convolutions-over-volume">Convolutions Over Volume</a></li>
+<li><a href="#filters-n_c">filters = n_c'</a><ul>
+<li><a href="#one-layer-of-a-convolutional-network">One Layer of a Convolutional Network</a></li>
+<li><a href="#simple-convolutional-network-example">Simple Convolutional Network Example</a></li>
+<li><a href="#pooling-layers">Pooling Layers</a></li>
+<li><a href="#cnn-example">CNN Example</a></li>
+<li><a href="#why-convolutions">Why Convolutions?</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h3 id="computer-vision">Computer Vision</h3>
 <p>CV with DL: rapid progress in past two years.  </p>
 <p>CV problems:  </p>
@@ -223,66 +240,66 @@ mx's blog            </a>
 <p>foundamental operation: convolution.  </p>
 <h3 id="edge-detection-example">Edge Detection Example</h3>
 <p>Motivating example for convolution operation: detecting vertical edges.  </p>
-<p>Convolve image with a <strong>filter(kernel) </strong>matrix:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image001.png"><br>
-Each element in resulting matrix: sum(element-wise multiplication of filter and input image).  </br></img></br></p>
-<p>Why the filter can detect vertical edge?<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image003.png"> </img></br></p>
+<p>Convolve image with a <strong>filter(kernel) </strong>matrix:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image001.png"/><br/>
+Each element in resulting matrix: sum(element-wise multiplication of filter and input image).  </p>
+<p>Why the filter can detect vertical edge?<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image003.png"/> </p>
 <h3 id="more-edge-detection">More Edge Detection</h3>
-<p><strong>Positive V.S. negative edges</strong>:<br>
-dark to light V.S. light to dark<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image004.png"> </img></br></br></p>
-<p>Instead of picking filter by hand, the actual parameters can be <em>learned</em> by ML.<br>
-Next: discuss some building blocks of CNN, padding/striding/pooling...  </br></p>
+<p><strong>Positive V.S. negative edges</strong>:<br/>
+dark to light V.S. light to dark<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image004.png"/> </p>
+<p>Instead of picking filter by hand, the actual parameters can be <em>learned</em> by ML.<br/>
+Next: discuss some building blocks of CNN, padding/striding/pooling...  </p>
 <h3 id="padding">Padding</h3>
-<p>Earlier: image <em>shrinks</em> after convolution.<br>
-Input <code>n*n</code> image, convolve with <code>f*f</code> filter ⇒ output shape = <code>(n-f+1) * (n-f+1)</code><br>
-downside:  </br></br></p>
+<p>Earlier: image <em>shrinks</em> after convolution.<br/>
+Input <code>n*n</code> image, convolve with <code>f*f</code> filter ⇒ output shape = <code>(n-f+1) * (n-f+1)</code><br/>
+downside:  </p>
 <ul>
 <li>image shrinks on every step (if 100 layer → shrinks to very small images)  </li>
 <li>pixels <em>at corner</em> are less used in the output  </li>
 </ul>
 <p>⇒ <em>pad the image</em> so that output shape is invariant.  </p>
-<p>if <code>p</code> = padding amount (width of padded border)<br>
-→ output shape = <code>(n+2p-f+1) * (n+2p-f+1)</code> </br></p>
+<p>if <code>p</code> = padding amount (width of padded border)<br/>
+→ output shape = <code>(n+2p-f+1) * (n+2p-f+1)</code> </p>
 <p>Terminology: <em>valid</em> and <em>same</em> convolutions:  </p>
 <ul>
 <li><strong>valid</strong> convolution: no padding, output shape = (n-f+1) * (n-f+1)  </li>
 <li><strong>same</strong> convolution: output size equals input size. i.e. filter width <code>p = (f-1) / 2</code> (only works <em>when f is odd — </em>this is also a convention in CV, partially because this way there'll be a central filter)  </li>
 </ul>
 <h3 id="strided-convolutions">Strided Convolutions</h3>
-<p>Example <code>stride = 2</code> in convolution:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image005.png"><br>
-(convention: stop moving if filter goes out of image border.)  </br></img></br></p>
-<p>if input image <code>n*n</code>, filter size <code>f*f</code>, padding = <code>f</code>, stride = <code>s</code><br>
-⇒ output shape = <code>(floor((n+2p-f)/s) + 1) * (floor((n+2p-f)/s) + 1)</code> </br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image006.png"> </img></p>
-<p><strong>Note on cross-correlation v.s. convolution</strong><br>
-In math books, "convolution" involves <em>flip filter in both direction</em> before doing "convolution" operation.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image007.png"><br>
-The operation discribed before is called "cross-correlation".  </br></img></br></br></p>
+<p>Example <code>stride = 2</code> in convolution:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image005.png"/><br/>
+(convention: stop moving if filter goes out of image border.)  </p>
+<p>if input image <code>n*n</code>, filter size <code>f*f</code>, padding = <code>f</code>, stride = <code>s</code><br/>
+⇒ output shape = <code>(floor((n+2p-f)/s) + 1) * (floor((n+2p-f)/s) + 1)</code> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image006.png"/> </p>
+<p><strong>Note on cross-correlation v.s. convolution</strong><br/>
+In math books, "convolution" involves <em>flip filter in both direction</em> before doing "convolution" operation.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image007.png"/><br/>
+The operation discribed before is called "cross-correlation".  </p>
 <p>(Why doing the flipping in math: to ensure assosative law for convolution — (A<em>B)</em>C=A<em>(B</em>C).)  </p>
 <h3 id="convolutions-over-volume">Convolutions Over Volume</h3>
-<p>example: convolutions on RGB image<br>
-image size = 6<em>6</em>3 = height * width * #channels<br>
-filter size = 3<em>3</em>3, (convention: <em>filter's #channels matches the image</em>)<br>
-output size = 4<em>4 (</em>1)  —  <strong>output is 2D for each filter</strong>.  </br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image008.png"> </img></p>
+<p>example: convolutions on RGB image<br/>
+image size = 6<em>6</em>3 = height * width * #channels<br/>
+filter size = 3<em>3</em>3, (convention: <em>filter's #channels matches the image</em>)<br/>
+output size = 4<em>4 (</em>1)  —  <strong>output is 2D for each filter</strong>.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image008.png"/> </p>
 <p><strong>Multiple filters:</strong> </p>
 <ul>
 <li>take &gt;1 filters  </li>
 <li>stack outputs together to form an <em>output volume</em>.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image009.png"> </img></p>
-<p><strong>Summary of dimensions</strong>:<br>
-input shape = <code>n*n*n_c</code><br>
-filter shape = <code>f*f*n_c</code> </br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image009.png"/> </p>
+<p><strong>Summary of dimensions</strong>:<br/>
+input shape = <code>n*n*n_c</code><br/>
+filter shape = <code>f*f*n_c</code> </p>
 <h1 id="filters-n_c_1">filters = <code>n_c</code>'</h1>
 <p>⇒ output shape = <code>(n-f+1) * (n-f+1) * n_c</code>'  </p>
 <h3 id="one-layer-of-a-convolutional-network">One Layer of a Convolutional Network</h3>
 <p>For each filter's output: <em>add bias b, then apply nonlinear activation function.</em> </p>
-<p>One layer of a CNN:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image011.png"> </img></br></p>
+<p>One layer of a CNN:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image011.png"/> </p>
 <p>with analogy to normall NN:  </p>
 <ul>
 <li>linear operation (matrix mul V.S. convolution)  </li>
@@ -290,16 +307,16 @@ filter shape = <code>f*f*n_c</code> </br></br></p>
 <li>nonlinear activation  </li>
 <li>difference: Number of parameters <em>doesn't depend on input dimension</em>: even for very large images.  </li>
 </ul>
-<p><strong>Notation summary:</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image014.png"><br>
-note: <em>ordering</em> of dimensions: example index, height, width, #channel.  </br></img></br></p>
+<p><strong>Notation summary:</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image014.png"/><br/>
+note: <em>ordering</em> of dimensions: example index, height, width, #channel.  </p>
 <h3 id="simple-convolutional-network-example">Simple Convolutional Network Example</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image015.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image015.png"/> </p>
 <p>general trend: as going to later layers, <em>image size shrinks, #channels increases</em>.  </p>
 <h3 id="pooling-layers">Pooling Layers</h3>
 <p>Pooling layers makes CNN more robust.  </p>
-<p><strong>Max pooling</strong><br>
-divide input into regions, take max of each region.  </br></p>
+<p><strong>Max pooling</strong><br/>
+divide input into regions, take max of each region.  </p>
 <ul>
 <li>Hyperparams:  </li>
 </ul>
@@ -307,24 +324,24 @@ divide input into regions, take max of each region.  </br></p>
 <ul>
 <li>note: <em>no params to learn</em> for max pooling layer, pooling layer not counted in #layers (conv-pool as a single layer)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image017.png"><br>
-Intuition: a large number indicats a detected feature in that region → preseved after pooling.  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image017.png"/><br/>
+Intuition: a large number indicats a detected feature in that region → preseved after pooling.  </p>
 <p>Formula of dimension <code>floor((n+2p-f+1)/s + 1)</code> holds for POOL layer as well.  </p>
 <p>Output of max pooling: the same #channels as input (i.e. do maxpooling on each channel).  </p>
-<p><strong>Average pooling</strong><br>
-Less often used than max pooling.<br>
-Typical usecase: collapse 7<em>7</em>1000 activation into 1<em>1</em>1000.  </br></br></p>
+<p><strong>Average pooling</strong><br/>
+Less often used than max pooling.<br/>
+Typical usecase: collapse 7<em>7</em>1000 activation into 1<em>1</em>1000.  </p>
 <h3 id="cnn-example">CNN Example</h3>
-<p><em>LeNet-5</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image018.png"> </img></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image020.png"> </img></p>
+<p><em>LeNet-5</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image018.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image020.png"/> </p>
 <h3 id="why-convolutions">Why Convolutions?</h3>
 <p>2 main advantages of CONV over FC: <em>param sharing; sparsity of connections.</em> </p>
-<p><strong>Parameter sharing</strong>:<br>
-A feature detector useful in one part of img is probably useful in another part as well.<br>
-→ no need to learn separate feature detectors in different parts.  </br></br></p>
-<p><strong>Sparsity of connections</strong>:<br>
-For each output value depends only on a small number of inputs (the pixels near that position)  </br></p>
+<p><strong>Parameter sharing</strong>:<br/>
+A feature detector useful in one part of img is probably useful in another part as well.<br/>
+→ no need to learn separate feature detectors in different parts.  </p>
+<p><strong>Sparsity of connections</strong>:<br/>
+For each output value depends only on a small number of inputs (the pixels near that position)  </p>
 <ul>
 <li>Invarance to translation...  </li>
 </ul>

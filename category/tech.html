@@ -196,7 +196,13 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#scala">Scala</a></li>
+<li><a href="#ocaml">OCaml</a></li>
+<li><a href="#compared-with-python">compared with Python</a></li>
+</ul>
+</div>
 <p>2016年的最后几小时, 随便写写关于Scala和OCaml的一些入门体验好了.   </p>
 <p>今年对FP语言特别感兴趣, 上了两门Scala的公开课(<a href="https://www.coursera.org/learn/progfun1/home/welcome">here</a> and <a href="https://www.coursera.org/learn/progfun2/home/welcome">here</a>)和一门OCaml的公开课(<a href="https://www.fun-mooc.fr/courses/parisdiderot/56002S02/session02/info">here</a>), 在博客中写了一系列的笔记, 课后作业也都认真做完了. 斗胆说这两门语言都算入门了吧... 这里就随便写一下使用这两门语言的感受, 想到哪里写到哪里...   </p>
 <p>FP语言和之前接触的语言确实不大一样, 比如之前我都有种错觉, 学什么语言只要知道循环/条件/基本类型运算怎么写, 就差不多可以上手了...... 然后遇到了FP, 发现循环语句其实是不必要的... 记得看到过一篇文章, 类比学FP就好像开了很多种车的老司机突然开始学开宇宙飞船, 肯定各种WTF不适应了~   </p>
@@ -204,8 +210,7 @@ mx's blog            </a>
 <h1 id="scala">Scala</h1>
 <p>Scala算是比较亲民的FP语言了(和Java有点像...), 也是我最早接触的FP语言. EPFL的那两门公开课质量很棒, 毕竟是Scala的作者亲自来上的...   </p>
 <ul>
-<li><em>immutable types</em>: 习惯了就好, 就像java里所有东西都是final的, 要修改什么东西的时候改成新建一个, immutable数据的优点就是并行方便啊...   </li>
-<li><em>一切皆为表达式</em>, specifically …</li></ul>
+<li><em>immutable types</em>: 习惯了就好, 就像java里所有东西都是final的 ...</li></ul>
                     </div>
                 </div>
             </article>
@@ -244,19 +249,41 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]   </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#requests">requests基础用法</a><ul>
+<li><a href="#html">抓取html内容</a></li>
+<li><a href="#_1">编码问题</a></li>
+<li><a href="#scrapy-shellhtml">用scrapy shell检查得到的html文件内容</a></li>
+<li><a href="#header">修改header, 伪装浏览器</a></li>
+</ul>
+</li>
+<li><a href="#lxmlxpath">lxml以及xpath语法</a><ul>
+<li><a href="#xpath">xpath基础语法</a></li>
+<li><a href="#chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</a></li>
+<li><a href="#lxmletreexpath">用lxml.etree操作xpath</a></li>
+<li><a href="#xpath_1">xpath使用技巧</a></li>
+</ul>
+</li>
+<li><a href="#chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul>
+<li><a href="#dev-toolscookies">用dev-tools获取登录cookies</a></li>
+<li><a href="#requestscookies">在requests里使用cookies</a></li>
+</ul>
+</li>
+<li><a href="#_2">保存爬取的内容</a><ul>
+<li><a href="#csv">保存文本内容: csv</a></li>
+<li><a href="#_3">保存非文本内容</a></li>
+<li><a href="#_4">并行下载</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
 <p>安装需要的库(python2):   </p>
 <p><code>pip install requests, lxml</code> </p>
 <p>然后在Python程序最开始导入:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
-<span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span></span>
-</pre></div>
-<h1 id="requestsji-chu-yong-fa">requests基础用法</h1>
-<h3 id="zhua-qu-htmlnei-rong">抓取html内容</h3>
-<p>用requests获取目标网址的html代码非常简单, 只需要用<code>requests.get</code>方法, 传入网址URL即可.   </p>
-<p>举个例子, 想要抓取<a href="https://zh.wikiquote.org/wiki/Wikiquote:%E9%A6%96%E9%A1%B5">维基语录</a>的HTML内容, 代码很简单:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦' …</span></pre></div>
+<span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -297,18 +324,31 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#collections">collections</a></li>
+<li><a href="#itertools">itertools</a></li>
+<li><a href="#bitmap">bitmap</a><ul>
+<li><a href="#use-bitmap-for-combinations-2n-possibilities">use bitmap for combinations (2^N possibilities)</a></li>
+<li><a href="#setclean-kth-bit">set/clean Kth bit</a></li>
+<li><a href="#count-nb-of-1s-in-a-bitmap">count nb of 1s in a bitmap</a></li>
+</ul>
+</li>
+<li><a href="#networkx">networkx</a><ul>
+<li><a href="#constructing-graph">constructing graph</a></li>
+<li><a href="#digraph-topo-sort-cycle-detection-strongly-connected-component">DiGraph: topo-sort, cycle-detection, strongly connected component</a></li>
+<li><a href="#undirected-graph-connected-component-mst">Undirected Graph: connected component, MST</a></li>
+<li><a href="#maxflow">maxflow</a></li>
+<li><a href="#maximum-matching">maximum matching</a></li>
+</ul>
+</li>
+<li><a href="#pulp">pulp</a></li>
+</ul>
+</div>
 <p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
 <h1 id="collections">collections</h1>
-<p>py自带的一些好用的数据结构...<br>
-<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </br></p>
-<p><code>from collections import Counter, deque, defaultdict</code> </p>
-<h1 id="itertools">itertools</h1>
-<p>主要是用来穷举的时候它里面一些函数很好用... </p>
-<p><a href="https://docs.python.org/2/library/itertools.html">https://docs.python.org/2/library/itertools.html</a> </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">combinations</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">'ABCD'</span><span class="p">;</span> <span class="n">b</span><span class="o">=</span><span class="s1">'EFG'</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b …</span></span></pre></div>
+<p>py自带的一些好用的数据结构...<br/>
+<a href="https://docs.python.org/2/library/collections.html">https ...</a></br/></p>
                     </div>
                 </div>
             </article>
@@ -348,12 +388,22 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#1-bruteforce-for-small-testcase">法1: 穷举 bruteforce (for small testcase)</a><ul>
+<li><a href="#naive-bruteforce">naive bruteforce</a></li>
+<li><a href="#bruteforce-using-bitmap">bruteforce using bitmap</a></li>
+</ul>
+</li>
+<li><a href="#2-maxflow">法2: 最大流 maxflow</a></li>
+<li><a href="#3-integer-linear-programming">法3: 线性规划 (integer) linear programming</a></li>
+</ul>
+</div>
 <p>昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记.    </p>
-<p>题目链接在这里:  <br>
-<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=p2">https://code.google.com/codejam/contest/8234486/dashboard#s=p2</a> </br></p>
+<p>题目链接在这里:  <br/>
+<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=p2">https://code.google.com/codejam/contest/8234486/dashboard#s=p2</a> </p>
 <blockquote>
-<p>Elliot's parents speak French and English to him at home. He has heard a lot of words, but it isn't always clear to him which word comes from which language! Elliot knows one sentence that …</p></blockquote>
+<p>Elliot's parents speak French and English to him at home. He has heard a lot of ...</p></blockquote>
                     </div>
                 </div>
             </article>
@@ -392,18 +442,40 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
-<p>总结了一下C++ STL里面用的比较频繁的一些代码片段. (地址: <a href="https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL">https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL</a>)<br>
-cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com/w/cpp</a> </br></p>
-<p>常用的library主要有: <br>
-<code>&lt;algorithm&gt;, &lt;vector&gt;, &lt;queue&gt;, &lt;set&gt;, &lt;map&gt;, &lt;cmath&gt;</code> </br></p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#algorithm">algorithm</a><ul>
+<li><a href="#copy">copy()</a></li>
+<li><a href="#sort">sort()</a></li>
+</ul>
+</li>
+<li><a href="#vector">vector</a><ul>
+<li><a href="#vector_1">vector</a></li>
+<li><a href="#pair">pair</a></li>
+</ul>
+</li>
+<li><a href="#queue">queue</a><ul>
+<li><a href="#queue_1">queue</a></li>
+<li><a href="#priority_queue">priority_queue</a></li>
+</ul>
+</li>
+<li><a href="#setmap">set/map</a><ul>
+<li><a href="#set">set</a></li>
+<li><a href="#map">map<k,v></k,v></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>总结了一下C++ STL里面用的比较频繁的一些代码片段. (地址: <a href="https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL">https://github.com/X-Wei/cpp-demo-snippets/tree/master/STL</a>)<br/>
+cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com/w/cpp</a> </p>
+<p>常用的library主要有: <br/>
+<code>&lt;algorithm&gt;, &lt;vector&gt;, &lt;queue&gt;, &lt;set&gt;, &lt;map&gt;, &lt;cmath&gt;</code> </p>
 <p>另外一个常见的cpp文件开头版本是:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;  </span><span class="cp"></span></span>
 <span class="code-line"><span class="cp">#include</span> <span class="cpf">&lt;vector&gt;  </span><span class="cp"></span></span>
 <span class="code-line"><span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;  </span><span class="cp"></span></span>
 <span class="code-line"><span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span>  </span>
-<span class="code-line"><span class="cp">#define forloop(i,lo,hi) for(int i = (lo); i &lt;= (hi); i++)  </span></span>
-<span class="code-line"><span class="cp">#define rep …</span></span></pre></div>
+<span class="code-line"><span class="cp">#define forloop ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -444,23 +516,32 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
-<p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
-<p>PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   </p>
-<h1 id="logical-structure-of-pq">logical structure of PQ</h1>
-<p>个人感觉"堆"这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种<strong>完全二叉树(complete binary tree)</strong>: 没错, PQ是一种满足某些条件的完全二叉树.   </p>
-<p>所谓的"完全二叉树", 要满足:  </p>
-<blockquote>
+                    <div class="summary"><div class="toc">
 <ul>
-<li>除了最后一层, 所有层都排满(没有非空节点)  </li>
-<li>最后一层的所有非空节点都排在左边  </li>
+<li><a href="#logical-structure-of-pq">logical structure of PQ</a></li>
+<li><a href="#array-representation-of-pq">array representation of PQ</a></li>
+<li><a href="#pq-implementation">PQ implementation</a><ul>
+<li><a href="#siftup">siftup</a></li>
+<li><a href="#siftdown">siftdown</a></li>
+<li><a href="#implementation-of-add-and-poll">implementation of add and poll</a></li>
 </ul>
-</blockquote>
-<p>一张图可以直观说明, 完全二叉树其实就是长得像这样:<br>
-<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image.png"> </img></br></p>
-<p>一个完全二叉树能被成为PQ的话, 要满足的条件就是:   </p>
-<blockquote>
-<p>对于任何一个节点, 它的优先级都大于左右子节点的优先级 …</p></blockquote>
+</li>
+<li><a href="#pq-application">PQ application</a><ul>
+<li><a href="#heapsort">heapsort</a></li>
+<li><a href="#heapify">heapify</a></li>
+<li><a href="#top-k-elements-of-a-stream">top K elements of a stream</a></li>
+<li><a href="#median-of-a-stream">median of a stream</a></li>
+</ul>
+</li>
+<li><a href="#more-about-heap">more about heap</a><ul>
+<li><a href="#k-way-heap">k-way heap</a></li>
+<li><a href="#more-flexible-heap">more "flexible" heap</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
+<p>PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出 ...</p>
                     </div>
                 </div>
             </article>
@@ -501,10 +582,18 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#quick-partition">quick partition</a></li>
+<li><a href="#knuth-shuffle">Knuth shuffle</a></li>
+<li><a href="#quick-sort">quick sort</a></li>
+<li><a href="#quick-select">quick select</a></li>
+<li><a href="#3-way-qsort">3-way qsort</a></li>
+</ul>
+</div>
 <p>今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   </p>
-<p>快速排序的算法可以用三句话描述:<br>
-<strong>[Algo]</strong> </br></p>
+<p>快速排序的算法可以用三句话描述:<br/>
+<strong>[Algo]</strong> </p>
 <blockquote>
 <ul>
 <li>选择基准项(pivot element, 一般取第一个元素为pivot)  </li>
@@ -514,8 +603,7 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </blockquote>
 <p>由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: <code>void qsort(int[] a, int lo, int hi)</code>, 表示排序a[lo, hi]之间(闭区间)的所有元素.   </p>
 <h2 id="quick-partition">quick partition</h2>
-<p>由上面描述可以见, qsort最关键的是第二步: 把数组元素以pivot分为两部分. 这个操作就是quick partition.   </p>
-<p>函数声明为: <code>int partition(int[] a …</code></p>
+<p>由上面描述可以见 ...</p>
                     </div>
                 </div>
             </article>
@@ -556,7 +644,14 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#floyd-warshall">任意两点最短路径: Floyd-Warshall</a></li>
+<li><a href="#dijkstra">单源最短路径: Dijkstra</a></li>
+<li><a href="#bellman-ford">有负权边的单源最短路径: Bellman-Ford</a></li>
+<li><a href="#more">More</a></li>
+</ul>
+</div>
 <p>weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    </p>
 <p>简单起见(这回只写伪代码好了), 对于图的定义如下:   </p>
 <ul>
@@ -564,12 +659,8 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 <li><code>e[u,v]</code> = distance of edge(u,v); if (u,v) is not an edge, <code>e[u,v]=INF</code> </li>
 <li>令N=点的数量, M=边的数量   </li>
 </ul>
-<h1 id="ren-yi-liang-dian-zui-duan-lu-jing-floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
-<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source)和<code>t</code>(target), 求s到达t的最短路径.    </p>
-<p>Floyd算法的思想是动态规划:    </p>
-<blockquote>
-<ul>
-<li>定义 …</li></ul></blockquote>
+<h1 id="floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
+<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source ...</p>
                     </div>
                 </div>
             </article>
@@ -610,23 +701,28 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#recursive-dfs">Recursive DFS</a></li>
+<li><a href="#non-recursive-dfs">Non-recursive DFS</a></li>
+<li><a href="#for-trees-dfs-with-depth">(for Trees) DFS with depth</a></li>
+<li><a href="#dfs-for-binary-tree-preorder-traversal">DFS for binary tree: Preorder traversal</a></li>
+<li><a href="#dfs-with-path">DFS with path</a></li>
+<li><a href="#cycle-detection">Cycle Detection</a></li>
+<li><a href="#topology-sort">Topology Sort</a></li>
+</ul>
+</div>
 <p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
 <p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GraphNode{      </span>
-<span class="code-line">    int val;      </span>
-<span class="code-line">    List&lt;GraphNode&gt; neighbors;      </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{      </span></span>
+<span class="code-line"><span class="err">    int val;      </span></span>
+<span class="code-line"><span class="err">    List&lt;GraphNode&gt; neighbors;      </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>为了防止重复, 仍然用一个HaseSet记录走过的节点:    </p>
 <p><code>HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();</code> </p>
 <h2 id="recursive-dfs">Recursive DFS</h2>
-<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
-<p>递归的DFS代码非常简洁:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void DFS(GraphNode nd){      </span>
-<span class="code-line">    System.out.println(nd.val);    </span>
-<span class="code-line">    visited.add(nd);   </span>
-<span class="code-line">    for(GraphNode next: nd.neighbors …</span></pre></div>
+<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点 ...</p>
                     </div>
                 </div>
             </article>
@@ -667,21 +763,27 @@ cpp文档: <a href="http://en.cppreference.com/w/cpp">http://en.cppreference.com
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
-<p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br>
-由于树的BFS只是图的BFS的一种特殊情况, 而且比较简单不需要visited标记, 这里只写一下图的BFS好了.  <br>
-先定义一个Graph类, 这里在每一个节点保存邻居信息:    </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GraphNode{   </span>
-<span class="code-line">    int val;   </span>
-<span class="code-line">    List&lt;GraphNode&gt; neighbors;   </span>
-<span class="code-line">}</span>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#bfs-for-treesgraphs">BFS for trees/graphs</a></li>
+<li><a href="#bfs-with-distance">BFS with distance</a></li>
+<li><a href="#properties">properties</a></li>
+<li><a href="#bfs-by-layer">BFS "by layer"</a></li>
+<li><a href="#complexity">complexity</a></li>
+</ul>
+</div>
+<p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br/>
+由于树的BFS只是图的BFS的一种特殊情况, 而且比较简单不需要visited标记, 这里只写一下图的BFS好了.  <br/>
+先定义一个Graph类, 这里在每一个节点保存邻居信息:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{   </span></span>
+<span class="code-line"><span class="err">    int val;   </span></span>
+<span class="code-line"><span class="err">    List&lt;GraphNode&gt; neighbors;   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="bfs-for-treesgraphs">BFS for trees/graphs</h2>
 <p>图的遍历需要注意不走重复节点, 所以需要一个HashSet(名字叫visited)来保存哪些节点已经访问过了. 需要注意的是, <em>在把一个节点放进队列queue的时刻就要把它放进visited</em>, 而不是在队列里取出来的时刻再放.    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void BFS(GraphNode start){   </span>
-<span class="code-line">    LinkedList&lt;GraphNode&gt; q = new LinkedList&lt;GraphNode&gt;();   </span>
-<span class="code-line">    HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();   </span>
-<span class="code-line">    q.push(start …</span></pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void BFS(GraphNode start){   </span></span>
+<span class="code-line"><span class="err">    LinkedList&lt;GraphNode&gt; q = new ...</span></span></pre></div>
                     </div>
                 </div>
             </article>

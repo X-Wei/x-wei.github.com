@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Intro to graphs Graph: vertices connected by edges. terminology: path: sequence of vertices connected by edges cycle: path with same starting and ending vertex two vertices are connected: if there is a path between ex of graph problems: path: or connectivity shortest path cycle Euler tour (ouii..) Hamilton …" />
+        <meta name="description" content="1. Intro to graphs 2. Graph API graph representation edge representation 3. Depth-First Search implementation properties 4. Breadth-First Search implementation property 5. Connected Components 6. Graph Challenges 1. Intro to graphs Graph: vertices connected by edges. terminology: path: sequence of vertices connected by edges cycle: path with same starting and ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 1-1 Undirected Graphs"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week1_1.html"/>
-        <meta property="og:description" content="[TOC] 1. Intro to graphs Graph: vertices connected by edges. terminology: path: sequence of vertices connected by edges cycle: path with same starting and ending vertex two vertices are connected: if there is a path between ex of graph problems: path: or connectivity shortest path cycle Euler tour (ouii..) Hamilton …"/>
+        <meta property="og:description" content="1. Intro to graphs 2. Graph API graph representation edge representation 3. Depth-First Search implementation properties 4. Breadth-First Search implementation property 5. Connected Components 6. Graph Challenges 1. Intro to graphs Graph: vertices connected by edges. terminology: path: sequence of vertices connected by edges cycle: path with same starting and ..."/>
         <meta property="article:published_time" content="2015-11-08" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,7 +210,28 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 1-1 Undirected Graphs">[Algorithms II] Week 1-1 Undirected Graphs</a><ul><li><a class="toc-href" href="#1-intro-to-graphs" title="1. Intro to graphs">1. Intro to graphs</a></li><li><a class="toc-href" href="#2-graph-api" title="2. Graph API">2. Graph API</a><ul><li><a class="toc-href" href="#graph-representation" title="graph representation">graph representation</a></li><li><a class="toc-href" href="#edge-representation" title="edge representation">edge representation</a></li></ul></li><li><a class="toc-href" href="#3-depth-first-search_1" title="3. Depth-First Search">3. Depth-First Search</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#properties" title="properties">properties</a></li></ul></li><li><a class="toc-href" href="#4-breadth-first-search_1" title="4. Breadth-First Search">4. Breadth-First Search</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#property" title="property">property</a></li></ul></li><li><a class="toc-href" href="#5-connected-components_1" title="5. Connected Components">5. Connected Components</a></li><li><a class="toc-href" href="#6-graph-challenges" title="6. Graph Challenges">6. Graph Challenges</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-intro-to-graphs">1. Intro to graphs</a></li>
+<li><a href="#2-graph-api">2. Graph API</a><ul>
+<li><a href="#graph-representation">graph representation</a></li>
+<li><a href="#edge-representation">edge representation</a></li>
+</ul>
+</li>
+<li><a href="#3-depth-first-search">3. Depth-First Search</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#properties">properties</a></li>
+</ul>
+</li>
+<li><a href="#4-breadth-first-search">4. Breadth-First Search</a><ul>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#property">property</a></li>
+</ul>
+</li>
+<li><a href="#5-connected-components">5. Connected Components</a></li>
+<li><a href="#6-graph-challenges">6. Graph Challenges</a></li>
+</ul>
+</div>
 <h1 id="1-intro-to-graphs">1. Intro to graphs</h1>
 <p>Graph: vertices connected by edges.    </p>
 <p>terminology:    </p>
@@ -235,31 +256,31 @@ mx's blog            </a>
 <h2 id="graph-representation">graph representation</h2>
 <ul>
 <li>vertex representation:  use integers <em>between 0 and V-1</em> </li>
-<li>anormalies: self-loop and multiple edges are <em>possible</em> <div class="highlight"><pre><span class="code-line"><span></span>public class Graph{   </span>
-<span class="code-line">    Graph(int V);   </span>
-<span class="code-line">    void addEdge(int v, int w);   </span>
-<span class="code-line">    Iterable&lt;Integer&gt; adj(int v);   </span>
-<span class="code-line">    int V();// nb of vertices   </span>
-<span class="code-line">    int E();// nb of edges   </span>
-<span class="code-line">}</span>
+<li>anormalies: self-loop and multiple edges are <em>possible</em> <div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class Graph{   </span></span>
+<span class="code-line"><span class="err">    Graph(int V);   </span></span>
+<span class="code-line"><span class="err">    void addEdge(int v, int w);   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;Integer&gt; adj(int v);   </span></span>
+<span class="code-line"><span class="err">    int V();// nb of vertices   </span></span>
+<span class="code-line"><span class="err">    int E();// nb of edges   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 </li>
 </ul>
-<p>print all edges:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image.png"> </img></br></p>
+<p>print all edges:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image.png"/> </p>
 <p>basic functions:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">static</span> <span class="nt">int</span> <span class="nt">degree</span><span class="o">(</span><span class="nt">Graph</span> <span class="nt">g</span><span class="o">,</span> <span class="nt">int</span> <span class="nt">v</span><span class="o">)</span><span class="p">{</span>   </span>
-<span class="code-line">    <span class="err">int</span> <span class="err">deg</span> <span class="err">=</span> <span class="err">0</span><span class="p">;</span>   </span>
-<span class="code-line">    <span class="err">for(int</span> <span class="n">w</span><span class="p">:</span><span class="n">G</span><span class="o">.</span><span class="nf">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="n">deg</span><span class="o">++</span><span class="p">;</span>   </span>
-<span class="code-line">    <span class="err">return</span> <span class="err">deg</span><span class="p">;</span>   </span>
-<span class="code-line"><span class="p">}</span>   </span>
-<span class="code-line"><span class="nt">static</span> <span class="nt">int</span> <span class="nt">nbOfSelfloops</span><span class="o">(</span><span class="nt">Graph</span> <span class="nt">g</span><span class="o">)</span><span class="p">{</span>   </span>
-<span class="code-line">    <span class="err">int</span> <span class="err">cnt</span> <span class="err">=</span> <span class="err">0</span><span class="p">;</span>   </span>
-<span class="code-line">    <span class="err">for(int</span> <span class="err">v=0</span><span class="p">;</span> <span class="err">v&lt;G.V()</span><span class="p">;</span> <span class="err">v++)</span>   </span>
-<span class="code-line">        <span class="err">for(int</span> <span class="n">w</span><span class="p">:</span><span class="n">G</span><span class="o">.</span><span class="nf">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>    </span>
-<span class="code-line">            <span class="n">if</span> <span class="p">(</span><span class="n">w</span><span class="o">==</span><span class="n">v</span><span class="p">)</span> <span class="n">cnt</span><span class="o">++</span><span class="p">;</span>   </span>
-<span class="code-line">    <span class="err">return</span> <span class="err">cnt/2</span><span class="p">;</span>   </span>
-<span class="code-line"><span class="p">}</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">static int degree(Graph g, int v){   </span></span>
+<span class="code-line"><span class="err">    int deg = 0;   </span></span>
+<span class="code-line"><span class="err">    for(int w:G.adj(v)) deg++;   </span></span>
+<span class="code-line"><span class="err">    return deg;   </span></span>
+<span class="code-line"><span class="err">}   </span></span>
+<span class="code-line"><span class="err">static int nbOfSelfloops(Graph g){   </span></span>
+<span class="code-line"><span class="err">    int cnt = 0;   </span></span>
+<span class="code-line"><span class="err">    for(int v=0; v&lt;G.V(); v++)   </span></span>
+<span class="code-line"><span class="err">        for(int w:G.adj(v))    </span></span>
+<span class="code-line"><span class="err">            if (w==v) cnt++;   </span></span>
+<span class="code-line"><span class="err">    return cnt/2;   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="edge-representation">edge representation</h2>
 <ul>
@@ -267,125 +288,125 @@ mx's blog            </a>
 <li>adj-matrix implementation: maintain a 2d (V*V) boolean array ⇒ space complexity too heavy   </li>
 <li>adj-list implementation: vertex-indexed array, each array entry is a <code>Bag</code> (类似桶bucket) ⇒ sutable for sparse graphs   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image001.png"> <br>
-adj-list implementation:   </br></img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private final int V;   </span>
-<span class="code-line">private Bag&lt;Integer&gt;[] adj;   </span>
-<span class="code-line">public Graph(int V){   </span>
-<span class="code-line">    this.V = V;   </span>
-<span class="code-line">    this.adj = (Bag&lt;Integer&gt;[]) new Bag[V];// java cannot create generic array   </span>
-<span class="code-line">    for(int v = 0; v&lt;V; v++) adj[v] = new Bag&lt;Integer&gt;();   </span>
-<span class="code-line">}   </span>
-<span class="code-line">public addEdge(int v, int w){   </span>
-<span class="code-line">    adj[v].add(w);   </span>
-<span class="code-line">    adj[w].add(v);// if undirected graph   </span>
-<span class="code-line">}</span>
+<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image001.png"/> <br/>
+adj-list implementation:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">V</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="err">[]</span><span class="w"> </span><span class="n">adj</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">Graph</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">V</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">V</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">V</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">adj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="err">[]</span><span class="p">)</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bag</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">java</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="k">array</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">v</span><span class="o">&lt;</span><span class="n">V</span><span class="p">;</span><span class="w"> </span><span class="n">v</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">adj</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">addEdge</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">adj</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="n">w</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">adj</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="n">v</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">undirected</span><span class="w"> </span><span class="n">graph</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image002.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image002.png"/> </p>
 <h1 id="3-depth-first-search_1">3. Depth-First Search</h1>
-<p>Tremaux maze exploration: trace back when no unvisited vertices availiable.  <br>
-动画好看... <br>
-DFS goal: systematically search through a graph.  <br>
-<strong>design pattern</strong>: <em>decouple</em> graph data and graph processing.    </br></br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Paths{   </span>
-<span class="code-line">    Path(Graph G, int s);// graph G and source s   </span>
-<span class="code-line">    boolean hasPathTo(int v);   </span>
-<span class="code-line">    Iterable&lt;Integer&gt; pathTo(int v);   </span>
-<span class="code-line">}</span>
+<p>Tremaux maze exploration: trace back when no unvisited vertices availiable.  <br/>
+动画好看... <br/>
+DFS goal: systematically search through a graph.  <br/>
+<strong>design pattern</strong>: <em>decouple</em> graph data and graph processing.    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class Paths{   </span></span>
+<span class="code-line"><span class="err">    Path(Graph G, int s);// graph G and source s   </span></span>
+<span class="code-line"><span class="err">    boolean hasPathTo(int v);   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;Integer&gt; pathTo(int v);   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>algo:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image003.png"> <br>
-注意每次访问节点以前就将其mark.    </br></img></br></p>
+<p>algo:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image003.png"/> <br/>
+注意每次访问节点以前就将其mark.    </p>
 <h2 id="implementation">implementation</h2>
 <ul>
 <li>用一个boolean数组<code>visited[]</code>作为标记   </li>
 <li>为了找到一条具体的路径(ie, 一系列节点), 维护一个<code>prev[]</code>数组, 存放当前节点是从哪个节点走过来的.    </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image004.png"> </img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>//public class DFSpaths extends Paths...   </span>
-<span class="code-line">boolean[] visited = new boolean[V];   </span>
-<span class="code-line">int[] prev = new int[V];   </span>
-<span class="code-line">public void dfs(int v){   </span>
-<span class="code-line">    visited[v] = true;   </span>
-<span class="code-line">    for(int w: G.adj())   </span>
-<span class="code-line">        if(!visited[w]) {   </span>
-<span class="code-line">            prev[w]=v;   </span>
-<span class="code-line">            dfs(w);   </span>
-<span class="code-line">        }   </span>
-<span class="code-line">}   </span>
-<span class="code-line">public Iterable&lt;Integer&gt; pathTo(int v){   </span>
-<span class="code-line">    Stack&lt;Integer&gt; s = new Stack&lt;Integer&gt;();   </span>
-<span class="code-line">    for(int x = v; x!=s; x = prev[x])    </span>
-<span class="code-line">        s.push(x);   </span>
-<span class="code-line">    return s;   </span>
-<span class="code-line">}</span>
+<p><img alt="" class="img-responsive" src="../images/algoII_week1_1/pasted_image004.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">DFSpaths</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">Paths</span><span class="p">...</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">boolean</span><span class="err">[]</span><span class="w"> </span><span class="n">visited</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="k">boolean</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">visited</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">w</span><span class="p">:</span><span class="w"> </span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">())</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">visited</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">prev</span><span class="o">[</span><span class="n">w</span><span class="o">]=</span><span class="n">v</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="n">w</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pathTo</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Stack</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">!=</span><span class="n">s</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="o">[</span><span class="n">x</span><span class="o">]</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="properties">properties</h2>
-<p><strong>prop</strong>. <br>
-DFS visite all edges in time propotional to the sum of their degrees(ie. nb of edges).    </br></p>
+<p><strong>prop</strong>. <br/>
+DFS visite all edges in time propotional to the sum of their degrees(ie. nb of edges).    </p>
 <h1 id="4-breadth-first-search_1">4. Breadth-First Search</h1>
-<p><strong>not</strong> recursive algo. <br>
-<em>maintain a queue, add to queue for all vertices not-marked.</em> </br></p>
+<p><strong>not</strong> recursive algo. <br/>
+<em>maintain a queue, add to queue for all vertices not-marked.</em> </p>
 <h2 id="implementation_1">implementation</h2>
 <ul>
 <li>use <code>visited[]</code> to mark vertices   </li>
 <li>use a <code>prev[]</code> array to get explicit path   </li>
-<li>use a <code>dist[]</code> array to record the shortest dist from v to source (can use <code>dist</code> to replace <code>visited</code>)   <div class="highlight"><pre><span class="code-line"><span></span>public void bfs(Graph G, int s){   </span>
-<span class="code-line">    boolean visited[] = new boolean[G.V()];   </span>
-<span class="code-line">    int prev[] = new int[G.V()];   </span>
-<span class="code-line">    int dist[] = new int[G.V()];   </span>
-<span class="code-line">    Queue&lt;Integer&gt; q = new Queue&lt;Integer&gt;();   </span>
-<span class="code-line">    visited[s] = true;   </span>
-<span class="code-line">    q.push(s);   </span>
-<span class="code-line">    while(!q.isEmpty()){   </span>
-<span class="code-line">        int v = q.dequeue();   </span>
-<span class="code-line">        for(int w:G.adj(v))   </span>
-<span class="code-line">            if(!visited[w]) {   </span>
-<span class="code-line">                prev[w] = v;   </span>
-<span class="code-line">                visited[w] = true;   </span>
-<span class="code-line">                q.enqueue(w);   </span>
-<span class="code-line">            }      </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<li>use a <code>dist[]</code> array to record the shortest dist from v to source (can use <code>dist</code> to replace <code>visited</code>)   <div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">bfs</span><span class="p">(</span><span class="n">Graph</span><span class="w"> </span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">boolean</span><span class="w"> </span><span class="n">visited</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="k">boolean</span><span class="o">[</span><span class="n">G.V()</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">prev</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">G.V()</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">dist</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">G.V()</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Queue</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Queue</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">visited</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">s</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="err">!</span><span class="n">q</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">())</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">dequeue</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">w</span><span class="p">:</span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">visited</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">prev</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">visited</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">q</span><span class="p">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">w</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w">      </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 </li>
 </ul>
 <h2 id="property">property</h2>
-<p><strong>prop.</strong> <br>
-BFS computes the shortest path from s to all vertices using time propotional to E+V.    </br></p>
+<p><strong>prop.</strong> <br/>
+BFS computes the shortest path from s to all vertices using time propotional to E+V.    </p>
 <p>intuition: BFS examines nodes by increasing distance    </p>
 <h1 id="5-connected-components_1">5. Connected Components</h1>
 <p>dealing with connectivity(equivalence) queries ⇒ answer in constant time (with <em>preprocessing</em>).    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class CC{   </span>
-<span class="code-line">    boolean connected(int v, int w);   </span>
-<span class="code-line">    int count();// nb of CCs   </span>
-<span class="code-line">    int id(int v);//id for a CC   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class CC{   </span></span>
+<span class="code-line"><span class="err">    boolean connected(int v, int w);   </span></span>
+<span class="code-line"><span class="err">    int count();// nb of CCs   </span></span>
+<span class="code-line"><span class="err">    int id(int v);//id for a CC   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>⇒ Union-Find ? ⇒ <em>Use DFS!!</em> </p>
 <p>def. <em>connected component</em> is a maximal set of connected vertices.    </p>
-<p>algo: for each unmarked vertex, run dfs(with increasing cc id)... <br>
-after the preprocessing, we can get the array <code>id[]</code> and cc count <code>cnt</code>...   </br></p>
+<p>algo: for each unmarked vertex, run dfs(with increasing cc id)... <br/>
+after the preprocessing, we can get the array <code>id[]</code> and cc count <code>cnt</code>...   </p>
 <h1 id="6-graph-challenges">6. Graph Challenges</h1>
-<p>some typical pbs <br>
-<strong>pb1. bipartite graph</strong> </br></p>
-<p>Can we  divide vertices into 2 subsets, where all edge go from one subset to other.  <br>
-⇒ can be done with dfs. <em>cf. booksite</em> </br></p>
-<p><strong>pb2. cycle detection</strong> <br>
-⇒ simple using dfs.    </br></p>
-<p><strong>pb3. Euler cycle</strong> <br>
-Find a cycle that uses all edges exactely once.  <br>
-[Euler] a graph is Eulerian <strong>iff</strong> all vertices have even degree.  <br>
-⇒ typical diligent algo students can do. <em>cf. booksite</em> </br></br></br></p>
-<p><strong>pb4. Hamilton cycle</strong> <br>
-Find cycle that visits each vertex exactly once.  <br>
-⇒ intractable (typical NP-complete pb)   </br></br></p>
-<p><strong>pb5. isomorphism of graphs</strong> <br>
-Are two graphs identical except for vertex names? <br>
-⇒ no one knows...    </br></br></p>
-<p><strong>pb6. planary graph</strong> <br>
-Lay out a graph in the plane without crossing edges? <br>
-⇒ expert level. exists linear time algo based on DFS by Tarjan, but too complicated.    </br></br></p>
+<p>some typical pbs <br/>
+<strong>pb1. bipartite graph</strong> </p>
+<p>Can we  divide vertices into 2 subsets, where all edge go from one subset to other.  <br/>
+⇒ can be done with dfs. <em>cf. booksite</em> </p>
+<p><strong>pb2. cycle detection</strong> <br/>
+⇒ simple using dfs.    </p>
+<p><strong>pb3. Euler cycle</strong> <br/>
+Find a cycle that uses all edges exactely once.  <br/>
+[Euler] a graph is Eulerian <strong>iff</strong> all vertices have even degree.  <br/>
+⇒ typical diligent algo students can do. <em>cf. booksite</em> </p>
+<p><strong>pb4. Hamilton cycle</strong> <br/>
+Find cycle that visits each vertex exactly once.  <br/>
+⇒ intractable (typical NP-complete pb)   </p>
+<p><strong>pb5. isomorphism of graphs</strong> <br/>
+Are two graphs identical except for vertex names? <br/>
+⇒ no one knows...    </p>
+<p><strong>pb6. planary graph</strong> <br/>
+Lay out a graph in the plane without crossing edges? <br/>
+⇒ expert level. exists linear time algo based on DFS by Tarjan, but too complicated.    </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android" />
-        <meta name="description" content="[TOC] Recycler View, Adaper, ViewHolder rather than creating list items as we scroll, keep them in a queue (recycling bin) → when scrolling, the list items are recycled and re-bind to new content. RecyclerView is better version of ListView. Adaper: bind data from data source, and provide the RecyclerView with new …" />
+        <meta name="description" content="Recycler View, Adaper, ViewHolder RecyclerView code example: a list of numbers 1. add gradle dependency 2. create item layout 3. subclass RecyclerView.ViewHolder 4. subclass RecyclerView.Adapter 5. use LayoutManager, putting things together 6. handle item click reciept Recycler View, Adaper, ViewHolder rather than creating list items as we scroll ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Android Dev] 1.3 RecyclerView"/>
         <meta property="og:url" content="http://x-wei.github.io/andev_p1e3_recyclerview.html"/>
-        <meta property="og:description" content="[TOC] Recycler View, Adaper, ViewHolder rather than creating list items as we scroll, keep them in a queue (recycling bin) → when scrolling, the list items are recycled and re-bind to new content. RecyclerView is better version of ListView. Adaper: bind data from data source, and provide the RecyclerView with new …"/>
+        <meta property="og:description" content="Recycler View, Adaper, ViewHolder RecyclerView code example: a list of numbers 1. add gradle dependency 2. create item layout 3. subclass RecyclerView.ViewHolder 4. subclass RecyclerView.Adapter 5. use LayoutManager, putting things together 6. handle item click reciept Recycler View, Adaper, ViewHolder rather than creating list items as we scroll ..."/>
         <meta property="article:published_time" content="2017-02-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="android" />
@@ -210,7 +210,20 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Android Dev] 1.3 RecyclerView">[Android Dev] 1.3 RecyclerView</a><ul><li><a class="toc-href" href="#recycler-view-adaper-viewholder" title="Recycler View, Adaper, ViewHolder">Recycler View, Adaper, ViewHolder</a></li><li><a class="toc-href" href="#recyclerview-code-example-a-list-of-numbers" title="RecyclerView code example: a list of numbers">RecyclerView code example: a list of numbers</a><ul><li><a class="toc-href" href="#1-add-gradle-dependency" title="1. add gradle dependency">1. add gradle dependency</a></li><li><a class="toc-href" href="#2-create-item-layout" title="2. create item layout">2. create item layout</a></li><li><a class="toc-href" href="#3-subclass-recyclerviewviewholder" title="3. subclass RecyclerView.ViewHolder">3. subclass RecyclerView.ViewHolder</a></li><li><a class="toc-href" href="#4-subclass-recyclerviewadapter" title="4. subclass RecyclerView.Adapter">4. subclass RecyclerView.Adapter</a></li><li><a class="toc-href" href="#5-use-layoutmanager-putting-things-together" title="5. use LayoutManager, putting things together">5. use LayoutManager, putting things together</a></li><li><a class="toc-href" href="#6-handle-item-click-reciept" title="6. handle item click reciept">6. handle item click reciept</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#recycler-view-adaper-viewholder">Recycler View, Adaper, ViewHolder</a></li>
+<li><a href="#recyclerview-code-example-a-list-of-numbers">RecyclerView code example: a list of numbers</a><ul>
+<li><a href="#1-add-gradle-dependency">1. add gradle dependency</a></li>
+<li><a href="#2-create-item-layout">2. create item layout</a></li>
+<li><a href="#3-subclass-recyclerviewviewholder">3. subclass RecyclerView.ViewHolder</a></li>
+<li><a href="#4-subclass-recyclerviewadapter">4. subclass RecyclerView.Adapter</a></li>
+<li><a href="#5-use-layoutmanager-putting-things-together">5. use LayoutManager, putting things together</a></li>
+<li><a href="#6-handle-item-click-reciept">6. handle item click reciept</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="recycler-view-adaper-viewholder">Recycler View, Adaper, ViewHolder</h2>
 <p>rather than creating list items as we scroll, keep them in a queue (recycling bin)
 → when scrolling, the list items are <em>recycled and re-bind</em> to new content. RecyclerView is better version of ListView. </p>
@@ -246,26 +259,26 @@ And the RecyclerView uses a <strong>LayoutManager</strong> to manage the appeara
 </pre></div>
 <h3 id="3-subclass-recyclerviewviewholder">3. subclass RecyclerView.ViewHolder</h3>
 <p>Create an inner class (<strong>inside the Adapter class</strong>), define class variables, override the <strong>constructor</strong>(takes a <code>View</code> as parameter), and add functions.  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1">// TODO (12) Create a class called NumberViewHolder that extends RecyclerView.ViewHolder</span></span>
-<span class="code-line"><span class="kr">class</span> <span class="nx">NumberViewHolder</span> <span class="kr">extends</span> <span class="nx">RecyclerView</span><span class="p">.</span><span class="nx">ViewHolder</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="c1">// TODO (13) Within NumberViewHolder, create a TextView variable called listItemNumberView</span></span>
-<span class="code-line">    <span class="nx">TextView</span> <span class="nx">listItemNumverView</span><span class="p">;</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="k">Create</span> <span class="n">a</span> <span class="k">class</span> <span class="k">called</span> <span class="n">NumberViewHolder</span> <span class="n">that</span> <span class="n">extends</span> <span class="n">RecyclerView</span><span class="p">.</span><span class="n">ViewHolder</span></span>
+<span class="code-line"><span class="k">class</span> <span class="n">NumberViewHolder</span> <span class="n">extends</span> <span class="n">RecyclerView</span><span class="p">.</span><span class="n">ViewHolder</span> <span class="err">{</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">13</span><span class="p">)</span> <span class="n">Within</span> <span class="n">NumberViewHolder</span><span class="p">,</span> <span class="k">create</span> <span class="n">a</span> <span class="n">TextView</span> <span class="k">variable</span> <span class="k">called</span> <span class="n">listItemNumberView</span></span>
+<span class="code-line">    <span class="n">TextView</span> <span class="n">listItemNumverView</span><span class="p">;</span></span>
 <span class="code-line"></span>
-<span class="code-line">    <span class="c1">// TODO (14) Create a constructor for NumberViewHolder that accepts a View called itemView as a parameter</span></span>
-<span class="code-line">    <span class="c1">// TODO (15) Within the constructor, call super(itemView) and then find listItemNumberView by ID</span></span>
-<span class="code-line">    <span class="kr">public</span> <span class="nx">NumberViewHolder</span><span class="p">(</span><span class="nx">View</span> <span class="nx">itemView</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">        <span class="kr">super</span><span class="p">(</span><span class="nx">itemView</span><span class="p">);</span></span>
-<span class="code-line">        <span class="nx">listItemNumverView</span> <span class="o">=</span> <span class="p">(</span><span class="nx">TextView</span><span class="p">)</span> <span class="nx">itemView</span><span class="p">.</span><span class="nx">findViewById</span><span class="p">(</span><span class="nx">R</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">tv_item</span><span class="p">);</span> <span class="c1">// this view is cached in ViewHolder</span></span>
-<span class="code-line">    <span class="p">}</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="k">Create</span> <span class="n">a</span> <span class="k">constructor</span> <span class="k">for</span> <span class="n">NumberViewHolder</span> <span class="n">that</span> <span class="n">accepts</span> <span class="n">a</span> <span class="k">View</span> <span class="k">called</span> <span class="n">itemView</span> <span class="k">as</span> <span class="n">a</span> <span class="k">parameter</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="n">Within</span> <span class="n">the</span> <span class="k">constructor</span><span class="p">,</span> <span class="k">call</span> <span class="n">super</span><span class="p">(</span><span class="n">itemView</span><span class="p">)</span> <span class="k">and</span> <span class="k">then</span> <span class="n">find</span> <span class="n">listItemNumberView</span> <span class="k">by</span> <span class="n">ID</span></span>
+<span class="code-line">    <span class="k">public</span> <span class="n">NumberViewHolder</span><span class="p">(</span><span class="k">View</span> <span class="n">itemView</span><span class="p">)</span> <span class="err">{</span></span>
+<span class="code-line">        <span class="n">super</span><span class="p">(</span><span class="n">itemView</span><span class="p">);</span></span>
+<span class="code-line">        <span class="n">listItemNumverView</span> <span class="o">=</span> <span class="p">(</span><span class="n">TextView</span><span class="p">)</span> <span class="n">itemView</span><span class="p">.</span><span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">tv_item</span><span class="p">);</span> <span class="o">//</span> <span class="n">this</span> <span class="k">view</span> <span class="k">is</span> <span class="n">cached</span> <span class="k">in</span> <span class="n">ViewHolder</span></span>
+<span class="code-line">    <span class="err">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">    <span class="c1">// TODO (16) Within the NumberViewHolder class, create a void method called bind that accepts an int parameter called listIndex</span></span>
-<span class="code-line">    <span class="c1">// TODO (17) Within bind, set the text of listItemNumberView to the listIndex</span></span>
-<span class="code-line">    <span class="c1">// TODO (18) Be careful to get the String representation of listIndex, as using setText with an int does something different</span></span>
-<span class="code-line">    <span class="c1">// calling setText() with an integer, android will use the int as a string resource id</span></span>
-<span class="code-line">    <span class="k">void</span> <span class="nx">bind</span><span class="p">(</span><span class="kr">int</span> <span class="nx">listIndex</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">        <span class="nx">listItemNumverView</span><span class="p">.</span><span class="nx">setText</span><span class="p">(</span><span class="nb">String</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">(</span><span class="nx">listIndex</span><span class="p">));</span></span>
-<span class="code-line">    <span class="p">}</span></span>
-<span class="code-line"><span class="p">}</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="n">Within</span> <span class="n">the</span> <span class="n">NumberViewHolder</span> <span class="k">class</span><span class="p">,</span> <span class="k">create</span> <span class="n">a</span> <span class="n">void</span> <span class="k">method</span> <span class="k">called</span> <span class="n">bind</span> <span class="n">that</span> <span class="n">accepts</span> <span class="n">an</span> <span class="nb">int</span> <span class="k">parameter</span> <span class="k">called</span> <span class="n">listIndex</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="n">Within</span> <span class="n">bind</span><span class="p">,</span> <span class="k">set</span> <span class="n">the</span> <span class="nb">text</span> <span class="k">of</span> <span class="n">listItemNumberView</span> <span class="k">to</span> <span class="n">the</span> <span class="n">listIndex</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">18</span><span class="p">)</span> <span class="n">Be</span> <span class="n">careful</span> <span class="k">to</span> <span class="k">get</span> <span class="n">the</span> <span class="n">String</span> <span class="n">representation</span> <span class="k">of</span> <span class="n">listIndex</span><span class="p">,</span> <span class="k">as</span> <span class="k">using</span> <span class="n">setText</span> <span class="k">with</span> <span class="n">an</span> <span class="nb">int</span> <span class="n">does</span> <span class="n">something</span> <span class="n">different</span></span>
+<span class="code-line">    <span class="o">//</span> <span class="n">calling</span> <span class="n">setText</span><span class="p">()</span> <span class="k">with</span> <span class="n">an</span> <span class="nb">integer</span><span class="p">,</span> <span class="n">android</span> <span class="n">will</span> <span class="n">use</span> <span class="n">the</span> <span class="nb">int</span> <span class="k">as</span> <span class="n">a</span> <span class="n">string</span> <span class="n">resource</span> <span class="n">id</span></span>
+<span class="code-line">    <span class="n">void</span> <span class="n">bind</span><span class="p">(</span><span class="nb">int</span> <span class="n">listIndex</span><span class="p">)</span> <span class="err">{</span></span>
+<span class="code-line">        <span class="n">listItemNumverView</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">listIndex</span><span class="p">));</span></span>
+<span class="code-line">    <span class="err">}</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="4-subclass-recyclerviewadapter">4. subclass RecyclerView.Adapter</h3>
 <p>The <code>Adapter</code> will</p>
@@ -276,68 +289,68 @@ And the RecyclerView uses a <strong>LayoutManager</strong> to manage the appeara
 <li>return the number of items in data source (<code>onBindViewHolder)</code></li>
 </ul>
 <p>⇒ create a class that extends <code>RecyclerView.Adapter&lt;MyViewHolder&gt;</code>, and implement methods.</p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GreenAdapter extends RecyclerView.Adapter&lt;GreenAdapter.NumberViewHolder&gt; {</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">GreenAdapter</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">RecyclerView</span><span class="p">.</span><span class="n">Adapter</span><span class="o">&lt;</span><span class="n">GreenAdapter</span><span class="p">.</span><span class="n">NumberViewHolder</span><span class="o">&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    int mNumberItems;</span>
-<span class="code-line">    public GreenAdapter(int nitems){</span>
-<span class="code-line">        this.mNumberItems = nitems;</span>
-<span class="code-line">    }</span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">mNumberItems</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">GreenAdapter</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">nitems</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">mNumberItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nitems</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // TODO (5) Override the onCreateViewHolder method</span>
-<span class="code-line">    // TODO (6) Create and return a new NumberViewHolder within this method</span>
-<span class="code-line">    @Override</span>
-<span class="code-line">    public NumberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {</span>
-<span class="code-line">        Context context = parent.getContext();</span>
-<span class="code-line">        LayoutInflater inflater = LayoutInflater.from(context);</span>
-<span class="code-line">        boolean shouldAttachToParentImmediatelly = false;</span>
-<span class="code-line">        View view = inflater.inflate(R.layout.number_list_item, parent, shouldAttachToParentImmediatelly);</span>
-<span class="code-line">        return new NumberViewHolder(view);</span>
-<span class="code-line">    }</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">onCreateViewHolder</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NumberViewHolder</span><span class="w"> </span><span class="k">within</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">NumberViewHolder</span><span class="w"> </span><span class="n">onCreateViewHolder</span><span class="p">(</span><span class="n">ViewGroup</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">viewType</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getContext</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">LayoutInflater</span><span class="w"> </span><span class="n">inflater</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LayoutInflater</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="n">context</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">boolean</span><span class="w"> </span><span class="n">shouldAttachToParentImmediatelly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">View</span><span class="w"> </span><span class="k">view</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inflater</span><span class="p">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">number_list_item</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="n">shouldAttachToParentImmediatelly</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NumberViewHolder</span><span class="p">(</span><span class="k">view</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // TODO (7) Override onBindViewHolder</span>
-<span class="code-line">    // TODO (8) Within onBindViewHolder, call holder.bind and pass in the position</span>
-<span class="code-line">    @Override</span>
-<span class="code-line">    public void onBindViewHolder(NumberViewHolder holder, int position) {</span>
-<span class="code-line">        holder.bind(position);</span>
-<span class="code-line">    }</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onBindViewHolder</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">Within</span><span class="w"> </span><span class="n">onBindViewHolder</span><span class="p">,</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="n">holder</span><span class="p">.</span><span class="n">bind</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">pass</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">position</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onBindViewHolder</span><span class="p">(</span><span class="n">NumberViewHolder</span><span class="w"> </span><span class="n">holder</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">position</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">holder</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="k">position</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // TODO (9) Override getItemCount and return the number of items to display</span>
-<span class="code-line">    @Override</span>
-<span class="code-line">    public int getItemCount() {</span>
-<span class="code-line">        return mNumberItems;</span>
-<span class="code-line">    }</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">getItemCount</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">display</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">getItemCount</span><span class="p">()</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">mNumberItems</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    /**</span>
-<span class="code-line">        * Cache of the children views for a list item.</span>
-<span class="code-line">        */</span>
-<span class="code-line">    class NumberViewHolder extends RecyclerView.ViewHolder {</span>
+<span class="code-line"><span class="w">    </span><span class="cm">/**</span></span>
+<span class="code-line"><span class="cm">        * Cache of the children views for a list item.</span></span>
+<span class="code-line"><span class="cm">        */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="n">NumberViewHolder</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">RecyclerView</span><span class="p">.</span><span class="n">ViewHolder</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">        // Will display the position in the list, ie 0 through getItemCount() - 1</span>
-<span class="code-line">        TextView listItemNumberView;</span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Will</span><span class="w"> </span><span class="n">display</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">position</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="n">ie</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="n">getItemCount</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">TextView</span><span class="w"> </span><span class="n">listItemNumberView</span><span class="p">;</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">        /**</span>
-<span class="code-line">            * Constructor for our ViewHolder. Within this constructor, we get a reference to our</span>
-<span class="code-line">            * TextViews and set an onClickListener to listen for clicks. Those will be handled in the</span>
-<span class="code-line">            * onClick method below.</span>
-<span class="code-line">            * @param itemView The View that you inflated in</span>
-<span class="code-line">            *                 {@link GreenAdapter#onCreateViewHolder(ViewGroup, int)}</span>
-<span class="code-line">            */</span>
-<span class="code-line">        public NumberViewHolder(View itemView) {</span>
-<span class="code-line">            super(itemView);</span>
+<span class="code-line"><span class="w">        </span><span class="cm">/**</span></span>
+<span class="code-line"><span class="cm">            * Constructor for our ViewHolder. Within this constructor, we get a reference to our</span></span>
+<span class="code-line"><span class="cm">            * TextViews and set an onClickListener to listen for clicks. Those will be handled in the</span></span>
+<span class="code-line"><span class="cm">            * onClick method below.</span></span>
+<span class="code-line"><span class="cm">            * @param itemView The View that you inflated in</span></span>
+<span class="code-line"><span class="cm">            *                 {@link GreenAdapter#onCreateViewHolder(ViewGroup, int)}</span></span>
+<span class="code-line"><span class="cm">            */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">NumberViewHolder</span><span class="p">(</span><span class="k">View</span><span class="w"> </span><span class="n">itemView</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">super</span><span class="p">(</span><span class="n">itemView</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">            listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);</span>
-<span class="code-line">        }</span>
+<span class="code-line"><span class="w">            </span><span class="n">listItemNumberView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">TextView</span><span class="p">)</span><span class="w"> </span><span class="n">itemView</span><span class="p">.</span><span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">tv_item_number</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">        /**</span>
-<span class="code-line">            * A method we wrote for convenience. This method will take an integer as input and</span>
-<span class="code-line">            * use that integer to display the appropriate text within a list item.</span>
-<span class="code-line">            * @param listIndex Position of the item in the list</span>
-<span class="code-line">            */</span>
-<span class="code-line">        void bind(int listIndex) {</span>
-<span class="code-line">            listItemNumberView.setText(String.valueOf(listIndex));</span>
-<span class="code-line">        }</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">        </span><span class="cm">/**</span></span>
+<span class="code-line"><span class="cm">            * A method we wrote for convenience. This method will take an integer as input and</span></span>
+<span class="code-line"><span class="cm">            * use that integer to display the appropriate text within a list item.</span></span>
+<span class="code-line"><span class="cm">            * @param listIndex Position of the item in the list</span></span>
+<span class="code-line"><span class="cm">            */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">void</span><span class="w"> </span><span class="n">bind</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">listIndex</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">listItemNumberView</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">listIndex</span><span class="p">));</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p><a href="https://www.youtube.com/watch?v=ns3WC8HFx90">https://www.youtube.com/watch?v=ns3WC8HFx90</a></p>
 <p><a href="https://github.com/udacity/ud851-Exercises/blob/student/Lesson03-Green-Recycler-View/T03.03-Solution-RecyclerViewAdapter/app/src/main/java/com/example/android/recyclerview/GreenAdapter.java">https://github.com/udacity/ud851-Exercises/blob/student/Lesson03-Green-Recycler-View/T03.03-Solution-RecyclerViewAdapter/app/src/main/java/com/example/android/recyclerview/GreenAdapter.java</a></p>
@@ -347,59 +360,59 @@ And the RecyclerView uses a <strong>LayoutManager</strong> to manage the appeara
 <p>3 implementation of LayoutManager: <code>LinearLayoutManager, GridLayoutManager, StaggeredGridLayoutManager</code>. </p>
 <p>In the MainActivity, create a LinearLayoutManager, and set the recycler view's manager to it. Then create an Adapter, and set recycler's adapter to it. </p>
 <p>In the onCreate method: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);</span>
-<span class="code-line">// TODO (5) Create a LinearLayoutManager variable called layoutManager</span>
-<span class="code-line">// TODO (6) Use setLayoutManager on mNumbersList with the LinearLayoutManager we created above</span>
-<span class="code-line">LinearLayoutManager layoutManager = new LinearLayoutManager(this);</span>
-<span class="code-line">mNumbersList.setLayoutManager(layoutManager);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">mNumbersList</span> <span class="o">=</span> <span class="p">(</span><span class="n">RecyclerView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">rv_numbers</span><span class="p">);</span></span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="k">Create</span> <span class="n">a</span> <span class="n">LinearLayoutManager</span> <span class="k">variable</span> <span class="k">called</span> <span class="n">layoutManager</span></span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="n">Use</span> <span class="n">setLayoutManager</span> <span class="k">on</span> <span class="n">mNumbersList</span> <span class="k">with</span> <span class="n">the</span> <span class="n">LinearLayoutManager</span> <span class="n">we</span> <span class="n">created</span> <span class="n">above</span></span>
+<span class="code-line"><span class="n">LinearLayoutManager</span> <span class="n">layoutManager</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinearLayoutManager</span><span class="p">(</span><span class="n">this</span><span class="p">);</span></span>
+<span class="code-line"><span class="n">mNumbersList</span><span class="p">.</span><span class="n">setLayoutManager</span><span class="p">(</span><span class="n">layoutManager</span><span class="p">);</span></span>
 <span class="code-line"></span>
-<span class="code-line">// TODO (7) Use setHasFixedSize(true) to designate that the contents of the RecyclerView won't change an item's size</span>
-<span class="code-line">mNumbersList.setHasFixedSize(true);</span>
-<span class="code-line">// TODO (8) Store a new GreenAdapter in mAdapter and pass it NUM_LIST_ITEMS</span>
-<span class="code-line">mAdapter = new GreenAdapter(NUM_LIST_ITEMS);</span>
-<span class="code-line">// TODO (9) Set the GreenAdapter you created on mNumbersList</span>
-<span class="code-line">mNumbersList.setAdapter(mAdapter);</span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="n">Use</span> <span class="n">setHasFixedSize</span><span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="k">to</span> <span class="n">designate</span> <span class="n">that</span> <span class="n">the</span> <span class="n">contents</span> <span class="k">of</span> <span class="n">the</span> <span class="n">RecyclerView</span> <span class="n">won</span><span class="s1">'t change an item'</span><span class="n">s</span> <span class="k">size</span></span>
+<span class="code-line"><span class="n">mNumbersList</span><span class="p">.</span><span class="n">setHasFixedSize</span><span class="p">(</span><span class="k">true</span><span class="p">);</span></span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="n">Store</span> <span class="n">a</span> <span class="k">new</span> <span class="n">GreenAdapter</span> <span class="k">in</span> <span class="n">mAdapter</span> <span class="k">and</span> <span class="n">pass</span> <span class="n">it</span> <span class="n">NUM_LIST_ITEMS</span></span>
+<span class="code-line"><span class="n">mAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GreenAdapter</span><span class="p">(</span><span class="n">NUM_LIST_ITEMS</span><span class="p">);</span></span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="k">Set</span> <span class="n">the</span> <span class="n">GreenAdapter</span> <span class="n">you</span> <span class="n">created</span> <span class="k">on</span> <span class="n">mNumbersList</span></span>
+<span class="code-line"><span class="n">mNumbersList</span><span class="p">.</span><span class="n">setAdapter</span><span class="p">(</span><span class="n">mAdapter</span><span class="p">);</span></span>
 </pre></div>
 <h3 id="6-handle-item-click-reciept">6. handle item click reciept</h3>
 <p>To handle the click on items: </p>
 <p>a. define a Listener interface</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1">// TODO (1) Add an interface called ListItemClickListener</span></span>
-<span class="code-line"><span class="c1">// TODO (2) Within that interface, define a void method called onListItemClick that takes an int as a parameter</span></span>
-<span class="code-line"><span class="kr">interface</span> <span class="nx">ListItemClickListener</span><span class="p">{</span></span>
-<span class="code-line">    <span class="k">void</span> <span class="nx">onListItemClick</span><span class="p">(</span><span class="kr">int</span> <span class="nx">index</span><span class="p">);</span></span>
-<span class="code-line"><span class="p">}</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (1) Add an interface called ListItemClickListener</span></span>
+<span class="code-line"><span class="err">// TODO (2) Within that interface, define a void method called onListItemClick that takes an int as a parameter</span></span>
+<span class="code-line"><span class="err">interface ListItemClickListener{</span></span>
+<span class="code-line"><span class="err">    void onListItemClick(int index);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>b. make this Listener a private meber of the <code>Adapter</code> class, passed as constructor parameter. 
 c. make the <code>Adapter</code>'s inner <code>ViewHolder</code> to implement <code>View.OnClickListener</code> interface, and override the onClick method:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (6) Override onClick, passing the clicked item's position (getAdapterPosition()) to mOnClickListener via its onListItemClick method</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onClick(View v) {</span>
-<span class="code-line">    int pos = this.getAdapterPosition();</span>
-<span class="code-line">    mOnClickListener.onListItemClick(pos);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (6) Override onClick, passing the clicked item's position (getAdapterPosition()) to mOnClickListener via its onListItemClick method</span></span>
+<span class="code-line"><span class="err">@Override</span></span>
+<span class="code-line"><span class="err">public void onClick(View v) {</span></span>
+<span class="code-line"><span class="err">    int pos = this.getAdapterPosition();</span></span>
+<span class="code-line"><span class="err">    mOnClickListener.onListItemClick(pos);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>d. in the inner <code>ViewHolder</code> class' constructor, set onclicklistner of the passed item to the viewholder itself: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public NumberViewHolder(View itemView) {</span>
-<span class="code-line">    super(itemView);</span>
-<span class="code-line">    listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);</span>
-<span class="code-line">    viewHolderIndex = (TextView) itemView.findViewById(R.id.tv_view_holder_instance);</span>
-<span class="code-line">    // TODO (7) Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)</span>
-<span class="code-line">    itemView.setOnClickListener(this);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public NumberViewHolder(View itemView) {</span></span>
+<span class="code-line"><span class="err">    super(itemView);</span></span>
+<span class="code-line"><span class="err">    listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);</span></span>
+<span class="code-line"><span class="err">    viewHolderIndex = (TextView) itemView.findViewById(R.id.tv_view_holder_instance);</span></span>
+<span class="code-line"><span class="err">    // TODO (7) Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)</span></span>
+<span class="code-line"><span class="err">    itemView.setOnClickListener(this);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>e. make <code>MainActivity</code> implments the Adapter.ItemClickListener, and provide the onclick method: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class MainActivity extends AppCompatActivity implements GreenAdapter.ListItemClickListener {</span>
-<span class="code-line">    //...</span>
-<span class="code-line">    // TODO (10) Override ListItemClickListener's onListItemClick method</span>
-<span class="code-line">    // TODO (11) In the beginning of the method, cancel the Toast if it isn't null</span>
-<span class="code-line">    // TODO (12) Show a Toast when an item is clicked, displaying that item number that was clicked</span>
-<span class="code-line">    @Override</span>
-<span class="code-line">    public void onListItemClick(int index) {</span>
-<span class="code-line">        if(mToast!=null) mToast.cancel();</span>
-<span class="code-line">        mToast.setText(String.format("item %d is clicked!", index));</span>
-<span class="code-line">        mToast.show();</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class MainActivity extends AppCompatActivity implements GreenAdapter.ListItemClickListener {</span></span>
+<span class="code-line"><span class="err">    //...</span></span>
+<span class="code-line"><span class="err">    // TODO (10) Override ListItemClickListener's onListItemClick method</span></span>
+<span class="code-line"><span class="err">    // TODO (11) In the beginning of the method, cancel the Toast if it isn't null</span></span>
+<span class="code-line"><span class="err">    // TODO (12) Show a Toast when an item is clicked, displaying that item number that was clicked</span></span>
+<span class="code-line"><span class="err">    @Override</span></span>
+<span class="code-line"><span class="err">    public void onListItemClick(int index) {</span></span>
+<span class="code-line"><span class="err">        if(mToast!=null) mToast.cancel();</span></span>
+<span class="code-line"><span class="err">        mToast.setText(String.format("item %d is clicked!", index));</span></span>
+<span class="code-line"><span class="err">        mToast.show();</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>f. when creating Adapter in MainActivity, pass this as second constructor parameter</p>
             </div>

@@ -150,13 +150,14 @@ instead of updating preferences in onStart/onResume of main activity, use ``onPr
 **step 1**: determine the activity who's UI needs to be changed when pref changes 
 — in our case, is the main activity
 
-**step 2**: let this activity implement this Listener (``onSharedPreferenceChange``)
+**step 2**: let this activity implement `OnSharedPreferenceChangeListener` and override the `onSharedPreferenceChanged` method
 
-  
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.pref_show_bass_key))){
-            mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, true));
+        Preference pref = findPreference(key);
+        if (!(pref instanceof CheckBoxPreference)) {
+            String value = sharedPreferences.getString(key, "");
+            setPreferenceSummary(pref, value);
         }
     }
 

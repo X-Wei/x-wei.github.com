@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] simplex algo: top 10 algo of the 20th century (ever?). what is linear programming: a general problem-solving model that works for: shortest-path, maxflow, MST, matching, assignment, ... 1. Brewer-&#39;s Problem toy example: choose products to maximize profit. ... feasible region: a convex polygon. ⇒ optimum solution appears at an extreme point. standard …" />
+        <meta name="description" content="1. Brewer-&#39;s Problem 2. Simplex Algorithm 3. Simplex Implementations choosing pivot variable (find entering column) choosing pivot constraint (find entering row) do the pivot (column q, row p) degeneracy 4. Linear Programming Reductions reduction to std form (equalities) modeling of LP maxflow by LP max cardinality bipartite matching by ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 6-2 Linear Programming"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week6_2_LP.html"/>
-        <meta property="og:description" content="[TOC] simplex algo: top 10 algo of the 20th century (ever?). what is linear programming: a general problem-solving model that works for: shortest-path, maxflow, MST, matching, assignment, ... 1. Brewer-&#39;s Problem toy example: choose products to maximize profit. ... feasible region: a convex polygon. ⇒ optimum solution appears at an extreme point. standard …"/>
+        <meta property="og:description" content="1. Brewer-&#39;s Problem 2. Simplex Algorithm 3. Simplex Implementations choosing pivot variable (find entering column) choosing pivot constraint (find entering row) do the pivot (column q, row p) degeneracy 4. Linear Programming Reductions reduction to std form (equalities) modeling of LP maxflow by LP max cardinality bipartite matching by ..."/>
         <meta property="article:published_time" content="2016-02-21" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,17 +210,37 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 6-2 Linear Programming">[Algorithms II] Week 6-2 Linear Programming</a><ul><li><a class="toc-href" href="#1-brewer-s-problem" problem'="" s="" title="1. Brewer-">1. Brewer-'s Problem</a></li><li><a class="toc-href" href="#2-simplex-algorithm" title="2. Simplex Algorithm">2. Simplex Algorithm</a></li><li><a class="toc-href" href="#3-simplex-implementations" title="3. Simplex Implementations">3. Simplex Implementations</a><ul><li><a class="toc-href" href="#choosing-pivot-variable-find-entering-column" title="choosing pivot variable (find entering column)">choosing pivot variable (find entering column)</a></li><li><a class="toc-href" href="#choosing-pivot-constraint-find-entering-row" title="choosing pivot constraint (find entering row)">choosing pivot constraint (find entering row)</a></li><li><a class="toc-href" href="#do-the-pivot-column-q-row-p" title="do the pivot (column q, row p)">do the pivot (column q, row p)</a></li><li><a class="toc-href" href="#degeneracy" title="degeneracy">degeneracy</a></li></ul></li><li><a class="toc-href" href="#4-linear-programming-reductions_1" title="4. Linear Programming Reductions">4. Linear Programming Reductions</a><ul><li><a class="toc-href" href="#reduction-to-std-form-equalities" title="reduction to std form (equalities)">reduction to std form (equalities)</a></li><li><a class="toc-href" href="#modeling-of-lp" title="modeling of LP">modeling of LP</a></li><li><a class="toc-href" href="#maxflow-by-lp" title="maxflow by LP">maxflow by LP</a></li><li><a class="toc-href" href="#max-cardinality-bipartite-matching-by-lp" title="max cardinality bipartite matching by LP">max cardinality bipartite matching by LP</a></li><li><a class="toc-href" href="#and-many-others" title="and many others...">and many others...</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]   </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-brewer-s-problem">1. Brewer-'s Problem</a></li>
+<li><a href="#2-simplex-algorithm">2. Simplex Algorithm</a></li>
+<li><a href="#3-simplex-implementations">3. Simplex Implementations</a><ul>
+<li><a href="#choosing-pivot-variable-find-entering-column">choosing pivot variable (find entering column)</a></li>
+<li><a href="#choosing-pivot-constraint-find-entering-row">choosing pivot constraint (find entering row)</a></li>
+<li><a href="#do-the-pivot-column-q-row-p">do the pivot (column q, row p)</a></li>
+<li><a href="#degeneracy">degeneracy</a></li>
+</ul>
+</li>
+<li><a href="#4-linear-programming-reductions">4. Linear Programming Reductions</a><ul>
+<li><a href="#reduction-to-std-form-equalities">reduction to std form (equalities)</a></li>
+<li><a href="#modeling-of-lp">modeling of LP</a></li>
+<li><a href="#maxflow-by-lp">maxflow by LP</a></li>
+<li><a href="#max-cardinality-bipartite-matching-by-lp">max cardinality bipartite matching by LP</a></li>
+<li><a href="#and-many-others">and many others...</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>simplex algo: top 10 algo of the 20th century (ever?).   </p>
-<p>what is linear programming:  <br>
-<em>a general problem-solving model</em> that works for:  <br>
-shortest-path, maxflow, MST, matching, assignment, ...   </br></br></p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image.png"> </img></p>
+<p>what is linear programming:  <br/>
+<em>a general problem-solving model</em> that works for:  <br/>
+shortest-path, maxflow, MST, matching, assignment, ...   </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image.png"/> </p>
 <h1 id="1-brewer-s-problem">1. Brewer-'s Problem</h1>
-<p>toy example: choose products to maximize profit.  <br>
-... <br>
-<em>feasible region</em>: a convex polygon.  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image002.png"> </img></br></br></br></p>
+<p>toy example: choose products to maximize profit.  <br/>
+... <br/>
+<em>feasible region</em>: a convex polygon.  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image002.png"/> </p>
 <p>⇒ optimum solution appears at an extreme point.    </p>
 <p>standard form of LP   </p>
 <ul>
@@ -229,27 +249,27 @@ shortest-path, maxflow, MST, matching, assignment, ...   </br></br></p>
 <li>input: a_ij, c_j, b_i   </li>
 <li>output: x_j   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image003.png"> <br>
-to convert <em>inequality</em> to <em>equality (as in the standard form above)</em>: add slack var!  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image004.png"> </img></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image003.png"/> <br/>
+to convert <em>inequality</em> to <em>equality (as in the standard form above)</em>: add slack var!  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image004.png"/> </p>
 <blockquote>
-<p>def. convex set <br>
-for any a and b in set ⇒ 1/2(a+b) is also in set.    </br></p>
+<p>def. convex set <br/>
+for any a and b in set ⇒ 1/2(a+b) is also in set.    </p>
 </blockquote>
 <p>extreme point:    </p>
 <blockquote>
-<p>def. <strong>extreme point</strong> <br>
-is a point in set that cannot be written as 1/2(a+b) with a b distinct.    </br></p>
+<p>def. <strong>extreme point</strong> <br/>
+is a point in set that cannot be written as 1/2(a+b) with a b distinct.    </p>
 </blockquote>
-<p>extreme point property:  <br>
-if there exists an potimal solution, then there exists one that is an extreme point.    </br></p>
+<p>extreme point property:  <br/>
+if there exists an potimal solution, then there exists one that is an extreme point.    </p>
 <ul>
 <li>nb of extreme point is finite   </li>
 <li>but this nb can be exponential   </li>
 </ul>
-<p>greedy property:  <br>
-<em>extreme point is optimal iff no better adj extreme points.</em> <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image005.png"> </img></br></br></p>
+<p>greedy property:  <br/>
+<em>extreme point is optimal iff no better adj extreme points.</em> <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image005.png"/> </p>
 <h1 id="2-simplex-algorithm">2. Simplex Algorithm</h1>
 <p>algo. simplex   </p>
 <blockquote>
@@ -275,8 +295,8 @@ if there exists an potimal solution, then there exists one that is an extreme po
 <li>initial basic-feasible-solution: start slack vars as basis.    </li>
 <li>choose a non-basic var as <strong>pivot</strong>, add it into basis, take some basis var out   </li>
 </ul>
-<p>ex. pick B as pivot var using constraint 2 (2nd equation): <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image006.png"> </img></br></p>
+<p>ex. pick B as pivot var using constraint 2 (2nd equation): <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image006.png"/> </p>
 <ul>
 <li>why picking var B? → its obj coeff is positive   </li>
 <li>why pivot on 2nd constraint (5A+15B+Sc=480)? →    <ul>
@@ -287,93 +307,93 @@ if there exists an potimal solution, then there exists one that is an extreme po
 </ul>
 <p>stop when no obj-coeff is positive   </p>
 <h1 id="3-simplex-implementations">3. Simplex Implementations</h1>
-<p>encode standard LP formulation into java 2d array:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image007.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Simplex{   </span>
-<span class="code-line">    private double[][] a;   </span>
-<span class="code-line">    private int m,n;   </span>
-<span class="code-line">    public Simplex(double[][] A, double[] b, double[] c){   </span>
-<span class="code-line">        m = b.length;   </span>
-<span class="code-line">        n = c.length;   </span>
-<span class="code-line">        a = new double[m+1][n+m+1];   </span>
-<span class="code-line">        for(int i=0; i&lt;m; i++)   </span>
-<span class="code-line">            for(int j=0; j&lt;n; j++)   </span>
-<span class="code-line">                a[i][j] = A[i][j];   </span>
-<span class="code-line">    for(int j=n; j&lt;m+n; j++) a[j-n][j] = 1;      </span>
-<span class="code-line">    for(int j=0; j&lt;m; j++) a[j][n+m] = b[j];    </span>
-<span class="code-line">    for(int j=0; j&lt;n; j++) a[m][j] = c[j];    </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<p>encode standard LP formulation into java 2d array:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image007.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Simplex</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">double</span><span class="err">[][]</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Simplex</span><span class="p">(</span><span class="k">double</span><span class="err">[][]</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="k">double</span><span class="err">[]</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="k">double</span><span class="err">[]</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="k">double</span><span class="o">[</span><span class="n">m+1</span><span class="o">][</span><span class="n">n+m+1</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j-n</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">      </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">][</span><span class="n">n+m</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">m</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>simplex algo: just transform initial 2d array into final solution.    </p>
 <h3 id="choosing-pivot-variable-find-entering-column">choosing pivot variable (find entering column)</h3>
 <p><strong>Bland's rule.</strong> find the first column whose obj-coeff is positive.    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private int bland(){   </span>
-<span class="code-line">    for(int q=0; q&lt;m+n; q++)   </span>
-<span class="code-line">        if(a[m][q]&gt;0) return q;   </span>
-<span class="code-line">    return -1;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">bland</span><span class="p">()</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">&lt;</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">m</span><span class="o">][</span><span class="n">q</span><span class="o">]&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="choosing-pivot-constraint-find-entering-row">choosing pivot constraint (find entering row)</h3>
 <p>minimum ratio rule (if a tie, choose first row).    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private int minRatioRule(int q){   </span>
-<span class="code-line">    int p = -1;   </span>
-<span class="code-line">    for(int i=0; i&lt;m; i++){   </span>
-<span class="code-line">        if (a[i][q]&lt;=0) continue;   </span>
-<span class="code-line">        else if (p==-1) p=i;   </span>
-<span class="code-line">        else if (a[i][m+n]/a[i][q] &lt; a[p][m+n]/a[p][q])    </span>
-<span class="code-line">            p=i;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    return p;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">minRatioRule</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">q</span><span class="o">]&lt;=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">m+n</span><span class="o">]/</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">m+n</span><span class="o">]/</span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">p</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="do-the-pivot-column-q-row-p">do the pivot (column q, row p)</h3>
 <p>like Guassian elimination:    </p>
-<p>make var q disappear on each row (except for row p); <br>
-on row p: make var q's coeff become 1.   </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void pivot(int p, int q){   </span>
-<span class="code-line">    for(int i=0; i&lt;m; i++)   </span>
-<span class="code-line">        for(int j=0; j&lt;m+n; j++)   </span>
-<span class="code-line">            if (i!=p &amp;&amp; j!=q)   </span>
-<span class="code-line">                a[i][j] -= a[p][j]*a[i][q]/a[p][q];   </span>
-<span class="code-line">    for(int i=0; i&lt;m; i++)    </span>
-<span class="code-line">        if(i!=p) a[i][q] = 0;   </span>
-<span class="code-line">        for(int j=0; j&lt;m+n; j++)   </span>
-<span class="code-line">        if(j!=q) a[p][j] /= a[p][q];   </span>
-<span class="code-line">    a[p][q] = 1;   </span>
-<span class="code-line">}</span>
+<p>make var q disappear on each row (except for row p); <br/>
+on row p: make var q's coeff become 1.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">pivot</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">!=</span><span class="n">p</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="o">!=</span><span class="n">q</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">j</span><span class="o">]*</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">q</span><span class="o">]/</span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">!=</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">!=</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">a</span><span class="o">[</span><span class="n">p</span><span class="o">][</span><span class="n">q</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>so the simplex algo is:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void solve(){   </span>
-<span class="code-line">    while(true){   </span>
-<span class="code-line">        int q = bland();    </span>
-<span class="code-line">        if(q==-1) break; // optimal if -1   </span>
-<span class="code-line">        int p = minRatioRule(q);   </span>
-<span class="code-line">        if(p==-1) break; // unbounded if -1   </span>
-<span class="code-line">        pivot(p,q);   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void solve(){   </span></span>
+<span class="code-line"><span class="err">    while(true){   </span></span>
+<span class="code-line"><span class="err">        int q = bland();    </span></span>
+<span class="code-line"><span class="err">        if(q==-1) break; // optimal if -1   </span></span>
+<span class="code-line"><span class="err">        int p = minRatioRule(q);   </span></span>
+<span class="code-line"><span class="err">        if(p==-1) break; // unbounded if -1   </span></span>
+<span class="code-line"><span class="err">        pivot(p,q);   </span></span>
+<span class="code-line"><span class="err">    }   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>final solution is just in the array: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image008.png"> </img></br></p>
-<p><strong>remarkable property</strong> <br>
-<em>in typical applications</em>, simplex terminates after at most 2(m+n) pivots. — whereas nb of extreme points is exp in n !! <br>
-ie. LINEAR time in practice!!   </br></br></p>
-<p>other pivot rules:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image009.png"> </img></br></p>
+<p>final solution is just in the array: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image008.png"/> </p>
+<p><strong>remarkable property</strong> <br/>
+<em>in typical applications</em>, simplex terminates after at most 2(m+n) pivots. — whereas nb of extreme points is exp in n !! <br/>
+ie. LINEAR time in practice!!   </p>
+<p>other pivot rules:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image009.png"/> </p>
 <h3 id="degeneracy">degeneracy</h3>
-<p>when choosing new basis, still stay in the same extreme point...  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image010.png"> <br>
-→ might cause cycling <br>
-→ bland's rule guarantees finite number of pivots   </br></br></img></br></p>
-<p>further improvement:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image012.png"> </img></br></p>
+<p>when choosing new basis, still stay in the same extreme point...  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image010.png"/> <br/>
+→ might cause cycling <br/>
+→ bland's rule guarantees finite number of pivots   </p>
+<p>further improvement:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image012.png"/> </p>
 <p>Best practice. <em>Don't implement it yourself......</em> </p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image013.png"> <br>
-(AMPL是个好东西...)   </br></img></p>
-<p>算法的力量:  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image014.png"> </img></br></p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image015.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image013.png"/> <br/>
+(AMPL是个好东西...)   </p>
+<p>算法的力量:  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image014.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image015.png"/> </p>
 <h1 id="4-linear-programming-reductions_1">4. Linear Programming Reductions</h1>
 <h3 id="reduction-to-std-form-equalities">reduction to std form (equalities)</h3>
 <ul>
@@ -394,26 +414,26 @@ ie. LINEAR time in practice!!   </br></br></p>
 <li>constraints: capacity, flow conservation   </li>
 <li>obj: net flow to t   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image016.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image016.png"/> </p>
 <p>can use LP to solve mincost maxflow easily...   </p>
 <h3 id="max-cardinality-bipartite-matching-by-lp">max cardinality bipartite matching by LP</h3>
-<p>input: bipartite graph <br>
-goal: max cardinatlity matching (set of vertex-disjoint edges) <br>
-<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image017.png"> <br>
-can be reduced to maxflow (见algolab...)   </br></img></br></br></p>
+<p>input: bipartite graph <br/>
+goal: max cardinatlity matching (set of vertex-disjoint edges) <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image017.png"/> <br/>
+can be reduced to maxflow (见algolab...)   </p>
 <ul>
 <li>var: x_ij = indicator of person i assigned to job j (0&lt;=x_ij&lt;=1)   </li>
 <li>constraints: vertex-disjoint   </li>
 <li>obj: sum of all x_ij   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image018.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image018.png"/> </p>
 <p>non-trival: cause this is an INTEGER LP...    </p>
-<p>Th (Von Neumann) (and Poincare?..)  <br>
-if all RHS=1 ⇒ <em>all extreme points of the polyhedron have integer coord</em>.   </br></p>
+<p>Th (Von Neumann) (and Poincare?..)  <br/>
+if all RHS=1 ⇒ <em>all extreme points of the polyhedron have integer coord</em>.   </p>
 <h3 id="and-many-others">and many others...</h3>
-<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image019.png"> </img></p>
-<p><strong>the profound question: Is there a universal problem-solving model ?</strong> <br>
-→ P/NP...   </br></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week6_2_LP/pasted_image019.png"/> </p>
+<p><strong>the profound question: Is there a universal problem-solving model ?</strong> <br/>
+→ P/NP...   </p>
 <blockquote>
 <p><strong>"For the time being, the closest thing that we have to universal problem-solving model is LP "</strong> </p>
 </blockquote>

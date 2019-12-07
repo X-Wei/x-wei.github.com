@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] This week: logistic regression. Binary Classification &amp; notation ex. cat classifier from image image pixels: 64x64x3 ⇒ unroll(flatten) to a feature vector x dim=64x64x3=12288:=n (input dimension) notation superscript (i) for ith example, e.g. x^(i) superscript [l] for lth layer, e.g. w^[l] m: number …" />
+        <meta name="description" content="Binary Classification &amp; notation Logistic Regression as a Nueral Network Logistic Regression Logistic Regression Cost Function Gradient Descent Computation Graph Logistic Regression Gradient Descent (&amp;computation graph) Gradient Descent on m Examples Python and Vectorization Vectorization Vectorizing Logistic Regression Broadcasting in Python A note on python numpy vectors Explanation of logistic regression ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Neural Networks and Deep Learning] week2. Neural Networks Basics"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c1wk2.html"/>
-        <meta property="og:description" content="[TOC] This week: logistic regression. Binary Classification &amp; notation ex. cat classifier from image image pixels: 64x64x3 ⇒ unroll(flatten) to a feature vector x dim=64x64x3=12288:=n (input dimension) notation superscript (i) for ith example, e.g. x^(i) superscript [l] for lth layer, e.g. w^[l] m: number …"/>
+        <meta property="og:description" content="Binary Classification &amp; notation Logistic Regression as a Nueral Network Logistic Regression Logistic Regression Cost Function Gradient Descent Computation Graph Logistic Regression Gradient Descent (&amp;computation graph) Gradient Descent on m Examples Python and Vectorization Vectorization Vectorizing Logistic Regression Broadcasting in Python A note on python numpy vectors Explanation of logistic regression ..."/>
         <meta property="article:published_time" content="2017-09-13" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,33 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Neural Networks and Deep Learning] week2. Neural Networks Basics">[Neural Networks and Deep Learning] week2. Neural Networks Basics</a><ul><li><a class="toc-href" href="#binary-classification-notation" title="Binary Classification &amp; notation">Binary Classification &amp; notation</a></li><li><a class="toc-href" href="#logistic-regression-as-a-nueral-network_1" title="Logistic Regression as a Nueral Network">Logistic Regression as a Nueral Network</a><ul><li><a class="toc-href" href="#logistic-regression" title="Logistic Regression">Logistic Regression</a></li><li><a class="toc-href" href="#logistic-regression-cost-function" title="Logistic Regression Cost Function">Logistic Regression Cost Function</a></li><li><a class="toc-href" href="#gradient-descent" title="Gradient Descent">Gradient Descent</a></li><li><a class="toc-href" href="#computation-graph" title="Computation Graph">Computation Graph</a></li><li><a class="toc-href" href="#logistic-regression-gradient-descent-computation-graph" title="Logistic Regression Gradient Descent (&amp;computation graph)">Logistic Regression Gradient Descent (&amp;computation; graph)</a></li><li><a class="toc-href" href="#gradient-descent-on-m-examples" title="Gradient Descent on m Examples">Gradient Descent on m Examples</a></li></ul></li><li><a class="toc-href" href="#python-and-vectorization_1" title="Python and Vectorization">Python and Vectorization</a><ul><li><a class="toc-href" href="#vectorization" title="Vectorization">Vectorization</a></li><li><a class="toc-href" href="#vectorizing-logistic-regression" title="Vectorizing Logistic Regression">Vectorizing Logistic Regression</a></li><li><a class="toc-href" href="#broadcasting-in-python" title="Broadcasting in Python">Broadcasting in Python</a></li><li><a class="toc-href" href="#a-note-on-python-numpy-vectors" title="A note on python numpy vectors">A note on python numpy vectors</a></li><li><a class="toc-href" href="#explanation-of-logistic-regression-cost-function-optional" title="Explanation of logistic regression cost function (optional)">Explanation of logistic regression cost function (optional)</a></li></ul></li><li><a class="toc-href" href="#assignments_1" title="Assignments">Assignments</a><ul><li><a class="toc-href" href="#python-numpy-basics" title="python / numpy basics">python / numpy basics</a></li><li><a class="toc-href" href="#logistic-regression-with-a-neural-network-mindset" title="Logistic Regression with a Neural Network mindset">Logistic Regression with a Neural Network mindset</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#binary-classification-notation">Binary Classification &amp; notation</a></li>
+<li><a href="#logistic-regression-as-a-nueral-network">Logistic Regression as a Nueral Network</a><ul>
+<li><a href="#logistic-regression">Logistic Regression</a></li>
+<li><a href="#logistic-regression-cost-function">Logistic Regression Cost Function</a></li>
+<li><a href="#gradient-descent">Gradient Descent</a></li>
+<li><a href="#computation-graph">Computation Graph</a></li>
+<li><a href="#logistic-regression-gradient-descent-computation-graph">Logistic Regression Gradient Descent (&amp;computation graph)</a></li>
+<li><a href="#gradient-descent-on-m-examples">Gradient Descent on m Examples</a></li>
+</ul>
+</li>
+<li><a href="#python-and-vectorization">Python and Vectorization</a><ul>
+<li><a href="#vectorization">Vectorization</a></li>
+<li><a href="#vectorizing-logistic-regression">Vectorizing Logistic Regression</a></li>
+<li><a href="#broadcasting-in-python">Broadcasting in Python</a></li>
+<li><a href="#a-note-on-python-numpy-vectors">A note on python numpy vectors</a></li>
+<li><a href="#explanation-of-logistic-regression-cost-function-optional">Explanation of logistic regression cost function (optional)</a></li>
+</ul>
+</li>
+<li><a href="#assignments">Assignments</a><ul>
+<li><a href="#python-numpy-basics">python / numpy basics</a></li>
+<li><a href="#logistic-regression-with-a-neural-network-mindset">Logistic Regression with a Neural Network mindset</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>This week: <strong>logistic regression</strong>.</p>
 <h2 id="binary-classification-notation">Binary Classification &amp; notation</h2>
 <p>ex. cat classifier from image
@@ -230,25 +256,25 @@ image pixels: 64x64x3
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image.png"/></p>
 <h1 id="logistic-regression-as-a-nueral-network_1">Logistic Regression as a Nueral Network</h1>
 <h2 id="logistic-regression">Logistic Regression</h2>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image009.png"><br>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image009.png"/><br/>
 dim(x) = n_x
 parameters: w (dim=n_x) , b (dim=1)
 (alternative notation: adding b to w → add x_0 = 1 to feature x. → will NOT use this notation here
-keeping w and b separate make implementation easier )</br></img></p>
+keeping w and b separate make implementation easier )</p>
 <p>linear regression: <code>y_hat = w^T*x + b</code>
 logistic regssion: <code>y_hat = sigmoid(w^T*x + b)</code>
 sigmoid function: S-shaped function 
 <code>sigmoid(z) = 1 / ( 1 + e^-z)</code>
 z large → sigmoid(z) ~= 1
-z small → sigmoid(z) ~= 0<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image001.png"/></br></p>
+z small → sigmoid(z) ~= 0<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image001.png"/></p>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image025.png"/></p>
 <h2 id="logistic-regression-cost-function">Logistic Regression Cost Function</h2>
-<p>To train model for best parameters (w, b), need to define loss function.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image010.png"> <br>
+<p>To train model for best parameters (w, b), need to define loss function.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image010.png"/> <br/>
 y_hat: between (0,1)
 training set: {(x^(i), y^(i)))), i = 1..m}
-want: y_hat(i) ~= y(i)</br></img></br></p>
+want: y_hat(i) ~= y(i)</p>
 <p><strong>Loss function</strong> <code>L(y_hat, y)</code>: on a <em>single</em> training example (x, y)</p>
 <ul>
 <li>square error: <code>L(y_hat, y) = (y_hat - y)^2/2</code> <ul>
@@ -263,11 +289,11 @@ want: y_hat(i) ~= y(i)</br></img></br></p>
 <li>when y = 1, loss = -log(y_hat)  → want y_hat large → y_hat ~=1</li>
 <li>when y = 0, loss = -log(1-y_hat) → want y_hat small → y_hat ~=0</li>
 </ul>
-<p><strong>Cost function</strong> <code>J(w,b)</code>: average on all training sets, only depends on parameters w, b<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image003.png"> </img></br></p>
+<p><strong>Cost function</strong> <code>J(w,b)</code>: average on all training sets, only depends on parameters w, b<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image003.png"/> </p>
 <h2 id="gradient-descent">Gradient Descent</h2>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image005.png"><br>
-⇒ minimize <code>J(w,b)</code> wrt. w and b</br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image005.png"/><br/>
+⇒ minimize <code>J(w,b)</code> wrt. w and b</p>
 <ul>
 <li><code>J(w,b)</code> is convex ⇒ gradient descent</li>
 <li>Initialization: for logistic regression, any init works because of convexity of J, usually init as 0</li>
@@ -287,10 +313,10 @@ want: y_hat(i) ~= y(i)</br></img></br></p>
 </ul>
 </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image006.png"> </img></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image007.png"> </img></p>
-<p>In the case of logistic regression, &gt;1 params (<code>w</code> and <code>b</code>) to update:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image008.png"> </img></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image006.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image007.png"/> </p>
+<p>In the case of logistic regression, &gt;1 params (<code>w</code> and <code>b</code>) to update:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image008.png"/> </p>
 <p>Intuitions about derivatives: <code>f'(a)</code> = slope of function <code>f</code> at <code>a</code> .</p>
 <h2 id="computation-graph">Computation Graph</h2>
 <p>example: function <code>J(a,b,c) = 3(a+b*c)</code></p>
@@ -329,10 +355,10 @@ as computation graph:</p>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image015.png"/></p>
 <h2 id="gradient-descent-on-m-examples">Gradient Descent on m Examples</h2>
-<p><em>cost function</em>, i.e. on all training sets.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image016.png"><br>
+<p><em>cost function</em>, i.e. on all training sets.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image016.png"/><br/>
 J(w,b) = avg{L(x,y), for all m examples}
-→ by linearity  of derivative: dJ/dw = avg(dL/dw), just average dw^(i) over all indices i.</br></img></br></p>
+→ by linearity  of derivative: dJ/dw = avg(dL/dw), just average dw^(i) over all indices i.</p>
 <p>In implementation: use <strong>vectorization</strong> as much as possible, get rid of for loops.</p>
 <h1 id="python-and-vectorization_1">Python and Vectorization</h1>
 <h2 id="vectorization">Vectorization</h2>
@@ -353,13 +379,13 @@ u = exp(v) element-wise operation: exponential/log/abs/...
 <li>training input <code>X = [x(1), ... , x(m)]</code>, X.dim = (n_x, m)</li>
 <li>weight <code>w^T = [w_1, ... , w_nx]</code>, w.dim = (n_x, 1)</li>
 </ul>
-<p><strong>Fwd propagation</strong><br>
+<p><strong>Fwd propagation</strong><br/>
 z(i) = w^T * x(i) + b, i = 1..m,
 → Z := [z(1)...z(m)] = w^T * X + [b...b], Z.dim = (1, m), stack horizentally
 → <code>Z = np.dot(w.T, X) + b</code> (scalar b <em>auto broadcasted</em> to a row vector)
 a(i) = sigmoid( z(i) ) = y_hat(i)
-→ A := [a(1)...a(m)] = sigmoid(Z), sigmoid is vectorized</br></p>
-<p><strong>Bkwd propagation: gradient computation</strong><br>
+→ A := [a(1)...a(m)] = sigmoid(Z), sigmoid is vectorized</p>
+<p><strong>Bkwd propagation: gradient computation</strong><br/>
 <code>dz(i)  = a(i) - y(i)</code>
 → stack horizentally:
 Y = [y(1)...y(m)]
@@ -369,17 +395,17 @@ graidents:
 <code>db = sum( dz(i) ) / m</code>
 → 
 db = 1/m * np.sum(dZ)
-dw = 1/m * X*dz^T<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image017.png"/></br></br></p>
-<p>efficient back-prop implementation:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image018.png"/></br></p>
+dw = 1/m * X*dz^T<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image017.png"/></p>
+<p>efficient back-prop implementation:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image018.png"/></p>
 <h2 id="broadcasting-in-python">Broadcasting in Python</h2>
-<p>example: calculate percentage of calories from carb/protein/fat for each food — without fooloop<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image019.png"><br>
+<p>example: calculate percentage of calories from carb/protein/fat for each food — without fooloop<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image019.png"/><br/>
 two lines of numpy code:
     A = np.array([[...]..]) # A.dim = (3,4)
     cal = A.sum(axis=0) # total calories
-    percentage = 100 * A / cal.reshape(1,4) # percentage.dim = (1,4)</br></img></br></p>
+    percentage = 100 * A / cal.reshape(1,4) # percentage.dim = (1,4)</p>
 <ul>
 <li><code>axis=0</code>→ sum <em>vertically, </em><code>axis=1</code><em> → sum horizentally</em></li>
 </ul>
@@ -388,11 +414,11 @@ two lines of numpy code:
 <li><code>reshape(a,b)</code> → redundant here, just to make sure shape correct, <em>reshape call is cheap</em>. </li>
 <li><code>A / cal</code> → (3<em>4 matrix) / (1</em>4 matrix) → <strong>broadcasting</strong></li>
 </ul>
-<p>more broadcasting examples:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image021.png"><br>
+<p>more broadcasting examples:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image021.png"/><br/>
 General principle: computing (m,n) matrix with (1,n) matrix 
-⇒ the (1,n) matrix is <em>auto expanded to a (m,n) matrix</em> by copying the row m times, to match the shape, calculate element-wise<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image022.png"/></br></br></img></br></p>
+⇒ the (1,n) matrix is <em>auto expanded to a (m,n) matrix</em> by copying the row m times, to match the shape, calculate element-wise<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image022.png"/></p>
 <h2 id="a-note-on-python-numpy-vectors">A note on python numpy vectors</h2>
 <p>flexibility of broadcasting: both advantage and <em>weakness</em>.
 example: adding column vec and a row vec → get a matrix instead of throwing exceptions.
@@ -405,7 +431,7 @@ example: adding column vec and a row vec → get a matrix instead of throwing ex
     array([[2, 3, 4],
            [3, 4, 5]])</p>
 <p><strong>Tips and trick to eliminate bugs</strong></p>
-<p><strong>avoid</strong> <strong>rank-1 array</strong>: <br>
+<p><strong>avoid</strong> <strong>rank-1 array</strong>: <br/>
 <code>a.shape = (x,)</code>
 this is <em>neither row nor column vector</em>, have non-intuitive effects.
     &gt;&gt;&gt; a = np.array([1,2,3])
@@ -416,7 +442,7 @@ this is <em>neither row nor column vector</em>, have non-intuitive effects.
     &gt;&gt;&gt; np.dot(a, a.T)  # Mathematically would expact a matrix, if a is column vec
     14
     &gt;&gt;&gt; a.T.shape
-    (3,)</br></p>
+    (3,)</p>
 <p>⇒ <em>do <strong><em>not</em></strong> use rank-1 arraies, use column/row vectors</em>
     &gt;&gt;&gt; a2 = a.reshape((-1, 1))  # A column vector -- (5,1) matrix.
     &gt;&gt;&gt; a2
@@ -425,8 +451,8 @@ this is <em>neither row nor column vector</em>, have non-intuitive effects.
            [3]])
     &gt;&gt;&gt; a2.T
     array([[1, 2, 3]])  # Note: two brackets!</p>
-<p><strong>add assertions</strong><br>
-<code>assert(a.shape == (3,1))</code></br></p>
+<p><strong>add assertions</strong><br/>
+<code>assert(a.shape == (3,1))</code></p>
 <h2 id="explanation-of-logistic-regression-cost-function-optional">Explanation of logistic regression cost function (optional)</h2>
 <p>Justisfy why we use this form of cost function:
 y_hat ~= chance of y==1 given x
@@ -436,15 +462,15 @@ P(y|x) as func(y, y_hat) at different values of y:</p>
 <li>if y = 1: P(y|x) = P(y=1|x) = y_hat</li>
 <li>if y = 0: P(y|x) = P(y=0|x) = 1 - y_hat</li>
 </ul>
-<p>⇒ wrap the two cases <em>in one single formula</em>: using exponent of y and (1-y)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image023.png"><br>
-⇒ take log of P(y|x) ⇒ loss function (for a single training example)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image024.png"><br>
+<p>⇒ wrap the two cases <em>in one single formula</em>: using exponent of y and (1-y)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image023.png"/><br/>
+⇒ take log of P(y|x) ⇒ loss function (for a single training example)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image024.png"/><br/>
 ⇒ aggregate over all training examples i = 1..m:
 (assume: data are iid)
 P(labels in training set) = multiply( P(y(i)|x(i) )
 take log → log(P(labels in training set)) = sum( log P(y(i)|x(i) ) = - J
-<strong>maximizing likelihood = minimizing cost function</strong></br></img></br></br></img></br></p>
+<strong>maximizing likelihood = minimizing cost function</strong></p>
 <h1 id="assignments_1">Assignments</h1>
 <h2 id="python-numpy-basics">python / numpy basics</h2>
 <ul>
@@ -456,14 +482,14 @@ take log → log(P(labels in training set)) = sum( log P(y(i)|x(i) ) = - J
 <li><code>keepdims=True</code>: </li>
 </ul>
 <p>axes that are reduced will be <em>kept</em> (with size=1)</p>
-<div class="highlight"><pre><span class="code-line"><span></span>  &gt;&gt;&gt; a</span>
-<span class="code-line">  array([[ 0.01014617,  0.08222027, -0.59608242],</span>
-<span class="code-line">        [-0.18495204, -1.50409531, -1.03853663],</span>
-<span class="code-line">        [ 0.03995499, -0.67679544,  0.11513247]])</span>
-<span class="code-line">  &gt;&gt;&gt; a.sum(keepdims=1)</span>
-<span class="code-line">  array([[-3.75300795]])</span>
-<span class="code-line">  &gt;&gt;&gt; a.sum()</span>
-<span class="code-line">  -3.7530079538833663</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">  &gt;&gt;&gt; a</span></span>
+<span class="code-line"><span class="err">  array([[ 0.01014617,  0.08222027, -0.59608242],</span></span>
+<span class="code-line"><span class="err">        [-0.18495204, -1.50409531, -1.03853663],</span></span>
+<span class="code-line"><span class="err">        [ 0.03995499, -0.67679544,  0.11513247]])</span></span>
+<span class="code-line"><span class="err">  &gt;&gt;&gt; a.sum(keepdims=1)</span></span>
+<span class="code-line"><span class="err">  array([[-3.75300795]])</span></span>
+<span class="code-line"><span class="err">  &gt;&gt;&gt; a.sum()</span></span>
+<span class="code-line"><span class="err">  -3.7530079538833663</span></span>
 </pre></div>
 <ul>
 <li><a href="https://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">broadcasting</a></li>
@@ -492,8 +518,8 @@ take log → log(P(labels in training set)) = sum( log P(y(i)|x(i) ) = - J
 <ul>
 <li>Fwd prop: compute cost function</li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image027.png"><br>
-  input <code>X</code> (shape = nx*m, one column per example)→ logits <code>Z</code> → activations <code>A=sigmoid(Z)</code>→ cost <code>J</code></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk2//pasted_image027.png"/><br/>
+  input <code>X</code> (shape = nx*m, one column per example)→ logits <code>Z</code> → activations <code>A=sigmoid(Z)</code>→ cost <code>J</code></p>
 <ul>
 <li>Bkwd prop</li>
 </ul>

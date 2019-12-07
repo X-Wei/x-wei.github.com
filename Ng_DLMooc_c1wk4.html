@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Deep L-layer neural network Layer counting: input layer is not counted as a layer, &#34;layer 0&#34; last layer (layer L, output layer) is counted. notation: layer 0 = input layer L = number of layers n^[l] = size of layer l a^[l] = activation of layer l = g[l]( z[l …" />
+        <meta name="description" content="Deep L-layer neural network Forward Propagation in a Deep Network Getting your matrix dimensions right Why deep representations? Building blocks of deep neural networks Forward and Backward Propagation Parameters vs Hyperparameters What does this have to do with the brain? assignment: implementing a L-layer NN Deep L-layer neural network Layer ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Neural Networks and Deep Learning] week4. Deep Neural Network"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c1wk4.html"/>
-        <meta property="og:description" content="[TOC] Deep L-layer neural network Layer counting: input layer is not counted as a layer, &#34;layer 0&#34; last layer (layer L, output layer) is counted. notation: layer 0 = input layer L = number of layers n^[l] = size of layer l a^[l] = activation of layer l = g[l]( z[l …"/>
+        <meta property="og:description" content="Deep L-layer neural network Forward Propagation in a Deep Network Getting your matrix dimensions right Why deep representations? Building blocks of deep neural networks Forward and Backward Propagation Parameters vs Hyperparameters What does this have to do with the brain? assignment: implementing a L-layer NN Deep L-layer neural network Layer ..."/>
         <meta property="article:published_time" content="2017-09-28" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,19 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Neural Networks and Deep Learning] week4. Deep Neural Network">[Neural Networks and Deep Learning] week4. Deep Neural Network</a><ul><li><a class="toc-href" href="#deep-l-layer-neural-network" title="Deep L-layer neural network">Deep L-layer neural network</a></li><li><a class="toc-href" href="#forward-propagation-in-a-deep-network" title="Forward Propagation in a Deep Network">Forward Propagation in a Deep Network</a></li><li><a class="toc-href" href="#getting-your-matrix-dimensions-right" title="Getting your matrix dimensions right">Getting your matrix dimensions right</a></li><li><a class="toc-href" href="#why-deep-representations" title="Why deep representations?">Why deep representations?</a></li><li><a class="toc-href" href="#building-blocks-of-deep-neural-networks" title="Building blocks of deep neural networks">Building blocks of deep neural networks</a></li><li><a class="toc-href" href="#forward-and-backward-propagation" title="Forward and Backward Propagation">Forward and Backward Propagation</a></li><li><a class="toc-href" href="#parameters-vs-hyperparameters" title="Parameters vs Hyperparameters">Parameters vs Hyperparameters</a></li><li><a class="toc-href" href="#what-does-this-have-to-do-with-the-brain" title="What does this have to do with the brain?">What does this have to do with the brain?</a></li><li><a class="toc-href" href="#assignment-implementing-a-l-layer-nn" title="assignment: implementing a L-layer NN">assignment: implementing a L-layer NN</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#deep-l-layer-neural-network">Deep L-layer neural network</a></li>
+<li><a href="#forward-propagation-in-a-deep-network">Forward Propagation in a Deep Network</a></li>
+<li><a href="#getting-your-matrix-dimensions-right">Getting your matrix dimensions right</a></li>
+<li><a href="#why-deep-representations">Why deep representations?</a></li>
+<li><a href="#building-blocks-of-deep-neural-networks">Building blocks of deep neural networks</a></li>
+<li><a href="#forward-and-backward-propagation">Forward and Backward Propagation</a></li>
+<li><a href="#parameters-vs-hyperparameters">Parameters vs Hyperparameters</a></li>
+<li><a href="#what-does-this-have-to-do-with-the-brain">What does this have to do with the brain?</a></li>
+<li><a href="#assignment-implementing-a-l-layer-nn">assignment: implementing a L-layer NN</a></li>
+</ul>
+</div>
 <h2 id="deep-l-layer-neural-network">Deep L-layer neural network</h2>
 <p>Layer counting:</p>
 <ul>
@@ -222,41 +234,41 @@ mx's blog            </a>
 layer 0 = input layer
 <code>L</code> = number of layers
 <code>n^[l]</code> = size of layer l
-<code>a^[l]</code> = activation of layer l = <code>g[l]( z[l] )</code> → a[L] = yhat, a[0] = x<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image002.png"/></br></p>
+<code>a^[l]</code> = activation of layer l = <code>g[l]( z[l] )</code> → a[L] = yhat, a[0] = x<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image002.png"/></p>
 <h2 id="forward-propagation-in-a-deep-network">Forward Propagation in a Deep Network</h2>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image003.png"/></p>
-<p>⇒ general rule:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image004.png"><br>
+<p>⇒ general rule:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image004.png"/><br/>
 vectorization over all training examples: 
-Z = [z(1),...,z(m)] one column per example ⇒ </br></img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>A[0] = X</span>
-<span class="code-line">for l = 1..L:</span>
-<span class="code-line">  Z[l] = W[l]A[l-1] + b[l]</span>
-<span class="code-line">  A[l] = g[l]( Z[l] )</span>
-<span class="code-line">Yhat = A[L]</span>
+Z = [z(1),...,z(m)] one column per example ⇒ </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">A</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="w"></span></span>
+<span class="code-line"><span class="k">for</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="p">.</span><span class="nl">L</span><span class="p">:</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Z</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">W</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="n">A</span><span class="o">[</span><span class="n">l-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="n">A</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="p">(</span><span class="w"> </span><span class="n">Z</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="n">Yhat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">[</span><span class="n">L</span><span class="o">]</span><span class="w"></span></span>
 </pre></div>
 <h2 id="getting-your-matrix-dimensions-right">Getting your matrix dimensions right</h2>
 <p>Debug: walk through matrix dimensions of NN, <code>W[l]</code>.</p>
-<p>Single training example dimension:<br>
-<code>a[l-1].shape = (n[l-1], 1)</code><br>
-<code>z[l].shape = (n[l], 1)</code><br>
-⇒ <code>z[l] = W[l] * a[l-1] + b[l], shape = (n[l],1)</code><br>
-⇒ <strong>W[l].shape = (n[l], n[l-1]), b[l].shape = (n[l],1)</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image006.png"/></br></br></br></br></br></p>
-<p>Vectorized (m examples) dimension:<br>
-Z = [z(1),...,z(m)] <em>stacking columns</em>.<br>
-<code>Z[l].shape = (n[l], m)</code><br>
-Z[l] = W[l] * A[l-1] + b[l]<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image007.png"><br>
-<strong>Z[l].shape = A[l].shape = (n[l], m)</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image008.png"> </img></br></br></img></br></br></br></br></p>
+<p>Single training example dimension:<br/>
+<code>a[l-1].shape = (n[l-1], 1)</code><br/>
+<code>z[l].shape = (n[l], 1)</code><br/>
+⇒ <code>z[l] = W[l] * a[l-1] + b[l], shape = (n[l],1)</code><br/>
+⇒ <strong>W[l].shape = (n[l], n[l-1]), b[l].shape = (n[l],1)</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image006.png"/></p>
+<p>Vectorized (m examples) dimension:<br/>
+Z = [z(1),...,z(m)] <em>stacking columns</em>.<br/>
+<code>Z[l].shape = (n[l], m)</code><br/>
+Z[l] = W[l] * A[l-1] + b[l]<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image007.png"/><br/>
+<strong>Z[l].shape = A[l].shape = (n[l], m)</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image008.png"/> </p>
 <h2 id="why-deep-representations">Why deep representations?</h2>
-<p>intuition: <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image010.png"/></br></p>
+<p>intuition: <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image010.png"/></p>
 <p>as layers grow: simple to complex representation / low to high level of abstraction.</p>
-<p>Circuit theory: small deep NN is better than big shallow NN.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image011.png"/></br></p>
+<p>Circuit theory: small deep NN is better than big shallow NN.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image011.png"/></p>
 <p><strong>Example</strong>: representation of a XOR.join(x1..xn) function.</p>
 <ul>
 <li>Using deep NN ⇒ build an XOR binary tree</li>
@@ -276,26 +288,26 @@ Z[l] = W[l] * A[l-1] + b[l]<br>
 <li><strong>Backprop: </strong>from da[l] to da[l-1], dw[l] and db[l]</li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image014.png"/></p>
-<p>Once the fwd and back functions are implemented, put layers together:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image015.png"/></br></p>
+<p>Once the fwd and back functions are implemented, put layers together:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image015.png"/></p>
 <h2 id="forward-and-backward-propagation">Forward and Backward Propagation</h2>
-<p><strong>Fwd prop</strong><br>
-input = a[l-1], output = a[l], cache = z[l]  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>Z[l] = W[l] * A[l-1] + b[l]</span>
-<span class="code-line">Z[l] = g[l]( Z[l] )</span>
+<p><strong>Fwd prop</strong><br/>
+input = a[l-1], output = a[l], cache = z[l]  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">Z</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">W</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="o">[</span><span class="n">l-1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="n">Z</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="p">(</span><span class="w"> </span><span class="n">Z</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p><strong>Back prop</strong>
-input = da[l], output = da[l-1], dW[1], db[l]<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image016.png"><br>
-note: </br></img></br></p>
+input = da[l], output = da[l-1], dW[1], db[l]<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image016.png"/><br/>
+note: </p>
 <ul>
 <li><em>remember </em><code>da = dL/da</code><em>, so here </em><code>da</code><em>~='1/da' mathematically.</em></li>
 <li>derivate of matrix multiplication = transposed matrix derivative: (A*B)' = B^T' * A^T'</li>
 <li><em>initial paule</em> of backprop: da[L] = dL/dyhat</li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image018.png"><br>
-Vectorized version:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image017.png"/></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image018.png"/><br/>
+Vectorized version:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image017.png"/></p>
 <h2 id="parameters-vs-hyperparameters">Parameters vs Hyperparameters</h2>
 <ul>
 <li>parameters: W[l] and b[l] → trained from data</li>
@@ -306,8 +318,8 @@ Vectorized version:<br>
 </li>
 </ul>
 <p>→ finally decides what params will be.</p>
-<p>empirical: try out different hyperparams.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image019.png"/></br></p>
+<p>empirical: try out different hyperparams.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image019.png"/></p>
 <h2 id="what-does-this-have-to-do-with-the-brain">What does this have to do with the brain?</h2>
 <p>logistic regression unit ~~~&gt; neuron in brain</p>
 <h2 id="assignment-implementing-a-l-layer-nn">assignment: implementing a L-layer NN</h2>
@@ -315,8 +327,8 @@ Vectorized version:<br>
 <li>params initialization:</li>
 </ul>
 <p>note: different signature for <code>np.random.randn</code> and <code>np.zeros</code>:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>W = np.random.randn(d0, d1) * 0.01</span>
-<span class="code-line">b = np.zeros((d0, d1)) # Needs putting dims in a tuple!</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">W = np.random.randn(d0, d1) * 0.01</span></span>
+<span class="code-line"><span class="err">b = np.zeros((d0, d1)) # Needs putting dims in a tuple!</span></span>
 </pre></div>
 <ul>
 <li>function activation:</li>
@@ -338,8 +350,8 @@ so <code>ReLU(x) = np.maximum(0, x)</code></p>
 <ul>
 <li>initial paulse of backprop dA[L]: </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image021.png"><br>
-<code>dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL))</code></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk4/pasted_image021.png"/><br/>
+<code>dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL))</code></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

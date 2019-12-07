@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Intro to digraphs Has profound differences wrt undirected graphs. def: digraph edges: have directions vertex: distinguish indeg and outdeg digraph pbs: path/shortest path topological sort: Can you draw a digraph so that all edges point upwards? strong connectivity: Is there a directed path between all pairs of …" />
+        <meta name="description" content="1. Intro to digraphs 2. Digraph API 3. Digraph Search 4. Topological Sort implementation proof 5. Strong Components linear time DFS solution: Tarjan (1972) implementation 1. Intro to digraphs Has profound differences wrt undirected graphs. def: digraph edges: have directions vertex: distinguish indeg and outdeg digraph pbs: path/shortest path ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 1-2 Directed Graphs"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week1_2.html"/>
-        <meta property="og:description" content="[TOC] 1. Intro to digraphs Has profound differences wrt undirected graphs. def: digraph edges: have directions vertex: distinguish indeg and outdeg digraph pbs: path/shortest path topological sort: Can you draw a digraph so that all edges point upwards? strong connectivity: Is there a directed path between all pairs of …"/>
+        <meta property="og:description" content="1. Intro to digraphs 2. Digraph API 3. Digraph Search 4. Topological Sort implementation proof 5. Strong Components linear time DFS solution: Tarjan (1972) implementation 1. Intro to digraphs Has profound differences wrt undirected graphs. def: digraph edges: have directions vertex: distinguish indeg and outdeg digraph pbs: path/shortest path ..."/>
         <meta property="article:published_time" content="2015-11-09" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,12 +210,28 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 1-2 Directed Graphs">[Algorithms II] Week 1-2 Directed Graphs</a><ul><li><a class="toc-href" href="#1-intro-to-digraphs" title="1. Intro to digraphs">1. Intro to digraphs</a></li><li><a class="toc-href" href="#2-digraph-api" title="2. Digraph API">2. Digraph API</a></li><li><a class="toc-href" href="#3-digraph-search" title="3. Digraph Search">3. Digraph Search</a></li><li><a class="toc-href" href="#4-topological-sort" title="4. Topological Sort">4. Topological Sort</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#proof" title="proof">proof</a></li></ul></li><li><a class="toc-href" href="#5-strong-components_1" title="5. Strong Components">5. Strong Components</a><ul><li><a class="toc-href" href="#linear-time-dfs-solution-tarjan-1972" title="linear time DFS solution: Tarjan (1972)">linear time DFS solution: Tarjan (1972)</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-intro-to-digraphs">1. Intro to digraphs</a></li>
+<li><a href="#2-digraph-api">2. Digraph API</a></li>
+<li><a href="#3-digraph-search">3. Digraph Search</a></li>
+<li><a href="#4-topological-sort">4. Topological Sort</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#proof">proof</a></li>
+</ul>
+</li>
+<li><a href="#5-strong-components">5. Strong Components</a><ul>
+<li><a href="#linear-time-dfs-solution-tarjan-1972">linear time DFS solution: Tarjan (1972)</a></li>
+<li><a href="#implementation_1">implementation</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-intro-to-digraphs">1. Intro to digraphs</h1>
 <p>Has profound differences wrt undirected graphs.    </p>
-<p>def: digraph <br>
-<em> edges: have directions <br>
-</br></em> vertex: distinguish indeg and outdeg   </br></p>
+<p>def: digraph <br/>
+<em> edges: have directions <br/>
+</em> vertex: distinguish indeg and outdeg   </p>
 <p>digraph pbs:    </p>
 <ul>
 <li>path/shortest path   </li>
@@ -225,24 +241,24 @@ mx's blog            </a>
 <li>PageRank   </li>
 </ul>
 <h1 id="2-digraph-api">2. Digraph API</h1>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Digraph{   </span>
-<span class="code-line">    Digraph(int V);   </span>
-<span class="code-line">    void addEdge(int v, int w);// edge is directed   </span>
-<span class="code-line">    Iterable&lt;Interger&gt; adj(int v);// vertices reached by outgoing edges   </span>
-<span class="code-line">    int V();   </span>
-<span class="code-line">    Digraph reverse();// &lt;--new methode wrt undirected graph   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class Digraph{   </span></span>
+<span class="code-line"><span class="err">    Digraph(int V);   </span></span>
+<span class="code-line"><span class="err">    void addEdge(int v, int w);// edge is directed   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;Interger&gt; adj(int v);// vertices reached by outgoing edges   </span></span>
+<span class="code-line"><span class="err">    int V();   </span></span>
+<span class="code-line"><span class="err">    Digraph reverse();// &lt;--new methode wrt undirected graph   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>representation: adj-list, ie. an array of bags.  <br>
-<code>Bag&lt;Integer&gt;[] adj;// prec vertices</code> </br></p>
+<p>representation: adj-list, ie. an array of bags.  <br/>
+<code>Bag&lt;Integer&gt;[] adj;// prec vertices</code> </p>
 <h1 id="3-digraph-search">3. Digraph Search</h1>
 <p>BFS and DFS can be applied to digraphs.   </p>
 <ul>
 <li>reachability   </li>
 </ul>
-<p>find all vertices reachable from vertex-s.  <br>
-use the same DFS as for undirected graphs.  <br>
-→ application: programme control-flow analyse, garbage collection.    </br></br></p>
+<p>find all vertices reachable from vertex-s.  <br/>
+use the same DFS as for undirected graphs.  <br/>
+→ application: programme control-flow analyse, garbage collection.    </p>
 <ul>
 <li>
 <p><em>DFS is the basis for a lot of digraph pbs</em>: 2-satisfiability, Euler path, strongly connected component.    </p>
@@ -251,43 +267,43 @@ use the same DFS as for undirected graphs.  <br>
 <p>multiple source shortest path:    </p>
 </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image.png"> <br>
-⇒ use DFS but <em>enque all vertices in the set</em>.  <br>
-→ application: web crawler(DFS not suitable for crawling)   </br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image.png"/> <br/>
+⇒ use DFS but <em>enque all vertices in the set</em>.  <br/>
+→ application: web crawler(DFS not suitable for crawling)   </p>
 <h1 id="4-topological-sort">4. Topological Sort</h1>
 <p>application. precedence schedule, java compiler (cycled inheritance), ...   </p>
-<p>def. <strong>topo-order</strong> <br>
-is a permutation of vertices, where for each vertice v→w, w is behind v in the permutation.    </br></p>
-<p>def. <strong>DAG</strong> <br>
-directed acyclic graph. <br>
-<strong>prop. </strong>for a digraph, topological order exists <em>iff</em> graph is a DAG.    </br></br></p>
-<p>algo: ⇒ use DFS~  <br>
-<em>reverse DFS postorder</em> </br></p>
-<p>def.    <strong>postorder</strong> <br>
-is the order of the vertices that we have <em>finished</em> (ie. we have visited all reachable vertices from this vertex).   </br></p>
+<p>def. <strong>topo-order</strong> <br/>
+is a permutation of vertices, where for each vertice v→w, w is behind v in the permutation.    </p>
+<p>def. <strong>DAG</strong> <br/>
+directed acyclic graph. <br/>
+<strong>prop. </strong>for a digraph, topological order exists <em>iff</em> graph is a DAG.    </p>
+<p>algo: ⇒ use DFS~  <br/>
+<em>reverse DFS postorder</em> </p>
+<p>def.    <strong>postorder</strong> <br/>
+is the order of the vertices that we have <em>finished</em> (ie. we have visited all reachable vertices from this vertex).   </p>
 <h3 id="implementation">implementation</h3>
 <p>这个以前的blog写过...    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private boolean[] visited;   </span>
-<span class="code-line">private Stack&lt;Integer&gt; revPostorder;// stores the vertices in reverse post order   </span>
-<span class="code-line">private void dfs(Digraph G, int v){   </span>
-<span class="code-line">    visited[v] = true;   </span>
-<span class="code-line">    for(int w: G.adj(v))   </span>
-<span class="code-line">        if(!visited[w])   </span>
-<span class="code-line">            dfs(G, w);   </span>
-<span class="code-line">    //** now we know the vertex v is "finished" **   </span>
-<span class="code-line">    revPostorder.push(v);   </span>
-<span class="code-line">}   </span>
-<span class="code-line">public Iterable&lt;Integer&gt; topoOrder(Digraph G){   </span>
-<span class="code-line">    for(int v=0;v&lt;G.V();v++)   </span>
-<span class="code-line">        if(!visited(v)) dfs(G,v);// visit all cc   </span>
-<span class="code-line">    return revPostorder;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="err">[]</span><span class="w"> </span><span class="n">visited</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">revPostorder</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">stores</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">vertices</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nf">reverse</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="k">order</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">Digraph</span><span class="w"> </span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">visited</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">w</span><span class="p">:</span><span class="w"> </span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">visited</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">/</span><span class="cm">/** now we know the vertex v is "finished" **   </span></span>
+<span class="code-line"><span class="cm">    revPostorder.push(v);   </span></span>
+<span class="code-line"><span class="cm">}   </span></span>
+<span class="code-line"><span class="cm">public Iterable&lt;Integer&gt; topoOrder(Digraph G){   </span></span>
+<span class="code-line"><span class="cm">    for(int v=0;v&lt;G.V();v++)   </span></span>
+<span class="code-line"><span class="cm">        if(!visited(v)) dfs(G,v);// visit all cc   </span></span>
+<span class="code-line"><span class="cm">    return revPostorder;   </span></span>
+<span class="code-line"><span class="cm">}</span></span>
 </pre></div>
 <h3 id="proof">proof</h3>
-<p><strong>prop. </strong>reverse post-order of a DAG is in topological order.  <br>
-(这个证明蛮精彩) <br>
-<strong>pf.</strong> <br>
-for any edge <strong>v→w</strong>, when <code>dfs(v)</code> is called:    </br></br></br></p>
+<p><strong>prop. </strong>reverse post-order of a DAG is in topological order.  <br/>
+(这个证明蛮精彩) <br/>
+<strong>pf.</strong> <br/>
+for any edge <strong>v→w</strong>, when <code>dfs(v)</code> is called:    </p>
 <ul>
 <li>case 1: <code>dfs(w)</code> is called and returned, so w is done before v in post-order;   </li>
 <li>case 2: <code>dfs(w)</code> is not called, it will be (in)directly get called by <code>dfs(v)</code>, so <code>dfs(w)</code> finishes before <code>dfs(v)</code>;   </li>
@@ -295,53 +311,53 @@ for any edge <strong>v→w</strong>, when <code>dfs(v)</code> is called:    </br
 </ul>
 <h1 id="5-strong-components_1">5. Strong Components</h1>
 <p>For undirected graphs: connected components can be solved with dfs or UF.    </p>
-<p>def. <strong>Strongly-connected</strong> <br>
-v and w are strongly-connected if exist path from v to w and w to v.  <br>
-→ is an equivalent relation.    </br></br></p>
-<p>def. <strong>Strong Component</strong> <br>
-subset of  V where each pair are strongly-connected.    </br></p>
+<p>def. <strong>Strongly-connected</strong> <br/>
+v and w are strongly-connected if exist path from v to w and w to v.  <br/>
+→ is an equivalent relation.    </p>
+<p>def. <strong>Strong Component</strong> <br/>
+subset of  V where each pair are strongly-connected.    </p>
 <p>Goal: compute all strong components(<em>scc</em>) in a digraph.    </p>
 <h2 id="linear-time-dfs-solution-tarjan-1972">linear time DFS solution: Tarjan (1972)</h2>
 <p>(developed version: a two-pass linear-time algorithm)   </p>
 <p>Intuition: <em>scc for G is the same for G.reverse().</em> </p>
-<p><strong>Kernel DAG</strong>: contract each scc into a single vertex.  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image001.png"> </img></br></p>
+<p><strong>Kernel DAG</strong>: contract each scc into a single vertex.  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image001.png"/> </p>
 <p>Idea:    </p>
 <ul>
 <li>compute topological-order in the kernel DAG.   </li>
 <li>run DFS, consider vertices in reverse-topo-order    </li>
 </ul>
 <blockquote>
-<p><strong>[Algo]</strong> <br>
-1. compute topo-order in <code>G.reverse</code> (just a DFS in the reversed graph) <br>
-2. run DFS in original  <code>G</code>, <em>visit unmarked vertices in topo-order of G.reverse</em>. (instead of visiting vertices by their index)   </br></br></p>
+<p><strong>[Algo]</strong> <br/>
+1. compute topo-order in <code>G.reverse</code> (just a DFS in the reversed graph) <br/>
+2. run DFS in original  <code>G</code>, <em>visit unmarked vertices in topo-order of G.reverse</em>. (instead of visiting vertices by their index)   </p>
 </blockquote>
-<p>⇒ <strong>each time we finish a dfs from a vertex, we get a scc!</strong> <br>
-太精彩了!!! <br>
-<img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image002.png"> </img></br></br></p>
+<p>⇒ <strong>each time we finish a dfs from a vertex, we get a scc!</strong> <br/>
+太精彩了!!! <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week1_2/pasted_image002.png"/> </p>
 <p>proof: tricky, cf book...(貌似Werner课上讲过..)   </p>
 <h2 id="implementation_1">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>private int[] scc = new int[V]; // scc[v] is the index of the SCC that v belongs to   </span>
-<span class="code-line">private int sccCount = 0;   </span>
-<span class="code-line">private boolean[] visited = new boolean[V];   </span>
-<span class="code-line">public getSCC(Digraph G){   </span>
-<span class="code-line">    // 1. get topo-order in reverse graph   </span>
-<span class="code-line">    Iterable&lt;Integer&gt; topoOrderGR = topoOrder(G.reverse());   </span>
-<span class="code-line">    // 2. run dfs in original graph, run on vertices using the above topo-order    </span>
-<span class="code-line">    for(int v:topoOrderGR)// &lt;-- only difference from the standard topo-order algo   </span>
-<span class="code-line">        if(!visited[v])   </span>
-<span class="code-line">            dfs(G, v, sccCount++);//increment sccCount everytime we done a component   </span>
-<span class="code-line">}   </span>
-<span class="code-line">private dfs(Digraph G, int v){   </span>
-<span class="code-line">    // run dfs from v, and all touched vertices are marked in sccId's SCC   </span>
-<span class="code-line">    visited[v] = true;   </span>
-<span class="code-line">    scc[v] = sccCount;   </span>
-<span class="code-line">    for(int w:G.adj(v))   </span>
-<span class="code-line">        if(!visited[w]){   </span>
-<span class="code-line">            scc[w] = sccCount;   </span>
-<span class="code-line">            dfs(G,w);   </span>
-<span class="code-line">        }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="n">scc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">scc</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">SCC</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">belongs</span><span class="w"> </span><span class="k">to</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">sccCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="k">boolean</span><span class="err">[]</span><span class="w"> </span><span class="n">visited</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="k">boolean</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">getSCC</span><span class="p">(</span><span class="n">Digraph</span><span class="w"> </span><span class="n">G</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">topo</span><span class="o">-</span><span class="k">order</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nf">reverse</span><span class="w"> </span><span class="n">graph</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topoOrderGR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topoOrder</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="nf">reverse</span><span class="p">());</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">dfs</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">original</span><span class="w"> </span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">vertices</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">above</span><span class="w"> </span><span class="n">topo</span><span class="o">-</span><span class="k">order</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">v</span><span class="p">:</span><span class="n">topoOrderGR</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="o">&lt;</span><span class="c1">-- only difference from the standard topo-order algo   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">visited</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">sccCount</span><span class="o">++</span><span class="p">);</span><span class="o">//</span><span class="n">increment</span><span class="w"> </span><span class="n">sccCount</span><span class="w"> </span><span class="n">everytime</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">done</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">component</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">dfs</span><span class="p">(</span><span class="n">Digraph</span><span class="w"> </span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">dfs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">touched</span><span class="w"> </span><span class="n">vertices</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">marked</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sccId</span><span class="err">'</span><span class="n">s</span><span class="w"> </span><span class="n">SCC</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">visited</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">scc</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sccCount</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">w</span><span class="p">:</span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">visited</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">scc</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sccCount</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">w</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">

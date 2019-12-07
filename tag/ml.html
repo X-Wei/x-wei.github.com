@@ -197,16 +197,30 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#1-include-jars-into-project">1. Include jars into project</a><ul>
+<li><a href="#about-libsvm">about libsvm...</a></li>
+</ul>
+</li>
+<li><a href="#2-terminology">2. terminology</a></li>
+<li><a href="#3">3. 在程序里构建数据</a><ul>
+<li><a href="#attribute">新建Attribute</a></li>
+<li><a href="#instancesdataset">新建Instances(dataset)</a></li>
+<li><a href="#instance">新建Instance</a></li>
+</ul>
+</li>
+<li><a href="#4-model">4. 在程序里训练model</a></li>
+<li><a href="#5-model">5. 从文件读入数据和model</a></li>
+<li><a href="#6-evaluation">6. 输出Evaluation统计</a></li>
+<li><a href="#7">7. 输出预测结果</a></li>
+</ul>
+</div>
 <p>之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   </p>
 <h1 id="1-include-jars-into-project">1. Include jars into project</h1>
 <p>weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...).   </p>
 <p>weka的文档在解压缩的文件里有, 另外在线文档在: <a href="http://weka.sourceforge.net/doc.stable-3-8/">http://weka.sourceforge.net/doc.stable-3-8/</a> </p>
-<h3 id="about-libsvm">about libsvm...</h3>
-<p>关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: <br>
-<img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image002.png"><br>
-在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, <code>wekafiles/packages/LibSVM/</code>目录下就是libsvm的内容.   </br></img></br></p>
-<p>需要指出的一点是, 要使用libsvm的话, <a href="http://stackoverflow.com/questions/30821926/solved-weka-api-libsvm-classpath-not-found">需要同时引用两个jar文件</a>, 而且都叫libsvm.jar …</p>
+<h3 id="about-libsvm">about libsvm ...</h3>
                     </div>
                 </div>
             </article>
@@ -245,18 +259,18 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>除了上次介绍的<a href="http://x-wei.github.io/minhash.html">minhash</a>方法以外, 还有一种常见的hash方法, 叫做simHash. 这里做简要介绍.  <br>
-这个hash函数的背景和上次一样, 还是考虑把文本抽象为ngram的集合:  <br>
-<img alt="" class="img-responsive" src="../images/simhash/pasted_image.png"> <br>
-然后相似度依旧是Jaccard similarity:  <br>
-<img alt="" class="img-responsive" src="../images/simhash/pasted_image001.png"> </img></br></br></img></br></br></p>
+                    <div class="summary"><p>除了上次介绍的<a href="http://x-wei.github.io/minhash.html">minhash</a>方法以外, 还有一种常见的hash方法, 叫做simHash. 这里做简要介绍.  <br/>
+这个hash函数的背景和上次一样, 还是考虑把文本抽象为ngram的集合:  <br/>
+<img alt="" class="img-responsive" src="../images/simhash/pasted_image.png"/> <br/>
+然后相似度依旧是Jaccard similarity:  <br/>
+<img alt="" class="img-responsive" src="../images/simhash/pasted_image001.png"/> </p>
 <h2 id="simhash">simHash</h2>
 <p>simHash的方法听上去比minHash还要简单:    </p>
 <ol>
 <li>对一个文档<em>d</em>中的每一个term(ngram, shingle) <em>t</em>, 计算其hashcode(比如用java内建的<code>Object.hashCode()</code>函数) <em>hash(t)</em>.    </li>
 <li>把d中所有term的<em>hash(t)</em>合成为一个hashcode作为d的hashcode <em>simHash(d)</em>: <em>simHash(d)</em>的长度与<em>hash(t)</em>相同, <em>simHash(d)</em>的第k个bit的取值为所有<em>hash(t)</em>第k个bit的<strong>众数</strong>.    </li>
 </ol>
-<p>写成数学表达式很吓人, 其实只不过不断在{0,1}和{-1 …</p>
+<p>写成数学表达式很吓人, 其实只不过不断在{0,1}和{-1 ...</p>
                     </div>
                 </div>
             </article>
@@ -303,7 +317,7 @@ mx's blog            </a>
 <h2 id="simhash">simhash</h2>
 <p>另一个思路是, 使用某个hash函数, 对于每一个数据计算一个哈希值. 这个hash函数要满足: <strong>当i和j的相似度很高的时候, hash(i)和hash(j)的值(很可能)相同.</strong> 这次介绍的minHash就是这样的一种方法.    </p>
 <h2 id="jaccard-similarity">Jaccard similarity</h2>
-<p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term …</p>
+<p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term ...</p>
                     </div>
                 </div>
             </article>
@@ -344,26 +358,26 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>几乎所有的ml课都是从线性回归讲起, ETH的课也不例外. 不过这次老师用了贝叶斯的视角讲这个问题, 自从高中接触丁老师讲的线性回归以来 第一次听到一个不同于最小二乘的解读, 感觉很有意思. 又想起来刘未鹏那篇非常棒的<a href="http://mindhacks.cn/2008/09/21/the-magical-bayesian-method/">博客</a>, 于是想记录一下.    </p>
 <h2 id="notation">notation</h2>
-<p>首先有n个数据点:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"> <br>
-其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"> <br>
-例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </br></img></br></br></img></br></p>
+<p>首先有n个数据点:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"/> <br/>
+其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"/> <br/>
+例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </p>
 <h2 id="least-square-viewpoint">least square viewpoint</h2>
-<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"> <br>
-使得拟合结果和观测结果的误差尽量小.  <br>
-不过这次不说最小二乘, 所以接下来不讨论这个思路...   </br></br></img></br></p>
+<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"/> <br/>
+使得拟合结果和观测结果的误差尽量小.  <br/>
+不过这次不说最小二乘, 所以接下来不讨论这个思路...   </p>
 <h2 id="assumptions-in-bayes-viewpoint">assumptions in Bayes viewpoint</h2>
-<p>在贝叶斯视角里, 我们假设: <br>
-<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br>
-即:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"> <br>
-其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br>
-另外再有一个比较强的假设: <br>
-<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"> <br>
-(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 …</p>
+<p>在贝叶斯视角里, 我们假设: <br/>
+<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br/>
+即:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"/> <br/>
+其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br/>
+另外再有一个比较强的假设: <br/>
+<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"/> <br/>
+(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 ...</br/></br/></br/></br/></br/></br/></br/></br/></p>
                     </div>
                 </div>
             </article>

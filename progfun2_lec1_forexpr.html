@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="[TOC] Recap: Functions and Pattern Matching case classes ex: json json objects can be seq, num, str, bool,... ⇒ represented as abstract class and case classes. pattern matching → question: what is the type of the {case(key, value)=&gt;&#34;...&#34;} clause? it is (JBinding =&gt; String) type, which is a shorthand for Function1[JBinding …" />
+        <meta name="description" content="Recap: Functions and Pattern Matching case classes pattern matching Function1 Trait subclass a function type Partial Match Recap: Collections For expressions 1.1 - Queries with For 1.2 - Translation of For implemention of for-expr: 3 rules 1.3 - Functional Random Generators other base Generators rand List Generator rand (binary) Tree ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC II] Lec1: For Expressions and Monads"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun2_lec1_forexpr.html"/>
-        <meta property="og:description" content="[TOC] Recap: Functions and Pattern Matching case classes ex: json json objects can be seq, num, str, bool,... ⇒ represented as abstract class and case classes. pattern matching → question: what is the type of the {case(key, value)=&gt;&#34;...&#34;} clause? it is (JBinding =&gt; String) type, which is a shorthand for Function1[JBinding …"/>
+        <meta property="og:description" content="Recap: Functions and Pattern Matching case classes pattern matching Function1 Trait subclass a function type Partial Match Recap: Collections For expressions 1.1 - Queries with For 1.2 - Translation of For implemention of for-expr: 3 rules 1.3 - Functional Random Generators other base Generators rand List Generator rand (binary) Tree ..."/>
         <meta property="article:published_time" content="2016-08-12" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -210,7 +210,45 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC II] Lec1: For Expressions and Monads">[Scala MOOC II] Lec1: For Expressions and Monads</a><ul><li><a class="toc-href" href="#recap-functions-and-pattern-matching" title="Recap: Functions and Pattern Matching">Recap: Functions and Pattern Matching</a><ul><li><a class="toc-href" href="#case-classes" title="case classes">case classes</a></li><li><a class="toc-href" href="#pattern-matching" title="pattern matching">pattern matching</a></li><li><a class="toc-href" href="#function1-trait" title="Function1 Trait">Function1 Trait</a></li><li><a class="toc-href" href="#subclass-a-function-type" title="subclass a function type">subclass a function type</a></li><li><a class="toc-href" href="#partial-match" title="Partial Match">Partial Match</a></li></ul></li><li><a class="toc-href" href="#recap-collections_1" title="Recap: Collections">Recap: Collections</a><ul><li><a class="toc-href" href="#for-expressions" title="For expressions">For expressions</a></li></ul></li><li><a class="toc-href" href="#11-queries-with-for_1" title="1.1 - Queries with For">1.1 - Queries with For</a></li><li><a class="toc-href" href="#12-translation-of-for" title="1.2 - Translation of For">1.2 - Translation of For</a><ul><li><a class="toc-href" href="#implemention-of-for-expr-3-rules" title="implemention of for-expr: 3 rules">implemention of for-expr: 3 rules</a></li></ul></li><li><a class="toc-href" href="#13-functional-random-generators_1" title="1.3 - Functional Random Generators">1.3 - Functional Random Generators</a><ul><li><a class="toc-href" href="#other-base-generators" title="other base Generators">other base Generators</a></li><li><a class="toc-href" href="#rand-list-generator" title="rand List Generator">rand List Generator</a></li><li><a class="toc-href" href="#rand-binary-tree-generator" title="rand (binary) Tree Generator">rand (binary) Tree Generator</a></li><li><a class="toc-href" href="#application-random-testing_1" title="Application: random testing">Application: random testing</a><ul><li><a class="toc-href" href="#scalacheck" title="ScalaCheck">ScalaCheck</a></li></ul></li></ul></li><li><a class="toc-href" href="#14-monads_2" title="1.4 - Monads">1.4 - Monads</a><ul><li><a class="toc-href" href="#monad-laws" title="Monad laws">Monad laws</a></li><li><a class="toc-href" href="#the-try-type_1" title="the Try type">the Try type</a><ul><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li></ul></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#recap-functions-and-pattern-matching">Recap: Functions and Pattern Matching</a><ul>
+<li><a href="#case-classes">case classes</a></li>
+<li><a href="#pattern-matching">pattern matching</a></li>
+<li><a href="#function1-trait">Function1 Trait</a></li>
+<li><a href="#subclass-a-function-type">subclass a function type</a></li>
+<li><a href="#partial-match">Partial Match</a></li>
+</ul>
+</li>
+<li><a href="#recap-collections">Recap: Collections</a><ul>
+<li><a href="#for-expressions">For expressions</a></li>
+</ul>
+</li>
+<li><a href="#11-queries-with-for">1.1 - Queries with For</a></li>
+<li><a href="#12-translation-of-for">1.2 - Translation of For</a><ul>
+<li><a href="#implemention-of-for-expr-3-rules">implemention of for-expr: 3 rules</a></li>
+</ul>
+</li>
+<li><a href="#13-functional-random-generators">1.3 - Functional Random Generators</a><ul>
+<li><a href="#other-base-generators">other base Generators</a></li>
+<li><a href="#rand-list-generator">rand List Generator</a></li>
+<li><a href="#rand-binary-tree-generator">rand (binary) Tree Generator</a></li>
+<li><a href="#application-random-testing">Application: random testing</a><ul>
+<li><a href="#scalacheck">ScalaCheck</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#14-monads">1.4 - Monads</a><ul>
+<li><a href="#monad-laws">Monad laws</a></li>
+<li><a href="#the-try-type">the Try type</a><ul>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="recap-functions-and-pattern-matching">Recap: Functions and Pattern Matching</h1>
 <h3 id="case-classes">case classes</h3>
 <p>ex: json
@@ -263,30 +301,30 @@ json objects can be seq, num, str, bool,...</p>
 <p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image015.png"/></p>
 <p>pat &lt;- expr </p>
 <p>is translated to : </p>
-<div class="highlight"><pre><span class="code-line"><span></span>x <span class="o">&lt;-</span> expr withFilter <span class="p">{</span>case pat <span class="o">=&gt;</span> true<span class="p">;</span> case _ <span class="o">=&gt;</span> false</span>
-<span class="code-line">                <span class="p">}</span> map <span class="p">{</span>case pat <span class="o">=&gt;</span> x<span class="p">}</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="n">expr</span> <span class="n">withFilter</span> <span class="p">{</span><span class="n">case</span> <span class="n">pat</span> <span class="o">=&gt;</span> <span class="n">true</span><span class="p">;</span> <span class="n">case</span> <span class="n">_</span> <span class="o">=&gt;</span> <span class="n">false</span></span>
+<span class="code-line">                <span class="p">}</span> <span class="n">map</span> <span class="p">{</span><span class="n">case</span> <span class="n">pat</span> <span class="o">=&gt;</span> <span class="n">x</span><span class="p">}</span></span>
 </pre></div>
 <h1 id="11-queries-with-for_1">1.1 - Queries with For</h1>
 <p>for notation is equivalent to common ops on databases(ex. sql). </p>
 <p>ex. books in library</p>
 <p><code>case class Book(title: String, authors: List[String])</code></p>
 <p>query1: books with author name is "Bird"</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">for</span><span class="p">(</span> b<span class="o">&lt;-</span>books<span class="p">;</span> a <span class="o">&lt;-</span> b.authors <span class="kr">if</span> a startsWith <span class="s">"Bird,"</span><span class="p">)</span> </span>
-<span class="code-line">yield b.title</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">for</span><span class="p">(</span> <span class="n">b</span><span class="o">&lt;-</span><span class="n">books</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;-</span> <span class="n">b.authors</span> <span class="n">if</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="s">"Bird,"</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">yield</span> <span class="n">b.title</span></span>
 </pre></div>
 <p>query2: books with "Program" in the title: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">for</span><span class="p">(</span> b<span class="o">&lt;-</span>books <span class="kr">if</span> b.title indexOf <span class="s">"Program"</span> <span class="o">&gt;=</span><span class="m">0</span><span class="p">)</span></span>
-<span class="code-line">yield b.title</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">for</span><span class="p">(</span> <span class="n">b</span><span class="o">&lt;-</span><span class="n">books</span> <span class="n">if</span> <span class="n">b.title</span> <span class="n">indexOf</span> <span class="s">"Program"</span> <span class="o">&gt;=</span><span class="m">0</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">yield</span> <span class="n">b.title</span></span>
 </pre></div>
 <p>query3: names of authors who wrote &gt;=2 books</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    b1 <span class="o">&lt;-</span> books</span>
-<span class="code-line">    b2 <span class="o">&lt;-</span> books </span>
-<span class="code-line">    <span class="kr">if</span> b1<span class="o">!=</span>b2</span>
-<span class="code-line">    a1 <span class="o">&lt;-</span> b1.authors</span>
-<span class="code-line">    a2 <span class="o">&lt;-</span> b2.authors</span>
-<span class="code-line">    <span class="kr">if</span> a1<span class="o">==</span>a2</span>
-<span class="code-line"><span class="p">}</span> yield a1</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">b1</span> <span class="o">&lt;-</span> <span class="n">books</span></span>
+<span class="code-line">    <span class="n">b2</span> <span class="o">&lt;-</span> <span class="n">books</span> </span>
+<span class="code-line">    <span class="n">if</span> <span class="n">b1</span><span class="o">!=</span><span class="n">b2</span></span>
+<span class="code-line">    <span class="n">a1</span> <span class="o">&lt;-</span> <span class="n">b1.authors</span></span>
+<span class="code-line">    <span class="n">a2</span> <span class="o">&lt;-</span> <span class="n">b2.authors</span></span>
+<span class="code-line">    <span class="n">if</span> <span class="n">a1</span><span class="o">==</span><span class="n">a2</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">a1</span></span>
 </pre></div>
 <p>→ pb: the authors will be doubled → b1,b2 and b2,b1
 ⇒ change line 3 to <code>b1.title &lt; b2.title</code></p>
@@ -318,113 +356,113 @@ sol2. decalre books as Set instead of List. </p>
 <p>is translated to: </p>
 <p><code>l1.flatMap( x =&gt; for(y&lt;-l2; s) yield e3 )</code></p>
 <p>example: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">for</span><span class="p">{</span> </span>
-<span class="code-line">b <span class="o">&lt;-</span> books</span>
-<span class="code-line">a <span class="o">&lt;-</span> b.authors <span class="kr">if</span> a startsWith <span class="s">"Bird"</span></span>
-<span class="code-line"><span class="p">}</span> yield b.title</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">for</span><span class="p">{</span> </span>
+<span class="code-line"><span class="n">b</span> <span class="o">&lt;-</span> <span class="n">books</span></span>
+<span class="code-line"><span class="n">a</span> <span class="o">&lt;-</span> <span class="n">b.authors</span> <span class="n">if</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="s">"Bird"</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">b.title</span></span>
 </pre></div>
 <p>translated to: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>books flatMap ( </span>
-<span class="code-line">    b =&gt; b.authors.filter( a =&gt; a startsWith "Bird").map(y=&gt;y.title)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">books</span> <span class="n">flatMap</span> <span class="p">(</span> </span>
+<span class="code-line">    <span class="n">b</span> <span class="o">=&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">authors</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="ss">"Bird"</span><span class="p">).</span><span class="k">map</span><span class="p">(</span><span class="n">y</span><span class="o">=&gt;</span><span class="n">y</span><span class="p">.</span><span class="n">title</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">)</span>
+<span class="code-line"><span class="p">)</span></span>
 </pre></div>
 <p>NB: for expr is not restricted to collections, it supports any types with <code>map/flatMap/withFilter</code> method. ⇒ use for expr for your own types as well. </p>
 <h1 id="13-functional-random-generators_1">1.3 - Functional Random Generators</h1>
 <p>goal: use for expr on rand generators. </p>
 <p>for expr support any type with map/flatMap/filter ⇒ ex. rand value generator. </p>
 <p>generate rand value of type T: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>trait Generator[+T] { </span>
-<span class="code-line">def generate: T</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">trait Generator[+T] { </span></span>
+<span class="code-line"><span class="err">def generate: T</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>first implement Generator[Int], then use this to implement booleans, pairs, lists, sets, trees,......</p>
-<div class="highlight"><pre><span class="code-line"><span></span>val integers = new Generator[Int]{</span>
-<span class="code-line">    val rand = new java.util.Random</span>
-<span class="code-line">    def generate = rand.nextInt()</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="nf">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Random</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rand</span><span class="p">.</span><span class="n">nextInt</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">val booleans = new Generator[Boolean{</span>
-<span class="code-line">    def generate = integers.generate &gt; 0</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Boolean{</span></span>
+<span class="code-line"><span class="n">    def generate = integers.generate &gt; 0</span></span>
+<span class="code-line"><span class="n">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">val pairs = new Generator[(Int, Int)]{</span>
-<span class="code-line">    def generate = (integers.generate, integers.generate)</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="n">val pairs = new Generator[(Int, Int)</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">,</span><span class="w"> </span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>→ can we avoid the <code>new Generator[...]</code> ? </p>
 <p><em>ideally we want to write booleans as pairs as:</em> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>val booleans <span class="o">=</span> <span class="kr">for</span><span class="p">(</span> x <span class="o">&lt;-</span> integers <span class="p">)</span> yield x<span class="o">&gt;</span><span class="m">0</span></span>
-<span class="code-line">def pairs<span class="p">[</span><span class="bp">T</span><span class="p">,</span>U<span class="p">](</span><span class="kp">t</span><span class="o">:</span> Generator<span class="p">[</span><span class="bp">T</span><span class="p">],</span> u<span class="o">:</span> Generator<span class="p">[</span>U<span class="p">])</span> <span class="o">=</span> </span>
-<span class="code-line">    <span class="kr">for</span><span class="p">{</span>x <span class="o">&lt;-</span> <span class="kp">t</span><span class="p">;</span> y <span class="o">&lt;-</span> u<span class="p">}</span> yield <span class="p">(</span>x<span class="p">,</span>y<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">pairs</span><span class="o">[</span><span class="n">T,U</span><span class="o">]</span><span class="p">(</span><span class="nl">t</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">u</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="err">{</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">u</span><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>the for expr will be translated to map/flatMap/filter... </p>
 <p>⇒ define map and flatMap on the Generator trait so that it supports for expr!</p>
-<div class="highlight"><pre><span class="code-line"><span></span>trait Generator[+T]{</span>
-<span class="code-line">    self =&gt; // syntax: `self` is an alias of `this`</span>
-<span class="code-line">    def generate: T</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">trait</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">+T</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">self</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nl">syntax</span><span class="p">:</span><span class="w"> </span><span class="err">`</span><span class="n">self</span><span class="err">`</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="k">alias</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="err">`</span><span class="n">this</span><span class="err">`</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="nl">generate</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    def map[S](f: T=&gt;S): Generator[S] = </span>
-<span class="code-line">        new Generator[S]{</span>
-<span class="code-line">            def generate = f(self.generate) // can't use `this` here: inf loop</span>
-<span class="code-line">            // or use Generator.this.generate</span>
-<span class="code-line">        }</span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">map</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">S</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">can</span><span class="err">'</span><span class="n">t</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="err">`</span><span class="n">this</span><span class="err">`</span><span class="w"> </span><span class="nl">here</span><span class="p">:</span><span class="w"> </span><span class="n">inf</span><span class="w"> </span><span class="n">loop</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">Generator</span><span class="p">.</span><span class="n">this</span><span class="p">.</span><span class="n">generate</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    def flatMap(f: T=&gt;Generator[S]): Generator[S] = </span>
-<span class="code-line">        new Generator[S]{   </span>
-<span class="code-line">            def generate = f(self.generate).generate </span>
-<span class="code-line">        }</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">flatMap</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">generate</span><span class="p">).</span><span class="n">generate</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>ex. the booleans expression: </p>
 <p><code>val booleans = for (x&lt;-integers) yield x&gt;0</code></p>
 <p>is translated to: </p>
 <p><code>val booleans = integers map (x=&gt;x&gt;0)</code></p>
 <p>which is then expands to: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>val booleans = </span>
-<span class="code-line">new Generator[Boolean]{</span>
-<span class="code-line">    val f = (x =&gt; x&gt;0)</span>
-<span class="code-line">    def generate = f(integers.generate)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Boolean</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>after reduction, the expression is: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>val booleans = new Generator[Boolean{</span>
-<span class="code-line">    def generate = integers.generate &gt; 0</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">val booleans = new Generator[Boolean{</span></span>
+<span class="code-line"><span class="err">    def generate = integers.generate &gt; 0</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>which is the initial implementation... </p>
 <h3 id="other-base-generators">other base Generators</h3>
 <p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image017.png"/></p>
 <p>(The <code>T*</code> syntax is variable parameter)</p>
 <h3 id="rand-list-generator">rand List Generator</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>def lists<span class="o">:</span> Generator<span class="p">[</span>List<span class="p">[</span>Int<span class="p">]]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    isEmpty <span class="o">&lt;-</span> booleans</span>
-<span class="code-line">    <span class="kt">list</span> <span class="o">&lt;-</span> <span class="kr">if</span> <span class="p">(</span>isEmpty<span class="p">)</span> emptyLists <span class="kr">else</span> nonEmptyLists</span>
-<span class="code-line"><span class="p">}</span> yield <span class="kt">list</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span> <span class="n">lists</span><span class="o">:</span> <span class="n">Generator[List[Int]]</span> <span class="o">=</span> <span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">isEmpty</span> <span class="o">&lt;-</span> <span class="n">booleans</span></span>
+<span class="code-line">    <span class="n">list</span> <span class="o">&lt;-</span> <span class="nf">if </span><span class="p">(</span><span class="n">isEmpty</span><span class="p">)</span> <span class="n">emptyLists</span> <span class="n">else</span> <span class="n">nonEmptyLists</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">list</span></span>
 <span class="code-line"></span>
-<span class="code-line">def emptyLists <span class="o">=</span> <span class="kp">single</span><span class="p">(</span>Nil<span class="p">)</span></span>
+<span class="code-line"><span class="n">def</span> <span class="n">emptyLists</span> <span class="o">=</span> <span class="nf">single</span><span class="p">(</span><span class="n">Nil</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">def nonEmptyLists <span class="o">=</span> <span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    head <span class="o">&lt;-</span> integers</span>
-<span class="code-line">    tail <span class="o">&lt;-</span> lists <span class="o">//</span> recursive call to <span class="sb">`lists`</span></span>
-<span class="code-line"><span class="p">}</span> yield <span class="kp">head</span><span class="o">::</span><span class="kp">tail</span></span>
+<span class="code-line"><span class="n">def</span> <span class="n">nonEmptyLists</span> <span class="o">=</span> <span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">head</span> <span class="o">&lt;-</span> <span class="n">integers</span></span>
+<span class="code-line">    <span class="n">tail</span> <span class="o">&lt;-</span> <span class="n">lists</span> <span class="o">//</span> <span class="n">recursive</span> <span class="n">call</span> <span class="n">to</span> <span class="n">`lists`</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">head</span><span class="o">::</span><span class="n">tail</span></span>
 </pre></div>
 <h3 id="rand-binary-tree-generator">rand (binary) Tree Generator</h3>
 <p>two types of tree nodes: leaf or inner node</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def trees<span class="o">:</span> Generator<span class="p">[</span>Tree<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    isLeaf <span class="o">&lt;-</span> booleans</span>
-<span class="code-line">    tree <span class="o">&lt;-</span> <span class="kr">if</span><span class="p">(</span>isLeaf<span class="p">)</span> leafs <span class="kr">else</span> inners</span>
-<span class="code-line"><span class="p">}</span> yield tree</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nl">trees</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Tree</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">isLeaf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">booleans</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">tree</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">isLeaf</span><span class="p">)</span><span class="w"> </span><span class="n">leafs</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">inners</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">tree</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">def leafs<span class="o">:</span> Generator<span class="p">[</span>Leaf<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    x <span class="o">&lt;-</span> integers</span>
-<span class="code-line"><span class="p">}</span> yield Leaf<span class="p">(</span>x<span class="p">)</span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="nl">leafs</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Leaf</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">integers</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">Leaf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">def inners<span class="o">:</span> Generator<span class="p">[</span>Inner<span class="p">]</span> <span class="o">=</span> <span class="kr">for</span><span class="p">{</span></span>
-<span class="code-line">    l <span class="o">&lt;-</span> trees</span>
-<span class="code-line">    r <span class="o">&lt;-</span> trees</span>
-<span class="code-line"><span class="p">}</span> yield Inner<span class="p">(</span>l<span class="p">,</span> r<span class="p">)</span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="nl">inners</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Inner</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">l</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">trees</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">trees</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="k">Inner</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <h2 id="application-random-testing_1">Application: random testing</h2>
 <p>test: check <em>postconditions</em> (expected results)</p>
@@ -440,18 +478,18 @@ sol2. decalre books as Set instead of List. </p>
 </pre></div>
 <h3 id="scalacheck">ScalaCheck</h3>
 <p><em>instead of writing tests, write properties that are assumed to hold.</em> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>forAll { </span>
-<span class="code-line">    (l1:List[Int], l2:List[Int]) =&gt;</span>
-<span class="code-line">        l1.size + l2.size == (l1++l2).size</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">forAll</span><span class="w"> </span><span class="err">{</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="p">(</span><span class="nl">l1</span><span class="p">:</span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">l2</span><span class="p">:</span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">l1</span><span class="p">.</span><span class="k">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="k">size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="o">++</span><span class="n">l2</span><span class="p">).</span><span class="k">size</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h1 id="14-monads_2">1.4 - Monads</h1>
 <p>from last section: not only collections, but also any type with map and flatmap can use for expr ⇒ monads. </p>
 <p><def>. Monads is a type M[T] with 2 operations: <code>flatMap</code> ("bind") and <code>unit</code>, and satisfy some laws.</def></p>
-<div class="highlight"><pre><span class="code-line"><span></span>train M[T]{</span>
-<span class="code-line">    def flatMap[U](f: T=&gt;M[U]): M[U]): M[U]</span>
-<span class="code-line">}</span>
-<span class="code-line">def unit[T](x:T): M[T]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">train</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">flatMap</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">unit</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">T</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"></span></span>
 </pre></div>
 <p>examples: </p>
 <ul>
@@ -478,17 +516,17 @@ sol2. decalre books as Set instead of List. </p>
 <p><code>m flatMap unit == m</code></p>
 <h2 id="the-try-type_1">the Try type</h2>
 <p>We define a Try class, which is similar to Option class. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>abstraxt class Try[+T]</span>
-<span class="code-line">case class Success[T](x:T) extends Try[T]</span>
-<span class="code-line">case class Failure(ex: Exception) extends Try[Nothing]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">abstraxt</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">+T</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Success</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">T</span><span class="p">)</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Failure</span><span class="p">(</span><span class="nl">ex</span><span class="p">:</span><span class="w"> </span><span class="k">Exception</span><span class="p">)</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">Nothing</span><span class="o">]</span><span class="w"></span></span>
 </pre></div>
 <p>we can write <code>Try(expr)</code> to give a computation a try, by implementing the <code>apply</code> method of object Try:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>object Try{</span>
-<span class="code-line">def apply[T](expr: =&gt;T): Try[T]= // expr is passed BY NAME, otherwise will cause exception in eval</span>
-<span class="code-line">    try Success(expr) // java syntax of try-catch</span>
-<span class="code-line">    catch{ case NonFatal(ex) =&gt; Failure(ex) }</span>
-<span class="code-line">}</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">object</span><span class="w"> </span><span class="k">Try</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">apply</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">expr</span><span class="p">:</span><span class="w"> </span><span class="o">=&gt;</span><span class="n">T</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">T</span><span class="o">]=</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">NAME</span><span class="p">,</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">cause</span><span class="w"> </span><span class="k">exception</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">eval</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="n">Success</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">java</span><span class="w"> </span><span class="n">syntax</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">try</span><span class="o">-</span><span class="k">catch</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">catch</span><span class="err">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="n">NonFatal</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Failure</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>if Try is a Monad ⇒ can be written in for expr: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image018.png"/></p>

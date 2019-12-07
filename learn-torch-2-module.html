@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="torch" />
-        <meta name="description" content="[TOC] Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from …" />
+        <meta name="description" content="Module class Linear Identity Other modules Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[learning torch] 2. Module (layers)"/>
         <meta property="og:url" content="http://x-wei.github.io/learn-torch-2-module.html"/>
-        <meta property="og:description" content="[TOC] Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt input of module, computed from …"/>
+        <meta property="og:description" content="Module class Linear Identity Other modules Module is an abstract class which defines fundamental methods necessary for a Layer. doc: https://github.com/torch/nn/blob/master/doc/module.md Module class variables in Module: output: Tensor, the ouput computed from last call of forward(input) gradInput: Tensor, gradient wrt ..."/>
         <meta property="article:published_time" content="2016-10-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="torch" />
@@ -210,7 +210,14 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[learning torch] 2. Module (layers)">[learning torch] 2. Module (layers)</a><ul><li><a class="toc-href" href="#module-class" title="Module class">Module class</a></li><li><a class="toc-href" href="#linear" title="Linear">Linear</a></li><li><a class="toc-href" href="#identity" title="Identity">Identity</a></li><li><a class="toc-href" href="#other-modules" title="Other modules">Other modules</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#module-class">Module class</a></li>
+<li><a href="#linear">Linear</a></li>
+<li><a href="#identity">Identity</a></li>
+<li><a href="#other-modules">Other modules</a></li>
+</ul>
+</div>
 <p><code>Module</code> is an abstract class which defines fundamental methods necessary for a <em>Layer</em>. </p>
 <p>doc: <a href="https://github.com/torch/nn/blob/master/doc/module.md">https://github.com/torch/nn/blob/master/doc/module.md</a> </p>
 <h2 id="module-class">Module class</h2>
@@ -267,29 +274,29 @@ mx's blog            </a>
 </pre></div>
 <h2 id="identity">Identity</h2>
 <p>output reproduces input, this layer can be used to model the input layer of a neural network.  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>th&gt; id = nn.Identity() </span>
-<span class="code-line">                                                                      [0.0000s]  </span>
-<span class="code-line">th&gt; y = id:forward(x) </span>
-<span class="code-line">                                                                      [0.0000s]  </span>
-<span class="code-line">th&gt; y </span>
-<span class="code-line"> 1 </span>
-<span class="code-line"> 2 </span>
-<span class="code-line"> 3 </span>
-<span class="code-line">[torch.DoubleTensor of size 3]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">th</span><span class="o">&gt;</span> <span class="n">id</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="k">Identity</span><span class="p">()</span> </span>
+<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0000</span><span class="n">s</span><span class="p">]</span>  </span>
+<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">id</span><span class="p">:</span><span class="k">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> </span>
+<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0000</span><span class="n">s</span><span class="p">]</span>  </span>
+<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">y</span> </span>
+<span class="code-line"> <span class="mi">1</span> </span>
+<span class="code-line"> <span class="mi">2</span> </span>
+<span class="code-line"> <span class="mi">3</span> </span>
+<span class="code-line"><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">DoubleTensor</span> <span class="k">of</span> <span class="k">size</span> <span class="mi">3</span><span class="p">]</span></span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      [0.0001s]  </span>
-<span class="code-line">th&gt; id:backward(x,y) </span>
-<span class="code-line"> 1 </span>
-<span class="code-line"> 2 </span>
-<span class="code-line"> 3 </span>
-<span class="code-line">[torch.DoubleTensor of size 3]</span>
+<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0001</span><span class="n">s</span><span class="p">]</span>  </span>
+<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">id</span><span class="p">:</span><span class="k">backward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> </span>
+<span class="code-line"> <span class="mi">1</span> </span>
+<span class="code-line"> <span class="mi">2</span> </span>
+<span class="code-line"> <span class="mi">3</span> </span>
+<span class="code-line"><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">DoubleTensor</span> <span class="k">of</span> <span class="k">size</span> <span class="mi">3</span><span class="p">]</span></span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      [0.0001s]  </span>
-<span class="code-line">th&gt; id.gradInput </span>
-<span class="code-line"> 1 </span>
-<span class="code-line"> 2 </span>
-<span class="code-line"> 3 </span>
-<span class="code-line">[torch.DoubleTensor of size 3]</span>
+<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0001</span><span class="n">s</span><span class="p">]</span>  </span>
+<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">id</span><span class="p">.</span><span class="n">gradInput</span> </span>
+<span class="code-line"> <span class="mi">1</span> </span>
+<span class="code-line"> <span class="mi">2</span> </span>
+<span class="code-line"> <span class="mi">3</span> </span>
+<span class="code-line"><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">DoubleTensor</span> <span class="k">of</span> <span class="k">size</span> <span class="mi">3</span><span class="p">]</span></span>
 </pre></div>
 <h2 id="other-modules">Other modules</h2>
 <p><a href="https://github.com/torch/nn/blob/master/doc/simple.md">https://github.com/torch/nn/blob/master/doc/simple.md</a> </p>

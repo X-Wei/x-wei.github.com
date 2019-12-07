@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Object Localization Classification VS. Localization VS. Detection classification with localization Apart from softmax output (for classification), add 4 more outputs of bounding box: b_x, b_y, b_h, b_w. Defining target label y in localization label format: P_c indicating if there&#39;s any object bounding box: b_x, b_y, b_h, b_w class proba …" />
+        <meta name="description" content="Object Localization Landmark Detection Object Detection Convolutional Implementation of Sliding Windows Bounding Box Predictions Intersection Over Union Non-max Suppression Anchor Boxes YOLO Algorithm (Optional) Region Proposals Object Localization Classification VS. Localization VS. Detection classification with localization Apart from softmax output (for classification), add 4 more outputs of bounding box: b_x ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Convolutional Neural Networks] week3. Object detection"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c4wk3.html"/>
-        <meta property="og:description" content="[TOC] Object Localization Classification VS. Localization VS. Detection classification with localization Apart from softmax output (for classification), add 4 more outputs of bounding box: b_x, b_y, b_h, b_w. Defining target label y in localization label format: P_c indicating if there&#39;s any object bounding box: b_x, b_y, b_h, b_w class proba …"/>
+        <meta property="og:description" content="Object Localization Landmark Detection Object Detection Convolutional Implementation of Sliding Windows Bounding Box Predictions Intersection Over Union Non-max Suppression Anchor Boxes YOLO Algorithm (Optional) Region Proposals Object Localization Classification VS. Localization VS. Detection classification with localization Apart from softmax output (for classification), add 4 more outputs of bounding box: b_x ..."/>
         <meta property="article:published_time" content="2017-11-27" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,117 +210,130 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Convolutional Neural Networks] week3. Object detection">[Convolutional Neural Networks] week3. Object detection</a><ul><li><a class="toc-href" href="#object-localization" title="Object Localization">Object Localization</a></li><li><a class="toc-href" href="#landmark-detection" title="Landmark Detection">Landmark Detection</a></li><li><a class="toc-href" href="#object-detection" title="Object Detection">Object Detection</a></li><li><a class="toc-href" href="#convolutional-implementation-of-sliding-windows" title="Convolutional Implementation of Sliding Windows">Convolutional Implementation of Sliding Windows</a></li><li><a class="toc-href" href="#bounding-box-predictions" title="Bounding Box Predictions">Bounding Box Predictions</a></li><li><a class="toc-href" href="#intersection-over-union" title="Intersection Over Union">Intersection Over Union</a></li><li><a class="toc-href" href="#non-max-suppression" title="Non-max Suppression">Non-max Suppression</a></li><li><a class="toc-href" href="#anchor-boxes" title="Anchor Boxes">Anchor Boxes</a></li><li><a class="toc-href" href="#yolo-algorithm" title="YOLO Algorithm">YOLO Algorithm</a></li><li><a class="toc-href" href="#optional-region-proposals" title="(Optional) Region Proposals">(Optional) Region Proposals</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#object-localization">Object Localization</a></li>
+<li><a href="#landmark-detection">Landmark Detection</a></li>
+<li><a href="#object-detection">Object Detection</a></li>
+<li><a href="#convolutional-implementation-of-sliding-windows">Convolutional Implementation of Sliding Windows</a></li>
+<li><a href="#bounding-box-predictions">Bounding Box Predictions</a></li>
+<li><a href="#intersection-over-union">Intersection Over Union</a></li>
+<li><a href="#non-max-suppression">Non-max Suppression</a></li>
+<li><a href="#anchor-boxes">Anchor Boxes</a></li>
+<li><a href="#yolo-algorithm">YOLO Algorithm</a></li>
+<li><a href="#optional-region-proposals">(Optional) Region Proposals</a></li>
+</ul>
+</div>
 <h3 id="object-localization">Object Localization</h3>
-<p>Classification VS. Localization VS. Detection<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image.png"> </img></br></p>
-<p><strong>classification with localization</strong><br>
-Apart from softmax output (for classification), <em>add 4 more outputs of bounding box</em>: <code>b_x, b_y, b_h, b_w</code>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image002.png"> </img></br></br></p>
-<p><strong>Defining target label y in localization</strong><br>
-label format:<br>
-<code>P_c</code> indicating if there's any object<br>
-bounding box: <code>b_x, b_y, b_h, b_w</code><br>
-class proba: <code>c_1, c_2, c_3</code> </br></br></br></br></p>
-<p>Loss function: squared error<br>
-if y_1=P_c=1: loss = square error (y, y_hat)<br>
-if y_1=P_c=0: loss = (y_1 - y_1_hat)^2<br>
-can use different loss function for different components, but sq-loss works in practice.  </br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image003.png"> </img></p>
+<p>Classification VS. Localization VS. Detection<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image.png"/> </p>
+<p><strong>classification with localization</strong><br/>
+Apart from softmax output (for classification), <em>add 4 more outputs of bounding box</em>: <code>b_x, b_y, b_h, b_w</code>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image002.png"/> </p>
+<p><strong>Defining target label y in localization</strong><br/>
+label format:<br/>
+<code>P_c</code> indicating if there's any object<br/>
+bounding box: <code>b_x, b_y, b_h, b_w</code><br/>
+class proba: <code>c_1, c_2, c_3</code> </p>
+<p>Loss function: squared error<br/>
+if y_1=P_c=1: loss = square error (y, y_hat)<br/>
+if y_1=P_c=0: loss = (y_1 - y_1_hat)^2<br/>
+can use different loss function for different components, but sq-loss works in practice.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image003.png"/> </p>
 <h3 id="landmark-detection">Landmark Detection</h3>
 <p>"landmark": important points in image. → let NN output their coords.  </p>
-<p>e.g. recognize coord of eye's corner or points along the eye/nose/mouth<br>
-→ specify a number of landmarks<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image005.png"> </img></br></br></p>
+<p>e.g. recognize coord of eye's corner or points along the eye/nose/mouth<br/>
+→ specify a number of landmarks<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image005.png"/> </p>
 <h3 id="object-detection">Object Detection</h3>
-<p><strong>sliding windows detection</strong><br>
-example: car detection.<br>
-training image: <em>closely-croped</em> image<br>
-in prediciton: use sliding window and pass to ConvNet; use window of different size.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image007.png"><br>
-Sliding window is OK with pre-DL algos.<br>
-disadvantage: computation cost too high — each window's crop ran <em>independently</em> through ConvNet.<br>
-→ sliding window also can be implemented "convolutionally" — some computation can be cached.  </br></br></br></img></br></br></br></br></p>
+<p><strong>sliding windows detection</strong><br/>
+example: car detection.<br/>
+training image: <em>closely-croped</em> image<br/>
+in prediciton: use sliding window and pass to ConvNet; use window of different size.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image007.png"/><br/>
+Sliding window is OK with pre-DL algos.<br/>
+disadvantage: computation cost too high — each window's crop ran <em>independently</em> through ConvNet.<br/>
+→ sliding window also can be implemented "convolutionally" — some computation can be cached.  </p>
 <h3 id="convolutional-implementation-of-sliding-windows">Convolutional Implementation of Sliding Windows</h3>
-<p><strong>Turning FC layer into conv layers</strong><br>
-example: last conv/maxpool layer: size=5<em>5<br>
-→ </br></em>replace FC(output_dim=400) by 400 5<em>5 filters</em><br>
-→ replace next FC layer by 1<em>1 filters<br>
-→ replace softmax layer by 1</br></em>1 filters and activation.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image008.png"> </img></br></br></br></p>
-<p><strong>conv implementation of sliding window</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image009.png"><br>
-example: training image 14<em>14</em>3, testing image 16<em>16</em>3<br>
-instead of corping image to 14<em>14 and feed to ConvNet, </em>feed the larger picture directly to ConvNet*.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image010.png"> </img></br></br></br></img></br></p>
-<p>→ <em>output contains results of all patches</em>!<br>
-⇒ instead of computing each sliding window sequentially, can get all results with a single pass of the full image!!<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image012.png"><br>
-problem: bounding box position is not accurate.  </br></img></br></br></p>
+<p><strong>Turning FC layer into conv layers</strong><br/>
+example: last conv/maxpool layer: size=5<em>5<br/>
+→ </em>replace FC(output_dim=400) by 400 5<em>5 filters</em><br/>
+→ replace next FC layer by 1<em>1 filters<br/>
+→ replace softmax layer by 1</em>1 filters and activation.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image008.png"/> </p>
+<p><strong>conv implementation of sliding window</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image009.png"/><br/>
+example: training image 14<em>14</em>3, testing image 16<em>16</em>3<br/>
+instead of corping image to 14<em>14 and feed to ConvNet, </em>feed the larger picture directly to ConvNet*.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image010.png"/> </p>
+<p>→ <em>output contains results of all patches</em>!<br/>
+⇒ instead of computing each sliding window sequentially, can get all results with a single pass of the full image!!<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image012.png"/><br/>
+problem: bounding box position is not accurate.  </p>
 <h3 id="bounding-box-predictions">Bounding Box Predictions</h3>
-<p>To output more accurate bounding boxes: aspect-ration no longer 1:1.<br>
-<strong>YOLO algorithm</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image013.png"><br>
-"You Only Look Once"<br>
-For each grid cell: apply image classification with bouding boxes (described in 1st section, 8 outputs).<br>
-needs labelled data: assign each obj to the grid where its center is in.<br>
-<em>output volume: 3</em>3<em>8</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image014.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image015.png"> </img></br></img></br></br></br></br></br></img></br></br></p>
+<p>To output more accurate bounding boxes: aspect-ration no longer 1:1.<br/>
+<strong>YOLO algorithm</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image013.png"/><br/>
+"You Only Look Once"<br/>
+For each grid cell: apply image classification with bouding boxes (described in 1st section, 8 outputs).<br/>
+needs labelled data: assign each obj to the grid where its center is in.<br/>
+<em>output volume: 3</em>3<em>8</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image014.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image015.png"/> </p>
 <p>Also: a lot of computation shared, efficient ⇒ possible to do real-time.  </p>
-<p>note: bounding box annotation in YOLO <em>can be out of [0,1] range.</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image016.png"> </img></br></p>
+<p>note: bounding box annotation in YOLO <em>can be out of [0,1] range.</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image016.png"/> </p>
 <h3 id="intersection-over-union">Intersection Over Union</h3>
-<p><strong>Evaluating</strong> object localization:<br>
-→  intersection over union (IoU) function = size(intesection) / size(union) = <em>measure of overlap of two bounding boxes.</em><br>
-"correct" if IoU &gt;= 0.5<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image017.png"> </img></br></br></br></p>
+<p><strong>Evaluating</strong> object localization:<br/>
+→  intersection over union (IoU) function = size(intesection) / size(union) = <em>measure of overlap of two bounding boxes.</em><br/>
+"correct" if IoU &gt;= 0.5<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image017.png"/> </p>
 <h3 id="non-max-suppression">Non-max Suppression</h3>
-<p>Problem: algo might detect the same obj multiple times.<br>
-example:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image018.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image019.png"><br>
-each bouding box has a confidence score — keep the max bouding box, suppress the overlapping ones.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image020.png"> </img></br></br></img></br></img></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image021.png"> </img></p>
+<p>Problem: algo might detect the same obj multiple times.<br/>
+example:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image018.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image019.png"/><br/>
+each bouding box has a confidence score — keep the max bouding box, suppress the overlapping ones.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image020.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image021.png"/> </p>
 <h3 id="anchor-boxes">Anchor Boxes</h3>
 <p>Problem: each grid detects only one obj → can a grid <em>detect multiple obj</em> ? → use anchor boxes.  </p>
-<p>In data labeling: predefine 2 shapes (anchor boxes); use 8 sets of 8 outputs for each anchor box.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image022.png"> </img></br></p>
+<p>In data labeling: predefine 2 shapes (anchor boxes); use 8 sets of 8 outputs for each anchor box.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image022.png"/> </p>
 <p>Compare with previous:  </p>
 <ul>
 <li>previous: each obj assigned to the grid which contains its mid point  </li>
 <li>now each obj assigned to (cell, anchorbox): cell=the grid which contains its mid point; anchor_box=<em> the anchorbox that has highest IoU with the labelled bounding box</em>.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image023.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image023.png"/> </p>
 <p>In practice: choose 5~10 anchor boxes by hand; or use Kmeans on object's shapes.  </p>
 <h3 id="yolo-algorithm">YOLO Algorithm</h3>
-<p>Put all components together.<br>
-example:  </br></p>
+<p>Put all components together.<br/>
+example:  </p>
 <ul>
 <li>detecting pedestrian/car/motercycle. (4 classes)  </li>
 <li>grid: 3*3  </li>
 <li>2 anchor boxes  </li>
 </ul>
-<p>→ <strong>Preparing training set</strong><br>
-y shape = 3*3*2*8<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image024.png"> </img></br></br></p>
-<p>train a ConvNet on this with output_dim = 3<em>3</em>16<br>
-→ <strong>making predictions</strong><br>
-2*8 outputs for each of the 9 grids<br>
-→ <strong>nonmax supression for each class</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image025.png"> </img></br></br></br></br></p>
+<p>→ <strong>Preparing training set</strong><br/>
+y shape = 3*3*2*8<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image024.png"/> </p>
+<p>train a ConvNet on this with output_dim = 3<em>3</em>16<br/>
+→ <strong>making predictions</strong><br/>
+2*8 outputs for each of the 9 grids<br/>
+→ <strong>nonmax supression for each class</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image025.png"/> </p>
 <h3 id="optional-region-proposals">(Optional) Region Proposals</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image026.png"><br>
-Region proposal algo (R-CNN): less often than YOLO.<br>
-Sliding window disadvantage: many regions are not interesting.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image027.png"><br>
-⇒ select just a few windows<br>
-first run segmentation algo, then run CNN on bounding box of blobs.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image028.png"><br>
-→ still quite slow<br>
-faster variants:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image029.png"> </img></br></br></br></img></br></br></br></img></br></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image026.png"/><br/>
+Region proposal algo (R-CNN): less often than YOLO.<br/>
+Sliding window disadvantage: many regions are not interesting.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image027.png"/><br/>
+⇒ select just a few windows<br/>
+first run segmentation algo, then run CNN on bounding box of blobs.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image028.png"/><br/>
+→ still quite slow<br/>
+faster variants:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk3/pasted_image029.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

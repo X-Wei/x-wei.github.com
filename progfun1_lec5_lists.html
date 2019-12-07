@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="[TOC] 5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs …" />
+        <meta name="description" content="5.1 - More Functions on Lists 5.2 - Pairs and Tuples Pair/Tuple 5.3 - Implicit Parameters 5.4 - Higher-Order List Functions map filtering 5.5 - Reduction of Lists reduceLeft foldLeft foldRight/reduceRight 5.6 - Reasoning About Concat structural induction 5.7 - A Larger Equational Proof on Lists 5.1 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC I] Lec5: Lists"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun1_lec5_lists.html"/>
-        <meta property="og:description" content="[TOC] 5.1 - More Functions on Lists already known methods: xs.head xs.tail sublist and ele access: xs.length xs.last xs.init: all elementh except last element xs.take(n): sublist of first n elements xs.drop(n): the rest of list after taking first n elements xs …"/>
+        <meta property="og:description" content="5.1 - More Functions on Lists 5.2 - Pairs and Tuples Pair/Tuple 5.3 - Implicit Parameters 5.4 - Higher-Order List Functions map filtering 5.5 - Reduction of Lists reduceLeft foldLeft foldRight/reduceRight 5.6 - Reasoning About Concat structural induction 5.7 - A Larger Equational Proof on Lists 5.1 ..."/>
         <meta property="article:published_time" content="2016-07-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -210,11 +210,36 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC I] Lec5: Lists">[Scala MOOC I] Lec5: Lists</a><ul><li><a class="toc-href" href="#51-more-functions-on-lists" title="5.1 - More Functions on Lists">5.1 - More Functions on Lists</a></li><li><a class="toc-href" href="#52-pairs-and-tuples" title="5.2 - Pairs and Tuples">5.2 - Pairs and Tuples</a><ul><li><a class="toc-href" href="#pairtuple" title="Pair/Tuple">Pair/Tuple</a></li></ul></li><li><a class="toc-href" href="#53-implicit-parameters_1" title="5.3 - Implicit Parameters">5.3 - Implicit Parameters</a></li><li><a class="toc-href" href="#54-higher-order-list-functions" title="5.4 - Higher-Order List Functions">5.4 - Higher-Order List Functions</a><ul><li><a class="toc-href" href="#map" title="map">map</a></li><li><a class="toc-href" href="#filtering" title="filtering">filtering</a></li></ul></li><li><a class="toc-href" href="#55-reduction-of-lists_1" title="5.5 - Reduction of Lists">5.5 - Reduction of Lists</a><ul><li><a class="toc-href" href="#reduceleft" title="reduceLeft">reduceLeft</a></li><li><a class="toc-href" href="#foldleft" title="foldLeft">foldLeft</a></li><li><a class="toc-href" href="#foldrightreduceright" title="foldRight/reduceRight">foldRight/reduceRight</a></li></ul></li><li><a class="toc-href" href="#56-reasoning-about-concat_1" title="5.6 - Reasoning About Concat">5.6 - Reasoning About Concat</a><ul><li><a class="toc-href" href="#structural-induction" title="structural induction">structural induction</a></li><li><a class="toc-href" href="#57-a-larger-equational-proof-on-lists_1" title="5.7 - A Larger Equational Proof on Lists">5.7 - A Larger Equational Proof on Lists</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#51-more-functions-on-lists">5.1 - More Functions on Lists</a></li>
+<li><a href="#52-pairs-and-tuples">5.2 - Pairs and Tuples</a><ul>
+<li><a href="#pairtuple">Pair/Tuple</a></li>
+</ul>
+</li>
+<li><a href="#53-implicit-parameters">5.3 - Implicit Parameters</a></li>
+<li><a href="#54-higher-order-list-functions">5.4 - Higher-Order List Functions</a><ul>
+<li><a href="#map">map</a></li>
+<li><a href="#filtering">filtering</a></li>
+</ul>
+</li>
+<li><a href="#55-reduction-of-lists">5.5 - Reduction of Lists</a><ul>
+<li><a href="#reduceleft">reduceLeft</a></li>
+<li><a href="#foldleft">foldLeft</a></li>
+<li><a href="#foldrightreduceright">foldRight/reduceRight</a></li>
+</ul>
+</li>
+<li><a href="#56-reasoning-about-concat">5.6 - Reasoning About Concat</a><ul>
+<li><a href="#structural-induction">structural induction</a></li>
+<li><a href="#57-a-larger-equational-proof-on-lists">5.7 - A Larger Equational Proof on Lists</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="51-more-functions-on-lists">5.1 - More Functions on Lists</h1>
 <p>already known methods: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>xs.head</span>
-<span class="code-line">xs.tail</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">xs.head</span></span>
+<span class="code-line"><span class="err">xs.tail</span></span>
 </pre></div>
 <p>sublist and ele access: </p>
 <ul>
@@ -236,83 +261,83 @@ mx's blog            </a>
 <p>complexity: 
 head, tail: simple to implement
 ⇒ complexity of <code>last</code>?</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def last[T](xs: List[T]): T = xs match{</span>
-<span class="code-line">    case List() =&gt; throw new Error("last of Nil")</span>
-<span class="code-line">    case List(x) =&gt; x</span>
-<span class="code-line">    case y::ys =&gt; last(ys)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="k">last</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Error</span><span class="p">(</span><span class="ss">"last of Nil"</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="n">ys</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">last</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>⇒ complexity of last = O(n)</p>
 <p>implement <code>init</code>:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def init[T](xs: List[T]): T = xs match{</span>
-<span class="code-line">    case List() =&gt; throw new Error("init of Nil")</span>
-<span class="code-line">    case List(x) =&gt; List()</span>
-<span class="code-line">    case y::ys =&gt; y::init(ys)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">init</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Error</span><span class="p">(</span><span class="ss">"init of Nil"</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="n">ys</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="n">init</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>⇒ complexity = O(length of xs)</p>
 <p>implement concatenation <code>:::</code>/<code>++</code>
 (NB: <code>:::</code> is right-associative, <code>xs:::ys</code> = <code>ys. :::(xs)</code>. )</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def concat[T](xs: List[T], ys: List[T]) = xs match{</span>
-<span class="code-line">    case List() =&gt; ys</span>
-<span class="code-line">    case z::zs =&gt; x:concat(xs, ys)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">concat</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">ys</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ys</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">z</span><span class="p">:</span><span class="err">:</span><span class="n">zs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="nf">concat</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>⇒ complexity of concat = O(length of xs)</p>
 <p>implement of reverse</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def reverse[T](xs: List[T]) = xs match{</span>
-<span class="code-line">    case List() =&gt; List()</span>
-<span class="code-line">    case y::ys =&gt; reverse(ys) ++ y</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">reverse</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">List</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="n">ys</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">y</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>⇒ complexity of reverse: every call contains a concat, thus complexity=O(n2)</p>
 <p>exercice: remove nth element: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def removeAt[T](n:Int, xs: List[T]): List[T] = </span>
-<span class="code-line">(xs take n ) ++ (xs drop n+1)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">removeAt</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">n</span><span class="p">:</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">take</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="k">drop</span><span class="w"> </span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <h1 id="52-pairs-and-tuples">5.2 - Pairs and Tuples</h1>
 <p>example: sort list faster than insertion sort → merge sort. </p>
 <p>sort 2 sublist, merge them ⇒ list is sorted</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def msort(xs: List[Int]): List[Int] = {</span>
-<span class="code-line">    val n = xs.length/2</span>
-<span class="code-line">    if(n==0) xs</span>
-<span class="code-line">    else{</span>
-<span class="code-line">        def merge(xs: List[Int], ys: List[Int]) = ... // see below</span>
-<span class="code-line">        val (fst, snd) = x splitAt n // splitAt returns 2 sublists</span>
-<span class="code-line">        merge(msort(fst), msort(snd))</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">msort</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="p">.</span><span class="n">length</span><span class="o">/</span><span class="mi">2</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">def</span><span class="w"> </span><span class="k">merge</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">ys</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">see</span><span class="w"> </span><span class="n">below</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">val</span><span class="w"> </span><span class="p">(</span><span class="n">fst</span><span class="p">,</span><span class="w"> </span><span class="n">snd</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">splitAt</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">splitAt</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">sublists</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">merge</span><span class="p">(</span><span class="n">msort</span><span class="p">(</span><span class="n">fst</span><span class="p">),</span><span class="w"> </span><span class="n">msort</span><span class="p">(</span><span class="n">snd</span><span class="p">))</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>merge: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def merge(xs: List[Int], ys: List[Int]): List[Int] = xs match {</span>
-<span class="code-line">    case Nil =&gt; ys</span>
-<span class="code-line">    case x::zs =&gt; match ys{</span>
-<span class="code-line">        case Nil =&gt; xs</span>
-<span class="code-line">        case y::ws =&gt; {</span>
-<span class="code-line">            if(x&lt;y) x::merge(zs, ys)</span>
-<span class="code-line">            else y::merge(xs, ws)</span>
-<span class="code-line">        }</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="k">merge</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">ys</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ys</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="n">zs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">ys</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">xs</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="n">ws</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="k">merge</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="k">merge</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">ws</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="pairtuple">Pair/Tuple</h3>
 <p>written as <code>(x, y)</code> in scala. pair can be used as patterns :  similar for tuples. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>val pair = ("a", 2)</span>
-<span class="code-line">val (label, value) = pair</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">val pair = ("a", 2)</span></span>
+<span class="code-line"><span class="err">val (label, value) = pair</span></span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image.png"/></p>
 <p>tuple implementation: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image001.png"/></p>
 <p>⇒ can use <code>_1</code> <code>_2</code> to access elements</p>
 <p>exercice: rewrite the merge function using a <em>pattern matching over pairs</em>:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def merge(xs: List[Int], ys: List[Int]): List[Int] =</span>
-<span class="code-line">(xs, ys) match {</span>
-<span class="code-line">    case (Nil, ys) =&gt; ys</span>
-<span class="code-line">    case (xs, Nil) =&gt; xs</span>
-<span class="code-line">    case (x:zs, y:ws) =&gt; </span>
-<span class="code-line">        if(x&lt;y) x::merge(zs, ys)</span>
-<span class="code-line">        else y::merge(xs, ws)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="k">merge</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">ys</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"></span></span>
+<span class="code-line"><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">Nil</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ys</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">Nil</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">xs</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">zs</span><span class="p">,</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="n">ws</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="k">merge</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="nl">y</span><span class="p">:</span><span class="err">:</span><span class="k">merge</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">ws</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h1 id="53-implicit-parameters_1">5.3 - Implicit Parameters</h1>
 <p>pb: how to apply msort to list of other element types. </p>
@@ -320,12 +345,12 @@ head, tail: simple to implement
 <p>⇒ <em>pass the lt function as a parameter</em>: </p>
 <p><code>def msort[T](xs: List[T])(lt: (T,T)=&gt;Boolean) = ...</code></p>
 <p>another option: <code>scala.math.Ordering[T]</code></p>
-<div class="highlight"><pre><span class="code-line"><span></span>impor math.Ordering</span>
-<span class="code-line">def msort[T](xs: List[T])(ord: Ordering) = ...// use ord.lt(x,y)</span>
-<span class="code-line">msort(nums)(Ordering.Int)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">impor</span><span class="w"> </span><span class="n">math</span><span class="p">.</span><span class="n">Ordering</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">msort</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)(</span><span class="nl">ord</span><span class="p">:</span><span class="w"> </span><span class="n">Ordering</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="o">//</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">ord</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="n">msort</span><span class="p">(</span><span class="n">nums</span><span class="p">)(</span><span class="n">Ordering</span><span class="p">.</span><span class="nc">Int</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>pb: pass each time the function parameter is cumbersome... ⇒ use <strong>implicite</strong> parameters</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def msort[T](xs: List[T])(implicite ord: Ordering) = ...// use ord.lt(x,y)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">msort</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)(</span><span class="n">implicite</span><span class="w"> </span><span class="nl">ord</span><span class="p">:</span><span class="w"> </span><span class="n">Ordering</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span><span class="o">//</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">ord</span><span class="p">.</span><span class="n">lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>⇒ the function calls can ignore the implicite parameter, the compiler will figure it out. </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image002.png"/></p>
@@ -338,44 +363,44 @@ head, tail: simple to implement
 </ul>
 <h3 id="map">map</h3>
 <p>apply an operation to every elements. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>abstract class List[T]{</span>
-<span class="code-line">    def map[U](f: T=&gt;U): List[U] = this match {</span>
-<span class="code-line">        case Nil =&gt; this</span>
-<span class="code-line">        case x:xs =&gt; f(x)::xs.map(f)</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">map</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">U</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">this</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">::</span><span class="n">xs</span><span class="p">.</span><span class="k">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="filtering">filtering</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>def filter(p: T=&gt;Boolean): List[T] = this match {</span>
-<span class="code-line">    case Nil =&gt; this</span>
-<span class="code-line">    case x:xs =&gt; f(p(x)) x::xs.filter(p) else xs.filter(p)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="k">filter</span><span class="p">(</span><span class="nl">p</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="k">Boolean</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">this</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="n">xs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">p</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="n">xs</span><span class="p">.</span><span class="k">filter</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">xs</span><span class="p">.</span><span class="k">filter</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>other methods that extracts sublist: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image003.png"/></p>
 <p>exercice: implement a function <code>pack</code>: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image004.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def pack[T](xs: List[T]): List[List[T]] = xs match {</span>
-<span class="code-line">    case Nil =&gt; Nil</span>
-<span class="code-line">    case x::ys =&gt; {</span>
-<span class="code-line">        val (head, tail) = xs span (c =&gt; c==x)</span>
-<span class="code-line">        head :: pack(tail)</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">pack</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">List[T</span><span class="o">]</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Nil</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="n">ys</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">val</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="o">==</span><span class="n">x</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">head</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">pack</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>exercice2: implement  a function <code>encode</code>:</p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image005.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def encode[T](xs: List[T]): List[(T, Int)] = xs match {</span>
-<span class="code-line">    case Nil =&gt; Nil</span>
-<span class="code-line">    case x::ys =&gt; {</span>
-<span class="code-line">        val (head, tail) = xs span (c =&gt; c==x)</span>
-<span class="code-line">        (x, head.length) :: pack(tail)</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">encode</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">(T, Int)</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Nil</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="err">:</span><span class="n">ys</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">val</span><span class="w"> </span><span class="p">(</span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">tail</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="o">==</span><span class="n">x</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">pack</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>another version: use the pack: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def encode[T](xs: List[T]): List[(T, Int)] = </span>
-<span class="code-line">    pack(xs) map (l =&gt; (l.head, l.length))</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">encode</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">(T, Int)</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="k">map</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">length</span><span class="p">))</span><span class="w"></span></span>
 </pre></div>
 <h1 id="55-reduction-of-lists_1">5.5 - Reduction of Lists</h1>
 <p>fold/reduce: combine elements using an operator. </p>
@@ -384,18 +409,18 @@ head, tail: simple to implement
 inserts a binary operator between adj elements: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image006.png"/></p>
 <p>ex. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (0::xs) reduceLeft ( (x,y)=&gt; x+y)</span>
-<span class="code-line">def prod(xs: List[Int]) = (1::xs) reduceLeft ( (x,y)=&gt; x*y)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="o">::</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="n">reduceLeft</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">prod</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">::</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="n">reduceLeft</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>write shorter function values using underscore <code>_</code>:  every <code>_</code> represents a new parameter</p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (0::xs) reduceLeft ( _+_ )</span>
-<span class="code-line">def prod(xs: List[Int]) = (1::xs) reduceLeft ( _*_ )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="o">::</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="n">reduceLeft</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">_</span><span class="o">+</span><span class="n">_</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">prod</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">::</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="n">reduceLeft</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">_</span><span class="o">*</span><span class="n">_</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <h3 id="foldleft">foldLeft</h3>
 <p>foldLeft is like reduceLeft, but can apply on Nil, and takes an <strong>accumulator</strong> <code>z</code> =&gt; returns z when calling on Nil. </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image007.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum(xs: List[Int]) = (xs foldleft 0) ( _+_ )</span>
-<span class="code-line">def prod(xs: List[Int]) = (xs foldleft 1) ( _*_ )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">foldleft</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">_</span><span class="o">+</span><span class="n">_</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">prod</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">foldleft</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">_</span><span class="o">*</span><span class="n">_</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image008.png"/></p>
 <h3 id="foldrightreduceright">foldRight/reduceRight</h3>
@@ -404,8 +429,8 @@ inserts a binary operator between adj elements: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image011.png"/></p>
 <p>if the operation is associative and communitive, foldLeft and foldRight should give same results. Other times need to think. </p>
 <p>ex. concat</p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image012.png">
-if apply foldLeft ⇒ type error, because the <code>::</code> operator will be applied to 2 elements of type T.</img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image012.png"/>
+if apply foldLeft ⇒ type error, because the <code>::</code> operator will be applied to 2 elements of type T.</p>
 <h1 id="56-reasoning-about-concat_1">5.6 - Reasoning About Concat</h1>
 <p>proof of programs</p>
 <h3 id="structural-induction">structural induction</h3>
@@ -414,10 +439,10 @@ if apply foldLeft ⇒ type error, because the <code>::</code> operator will be a
 <p>类似数学归纳法: </p>
 <p><img alt="" class="img-responsive" src="../images/progfun1_lec5_lists/pasted_image016.png"/></p>
 <p>ex. prove <code>(xs ++ ys) ++ zs = xs ++ (ys ++ zs)</code>: induction on <code>xs</code></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def concat[T](xs: List[T], ys: List[T]) = xs match{</span>
-<span class="code-line">    case Nil =&gt; ys</span>
-<span class="code-line">    case z::zs =&gt; x:concat(xs, ys)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nf">concat</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">xs</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">ys</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="k">match</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ys</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nl">z</span><span class="p">:</span><span class="err">:</span><span class="n">zs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nl">x</span><span class="p">:</span><span class="nf">concat</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="n">ys</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <ul>
 <li>base case: <code>xs=Nil</code></li>

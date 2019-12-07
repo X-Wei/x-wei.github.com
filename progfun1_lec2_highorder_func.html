@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="[TOC] This week, we&#39;ll learn about functions as first-class values, and higher order functions. We&#39;ll also learn about Scala&#39;s syntax and how it&#39;s formally defined. Finally, we&#39;ll learn about methods, classes, and data abstraction through the design of a data structure for rational numbers. 2.1 - Higher-Order Functions higher order …" />
+        <meta name="description" content="2.1 - Higher-Order Functions function types Anonymous functions 2.2 - Currying &#34;currying&#34; 2.3 - Example: Finding Fixed Points 2.4 - Scala Syntax Summary 2.5 - Functions and Data 2.6 - More Fun With Rationals preconditions constructor 2.7 - Evaluation and Operators evaluation for class/object operator overloading infix ops unitary ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC I] Lec2: Higher Order Functions"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun1_lec2_highorder_func.html"/>
-        <meta property="og:description" content="[TOC] This week, we&#39;ll learn about functions as first-class values, and higher order functions. We&#39;ll also learn about Scala&#39;s syntax and how it&#39;s formally defined. Finally, we&#39;ll learn about methods, classes, and data abstraction through the design of a data structure for rational numbers. 2.1 - Higher-Order Functions higher order …"/>
+        <meta property="og:description" content="2.1 - Higher-Order Functions function types Anonymous functions 2.2 - Currying &#34;currying&#34; 2.3 - Example: Finding Fixed Points 2.4 - Scala Syntax Summary 2.5 - Functions and Data 2.6 - More Fun With Rationals preconditions constructor 2.7 - Evaluation and Operators evaluation for class/object operator overloading infix ops unitary ..."/>
         <meta property="article:published_time" content="2016-06-23" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -210,19 +210,48 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC I] Lec2: Higher Order Functions">[Scala MOOC I] Lec2: Higher Order Functions</a><ul><li><a class="toc-href" href="#21-higher-order-functions" title="2.1 - Higher-Order Functions">2.1 - Higher-Order Functions</a><ul><li><a class="toc-href" href="#function-types" title="function types">function types</a></li><li><a class="toc-href" href="#anonymous-functions" title="Anonymous functions">Anonymous functions</a></li></ul></li><li><a class="toc-href" href="#22-currying_1" title="2.2 - Currying">2.2 - Currying</a><ul><li><a class="toc-href" href="#currying" title='"currying"'>"currying"</a></li></ul></li><li><a class="toc-href" href="#23-example-finding-fixed-points_1" title="2.3 - Example: Finding Fixed Points">2.3 - Example: Finding Fixed Points</a></li><li><a class="toc-href" href="#24-scala-syntax-summary" title="2.4 - Scala Syntax Summary">2.4 - Scala Syntax Summary</a></li><li><a class="toc-href" href="#25-functions-and-data" title="2.5 - Functions and Data">2.5 - Functions and Data</a></li><li><a class="toc-href" href="#26-more-fun-with-rationals" title="2.6 - More Fun With Rationals">2.6 - More Fun With Rationals</a><ul><li><a class="toc-href" href="#preconditions" title="preconditions">preconditions</a></li><li><a class="toc-href" href="#constructor" title="constructor">constructor</a></li></ul></li><li><a class="toc-href" href="#27-evaluation-and-operators_1" title="2.7 - Evaluation and Operators">2.7 - Evaluation and Operators</a></li><li><a class="toc-href" href="#evaluation-for-classobject" title="evaluation for class/object">evaluation for class/object</a></li><li><a class="toc-href" href="#operator-overloading" title="operator overloading">operator overloading</a><ul><li><a class="toc-href" href="#infix-ops" title="infix ops">infix ops</a></li><li><a class="toc-href" href="#unitary-ops" title="unitary ops">unitary ops</a></li><li><a class="toc-href" href="#precedence-of-ops" title="precedence of ops">precedence of ops</a></li></ul></li><li><a class="toc-href" href="#programming-assignment-functional-sets_1" title="Programming Assignment: Functional Sets">Programming Assignment: Functional Sets</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#21-higher-order-functions">2.1 - Higher-Order Functions</a><ul>
+<li><a href="#function-types">function types</a></li>
+<li><a href="#anonymous-functions">Anonymous functions</a></li>
+</ul>
+</li>
+<li><a href="#22-currying">2.2 - Currying</a><ul>
+<li><a href="#currying">"currying"</a></li>
+</ul>
+</li>
+<li><a href="#23-example-finding-fixed-points">2.3 - Example: Finding Fixed Points</a></li>
+<li><a href="#24-scala-syntax-summary">2.4 - Scala Syntax Summary</a></li>
+<li><a href="#25-functions-and-data">2.5 - Functions and Data</a></li>
+<li><a href="#26-more-fun-with-rationals">2.6 - More Fun With Rationals</a><ul>
+<li><a href="#preconditions">preconditions</a></li>
+<li><a href="#constructor">constructor</a></li>
+</ul>
+</li>
+<li><a href="#27-evaluation-and-operators">2.7 - Evaluation and Operators</a></li>
+<li><a href="#evaluation-for-classobject">evaluation for class/object</a></li>
+<li><a href="#operator-overloading">operator overloading</a><ul>
+<li><a href="#infix-ops">infix ops</a></li>
+<li><a href="#unitary-ops">unitary ops</a></li>
+<li><a href="#precedence-of-ops">precedence of ops</a></li>
+</ul>
+</li>
+<li><a href="#programming-assignment-functional-sets">Programming Assignment: Functional Sets</a></li>
+</ul>
+</div>
 <blockquote>
 <p>This week, we'll learn about functions as first-class values, and higher order functions. We'll also learn about Scala's syntax and how it's formally defined. Finally, we'll learn about methods, classes, and data abstraction through the design of a data structure for rational numbers. </p>
 </blockquote>
 <h2 id="21-higher-order-functions">2.1 - Higher-Order Functions</h2>
 <p>higher order functions: functions that takes functions as parameter or returns functions.  </p>
-<p>example:<br>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image.png"> 
-⇒ put the <code>f</code> as a parameter </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum(f:Int =&gt; Int, a: Int, b: Int):Int = { </span>
-<span class="code-line">  if(a&gt;b) 0 </span>
-<span class="code-line">  else f(a) + sum(f, a+1, b) </span>
-<span class="code-line">}</span>
+<p>example:<br/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image.png"/> 
+⇒ put the <code>f</code> as a parameter </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def sum(f:Int =&gt; Int, a: Int, b: Int):Int = { </span></span>
+<span class="code-line"><span class="err">  if(a&gt;b) 0 </span></span>
+<span class="code-line"><span class="err">  else f(a) + sum(f, a+1, b) </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="function-types">function types</h3>
 <p><code>A =&gt; B</code> is a function that takes <code>A</code> as parameter and returns <code>B</code>. </p>
@@ -232,86 +261,86 @@ ex.   </p>
 <p><code>(x: Int, y: Int) =&gt; x+y</code>
 <code>(x: Int) =&gt; x*x</code> </p>
 <p>use anon functions in previous <code>sum()</code> function:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>sum(x=&gt;x, 1, 10) </span>
-<span class="code-line">sum(x=&gt;x*x, 1, 10)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">sum(x=&gt;x, 1, 10) </span></span>
+<span class="code-line"><span class="err">sum(x=&gt;x*x, 1, 10)</span></span>
 </pre></div>
 <p>exercice: turn <code>sum()</code> into tailrec fashion. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum2(f:Int =&gt; Int, a: Int, b: Int):Int = { </span>
-<span class="code-line">  @tailrec </span>
-<span class="code-line">  def sumTR(a: Int, acc: Int): Int = { </span>
-<span class="code-line">    if (a &gt; b) acc </span>
-<span class="code-line">    else sumTR(a + 1, acc + f(a)) </span>
-<span class="code-line">  } </span>
-<span class="code-line">  sumTR(a, 0) </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def sum2(f:Int =&gt; Int, a: Int, b: Int):Int = { </span></span>
+<span class="code-line"><span class="err">  @tailrec </span></span>
+<span class="code-line"><span class="err">  def sumTR(a: Int, acc: Int): Int = { </span></span>
+<span class="code-line"><span class="err">    if (a &gt; b) acc </span></span>
+<span class="code-line"><span class="err">    else sumTR(a + 1, acc + f(a)) </span></span>
+<span class="code-line"><span class="err">  } </span></span>
+<span class="code-line"><span class="err">  sumTR(a, 0) </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>(note: using namescoping to eliminate parameters in inner functions) </p>
 <h2 id="22-currying_1">2.2 - Currying</h2>
 <p>define a function that <em>returns  a funtion</em> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum3(f:Int =&gt; Int): (Int, Int)=&gt;Int = { </span>
-<span class="code-line">  def sumF(a:Int, b:Int):Int = { </span>
-<span class="code-line">    if(a&gt;b) 0 </span>
-<span class="code-line">    else f(a) + sum3(f, a+1, b) </span>
-<span class="code-line">  } </span>
-<span class="code-line">  sumF </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def sum3(f:Int =&gt; Int): (Int, Int)=&gt;Int = { </span></span>
+<span class="code-line"><span class="err">  def sumF(a:Int, b:Int):Int = { </span></span>
+<span class="code-line"><span class="err">    if(a&gt;b) 0 </span></span>
+<span class="code-line"><span class="err">    else f(a) + sum3(f, a+1, b) </span></span>
+<span class="code-line"><span class="err">  } </span></span>
+<span class="code-line"><span class="err">  sumF </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>when calling this function:<br>
-<code>sum3(cube)(1,10)</code> </br></p>
+<p>when calling this function:<br/>
+<code>sum3(cube)(1,10)</code> </p>
 <p>syntactic sugar: shorter version of functions that return functions: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def sum3(f:Int =&gt; Int)(a:Int, b:Int):Int = { </span>
-<span class="code-line">    if(a&gt;b) 0 </span>
-<span class="code-line">    else f(a) + sum3(f)(a+1, b) </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def sum3(f:Int =&gt; Int)(a:Int, b:Int):Int = { </span></span>
+<span class="code-line"><span class="err">    if(a&gt;b) 0 </span></span>
+<span class="code-line"><span class="err">    else f(a) + sum3(f)(a+1, b) </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>question: what is type of <code>sum3</code>? 
 → <code>Int =&gt; Int =&gt; (Int, Int) =&gt; Int</code> 
-note: functional types are <em>associated to the right</em>,<br>
-<code>Int =&gt; Int =&gt; Int</code> is equivalent to <code>Int =&gt; (Int =&gt; Int)</code> </br></p>
+note: functional types are <em>associated to the right</em>,<br/>
+<code>Int =&gt; Int =&gt; Int</code> is equivalent to <code>Int =&gt; (Int =&gt; Int)</code> </p>
 <h3 id="currying">"currying"</h3>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image002.png">
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image003.png"> </img></img></p>
-<p>exercice:<br>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image005.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def product(f: Int =&gt; Int)(a: Int, b: Int): Int = { </span>
-<span class="code-line">  if (a &gt; b) 1 </span>
-<span class="code-line">  else a * product(f)(a + 1, b) </span>
-<span class="code-line">} </span>
-<span class="code-line">product(x=&gt;x)(1,10)</span>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image002.png"/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image003.png"/> </p>
+<p>exercice:<br/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image005.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def product(f: Int =&gt; Int)(a: Int, b: Int): Int = { </span></span>
+<span class="code-line"><span class="err">  if (a &gt; b) 1 </span></span>
+<span class="code-line"><span class="err">  else a * product(f)(a + 1, b) </span></span>
+<span class="code-line"><span class="err">} </span></span>
+<span class="code-line"><span class="err">product(x=&gt;x)(1,10)</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image006.png"> </img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def fact(n:Int) = product(x=&gt;x)(1,n) </span>
-<span class="code-line">fact(10)</span>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image006.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def fact(n:Int) = product(x=&gt;x)(1,n) </span></span>
+<span class="code-line"><span class="err">fact(10)</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image007.png"> 
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image007.png"/> 
     def more_general(op: (Int,Int) =&gt; Int, default: Int) 
                     (f: Int=&gt; Int)(a:Int, b:Int):Int = { 
       if(a&gt;b) default 
       else op(a, more_general(op, default)(f)(a + 1, b)) 
     } 
-    more_general((x,y)=&gt;x+y, 0)(x=&gt;x)(1,10) </img></p>
-<p>老师的解法:<br>
+    more_general((x,y)=&gt;x+y, 0)(x=&gt;x)(1,10) </p>
+<p>老师的解法:<br/>
     def map_reduce(f:Int=&gt; Int, op:(Int, Int)=&gt;Int, default:Int) 
                   (a:Int, b:Int):Int = { 
       if(a&gt;b) default 
       else op(f(a), map_reduce(f, op, default)(a+1,b)) 
     } 
     def factorial2(n:Int):Int = map_reduce(x=&gt;x, (a,b)=&gt; a*b, 1)(1,n) 
-    factorial2(10) </br></p>
+    factorial2(10) </p>
 <h2 id="23-example-finding-fixed-points_1">2.3 - Example: Finding Fixed Points</h2>
 <p>find the fix point of a function: x = f(x) 
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image008.png"> </img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>val tol = 0.001 </span>
-<span class="code-line">def isCloseEnough(x:Double, y:Double):Boolean = </span>
-<span class="code-line">  math.abs((x-y)/x)&lt;tol </span>
-<span class="code-line">def fixedPoint(f: Double=&gt;Double)(firstGuess:Double):Double = { </span>
-<span class="code-line">  def iterate(guess:Double):Double = { </span>
-<span class="code-line">    if(isCloseEnough(guess, f(guess))) guess </span>
-<span class="code-line">    else iterate(f(guess)) </span>
-<span class="code-line">  } </span>
-<span class="code-line">  iterate(firstGuess) </span>
-<span class="code-line">} </span>
-<span class="code-line">fixedPoint(x=&gt;1+x/2)(1)</span>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image008.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">val tol = 0.001 </span></span>
+<span class="code-line"><span class="err">def isCloseEnough(x:Double, y:Double):Boolean = </span></span>
+<span class="code-line"><span class="err">  math.abs((x-y)/x)&lt;tol </span></span>
+<span class="code-line"><span class="err">def fixedPoint(f: Double=&gt;Double)(firstGuess:Double):Double = { </span></span>
+<span class="code-line"><span class="err">  def iterate(guess:Double):Double = { </span></span>
+<span class="code-line"><span class="err">    if(isCloseEnough(guess, f(guess))) guess </span></span>
+<span class="code-line"><span class="err">    else iterate(f(guess)) </span></span>
+<span class="code-line"><span class="err">  } </span></span>
+<span class="code-line"><span class="err">  iterate(firstGuess) </span></span>
+<span class="code-line"><span class="err">} </span></span>
+<span class="code-line"><span class="err">fixedPoint(x=&gt;1+x/2)(1)</span></span>
 </pre></div>
 <p>using the fixepoint function for <code>sqrt</code>: </p>
 <ul>
@@ -328,9 +357,9 @@ average damping: prevent the estimate from varying to much.
 ⇒  <em>by taking the average of successive values</em> </p>
 <p><code>def sqrt2(x: Double): Double = fixedPoint(y =&gt; (y + x / y) / 2)(1)</code> </p>
 <p>abstract this damping technique: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def avgDamping(f:Double=&gt; Double)(x:Double):Double = </span>
-<span class="code-line">  (f(x)+x)/2 </span>
-<span class="code-line">def sqrt2(x: Double): Double = fixedPoint(avgDamping(y=&gt;x/y))(1)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">def avgDamping(f:Double=&gt; Double)(x:Double):Double = </span></span>
+<span class="code-line"><span class="err">  (f(x)+x)/2 </span></span>
+<span class="code-line"><span class="err">def sqrt2(x: Double): Double = fixedPoint(avgDamping(y=&gt;x/y))(1)</span></span>
 </pre></div>
 <p>summary: The highest level of abstraction is not always the best, but it is important to know the techniques of abstraction, so as to use them when appropriate. </p>
 <h2 id="24-scala-syntax-summary">2.4 - Scala Syntax Summary</h2>
@@ -341,40 +370,40 @@ average damping: prevent the estimate from varying to much.
 <li><code>{...}</code> a repetition (0 or more) </li>
 </ul>
 <p><strong>Types</strong>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image009.png"> </img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image009.png"/> </p>
 <p><strong>Expressions</strong>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image010.png"> </img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image010.png"/> </p>
 <p><strong>Definitions</strong>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image011.png"> </img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image011.png"/> </p>
 <h2 id="25-functions-and-data">2.5 - Functions and Data</h2>
 <p>example. <em>rational numbers</em> (x/y) 
 define a class:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">class</span> <span class="nx">Rational</span><span class="p">(</span><span class="nx">x</span>:<span class="kt">Int</span><span class="p">,</span> <span class="nx">y</span>:<span class="kt">Int</span><span class="p">){</span> </span>
-<span class="code-line">  <span class="nx">def</span> <span class="nx">numer</span> <span class="o">=</span> <span class="nx">x</span> </span>
-<span class="code-line">  <span class="nx">def</span> <span class="nx">denom</span> <span class="o">=</span> <span class="nx">y</span> </span>
-<span class="code-line"><span class="p">}</span> </span>
-<span class="code-line"><span class="nx">val</span> <span class="nx">x</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rational</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> </span>
-<span class="code-line"><span class="nx">x</span><span class="p">.</span><span class="nx">numer</span> </span>
-<span class="code-line"><span class="nx">x</span><span class="p">.</span><span class="nx">denom</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">class Rational(x:Int, y:Int){ </span></span>
+<span class="code-line"><span class="err">  def numer = x </span></span>
+<span class="code-line"><span class="err">  def denom = y </span></span>
+<span class="code-line"><span class="err">} </span></span>
+<span class="code-line"><span class="err">val x = new Rational(1,2) </span></span>
+<span class="code-line"><span class="err">x.numer </span></span>
+<span class="code-line"><span class="err">x.denom</span></span>
 </pre></div>
-<p>this definition creates both a class and the constructor.<br>
-now implement arithmetic: </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>def add(that: Rational) = </span>
-<span class="code-line">  new Rational(numer * that.denom + denom * that.numer, that.denom * denom)</span>
+<p>this definition creates both a class and the constructor.<br/>
+now implement arithmetic: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span> <span class="k">add</span><span class="p">(</span><span class="n">that</span><span class="p">:</span> <span class="n">Rational</span><span class="p">)</span> <span class="o">=</span> </span>
+<span class="code-line">  <span class="k">new</span> <span class="n">Rational</span><span class="p">(</span><span class="n">numer</span> <span class="o">*</span> <span class="n">that</span><span class="p">.</span><span class="n">denom</span> <span class="o">+</span> <span class="n">denom</span> <span class="o">*</span> <span class="n">that</span><span class="p">.</span><span class="n">numer</span><span class="p">,</span> <span class="n">that</span><span class="p">.</span><span class="n">denom</span> <span class="o">*</span> <span class="n">denom</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">def neg = new Rational(-numer, denom)</span>
+<span class="code-line"><span class="n">def</span> <span class="n">neg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rational</span><span class="p">(</span><span class="o">-</span><span class="n">numer</span><span class="p">,</span> <span class="n">denom</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">def sub(that: Rational) = </span>
-<span class="code-line">  add(that.neg)</span>
+<span class="code-line"><span class="n">def</span> <span class="n">sub</span><span class="p">(</span><span class="n">that</span><span class="p">:</span> <span class="n">Rational</span><span class="p">)</span> <span class="o">=</span> </span>
+<span class="code-line">  <span class="k">add</span><span class="p">(</span><span class="n">that</span><span class="p">.</span><span class="n">neg</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">override def toString = numer + "/" + denom</span>
+<span class="code-line"><span class="n">override</span> <span class="n">def</span> <span class="n">toString</span> <span class="o">=</span> <span class="n">numer</span> <span class="o">+</span> <span class="ss">"/"</span> <span class="o">+</span> <span class="n">denom</span></span>
 </pre></div>
 <h2 id="26-more-fun-with-rationals">2.6 - More Fun With Rationals</h2>
 <p>simplify the rationals <em>at construction</em>:  add private members:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b) </span>
-<span class="code-line">private val g = gcd(x, y) </span>
-<span class="code-line">def numer = x/g </span>
-<span class="code-line">def denom = y/g</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b) </span></span>
+<span class="code-line"><span class="err">private val g = gcd(x, y) </span></span>
+<span class="code-line"><span class="err">def numer = x/g </span></span>
+<span class="code-line"><span class="err">def denom = y/g</span></span>
 </pre></div>
 <p>other options:  </p>
 <ul>
@@ -382,17 +411,17 @@ now implement arithmetic: </br></p>
 <li>turn <code>numer</code> and <code>denom</code> into <code>val</code> </li>
 </ul>
 <p>add less and max function:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def less(that:Rational) = </span>
-<span class="code-line">  this.numer*that.denom &lt; this.denom*that.numer</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span> <span class="k">less</span><span class="p">(</span><span class="n">that</span><span class="p">:</span><span class="n">Rational</span><span class="p">)</span> <span class="o">=</span> </span>
+<span class="code-line">  <span class="n">this</span><span class="p">.</span><span class="n">numer</span><span class="o">*</span><span class="n">that</span><span class="p">.</span><span class="n">denom</span> <span class="o">&lt;</span> <span class="n">this</span><span class="p">.</span><span class="n">denom</span><span class="o">*</span><span class="n">that</span><span class="p">.</span><span class="n">numer</span></span>
 <span class="code-line"></span>
-<span class="code-line">def max(that:Rational) = if(this.less(that)) that else this</span>
+<span class="code-line"><span class="n">def</span> <span class="k">max</span><span class="p">(</span><span class="n">that</span><span class="p">:</span><span class="n">Rational</span><span class="p">)</span> <span class="o">=</span> <span class="k">if</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="k">less</span><span class="p">(</span><span class="n">that</span><span class="p">))</span> <span class="n">that</span> <span class="k">else</span> <span class="n">this</span></span>
 </pre></div>
 <h3 id="preconditions">preconditions</h3>
 <p>ex: avoid divide by 0.  </p>
 <p><code>require(y!=0, "denominator must be non zero")</code> </p>
 <p>→ <em>java.lang.IllegalArgumentException: requirement failed: denominator must be non zero</em> </p>
-<p><code>require</code>is a test to perform when the class is initialized.<br>
-similar: <code>assert()</code> </br></p>
+<p><code>require</code>is a test to perform when the class is initialized.<br/>
+similar: <code>assert()</code> </p>
 <h3 id="constructor">constructor</h3>
 <p>in scala a class implicitly introduces a <strong>primary constructor:</strong> </p>
 <ul>
@@ -401,33 +430,33 @@ similar: <code>assert()</code> </br></p>
 </ul>
 <p>to add another constructor: </p>
 <p><code>def this(x:Int) = this(x,1)</code> </p>
-<p>exercice:<br>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image012.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>override def toString = { </span>
-<span class="code-line">  val g = gcd(numer, denom) </span>
-<span class="code-line">  numer/g + "/" + denom/g </span>
-<span class="code-line">}</span>
+<p>exercice:<br/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image012.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">override def toString = { </span></span>
+<span class="code-line"><span class="err">  val g = gcd(numer, denom) </span></span>
+<span class="code-line"><span class="err">  numer/g + "/" + denom/g </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="27-evaluation-and-operators_1">2.7 - Evaluation and Operators</h2>
 <h2 id="evaluation-for-classobject">evaluation for class/object</h2>
 <p>extend the substitution model to classes and objects 
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image014.png"> </img></p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image015.png">
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image016.png">
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image017.png"> </img></img></img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image014.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image015.png"/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image016.png"/>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image017.png"/> </p>
 <p>examples:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image019.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image019.png"/> </p>
 <h2 id="operator-overloading">operator overloading</h2>
 <h3 id="infix-ops">infix ops</h3>
 <p><strong>any method with one parameter can be used as an infix operator.</strong>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image020.png"> </img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image020.png"/> </p>
 <p><em>scala identifiers can bu symbolic:</em>
-<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image021.png"> </img></p>
+<img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image021.png"/> </p>
 <p>⇒ change names to <code>+, &lt;, -,</code> use in this way: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>x + y </span>
-<span class="code-line">x &lt; y </span>
-<span class="code-line">x max y </span>
-<span class="code-line">x - y - z</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">x + y </span></span>
+<span class="code-line"><span class="err">x &lt; y </span></span>
+<span class="code-line"><span class="err">x max y </span></span>
+<span class="code-line"><span class="err">x - y - z</span></span>
 </pre></div>
 <h3 id="unitary-ops">unitary ops</h3>
 <p>now change the <code>neg</code> method: prefix operator, and might be confused with the sub(<code>-</code>) 
@@ -436,15 +465,15 @@ similar: <code>assert()</code> </br></p>
 <h3 id="precedence-of-ops">precedence of ops</h3>
 <p><strong>the precedence of an op is defined by its first letter</strong> 
 order (by increasing precedence): </p>
-<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image022.png"> 
-quite the same as in java </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun1_lec2_highorder_func/pasted_image022.png"/> 
+quite the same as in java </p>
 <h2 id="programming-assignment-functional-sets_1">Programming Assignment: Functional Sets</h2>
 <blockquote>
 <p>Mathematically, we call the function which takes an integer as argument and which returns a boolean indicating whether the given integer belongs to a set, the characteristic function of the set. For example, we can characterize the set of negative integers by the characteristic function (x: Int) =&gt; x &lt; 0. </p>
 <p>Therefore, we choose to represent a set by its characterisitc function and define a type alias for this representation: </p>
 </blockquote>
-<div class="highlight"><pre><span class="code-line"><span></span>type Set = Int =&gt; Boolean </span>
-<span class="code-line">def contains(s: Set, elem: Int): Boolean = s(elem)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">type Set = Int =&gt; Boolean </span></span>
+<span class="code-line"><span class="err">def contains(s: Set, elem: Int): Boolean = s(elem)</span></span>
 </pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">

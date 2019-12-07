@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android" />
-        <meta name="description" content="[TOC] Save settings and configurations. Data Persistance 5 different ways of data persistance: onSavedInstanceState(): store state of views in k-v pairs (Bundles), used when screen rotates / app killed by system, temperary. SharedPreferences: save k-v pairs to a file, can save primitive types. SQLite database: complicated data types Internal / External Storage …" />
+        <meta name="description" content="Data Persistance PreferenceFragments Fragment PreferenceFragment Adding a settings screen from a pref-xml file Recipe 1. create a settings activity 2. create a preferences xml 3. create a class that extends PreferenceFragment 4. change root element of settings activity to a fragment 5. add a preferenceTheme 6. read from SharedPreferences and ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Android Dev] 2.2 Preference"/>
         <meta property="og:url" content="http://x-wei.github.io/andev_p2e2_pref.html"/>
-        <meta property="og:description" content="[TOC] Save settings and configurations. Data Persistance 5 different ways of data persistance: onSavedInstanceState(): store state of views in k-v pairs (Bundles), used when screen rotates / app killed by system, temperary. SharedPreferences: save k-v pairs to a file, can save primitive types. SQLite database: complicated data types Internal / External Storage …"/>
+        <meta property="og:description" content="Data Persistance PreferenceFragments Fragment PreferenceFragment Adding a settings screen from a pref-xml file Recipe 1. create a settings activity 2. create a preferences xml 3. create a class that extends PreferenceFragment 4. change root element of settings activity to a fragment 5. add a preferenceTheme 6. read from SharedPreferences and ..."/>
         <meta property="article:published_time" content="2017-02-12" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="android" />
@@ -210,7 +210,35 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Android Dev] 2.2 Preference">[Android Dev] 2.2 Preference</a><ul><li><a class="toc-href" href="#data-persistance" title="Data Persistance">Data Persistance</a></li><li><a class="toc-href" href="#preferencefragments" title="PreferenceFragments">PreferenceFragments</a><ul><li><a class="toc-href" href="#fragment" title="Fragment">Fragment</a></li><li><a class="toc-href" href="#preferencefragment" title="PreferenceFragment">PreferenceFragment</a></li></ul></li><li><a class="toc-href" href="#adding-a-settings-screen-from-a-pref-xml-file-recipe_1" title="Adding a settings screen from a pref-xml file Recipe">Adding a settings screen from a pref-xml file Recipe</a><ul><li><a class="toc-href" href="#1-create-a-settings-activity" title="1. create a settings activity">1. create a settings activity</a></li><li><a class="toc-href" href="#2-create-a-preferences-xml" title="2. create a preferences xml">2. create a preferences xml</a></li><li><a class="toc-href" href="#3-create-a-class-that-extends-preferencefragment" title="3. create a class that extends PreferenceFragment">3. create a class that extends PreferenceFragment</a></li><li><a class="toc-href" href="#4-change-root-element-of-settings-activity-to-a-fragment" title="4. change root element of settings activity to a fragment">4. change root element of settings activity to a fragment</a></li><li><a class="toc-href" href="#5-add-a-preferencetheme" title="5. add a preferenceTheme">5. add a preferenceTheme</a></li><li><a class="toc-href" href="#6-read-from-sharedpreferences-and-update" title="6. read from SharedPreferences and update">6. read from SharedPreferences and update</a></li><li><a class="toc-href" href="#best-practice-using-resources-instead-of-using-constant-iterals-everywhere" title="best practice: using resources instead of using constant iterals everywhere.">best practice: using resources instead of using constant iterals everywhere.</a></li></ul></li><li><a class="toc-href" href="#preferencechangelistener_1" title="PreferenceChangeListener">PreferenceChangeListener</a><ul><li><a class="toc-href" href="#reciept" title="Reciept">Reciept</a></li></ul></li><li><a class="toc-href" href="#list-preference_1" title="List Preference">List Preference</a><ul><li><a class="toc-href" href="#listpreference-recipe" title="ListPreference Recipe">ListPreference Recipe</a></li><li><a class="toc-href" href="#add-summary-for-list-preference" title="add summary for list preference">add summary for list preference</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#data-persistance">Data Persistance</a></li>
+<li><a href="#preferencefragments">PreferenceFragments</a><ul>
+<li><a href="#fragment">Fragment</a></li>
+<li><a href="#preferencefragment">PreferenceFragment</a></li>
+</ul>
+</li>
+<li><a href="#adding-a-settings-screen-from-a-pref-xml-file-recipe">Adding a settings screen from a pref-xml file Recipe</a><ul>
+<li><a href="#1-create-a-settings-activity">1. create a settings activity</a></li>
+<li><a href="#2-create-a-preferences-xml">2. create a preferences xml</a></li>
+<li><a href="#3-create-a-class-that-extends-preferencefragment">3. create a class that extends PreferenceFragment</a></li>
+<li><a href="#4-change-root-element-of-settings-activity-to-a-fragment">4. change root element of settings activity to a fragment</a></li>
+<li><a href="#5-add-a-preferencetheme">5. add a preferenceTheme</a></li>
+<li><a href="#6-read-from-sharedpreferences-and-update">6. read from SharedPreferences and update</a></li>
+<li><a href="#best-practice-using-resources-instead-of-using-constant-iterals-everywhere">best practice: using resources instead of using constant iterals everywhere.</a></li>
+</ul>
+</li>
+<li><a href="#preferencechangelistener">PreferenceChangeListener</a><ul>
+<li><a href="#reciept">Reciept</a></li>
+</ul>
+</li>
+<li><a href="#list-preference">List Preference</a><ul>
+<li><a href="#listpreference-recipe">ListPreference Recipe</a></li>
+<li><a href="#add-summary-for-list-preference">add summary for list preference</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>Save settings and configurations. </p>
 <h2 id="data-persistance">Data Persistance</h2>
 <p>5 different ways of data persistance: </p>
@@ -254,15 +282,15 @@ and (automatically) update k-v pairs in a sharedpref file. </p>
 </li>
 </ul>
 <h3 id="3-create-a-class-that-extends-preferencefragment">3. create a class that extends PreferenceFragment</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (2) Create a class called SettingsFragment that extends PreferenceFragmentCompat</span>
-<span class="code-line">public class SettingsFragment extends PreferenceFragmentCompat{</span>
-<span class="code-line">// TODO (5) In SettingsFragment's onCreatePreferences method add the preference file using the</span>
-<span class="code-line">// addPreferencesFromResource method</span>
-<span class="code-line">    @Override</span>
-<span class="code-line">    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {</span>
-<span class="code-line">        addPreferencesFromResource(R.xml.pref_visualizer);</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (2) Create a class called SettingsFragment that extends PreferenceFragmentCompat</span></span>
+<span class="code-line"><span class="err">public class SettingsFragment extends PreferenceFragmentCompat{</span></span>
+<span class="code-line"><span class="err">// TODO (5) In SettingsFragment's onCreatePreferences method add the preference file using the</span></span>
+<span class="code-line"><span class="err">// addPreferencesFromResource method</span></span>
+<span class="code-line"><span class="err">    @Override</span></span>
+<span class="code-line"><span class="err">    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {</span></span>
+<span class="code-line"><span class="err">        addPreferencesFromResource(R.xml.pref_visualizer);</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="4-change-root-element-of-settings-activity-to-a-fragment">4. change root element of settings activity to a fragment</h3>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span>
@@ -279,11 +307,11 @@ and (automatically) update k-v pairs in a sharedpref file. </p>
 <p><code>&lt;item name="preferenceTheme"&gt;@style/PreferenceThemeOverlay&lt;/item&gt;</code></p>
 <h3 id="6-read-from-sharedpreferences-and-update">6. read from SharedPreferences and update</h3>
 <p>in <code>onStart</code> or <code>onResume</code> of main activity: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (2) Get a reference to the default shared preferences from the PreferenceManager class</span>
-<span class="code-line">SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);</span>
-<span class="code-line">// TODO (3) Get the value of the show_bass checkbox preference and use it to call setShowBass</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">Get</span> <span class="n">a</span> <span class="n">reference</span> <span class="k">to</span> <span class="n">the</span> <span class="k">default</span> <span class="n">shared</span> <span class="n">preferences</span> <span class="k">from</span> <span class="n">the</span> <span class="n">PreferenceManager</span> <span class="k">class</span></span>
+<span class="code-line"><span class="n">SharedPreferences</span> <span class="n">pref</span> <span class="o">=</span> <span class="n">PreferenceManager</span><span class="p">.</span><span class="n">getDefaultSharedPreferences</span><span class="p">(</span><span class="n">this</span><span class="p">);</span></span>
+<span class="code-line"><span class="o">//</span> <span class="n">TODO</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">Get</span> <span class="n">the</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">show_bass</span> <span class="n">checkbox</span> <span class="n">preference</span> <span class="k">and</span> <span class="n">use</span> <span class="n">it</span> <span class="k">to</span> <span class="k">call</span> <span class="n">setShowBass</span></span>
 <span class="code-line"></span>
-<span class="code-line">mVisualizerView.setShowBass(pref.getBoolean("show_bass", true));</span>
+<span class="code-line"><span class="n">mVisualizerView</span><span class="p">.</span><span class="n">setShowBass</span><span class="p">(</span><span class="n">pref</span><span class="p">.</span><span class="n">getBoolean</span><span class="p">(</span><span class="ss">"show_bass"</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span></span>
 </pre></div>
 <h3 id="best-practice-using-resources-instead-of-using-constant-iterals-everywhere">best practice: using resources instead of using constant iterals everywhere.</h3>
 <p>i.e. extract strings/bools into strings.xml or bools.xml: </p>
@@ -294,44 +322,46 @@ and (automatically) update k-v pairs in a sharedpref file. </p>
 <span class="code-line"><span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">"pref_show_bass_default"</span><span class="nt">&gt;</span>true<span class="nt">&lt;/bool&gt;</span></span>
 </pre></div>
 <p>in other xml files: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&lt;CheckBoxPreference</span>
-<span class="code-line">        android:defaultValue="@bool/pref_show_bass_default"</span>
-<span class="code-line">        android:key="@string/pref_show_bass_key"</span>
-<span class="code-line">        android:summaryOff="@string/pref_show_bass_summaryoff"</span>
-<span class="code-line">        android:summaryOn="@string/pref_show_bass_summaryon"</span>
-<span class="code-line">        android:title="@string/perf_show_bass_title" /&gt;</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&lt;CheckBoxPreference</span></span>
+<span class="code-line"><span class="err">        android:defaultValue="@bool/pref_show_bass_default"</span></span>
+<span class="code-line"><span class="err">        android:key="@string/pref_show_bass_key"</span></span>
+<span class="code-line"><span class="err">        android:summaryOff="@string/pref_show_bass_summaryoff"</span></span>
+<span class="code-line"><span class="err">        android:summaryOn="@string/pref_show_bass_summaryon"</span></span>
+<span class="code-line"><span class="err">        android:title="@string/perf_show_bass_title" /&gt;</span></span>
 </pre></div>
 <p>in java files: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>mVisualizerView.setShowBass(perf.getBoolean(getString(R.string.pref_show_bass_key),</span>
-<span class="code-line">                    getResources().getBoolean(R.bool.pref_show_bass_default)));</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">mVisualizerView.setShowBass(perf.getBoolean(getString(R.string.pref_show_bass_key),</span></span>
+<span class="code-line"><span class="err">                    getResources().getBoolean(R.bool.pref_show_bass_default)));</span></span>
 </pre></div>
 <h2 id="preferencechangelistener_1">PreferenceChangeListener</h2>
-<p>instead of updating preferences in onStart/onResume of main activity, use <code>onPreferenceChangeListener</code>, this is called whenever a sharedpref is changed.<br>
-<img alt="" class="img-responsive" src="../images/andev_p2e2_pref/pasted_image004.png"/></br></p>
+<p>instead of updating preferences in onStart/onResume of main activity, use <code>onPreferenceChangeListener</code>, this is called whenever a sharedpref is changed.<br/>
+<img alt="" class="img-responsive" src="../images/andev_p2e2_pref/pasted_image004.png"/></p>
 <h3 id="reciept">Reciept</h3>
 <p><strong>step 1</strong>: determine the activity who's UI needs to be changed when pref changes 
 — in our case, is the main activity</p>
-<p><strong>step 2</strong>: let this activity implement this Listener (<code>onSharedPreferenceChange</code>)</p>
-<div class="highlight"><pre><span class="code-line"><span></span>@Override</span>
-<span class="code-line">public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {</span>
-<span class="code-line">    if(key.equals(getString(R.string.pref_show_bass_key))){</span>
-<span class="code-line">        mVisualizerView.setShowBass(sharedPreferences.getBoolean(key, true));</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<p><strong>step 2</strong>: let this activity implement <code>OnSharedPreferenceChangeListener</code> and override the <code>onSharedPreferenceChanged</code> method</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">@Override</span></span>
+<span class="code-line"><span class="err">public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {</span></span>
+<span class="code-line"><span class="err">    Preference pref = findPreference(key);</span></span>
+<span class="code-line"><span class="err">    if (!(pref instanceof CheckBoxPreference)) {</span></span>
+<span class="code-line"><span class="err">        String value = sharedPreferences.getString(key, "");</span></span>
+<span class="code-line"><span class="err">        setPreferenceSummary(pref, value);</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p><strong>step 3</strong>: link this Listener to the SharedPreference object that it listens to, using <code>registerOnSharedPreferenceChangeListener</code>
 in onCreate(): </p>
-<div class="highlight"><pre><span class="code-line"><span></span>SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);</span>
-<span class="code-line">sharedPreferences.registerOnSharedPreferenceChangeListener(this);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);</span></span>
+<span class="code-line"><span class="err">sharedPreferences.registerOnSharedPreferenceChangeListener(this);</span></span>
 </pre></div>
 <p><strong>step 4</strong>: unregister the Listener when activity is shut down
 in onDestroy(): </p>
-<div class="highlight"><pre><span class="code-line"><span></span>@Override</span>
-<span class="code-line">protected void onDestroy() {</span>
-<span class="code-line">    super.onDestroy();</span>
-<span class="code-line">    PreferenceManager.getDefaultSharedPreferences(this)</span>
-<span class="code-line">            .unregisterOnSharedPreferenceChangeListener(this);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">@Override</span></span>
+<span class="code-line"><span class="err">protected void onDestroy() {</span></span>
+<span class="code-line"><span class="err">    super.onDestroy();</span></span>
+<span class="code-line"><span class="err">    PreferenceManager.getDefaultSharedPreferences(this)</span></span>
+<span class="code-line"><span class="err">            .unregisterOnSharedPreferenceChangeListener(this);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="list-preference_1">List Preference</h2>
 <p>Compared to <code>CheckBoxPreference</code>, <code>ListPreference</code> offers an array of possible choices. </p>
@@ -366,90 +396,90 @@ in onDestroy(): </p>
 <span class="code-line"><span class="nt">&lt;/resources&gt;</span></span>
 </pre></div>
 <p>in preference xml: add a ListPreference element</p>
-<div class="highlight"><pre><span class="code-line"><span></span>&lt;ListPreference</span>
-<span class="code-line">        android:defaultValue="@string/pref_color_red_value"</span>
-<span class="code-line">        android:entries="@array/pref_color_option_labels"</span>
-<span class="code-line">        android:entryValues="@array/pref_color_option_values"</span>
-<span class="code-line">        android:key="@string/pref_color_key"</span>
-<span class="code-line">        android:title="@string/pref_color_title"/&gt;</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&lt;ListPreference</span></span>
+<span class="code-line"><span class="err">        android:defaultValue="@string/pref_color_red_value"</span></span>
+<span class="code-line"><span class="err">        android:entries="@array/pref_color_option_labels"</span></span>
+<span class="code-line"><span class="err">        android:entryValues="@array/pref_color_option_values"</span></span>
+<span class="code-line"><span class="err">        android:key="@string/pref_color_key"</span></span>
+<span class="code-line"><span class="err">        android:title="@string/pref_color_title"/&gt;</span></span>
 </pre></div>
 <p>finally in main activity: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>String default_color_value = getString(R.string.pref_color_red_value);</span>
-<span class="code-line">mVisualizerView.setColor(sharedPreferences.getString(getString(R.string.pref_color_key),</span>
-<span class="code-line">                default_color_value) );</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">String default_color_value = getString(R.string.pref_color_red_value);</span></span>
+<span class="code-line"><span class="err">mVisualizerView.setColor(sharedPreferences.getString(getString(R.string.pref_color_key),</span></span>
+<span class="code-line"><span class="err">                default_color_value) );</span></span>
 </pre></div>
 <h3 id="add-summary-for-list-preference">add summary for list preference</h3>
 <p>we have to this programatically in the java code. </p>
 <p>Here is the recipe: </p>
 <p><strong>step 1</strong>: let the SettingsFragment class implement OnSharedPreferenceChangeListener:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (1) Implement OnSharedPreferenceChangeListener</span>
-<span class="code-line">public class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (1) Implement OnSharedPreferenceChangeListener</span></span>
+<span class="code-line"><span class="err">public class SettingsFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener</span></span>
 </pre></div>
 <p><strong>step 2</strong>:set preference's summary by <code>setSummary()</code>:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (2) Create a setPreferenceSummary which takes a Preference and String value as parameters.</span>
-<span class="code-line">// This method should check if the preference is a ListPreference and, if so, find the label</span>
-<span class="code-line">// associated with the value. You can do this by using the findIndexOfValue and getEntries methods</span>
-<span class="code-line">// of Preference.</span>
-<span class="code-line">private void setPreferenceSummary(Preference sharedPref, String value) {</span>
-<span class="code-line">    if (sharedPref instanceof ListPreference) {</span>
-<span class="code-line">        ListPreference listPref = (ListPreference) sharedPref;</span>
-<span class="code-line">        int idx = listPref.findIndexOfValue(value);</span>
-<span class="code-line">        listPref.setSummary(listPref.getEntries()[idx]);</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">setPreferenceSummary</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">takes</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Preference</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">parameters</span><span class="p">.</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="k">method</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="k">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">preference</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">ListPreference</span><span class="w"> </span><span class="ow">and</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">so</span><span class="p">,</span><span class="w"> </span><span class="n">find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">label</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">associated</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">value</span><span class="p">.</span><span class="w"> </span><span class="n">You</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">findIndexOfValue</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">getEntries</span><span class="w"> </span><span class="n">methods</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Preference</span><span class="p">.</span><span class="w"></span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">setPreferenceSummary</span><span class="p">(</span><span class="n">Preference</span><span class="w"> </span><span class="n">sharedPref</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">value</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sharedPref</span><span class="w"> </span><span class="n">instanceof</span><span class="w"> </span><span class="n">ListPreference</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">ListPreference</span><span class="w"> </span><span class="n">listPref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ListPreference</span><span class="p">)</span><span class="w"> </span><span class="n">sharedPref</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listPref</span><span class="p">.</span><span class="n">findIndexOfValue</span><span class="p">(</span><span class="k">value</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">listPref</span><span class="p">.</span><span class="n">setSummary</span><span class="p">(</span><span class="n">listPref</span><span class="p">.</span><span class="n">getEntries</span><span class="p">()</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p><strong>step 3</strong>: set pref summary in onCreatePreferences: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>@Override</span>
-<span class="code-line">public void onCreatePreferences(Bundle bundle, String s) {</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onCreatePreferences</span><span class="p">(</span><span class="n">Bundle</span><span class="w"> </span><span class="n">bundle</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // Add visualizer preferences, defined in the XML file in res-&gt;xml-&gt;pref_visualizer</span>
-<span class="code-line">    addPreferencesFromResource(R.xml.pref_visualizer);</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="k">Add</span><span class="w"> </span><span class="n">visualizer</span><span class="w"> </span><span class="n">preferences</span><span class="p">,</span><span class="w"> </span><span class="n">defined</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nc">XML</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">res</span><span class="o">-&gt;</span><span class="nc">xml</span><span class="o">-&gt;</span><span class="n">pref_visualizer</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">addPreferencesFromResource</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="nc">xml</span><span class="p">.</span><span class="n">pref_visualizer</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // TODO (3) Get the preference screen, get the number of preferences and iterate through</span>
-<span class="code-line">    // all of the preferences if it is not a checkbox preference, call the setSummary method</span>
-<span class="code-line">    // passing in a preference and the value of the preference</span>
-<span class="code-line">    PreferenceScreen prefScreen = getPreferenceScreen();</span>
-<span class="code-line">    int nPrefs = prefScreen.getPreferenceCount();</span>
-<span class="code-line">    for(int i=0; i&lt;nPrefs; i++){</span>
-<span class="code-line">        Preference p = prefScreen.getPreference(i);</span>
-<span class="code-line">        if(p instanceof CheckBoxPreference) continue;</span>
-<span class="code-line">        else {</span>
-<span class="code-line">            String value = prefScreen.getSharedPreferences().getString(p.getKey(), "");</span>
-<span class="code-line">            setPreferenceSummary(p, value);</span>
-<span class="code-line">        }</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">Get</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">preference</span><span class="w"> </span><span class="n">screen</span><span class="p">,</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">preferences</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">iterate</span><span class="w"> </span><span class="n">through</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">preferences</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">checkbox</span><span class="w"> </span><span class="n">preference</span><span class="p">,</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">setSummary</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">passing</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">preference</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">preference</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">PreferenceScreen</span><span class="w"> </span><span class="n">prefScreen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getPreferenceScreen</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">nPrefs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefScreen</span><span class="p">.</span><span class="n">getPreferenceCount</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">nPrefs</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Preference</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefScreen</span><span class="p">.</span><span class="n">getPreference</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">instanceof</span><span class="w"> </span><span class="n">CheckBoxPreference</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefScreen</span><span class="p">.</span><span class="n">getSharedPreferences</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">getKey</span><span class="p">(),</span><span class="w"> </span><span class="ss">""</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">setPreferenceSummary</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="k">value</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p><strong>step 4</strong>: implement onSharedPreferenceChanged listener: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (4) Override onSharedPreferenceChanged and, if it is not a checkbox preference,</span>
-<span class="code-line">// call setPreferenceSummary on the changed preference</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {</span>
-<span class="code-line">    if (sharedPreferences instanceof CheckBoxPreference) return;</span>
-<span class="code-line">    else{</span>
-<span class="code-line">        Preference pref = findPreference(key);</span>
-<span class="code-line">        String value = sharedPreferences.getString(key, "");</span>
-<span class="code-line">        setPreferenceSummary(pref, value);</span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onSharedPreferenceChanged</span><span class="w"> </span><span class="ow">and</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">checkbox</span><span class="w"> </span><span class="n">preference</span><span class="p">,</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="n">setPreferenceSummary</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="n">preference</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onSharedPreferenceChanged</span><span class="p">(</span><span class="n">SharedPreferences</span><span class="w"> </span><span class="n">sharedPreferences</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sharedPreferences</span><span class="w"> </span><span class="n">instanceof</span><span class="w"> </span><span class="n">CheckBoxPreference</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Preference</span><span class="w"> </span><span class="n">pref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findPreference</span><span class="p">(</span><span class="k">key</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sharedPreferences</span><span class="p">.</span><span class="n">getString</span><span class="p">(</span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="ss">""</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">setPreferenceSummary</span><span class="p">(</span><span class="n">pref</span><span class="p">,</span><span class="w"> </span><span class="k">value</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p><strong>step 5</strong>: finally register/unregister the listener in oncreate/ondestroy: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (5) Register and unregister the OnSharedPreferenceChange listener (this class) in</span>
-<span class="code-line">// onCreate and onDestroy respectively.</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onCreate(Bundle savedInstanceState) {</span>
-<span class="code-line">    super.onCreate(savedInstanceState);</span>
-<span class="code-line">    getPreferenceScreen().getSharedPreferences()</span>
-<span class="code-line">            .registerOnSharedPreferenceChangeListener(this);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">Register</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">unregister</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">OnSharedPreferenceChange</span><span class="w"> </span><span class="n">listener</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="w"> </span><span class="k">class</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">onCreate</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">onDestroy</span><span class="w"> </span><span class="n">respectively</span><span class="p">.</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onCreate</span><span class="p">(</span><span class="n">Bundle</span><span class="w"> </span><span class="n">savedInstanceState</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">getPreferenceScreen</span><span class="p">().</span><span class="n">getSharedPreferences</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="p">.</span><span class="n">registerOnSharedPreferenceChangeListener</span><span class="p">(</span><span class="n">this</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onDestroy() {</span>
-<span class="code-line">    super.onDestroy();</span>
-<span class="code-line">    getPreferenceScreen().getSharedPreferences()</span>
-<span class="code-line">            .unregisterOnSharedPreferenceChangeListener(this);</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onDestroy</span><span class="p">()</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">onDestroy</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">getPreferenceScreen</span><span class="p">().</span><span class="n">getSharedPreferences</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="p">.</span><span class="n">unregisterOnSharedPreferenceChangeListener</span><span class="p">(</span><span class="n">this</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">

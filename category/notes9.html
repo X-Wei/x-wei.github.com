@@ -197,18 +197,42 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
-<h1 id="1-introduction">1. Introduction</h1>
-<p>rearanging array of size N into ascending order <br>
-test client code: <code>Insertion.sort(a);</code> </br></p>
-<p>sort <em>any</em> datatype </p>
-<h3 id="callback">callback</h3>
-<p><em>callback = reference to executable code</em> <br>
-i.e. passing functions as argument to sort() method<br>
-sort() function calls object's <code>compareTo()</code> method  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image.png"> <br>
-→ implement the <code>Comparable</code> interface:    </br></img></br></br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public class XX implements Comparable …</span></pre></div>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#1-introduction">1. Introduction</a><ul>
+<li><a href="#callback">callback</a></li>
+<li><a href="#helper-functions">helper functions</a></li>
+</ul>
+</li>
+<li><a href="#2-selection-sort">2. Selection Sort</a><ul>
+<li><a href="#invariants">invariants</a></li>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#3-insertion-sort">3. Insertion sort</a><ul>
+<li><a href="#invariants_1">invariants</a></li>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#analysis_1">analysis</a><ul>
+<li><a href="#best-case-and-worst-case">best case and worst case</a></li>
+<li><a href="#partially-sorted-arrays">partially  sorted arrays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-shell-sort">4. Shell Sort</a><ul>
+<li><a href="#implementation_2">implementation</a></li>
+<li><a href="#analysis_2">analysis</a></li>
+</ul>
+</li>
+<li><a href="#of-compares-cte-n-of-h-used">of compares &lt; Cte * N * (# of h used )</a></li>
+<li><a href="#5-shuffling">5. shuffling</a><ul>
+<li><a href="#shuffle-array-using-sort">shuffle array using sort</a></li>
+<li><a href="#knuth-shuffle">Knuth shuffle</a></li>
+<li><a href="#example-online-poker">example: online poker</a></li>
+</ul>
+</li>
+<li><a href="#6-convex-hull">6. Convex ...</a></li></ul></div>
                     </div>
                 </div>
             </article>
@@ -249,27 +273,36 @@ sort() function calls object's <code>compareTo()</code> method  <br>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
-<p>fundamental data types: stacks and queues
-operations: 
-<strong>insert, remove, test empy, iterate,</strong>...  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_1/pasted_image.png"> </img></br></p>
-<p>module programming: seperate interface and implementation</p>
-<h1 id="1-stacks">1. Stacks</h1>
-<p>ex. a stack of strings</p>
+                    <div class="summary"><div class="toc">
 <ul>
-<li>
-<p>API: </p>
-<p>public interface StackoOfStrings{
-    void push(String item);
-    String pop();
-    boolean isEmpty();
-    //int size();
-}</p>
+<li><a href="#1-stacks">1. Stacks</a><ul>
+<li><a href="#implementation-1-using-a-linkedlist">implementation 1: using a linkedlist</a></li>
+<li><a href="#array-implementation">array implementation</a></li>
+</ul>
+</li>
+<li><a href="#2-resizing-arrays">2. Resizing Arrays</a><ul>
+<li><a href="#resizing-strategy">resizing strategy</a></li>
+<li><a href="#comparison-resizable-array-vs-linkedlist">comparison: resizable array vs linkedlist</a></li>
+<li><a href="#3-queues">3. Queues</a><ul>
+<li><a href="#linked-list-implementation">linked list implementation</a></li>
+<li><a href="#resizing-array-implementation">resizing array implementation</a></li>
+</ul>
 </li>
 </ul>
-<h3 id="implementation-1-using-a-linkedlist">implementation 1: using a linkedlist</h3>
-<p>insert/remove from the top …</p>
+</li>
+<li><a href="#4-generics">4. Generics</a><ul>
+<li><a href="#a-pb-with-array-implementation">a pb with array implementation</a></li>
+<li><a href="#autoboxing-for-primitive-types">autoboxing for primitive types</a></li>
+</ul>
+</li>
+<li><a href="#5-iterators">5. Iterators</a><ul>
+<li><a href="#interface">Interface</a></li>
+<li><a href="#bag-data-structure">Bag data structure</a></li>
+</ul>
+</li>
+<li><a href="#6-applications">6. Applications</a><ul>
+<li><a href="#java-collections-library">Java collections library</a></li>
+<li><a href="#stacks-applications">Stacks ...</a></li></ul></li></ul></div>
                     </div>
                 </div>
             </article>
@@ -310,13 +343,21 @@ operations:
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#model-problem">model &amp; problem</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a><ul>
+<li><a href="#backwash">backwash问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="model-problem">model &amp; problem</h1>
-<p>(原文描述太啰嗦了)<br>
-A system using an N-by-N grid of sites. <br>
-→ Each site is either open or blocked. <br>
-→ A <strong>full</strong> site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)<br>
-→ We …</p>
+<p>(原文描述太啰嗦了)<br/>
+A system using an N-by-N grid of sites. <br/>
+→ Each site is either open or blocked. <br/>
+→ A <strong>full</strong> site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 ...</br/></br/></br/></p>
                     </div>
                 </div>
             </article>
@@ -357,18 +398,25 @@ A system using an N-by-N grid of sites. <br>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#1-introduction">1. Introduction</a></li>
+<li><a href="#2-observations">2. Observations</a></li>
+<li><a href="#3mathematical-models">3.Mathematical Models</a></li>
+<li><a href="#4-order-of-growth-classification">4. Order of Growth Classification</a></li>
+<li><a href="#5-theory-of-algorithms">5. Theory of Algorithms</a></li>
+<li><a href="#6-memory">6. Memory</a></li>
+</ul>
+</div>
 <h1 id="1-introduction">1. Introduction</h1>
 <p><img alt="" class="img-responsive" src="../images/algoI_week1_2/pasted_image.png"/></p>
 <h1 id="2-observations">2. Observations</h1>
-<p>ex. <strong>3-SUM pb</strong><br>
-<em>given N distinct numbers, how many triples sum up to 0? (pb related to computatioal geogtry)</em></br></p>
+<p>ex. <strong>3-SUM pb</strong><br/>
+<em>given N distinct numbers, how many triples sum up to 0? (pb related to computatioal geogtry)</em></p>
 <ul>
 <li>brute force method:</li>
 </ul>
-<div class="highlight"><pre><span class="code-line"><span></span>for(int i=0;i&lt;N;i++)</span>
-<span class="code-line">    for(int j=i+1;j&lt;N;j++)</span>
-<span class="code-line">        for(int k=j+1;k&lt;N;k …</span></pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -409,13 +457,23 @@ A system using an N-by-N grid of sites. <br>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#part-0-preliminaries">Part 0: Preliminaries</a></li>
+<li><a href="#part-1-basic-recommendations">Part 1: Basic Recommendations</a></li>
+<li><a href="#part-2-collaborative-filtering">Part 2: Collaborative Filtering</a><ul>
+<li><a href="#matrix-factorization">Matrix Factorization</a></li>
+<li><a href="#train-test-validation-split">train-test-validation split</a></li>
+<li><a href="#root-mean-square-error-rmse">Root Mean Square Error (RMSE)</a></li>
+<li><a href="#alternating-least-square-of-mlllib">alternating least square of MLllib</a></li>
+<li><a href="#compare-model">compare model</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="part-0-preliminaries">Part 0: Preliminaries</h1>
-<p>Each line in the ratings dataset (<em>ratings.dat.gz</em>) is formatted as: <br>
-<code>UserID::MovieID::Rating::Timestamp</code> ⇒ tuples of <code>(UserID, MovieID, Rating)</code>in <em>ratingsRDD</em> <br>
-Each line in the movies (<em>movies.dat</em>) dataset is formatted as: <br>
-<code>MovieID::Title::Genres</code> ⇒ tuples of <code>(MovieID, Title)</code> in <em>ratingsRDD</em> </br></br></br></p>
-<p>487650 ratings and …</p>
+<p>Each line in the ratings dataset (<em>ratings.dat.gz</em>) is formatted as: <br/>
+<code>UserID::MovieID::Rating::Timestamp</code> ⇒ tuples of <code>(UserID, MovieID ...</code></br/></p>
                     </div>
                 </div>
             </article>
@@ -456,16 +514,48 @@ Each line in the movies (<em>movies.dat</em>) dataset is formatted as: <br>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#1-dynamic-connectivity-pb">1. Dynamic Connectivity pb</a><ul>
+<li><a href="#pb-statement">pb statement</a></li>
+<li><a href="#uf-api">UF API</a></li>
+</ul>
+</li>
+<li><a href="#2-quick-find">2. Quick Find</a><ul>
+<li><a href="#data-structure">data structure</a></li>
+<li><a href="#uf-operations">UF operations</a></li>
+<li><a href="#implementation">implementation</a></li>
+</ul>
+</li>
+<li><a href="#3-quick-union">3. Quick Union</a><ul>
+<li><a href="#data-structure_1">data structure</a></li>
+<li><a href="#uf-operations_1">UF operations</a></li>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#complexity">complexity</a></li>
+</ul>
+</li>
+<li><a href="#4-quick-union-improvements">4. Quick Union Improvements</a><ul>
+<li><a href="#improvement1-weighting">improvement1: weighting</a><ul>
+<li><a href="#implementation_2">implementation</a></li>
+<li><a href="#complexity_1">complexity</a></li>
+</ul>
+</li>
+<li><a href="#improvement-2-path-compression">improvement 2: path compression</a><ul>
+<li><a href="#complexity_2">complexity</a></li>
+</ul>
+</li>
+<li><a href="#summery">summery</a></li>
+</ul>
+</li>
+<li><a href="#5-union-find-application">5. Union Find Application</a><ul>
+<li><a href="#percolation">percolation</a></li>
+<li><a href="#implementation_3">implementation</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-dynamic-connectivity-pb">1. Dynamic Connectivity pb</h1>
-<h3 id="pb-statement">pb statement</h3>
-<p>a set of N obj, <em>indexed by 0,1,...,N-1</em>
-⇒ 
-<em> UNION: connect objects <code>void union(int p, int q)</code>
-</em> FIND: is there a path connecting 2 obj?  <code>boolean connected(int p, int q)</code></p>
-<p>ex: <br>
-<img alt="" class="img-responsive" src="../images/algoI_week1_1/pasted_image.png"/></br></p>
-<p><strong>connect components</strong>(联通分支): max set of obj that are …</p>
+<h3 id="pb-statement">pb ...</h3>
                     </div>
                 </div>
             </article>
@@ -506,20 +596,23 @@ Each line in the movies (<em>movies.dat</em>) dataset is formatted as: <br>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#statistics-business-questions-and-learning-techniques">STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES</a></li>
+<li><a href="#exploratory-data-analysis">EXPLORATORY DATA ANALYSIS</a></li>
+<li><a href="#the-r-language-and-normal-distributions">THE R LANGUAGE AND NORMAL DISTRIBUTIONS</a></li>
+<li><a href="#distributions">DISTRIBUTIONS</a></li>
+<li><a href="#rhine-paradox">RHINE PARADOX</a></li>
+<li><a href="#sparks-machine-learning-toolkit">SPARK'S MACHINE LEARNING TOOLKIT</a></li>
+<li><a href="#lab3-text-analysis-and-entity-resolution">Lab3. Text Analysis and Entity Resolution</a></li>
+</ul>
+</div>
 <h2 id="statistics-business-questions-and-learning-techniques">STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES</h2>
 <p>2 different kinds of statistics: </p>
 <ul>
 <li>descriptive statistics</li>
 </ul>
-<p>ex. median — describes data, <em>but cannot generalize beyong that</em> </p>
-<ul>
-<li>inferential statistics</li>
-</ul>
-<p>ex. <em>t-testing — inferences beyond the data</em>
-techniques leveraged for machine learning and prediction</p>
-<p>supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
- → UL often used in …</p>
+<p>ex. median — describes data, <em>but cannot generalize beyong ...</em></p>
                     </div>
                 </div>
             </article>
@@ -560,17 +653,25 @@ techniques leveraged for machine learning and prediction</p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#data-cleaning">DATA CLEANING</a></li>
+<li><a href="#data-quality-problems">DATA QUALITY PROBLEMS</a></li>
+<li><a href="#example-ages-of-students-in-this-course">EXAMPLE: AGES OF STUDENTS IN THIS COURSE</a></li>
+<li><a href="#data-cleaning-makes-everything-okay">DATA CLEANING MAKES EVERYTHING OKAY?</a></li>
+<li><a href="#dirty-data-problems">DIRTY DATA PROBLEMS</a></li>
+<li><a href="#data-gathering">DATA GATHERING</a></li>
+<li><a href="#data-delivery">DATA DELIVERY</a></li>
+<li><a href="#data-storage">DATA STORAGE</a></li>
+<li><a href="#data-retrieval">DATA RETRIEVAL</a></li>
+<li><a href="#data-quality-constraints">DATA QUALITY CONSTRAINTS</a></li>
+<li><a href="#technical-approaches-to-data-quality">TECHNICAL APPROACHES TO DATA QUALITY</a></li>
+<li><a href="#example-dedupcleaning">EXAMPLE: DEDUP/CLEANING</a></li>
+</ul>
+</div>
 <h2 id="data-cleaning">DATA CLEANING</h2>
 <p>ex. 
-deal with missing data, entity resolution, unit mismatch, ... </p>
-<p>deal with non-ideal samples ⇒ tradeoff between simplicity and accuracy. </p>
-<h2 id="data-quality-problems">DATA QUALITY PROBLEMS</h2>
-<p>data quality problems: </p>
-<ul>
-<li>Conversions in complex pipelines can mess up data </li>
-<li>Combining multiple datasets can result in errrors</li>
-<li>Data degrades in accuracy or loses value over …</li></ul>
+deal with missing data, entity resolution, unit mismatch ...</p>
                     </div>
                 </div>
             </article>
@@ -611,7 +712,19 @@ deal with missing data, entity resolution, unit mismatch, ... </p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#relational-database">RELATIONAL DATABASE</a></li>
+<li><a href="#large-databases">LARGE DATABASES</a></li>
+<li><a href="#relational-database-example-and-discussion">RELATIONAL DATABASE EXAMPLE AND DISCUSSION</a></li>
+<li><a href="#structured-query-language-sql">STRUCTURED QUERY LANGUAGE (SQL)</a></li>
+<li><a href="#joins-in-sql">JOINS IN SQL</a></li>
+<li><a href="#explicit-sql-joins">EXPLICIT SQL JOINS</a></li>
+<li><a href="#types-of-sql-joins">TYPES OF SQL JOINS</a></li>
+<li><a href="#joins-in-spark">JOINS IN SPARK</a></li>
+<li><a href="#lab-2-web-server-log-analysis-with-apache-spark">Lab 2 - Web Server Log Analysis with Apache Spark</a></li>
+</ul>
+</div>
 <h2 id="relational-database">RELATIONAL DATABASE</h2>
 <p>review: key data management concepts:</p>
 <ul>
@@ -619,18 +732,7 @@ deal with missing data, entity resolution, unit mismatch, ... </p>
 <li>schema</li>
 <li><em>relational data model</em></li>
 </ul>
-<p>structured data: have a specific schema to start with</p>
-<p>relationl database: a set of relations.
-2 parts to a Relation: </p>
-<ul>
-<li>schema: name of relation, name and type of columns</li>
-</ul>
-<p><img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image.png"/></p>
-<ul>
-<li>instance: </li>
-</ul>
-<p>any data at given time 
-(<em>cardinality …</em></p>
+<p>structured data ...</p>
                     </div>
                 </div>
             </article>
@@ -671,15 +773,22 @@ deal with missing data, entity resolution, unit mismatch, ... </p>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]  </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#key-data-management-concepts">KEY DATA MANAGEMENT CONCEPTS</a></li>
+<li><a href="#files">FILES</a></li>
+<li><a href="#semi-structured-tabular-data">SEMI-STRUCTURED TABULAR DATA</a></li>
+<li><a href="#challenges-with-tabular-data">CHALLENGES WITH TABULAR DATA</a></li>
+<li><a href="#pandas-and-semi-structured-data-in-pyspark">PANDAS AND SEMI-STRUCTURED DATA IN PYSPARK</a></li>
+<li><a href="#semi-structured-log-files">SEMI-STRUCTURED LOG FILES</a></li>
+<li><a href="#exploring-a-web-server-access-log">EXPLORING A WEB SERVER ACCESS LOG</a></li>
+<li><a href="#data-mining-log-files">DATA MINING LOG FILES</a></li>
+<li><a href="#file-performance">FILE PERFORMANCE</a></li>
+</ul>
+</div>
 <h2 id="key-data-management-concepts">KEY DATA MANAGEMENT CONCEPTS</h2>
 <p>data model: collection of concepts for describing data
-schema: a description of a particular collection of data using a given data model</p>
-<p>structure spectrum: <br>
-<img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image.png">
-semi-structured data: apply schema <strong>after</strong> creating data. </img></br></p>
-<h2 id="files">FILES</h2>
-<p>files: named collection of bytes, in hierarchical namespace (but: In a Content-Addressable Storage …</p>
+schema: a description of a ...</p>
                     </div>
                 </div>
             </article>

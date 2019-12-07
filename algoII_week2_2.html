@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Shortest Paths APIs context: directe, weighted graphs. shortest path variants in terms of vertices: source-sink: form one vertex to another single source: from one vertex to all others (considered in this lecture) all pairs constraints on edge weights: nonnegative weights arbitary weights eculidean cycles: no directed cycles no …" />
+        <meta name="description" content="1. Shortest Paths APIs shortest path variants APIs 2. Shortest path properties Edge relaxation optimality conditions Generic algo 3. Dijkstra&#39;s Algorithm implementation complexity 4. Edge-Weighted DAGs correctness implementation application 5. Negative Weights Bellman-Ford improvement Finding negative cycle negative cycle application Summery 1. Shortest Paths APIs context: directe, weighted graphs ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 2-2 Shortest Paths"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week2_2.html"/>
-        <meta property="og:description" content="[TOC] 1. Shortest Paths APIs context: directe, weighted graphs. shortest path variants in terms of vertices: source-sink: form one vertex to another single source: from one vertex to all others (considered in this lecture) all pairs constraints on edge weights: nonnegative weights arbitary weights eculidean cycles: no directed cycles no …"/>
+        <meta property="og:description" content="1. Shortest Paths APIs shortest path variants APIs 2. Shortest path properties Edge relaxation optimality conditions Generic algo 3. Dijkstra&#39;s Algorithm implementation complexity 4. Edge-Weighted DAGs correctness implementation application 5. Negative Weights Bellman-Ford improvement Finding negative cycle negative cycle application Summery 1. Shortest Paths APIs context: directe, weighted graphs ..."/>
         <meta property="article:published_time" content="2015-11-15" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,7 +210,40 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 2-2 Shortest Paths">[Algorithms II] Week 2-2 Shortest Paths</a><ul><li><a class="toc-href" href="#1-shortest-paths-apis" title="1. Shortest Paths APIs">1. Shortest Paths APIs</a><ul><li><a class="toc-href" href="#shortest-path-variants" title="shortest path variants">shortest path variants</a></li><li><a class="toc-href" href="#apis" title="APIs">APIs</a></li></ul></li><li><a class="toc-href" href="#2-shortest-path-properties_1" title="2. Shortest path properties">2. Shortest path properties</a><ul><li><a class="toc-href" href="#edge-relaxation" title="Edge relaxation">Edge relaxation</a></li><li><a class="toc-href" href="#optimality-conditions" title="optimality conditions">optimality conditions</a></li><li><a class="toc-href" href="#generic-algo" title="Generic algo">Generic algo</a></li></ul></li><li><a algorithm'="" class="toc-href" href="#3-dijkstras-algorithm_1" s="" title="3. Dijkstra">3. Dijkstra's Algorithm</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#complexity" title="complexity">complexity</a></li></ul></li><li><a class="toc-href" href="#4-edge-weighted-dags_1" title="4. Edge-Weighted DAGs">4. Edge-Weighted DAGs</a><ul><li><a class="toc-href" href="#correctness" title="correctness">correctness</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#application" title="application">application</a></li></ul></li><li><a class="toc-href" href="#5-negative-weights_1" title="5. Negative Weights">5. Negative Weights</a><ul><li><a class="toc-href" href="#bellman-ford" title="Bellman-Ford">Bellman-Ford</a></li><li><a class="toc-href" href="#improvement" title="improvement">improvement</a></li><li><a class="toc-href" href="#finding-negative-cycle" title="Finding negative cycle">Finding negative cycle</a></li><li><a class="toc-href" href="#negative-cycle-application" title="negative cycle application">negative cycle application</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-shortest-paths-apis">1. Shortest Paths APIs</a><ul>
+<li><a href="#shortest-path-variants">shortest path variants</a></li>
+<li><a href="#apis">APIs</a></li>
+</ul>
+</li>
+<li><a href="#2-shortest-path-properties">2. Shortest path properties</a><ul>
+<li><a href="#edge-relaxation">Edge relaxation</a></li>
+<li><a href="#optimality-conditions">optimality conditions</a></li>
+<li><a href="#generic-algo">Generic algo</a></li>
+</ul>
+</li>
+<li><a href="#3-dijkstras-algorithm">3. Dijkstra's Algorithm</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#complexity">complexity</a></li>
+</ul>
+</li>
+<li><a href="#4-edge-weighted-dags">4. Edge-Weighted DAGs</a><ul>
+<li><a href="#correctness">correctness</a></li>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#application">application</a></li>
+</ul>
+</li>
+<li><a href="#5-negative-weights">5. Negative Weights</a><ul>
+<li><a href="#bellman-ford">Bellman-Ford</a></li>
+<li><a href="#improvement">improvement</a></li>
+<li><a href="#finding-negative-cycle">Finding negative cycle</a></li>
+<li><a href="#negative-cycle-application">negative cycle application</a></li>
+</ul>
+</li>
+<li><a href="#summery">Summery</a></li>
+</ul>
+</div>
 <h1 id="1-shortest-paths-apis">1. Shortest Paths APIs</h1>
 <p>context: <em>directe, weighted graphs</em>.     </p>
 <h3 id="shortest-path-variants">shortest path variants</h3>
@@ -233,51 +266,51 @@ mx's blog            </a>
 </ul>
 <h3 id="apis">APIs</h3>
 <p>for weighted directed edge:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class DirectedEdge{   </span>
-<span class="code-line">    DirectedEdge(int v, int w, double weight);   </span>
-<span class="code-line">    int from();   </span>
-<span class="code-line">    int to();   </span>
-<span class="code-line">    double weight();   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class DirectedEdge{   </span></span>
+<span class="code-line"><span class="err">    DirectedEdge(int v, int w, double weight);   </span></span>
+<span class="code-line"><span class="err">    int from();   </span></span>
+<span class="code-line"><span class="err">    int to();   </span></span>
+<span class="code-line"><span class="err">    double weight();   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>for edge-weighted digraph:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class EdgeWeightedDigraph{   </span>
-<span class="code-line">    private final Bag&lt;DirectedEdge&gt;[] adj;    </span>
-<span class="code-line">    EdgeWeightedDigraph(int V);   </span>
-<span class="code-line">    void addEdge(DirectedEdge e);   </span>
-<span class="code-line">    Iterable&lt;DirectedEdge&gt; adj(int v);   </span>
-<span class="code-line">    int V();   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class EdgeWeightedDigraph{   </span></span>
+<span class="code-line"><span class="err">    private final Bag&lt;DirectedEdge&gt;[] adj;    </span></span>
+<span class="code-line"><span class="err">    EdgeWeightedDigraph(int V);   </span></span>
+<span class="code-line"><span class="err">    void addEdge(DirectedEdge e);   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;DirectedEdge&gt; adj(int v);   </span></span>
+<span class="code-line"><span class="err">    int V();   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>for single source shortest-path:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class SP{   </span>
-<span class="code-line">    SP(EdgeWeightedDigraph G, int s);//s is the source node   </span>
-<span class="code-line">    double distTo(int v);//dist from s to v   </span>
-<span class="code-line">    Iterable&lt;DirectedEdge&gt; pathTo(int v);// shortest path from s to v   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class SP{   </span></span>
+<span class="code-line"><span class="err">    SP(EdgeWeightedDigraph G, int s);//s is the source node   </span></span>
+<span class="code-line"><span class="err">    double distTo(int v);//dist from s to v   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;DirectedEdge&gt; pathTo(int v);// shortest path from s to v   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h1 id="2-shortest-path-properties_1">2. Shortest path properties</h1>
-<p>goal: single-source shortest path <br>
-<strong>prop</strong>. a <strong>shortest-path-tree</strong> (SPT) exists.  <br>
-这个结论以前没见过... 不太evident吧... 没有太想明白 <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image.png"> <br>
-⇒ consequence: can represent this SPT by 2 vertex-indexted arrays:   </br></img></br></br></br></p>
+<p>goal: single-source shortest path <br/>
+<strong>prop</strong>. a <strong>shortest-path-tree</strong> (SPT) exists.  <br/>
+这个结论以前没见过... 不太evident吧... 没有太想明白 <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image.png"/> <br/>
+⇒ consequence: can represent this SPT by 2 vertex-indexted arrays:   </p>
 <ul>
 <li><code>double distTo[v]</code> = shortest path length s → v   </li>
 <li><code>DirectedEdge edgeTo[v]</code> = last edge to v in shortest path, <code>edgeTo[s] = null</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image001.png"> </img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private int distTo[] = new int[V];   </span>
-<span class="code-line">private DirectedEdge edgeTo[] = new DirectedEdge[V];   </span>
-<span class="code-line">public double distTo(int v){   </span>
-<span class="code-line">    return this.distTo[v];   </span>
-<span class="code-line">}   </span>
-<span class="code-line">public Iterable&lt;DirectedEdge&gt; pathTo(int v){   </span>
-<span class="code-line">    Stack&lt;DirectedEdge&gt; path = new Stack&lt;DirectedEdge&gt;();   </span>
-<span class="code-line">    for(DirectedEdge e = this.edgeTo[v]; e!=null; e = edgeTo[e.from])   </span>
-<span class="code-line">        path.push(e);   </span>
-<span class="code-line">    return path;   </span>
-<span class="code-line">}</span>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image001.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">distTo</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">DirectedEdge</span><span class="w"> </span><span class="n">edgeTo</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DirectedEdge</span><span class="o">[</span><span class="n">V</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="k">double</span><span class="w"> </span><span class="n">distTo</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">distTo</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">DirectedEdge</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pathTo</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">DirectedEdge</span><span class="o">&gt;</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">DirectedEdge</span><span class="o">&gt;</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">edgeTo</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">e</span><span class="o">!=</span><span class="k">null</span><span class="p">;</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">edgeTo</span><span class="o">[</span><span class="n">e.from</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">path</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">path</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="edge-relaxation">Edge relaxation</h3>
 <p>dynamic prog:   </p>
@@ -286,20 +319,20 @@ mx's blog            </a>
 <li>distTo[w] = length of <strong>known</strong> shortest path from s to w   </li>
 <li>edgeTo[w] = last edge in the <strong>known</strong> shortest path form s to w   </li>
 </ul>
-<p>(consider edges one by one) <br>
-<strong>def</strong>. edge e = v--&gt;w <strong>relaxes</strong> if e.weight+distTo[v] &lt; distTo[w]. → update distTo[w] and edgeTo[w]. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image003.png"> </img></br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void relax(DirectedEdge e){   </span>
-<span class="code-line">    int v = e.from(), w = e.to();   </span>
-<span class="code-line">    if(distTo[w]&gt;distTo[v]+e.weight()){   </span>
-<span class="code-line">        distTo[w] = distTo[v]+e.weight();   </span>
-<span class="code-line">        edgeTo[w] = e;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<p>(consider edges one by one) <br/>
+<strong>def</strong>. edge e = v--&gt;w <strong>relaxes</strong> if e.weight+distTo[v] &lt; distTo[w]. → update distTo[w] and edgeTo[w]. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image003.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">relax</span><span class="p">(</span><span class="n">DirectedEdge</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="k">from</span><span class="p">(),</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="k">to</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">distTo</span><span class="o">[</span><span class="n">w</span><span class="o">]&gt;</span><span class="n">distTo</span><span class="o">[</span><span class="n">v</span><span class="o">]+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">())</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">distTo</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">distTo</span><span class="o">[</span><span class="n">v</span><span class="o">]+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">edgeTo</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="optimality-conditions">optimality conditions</h3>
-<p><strong>prop</strong>. optimality conditions <br>
-distTo[] is the solution <em>iff</em>:   </br></p>
+<p><strong>prop</strong>. optimality conditions <br/>
+distTo[] is the solution <em>iff</em>:   </p>
 <blockquote>
 <ul>
 <li>distTo[s] = 0   </li>
@@ -308,9 +341,9 @@ distTo[] is the solution <em>iff</em>:   </br></p>
 </ul>
 </blockquote>
 <h3 id="generic-algo">Generic algo</h3>
-<p>just relax all edges... <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image004.png"> <br>
-<strong>prop</strong>. the above generic algo gives the SPT from s.    </br></img></br></p>
+<p>just relax all edges... <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image004.png"/> <br/>
+<strong>prop</strong>. the above generic algo gives the SPT from s.    </p>
 <p>implementations of the algo:    </p>
 <ul>
 <li>Dijkstra (nonnegative edge)   </li>
@@ -326,65 +359,65 @@ distTo[] is the solution <em>iff</em>:   </br></p>
 <li>each time: take the closest vertex to s that is not in the SPT (ie. whose dist is not determined yet), add the vertex, and relax all its outgoing edges.    </li>
 </ul>
 </blockquote>
-<p><strong>prop</strong>. Dijkstra works. <br>
-pf.  <br>
-<em> each edge e = v → w is considered exactly once (when vertex v is added to SPT). distTo[w] &lt;= distTo[v]+e.weight() after relaxing e <br>
-</br></em> ineq holds until algo terminates <br>
-    * distTo[w] decrease monotonely, <br>
-    * distTo[v] will not change because each time we choose distTo[v] smallest, and all edges non-negative.  <br>
-* CQFD by optimality condition.   </br></br></br></br></br></p>
+<p><strong>prop</strong>. Dijkstra works. <br/>
+pf.  <br/>
+<em> each edge e = v → w is considered exactly once (when vertex v is added to SPT). distTo[w] &lt;= distTo[v]+e.weight() after relaxing e <br/>
+</em> ineq holds until algo terminates <br/>
+    * distTo[w] decrease monotonely, <br/>
+    * distTo[v] will not change because each time we choose distTo[v] smallest, and all edges non-negative.  <br/>
+* CQFD by optimality condition.   </p>
 <h3 id="implementation">implementation</h3>
 <p>Use an <code>IndexMinPQ</code> to store vertices.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class DijkstraSP{   </span>
-<span class="code-line">    private int dist[];   </span>
-<span class="code-line">    private DirectedEdge edgeTo[];   </span>
-<span class="code-line">    private IndexMinPQ&lt;Integer,Double&gt; pq;   </span>
-<span class="code-line">    DijkstraSP(EdgeWeightedDigraph G, int s){   </span>
-<span class="code-line">        this.dist[] = new int[G.V()];   </span>
-<span class="code-line">        this.edgeTo[] = new DirectedEdge[G.V()];   </span>
-<span class="code-line">        this.pq = new IndexMinPQ&lt;Integer,Double&gt;(G.V());   </span>
-<span class="code-line">        for(int v = 0; v&lt;G.V(); v++)  dist[v] = 999999;   </span>
-<span class="code-line">        dist[s] = 0;           </span>
-<span class="code-line">        pq.insert(s, 0.0);   </span>
-<span class="code-line">        while(!pq.isEmpty()){   </span>
-<span class="code-line">            int v = pq.delMin();   </span>
-<span class="code-line">            for(DirectedEdge e:G.adj(v))    </span>
-<span class="code-line">                relax(e);// decrease key or insert vertices to pq   </span>
-<span class="code-line">        }   </span>
-<span class="code-line">    }//constructor()</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">DijkstraSP</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">dist</span><span class="err">[]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">DirectedEdge</span><span class="w"> </span><span class="n">edgeTo</span><span class="err">[]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">IndexMinPQ</span><span class="o">&lt;</span><span class="k">Integer</span><span class="p">,</span><span class="k">Double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pq</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">DijkstraSP</span><span class="p">(</span><span class="n">EdgeWeightedDigraph</span><span class="w"> </span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">dist</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">G.V()</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">edgeTo</span><span class="err">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DirectedEdge</span><span class="o">[</span><span class="n">G.V()</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">pq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IndexMinPQ</span><span class="o">&lt;</span><span class="k">Integer</span><span class="p">,</span><span class="k">Double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">v</span><span class="o">&lt;</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span><span class="w"> </span><span class="n">v</span><span class="o">++</span><span class="p">)</span><span class="w">  </span><span class="n">dist</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">999999</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">dist</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">           </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">pq</span><span class="p">.</span><span class="k">insert</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="err">!</span><span class="n">pq</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">())</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="n">delMin</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span><span class="w"> </span><span class="nl">e</span><span class="p">:</span><span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">relax</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">decrease</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">insert</span><span class="w"> </span><span class="n">vertices</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">pq</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="o">//</span><span class="k">constructor</span><span class="p">()</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    private relax(DirectedEdge e){   </span>
-<span class="code-line">        int v = e.from(), w = e.to();   </span>
-<span class="code-line">        if(dist[w]&lt;dist[v]+e.weight()){   </span>
-<span class="code-line">            dist[w] = dist[v]+e.weight();   </span>
-<span class="code-line">            edgeTo[w] = e;   </span>
-<span class="code-line">            if(pq.contains(w)) pq.decreaseKey(w, dist[w]);   </span>
-<span class="code-line">            else pq.insert(w, dist[w]);   </span>
-<span class="code-line">        }   </span>
-<span class="code-line">    }//relax()   </span>
-<span class="code-line">}//class</span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">relax</span><span class="p">(</span><span class="n">DirectedEdge</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="k">from</span><span class="p">(),</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="k">to</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="o">[</span><span class="n">w</span><span class="o">]&lt;</span><span class="n">dist</span><span class="o">[</span><span class="n">v</span><span class="o">]+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">())</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">dist</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dist</span><span class="o">[</span><span class="n">v</span><span class="o">]+</span><span class="n">e</span><span class="p">.</span><span class="n">weight</span><span class="p">();</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">edgeTo</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="k">contains</span><span class="p">(</span><span class="n">w</span><span class="p">))</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="n">decreaseKey</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">dist</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="n">pq</span><span class="p">.</span><span class="k">insert</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">dist</span><span class="o">[</span><span class="n">w</span><span class="o">]</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="o">//</span><span class="n">relax</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="o">//</span><span class="k">class</span><span class="w"></span></span>
 </pre></div>
 <p><strong>Dijkstra is in fact a Prim algorithm ! </strong><em>Both are algos that compute a spanning tree.</em> </p>
 <ul>
 <li>in Prim: each time takes the vertex <em>closest to the tree </em>(and is for undirected graph).   </li>
 <li>in Dijkstra: each time takes the vertex <em>closest to source s </em>(and is for directed graph).   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image005.png"> <br>
-DFS BFS are also computing spanning tree!  <br>
-...NB!!   </br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image005.png"/> <br/>
+DFS BFS are also computing spanning tree!  <br/>
+...NB!!   </p>
 <h3 id="complexity">complexity</h3>
 <ul>
 <li>V insertions to PQ (each vertex is added to the SPT)   </li>
 <li>V delMin from PQ    </li>
 <li>E decrease key   </li>
 </ul>
-<p>→ depends on the PQ implementation.  <br>
-in our implementation, <strong>O(ElogV)</strong> <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image006.png"> </img></br></br></p>
+<p>→ depends on the PQ implementation.  <br/>
+in our implementation, <strong>O(ElogV)</strong> <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image006.png"/> </p>
 <h1 id="4-edge-weighted-dags_1">4. Edge-Weighted DAGs</h1>
-<p>in a DAG, it's easier to find the shortest path ? <br>
-⇒ yes!  <br>
-simple algo:    </br></br></p>
+<p>in a DAG, it's easier to find the shortest path ? <br/>
+⇒ yes!  <br/>
+simple algo:    </p>
 <blockquote>
 <ul>
 <li>consider vertices in topological order   </li>
@@ -396,100 +429,100 @@ simple algo:    </br></br></p>
 <blockquote>
 <p>topo-sort algo computes SPT in any DAG (<em>even with negative weights</em>) in time <strong>O(E+V) </strong><em>(linear time!)</em>.    </p>
 </blockquote>
-<p><em>pf.</em> <br>
-<em> each edge is relaxed exactely once. distTo[w] &lt;= distTo[v]+e.weight() after relaxing e <br>
-</br></em> ineq holds until the algo terminates because:  <br>
-    * distTo[w] decrease monotonely, <br>
-    * distTo[v] will not change because of topo-order, no edge pointing to v after v is relaxed.  <br>
-* CQFD   </br></br></br></br></p>
+<p><em>pf.</em> <br/>
+<em> each edge is relaxed exactely once. distTo[w] &lt;= distTo[v]+e.weight() after relaxing e <br/>
+</em> ineq holds until the algo terminates because:  <br/>
+    * distTo[w] decrease monotonely, <br/>
+    * distTo[v] will not change because of topo-order, no edge pointing to v after v is relaxed.  <br/>
+* CQFD   </p>
 <h3 id="implementation_1">implementation</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>public class AsyclicSP{   </span>
-<span class="code-line">    AsyclicSP(EdgeWeightedDigraph G, int s){   </span>
-<span class="code-line">        // init dist[] and edgeTo[]...   </span>
-<span class="code-line">        Topological topo = new Topological(G);   </span>
-<span class="code-line">        for(int v: topo.order())   </span>
-<span class="code-line">            for(DirectedEdge e:G.adj(v))   </span>
-<span class="code-line">                relax(e);   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class AsyclicSP{   </span></span>
+<span class="code-line"><span class="err">    AsyclicSP(EdgeWeightedDigraph G, int s){   </span></span>
+<span class="code-line"><span class="err">        // init dist[] and edgeTo[]...   </span></span>
+<span class="code-line"><span class="err">        Topological topo = new Topological(G);   </span></span>
+<span class="code-line"><span class="err">        for(int v: topo.order())   </span></span>
+<span class="code-line"><span class="err">            for(DirectedEdge e:G.adj(v))   </span></span>
+<span class="code-line"><span class="err">                relax(e);   </span></span>
+<span class="code-line"><span class="err">    }   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="application">application</h3>
 <ul>
 <li><em>seam-carving</em> </li>
 </ul>
-<p>Resizing images <em>non-uniformly</em> without distortion.  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image008.png"> <br>
-好神奇! <br>
-Grid DAG of pixels, edges are pointed to 3 downward neighbors. <br>
-横向缩小: 删掉一个"seam" <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image009.png"> </img></br></br></br></br></img></br></p>
+<p>Resizing images <em>non-uniformly</em> without distortion.  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image008.png"/> <br/>
+好神奇! <br/>
+Grid DAG of pixels, edges are pointed to 3 downward neighbors. <br/>
+横向缩小: 删掉一个"seam" <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image009.png"/> </p>
 <ul>
 <li>
 <p>longest path in DAG → <em>just negate all edge weights</em>, as this algo is OK for negative edges.    </p>
 </li>
 <li>
-<p>parallel job scheduling <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image010.png"> <br>
-感觉有点运筹的意思, 关键是建立一个DAG, 比较有技巧性:   </br></img></br></p>
+<p>parallel job scheduling <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image010.png"/> <br/>
+感觉有点运筹的意思, 关键是建立一个DAG, 比较有技巧性:   </p>
 <ul>
 <li>add source and sink    </li>
 <li>split each job to 2 vertices (begin and end)   </li>
 </ul>
 </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image011.png"> <br>
-⇒ use longest path to schedule jobs   </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image011.png"/> <br/>
+⇒ use longest path to schedule jobs   </p>
 <h1 id="5-negative-weights_1">5. Negative Weights</h1>
-<p>只是给所有边增加weight并<strong>不能</strong>解决负权边问题.  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image013.png"> <br>
-⇒ need a different algo.   </br></img></br></p>
+<p>只是给所有边增加weight并<strong>不能</strong>解决负权边问题.  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image013.png"/> <br/>
+⇒ need a different algo.   </p>
 <p>prop. SPT exists <em>iff</em> there is no <em>negative cycles.</em> </p>
 <h3 id="bellman-ford">Bellman-Ford</h3>
-<p>一句话总结Bellman算法: 每次relax所有的边, 进行V次. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image014.png"> <br>
-(<em>因为relax k次以后, s到v的最短路径的长度小于等于k.</em>)   </br></img></br></p>
-<p><strong>prop</strong>. Bellman-Ford works, complexity is <strong>O(EV)</strong>.  <br>
-pf.  <br>
-after i passes, found shortest path contain at most i edges.    </br></br></p>
+<p>一句话总结Bellman算法: 每次relax所有的边, 进行V次. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image014.png"/> <br/>
+(<em>因为relax k次以后, s到v的最短路径的长度小于等于k.</em>)   </p>
+<p><strong>prop</strong>. Bellman-Ford works, complexity is <strong>O(EV)</strong>.  <br/>
+pf.  <br/>
+after i passes, found shortest path contain at most i edges.    </p>
 <p>code:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class BellmanFordSP{   </span>
-<span class="code-line">    BellmanFordSP(EdgeWeightedDigraph G, int s){   </span>
-<span class="code-line">        // init dist[] and edgeTo[]...   </span>
-<span class="code-line">        for(int i=0;i&lt;G.V();i++)   </span>
-<span class="code-line">            for(DirectedEdge e:G.edges())   </span>
-<span class="code-line">                relax(e);   </span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span> <span class="k">class</span> <span class="n">BellmanFordSP</span><span class="err">{</span>   </span>
+<span class="code-line">    <span class="n">BellmanFordSP</span><span class="p">(</span><span class="n">EdgeWeightedDigraph</span> <span class="k">G</span><span class="p">,</span> <span class="nb">int</span> <span class="n">s</span><span class="p">)</span><span class="err">{</span>   </span>
+<span class="code-line">        <span class="o">//</span> <span class="n">init</span> <span class="n">dist</span><span class="p">[]</span> <span class="k">and</span> <span class="n">edgeTo</span><span class="p">[]...</span>   </span>
+<span class="code-line">        <span class="k">for</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="k">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>   </span>
+<span class="code-line">            <span class="k">for</span><span class="p">(</span><span class="n">DirectedEdge</span> <span class="n">e</span><span class="p">:</span><span class="k">G</span><span class="p">.</span><span class="n">edges</span><span class="p">())</span>   </span>
+<span class="code-line">                <span class="n">relax</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>   </span>
+<span class="code-line">    <span class="err">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="improvement">improvement</h3>
-<p><em>if dist[v] is not changed during one pasee → no need to relax incoming edges any more.</em> <br>
-    → much faster in practice.    </br></p>
+<p><em>if dist[v] is not changed during one pasee → no need to relax incoming edges any more.</em> <br/>
+    → much faster in practice.    </p>
 <p>FIFO implementation: maintain a queue of vertices whoses dist is changed.    </p>
 <h3 id="finding-negative-cycle">Finding negative cycle</h3>
 <p>add two method to SP:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>boolean hasNegCycle();   </span>
-<span class="code-line">Iterable&lt;DirectedEdge&gt; negCycle();</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">boolean hasNegCycle();   </span></span>
+<span class="code-line"><span class="err">Iterable&lt;DirectedEdge&gt; negCycle();</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image016.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image016.png"/> </p>
 <p><strong>prop</strong>.   </p>
 <blockquote>
 <p>if a vertex u is updated in phase V, there exists a negative cycle, and can track edgeTo[u] to find the cycle.    </p>
 </blockquote>
 <p>原因是最短路径的长度小于V, 如果大于V则说明存在negative cycle.  </p>
 <h3 id="negative-cycle-application">negative cycle application</h3>
-<p><em>arbitrage detection</em> <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image018.png"> <br>
+<p><em>arbitrage detection</em> <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image018.png"/> <br/>
 建模: 
-graph of currencies, edge weight = exchange weight (complete graph). <br>
-    ⇒ <em>find a cycle whose product of edge is &gt;1.</em> <br>
-        ⇒ <strong>take logs</strong> to make a shortest-path pb. <br>
-            ⇒ take minus log, then try to find a negative cycle.  <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image020.png"> <br>
-NB!!   </br></img></br></br></br></br></br></img></br></p>
+graph of currencies, edge weight = exchange weight (complete graph). <br/>
+    ⇒ <em>find a cycle whose product of edge is &gt;1.</em> <br/>
+        ⇒ <strong>take logs</strong> to make a shortest-path pb. <br/>
+            ⇒ take minus log, then try to find a negative cycle.  <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image020.png"/> <br/>
+NB!!   </p>
 <h1 id="summery_1">Summery</h1>
-<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image015.png"> <br>
-<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image021.png"> </img></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image015.png"/> <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week2_2/pasted_image021.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

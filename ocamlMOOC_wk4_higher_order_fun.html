@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="OCaml" />
-        <meta name="description" content="[TOC] 1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the functional expr is t1 -&gt; t2 where t1 is the type of some_identifier, t2 is type of some_expr ex. function x -&gt; x + 1;; (function x -&gt; 2*x) 5;; (*annonymous function*) the previous way of defining function …" />
+        <meta name="description" content="1. FUNCTIONAL EXPRESSIONS 2. FUNCTIONS AS FIRST-CLASS VALUES function pitfalls 3. FUNCTIONS WITH MULTIPLE ARGUMENTS 4. PARTIAL FUNCTION APPLICATION partial evaluation 5. MAPPING FUNCTIONS ON LISTS implementation examples 6. FOLDING FUNCTIONS ON LISTS fold_right fold_left examples 1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS"/>
         <meta property="og:url" content="http://x-wei.github.io/ocamlMOOC_wk4_higher_order_fun.html"/>
-        <meta property="og:description" content="[TOC] 1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the functional expr is t1 -&gt; t2 where t1 is the type of some_identifier, t2 is type of some_expr ex. function x -&gt; x + 1;; (function x -&gt; 2*x) 5;; (*annonymous function*) the previous way of defining function …"/>
+        <meta property="og:description" content="1. FUNCTIONAL EXPRESSIONS 2. FUNCTIONS AS FIRST-CLASS VALUES function pitfalls 3. FUNCTIONS WITH MULTIPLE ARGUMENTS 4. PARTIAL FUNCTION APPLICATION partial evaluation 5. MAPPING FUNCTIONS ON LISTS implementation examples 6. FOLDING FUNCTIONS ON LISTS fold_right fold_left examples 1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the ..."/>
         <meta property="article:published_time" content="2016-11-22" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="OCaml" />
@@ -210,10 +210,34 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS">[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS</a><ul><li><a class="toc-href" href="#1-functional-expressions" title="1. FUNCTIONAL EXPRESSIONS">1. FUNCTIONAL EXPRESSIONS</a></li><li><a class="toc-href" href="#2-functions-as-first-class-values" title="2. FUNCTIONS AS FIRST-CLASS VALUES">2. FUNCTIONS AS FIRST-CLASS VALUES</a><ul><li><a class="toc-href" href="#function-pitfalls" title="function pitfalls">function pitfalls</a></li></ul></li><li><a class="toc-href" href="#3-functions-with-multiple-arguments_1" title="3. FUNCTIONS WITH MULTIPLE ARGUMENTS">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</a></li><li><a class="toc-href" href="#4-partial-function-application" title="4. PARTIAL FUNCTION APPLICATION">4. PARTIAL FUNCTION APPLICATION</a><ul><li><a class="toc-href" href="#partial-evaluation" title="partial evaluation">partial evaluation</a></li></ul></li><li><a class="toc-href" href="#5-mapping-functions-on-lists_1" title="5. MAPPING FUNCTIONS ON LISTS">5. MAPPING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#examples" title="examples">examples</a></li></ul></li><li><a class="toc-href" href="#6-folding-functions-on-lists_1" title="6. FOLDING FUNCTIONS ON LISTS">6. FOLDING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#fold_right" title="fold_right">fold_right</a></li><li><a class="toc-href" href="#fold_left" title="fold_left">fold_left</a></li><li><a class="toc-href" href="#examples_1" title="examples">examples</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-functional-expressions">1. FUNCTIONAL EXPRESSIONS</a></li>
+<li><a href="#2-functions-as-first-class-values">2. FUNCTIONS AS FIRST-CLASS VALUES</a><ul>
+<li><a href="#function-pitfalls">function pitfalls</a></li>
+</ul>
+</li>
+<li><a href="#3-functions-with-multiple-arguments">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</a></li>
+<li><a href="#4-partial-function-application">4. PARTIAL FUNCTION APPLICATION</a><ul>
+<li><a href="#partial-evaluation">partial evaluation</a></li>
+</ul>
+</li>
+<li><a href="#5-mapping-functions-on-lists">5. MAPPING FUNCTIONS ON LISTS</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#examples">examples</a></li>
+</ul>
+</li>
+<li><a href="#6-folding-functions-on-lists">6. FOLDING FUNCTIONS ON LISTS</a><ul>
+<li><a href="#fold_right">fold_right</a></li>
+<li><a href="#fold_left">fold_left</a></li>
+<li><a href="#examples_1">examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-functional-expressions">1. FUNCTIONAL EXPRESSIONS</h1>
-<p>syntax for functional expr: <code>function some_identifier -&gt; some_expr</code><br>
-the type of the functional expr is <code>t1 -&gt; t2</code> where t1 is the type of some_identifier, t2 is type of some_expr  </br></p>
+<p>syntax for functional expr: <code>function some_identifier -&gt; some_expr</code><br/>
+the type of the functional expr is <code>t1 -&gt; t2</code> where t1 is the type of some_identifier, t2 is type of some_expr  </p>
 <p>ex.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="mi">5</span><span class="o">;;</span> <span class="c">(*annonymous function*)</span>   </span>
@@ -246,7 +270,7 @@ the type of the functional expr is <code>t1 -&gt; t2</code> where t1 is the type
 <li>e1 has type t1 -&gt; t2  </li>
 <li>t1 matchs the type of e2  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image.png"/> </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f1</span> <span class="o">=</span> <span class="o">[(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)];;</span>  </span>
 <span class="code-line"><span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="n">fl</span><span class="o">)</span> <span class="mi">17</span><span class="o">;;</span>  </span>
 <span class="code-line"></span>
@@ -263,15 +287,15 @@ the type of the functional expr is <code>t1 -&gt; t2</code> where t1 is the type
 </pre></div>
 <h3 id="function-pitfalls">function pitfalls</h3>
 <p>function apply from left to right (<em>function application associates to the left</em>):   </p>
-<p><code>exp1 exp2 exp3</code> <br>
-is equivalent to: <code>(exp1 exp2) exp3</code> </br></p>
+<p><code>exp1 exp2 exp3</code> <br/>
+is equivalent to: <code>(exp1 exp2) exp3</code> </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">double</span> <span class="o">=</span> <span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="n">double</span> <span class="n">double</span> <span class="mi">5</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="n">double</span> <span class="o">(</span><span class="n">double</span> <span class="mi">5</span><span class="o">);;</span>   </span>
 </pre></div>
 <h1 id="3-functions-with-multiple-arguments_1">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</h1>
-<p>anonymous function with several arguments: use keyword <code>fun</code>:<br>
-<code>fun p1 ... pn -&gt; exp</code> </br></p>
+<p>anonymous function with several arguments: use keyword <code>fun</code>:<br/>
+<code>fun p1 ... pn -&gt; exp</code> </p>
 <p>unlike <code>function</code> keyword, <code>fun</code> <em>only admits one case/branch</em> </p>
 <p>remark: funs with several arguments are just abbrevations for single-argument functions that returns a function:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f1</span> <span class="o">=</span> <span class="k">function</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">+</span><span class="n">x</span><span class="o">);;</span>  </span>
@@ -290,17 +314,17 @@ is equivalent to: <code>(exp1 exp2) exp3</code> </br></p>
 <span class="code-line"><span class="k">let</span> <span class="n">f3</span> <span class="o">=</span> <span class="n">f2</span> <span class="mi">2</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="n">f3</span> <span class="mi">4</span><span class="o">;;</span>   </span>
 </pre></div>
-<p>what happens at func-application:<br>
-when applying <code>f = function x-&gt;e</code> to <code>a</code>:<br>
-→ evaluate <code>e</code> in the context <code>x=a</code><br>
-→ the arrow <code>-&gt;</code> will <strong>block</strong> any evaluation  </br></br></br></p>
+<p>what happens at func-application:<br/>
+when applying <code>f = function x-&gt;e</code> to <code>a</code>:<br/>
+→ evaluate <code>e</code> in the context <code>x=a</code><br/>
+→ the arrow <code>-&gt;</code> will <strong>block</strong> any evaluation  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span> <span class="mi">17</span><span class="o">;;</span> <span class="c">(*error will not happen here, as the `-&gt;` blocks the evaluation!*)</span>  </span>
 <span class="code-line"><span class="n">f2</span> <span class="mi">42</span><span class="o">;;</span>   </span>
 </pre></div>
 <h3 id="partial-evaluation">partial evaluation</h3>
-<p>sometimes we can do part of a calculation as soon as we have the frist few arguments <br>
-⇒ extract that part of calculation before the arrow !   </br></p>
+<p>sometimes we can do part of a calculation as soon as we have the frist few arguments <br/>
+⇒ extract that part of calculation before the arrow !   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">egal</span> <span class="n">l1</span> <span class="n">l2</span> <span class="o">=</span>   </span>
 <span class="code-line">  <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l1</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l2</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">egalp</span> <span class="n">l1</span> <span class="o">=</span>   </span>
@@ -323,17 +347,17 @@ when applying <code>f = function x-&gt;e</code> to <code>a</code>:<br>
 </pre></div>
 <h3 id="examples">examples</h3>
 <p>example1: int vectors/matrices  </p>
-<p>row vector: int list<br>
-matrix: list of row vectors<br>
-turn infix operators into functions : using parentheses <code>(+) (/) ( * )</code> ...(note: spaces are necessary for <code>*</code>, otherwise this turns into comments...  </br></br></p>
+<p>row vector: int list<br/>
+matrix: list of row vectors<br/>
+turn infix operators into functions : using parentheses <code>(+) (/) ( * )</code> ...(note: spaces are necessary for <code>*</code>, otherwise this turns into comments...  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">vsum</span>  <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(+);;</span> <span class="c">(* use partial application *)</span>  </span>
 <span class="code-line"><span class="n">vsum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">10</span><span class="o">;</span><span class="mi">20</span><span class="o">;</span><span class="mi">30</span><span class="o">];;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">msum</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(+));;</span> <span class="c">(* nested partial application *)</span>  </span>
 <span class="code-line"><span class="n">msum</span> <span class="o">[[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;];</span> <span class="o">[</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">]]</span> <span class="o">[[</span><span class="mi">10</span><span class="o">;</span><span class="mi">20</span><span class="o">];</span> <span class="o">[</span><span class="mi">30</span><span class="o">;</span><span class="mi">40</span><span class="o">]];;</span>   </span>
 </pre></div>
-<p>example2: get <em>all sublists</em> of a list<br>
-type: <code>a' list -&gt; 'a list list</code><br>
-write using induction:   </br></br></p>
+<p>example2: get <em>all sublists</em> of a list<br/>
+type: <code>a' list -&gt; 'a list list</code><br/>
+write using induction:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sublists</span> <span class="o">=</span> <span class="k">function</span>   </span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="o">[</span> <span class="bp">[]</span> <span class="o">]</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span>   </span>
@@ -349,7 +373,7 @@ write using induction:   </br></br></p>
 </ul>
 <h3 id="fold_right">fold_right</h3>
 <p><code>fold_right: ('a -&gt; 'b -&gt; 'b) -&gt; 'a list -&gt; 'b -&gt; 'b</code> </p>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image002.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image002.png"/> </p>
 <p>implementation and usage:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fold_right</span> <span class="n">f</span> <span class="n">l</span> <span class="n">b</span> <span class="o">=</span> <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>   </span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">b</span>  </span>
@@ -359,9 +383,9 @@ write using induction:   </br></br></p>
 <span class="code-line"><span class="n">concat</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">];;</span>   </span>
 </pre></div>
 <h3 id="fold_left">fold_left</h3>
-<p><code>fold_left: ('a -&gt; 'b -&gt; 'a) -&gt; 'a -&gt; 'b list -&gt; 'a</code> <br>
-note: the default value's position is different from that of fold_right !   </br></p>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image003.png"> </img></p>
+<p><code>fold_left: ('a -&gt; 'b -&gt; 'a) -&gt; 'a -&gt; 'b list -&gt; 'a</code> <br/>
+note: the default value's position is different from that of fold_right !   </p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image003.png"/> </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fold_left</span> <span class="n">f</span> <span class="n">a</span> <span class="n">l</span> <span class="o">=</span> <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">a</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span> <span class="n">fold_left</span> <span class="n">f</span> <span class="o">(</span><span class="n">f</span> <span class="n">a</span> <span class="n">h</span><span class="o">)</span> <span class="n">r</span><span class="o">;;</span>  </span>
@@ -370,8 +394,8 @@ note: the default value's position is different from that of fold_right !   </br
 <span class="code-line"><span class="n">reverse</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">];;</span>   </span>
 </pre></div>
 <h3 id="examples_1">examples</h3>
-<p>example1: Inner product of int vectors <br>
-first get pairwise product, then sum up.   </br></p>
+<p>example1: Inner product of int vectors <br/>
+first get pairwise product, then sum up.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">product</span> <span class="n">v1</span> <span class="n">v2</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span> <span class="o">(+)</span> <span class="mi">0</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(</span> <span class="o">*</span> <span class="o">)</span> <span class="n">v1</span> <span class="n">v2</span><span class="o">);;</span>  </span>
 <span class="code-line"><span class="n">product</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">;</span><span class="mi">6</span><span class="o">];;</span>   </span>
 </pre></div>

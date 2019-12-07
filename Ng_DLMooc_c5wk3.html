@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="This week: seq2seq. I-Various sequence to sequence architectures Basic Models e.g. Machine translation encoder network: many-to-one RNN decoder network: one-to-many RNN This architecture also works for image captioning: use ConvNet as encoder Difference between seq2seq and generating new text with language model: seq2seq don&#39;t randomly choose a translation, but …" />
+        <meta name="description" content="This week: seq2seq. I-Various sequence to sequence architectures Basic Models e.g. Machine translation encoder network: many-to-one RNN decoder network: one-to-many RNN This architecture also works for image captioning: use ConvNet as encoder Difference between seq2seq and generating new text with language model: seq2seq don&#39;t randomly choose a translation ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Sequential Models] week3. Sequence models &amp; Attention mechanism"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c5wk3.html"/>
-        <meta property="og:description" content="This week: seq2seq. I-Various sequence to sequence architectures Basic Models e.g. Machine translation encoder network: many-to-one RNN decoder network: one-to-many RNN This architecture also works for image captioning: use ConvNet as encoder Difference between seq2seq and generating new text with language model: seq2seq don&#39;t randomly choose a translation, but …"/>
+        <meta property="og:description" content="This week: seq2seq. I-Various sequence to sequence architectures Basic Models e.g. Machine translation encoder network: many-to-one RNN decoder network: one-to-many RNN This architecture also works for image captioning: use ConvNet as encoder Difference between seq2seq and generating new text with language model: seq2seq don&#39;t randomly choose a translation ..."/>
         <meta property="article:published_time" content="2018-02-28" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -213,54 +213,54 @@ mx's blog            </a>
                 <p>This week: seq2seq.  </p>
 <h2 id="i-various-sequence-to-sequence-architectures">I-Various sequence to sequence architectures</h2>
 <h3 id="basic-models">Basic Models</h3>
-<p>e.g. Machine translation<br>
-<strong>encoder network</strong>: many-to-one RNN<br>
-<strong>decoder network</strong>: one-to-many RNN<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image001.png"><br>
-This architecture also works for image captioning: <em>use ConvNet as encoder</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image002.png"><br>
-Difference between seq2seq and generating new text with language model: seq2seq don't <em>randomly</em> choose a translation, but choose <em>most likely</em> output sequence.  </br></img></br></br></img></br></br></br></p>
+<p>e.g. Machine translation<br/>
+<strong>encoder network</strong>: many-to-one RNN<br/>
+<strong>decoder network</strong>: one-to-many RNN<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image001.png"/><br/>
+This architecture also works for image captioning: <em>use ConvNet as encoder</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image002.png"/><br/>
+Difference between seq2seq and generating new text with language model: seq2seq don't <em>randomly</em> choose a translation, but choose <em>most likely</em> output sequence.  </p>
 <h3 id="picking-the-most-likely-sentence">Picking the most likely sentence</h3>
 <p>Machine translation (or seq2seq in general): a <em>conditional</em> language model.  </p>
 <ul>
 <li>language model: <code>P(y&lt;1&gt;,...,y&lt;T&gt;)</code>, <code>x&lt;i&gt; = y&lt;i-1&gt;</code>, initial activation = <code>a&lt;0&gt;</code> </li>
 <li>seq2seq: feed encoder output as initial activation → <code>P(y&lt;1&gt;...y&lt;T&gt;|x=input seq)</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image003.png"><br>
-Want to sample most likely output sequence (instead of random sampling) <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image004.png"> </img></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image003.png"/><br/>
+Want to sample most likely output sequence (instead of random sampling) <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image004.png"/> </p>
 <ul>
 <li>For output sequence of length L, there are |V|^L possiblilities.  </li>
 <li>greedy search: pick most likely word at each step → doesn't work well  </li>
 <li>→ <em>approximate(not guaranteed)</em> search algo: beam search (next section).  </li>
 </ul>
 <h3 id="beam-search">Beam Search</h3>
-<p>Approximately find most likely output sequence.<br>
-<strong>algo</strong><br>
-parameter: beam width <code>B</code> = 3 (beam serach = greedy for B=1)  </br></br></p>
+<p>Approximately find most likely output sequence.<br/>
+<strong>algo</strong><br/>
+parameter: beam width <code>B</code> = 3 (beam serach = greedy for B=1)  </p>
 <ul>
 <li>step 1: find <code>B</code> most likely choices for first word argmax <code>P(y&lt;1&gt;|x)</code> </li>
 <li>step 2: for each of <code>B</code> previous choices → compute second word probabilities  </li>
 </ul>
-<p>→ compuate <code>P(y&lt;1&gt;, y&lt;2&gt;|x)</code> by Bayes<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image005.png"><br>
-initialize <strong>B</strong> copies of the network, hardwiring each of the B choices of first word from last step<br>
-⇒ keep top <code>B</code> most likely first 2 words {y&lt;1&gt;,y&lt;2&gt;}<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image006.png"> </img></br></br></br></img></br></p>
+<p>→ compuate <code>P(y&lt;1&gt;, y&lt;2&gt;|x)</code> by Bayes<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image005.png"/><br/>
+initialize <strong>B</strong> copies of the network, hardwiring each of the B choices of first word from last step<br/>
+⇒ keep top <code>B</code> most likely first 2 words {y&lt;1&gt;,y&lt;2&gt;}<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image006.png"/> </p>
 <ul>
 <li>step 3: similar  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image007.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image007.png"/> </p>
 <h3 id="refinements-to-beam-search">Refinements to Beam Search</h3>
-<p><strong>Length normalization</strong><br>
-original object to optimize: <br>
-P(y&lt;1&gt;...y<t>) = product of conditional proba: P(y&lt;1&gt;|x)<em>P(y&lt;2&gt;|y&lt;1&gt;,x)</em>...<br>
-(in practice: taking log → sum of log-probas, more numerically stable)<br>
-with original object function, tends to prefer shorter output sequences<br>
-⇒ normalize the probability by output length, i.e. average proba of each word<br>
-"<strong>normlized log-likelihood</strong>"<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image010.png"><br>
-In practice: use a softer normalization: normalize by <code>T^alpha</code> (typical value: alpha=0.7)  </br></img></br></br></br></br></br></t></br></br></p>
+<p><strong>Length normalization</strong><br/>
+original object to optimize: <br/>
+P(y&lt;1&gt;...y<t>) = product of conditional proba: P(y&lt;1&gt;|x)<em>P(y&lt;2&gt;|y&lt;1&gt;,x)</em>...<br/>
+(in practice: taking log → sum of log-probas, more numerically stable)<br/>
+with original object function, tends to prefer shorter output sequences<br/>
+⇒ normalize the probability by output length, i.e. average proba of each word<br/>
+"<strong>normlized log-likelihood</strong>"<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image010.png"/><br/>
+In practice: use a softer normalization: normalize by <code>T^alpha</code> (typical value: alpha=0.7)  </t></p>
 <ul>
 <li>alpha=1: fully normalizing by length  </li>
 <li>alpha=0: no normalization  </li>
@@ -270,76 +270,76 @@ In practice: use a softer normalization: normalize by <code>T^alpha</code> (typi
 <li>large B: better approximation, better result, slower  </li>
 <li>small B: worse result, but faster  </li>
 </ul>
-<p>In production: B=10<br>
-In research: B=~1000  </br></p>
+<p>In production: B=10<br/>
+In research: B=~1000  </p>
 <h3 id="error-analysis-in-beam-search">Error analysis in beam search</h3>
-<p>When error occurs: figure out whether it's due to beam search or RNN model.<br>
-Given <code>yhat</code> and <code>y*</code>(human result):<br>
-→ feed <code>yhat</code> and <code>y*</code> to RNN language model, compute the <em>probability of each sequence</em> <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image011.png"> </img></br></br></br></p>
+<p>When error occurs: figure out whether it's due to beam search or RNN model.<br/>
+Given <code>yhat</code> and <code>y*</code>(human result):<br/>
+→ feed <code>yhat</code> and <code>y*</code> to RNN language model, compute the <em>probability of each sequence</em> <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image011.png"/> </p>
 <ul>
 <li>If <code>P(y*)&gt;P(yhat)</code>⇒ beam seach needs improvement  </li>
 <li>If <code>P(y*)&lt;P(yhat)</code> ⇒ RNN needs improvement  </li>
 </ul>
 <h3 id="bleu-score-optional">Bleu Score (optional)</h3>
-<p>How to evaluate machine translation systems (multiple correct answers).<br>
-→ <strong>BLEU </strong>(bilingual evaluation understudy): pretty good single-number eval metrics.<br>
-<strong>Precision</strong> </br></br></p>
+<p>How to evaluate machine translation systems (multiple correct answers).<br/>
+→ <strong>BLEU </strong>(bilingual evaluation understudy): pretty good single-number eval metrics.<br/>
+<strong>Precision</strong> </p>
 <ul>
 <li>(word-level) Precision: fraction of words in MT output that appears in reference translation  </li>
 <li>Modified precision: each word has a <em>credit</em>: max number of appearance in reference sentences (i.e. clip the count of a word)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image012.png"><br>
-<strong>Precision on bigrams</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image013.png"><br>
-For n-grams:<br>
-<code>Pn = sum(count_clip of ngram in yhat) / sum(count of ngram in yhat)</code> </br></br></img></br></br></img></p>
-<p><strong>Bleu score</strong><br>
-Combined Bleu score: exp of avearged precision.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image015.png"><br>
-<strong>BP</strong>: brevety penalty (penalize short translations)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image014.png"> </img></br></br></img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image012.png"/><br/>
+<strong>Precision on bigrams</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image013.png"/><br/>
+For n-grams:<br/>
+<code>Pn = sum(count_clip of ngram in yhat) / sum(count of ngram in yhat)</code> </p>
+<p><strong>Bleu score</strong><br/>
+Combined Bleu score: exp of avearged precision.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image015.png"/><br/>
+<strong>BP</strong>: brevety penalty (penalize short translations)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image014.png"/> </p>
 <h3 id="attention-model-intuition">Attention Model Intuition</h3>
-<p>Human translator: generate translation one part after another, instead of memorize (encode) whole sentence before translate.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image016.png"> </img></br></p>
+<p>Human translator: generate translation one part after another, instead of memorize (encode) whole sentence before translate.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image016.png"/> </p>
 <ul>
 <li>Input: run B-RNN to get hidden features for each word <code>a&lt;t&gt;</code> </li>
 <li>Output: also an RNN,   </li>
 </ul>
-<p>at each step, using <strong>context</strong> with <strong>attention weights</strong> <code>alpha</code> to focus on only parts of input features.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image017.png"><br>
-Attention <code>alpha&lt;t,t'&gt;</code>: how much attention to pay to <code>t</code>'th input word when generating <code>t</code>th output word: depends on previous output <code>s&lt;t-1&gt;</code>, and RNN input feature <code>a&lt;t'&gt;</code>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image018.png"> </img></br></br></img></br></p>
+<p>at each step, using <strong>context</strong> with <strong>attention weights</strong> <code>alpha</code> to focus on only parts of input features.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image017.png"/><br/>
+Attention <code>alpha&lt;t,t'&gt;</code>: how much attention to pay to <code>t</code>'th input word when generating <code>t</code>th output word: depends on previous output <code>s&lt;t-1&gt;</code>, and RNN input feature <code>a&lt;t'&gt;</code>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image018.png"/> </p>
 <h3 id="attention-model">Attention Model</h3>
-<p>Recap of attention model:<br>
-Feature vector at <code>t</code>'th input word: <code>a&lt;t'&gt;</code><br>
-<em>context</em>: input features, weighted by attention weights<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image019.png"> </img></br></br></br></p>
-<p><strong>Computing attention alpha<t,t'></t,t'></strong><br>
-Use <code>a&lt;t,t'&gt;=softmax(e&lt;t,t'&gt;)</code> to ensure attention is normalized (over all <code>t</code>'s) to one.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image020.png"><br>
-⇒ The mapping function from <code>a&lt;t'&gt;</code> and <code>s&lt;t-1&gt;</code> to attention logits <code>e&lt;t,t'&gt;</code> is unknown<br>
-→ plug in a NN: <code>e&lt;t,t'&gt; = W * (s&lt;t-1&gt;, a&lt;t'&gt;)</code>— and trust backprop !  </br></br></img></br></br></p>
-<p>downside: quadratique time complexity (<code>Tx * Ty</code>) → acceptable in MT, since input/output seqs are not that long...<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image021.png"> </img></br></p>
+<p>Recap of attention model:<br/>
+Feature vector at <code>t</code>'th input word: <code>a&lt;t'&gt;</code><br/>
+<em>context</em>: input features, weighted by attention weights<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image019.png"/> </p>
+<p><strong>Computing attention alpha<t,t'></t,t'></strong><br/>
+Use <code>a&lt;t,t'&gt;=softmax(e&lt;t,t'&gt;)</code> to ensure attention is normalized (over all <code>t</code>'s) to one.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image020.png"/><br/>
+⇒ The mapping function from <code>a&lt;t'&gt;</code> and <code>s&lt;t-1&gt;</code> to attention logits <code>e&lt;t,t'&gt;</code> is unknown<br/>
+→ plug in a NN: <code>e&lt;t,t'&gt; = W * (s&lt;t-1&gt;, a&lt;t'&gt;)</code>— and trust backprop !  </p>
+<p>downside: quadratique time complexity (<code>Tx * Ty</code>) → acceptable in MT, since input/output seqs are not that long...<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image021.png"/> </p>
 <h2 id="ii-speech-recognition-audio-data_1">II-Speech recognition - Audio data</h2>
 <h3 id="speech-recognition">Speech recognition</h3>
-<p>seq2seq, where x = audio clip / spectrum gram, y=transcript<br>
-pre-DL era: phonemes (hand-engineered basic unit of sound) → no longer necessary with end-to-end learning on large dataset.<br>
-Dataset: 300~3000 hours  </br></br></p>
-<p><strong>CTC cost</strong> : "Connectionist temporal classification".<br>
-Pb in speech recogintion with many-to-many RNN: number of input timesteps are <em>much longer</em> than output.<br>
-→ blank and repeated characters are considered correct (collapse repeated characters afterwards)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image023.png"> </img></br></br></br></p>
+<p>seq2seq, where x = audio clip / spectrum gram, y=transcript<br/>
+pre-DL era: phonemes (hand-engineered basic unit of sound) → no longer necessary with end-to-end learning on large dataset.<br/>
+Dataset: 300~3000 hours  </p>
+<p><strong>CTC cost</strong> : "Connectionist temporal classification".<br/>
+Pb in speech recogintion with many-to-many RNN: number of input timesteps are <em>much longer</em> than output.<br/>
+→ blank and repeated characters are considered correct (collapse repeated characters afterwards)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image023.png"/> </p>
 <h3 id="trigger-word-detection">Trigger Word Detection</h3>
-<p>Train with an RNN.<br>
-Data: audio clips<br>
-→ set label 1 right after the trigger word.<br>
-pb: unbalanced dataset (a lot of 0s) → label = 1 for several timesteps after trigger word.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image025.png"> </img></br></br></br></br></p>
+<p>Train with an RNN.<br/>
+Data: audio clips<br/>
+→ set label 1 right after the trigger word.<br/>
+pb: unbalanced dataset (a lot of 0s) → label = 1 for several timesteps after trigger word.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image025.png"/> </p>
 <h2 id="conclusion-and-thank-you_1">Conclusion and thank you</h2>
-<p><em>Deep learning is a super power.</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image026.png"> </img></br></p>
+<p><em>Deep learning is a super power.</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk3/pasted_image026.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

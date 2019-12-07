@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] problems with text: often very rare word is important, e.g. retinopathy ambiguity: e.g. cat and kitty → need a lot of labeled data ⇒ not realistic. ⇒ unsupervised learning similar words appear in similar context. embedding: map words to small vectors measure the closeness by cosine distance: word2vec initial: random …" />
+        <meta name="description" content="word2vec tSNE RNN backprop for RNN LSTM beam search seq to seq problems with text: often very rare word is important, e.g. retinopathy ambiguity: e.g. cat and kitty → need a lot of labeled data ⇒ not realistic. ⇒ unsupervised learning similar words appear in similar context. embedding: map words to ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences"/>
         <meta property="og:url" content="http://x-wei.github.io/dlMOOC_L4.html"/>
-        <meta property="og:description" content="[TOC] problems with text: often very rare word is important, e.g. retinopathy ambiguity: e.g. cat and kitty → need a lot of labeled data ⇒ not realistic. ⇒ unsupervised learning similar words appear in similar context. embedding: map words to small vectors measure the closeness by cosine distance: word2vec initial: random …"/>
+        <meta property="og:description" content="word2vec tSNE RNN backprop for RNN LSTM beam search seq to seq problems with text: often very rare word is important, e.g. retinopathy ambiguity: e.g. cat and kitty → need a lot of labeled data ⇒ not realistic. ⇒ unsupervised learning similar words appear in similar context. embedding: map words to ..."/>
         <meta property="article:published_time" content="2016-06-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,57 +210,67 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences">(DeepLearning MOOC) Lesson 4: Deep Models for Text and Sequences</a><ul><li><a class="toc-href" href="#word2vec" title="word2vec">word2vec</a></li><li><a class="toc-href" href="#tsne" title="tSNE">tSNE</a></li><li><a class="toc-href" href="#rnn" title="RNN">RNN</a></li><li><a class="toc-href" href="#backprop-for-rnn" title="backprop for RNN">backprop for RNN</a></li><li><a class="toc-href" href="#lstm" title="LSTM">LSTM</a></li><li><a class="toc-href" href="#beam-search" title="beam search">beam search</a></li><li><a class="toc-href" href="#seq-to-seq" title="seq to seq">seq to seq</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#word2vec">word2vec</a></li>
+<li><a href="#tsne">tSNE</a></li>
+<li><a href="#rnn">RNN</a></li>
+<li><a href="#backprop-for-rnn">backprop for RNN</a></li>
+<li><a href="#lstm">LSTM</a></li>
+<li><a href="#beam-search">beam search</a></li>
+<li><a href="#seq-to-seq">seq to seq</a></li>
+</ul>
+</div>
 <p>problems with text:   </p>
 <ol>
 <li>often very rare word is important, e.g. <em>retinopathy</em> </li>
 <li>ambiguity: e.g. <em>cat</em> and <em>kitty</em> </li>
 </ol>
-<p>→ need a lot of labeled data ⇒ not realistic. <br>
-⇒ <strong>unsupervised learning</strong> </br></p>
-<p>similar words appear in similar context. <br>
-embedding: map words to small vectors<br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image.png"><br>
-measure the closeness by cosine distance: <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image003.png"> </img></br></br></img></br></br></p>
+<p>→ need a lot of labeled data ⇒ not realistic. <br/>
+⇒ <strong>unsupervised learning</strong> </p>
+<p>similar words appear in similar context. <br/>
+embedding: map words to small vectors<br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image.png"/><br/>
+measure the closeness by cosine distance: <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image003.png"/> </p>
 <h2 id="word2vec">word2vec</h2>
-<p>initial: random vector<br>
-→ train model to predict nearby word. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image001.png"><br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image004.png"><br>
-pb: too many words in dictionary → softmax too slow<br>
-⇒ random sample the non-target words <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image005.png"> </img></br></br></br></img></br></img></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image006.png"> </img></p>
+<p>initial: random vector<br/>
+→ train model to predict nearby word. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image001.png"/><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image004.png"/><br/>
+pb: too many words in dictionary → softmax too slow<br/>
+⇒ random sample the non-target words <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image005.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image006.png"/> </p>
 <h2 id="tsne">tSNE</h2>
-<p>dimension reduction (not PCA) that preserves the neighborhood structure (close vector → close in 2d as well). <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image002.png"> </img></br></p>
+<p>dimension reduction (not PCA) that preserves the neighborhood structure (close vector → close in 2d as well). <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image002.png"/> </p>
 <h2 id="rnn">RNN</h2>
-<p>treat varaible length sequences of words. <br>
-use the current word (Xi) and the last prediction as input. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image007.png"> </img></br></br></p>
+<p>treat varaible length sequences of words. <br/>
+use the current word (Xi) and the last prediction as input. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image007.png"/> </p>
 <h2 id="backprop-for-rnn">backprop for RNN</h2>
-<p>apply highly correlated derivatives to W → not good for SGD. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image008.png"> </img></br></p>
+<p>apply highly correlated derivatives to W → not good for SGD. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image008.png"/> </p>
 <p>pb if we use highly correlated updates: grad either explod or it disappear quickly.   </p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image009.png"> </img></p>
-<p>fix grad-exploding: <em>clip</em><br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image010.png"> </img></br></p>
-<p>grad-vanishing: memory loss in RNN<br>
-⇒ LSTM  </br></p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image009.png"/> </p>
+<p>fix grad-exploding: <em>clip</em><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image010.png"/> </p>
+<p>grad-vanishing: memory loss in RNN<br/>
+⇒ LSTM  </p>
 <h2 id="lstm">LSTM</h2>
-<p>in RNN: replace the NN by a LSTM cell<br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image011.png"> </img></br></p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image013.png"><br>
-represent the system with memory by a diagram with logical gates:   </br></img></p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image014.png"><br>
-change the decision variables to continous:<br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image012.png"><br>
-a logistic regression in each gate: controls when to remember and when to forget things. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image015.png"><br>
-<a href="http://blog.csdn.net/dark_scope/article/details/47056361">http://blog.csdn.net/dark_scope/article/details/47056361</a><br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image024.png"><br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image023.png"> </img></br></img></br></br></img></br></br></img></br></br></img></p>
+<p>in RNN: replace the NN by a LSTM cell<br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image011.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image013.png"/><br/>
+represent the system with memory by a diagram with logical gates:   </p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image014.png"/><br/>
+change the decision variables to continous:<br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image012.png"/><br/>
+a logistic regression in each gate: controls when to remember and when to forget things. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image015.png"/><br/>
+<a href="http://blog.csdn.net/dark_scope/article/details/47056361">http://blog.csdn.net/dark_scope/article/details/47056361</a><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image024.png"/><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image023.png"/> </p>
 <p>regularization for LSTM:  </p>
 <ul>
 <li>L2 regularization: OK  </li>
@@ -268,23 +278,23 @@ a logistic regression in each gate: controls when to remember and when to forget
 </ul>
 <h2 id="beam-search">beam search</h2>
 <p>beam search is for <em>generating</em> sequences by RNN.   </p>
-<p>Greedy approach: at each step, <em>sample</em> from the predicted distribution of the RNN. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image017.png"><br>
-smarter approach: <br>
-predict more steps and pick the seq with largest proba. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image018.png"><br>
-pb with this: the number of possible seq grows exponentially <br>
-⇒ just keep the few most promising seqs → "<strong>Beam search"</strong><br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image016.png"> </img></br></br></br></img></br></br></br></img></br></p>
+<p>Greedy approach: at each step, <em>sample</em> from the predicted distribution of the RNN. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image017.png"/><br/>
+smarter approach: <br/>
+predict more steps and pick the seq with largest proba. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image018.png"/><br/>
+pb with this: the number of possible seq grows exponentially <br/>
+⇒ just keep the few most promising seqs → "<strong>Beam search"</strong><br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image016.png"/> </p>
 <h2 id="seq-to-seq">seq to seq</h2>
-<p>RNN: model to map vaiable length seq to fix-length vectors. <br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image021.png"><br>
-Beam search: sequence generation (map fix-length vectors to seq)<br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image019.png"> </img></br></br></img></br></p>
-<p>concat them together: seq to seq system<br>
-<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image022.png"> </img></br></p>
-<p>e.g. <br>
-translation, speech recognation, image captionning  </br></p>
+<p>RNN: model to map vaiable length seq to fix-length vectors. <br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image021.png"/><br/>
+Beam search: sequence generation (map fix-length vectors to seq)<br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image019.png"/> </p>
+<p>concat them together: seq to seq system<br/>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L4/pasted_image022.png"/> </p>
+<p>e.g. <br/>
+translation, speech recognation, image captionning  </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

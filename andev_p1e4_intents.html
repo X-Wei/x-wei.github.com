@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android" />
-        <meta name="description" content="[TOC] So far: single screen with a single activity. start activity from another activity: use Intents. Explicit intent: start a new activity toy app: type some text, press button, and a new activity will appear with the typed words. create activity in android studio: new → activity call startActivity with …" />
+        <meta name="description" content="Explicit intent: start a new activity Passing data between activities Implicit Intent: opening a link URIs construct a geo URI Share Intent So far: single screen with a single activity. start activity from another activity: use Intents. Explicit intent: start a new activity toy app: type some text, press ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Android Dev] 1.4 Intents"/>
         <meta property="og:url" content="http://x-wei.github.io/andev_p1e4_intents.html"/>
-        <meta property="og:description" content="[TOC] So far: single screen with a single activity. start activity from another activity: use Intents. Explicit intent: start a new activity toy app: type some text, press button, and a new activity will appear with the typed words. create activity in android studio: new → activity call startActivity with …"/>
+        <meta property="og:description" content="Explicit intent: start a new activity Passing data between activities Implicit Intent: opening a link URIs construct a geo URI Share Intent So far: single screen with a single activity. start activity from another activity: use Intents. Explicit intent: start a new activity toy app: type some text, press ..."/>
         <meta property="article:published_time" content="2017-02-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="android" />
@@ -210,7 +210,16 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Android Dev] 1.4 Intents">[Android Dev] 1.4 Intents</a><ul><li><a class="toc-href" href="#explicit-intent-start-a-new-activity" title="Explicit intent: start a new activity">Explicit intent: start a new activity</a></li><li><a class="toc-href" href="#passing-data-between-activities" title="Passing data between activities">Passing data between activities</a></li><li><a class="toc-href" href="#implicit-intent-opening-a-link" title="Implicit Intent: opening a link">Implicit Intent: opening a link</a></li><li><a class="toc-href" href="#uris" title="URIs">URIs</a></li><li><a class="toc-href" href="#construct-a-geo-uri" title="construct a geo URI">construct a geo URI</a></li><li><a class="toc-href" href="#share-intent" title="Share Intent">Share Intent</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#explicit-intent-start-a-new-activity">Explicit intent: start a new activity</a></li>
+<li><a href="#passing-data-between-activities">Passing data between activities</a></li>
+<li><a href="#implicit-intent-opening-a-link">Implicit Intent: opening a link</a></li>
+<li><a href="#uris">URIs</a></li>
+<li><a href="#construct-a-geo-uri">construct a geo URI</a></li>
+<li><a href="#share-intent">Share Intent</a></li>
+</ul>
+</div>
 <p>So far: single screen with a single activity. </p>
 <p>start activity from another activity: use <code>Intent</code>s. </p>
 <h2 id="explicit-intent-start-a-new-activity">Explicit intent: start a new activity</h2>
@@ -218,8 +227,8 @@ mx's blog            </a>
 <p>create activity in android studio: new → activity</p>
 <p>call <code>startActivity</code> with an intent as parameter. </p>
 <p>Explicit intent constructor: a context (every <code>Acitivity</code> is a <code>Context</code>), and a destination activity class. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>Intent ineten = new Intent(MainActivity.this, ChildActivity.class);</span>
-<span class="code-line">startActivity(intent);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">Intent ineten = new Intent(MainActivity.this, ChildActivity.class);</span></span>
+<span class="code-line"><span class="err">startActivity(intent);</span></span>
 </pre></div>
 <p>This is called <strong>explicit</strong> intent as we know exactly which activity to start. </p>
 <p>in AndroidManifest.xml file, configure child activity having a back buttom to return to parent activity: </p>
@@ -249,11 +258,11 @@ then start new activity with this intent. </p>
 <p>in child activity: 
 use <code>getIntent()</code> to get the comming intent, then use <code>intent.getStringExtra(String name)</code>, 
 before getting extra data: use <code>intent.hasExtra(name)</code> to check if the extra stuff exists. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>Intent commingIntent = getIntent();</span>
-<span class="code-line">if(commingIntent.hasExtra(Intent.EXTRA_TEXT)){</span>
-<span class="code-line">    String txt = commingIntent.getStringExtra(Intent.EXTRA_TEXT);</span>
-<span class="code-line">    mDisplayText.setText(txt);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">Intent commingIntent = getIntent();</span></span>
+<span class="code-line"><span class="err">if(commingIntent.hasExtra(Intent.EXTRA_TEXT)){</span></span>
+<span class="code-line"><span class="err">    String txt = commingIntent.getStringExtra(Intent.EXTRA_TEXT);</span></span>
+<span class="code-line"><span class="err">    mDisplayText.setText(txt);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="implicit-intent-opening-a-link">Implicit Intent: opening a link</h2>
 <p>when don't know/care which activity to start. 
@@ -261,16 +270,16 @@ example: want to visit a link or dial a number. </p>
 <p>ref of common intents: <a href="https://developer.android.com/guide/components/intents-common.html">https://developer.android.com/guide/components/intents-common.html</a></p>
 <p>most implicit intent contains 2 parameters: an action and the associated data (<code>Uri</code>). Or use <code>intent.setData</code> to add uri to intent. 
 To test if there is any application that can handle the intent: use <code>intent.resolveActivity(getPackageManager())</code></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void openWebPage(String url) {</span>
-<span class="code-line">    // TODO (2) Use Uri.parse to parse the String into a Uri</span>
-<span class="code-line">    Uri uri = Uri.parse(url);</span>
-<span class="code-line">    // TODO (3) Create an Intent with Intent.ACTION_VIEW and the webpage Uri as parameters</span>
-<span class="code-line">    Intent intent = new Intent(Intent.ACTION_VIEW, uri);</span>
-<span class="code-line">    // TODO (4) Verify that this Intent can be launched and then call startActivity</span>
-<span class="code-line">    if(intent.resolveActivity(getPackageManager()) != null){</span>
-<span class="code-line">        startActivity(intent);</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private void openWebPage(String url) {</span></span>
+<span class="code-line"><span class="err">    // TODO (2) Use Uri.parse to parse the String into a Uri</span></span>
+<span class="code-line"><span class="err">    Uri uri = Uri.parse(url);</span></span>
+<span class="code-line"><span class="err">    // TODO (3) Create an Intent with Intent.ACTION_VIEW and the webpage Uri as parameters</span></span>
+<span class="code-line"><span class="err">    Intent intent = new Intent(Intent.ACTION_VIEW, uri);</span></span>
+<span class="code-line"><span class="err">    // TODO (4) Verify that this Intent can be launched and then call startActivity</span></span>
+<span class="code-line"><span class="err">    if(intent.resolveActivity(getPackageManager()) != null){</span></span>
+<span class="code-line"><span class="err">        startActivity(intent);</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="uris">URIs</h2>
 <p><strong>URI</strong>: uniform resource identifier, a string that identifies resources. </p>
@@ -285,21 +294,21 @@ To test if there is any application that can handle the intent: use <code>intent
 <li>fragment</li>
 </ul>
 <p>example of URI: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>uri1 = https://archive.org/web</span>
-<span class="code-line">uri2 = geo:0,0?q=Montreal,Canada</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">uri1 = https://archive.org/web</span></span>
+<span class="code-line"><span class="err">uri2 = geo:0,0?q=Montreal,Canada</span></span>
 </pre></div>
 <h2 id="construct-a-geo-uri">construct a geo URI</h2>
 <p>now: want to open a location on maps. </p>
 <p><a href="https://developers.google.com/maps/documentation/android-api/intents">https://developers.google.com/maps/documentation/android-api/intents</a></p>
 <p>Use <code>Uri.Builder</code> to create complex URIs. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void onClickOpenAddressButton(View v) {</span>
-<span class="code-line">        String address = "Boulvard des Marechaux";</span>
-<span class="code-line">        // TODO (6) Use Uri.Builder with the appropriate scheme and query to form the Uri for the address</span>
-<span class="code-line">        Uri.Builder builder = new Uri.Builder();</span>
-<span class="code-line">        builder.scheme("geo").path("0,0").query(address);</span>
-<span class="code-line">        Uri uri = builder.build();</span>
-<span class="code-line">        showMap(uri); // constructs an intent and starts activity</span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void onClickOpenAddressButton(View v) {</span></span>
+<span class="code-line"><span class="err">        String address = "Boulvard des Marechaux";</span></span>
+<span class="code-line"><span class="err">        // TODO (6) Use Uri.Builder with the appropriate scheme and query to form the Uri for the address</span></span>
+<span class="code-line"><span class="err">        Uri.Builder builder = new Uri.Builder();</span></span>
+<span class="code-line"><span class="err">        builder.scheme("geo").path("0,0").query(address);</span></span>
+<span class="code-line"><span class="err">        Uri uri = builder.build();</span></span>
+<span class="code-line"><span class="err">        showMap(uri); // constructs an intent and starts activity</span></span>
+<span class="code-line"><span class="err">    }</span></span>
 </pre></div>
 <h2 id="share-intent">Share Intent</h2>
 <p>When mutilple apps that can handle this intent ⇒ a chooser will pop up. 
@@ -308,14 +317,14 @@ Example: open an image / share a piece of text / share link ...
 Media type (MIME):
 format: <code>toplevel_type_name/subtype_name[; parameters]</code>
 example: <code>text/html;charset=UTF-8, image/png</code>, <code>text/plain</code>, <code>text/rtf, video/mp4</code>,...</p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void shareText(String txt) {</span>
-<span class="code-line">        String mimeType = "text/plain";</span>
-<span class="code-line">        String title = "title of chooser window";</span>
-<span class="code-line">        ShareCompat.IntentBuilder.from(this)</span>
-<span class="code-line">                .setType(mimeType)</span>
-<span class="code-line">                .setChooserTitle(title)</span>
-<span class="code-line">                .setText(txt).startChooser();</span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private void shareText(String txt) {</span></span>
+<span class="code-line"><span class="err">        String mimeType = "text/plain";</span></span>
+<span class="code-line"><span class="err">        String title = "title of chooser window";</span></span>
+<span class="code-line"><span class="err">        ShareCompat.IntentBuilder.from(this)</span></span>
+<span class="code-line"><span class="err">                .setType(mimeType)</span></span>
+<span class="code-line"><span class="err">                .setChooserTitle(title)</span></span>
+<span class="code-line"><span class="err">                .setText(txt).startChooser();</span></span>
+<span class="code-line"><span class="err">    }</span></span>
 </pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">

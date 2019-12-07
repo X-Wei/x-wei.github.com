@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] This week: optimization algos to faster train NN, on large dataset. Mini-batch gradient descent batch v.s. mini-batch GD Compute J on m examples: vectorization, i.e. stacking x(i) y(i) horizontally. X = [x(1), ..., x(m)] Y = [y(1), ..., y(m)] → still slow or impossible with large …" />
+        <meta name="description" content="Mini-batch gradient descent batch v.s. mini-batch GD Understanding mini-batch gradient descent Exponentially weighted (moveing) averages Understanding exponentially weighted averages Bias correction in exponentially weighted averages Gradient descent with momentum RMSprop Adam optimization algorithm Learning rate decay The problem of local optima assignment This week: optimization algos to faster train ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Improving Deep Neural Networks] week2. Optimization algorithms"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c2wk2.html"/>
-        <meta property="og:description" content="[TOC] This week: optimization algos to faster train NN, on large dataset. Mini-batch gradient descent batch v.s. mini-batch GD Compute J on m examples: vectorization, i.e. stacking x(i) y(i) horizontally. X = [x(1), ..., x(m)] Y = [y(1), ..., y(m)] → still slow or impossible with large …"/>
+        <meta property="og:description" content="Mini-batch gradient descent batch v.s. mini-batch GD Understanding mini-batch gradient descent Exponentially weighted (moveing) averages Understanding exponentially weighted averages Bias correction in exponentially weighted averages Gradient descent with momentum RMSprop Adam optimization algorithm Learning rate decay The problem of local optima assignment This week: optimization algos to faster train ..."/>
         <meta property="article:published_time" content="2017-10-23" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,25 +210,42 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Improving Deep Neural Networks] week2. Optimization algorithms">[Improving Deep Neural Networks] week2. Optimization algorithms</a><ul><li><a class="toc-href" href="#mini-batch-gradient-descent" title="Mini-batch gradient descent">Mini-batch gradient descent</a><ul><li><a class="toc-href" href="#batch-vs-mini-batch-gd" title="batch v.s. mini-batch GD">batch v.s. mini-batch GD</a></li></ul></li><li><a class="toc-href" href="#understanding-mini-batch-gradient-descent_1" title="Understanding mini-batch gradient descent">Understanding mini-batch gradient descent</a></li><li><a class="toc-href" href="#exponentially-weighted-moveing-averages" title="Exponentially weighted (moveing) averages">Exponentially weighted (moveing) averages</a></li><li><a class="toc-href" href="#understanding-exponentially-weighted-averages" title="Understanding exponentially weighted averages">Understanding exponentially weighted averages</a></li><li><a class="toc-href" href="#bias-correction-in-exponentially-weighted-averages" title="Bias correction in exponentially weighted averages">Bias correction in exponentially weighted averages</a></li><li><a class="toc-href" href="#gradient-descent-with-momentum" title="Gradient descent with momentum">Gradient descent with momentum</a></li><li><a class="toc-href" href="#rmsprop" title="RMSprop">RMSprop</a></li><li><a class="toc-href" href="#adam-optimization-algorithm" title="Adam optimization algorithm">Adam optimization algorithm</a></li><li><a class="toc-href" href="#learning-rate-decay" title="Learning rate decay">Learning rate decay</a></li><li><a class="toc-href" href="#the-problem-of-local-optima" title="The problem of local optima">The problem of local optima</a></li><li><a class="toc-href" href="#assignment" title="assignment">assignment</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]    </p>
+                <div class="toc">
+<ul>
+<li><a href="#mini-batch-gradient-descent">Mini-batch gradient descent</a><ul>
+<li><a href="#batch-vs-mini-batch-gd">batch v.s. mini-batch GD</a></li>
+</ul>
+</li>
+<li><a href="#understanding-mini-batch-gradient-descent">Understanding mini-batch gradient descent</a></li>
+<li><a href="#exponentially-weighted-moveing-averages">Exponentially weighted (moveing) averages</a></li>
+<li><a href="#understanding-exponentially-weighted-averages">Understanding exponentially weighted averages</a></li>
+<li><a href="#bias-correction-in-exponentially-weighted-averages">Bias correction in exponentially weighted averages</a></li>
+<li><a href="#gradient-descent-with-momentum">Gradient descent with momentum</a></li>
+<li><a href="#rmsprop">RMSprop</a></li>
+<li><a href="#adam-optimization-algorithm">Adam optimization algorithm</a></li>
+<li><a href="#learning-rate-decay">Learning rate decay</a></li>
+<li><a href="#the-problem-of-local-optima">The problem of local optima</a></li>
+<li><a href="#assignment">assignment</a></li>
+</ul>
+</div>
 <p>This week: optimization algos to faster train NN, on large dataset.  </p>
 <h2 id="mini-batch-gradient-descent">Mini-batch gradient descent</h2>
 <h3 id="batch-vs-mini-batch-gd">batch v.s. mini-batch GD</h3>
-<p>Compute J on <code>m</code> examples: vectorization, i.e. stacking x(i) y(i) horizontally.<br>
-<code>X = [x(1), ..., x(m)]</code><br>
-<code>Y = [y(1), ..., y(m)]</code><br>
-→ still slow or impossible with large <code>m</code>.  </br></br></br></p>
-<p>⇒ split all m examples into <em>mini-batches</em>. X^t^, Y^t^<br>
-e.g. mini batch size = 1000.  </br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image001.png"> </img></p>
-<p>Minibatch GD:<br>
-each step, run one iteration of GD using X{t}, Y{t} instead of doing with full X, Y.<br>
-one "<strong>epoch</strong>": one pass through all training set<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image003.png"> </img></br></br></br></p>
+<p>Compute J on <code>m</code> examples: vectorization, i.e. stacking x(i) y(i) horizontally.<br/>
+<code>X = [x(1), ..., x(m)]</code><br/>
+<code>Y = [y(1), ..., y(m)]</code><br/>
+→ still slow or impossible with large <code>m</code>.  </p>
+<p>⇒ split all m examples into <em>mini-batches</em>. X^t^, Y^t^<br/>
+e.g. mini batch size = 1000.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image001.png"/> </p>
+<p>Minibatch GD:<br/>
+each step, run one iteration of GD using X{t}, Y{t} instead of doing with full X, Y.<br/>
+one "<strong>epoch</strong>": one pass through all training set<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image003.png"/> </p>
 <h2 id="understanding-mini-batch-gradient-descent_1">Understanding mini-batch gradient descent</h2>
-<p>with batch-GD: each iteration will decrease cost function.<br>
-in mini-batch: cost J^t^ is computed on different dataset — noisy.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image004.png"> </img></br></br></p>
+<p>with batch-GD: each iteration will decrease cost function.<br/>
+in mini-batch: cost J^t^ is computed on different dataset — noisy.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image004.png"/> </p>
 <p>How to choose minibatch size  </p>
 <ul>
 <li>
@@ -237,8 +254,8 @@ in mini-batch: cost J^t^ is computed on different dataset — noisy.<br>
 </li>
 <li>
 <p>extreme 2: minibatch size = 1 → <em>stochastic GD</em> </p>
-<p>noisy, never coverge, (<em>but loose all vectorization speedup)</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image006.png"> </img></br></p>
+<p>noisy, never coverge, (<em>but loose all vectorization speedup)</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image006.png"/> </p>
 </li>
 </ul>
 <p><strong>Guidelines on choosing batch size</strong>:  </p>
@@ -251,40 +268,40 @@ in mini-batch: cost J^t^ is computed on different dataset — noisy.<br>
 </ul>
 <h2 id="exponentially-weighted-moveing-averages">Exponentially weighted (moveing) averages</h2>
 <p><em>In fact, exp-weighted-avg is an non-parametric estimator/smoother of a series of vlaues.</em> </p>
-<p>example: Temperature over the year<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image007.png"><br>
-→ use a <em>exp-weighted moving average</em> to model this:<br>
-<code>theta[t]</code> = temperature at day t, t = 1,2,3,...<br>
-<code>v[t]</code> = averaged(smoothed) estimate of theta, t = <strong>0</strong>,1,2,3,...<br>
-<strong>exp-weighted average</strong>: <em>recursivly compute v[t].</em><br>
-<code>v[0] = 0, v[t] = 0.9 * v[t-1] + 0.1 * theta[t]</code><br>
-(param: beta = 0.9)<br>
-⇒ v[t] ~= <em>average of theta[t] over the last 1/(1-beta) days</em>. (c.f. next section)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image009.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image008.png"> </img></br></img></br></br></br></br></br></br></br></br></img></br></p>
+<p>example: Temperature over the year<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image007.png"/><br/>
+→ use a <em>exp-weighted moving average</em> to model this:<br/>
+<code>theta[t]</code> = temperature at day t, t = 1,2,3,...<br/>
+<code>v[t]</code> = averaged(smoothed) estimate of theta, t = <strong>0</strong>,1,2,3,...<br/>
+<strong>exp-weighted average</strong>: <em>recursivly compute v[t].</em><br/>
+<code>v[0] = 0, v[t] = 0.9 * v[t-1] + 0.1 * theta[t]</code><br/>
+(param: beta = 0.9)<br/>
+⇒ v[t] ~= <em>average of theta[t] over the last 1/(1-beta) days</em>. (c.f. next section)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image009.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image008.png"/> </p>
 <h2 id="understanding-exponentially-weighted-averages">Understanding exponentially weighted averages</h2>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image010.png"><br>
-Understanding the math of exp-weighted-average:<br>
-→ unroll the recursive formula:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image011.png"> </img></br></br></br></img></p>
-<p>⇔ v[100] = <em>a convolution of theta[t-100:t] and a exp-decaying function:</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image012.png"> </img></br></p>
-<p>A small trick on <em>estimating exps</em>: <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image013.png"><br>
-That's why in previous section, we say this formula ~= averaging over last 1/(1-beta) (=1/epslon) days' theta.<br>
-e.g. theta[t-10]'s weight is 0.9 ^ 10 ~= 1/e ~= 0.35, i.e. after 10 days, the weight of theta[t-10] is decayed to ~&lt; 1/3.  </br></br></img></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image010.png"/><br/>
+Understanding the math of exp-weighted-average:<br/>
+→ unroll the recursive formula:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image011.png"/> </p>
+<p>⇔ v[100] = <em>a convolution of theta[t-100:t] and a exp-decaying function:</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image012.png"/> </p>
+<p>A small trick on <em>estimating exps</em>: <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image013.png"/><br/>
+That's why in previous section, we say this formula ~= averaging over last 1/(1-beta) (=1/epslon) days' theta.<br/>
+e.g. theta[t-10]'s weight is 0.9 ^ 10 ~= 1/e ~= 0.35, i.e. after 10 days, the weight of theta[t-10] is decayed to ~&lt; 1/3.  </p>
 <p><strong>Advantage</strong> to just computing moving window averages:  in implementation, only keep updating a single variable v_theta — very small memory usage.  </p>
 <h2 id="bias-correction-in-exponentially-weighted-averages">Bias correction in exponentially weighted averages</h2>
-<p>To make exp-weighted averages more accurate by <em>bias correction.</em><br>
-Problem with previous implementation in initial phase:   </br></p>
+<p>To make exp-weighted averages more accurate by <em>bias correction.</em><br/>
+Problem with previous implementation in initial phase:   </p>
 <ul>
 <li>v[0] = 0, beta = 0.98  </li>
 <li>v[1] = 0.98<em>0 + 0.02 * theta[1] ⇒ </em>v[t] starts lower than theta. *(purple curve VS green curve)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image014.png"><br>
-⇒ <strong>Correction</strong>:<br>
-take <code>v[t] / (1 - beta^t)</code> instead of v[t].<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image015.png"> </img></br></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image014.png"/><br/>
+⇒ <strong>Correction</strong>:<br/>
+take <code>v[t] / (1 - beta^t)</code> instead of v[t].<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image015.png"/> </p>
 <p>In practice: <em>most people don't bother to implement bias correction</em> — just wait for the initial phase to warm up...  </p>
 <h2 id="gradient-descent-with-momentum">Gradient descent with momentum</h2>
 <p>GD with momentum:   </p>
@@ -293,16 +310,16 @@ take <code>v[t] / (1 - beta^t)</code> instead of v[t].<br>
 <li>in short: <em>compute exp-weighted-avg of the gradients as gradient to use</em> </li>
 </ul>
 <p>example:  if contour of loss is an ellipse, can't use too large step in GD, and oscillate. → average of steps will be faster.  </p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image018.png"> </img></p>
-<p><strong>GD momentum</strong>:<br>
-Use exp-weighted-avg of dW (V_dW) and of db (V_db). — smooth out oscillation steps of normal GD.<br>
-update params with the averaged value V_dW, V_db.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image017.png"> </img></br></br></br></p>
-<p>Why the name "momentum": <em>rolling down a ball in a bowl</em><br>
-dW/db: ~accelation<br>
-V_dW/B_db: ~velocity at current time (<em>this is why the smoothing average is called 'v'</em>)<br>
-beta: ~friction  </br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image019.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image018.png"/> </p>
+<p><strong>GD momentum</strong>:<br/>
+Use exp-weighted-avg of dW (V_dW) and of db (V_db). — smooth out oscillation steps of normal GD.<br/>
+update params with the averaged value V_dW, V_db.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image017.png"/> </p>
+<p>Why the name "momentum": <em>rolling down a ball in a bowl</em><br/>
+dW/db: ~accelation<br/>
+V_dW/B_db: ~velocity at current time (<em>this is why the smoothing average is called 'v'</em>)<br/>
+beta: ~friction  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image019.png"/> </p>
 <p>in practice:   </p>
 <ul>
 <li>beta=0.9 works well for most cases  </li>
@@ -316,17 +333,17 @@ beta: ~friction  </br></br></br></p>
 <li>also for speedup GD  </li>
 <li>
 <p>in short:   </p>
-<p><em>S =</em> exp-weighted-avg of gradient <em>squared</em> <em>(that's why call param beta2);</em><br>
-when updating params(W,b)<em>, scale dW,db by <strong><em>sqrt of S</em></strong>. </em><code>dW / sqrt(S_dW)</code> </br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image022.png"> </img></p>
+<p><em>S =</em> exp-weighted-avg of gradient <em>squared</em> <em>(that's why call param beta2);</em><br/>
+when updating params(W,b)<em>, scale dW,db by <strong><em>sqrt of S</em></strong>. </em><code>dW / sqrt(S_dW)</code> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image022.png"/> </p>
 <p>example: ellipse contour, want slow rate in <code>b</code> directrion and fast rate in <code>w</code> direction.  </p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image023.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image023.png"/> </p>
 <p>⇒ for each step (dW, db) = gradient of current minibatch:  </p>
 </li>
 <li>
 <p>db <em>large</em>, dW <em>small</em> </p>
-<p>→ update w by dW/sqrt(S_dW), ⇔ <em>larger</em> step in W direction<br>
-→ db/sqrt(S_db) ⇔ <em>smaller</em> step in b direction → damping out oscillations in b direction  </br></p>
+<p>→ update w by dW/sqrt(S_dW), ⇔ <em>larger</em> step in W direction<br/>
+→ db/sqrt(S_db) ⇔ <em>smaller</em> step in b direction → damping out oscillations in b direction  </p>
 </li>
 </ul>
 <h2 id="adam-optimization-algorithm">Adam optimization algorithm</h2>
@@ -339,8 +356,8 @@ when updating params(W,b)<em>, scale dW,db by <strong><em>sqrt of S</em></strong
 <ul>
 <li>maintain both V_dW, V_db (hyper-param=beta1) and S_dW, S_db (hyper-param=beta2)  </li>
 <li>implement bias correction: V_corrected, S_corrected — divid by (1-beta^t)  </li>
-<li>param update (W, b): <code>V / sqrt(S)</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image024.png"> </img></br></li>
+<li>param update (W, b): <code>V / sqrt(S)</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image024.png"/> </li>
 </ul>
 <p>hyperparameters:   </p>
 <ul>
@@ -351,54 +368,54 @@ when updating params(W,b)<em>, scale dW,db by <strong><em>sqrt of S</em></strong
 </ul>
 <h2 id="learning-rate-decay">Learning rate decay</h2>
 <p>slowly reduce learning rate.  </p>
-<p>In minibatch with fixed learning rate: <em>will never converge</em>.<br>
-⇒ decay learning rate → oscillating around a smaller region of optima.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image026.png"> </img></br></br></p>
+<p>In minibatch with fixed learning rate: <em>will never converge</em>.<br/>
+⇒ decay learning rate → oscillating around a smaller region of optima.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image026.png"/> </p>
 <p>Implementation:  </p>
 <ul>
 <li>1 <em>epoch</em> = 1 pass through whole data.  </li>
-<li>decay learning rate alpha after each epoch (hyper-param <em>decay-rate</em>):<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image028.png"> </img></br></li>
+<li>decay learning rate alpha after each epoch (hyper-param <em>decay-rate</em>):<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image028.png"/> </li>
 </ul>
 <p>other decay method:  </p>
 <ul>
 <li>exponentially decay alpha:   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image029.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image029.png"/> </p>
 <ul>
 <li>sqrt of epoch_num:  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image030.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image030.png"/> </p>
 <ul>
 <li>discrete staircase:  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image031.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image031.png"/> </p>
 <ul>
 <li>manual decay: when training takes <em>long time</em> </li>
 </ul>
 <h2 id="the-problem-of-local-optima">The problem of local optima</h2>
-<p>low-dimention optimas: <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image032.png"> </img></br></p>
+<p>low-dimention optimas: <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image032.png"/> </p>
 <p>This gives <em>wrong</em> intuition, in practice (high-dim), most 0-gradient points are <em>saddle points.</em> </p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image034.png"> </img></p>
-<p><strong>plateau</strong>: region where gradient close to 0 for long time.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image035.png"> </img></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image034.png"/> </p>
+<p><strong>plateau</strong>: region where gradient close to 0 for long time.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk2/pasted_image035.png"/> </p>
 <p>take-away:  </p>
 <ul>
 <li><em>unlikely</em> to stuck in bad local optima: D dimentional → ~2^(-D) of chance.  </li>
 <li><em>plateaus</em> can make learning slow → use momentum/RMSprop/Adam to speedup training.  </li>
 </ul>
 <h2 id="assignment">assignment</h2>
-<p><strong>implementing mini-batch GD</strong>:<br>
-shuffle data (note: X and Y's columns are sync-ed!):  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>permutation = list(np.random.permutation(m))  </span>
-<span class="code-line">        shuffled_X = X[:, permutation]  </span>
-<span class="code-line">        shuffled_Y = Y[:, permutation].reshape((1,m))</span>
+<p><strong>implementing mini-batch GD</strong>:<br/>
+shuffle data (note: X and Y's columns are sync-ed!):  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">permutation = list(np.random.permutation(m))  </span></span>
+<span class="code-line"><span class="err">        shuffled_X = X[:, permutation]  </span></span>
+<span class="code-line"><span class="err">        shuffled_Y = Y[:, permutation].reshape((1,m))</span></span>
 </pre></div>
-<p>→ partition data:<br>
-kth mini batch:  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>mini_batch_X = shuffled_X[:, k*mini_batch_size:(k+1)*mini_batch_size]  </span>
-<span class="code-line">     mini_batch_Y = shuffled_Y[:, k*mini_batch_size:(k+1)*mini_batch_size]</span>
+<p>→ partition data:<br/>
+kth mini batch:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">mini_batch_X = shuffled_X[:, k*mini_batch_size:(k+1)*mini_batch_size]  </span></span>
+<span class="code-line"><span class="err">     mini_batch_Y = shuffled_Y[:, k*mini_batch_size:(k+1)*mini_batch_size]</span></span>
 </pre></div>
 <p>detail: when m % minibatch_size != 0: handle last batch (smaller than a regular batch)  </p>
             </div>

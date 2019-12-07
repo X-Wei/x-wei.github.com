@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm,codejam" />
-        <meta name="description" content="[TOC] 昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记. 题目链接在这里: https://code.google.com/codejam/contest/8234486/dashboard#s=p2 Elliot&#39;s parents speak French and English to him at home. He has heard a lot of words, but it isn&#39;t always clear to him which word comes from which language! Elliot knows one sentence that …" />
+        <meta name="description" content="法1: 穷举 bruteforce (for small testcase) naive bruteforce bruteforce using bitmap 法2: 最大流 maxflow 法3: 线性规划 (integer) linear programming 昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记. 题目链接在这里: https://code.google.com/codejam/contest/8234486/dashboard#s=p2 Elliot&#39;s parents speak French and English to him at home. He has heard a lot of ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="codejam2015-round2-pbC 的三种解法"/>
         <meta property="og:url" content="http://x-wei.github.io/codejam-2015-r2pbC.html"/>
-        <meta property="og:description" content="[TOC] 昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记. 题目链接在这里: https://code.google.com/codejam/contest/8234486/dashboard#s=p2 Elliot&#39;s parents speak French and English to him at home. He has heard a lot of words, but it isn&#39;t always clear to him which word comes from which language! Elliot knows one sentence that …"/>
+        <meta property="og:description" content="法1: 穷举 bruteforce (for small testcase) naive bruteforce bruteforce using bitmap 法2: 最大流 maxflow 法3: 线性规划 (integer) linear programming 昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记. 题目链接在这里: https://code.google.com/codejam/contest/8234486/dashboard#s=p2 Elliot&#39;s parents speak French and English to him at home. He has heard a lot of ..."/>
         <meta property="article:published_time" content="2016-05-27" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -207,54 +207,64 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#fa-1-qiong-ju-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#fa-2-zui-da-liu-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#fa-3-xian-xing-gui-hua-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#1-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#2-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#3-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-bruteforce-for-small-testcase">法1: 穷举 bruteforce (for small testcase)</a><ul>
+<li><a href="#naive-bruteforce">naive bruteforce</a></li>
+<li><a href="#bruteforce-using-bitmap">bruteforce using bitmap</a></li>
+</ul>
+</li>
+<li><a href="#2-maxflow">法2: 最大流 maxflow</a></li>
+<li><a href="#3-integer-linear-programming">法3: 线性规划 (integer) linear programming</a></li>
+</ul>
+</div>
 <p>昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记.    </p>
-<p>题目链接在这里:  <br>
-<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=p2">https://code.google.com/codejam/contest/8234486/dashboard#s=p2</a> </br></p>
+<p>题目链接在这里:  <br/>
+<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=p2">https://code.google.com/codejam/contest/8234486/dashboard#s=p2</a> </p>
 <blockquote>
-<p>Elliot's parents speak French and English to him at home. He has heard a lot of words, but it isn't always clear to him which word comes from which language! Elliot knows one sentence that he's sure is English and one sentence that he's sure is French, and some other sentences that could be either English or French. If a word appears in an English sentence, it must be a word in English. If a word appears in a French sentence, it must be a word in French.    <br>
-Considering all the sentences that Elliot has heard, what is the minimum possible number of words that he's heard that must be words in both English and French?        </br></p>
+<p>Elliot's parents speak French and English to him at home. He has heard a lot of words, but it isn't always clear to him which word comes from which language! Elliot knows one sentence that he's sure is English and one sentence that he's sure is French, and some other sentences that could be either English or French. If a word appears in an English sentence, it must be a word in English. If a word appears in a French sentence, it must be a word in French.    <br/>
+Considering all the sentences that Elliot has heard, what is the minimum possible number of words that he's heard that must be words in both English and French?        </p>
 <ul>
 <li>
-<p>Input     <br>
-The first line of the input gives the number of test cases, T. T test cases follow. Each starts with a single line containing an integer N. N lines follow, each of which contains a series of space-separated "words". Each "word" is made up only of lowercase characters a-z. The first of those N lines is a "sentence" in English, and the second is a "sentence" in French. The rest could be "sentences" in either English or French. (Note that the "words" and "sentences" are not guaranteed to be valid in any real language.)   </br></p>
+<p>Input     <br/>
+The first line of the input gives the number of test cases, T. T test cases follow. Each starts with a single line containing an integer N. N lines follow, each of which contains a series of space-separated "words". Each "word" is made up only of lowercase characters a-z. The first of those N lines is a "sentence" in English, and the second is a "sentence" in French. The rest could be "sentences" in either English or French. (Note that the "words" and "sentences" are not guaranteed to be valid in any real language.)   </p>
 </li>
 <li>
-<p>Output     <br>
-For each test case, output one line containing "Case #x: y", where x is the test case number (starting from 1) and y is the minimum number of words that Elliot has heard that must be words in both English and French.   </br></p>
+<p>Output     <br/>
+For each test case, output one line containing "Case #x: y", where x is the test case number (starting from 1) and y is the minimum number of words that Elliot has heard that must be words in both English and French.   </p>
 </li>
 <li>
-<p>Limits   <br>
-1 ≤ T ≤ 25. <br>
-Each word will contain no more than 10 characters. <br>
-The two "known" sentences will contain no more than 1000 words each. <br>
-The "unknown" sentences will contain no more than 10 words each. <br>
-Small dataset <br>
-2 ≤ N ≤ 20. <br>
-Large dataset <br>
-2 ≤ N ≤ 200.   </br></br></br></br></br></br></br></br></p>
+<p>Limits   <br/>
+1 ≤ T ≤ 25. <br/>
+Each word will contain no more than 10 characters. <br/>
+The two "known" sentences will contain no more than 1000 words each. <br/>
+The "unknown" sentences will contain no more than 10 words each. <br/>
+Small dataset <br/>
+2 ≤ N ≤ 20. <br/>
+Large dataset <br/>
+2 ≤ N ≤ 200.   </p>
 </li>
 </ul>
 </blockquote>
 <p>我的codejam程序模板长这样:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def readval(typ=int):   </span>
-<span class="code-line">    return typ( raw_input() )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span> <span class="n">readval</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>   </span>
+<span class="code-line">    <span class="k">return</span> <span class="n">typ</span><span class="p">(</span> <span class="n">raw_input</span><span class="p">()</span> <span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">def readvals(typ=int):   </span>
-<span class="code-line">    return map( typ, raw_input().split() )</span>
+<span class="code-line"><span class="n">def</span> <span class="n">readvals</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>   </span>
+<span class="code-line">    <span class="k">return</span> <span class="k">map</span><span class="p">(</span> <span class="n">typ</span><span class="p">,</span> <span class="n">raw_input</span><span class="p">().</span><span class="n">split</span><span class="p">()</span> <span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">def testcase(cas):   </span>
-<span class="code-line">    print 'Case #%d: %d' % ( cas, res )</span>
+<span class="code-line"><span class="n">def</span> <span class="n">testcase</span><span class="p">(</span><span class="n">cas</span><span class="p">):</span>   </span>
+<span class="code-line">    <span class="n">print</span> <span class="s1">'Case #%d: %d'</span> <span class="o">%</span> <span class="p">(</span> <span class="n">cas</span><span class="p">,</span> <span class="n">res</span> <span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">if __name__=='__main__':   </span>
-<span class="code-line">    T = int(raw_input())   </span>
-<span class="code-line">    for i in xrange(T):   </span>
-<span class="code-line">        testcase(i+1)</span>
+<span class="code-line"><span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s1">'__main__'</span><span class="p">:</span>   </span>
+<span class="code-line">    <span class="n">T</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_input</span><span class="p">())</span>   </span>
+<span class="code-line">    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>   </span>
+<span class="code-line">        <span class="n">testcase</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></span>
 </pre></div>
-<h1 id="fa-1-qiong-ju-bruteforce-for-small-testcase">法1: 穷举 bruteforce (for small testcase)</h1>
+<h1 id="1-bruteforce-for-small-testcase">法1: 穷举 bruteforce (for small testcase)</h1>
 <p>在small set(N=20) 中, 对于那18个未知语言的句子, 每句可能是英语或法语. 那么穷举所有可能性, 然后选择双语单词最少的即可. 2^18约等于几十万 , 按说python还是可以handle的 (2^10=1k, 2^ 20=1M, python每秒大约能循环几百万次).    </p>
 <h2 id="naive-bruteforce">naive bruteforce</h2>
 <p>生成所有的可能性组合, python的<code>itertools</code>包里提供了<a href="https://docs.python.org/2/library/itertools.html#itertools.combinations">combinations</a>函数, <code>combinations(iterable, r)</code>返回所有在iterable中大小为r的子集(的迭代器):    </p>
@@ -269,28 +279,28 @@ Large dataset <br>
 </pre></div>
 <p>用<code>combination</code>函数即可实现枚举每句话是英语还是法语的功能.    </p>
 <p>当每句话是英语还是法语已经确定以后, 可以用集合取交集的方法(<code>set1.intersection(set2)</code>)得到两种语言一共有多少个重复的单词. 程序长这样:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def testcase(cas): # not fast enough...   </span>
-<span class="code-line">    N = readval()   </span>
-<span class="code-line">    En = set( readvals(str) )   </span>
-<span class="code-line">    Fr = set( readvals(str) )   </span>
-<span class="code-line">    if N==2:    </span>
-<span class="code-line">        print 'Case #%d: %d' % ( cas, len(En.intersection(Fr)) )   </span>
-<span class="code-line">        return   </span>
-<span class="code-line">    scent = []   </span>
-<span class="code-line">    for i in xrange(N-2):   </span>
-<span class="code-line">        scent.append( set(readvals(str)) )   </span>
-<span class="code-line">    def partition(engsubset):    </span>
-<span class="code-line">        allEn, allFr = En.copy(), Fr.copy()   </span>
-<span class="code-line">        for i in xrange(N-2):    </span>
-<span class="code-line">            if i in engsubset: allEn.update(scent[i])   </span>
-<span class="code-line">            else: allFr.update(scent[i])   </span>
-<span class="code-line">        return len( allEn.intersection(allFr) )    </span>
-<span class="code-line">    possibleres = []   </span>
-<span class="code-line">    for l in xrange(N-2):    </span>
-<span class="code-line">        for engsubset in combinations(xrange(N-2), l):    </span>
-<span class="code-line">            possibleres.append(partition(engsubset))   </span>
-<span class="code-line">    res = min(possibleres)   </span>
-<span class="code-line">    print 'Case #%d: %d' % ( cas, res )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">testcase</span><span class="p">(</span><span class="n">cas</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">fast</span><span class="w"> </span><span class="n">enough</span><span class="p">...</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readval</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">En</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">set</span><span class="p">(</span><span class="w"> </span><span class="n">readvals</span><span class="p">(</span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Fr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">set</span><span class="p">(</span><span class="w"> </span><span class="n">readvals</span><span class="p">(</span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">N</span><span class="o">==</span><span class="mi">2</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">print</span><span class="w"> </span><span class="s1">'Case #%d: %d'</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cas</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">En</span><span class="p">.</span><span class="k">intersection</span><span class="p">(</span><span class="n">Fr</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">scent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">scent</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="w"> </span><span class="k">set</span><span class="p">(</span><span class="n">readvals</span><span class="p">(</span><span class="nf">str</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">partition</span><span class="p">(</span><span class="n">engsubset</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">allEn</span><span class="p">,</span><span class="w"> </span><span class="n">allFr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">En</span><span class="p">.</span><span class="n">copy</span><span class="p">(),</span><span class="w"> </span><span class="n">Fr</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">engsubset</span><span class="p">:</span><span class="w"> </span><span class="n">allEn</span><span class="p">.</span><span class="k">update</span><span class="p">(</span><span class="n">scent</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">else</span><span class="err">:</span><span class="w"> </span><span class="n">allFr</span><span class="p">.</span><span class="k">update</span><span class="p">(</span><span class="n">scent</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="w"> </span><span class="n">allEn</span><span class="p">.</span><span class="k">intersection</span><span class="p">(</span><span class="n">allFr</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">possibleres</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">engsubset</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">combinations</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">possibleres</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="k">partition</span><span class="p">(</span><span class="n">engsubset</span><span class="p">))</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">possibleres</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="s1">'Case #%d: %d'</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cas</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>然而, 下载了small testcase以后运行程序, 速度还是不够快, 大约要十分钟才有结果 — 而codejam的提交时间限制是4分钟啊... 程序每次检查2^18种可能性, 但是由于每次检查都要进行集合的union和intersection操作(这种操作的效率并不高, 甚至C++里也是一样), 这个操作太耗费时间了所以不行...    </p>
 <h2 id="bruteforce-using-bitmap">bruteforce using bitmap</h2>
@@ -300,32 +310,32 @@ Large dataset <br>
 <li>两种语言的词汇表进行union/intersection: 假设共有K个不同的单词, 那么用一个K位的bitmap即可表示一种语言包含了哪些单词. 然后集合的union和intersection即可表示为OR和AND的逻辑运算.    </li>
 </ul>
 <p>bit manipulation蛮subtle的, 不过习惯了就好... 另外python的integer可以任意长度, 不用像C/java那样考虑bitmap位数大于64的情况, 还是非常方便的. 代码如下:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def testcase(cas): # use bitmap instead of set to speedup for small case !!    </span>
-<span class="code-line">    N = readval()   </span>
-<span class="code-line">    scent = []; allwords = set()   </span>
-<span class="code-line">    for i in xrange(N):    </span>
-<span class="code-line">        scent.append( readval(str) )   </span>
-<span class="code-line">        allwords.update( scent[i].split() )   </span>
-<span class="code-line">    words = sorted(allwords)    </span>
-<span class="code-line">    # if K distinct words in total, each sentence can be reprensented as a K-bit bitmap   </span>
-<span class="code-line">    bitmaps = []    </span>
-<span class="code-line">    for i in  xrange(N): #construct bitmaps   </span>
-<span class="code-line">        bm = 0   </span>
-<span class="code-line">        for wd in scent[i].split():   </span>
-<span class="code-line">            bm |= ( 1&lt;&lt; words.index(wd) )   </span>
-<span class="code-line">        bitmaps.append(bm)   </span>
-<span class="code-line">    res = 1e10   </span>
-<span class="code-line">    # look for all combinations    </span>
-<span class="code-line">    for i in xrange(1&lt;&lt;(N-2)):   </span>
-<span class="code-line">        en = bitmaps[0]; fr = bitmaps[1]   </span>
-<span class="code-line">        for k in xrange(N-2):   </span>
-<span class="code-line">            if (1&lt;&lt;k) &amp; i &gt; 0: en |= bitmaps[k+2]   </span>
-<span class="code-line">            else: fr |= bitmaps[k+2]   </span>
-<span class="code-line">        res = min( res, bin(en&amp;fr).count('1') )   </span>
-<span class="code-line">    print 'Case #%d: %d' % ( cas, res )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">testcase</span><span class="p">(</span><span class="n">cas</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">bitmap</span><span class="w"> </span><span class="n">instead</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">speedup</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">small</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="err">!!</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readval</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">scent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="p">;</span><span class="w"> </span><span class="n">allwords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">set</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">scent</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="w"> </span><span class="n">readval</span><span class="p">(</span><span class="nf">str</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">allwords</span><span class="p">.</span><span class="k">update</span><span class="p">(</span><span class="w"> </span><span class="n">scent</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="n">split</span><span class="p">()</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sorted</span><span class="p">(</span><span class="n">allwords</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="k">distinct</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">sentence</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">reprensented</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">K</span><span class="o">-</span><span class="nc">bit</span><span class="w"> </span><span class="n">bitmap</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">bitmaps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w">  </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">#construct</span><span class="w"> </span><span class="n">bitmaps</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">bm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">wd</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">scent</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="n">split</span><span class="p">()</span><span class="err">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">bm</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">words</span><span class="p">.</span><span class="k">index</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">bitmaps</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">bm</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e10</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">look</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="n">combinations</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span><span class="err">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">en</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bitmaps</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">fr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bitmaps</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="err">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span><span class="w"> </span><span class="n">en</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">bitmaps</span><span class="o">[</span><span class="n">k+2</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">else</span><span class="err">:</span><span class="w"> </span><span class="n">fr</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">bitmaps</span><span class="o">[</span><span class="n">k+2</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="w"> </span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">bin</span><span class="p">(</span><span class="n">en</span><span class="o">&amp;</span><span class="n">fr</span><span class="p">).</span><span class="nf">count</span><span class="p">(</span><span class="s1">'1'</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="s1">'Case #%d: %d'</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">cas</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>以上代码在我电脑上执行small的时候大约花费1分钟, 比最开始用set的速度提高了十倍. 当然, 对于large的case这种解法肯定就超时了...    </p>
-<h1 id="fa-2-zui-da-liu-maxflow_1">法2: 最大流 maxflow</h1>
+<h1 id="2-maxflow_1">法2: 最大流 maxflow</h1>
 <p>这个方法也是官方<a href="https://code.google.com/codejam/contest/8234486/dashboard#s=a&amp;a=2">analysis</a>里提供的答案. 如果将所有句子<code>S</code>以及所有单词<code>w</code>看作节点, 每个句子的节点<code>S</code>于它包含的单词的节点<code>w</code>相连, 问题转化成了从节点<code>S1</code>到节点<code>S2</code>的vertex cut问题 (选取最小的节点集合, 将该集合的节点去掉以后S1和S2不再联通).    </p>
 <p>然后这个问题又可以转为边的min cut问题: 只需要把每个单词节点w分成左右两个节点<code>w1</code>和<code>w2</code>, 并且这样添加边(假设w在句子S中):    </p>
 <ul>
@@ -352,7 +362,7 @@ Large dataset <br>
 <span class="code-line">    <span class="k">print</span> <span class="s1">'Case #</span><span class="si">%d</span><span class="s1">: </span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span> <span class="n">ind</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">flow_value</span><span class="p">)</span> <span class="p">)</span></span>
 </pre></div>
 <p>用这个代码即可轻松通过large case... maxflow的建模还真是艺术...orz   </p>
-<h1 id="fa-3-xian-xing-gui-hua-integer-linear-programming">法3: 线性规划 (integer) linear programming</h1>
+<h1 id="3-integer-linear-programming">法3: 线性规划 (integer) linear programming</h1>
 <p>写完上面那个解法以后, 我又看了看<a href="https://www.go-hero.net/jam/15/name/linguo">大神</a>的解法, 发现他居然用的是<a href="https://pythonhosted.org/PuLP/pulp.html">pulp</a>(python线性规划的包), 于是自己想了一下, 这个问题确实可以用线性规划来建模 !    </p>
 <p>首先说一句pulp这个包, 它提供了非常好用的接口来构造LP问题, 增加约束或者定义objective只要用<code>prob+=[expression]</code>就好了, 可以说比AMPL好用不少... 下面是一个简单的例子:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">pulp</span> <span class="kn">import</span> <span class="o">*</span>   </span>
@@ -370,64 +380,64 @@ Large dataset <br>
 <span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># see variable value    </span></span>
 <span class="code-line"><span class="mf">2.0</span></span>
 </pre></div>
-<p>OK, 本题的建模过程如下:  <br>
-对于每一个句子<code>S</code>, 定义binary的LP变量<code>Se</code>, Se=1表示句子S为英语, =0表示为法语.  <br>
-对于每个单词<code>w</code>, 定义两个binary变量<code>we</code>, <code>wf</code>, 表示单词w是英(法)语单词.  <br>
-然后, 再定义变量<code>wef</code>, 它表示单词<code>w</code>既是英语单词又是法语单词. 所以有这个逻辑关系: <code>wef = we AND wf</code> 那么这种逻辑关系如何用线性约束描述呢? 可以这样: <code>wef &gt;= we+wf-1</code> 非常巧妙吧... <br>
-(<a href="http://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp">这篇文章</a>总结了各种逻辑关系用线性规划的描述方式, 写的得非常详细. )   </br></br></br></br></p>
+<p>OK, 本题的建模过程如下:  <br/>
+对于每一个句子<code>S</code>, 定义binary的LP变量<code>Se</code>, Se=1表示句子S为英语, =0表示为法语.  <br/>
+对于每个单词<code>w</code>, 定义两个binary变量<code>we</code>, <code>wf</code>, 表示单词w是英(法)语单词.  <br/>
+然后, 再定义变量<code>wef</code>, 它表示单词<code>w</code>既是英语单词又是法语单词. 所以有这个逻辑关系: <code>wef = we AND wf</code> 那么这种逻辑关系如何用线性约束描述呢? 可以这样: <code>wef &gt;= we+wf-1</code> 非常巧妙吧... <br/>
+(<a href="http://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp">这篇文章</a>总结了各种逻辑关系用线性规划的描述方式, 写的得非常详细. )   </p>
 <p>要最小化的目标函数就是 <code>sum(wef)</code> 了, 约束除了刚才那个<code>wef &gt;= we+wf-1</code>以外, 还要表达单词和句子之间的关系: 如果一个句子为英(法)语, 那么句子里的每一个单词都为英(法)语. 这是一个<code>se==&gt;we</code>的逻辑关系, 用线性约束表达为: <code>we&gt;=se</code>.    </p>
 <p>所以整个模型是:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>Minimize sum(wef)   </span>
-<span class="code-line">st:   </span>
-<span class="code-line">we &gt;= se   </span>
-<span class="code-line">wf &gt;= (1-se)   </span>
-<span class="code-line">wef &gt;= we+wf-1   </span>
-<span class="code-line">Se[0]==1, Se[1]==0</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">Minimize sum(wef)   </span></span>
+<span class="code-line"><span class="c">st:   </span></span>
+<span class="code-line"><span class="err">we &gt;= se   </span></span>
+<span class="code-line"><span class="err">wf &gt;= (1-se)   </span></span>
+<span class="code-line"><span class="err">wef &gt;= we+wf-1   </span></span>
+<span class="code-line"><span class="err">Se[0]==1, Se[1]==0</span></span>
 </pre></div>
 <p>用pulp编写的代码如下:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>def testcase(ind):# formulate it as linear programming    </span>
-<span class="code-line">    N = readval()   </span>
-<span class="code-line">    sentc = []   </span>
-<span class="code-line">    allwords = set()   </span>
-<span class="code-line">    for i in xrange(N):   </span>
-<span class="code-line">        sentc.append( set(readvals(str)) )   </span>
-<span class="code-line">        allwords.update( sentc[-1] )   </span>
-<span class="code-line">    words = sorted( allwords )   </span>
-<span class="code-line">    M = len(words)   </span>
-<span class="code-line">    wordsindex = {words[i]:i for i in xrange(M)} # mapping a word to its index   </span>
-<span class="code-line">    pb = LpProblem('Bilingual', LpMinimize)   </span>
-<span class="code-line">    # LP variables   </span>
-<span class="code-line">    Se = [ LpVariable('Se_'+str(i), cat='Binary') for i in xrange(N) ] # Se[i] = indicator(scentence i is english)   </span>
-<span class="code-line">    we = [ LpVariable('we_'+str(j), cat='Binary') for j in xrange(M) ] # we[j] = indicator(word j is english)    </span>
-<span class="code-line">    wf = [ LpVariable('wf_'+str(j), cat='Binary') for j in xrange(M) ] # wf[j] = indicator(word j is french)    </span>
-<span class="code-line">    wef = [ LpVariable('wef_'+str(j), cat='Binary') for j in xrange(M) ] # wef[j] = indicator(word j is BOTH en and fr)    </span>
-<span class="code-line">    pb += sum( wef )   </span>
-<span class="code-line">    pb += Se[0]==1   </span>
-<span class="code-line">    pb += Se[1]==0   </span>
-<span class="code-line">    for i in xrange(N):    </span>
-<span class="code-line">        si = sentc[i]   </span>
-<span class="code-line">        for wd in si:    </span>
-<span class="code-line">            j = wordsindex[wd]   </span>
-<span class="code-line">            pb += we[j] &gt;= Se[i]   </span>
-<span class="code-line">            pb += wf[j] &gt;= (1-Se[i])   </span>
-<span class="code-line">    for j in xrange(M):    </span>
-<span class="code-line">        pb += wef[j] &gt;= we[j]+wf[j]-1 # # wef[i] = we[i] &amp;&amp; wf[i]   </span>
-<span class="code-line">    #~ pb.solve( GLPK(msg=0) )   </span>
-<span class="code-line">    pb.solve(  )   </span>
-<span class="code-line">    res = int( value(pb.objective) )   </span>
-<span class="code-line">    print 'Case #%d: %d' % ( ind, res )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="n">testcase</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span><span class="err">:#</span><span class="w"> </span><span class="n">formulate</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">linear</span><span class="w"> </span><span class="n">programming</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readval</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">sentc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">allwords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">set</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="err">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">sentc</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="w"> </span><span class="k">set</span><span class="p">(</span><span class="n">readvals</span><span class="p">(</span><span class="nf">str</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">allwords</span><span class="p">.</span><span class="k">update</span><span class="p">(</span><span class="w"> </span><span class="n">sentc</span><span class="o">[</span><span class="n">-1</span><span class="o">]</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sorted</span><span class="p">(</span><span class="w"> </span><span class="n">allwords</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">wordsindex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span><span class="n">words</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="err">:</span><span class="n">i</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">M</span><span class="p">)</span><span class="err">}</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">mapping</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="k">index</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LpProblem</span><span class="p">(</span><span class="s1">'Bilingual'</span><span class="p">,</span><span class="w"> </span><span class="n">LpMinimize</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="n">LP</span><span class="w"> </span><span class="n">variables</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('Se_'+str(i), cat='Binary') for i in xrange(N) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">Se</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">scentence</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">english</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">we</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('we_'+str(j), cat='Binary') for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">we</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">english</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('wf_'+str(j), cat='Binary') for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">wf</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">french</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">wef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('wef_'+str(j), cat='Binary') for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">wef</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">BOTH</span><span class="w"> </span><span class="n">en</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">fr</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="w"> </span><span class="n">wef</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">Se</span><span class="o">[</span><span class="n">0</span><span class="o">]==</span><span class="mi">1</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">Se</span><span class="o">[</span><span class="n">1</span><span class="o">]==</span><span class="mi">0</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">si</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sentc</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">wd</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">si</span><span class="p">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wordsindex</span><span class="o">[</span><span class="n">wd</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">we</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">Se</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">wf</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Se</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">xrange</span><span class="p">(</span><span class="n">M</span><span class="p">)</span><span class="err">:</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">pb</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">wef</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">we</span><span class="o">[</span><span class="n">j</span><span class="o">]+</span><span class="n">wf</span><span class="o">[</span><span class="n">j</span><span class="o">]-</span><span class="mi">1</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">wef</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">we</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">wf</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">#</span><span class="o">~</span><span class="w"> </span><span class="n">pb</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="w"> </span><span class="n">GLPK</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pb</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="w">  </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">int</span><span class="p">(</span><span class="w"> </span><span class="k">value</span><span class="p">(</span><span class="n">pb</span><span class="p">.</span><span class="n">objective</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="s1">'Case #%d: %d'</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">ind</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>以上代码在small上运行约1分钟, large约3分钟.    </p>
 <p>另外我发现<a href="https://www.go-hero.net/jam/15/name/liutianren">另一个大神</a>代码里没有用Binary/Integer的lp变量, 也就是说他用的是连续的线性规划! 当我把变量的定义改成:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>Se = [ LpVariable('Se_'+str(i), 0, 1) for i in xrange(N) ] # Se[i] = indicator(scentence i is english)   </span>
-<span class="code-line">we = [ LpVariable('we_'+str(j), 0) for j in xrange(M) ] # we[j] = indicator(word j is english)    </span>
-<span class="code-line">wf = [ LpVariable('wf_'+str(j), 0) for j in xrange(M) ] # wf[j] = indicator(word j is french)    </span>
-<span class="code-line">wef = [ LpVariable('wef_'+str(j), 0) for j in xrange(M) ] # wef[j] = indicator(word j is BOTH en and fr)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">Se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('Se_'+str(i), 0, 1) for i in xrange(N) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">Se</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">scentence</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">english</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="n">we</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('we_'+str(j), 0) for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">we</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">english</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="n">wf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('wf_'+str(j), 0) for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">wf</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">french</span><span class="p">)</span><span class="w">    </span></span>
+<span class="code-line"><span class="n">wef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n"> LpVariable('wef_'+str(j), 0) for j in xrange(M) </span><span class="o">]</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="n">wef</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">indicator</span><span class="p">(</span><span class="n">word</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">BOTH</span><span class="w"> </span><span class="n">en</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">fr</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
 <p>这样以后, 得到的结果还是正确的!! (不过代码运行时间没有显著的提高).    </p>
-<p>所以是这个模型中的矩阵满足<a href="https://en.wikipedia.org/wiki/Unimodular_matrix#Total_unimodularity">totally unimodular</a>性质?  <br>
-不过这个模型似乎并不满足wikipedia里写的那个充分条件?...@@  <br>
-<a href="https://kunigami.wordpress.com/2013/08/12/tu-matrix-recognition/">这里</a>有一篇真•大神的文章是讲如何识别TU矩阵的 (tl;dr......), 那么是不是各种solver内部已经有了自动判断TU的代码, 所以这两种程序的运行时间差不多?...    </br></br></p>
+<p>所以是这个模型中的矩阵满足<a href="https://en.wikipedia.org/wiki/Unimodular_matrix#Total_unimodularity">totally unimodular</a>性质?  <br/>
+不过这个模型似乎并不满足wikipedia里写的那个充分条件?...@@  <br/>
+<a href="https://kunigami.wordpress.com/2013/08/12/tu-matrix-recognition/">这里</a>有一篇真•大神的文章是讲如何识别TU矩阵的 (tl;dr......), 那么是不是各种solver内部已经有了自动判断TU的代码, 所以这两种程序的运行时间差不多?...    </p>
 <p>总而言之这道题目还是非常有意思的, 三种解法都很有代表性, 这里的技巧估计在codejam里会经常用到...    </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -826,7 +836,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#fa-1-qiong-ju-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#fa-2-zui-da-liu-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#fa-3-xian-xing-gui-hua-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam2015-round2-pbC 的三种解法">codejam2015-round2-pbC 的三种解法</a><ul><li><a class="toc-href" href="#1-bruteforce-for-small-testcase" title="法1: 穷举 bruteforce (for small testcase)">法1: 穷举 bruteforce (for small testcase)</a><ul><li><a class="toc-href" href="#naive-bruteforce" title="naive bruteforce">naive bruteforce</a></li><li><a class="toc-href" href="#bruteforce-using-bitmap" title="bruteforce using bitmap">bruteforce using bitmap</a></li></ul></li><li><a class="toc-href" href="#2-maxflow_1" title="法2: 最大流 maxflow">法2: 最大流 maxflow</a></li><li><a class="toc-href" href="#3-integer-linear-programming" title="法3: 线性规划 (integer) linear programming">法3: 线性规划 (integer) linear programming</a></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition). 快速排序的算法可以用三句话描述: [Algo] 选择基准项(pivot element, 一般取第一个元素为pivot) 把数组里所有小于pivot的移动到pivot左边, 大于pivot的移动到右边 ⇒ 此时pivot已经位于最终排序时的正确位置 对pivot左右两个数组分别递归进行快速排序 由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: void qsort(int[] a, int lo, int hi), 表示排序a[lo, hi]之间(闭区间)的所有元素. quick partition 由上面描述可以见, qsort最关键的是第二步: 把数组元素以pivot分为两部分. 这个操作就是quick partition. 函数声明为: int partition(int[] a …" />
+        <meta name="description" content="quick partition Knuth shuffle quick sort quick select 3-way qsort 今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition). 快速排序的算法可以用三句话描述: [Algo] 选择基准项(pivot element, 一般取第一个元素为pivot) 把数组里所有小于pivot的移动到pivot左边, 大于pivot的移动到右边 ⇒ 此时pivot已经位于最终排序时的正确位置 对pivot左右两个数组分别递归进行快速排序 由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: void qsort(int[] a, int lo, int hi), 表示排序a[lo, hi]之间(闭区间)的所有元素. quick partition 由上面描述可以见 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="quick sort and more: 快速排序算法总结"/>
         <meta property="og:url" content="http://x-wei.github.io/quick-sort-and-more.html"/>
-        <meta property="og:description" content="[TOC] 今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition). 快速排序的算法可以用三句话描述: [Algo] 选择基准项(pivot element, 一般取第一个元素为pivot) 把数组里所有小于pivot的移动到pivot左边, 大于pivot的移动到右边 ⇒ 此时pivot已经位于最终排序时的正确位置 对pivot左右两个数组分别递归进行快速排序 由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: void qsort(int[] a, int lo, int hi), 表示排序a[lo, hi]之间(闭区间)的所有元素. quick partition 由上面描述可以见, qsort最关键的是第二步: 把数组元素以pivot分为两部分. 这个操作就是quick partition. 函数声明为: int partition(int[] a …"/>
+        <meta property="og:description" content="quick partition Knuth shuffle quick sort quick select 3-way qsort 今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition). 快速排序的算法可以用三句话描述: [Algo] 选择基准项(pivot element, 一般取第一个元素为pivot) 把数组里所有小于pivot的移动到pivot左边, 大于pivot的移动到右边 ⇒ 此时pivot已经位于最终排序时的正确位置 对pivot左右两个数组分别递归进行快速排序 由以上描述可见, qsort是一个递归算法, 我们可以把它的函数声明写成: void qsort(int[] a, int lo, int hi), 表示排序a[lo, hi]之间(闭区间)的所有元素. quick partition 由上面描述可以见 ..."/>
         <meta property="article:published_time" content="2015-12-07" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -210,10 +210,18 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="quick sort and more: 快速排序算法总结">quick sort and more: 快速排序算法总结</a><ul><li><a class="toc-href" href="#quick-partition" title="quick partition">quick partition</a></li><li><a class="toc-href" href="#knuth-shuffle" title="Knuth shuffle">Knuth shuffle</a></li><li><a class="toc-href" href="#quick-sort" title="quick sort">quick sort</a></li><li><a class="toc-href" href="#quick-select" title="quick select">quick select</a></li><li><a class="toc-href" href="#3-way-qsort" title="3-way qsort">3-way qsort</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#quick-partition">quick partition</a></li>
+<li><a href="#knuth-shuffle">Knuth shuffle</a></li>
+<li><a href="#quick-sort">quick sort</a></li>
+<li><a href="#quick-select">quick select</a></li>
+<li><a href="#3-way-qsort">3-way qsort</a></li>
+</ul>
+</div>
 <p>今天总结一下非常有用的快速排序(qsort)算法, 以及由此衍生的一些其他相关算法(Knuth shuffle, quick select, 3-way partition).   </p>
-<p>快速排序的算法可以用三句话描述:<br>
-<strong>[Algo]</strong> </br></p>
+<p>快速排序的算法可以用三句话描述:<br/>
+<strong>[Algo]</strong> </p>
 <blockquote>
 <ul>
 <li>选择基准项(pivot element, 一般取第一个元素为pivot)  </li>
@@ -226,25 +234,25 @@ mx's blog            </a>
 <p>由上面描述可以见, qsort最关键的是第二步: 把数组元素以pivot分为两部分. 这个操作就是quick partition.   </p>
 <p>函数声明为: <code>int partition(int[] a, int lo, int hi)</code>, 该函数返回pivot(即subarray的第一个元素<code>a[lo]</code>)所在的位置.   </p>
 <p>如果允许新建一个临时数组的话, 那么这个就不是什么问题, 但是为了节约空间占用, 现在需要直接修改(in-place)使得a[lo] 到, 而且希望可以用尽量少的交换(<code>swap(int[]a, int i, int j)</code>)操作, 就不是很evident了.   </p>
-<p>这个函数的写法是用两个指针i和j分别从两端向中间走, 如果两个指针指向的元素一个小于pivot一个大于pivot那么就进行交换, 当两个指针碰面的时候结束(最后把pivot和指针元素交换). 请看下面这个萌萌的图(图片来自&lt;&lt;啊哈!算法&gt;&gt;): <br>
-<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image003.png"><br>
-选取第一个元素(6)为pivot, 然后j向左走直到遇到一个小于pivot(6)的数停止, i向右走直到遇到一个大于pivot的数停止(<em>注意要让j先移动</em>), 此时二者交换: <br>
-<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image004.png"><br>
-只要重复这个过程, 直到i&gt;=j为止, 此时只要最后把pivot和j(<em>注意是j而不是i</em>)指向的元素交换即可: <br>
-<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image005.png"><br>
-所以pivot的位置就是j, 函数返回j即可.    </br></img></br></br></img></br></br></img></br></p>
+<p>这个函数的写法是用两个指针i和j分别从两端向中间走, 如果两个指针指向的元素一个小于pivot一个大于pivot那么就进行交换, 当两个指针碰面的时候结束(最后把pivot和指针元素交换). 请看下面这个萌萌的图(图片来自&lt;&lt;啊哈!算法&gt;&gt;): <br/>
+<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image003.png"/><br/>
+选取第一个元素(6)为pivot, 然后j向左走直到遇到一个小于pivot(6)的数停止, i向右走直到遇到一个大于pivot的数停止(<em>注意要让j先移动</em>), 此时二者交换: <br/>
+<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image004.png"/><br/>
+只要重复这个过程, 直到i&gt;=j为止, 此时只要最后把pivot和j(<em>注意是j而不是i</em>)指向的元素交换即可: <br/>
+<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image005.png"/><br/>
+所以pivot的位置就是j, 函数返回j即可.    </p>
 <p>java实现:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>int partition(int[] a, int lo, int hi){  </span>
-<span class="code-line">    int pivot = a[lo], i=lo, j=hi;  </span>
-<span class="code-line">    while(true){  </span>
-<span class="code-line">        for(;j&gt;=lo &amp;&amp; a[j]&gt;=pivot;j--);// move j to a point where a[j]&lt;pivot  </span>
-<span class="code-line">        for(;i&lt;=hi &amp;&amp; a[i]&lt;=pivot;i++);// move i to a point where a[i]&gt;pivot  </span>
-<span class="code-line">        if(i&gt;=j) break;// break if i and j meets  </span>
-<span class="code-line">        swap(a, i++, j--);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    swap(a, lo, j);// swap pivot with a[j]  </span>
-<span class="code-line">    return j;  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nc">int</span><span class="w"> </span><span class="k">partition</span><span class="p">(</span><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">hi</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="k">pivot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">lo</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">hi</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="k">true</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(;</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">lo</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]&gt;=</span><span class="k">pivot</span><span class="p">;</span><span class="n">j</span><span class="c1">--);// move j to a point where a[j]&lt;pivot  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">hi</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]&lt;=</span><span class="k">pivot</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">move</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]&gt;</span><span class="k">pivot</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="k">break</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="n">meets</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="c1">--);  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">swap</span><span class="w"> </span><span class="k">pivot</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>这里有几点要注意的:   </p>
 <ul>
@@ -257,50 +265,50 @@ mx's blog            </a>
 <p>qsort之所以快, 是因为每次都能够按照pivot分为大致同样长度的两个子数组(所以每次子问题的规模除以二), 所以复杂度为<strong>O(NlogN)</strong>. 最坏情况下, 如果每次两个子数组中可能有一个长度为0, 那么每次子问题的规模只减少了1, 所以复杂度变成了quadratic <strong>O(N2)</strong>.  </p>
 <p>为了防止这种最坏情况的出现, 可以在一切开始之前把数组打乱顺序, 所以这一节讨论快速shuffle的算法. 最经典的就是Knuth的shuffle算法了, 算法很简答, 描述为: for(k=1 to n): 每次把第k个元素和前k个元素中的随机一个元素交换.  </p>
 <p>代码只有两行:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>void shuffle(int[] a){  </span>
-<span class="code-line">    for(int K=0; K&lt;a.length; K++)  </span>
-<span class="code-line">        swap(K, Random.nextInt(K+1));  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">void shuffle(int[] a){  </span></span>
+<span class="code-line"><span class="err">    for(int K=0; K&lt;a.length; K++)  </span></span>
+<span class="code-line"><span class="err">        swap(K, Random.nextInt(K+1));  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>关于算法的正确性, 其实只要证明"元素i在shuffle后最终位于位置i"的概率为1/N即可, 不难证明.   </p>
 <h2 id="quick-sort">quick sort</h2>
 <p>好了 有了以上两个辅助函数就可以写qsort函数了:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>void qsort(int[] a, int lo, int hi){//recursive helper function  </span>
-<span class="code-line">    if(lo&gt;=hi) return;  </span>
-<span class="code-line">    int p = partition(a, lo, hi);  </span>
-<span class="code-line">    qsort(a, lo, p-1);  </span>
-<span class="code-line">    qsort(a, hi, p+1);  </span>
-<span class="code-line">}  </span>
-<span class="code-line">void qsort(int[] a){  </span>
-<span class="code-line">    shuffle(a);  </span>
-<span class="code-line">    qsort(a, 0, a.length-1);  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">void qsort(int[] a, int lo, int hi){//recursive helper function  </span></span>
+<span class="code-line"><span class="err">    if(lo&gt;=hi) return;  </span></span>
+<span class="code-line"><span class="err">    int p = partition(a, lo, hi);  </span></span>
+<span class="code-line"><span class="err">    qsort(a, lo, p-1);  </span></span>
+<span class="code-line"><span class="err">    qsort(a, hi, p+1);  </span></span>
+<span class="code-line"><span class="err">}  </span></span>
+<span class="code-line"><span class="err">void qsort(int[] a){  </span></span>
+<span class="code-line"><span class="err">    shuffle(a);  </span></span>
+<span class="code-line"><span class="err">    qsort(a, 0, a.length-1);  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>其实qsort的主体就是那个partition函数, 单独把partition列出来是因为它不止可以用在排序, 还可以用来做quick select, 见quick select节.    </p>
 <h2 id="quick-select">quick select</h2>
-<p><em>对于一个没有排序的数组, 如何快速找到它的中值(median)?</em><br>
-以上这个问题的答案就在<code>partition()</code>函数.   </br></p>
+<p><em>对于一个没有排序的数组, 如何快速找到它的中值(median)?</em><br/>
+以上这个问题的答案就在<code>partition()</code>函数.   </p>
 <p>之前说过, <code>partition()</code>函数的返回值表示pivot在排序好的数组中的位置(rank), 这个消息非常有用: 中值只不过是rank等于长度除以2的元素而已.   </p>
 <p>为了寻找rank等于k的元素, 我们用partition函数可以每次把问题规模缩小: 如果partition()=p<k, 如果p="" 那么pivot左边的subarray不必考虑,="">k那么右边subarray不用考虑, 如果数组事先shuffle过了的话, 问题规模每次缩小一半.   </k,></p>
 <p>定义一个函数, 寻找rank等于k的元素, 代码类似于二分查找:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>int findKth(int[] a, int k){  </span>
-<span class="code-line">    shuffle(a);  </span>
-<span class="code-line">    int lo=0, hi=a.length-1;  </span>
-<span class="code-line">    while(lo&lt;hi){  </span>
-<span class="code-line">    int p = partition(a, lo, hi);  </span>
-<span class="code-line">    if(p==k) return a[k];  </span>
-<span class="code-line">    else if(p&lt;k) lo=p+1;  </span>
-<span class="code-line">    else hi=p-1;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    return a[k];  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nc">int</span><span class="w"> </span><span class="n">findKth</span><span class="p">(</span><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">shuffle</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hi</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">lo</span><span class="o">&lt;</span><span class="n">hi</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">partition</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">hi</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">==</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">&lt;</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="n">lo</span><span class="o">=</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="n">hi</span><span class="o">=</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>该算法内层循环为O(hi-lo), 每次问题规模减少一半, 所以复杂度为N+N/2+N/4+...+1 = 2N, 复杂度为线性时间!  </p>
 <h2 id="3-way-qsort">3-way qsort</h2>
 <p>qsort之前有个bug: 在数组里很多重复元素的时候, 效率会下降为O(N2). 原因是qsort没有好好处理重复元素的问题.   </p>
 <p>于是Dijkstra提出了一个<strong>3-way partition</strong>的算法: 把数组分为三部分: 左边<code>[lo, lt)</code>严格小于pivot, 中间<code>[lt, gt]</code>等于pivot, 右边<code>(gt, hi]</code>严格大于pivot.   </p>
-<p>算法初始化<code>lt=lo, gt=hi, i=lo</code>, 用指针i向右扫描, [i,gt]为未处理到的部分. <br>
-算法很subtle, invariant是这样的:   </br></p>
+<p>算法初始化<code>lt=lo, gt=hi, i=lo</code>, 用指针i向右扫描, [i,gt]为未处理到的部分. <br/>
+算法很subtle, invariant是这样的:   </p>
 <blockquote>
 <ul>
 <li>a[lo,lt-1] &lt; pivot  </li>
@@ -309,23 +317,23 @@ mx's blog            </a>
 <li>a[gt+1, hi] &gt; pivot  </li>
 </ul>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image006.png"><br>
-这个图很有助于写代码: <br>
-<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image007.png"> </img></br></br></img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>void qsort3way(int[] a, int lo, int hi){  </span>
-<span class="code-line">    if(hi&lt;=lo) return;  </span>
-<span class="code-line">    int lt=lo, i=lo, gt=hi, pivot=a[lo];  </span>
-<span class="code-line">    while (i&lt;=gt){// [i,gt] is unseen elements  </span>
-<span class="code-line">        if(a[i]==pivot) //a[lt,i-1] are elements == pivot  </span>
-<span class="code-line">            i++;  </span>
-<span class="code-line">        else if(a[i]&gt;pivot) // a[gt+1, hi] are elements &gt; pivot  </span>
-<span class="code-line">            swap(a, gt--, i);  </span>
-<span class="code-line">        else // a[lo, lt-1] are elements &lt; pivot  </span>
-<span class="code-line">            swap(a, lt++, i++);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    qsort3way(a, lo, lt-1);  </span>
-<span class="code-line">    qsort3way(a, gt+1, hi);  </span>
-<span class="code-line">}</span>
+<p><img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image006.png"/><br/>
+这个图很有助于写代码: <br/>
+<img alt="" class="img-responsive" src="../images/quick-sort-and-more/pasted_image007.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">void</span><span class="w"> </span><span class="n">qsort3way</span><span class="p">(</span><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">hi</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">hi</span><span class="o">&lt;=</span><span class="n">lo</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">lt</span><span class="o">=</span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">gt</span><span class="o">=</span><span class="n">hi</span><span class="p">,</span><span class="w"> </span><span class="k">pivot</span><span class="o">=</span><span class="n">a</span><span class="o">[</span><span class="n">lo</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">gt</span><span class="p">)</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="o">[</span><span class="n">i,gt</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">unseen</span><span class="w"> </span><span class="n">elements</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="k">pivot</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="n">a</span><span class="o">[</span><span class="n">lt,i-1</span><span class="o">]</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">pivot</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]&gt;</span><span class="k">pivot</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">gt+1, hi</span><span class="o">]</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">pivot</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">gt</span><span class="c1">--, i);  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">lo, lt-1</span><span class="o">]</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">elements</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">pivot</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lt</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">qsort3way</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">lt</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">qsort3way</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">gt</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">hi</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>说它很subtle, 除了因为没有那个图我写不出来以外, 还有就是, 在把i和lt交换时, i可以increment (因为我们知道<code>a[lt]==pivot</code>), 但是i和gt交换时, i<strong>不能</strong>increment: 因为a[gt]不知道多大, 所以i位置要继续检查.   </p>
 <p>另外说一句, quicksort的思想在radix sort和trie里面也有闪现, 见我关于这两个主题的MOOC笔记...</p>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="spark" />
-        <meta name="description" content="[TOC] PYTHON SPARK (PYSPARK) a spark prog has 2 programs: dirver program: runs on driver machine worker program: runs on local threads or cluster nodes a spark prog first creates a SparkContext object: tells how and where to access a cluster shell will automatically create the sc varible in iPython …" />
+        <meta name="description" content="PYTHON SPARK (PYSPARK) RDDs SPARK TRANSFORMATIONS PYTHON LAMBDA FUNCTIONS TRANSFORMATIONS SPARK ACTIONS SPARK PROGRAMMING MODEL CACHING RDDS SPARK PROGRAM LIFECYCLE SPARK KEY-VALUE RDDS PYSPARK CLOSURES SPARK BROADCAST VARIABLES SPARK ACCUMULATORS Lab1 PYTHON SPARK (PYSPARK) a spark prog has 2 programs: dirver program: runs on driver machine worker program: runs on ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Spark MOOC note] Lec4. Spark Essentials"/>
         <meta property="og:url" content="http://x-wei.github.io/sparkmooc_note_lec4.html"/>
-        <meta property="og:description" content="[TOC] PYTHON SPARK (PYSPARK) a spark prog has 2 programs: dirver program: runs on driver machine worker program: runs on local threads or cluster nodes a spark prog first creates a SparkContext object: tells how and where to access a cluster shell will automatically create the sc varible in iPython …"/>
+        <meta property="og:description" content="PYTHON SPARK (PYSPARK) RDDs SPARK TRANSFORMATIONS PYTHON LAMBDA FUNCTIONS TRANSFORMATIONS SPARK ACTIONS SPARK PROGRAMMING MODEL CACHING RDDS SPARK PROGRAM LIFECYCLE SPARK KEY-VALUE RDDS PYSPARK CLOSURES SPARK BROADCAST VARIABLES SPARK ACCUMULATORS Lab1 PYTHON SPARK (PYSPARK) a spark prog has 2 programs: dirver program: runs on driver machine worker program: runs on ..."/>
         <meta property="article:published_time" content="2015-06-16" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="spark" />
@@ -210,7 +210,24 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Spark MOOC note] Lec4. Spark Essentials">[Spark MOOC note] Lec4. Spark Essentials</a><ul><li><a class="toc-href" href="#python-spark-pyspark" title="PYTHON SPARK (PYSPARK)">PYTHON SPARK (PYSPARK)</a></li><li><a class="toc-href" href="#rdds" title="RDDs">RDDs</a></li><li><a class="toc-href" href="#spark-transformations" title="SPARK TRANSFORMATIONS">SPARK TRANSFORMATIONS</a></li><li><a class="toc-href" href="#python-lambda-functions" title="PYTHON LAMBDA FUNCTIONS">PYTHON LAMBDA FUNCTIONS</a></li><li><a class="toc-href" href="#transformations" title="TRANSFORMATIONS">TRANSFORMATIONS</a></li><li><a class="toc-href" href="#spark-actions" title="SPARK ACTIONS">SPARK ACTIONS</a></li><li><a class="toc-href" href="#spark-programming-model" title="SPARK PROGRAMMING MODEL">SPARK PROGRAMMING MODEL</a></li><li><a class="toc-href" href="#caching-rdds" title="CACHING RDDS">CACHING RDDS</a></li><li><a class="toc-href" href="#spark-program-lifecycle" title="SPARK PROGRAM LIFECYCLE">SPARK PROGRAM LIFECYCLE</a></li><li><a class="toc-href" href="#spark-key-value-rdds" title="SPARK KEY-VALUE RDDS">SPARK KEY-VALUE RDDS</a></li><li><a class="toc-href" href="#pyspark-closures" title="PYSPARK CLOSURES">PYSPARK CLOSURES</a></li><li><a class="toc-href" href="#spark-broadcast-variables" title="SPARK BROADCAST VARIABLES">SPARK BROADCAST VARIABLES</a></li><li><a class="toc-href" href="#spark-accumulators" title="SPARK ACCUMULATORS">SPARK ACCUMULATORS</a></li><li><a class="toc-href" href="#lab1" title="Lab1">Lab1</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#python-spark-pyspark">PYTHON SPARK (PYSPARK)</a></li>
+<li><a href="#rdds">RDDs</a></li>
+<li><a href="#spark-transformations">SPARK TRANSFORMATIONS</a></li>
+<li><a href="#python-lambda-functions">PYTHON LAMBDA FUNCTIONS</a></li>
+<li><a href="#transformations">TRANSFORMATIONS</a></li>
+<li><a href="#spark-actions">SPARK ACTIONS</a></li>
+<li><a href="#spark-programming-model">SPARK PROGRAMMING MODEL</a></li>
+<li><a href="#caching-rdds">CACHING RDDS</a></li>
+<li><a href="#spark-program-lifecycle">SPARK PROGRAM LIFECYCLE</a></li>
+<li><a href="#spark-key-value-rdds">SPARK KEY-VALUE RDDS</a></li>
+<li><a href="#pyspark-closures">PYSPARK CLOSURES</a></li>
+<li><a href="#spark-broadcast-variables">SPARK BROADCAST VARIABLES</a></li>
+<li><a href="#spark-accumulators">SPARK ACCUMULATORS</a></li>
+<li><a href="#lab1">Lab1</a></li>
+</ul>
+</div>
 <h2 id="python-spark-pyspark">PYTHON SPARK (PYSPARK)</h2>
 <p><strong>a spark prog has 2 programs:</strong> </p>
 <ul>
@@ -224,9 +241,9 @@ mx's blog            </a>
 <li>in iPython: use constructor to create a <code>SparkContext</code> obj</li>
 <li>⇒ use this SparkContext obj to create RDDs</li>
 </ul>
-<p>Master:<br>
+<p>Master:<br/>
 The <code>master</code> parameter (for a SparkContext) determines which type and size of cluster to use
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image.png"/></br></p>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image.png"/></p>
 <h2 id="rdds">RDDs</h2>
 <p><strong>Resilient Distributed Dataset</strong>:</p>
 <ul>
@@ -254,14 +271,14 @@ The <code>master</code> parameter (for a SparkContext) determines which type and
 <li>apply actions on RDD (collect, count)</li>
 </ul>
 <p>ex code:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>data = [1,2,3,4]</span>
-<span class="code-line">rDD = sc.paralize(data, 4)</span>
-<span class="code-line">distFile = sc.textFile("readme.txt", 4) // elements are lines in the file</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">data = [1,2,3,4]</span></span>
+<span class="code-line"><span class="err">rDD = sc.paralize(data, 4)</span></span>
+<span class="code-line"><span class="err">distFile = sc.textFile("readme.txt", 4) // elements are lines in the file</span></span>
 </pre></div>
 <h2 id="spark-transformations">SPARK TRANSFORMATIONS</h2>
 <p>to create new dataset from existing one (lazy)</p>
-<p>examples of transformations: <br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image003.png"/></br></p>
+<p>examples of transformations: <br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image003.png"/></p>
 <h2 id="python-lambda-functions">PYTHON LAMBDA FUNCTIONS</h2>
 <p>single expression</p>
 <h2 id="transformations">TRANSFORMATIONS</h2>
@@ -272,16 +289,16 @@ The <code>master</code> parameter (for a SparkContext) determines which type and
 <img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image006.png"/></p>
 <h2 id="spark-programming-model">SPARK PROGRAMMING MODEL</h2>
 <h2 id="caching-rdds">CACHING RDDS</h2>
-<p>to avoid having to reload data: <code>rdd.cache()</code>⇒ read from memory instead of disk<br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image007.png"/></br></p>
+<p>to avoid having to reload data: <code>rdd.cache()</code>⇒ read from memory instead of disk<br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image007.png"/></p>
 <h2 id="spark-program-lifecycle">SPARK PROGRAM LIFECYCLE</h2>
 <p>create/paralise ⇒ transform ⇒ [cache] ⇒ action</p>
 <h2 id="spark-key-value-rdds">SPARK KEY-VALUE RDDS</h2>
 <p>each element of a <em>pair RDD</em> is a pair tuple</p>
-<p>key-value transformations: <br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image008.png"/></br></p>
-<p>ex:<br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image009.png"/></br></p>
+<p>key-value transformations: <br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image008.png"/></p>
+<p>ex:<br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image009.png"/></p>
 <p><img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image010.png"/></p>
 <p>careful using <code>groupByKey</code>: create lots of data traffic and iterables at works</p>
 <h2 id="pyspark-closures">PYSPARK CLOSURES</h2>
@@ -310,16 +327,16 @@ The <code>master</code> parameter (for a SparkContext) determines which type and
 </li>
 </ul>
 <h2 id="spark-broadcast-variables">SPARK BROADCAST VARIABLES</h2>
-<p>ex. give every worker a large dataset <br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image011.png"/></br></p>
+<p>ex. give every worker a large dataset <br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image011.png"/></p>
 <h2 id="spark-accumulators">SPARK ACCUMULATORS</h2>
-<p>can only be "add" to by associative operation <br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image012.png"/></br></p>
-<p>careful to use accumulators in transformations: <br>
-<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image013.png"/></br></p>
+<p>can only be "add" to by associative operation <br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image012.png"/></p>
+<p>careful to use accumulators in transformations: <br/>
+<img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image013.png"/></p>
 <h2 id="lab1">Lab1</h2>
-<p>VB更新以后虚拟机打不开了, 解决办法在: <br>
-<a href="http://bbs.deepin.org/forum.php?mod=viewthread&amp;tid=26001">http://bbs.deepin.org/forum.php?mod=viewthread&amp;tid=26001</a></br></p>
+<p>VB更新以后虚拟机打不开了, 解决办法在: <br/>
+<a href="http://bbs.deepin.org/forum.php?mod=viewthread&amp;tid=26001">http://bbs.deepin.org/forum.php?mod=viewthread&amp;tid=26001</a></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

@@ -197,7 +197,14 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#floyd-warshall">任意两点最短路径: Floyd-Warshall</a></li>
+<li><a href="#dijkstra">单源最短路径: Dijkstra</a></li>
+<li><a href="#bellman-ford">有负权边的单源最短路径: Bellman-Ford</a></li>
+<li><a href="#more">More</a></li>
+</ul>
+</div>
 <p>weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    </p>
 <p>简单起见(这回只写伪代码好了), 对于图的定义如下:   </p>
 <ul>
@@ -205,12 +212,8 @@ mx's blog            </a>
 <li><code>e[u,v]</code> = distance of edge(u,v); if (u,v) is not an edge, <code>e[u,v]=INF</code> </li>
 <li>令N=点的数量, M=边的数量   </li>
 </ul>
-<h1 id="ren-yi-liang-dian-zui-duan-lu-jing-floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
-<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source)和<code>t</code>(target), 求s到达t的最短路径.    </p>
-<p>Floyd算法的思想是动态规划:    </p>
-<blockquote>
-<ul>
-<li>定义 …</li></ul></blockquote>
+<h1 id="floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
+<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source ...</p>
                     </div>
                 </div>
             </article>
@@ -251,23 +254,28 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#recursive-dfs">Recursive DFS</a></li>
+<li><a href="#non-recursive-dfs">Non-recursive DFS</a></li>
+<li><a href="#for-trees-dfs-with-depth">(for Trees) DFS with depth</a></li>
+<li><a href="#dfs-for-binary-tree-preorder-traversal">DFS for binary tree: Preorder traversal</a></li>
+<li><a href="#dfs-with-path">DFS with path</a></li>
+<li><a href="#cycle-detection">Cycle Detection</a></li>
+<li><a href="#topology-sort">Topology Sort</a></li>
+</ul>
+</div>
 <p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
 <p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GraphNode{      </span>
-<span class="code-line">    int val;      </span>
-<span class="code-line">    List&lt;GraphNode&gt; neighbors;      </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{      </span></span>
+<span class="code-line"><span class="err">    int val;      </span></span>
+<span class="code-line"><span class="err">    List&lt;GraphNode&gt; neighbors;      </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>为了防止重复, 仍然用一个HaseSet记录走过的节点:    </p>
 <p><code>HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();</code> </p>
 <h2 id="recursive-dfs">Recursive DFS</h2>
-<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
-<p>递归的DFS代码非常简洁:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void DFS(GraphNode nd){      </span>
-<span class="code-line">    System.out.println(nd.val);    </span>
-<span class="code-line">    visited.add(nd);   </span>
-<span class="code-line">    for(GraphNode next: nd.neighbors …</span></pre></div>
+<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点 ...</p>
                     </div>
                 </div>
             </article>
@@ -306,18 +314,18 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>除了上次介绍的<a href="http://x-wei.github.io/minhash.html">minhash</a>方法以外, 还有一种常见的hash方法, 叫做simHash. 这里做简要介绍.  <br>
-这个hash函数的背景和上次一样, 还是考虑把文本抽象为ngram的集合:  <br>
-<img alt="" class="img-responsive" src="../images/simhash/pasted_image.png"> <br>
-然后相似度依旧是Jaccard similarity:  <br>
-<img alt="" class="img-responsive" src="../images/simhash/pasted_image001.png"> </img></br></br></img></br></br></p>
+                    <div class="summary"><p>除了上次介绍的<a href="http://x-wei.github.io/minhash.html">minhash</a>方法以外, 还有一种常见的hash方法, 叫做simHash. 这里做简要介绍.  <br/>
+这个hash函数的背景和上次一样, 还是考虑把文本抽象为ngram的集合:  <br/>
+<img alt="" class="img-responsive" src="../images/simhash/pasted_image.png"/> <br/>
+然后相似度依旧是Jaccard similarity:  <br/>
+<img alt="" class="img-responsive" src="../images/simhash/pasted_image001.png"/> </p>
 <h2 id="simhash">simHash</h2>
 <p>simHash的方法听上去比minHash还要简单:    </p>
 <ol>
 <li>对一个文档<em>d</em>中的每一个term(ngram, shingle) <em>t</em>, 计算其hashcode(比如用java内建的<code>Object.hashCode()</code>函数) <em>hash(t)</em>.    </li>
 <li>把d中所有term的<em>hash(t)</em>合成为一个hashcode作为d的hashcode <em>simHash(d)</em>: <em>simHash(d)</em>的长度与<em>hash(t)</em>相同, <em>simHash(d)</em>的第k个bit的取值为所有<em>hash(t)</em>第k个bit的<strong>众数</strong>.    </li>
 </ol>
-<p>写成数学表达式很吓人, 其实只不过不断在{0,1}和{-1 …</p>
+<p>写成数学表达式很吓人, 其实只不过不断在{0,1}和{-1 ...</p>
                     </div>
                 </div>
             </article>
@@ -358,21 +366,27 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
-<p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br>
-由于树的BFS只是图的BFS的一种特殊情况, 而且比较简单不需要visited标记, 这里只写一下图的BFS好了.  <br>
-先定义一个Graph类, 这里在每一个节点保存邻居信息:    </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GraphNode{   </span>
-<span class="code-line">    int val;   </span>
-<span class="code-line">    List&lt;GraphNode&gt; neighbors;   </span>
-<span class="code-line">}</span>
+                    <div class="summary"><div class="toc">
+<ul>
+<li><a href="#bfs-for-treesgraphs">BFS for trees/graphs</a></li>
+<li><a href="#bfs-with-distance">BFS with distance</a></li>
+<li><a href="#properties">properties</a></li>
+<li><a href="#bfs-by-layer">BFS "by layer"</a></li>
+<li><a href="#complexity">complexity</a></li>
+</ul>
+</div>
+<p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br/>
+由于树的BFS只是图的BFS的一种特殊情况, 而且比较简单不需要visited标记, 这里只写一下图的BFS好了.  <br/>
+先定义一个Graph类, 这里在每一个节点保存邻居信息:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{   </span></span>
+<span class="code-line"><span class="err">    int val;   </span></span>
+<span class="code-line"><span class="err">    List&lt;GraphNode&gt; neighbors;   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="bfs-for-treesgraphs">BFS for trees/graphs</h2>
 <p>图的遍历需要注意不走重复节点, 所以需要一个HashSet(名字叫visited)来保存哪些节点已经访问过了. 需要注意的是, <em>在把一个节点放进队列queue的时刻就要把它放进visited</em>, 而不是在队列里取出来的时刻再放.    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void BFS(GraphNode start){   </span>
-<span class="code-line">    LinkedList&lt;GraphNode&gt; q = new LinkedList&lt;GraphNode&gt;();   </span>
-<span class="code-line">    HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();   </span>
-<span class="code-line">    q.push(start …</span></pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void BFS(GraphNode start){   </span></span>
+<span class="code-line"><span class="err">    LinkedList&lt;GraphNode&gt; q = new ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -413,9 +427,11 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC] </p>
+                    <div class="summary"><div class="toc">
+<ul></ul>
+</div>
 <p>Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    </p>
-<p><img alt="" class="img-responsive" src="../images/algo-ds-mindmap/Algo%20%26%20DS.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algo-ds-mindmap/Algo%20%26%20DS.png"/> </p>
 <p>I shall update its content later on. And maybe write some blog entries on some of the items.   </p>
 <p>This mindmap is drawn using <a href="http://www.xmind.net/">xmind</a>.   </p>
                     </div>
@@ -464,7 +480,7 @@ mx's blog            </a>
 <h2 id="simhash">simhash</h2>
 <p>另一个思路是, 使用某个hash函数, 对于每一个数据计算一个哈希值. 这个hash函数要满足: <strong>当i和j的相似度很高的时候, hash(i)和hash(j)的值(很可能)相同.</strong> 这次介绍的minHash就是这样的一种方法.    </p>
 <h2 id="jaccard-similarity">Jaccard similarity</h2>
-<p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term …</p>
+<p>明确问题含义, 首先需要定义相似度. 这里主要考虑文本相似度的问题, 假设字典D有M个term ...</p>
                     </div>
                 </div>
             </article>
@@ -505,15 +521,15 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   </p>
 <p>然后就看到chrome这几年来吃内存越来越严重, 导致我开多几个标签页再开eclipse的话电脑就很有可能直接卡死... 郁闷啊 ! 于是决定给系统增加一个swap分区. 之前给<a href="http://thealternative.ch/index.php?view=linuxdays">thealternative</a>写邮件询问这件事, Sandro Kalbermatter同学热情回复了我告诉我怎么做, 按照他说的果然成功了, 特此一记.    </p>
-<h2 id="step1-jian-li-swapfen-qu">step1. 建立swap分区</h2>
+<h2 id="step1-swap">step1. 建立swap分区</h2>
 <p>首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    </p>
 <p>关于swap分区应该多大, 根据<a href="http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space">这个帖子</a>, 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   </p>
-<p>我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  <br>
-<img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"> </img></br></p>
-<h2 id="step2-bian-ji-fstab">step2. 编辑fstab</h2>
+<p>我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  <br/>
+<img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"/> </p>
+<h2 id="step2-fstab">step2. 编辑fstab</h2>
 <p>建立好了swap分区以后, 打开终端, 输入<code>sudo blkid</code>查看所有的磁盘分区.    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>$ sudo blkid   </span>
-<span class="code-line">/dev/sda1: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">"FILES"</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">"ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3"</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext2 …</span></span></pre></div>
+<span class="code-line">/dev/sda1: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">"FILES"</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">"ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3"</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext2 ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -554,26 +570,26 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>几乎所有的ml课都是从线性回归讲起, ETH的课也不例外. 不过这次老师用了贝叶斯的视角讲这个问题, 自从高中接触丁老师讲的线性回归以来 第一次听到一个不同于最小二乘的解读, 感觉很有意思. 又想起来刘未鹏那篇非常棒的<a href="http://mindhacks.cn/2008/09/21/the-magical-bayesian-method/">博客</a>, 于是想记录一下.    </p>
 <h2 id="notation">notation</h2>
-<p>首先有n个数据点:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"> <br>
-其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"> <br>
-例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </br></img></br></br></img></br></p>
+<p>首先有n个数据点:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image001.png"/> <br/>
+其中y是实数, 每个x有d个维度, 为了方便表示截距, 再给x加入一个始终等于1的维度:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image002.png"/> <br/>
+例子: y代表房价, x代表了房子的面积, 使用时间, 距离市中心的距离等因素.   </p>
 <h2 id="least-square-viewpoint">least square viewpoint</h2>
-<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"> <br>
-使得拟合结果和观测结果的误差尽量小.  <br>
-不过这次不说最小二乘, 所以接下来不讨论这个思路...   </br></br></img></br></p>
+<p>在最小二乘的视角里, 线性回归是用一个x的线性函数拟合y:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image003.png"/> <br/>
+使得拟合结果和观测结果的误差尽量小.  <br/>
+不过这次不说最小二乘, 所以接下来不讨论这个思路...   </p>
 <h2 id="assumptions-in-bayes-viewpoint">assumptions in Bayes viewpoint</h2>
-<p>在贝叶斯视角里, 我们假设: <br>
-<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br>
-即:  <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"> <br>
-其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br>
-另外再有一个比较强的假设: <br>
-<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br>
-<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"> <br>
-(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 …</p>
+<p>在贝叶斯视角里, 我们假设: <br/>
+<strong>假设1. y = 某个x的线性函数 + 观测噪音</strong> <br/>
+即:  <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image006.png"/> <br/>
+其中εi是一个<em>随机变量</em>, 所以y也是一个随机变量.  <br/>
+另外再有一个比较强的假设: <br/>
+<strong>假设2.  ε服从centered高斯分布, iid.</strong> <br/>
+<img alt="" class="img-responsive" src="../images/linreg-bayes/pasted_image007.png"/> <br/>
+(btw, 对一个随机变量建模, 一般来说, 连续随机变量就用高斯 ...</br/></br/></br/></br/></br/></br/></br/></br/></p>
                     </div>
                 </div>
             </article>
@@ -613,13 +629,13 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>python科学计算包的基础是numpy, 里面的array类型经常遇到. 一开始可能把这个array和python内建的列表(list)混淆, 这里简单总结一下列表(list), 多维数组(np.ndarray)和矩阵(np.matrix)的区别.    </p>
-<h2 id="listlie-biao">list列表</h2>
+<h2 id="list">list列表</h2>
 <p>列表属于python的三种基本集合类型之一, 其他两种是元组(tuple)和字典(dict). tuple和list区别主要在于是不是mutable的.    </p>
 <p>list和java里的数组不同之处在于, python的list可以包含任意类型的对象, 一个list里可以包含int, string或者其他任何对象, 另外list是可变长度的(list有<code>append</code>, <code>extend</code>和<code>pop</code>等方法).   </p>
 <p>所以, python内建的所谓"列表"其实是功能很强大的数组, 类比一下可以说它对应于java里面的<code>ArrayList&lt;Object&gt;</code> .    </p>
-<h2 id="ndarrayduo-wei-shu-zu">ndarray多维数组</h2>
+<h2 id="ndarray">ndarray多维数组</h2>
 <p>ndarray是numpy的基石, 其实它更像一个java里面的标准数组: 所有元素有一个相同数据类型(dtype), 不过大小不是固定的.    </p>
-<p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ …</code></p>
+<p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ ...</code></p>
                     </div>
                 </div>
             </article>
@@ -660,19 +676,33 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>[TOC]</p>
-<p><em>Can we do better than BST if we do not need ordered operations ?</em> </p>
-<p>(No compare methods, use equals method)   </p>
-<p>Idea: save items in an array.  <br>
-<strong>Hash function</strong>: method for calclulating the array index of  a key.    </br></p>
-<p>Issues:    </p>
+                    <div class="summary"><div class="toc">
 <ul>
-<li>computing hash function   </li>
-<li>equality tests   </li>
-<li>collision resolution   </li>
+<li><a href="#1-hash-functions">1. Hash Functions</a><ul>
+<li><a href="#javas-hashing">Java's hashing</a></li>
+<li><a href="#modeular-hasing">Modeular hasing</a></li>
+<li><a href="#uniform-hasing-assumption">uniform hasing assumption</a></li>
 </ul>
-<p><em>Classic space-time tradeoff.</em> </p>
-<h1 id="1-hash-functions">1. Hash …</h1>
+</li>
+<li><a href="#2-separate-chaining">2. Separate Chaining</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#3-linear-probing">3. Linear Probing</a><ul>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#cluster">cluster</a></li>
+</ul>
+</li>
+<li><a href="#4-hash-table-context">4. Hash Table Context</a><ul>
+<li><a href="#seperate-chaining-vs-linear-probing">Seperate chaining VS linear probing</a></li>
+<li><a href="#variations">variations</a></li>
+<li><a href="#st-choice-hash-tables-vs-balanced-search-trees">ST choice: hash tables VS balanced search trees</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><em>Can we do better than BST if we do not need ...</em></p>
                     </div>
                 </div>
             </article>

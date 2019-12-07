@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] This week: two special application of ConvNet. I-Face Recognition What is face recognition Face verification &amp; face recognition verification: input = image and ID → output whether the image and ID are the same. recognition: database = K persons, input = image → output = ID of the image among the K person or &#34;not recognized …" />
+        <meta name="description" content="I-Face Recognition What is face recognition One Shot Learning Siamese Network Triplet Loss Face Verification and Binary Classification II-Neural Style Transfer What is neural style transfer? What are deep ConvNets learning? Cost Function Content Cost Function Style Cost Function 1D and 3D Generalizations This week: two special application of ConvNet ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Convolutional Neural Networks] week4. Special applications: Face recognition &amp; Neural style transfer"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c4wk4.html"/>
-        <meta property="og:description" content="[TOC] This week: two special application of ConvNet. I-Face Recognition What is face recognition Face verification &amp; face recognition verification: input = image and ID → output whether the image and ID are the same. recognition: database = K persons, input = image → output = ID of the image among the K person or &#34;not recognized …"/>
+        <meta property="og:description" content="I-Face Recognition What is face recognition One Shot Learning Siamese Network Triplet Loss Face Verification and Binary Classification II-Neural Style Transfer What is neural style transfer? What are deep ConvNets learning? Cost Function Content Cost Function Style Cost Function 1D and 3D Generalizations This week: two special application of ConvNet ..."/>
         <meta property="article:published_time" content="2017-11-30" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,27 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Convolutional Neural Networks] week4. Special applications: Face recognition &amp; Neural style transfer">[Convolutional Neural Networks] week4. Special applications: Face recognition &amp; Neural style transfer</a><ul><li><a class="toc-href" href="#i-face-recognition" title="I-Face Recognition">I-Face Recognition</a><ul><li><a class="toc-href" href="#what-is-face-recognition" title="What is face recognition">What is face recognition</a></li><li><a class="toc-href" href="#one-shot-learning" title="One Shot Learning">One Shot Learning</a></li><li><a class="toc-href" href="#siamese-network" title="Siamese Network">Siamese Network</a></li><li><a class="toc-href" href="#triplet-loss" title="Triplet Loss">Triplet Loss</a></li><li><a class="toc-href" href="#face-verification-and-binary-classification" title="Face Verification and Binary Classification">Face Verification and Binary Classification</a></li></ul></li><li><a class="toc-href" href="#ii-neural-style-transfer_1" title="II-Neural Style Transfer">II-Neural Style Transfer</a><ul><li><a class="toc-href" href="#what-is-neural-style-transfer" title="What is neural style transfer?">What is neural style transfer?</a></li><li><a class="toc-href" href="#what-are-deep-convnets-learning" title="What are deep ConvNets learning?">What are deep ConvNets learning?</a></li><li><a class="toc-href" href="#cost-function" title="Cost Function">Cost Function</a></li><li><a class="toc-href" href="#content-cost-function" title="Content Cost Function">Content Cost Function</a></li><li><a class="toc-href" href="#style-cost-function" title="Style Cost Function">Style Cost Function</a></li><li><a class="toc-href" href="#1d-and-3d-generalizations" title="1D and 3D Generalizations">1D and 3D Generalizations</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#i-face-recognition">I-Face Recognition</a><ul>
+<li><a href="#what-is-face-recognition">What is face recognition</a></li>
+<li><a href="#one-shot-learning">One Shot Learning</a></li>
+<li><a href="#siamese-network">Siamese Network</a></li>
+<li><a href="#triplet-loss">Triplet Loss</a></li>
+<li><a href="#face-verification-and-binary-classification">Face Verification and Binary Classification</a></li>
+</ul>
+</li>
+<li><a href="#ii-neural-style-transfer">II-Neural Style Transfer</a><ul>
+<li><a href="#what-is-neural-style-transfer">What is neural style transfer?</a></li>
+<li><a href="#what-are-deep-convnets-learning">What are deep ConvNets learning?</a></li>
+<li><a href="#cost-function">Cost Function</a></li>
+<li><a href="#content-cost-function">Content Cost Function</a></li>
+<li><a href="#style-cost-function">Style Cost Function</a></li>
+<li><a href="#1d-and-3d-generalizations">1D and 3D Generalizations</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>This week: two special application of ConvNet.  </p>
 <h2 id="i-face-recognition">I-Face Recognition</h2>
 <h3 id="what-is-face-recognition">What is face recognition</h3>
@@ -221,116 +241,116 @@ mx's blog            </a>
 </ul>
 <p>→ the verification system's precision needs to be very high in order to be used in face recognition.  </p>
 <h3 id="one-shot-learning">One Shot Learning</h3>
-<p>"one shot": learn from just <em>one</em> example, and able to recognize the person again.<br>
-A CNN+softmax is not practical, e.g. when new images are added to database, output_dim will change...  </br></p>
-<p>⇒ instead, learn a <em>similarity</em> function.<br>
-<code>d(img1, img2)</code> = degree of difference between images. + threshold <code>tau</code> </br></p>
+<p>"one shot": learn from just <em>one</em> example, and able to recognize the person again.<br/>
+A CNN+softmax is not practical, e.g. when new images are added to database, output_dim will change...  </p>
+<p>⇒ instead, learn a <em>similarity</em> function.<br/>
+<code>d(img1, img2)</code> = degree of difference between images. + threshold <code>tau</code> </p>
 <h3 id="siamese-network">Siamese Network</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image.png"><br>
-To learn a disimilarity function: <em>Siamese Network</em>.  </br></img></p>
-<p>Use CNN+FC to <strong>encode</strong><em> a pic </em><code>x</code><em> into vector </em><code>f(x)</code><em>.</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image001.png"><br>
-⇒ define disimilarity function d(x1, x2) as distance between encoded vectors.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image002.png"> </img></br></br></img></br></p>
-<p>More formally:<br>
-want to learn NN params for the encoding f(x) such that:<br>
-when x1 and x2 are same person, dist(f(x1), f(x2)) is small, otherwise large.  </br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image.png"/><br/>
+To learn a disimilarity function: <em>Siamese Network</em>.  </p>
+<p>Use CNN+FC to <strong>encode</strong><em> a pic </em><code>x</code><em> into vector </em><code>f(x)</code><em>.</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image001.png"/><br/>
+⇒ define disimilarity function d(x1, x2) as distance between encoded vectors.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image002.png"/> </p>
+<p>More formally:<br/>
+want to learn NN params for the encoding f(x) such that:<br/>
+when x1 and x2 are same person, dist(f(x1), f(x2)) is small, otherwise large.  </p>
 <h3 id="triplet-loss">Triplet Loss</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image005.png"><br>
-triplet: (<em>anchor, positive, negative)</em>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image004.png"><br>
-want f(A) similar to f(P) and different from f(N):<br>
-i.e. want <code>d(A, P) - d(A, N) &lt;= 0</code><br>
-⇒ to avoid NN from learning a trival output (i.e. all encodings are identical, d(A, P)=d(A, N)=0), <em>add margin </em><code>alpha</code>.<br>
-want <code>d(A, P) - d(A, N) + alpha&lt;= 0</code> </br></br></br></br></img></br></br></img></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image006.png"> </img></p>
-<p><strong>Loss function definition</strong>:<br>
-similar to hinge loss: <code>L = max(0, d(A,P)-d(A,N) + alpha)</code> </br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image007.png"><br>
-→ Generate triplets from dataset, and feed to the NN.<br>
-note: here we do need &gt;1 pics of the same person (Anchor and Positive).  </br></br></img></p>
-<p><strong>Choosing triplets A, P, N</strong><br>
-If A,P,N are <em>randomly</em> chosen, the constraint is easily satisfied → NN won't learn much.<br>
-→ <em>choose A,P,N that are "hard" to train on. </em>Computation efficiency of learning is improved.<br>
-(<em>details presented in the FaceNet paper</em>)  </br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image005.png"/><br/>
+triplet: (<em>anchor, positive, negative)</em>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image004.png"/><br/>
+want f(A) similar to f(P) and different from f(N):<br/>
+i.e. want <code>d(A, P) - d(A, N) &lt;= 0</code><br/>
+⇒ to avoid NN from learning a trival output (i.e. all encodings are identical, d(A, P)=d(A, N)=0), <em>add margin </em><code>alpha</code>.<br/>
+want <code>d(A, P) - d(A, N) + alpha&lt;= 0</code> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image006.png"/> </p>
+<p><strong>Loss function definition</strong>:<br/>
+similar to hinge loss: <code>L = max(0, d(A,P)-d(A,N) + alpha)</code> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image007.png"/><br/>
+→ Generate triplets from dataset, and feed to the NN.<br/>
+note: here we do need &gt;1 pics of the same person (Anchor and Positive).  </p>
+<p><strong>Choosing triplets A, P, N</strong><br/>
+If A,P,N are <em>randomly</em> chosen, the constraint is easily satisfied → NN won't learn much.<br/>
+→ <em>choose A,P,N that are "hard" to train on. </em>Computation efficiency of learning is improved.<br/>
+(<em>details presented in the FaceNet paper</em>)  </p>
 <p>in practice: better download pretrained model.  </p>
 <h3 id="face-verification-and-binary-classification">Face Verification and Binary Classification</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image.png"><br>
-Triplet loss is one way of doing face verification.<br>
-another way that works as well: treat as a binary classification problem.  </br></br></img></p>
-<p>Given input image x1 and x2 → feed f(x1) and f(x2) to a logistic regression unit.<br>
-→ feed the <em>difference in encodings</em> and feed to logistic regression.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image009.png"> </img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image.png"/><br/>
+Triplet loss is one way of doing face verification.<br/>
+another way that works as well: treat as a binary classification problem.  </p>
+<p>Given input image x1 and x2 → feed f(x1) and f(x2) to a logistic regression unit.<br/>
+→ feed the <em>difference in encodings</em> and feed to logistic regression.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image009.png"/> </p>
 <p>computation trick: precompute encodings of imgs in database at inference time.  </p>
 <h2 id="ii-neural-style-transfer_1">II-Neural Style Transfer</h2>
 <h3 id="what-is-neural-style-transfer">What is neural style transfer?</h3>
-<p>content image <code>C</code>+ style image <code>S</code> → generated image <code>G</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image010.png"> </img></br></p>
+<p>content image <code>C</code>+ style image <code>S</code> → generated image <code>G</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image010.png"/> </p>
 <h3 id="what-are-deep-convnets-learning">What are deep ConvNets learning?</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image011.png"><br>
-<strong>visualize hidden units of different layers</strong><br>
-Pick <em>one unit</em> in 1st layer → find the <em>nine image patches that maximize the unit's activation</em>.  </br></br></img></p>
-<p>In deeper layers: units can see larger image patches → gather nine argmax image patchs as before.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image012.png"> </img></br></p>
-<p>deeper layers can detect higher level shapes:<br>
-layer 3:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image013.png"><br>
-layer 4:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image014.png"> </img></br></br></img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image011.png"/><br/>
+<strong>visualize hidden units of different layers</strong><br/>
+Pick <em>one unit</em> in 1st layer → find the <em>nine image patches that maximize the unit's activation</em>.  </p>
+<p>In deeper layers: units can see larger image patches → gather nine argmax image patchs as before.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image012.png"/> </p>
+<p>deeper layers can detect higher level shapes:<br/>
+layer 3:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image013.png"/><br/>
+layer 4:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image014.png"/> </p>
 <h3 id="cost-function">Cost Function</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image015.png"><br>
-Define a cost function <em>for the generated image</em>.<br>
-<code>J(G)</code> measure how good is an image, contains two parts:  </br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image015.png"/><br/>
+Define a cost function <em>for the generated image</em>.<br/>
+<code>J(G)</code> measure how good is an image, contains two parts:  </p>
 <ul>
 <li><code>J_content(C, G)</code>: how similar is G to C  </li>
 <li><code>J_style(S, G)</code>: how similar is G to S.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image016.png"><br>
-<strong>Find generated image G</strong><br>
-(similar to embedding?)  </br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image016.png"/><br/>
+<strong>Find generated image G</strong><br/>
+(similar to embedding?)  </p>
 <ul>
 <li>initialize G randomly  </li>
 <li>Use gradient-descent to minimized J(G)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image017.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image017.png"/> </p>
 <h3 id="content-cost-function">Content Cost Function</h3>
 <p><code>J_content(C, G)</code> </p>
 <p><em>Given a pre-trained CNN</em>, use <em>hidden layer l</em> to compute J_content. The depth of <em>l</em> controls the level of details focuses on.  </p>
-<p>Define J_content(C, G) = difference (e.g. L2-norm) between the activation of layer l of image C and image G.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image019.png"> </img></br></p>
+<p>Define J_content(C, G) = difference (e.g. L2-norm) between the activation of layer l of image C and image G.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image019.png"/> </p>
 <h3 id="style-cost-function">Style Cost Function</h3>
-<p>Use layer <code>l</code> to measure "style".<br>
-→ <strong>style</strong> defined as <em>correlation between activations across channels</em>.<br>
-e.g. <code>n_C=5</code> channels of slices <code>n_W * n_H</code>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image020.png"><br>
-correlation between 2 channel ~= <em>which high-level features tend to occur / not occur together in an image.</em> </br></img></br></br></br></p>
-<p><strong>style matrix</strong><br>
-notation:  </br></p>
+<p>Use layer <code>l</code> to measure "style".<br/>
+→ <strong>style</strong> defined as <em>correlation between activations across channels</em>.<br/>
+e.g. <code>n_C=5</code> channels of slices <code>n_W * n_H</code>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image020.png"/><br/>
+correlation between 2 channel ~= <em>which high-level features tend to occur / not occur together in an image.</em> </p>
+<p><strong>style matrix</strong><br/>
+notation:  </p>
 <ul>
 <li><code>a_ijk</code> = (scalar)activation at hight=<code>i</code>, width=<code>j</code>, channel=<code>k</code> </li>
 <li>"Style matrix) <code>G[l]</code>, (G for "Gram matrix") shape = <code>n_C * n_C</code>, measures <em>how correlated any two channels are. </em>(i.e. G[l] measures the degree to which the activations of different feature detectors in layer l vary (or correlate) together with each other.)  </li>
 <li><code>G_kk</code>' = correlation between kth and k'th channel.  </li>
 </ul>
 <p>:= sum_over_i_j( a_ijk * a_ijk')  </p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image021.png"><br>
-mathematically, this "correlation" is unnormalized cross-covariance (without substracting the mean).  </br></img></p>
-<p>Compute <code>G</code> for both the style image and generated image.<br>
-→ J_style(Gen_img, Sty_img) = difference (Frobenius norm) between G(gen) and G(sty)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image022.png"><br>
-In practice, take J_style for multiple layers:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image023.png"> </img></br></br></img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image021.png"/><br/>
+mathematically, this "correlation" is unnormalized cross-covariance (without substracting the mean).  </p>
+<p>Compute <code>G</code> for both the style image and generated image.<br/>
+→ J_style(Gen_img, Sty_img) = difference (Frobenius norm) between G(gen) and G(sty)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image022.png"/><br/>
+In practice, take J_style for multiple layers:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image023.png"/> </p>
 <h3 id="1d-and-3d-generalizations">1D and 3D Generalizations</h3>
-<p>images: 2D data.<br>
-→ <em>generalize convolution to 1D and 3D data.</em> </br></p>
-<p><strong>1D data</strong><br>
-e.g. EKG data (heart voltage).<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image024.png"> </img></br></br></p>
+<p>images: 2D data.<br/>
+→ <em>generalize convolution to 1D and 3D data.</em> </p>
+<p><strong>1D data</strong><br/>
+e.g. EKG data (heart voltage).<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image024.png"/> </p>
 <p>(note: most 1D data use RNN...)  </p>
-<p><strong>3D data</strong><br>
-have height width and depth,<br>
-e.g. C.T. data; movie date (frame by frame)<br>
-→ generalized from 2D<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image025.png"> </img></br></br></br></br></p>
+<p><strong>3D data</strong><br/>
+have height width and depth,<br/>
+e.g. C.T. data; movie date (frame by frame)<br/>
+→ generalized from 2D<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk4/pasted_image025.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

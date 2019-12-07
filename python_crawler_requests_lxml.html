@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="python" />
-        <meta name="description" content="[TOC] 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import etree requests基础用法 抓取html内容 用requests获取目标网址的html代码非常简单, 只需要用requests.get方法, 传入网址URL即可. 举个例子, 想要抓取维基语录的HTML内容, 代码很简单: url = &#39;https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦&#39; …" />
+        <meta name="description" content="requests基础用法 抓取html内容 编码问题 用scrapy shell检查得到的html文件内容 修改header, 伪装浏览器 lxml以及xpath语法 xpath基础语法 使用chrome-dev-tool获得元素的xpath 用lxml.etree操作xpath xpath使用技巧 动态页面/模拟登录: 善用chrome-dev-tools 用dev-tools获取登录cookies 在requests里使用cookies 保存爬取的内容 保存文本内容: csv 保存非文本内容 并行下载 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="使用requests和lxml编写python爬虫小记"/>
         <meta property="og:url" content="http://x-wei.github.io/python_crawler_requests_lxml.html"/>
-        <meta property="og:description" content="[TOC] 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import etree requests基础用法 抓取html内容 用requests获取目标网址的html代码非常简单, 只需要用requests.get方法, 传入网址URL即可. 举个例子, 想要抓取维基语录的HTML内容, 代码很简单: url = &#39;https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦&#39; …"/>
+        <meta property="og:description" content="requests基础用法 抓取html内容 编码问题 用scrapy shell检查得到的html文件内容 修改header, 伪装浏览器 lxml以及xpath语法 xpath基础语法 使用chrome-dev-tool获得元素的xpath 用lxml.etree操作xpath xpath使用技巧 动态页面/模拟登录: 善用chrome-dev-tools 用dev-tools获取登录cookies 在requests里使用cookies 保存爬取的内容 保存文本内容: csv 保存非文本内容 并行下载 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import ..."/>
         <meta property="article:published_time" content="2016-12-29" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="python" />
@@ -205,10 +205,38 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requestsji-chu-yong-fa" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#zhua-qu-htmlnei-rong" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#bian-ma-wen-ti" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#xiu-gai-header-wei-zhuang-liu-lan-qi" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlyi-ji-xpathyu-fa_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpathji-chu-yu-fa" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#yong-lxmletreecao-zuo-xpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpathshi-yong-ji-qiao" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#yong-dev-toolshuo-qu-deng-lu-cookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#zai-requestsli-shi-yong-cookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#bao-cun-pa-qu-de-nei-rong_1" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#bao-cun-wen-ben-nei-rong-csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#bao-cun-fei-wen-ben-nei-rong" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#bing-xing-xia-zai" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requests" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#html" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#_1" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#scrapy-shellhtml" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#header" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlxpath_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpath" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#chrome-dev-toolxpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#lxmletreexpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpath_1" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#dev-toolscookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#requestscookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#_3" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#_4" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#_5" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]   </p>
+                <div class="toc">
+<ul>
+<li><a href="#requests">requests基础用法</a><ul>
+<li><a href="#html">抓取html内容</a></li>
+<li><a href="#_1">编码问题</a></li>
+<li><a href="#scrapy-shellhtml">用scrapy shell检查得到的html文件内容</a></li>
+<li><a href="#header">修改header, 伪装浏览器</a></li>
+</ul>
+</li>
+<li><a href="#lxmlxpath">lxml以及xpath语法</a><ul>
+<li><a href="#xpath">xpath基础语法</a></li>
+<li><a href="#chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</a></li>
+<li><a href="#lxmletreexpath">用lxml.etree操作xpath</a></li>
+<li><a href="#xpath_1">xpath使用技巧</a></li>
+</ul>
+</li>
+<li><a href="#chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul>
+<li><a href="#dev-toolscookies">用dev-tools获取登录cookies</a></li>
+<li><a href="#requestscookies">在requests里使用cookies</a></li>
+</ul>
+</li>
+<li><a href="#_2">保存爬取的内容</a><ul>
+<li><a href="#csv">保存文本内容: csv</a></li>
+<li><a href="#_3">保存非文本内容</a></li>
+<li><a href="#_4">并行下载</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
 <p>安装需要的库(python2):   </p>
 <p><code>pip install requests, lxml</code> </p>
@@ -216,75 +244,75 @@ mx's blog            </a>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
 <span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span></span>
 </pre></div>
-<h1 id="requestsji-chu-yong-fa">requests基础用法</h1>
-<h3 id="zhua-qu-htmlnei-rong">抓取html内容</h3>
+<h1 id="requests">requests基础用法</h1>
+<h3 id="html">抓取html内容</h3>
 <p>用requests获取目标网址的html代码非常简单, 只需要用<code>requests.get</code>方法, 传入网址URL即可.   </p>
 <p>举个例子, 想要抓取<a href="https://zh.wikiquote.org/wiki/Wikiquote:%E9%A6%96%E9%A1%B5">维基语录</a>的HTML内容, 代码很简单:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span>
-<span class="code-line">r = requests.get(url)  </span>
-<span class="code-line">html = r.text</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
+<span class="code-line"><span class="err">r = requests.get(url)  </span></span>
+<span class="code-line"><span class="err">html = r.text</span></span>
 </pre></div>
 <p><code>requests.get()</code>返回一个response对象<code>r</code>, 可以用<code>r.ok</code>或者<code>r.status_code</code>检查对象是否正常返回(status code=200).   </p>
-<h3 id="bian-ma-wen-ti">编码问题</h3>
+<h3 id="_1">编码问题</h3>
 <p>处理非英文网页时经常遇到的问题就是编码的问题了(不知道py3是不是对Unicode支持好一点?), 前面得到的html其实并非字符串而是Unicode对象:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; type(html)  </span>
-<span class="code-line">&lt;type 'unicode'&gt;</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; type(html)  </span></span>
+<span class="code-line"><span class="err">&lt;type 'unicode'&gt;</span></span>
 </pre></div>
 <p>Unicode对象处理的时候一不小心就会得到以下的错误:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>UnicodeEncodeError: 'ascii' codec can't encode characters in position 101-113: ordinal not in range(128)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="c">UnicodeEncodeError: 'ascii' codec can't encode characters in position 101-113: ordinal not in range(128)</span></span>
 </pre></div>
 <p>所以在那些需要string类型的地方, 需要用<code>encode</code>函数转换:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; type(html.encode('utf-8'))  </span>
-<span class="code-line">&lt;type 'str'&gt;</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; type(html.encode('utf-8'))  </span></span>
+<span class="code-line"><span class="err">&lt;type 'str'&gt;</span></span>
 </pre></div>
 <p>另外实际中还遇到过比较奇葩的情况, 是返回的response的编码并不对(这个编码是requests根据网页内容自己推断的, 所以有时会出错), 比如<a href="http://diglib.hab.de/content.php?dir=edoc/ed000216&amp;distype=optional&amp;metsID=edoc_ed000216_009_introduction&amp;xml=009%2F009_introduction.xml&amp;xsl=tei-introduction.xsl">这个网址</a>, requests以为它的encoding是'ISO-8859-1', 所以为了保险起见, <em>最好手动指定r.encoding</em>:   </p>
 <p><code>r.encoding = 'utf-8</code>'   </p>
 <p>另: 还有一种经常用的解决utf编码的方式, 就是在文件开头加上这四句话:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># coding: utf-8  </span></span>
 <span class="code-line"><span class="kn">import</span> <span class="nn">sys</span>  </span>
-<span class="code-line"><span class="nb">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>  </span>
+<span class="code-line"><span class="n">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">)</span>  </span>
 <span class="code-line"><span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>  </span>
 </pre></div>
 <p>不过, 看到有人说这种方式<a href="http://blog.ernest.me/post/python-setdefaultencoding-unicode-bytes">并不好</a>, 所以最好别用这么暴力的方式吧...  </p>
-<h3 id="yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong">用scrapy shell检查得到的html文件内容</h3>
+<h3 id="scrapy-shellhtml">用scrapy shell检查得到的html文件内容</h3>
 <p>需要注意的一点是, requests.get得到的html内容<strong>并不一定</strong>和在浏览器打开链接得到的内容相同!   </p>
 <p>为了检查是否得到了想要的html内容, 有两个方式, 一个是把得到的内容输出为一个.html文件, 然后用浏览器打开, 比如这样:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; with open('tmp.html', 'w') as f:  </span>
-<span class="code-line">...     f.write(html.encode('utf8')) # 注意要显式指定编码</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; with open('tmp.html', 'w') as f:  </span></span>
+<span class="code-line"><span class="err">...     f.write(html.encode('utf8')) # 注意要显式指定编码</span></span>
 </pre></div>
 <p>这样做其实并不方便, 输出到本地文件以后还要用文件浏览器找到那个文件再打开, 而且打开的网页并没有图片, 也没有css样式.   </p>
 <p>我比较喜欢用scrapy shell这个工具, 这个工具在之前的文章也<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html#iii-scrapy-shell">提到过</a>, 它非常适合快速测试一些东西.   </p>
 <p>首先安装一下scrapy吧还是:　 <code>pip install scrapy</code> </p>
 <p>然后输入<code>scrapy shell</code>即可使用. 用<code>fetch(url)</code>可以把返回的结果存放在(scrapy shell默认的)<code>response</code>变量中, 可以把<code>fetch</code>操作理解为<code>response = requests.get(url)</code>. 然后查看得到的html文件 只需要 <code>view(response)</code>, 就会自动用浏览器打开下载的临时文件, 非常方便.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ scrapy shell --nolog  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span> Available Scrapy objects:  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   scrapy     scrapy module <span class="o">(</span>contains scrapy.Request, scrapy.Selector, etc<span class="o">)</span>  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   crawler    &lt;scrapy.crawler.Crawler object at 0x7f8aa3b70e50&gt;  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   item       <span class="o">{}</span>  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   settings   &lt;scrapy.settings.Settings object at 0x7f8aa3b70cd0&gt;  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span> Useful shortcuts:  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   shelp<span class="o">()</span>           Shell <span class="nb">help</span> <span class="o">(</span>print this <span class="nb">help</span><span class="o">)</span>  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   fetch<span class="o">(</span>req_or_url<span class="o">)</span> Fetch request <span class="o">(</span>or URL<span class="o">)</span> and update <span class="nb">local</span> objects  </span>
-<span class="code-line"><span class="o">[</span>s<span class="o">]</span>   view<span class="o">(</span>response<span class="o">)</span>    View response in a browser</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">$</span><span class="w"> </span><span class="n">scrapy</span><span class="w"> </span><span class="n">shell</span><span class="w"> </span><span class="c1">--nolog  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="n">Available</span><span class="w"> </span><span class="n">Scrapy</span><span class="w"> </span><span class="nl">objects</span><span class="p">:</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="n">scrapy</span><span class="w">     </span><span class="n">scrapy</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="p">(</span><span class="k">contains</span><span class="w"> </span><span class="n">scrapy</span><span class="p">.</span><span class="n">Request</span><span class="p">,</span><span class="w"> </span><span class="n">scrapy</span><span class="p">.</span><span class="n">Selector</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="n">crawler</span><span class="w">    </span><span class="o">&lt;</span><span class="n">scrapy</span><span class="p">.</span><span class="n">crawler</span><span class="p">.</span><span class="n">Crawler</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="mh">0x7f8aa3b70e50</span><span class="o">&gt;</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="n">item</span><span class="w">       </span><span class="err">{}</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="n">settings</span><span class="w">   </span><span class="o">&lt;</span><span class="n">scrapy</span><span class="p">.</span><span class="n">settings</span><span class="p">.</span><span class="n">Settings</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="mh">0x7f8aa3b70cd0</span><span class="o">&gt;</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="n">Useful</span><span class="w"> </span><span class="nl">shortcuts</span><span class="p">:</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="n">shelp</span><span class="p">()</span><span class="w">           </span><span class="n">Shell</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="p">(</span><span class="k">print</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">help</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="k">fetch</span><span class="p">(</span><span class="n">req_or_url</span><span class="p">)</span><span class="w"> </span><span class="k">Fetch</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="p">(</span><span class="ow">or</span><span class="w"> </span><span class="n">URL</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="k">local</span><span class="w"> </span><span class="n">objects</span><span class="w">  </span></span>
+<span class="code-line"><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w">   </span><span class="k">view</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="w">    </span><span class="k">View</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">browser</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">In <span class="o">[</span><span class="m">1</span><span class="o">]</span>: <span class="nv">url</span> <span class="o">=</span> <span class="s1">'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'</span></span>
+<span class="code-line"><span class="ow">In</span><span class="w"> </span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">In <span class="o">[</span><span class="m">2</span><span class="o">]</span>: fetch<span class="o">(</span>url<span class="o">)</span></span>
+<span class="code-line"><span class="ow">In</span><span class="w"> </span><span class="o">[</span><span class="n">2</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="k">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">In <span class="o">[</span><span class="m">3</span><span class="o">]</span>: view<span class="o">(</span>response<span class="o">)</span>  </span>
-<span class="code-line">Out<span class="o">[</span><span class="m">3</span><span class="o">]</span>: True</span>
+<span class="code-line"><span class="ow">In</span><span class="w"> </span><span class="o">[</span><span class="n">3</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="k">view</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="k">Out</span><span class="o">[</span><span class="n">3</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="k">True</span><span class="w"></span></span>
 </pre></div>
-<h3 id="xiu-gai-header-wei-zhuang-liu-lan-qi">修改header, 伪装浏览器</h3>
+<h3 id="header">修改header, 伪装浏览器</h3>
 <p>对于有些网站, 直接用<code>requests.get</code>抓取会得到403forbidden错误, 这时就要修改一下get函数的<code>headers</code>参数了, 把一个Python字典传给headers参数, 这个字典理, 'user-agent'对应chrome/firefox使用的内容. 例子:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>hea = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36'}  </span>
-<span class="code-line">r = requests.get('http://jp.tingroom.com/yuedu/yd300p/', headers = hea)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">hea = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36'}  </span></span>
+<span class="code-line"><span class="err">r = requests.get('http://jp.tingroom.com/yuedu/yd300p/', headers = hea)</span></span>
 </pre></div>
 <p>headers参数对于那些不太好爬的网站非常有用, 不过关于如何知道往header里放什么东西, 需要用chrome-dev-tools, 这个后面再说.   </p>
-<h1 id="lxmlyi-ji-xpathyu-fa_1">lxml以及xpath语法</h1>
+<h1 id="lxmlxpath_1">lxml以及xpath语法</h1>
 <p>还是继续上面维基语录的例子, 假设现在已经获取了网页的html文件, 下一步就是在html文件里提取想要的内容了. 比如我们想要从维基语录上抓取<a href="https://zh.wikiquote.org/wiki/%E9%98%BF%E7%88%BE%E4%BC%AF%E7%89%B9%C2%B7%E6%84%9B%E5%9B%A0%E6%96%AF%E5%9D%A6">爱因斯坦</a>的所有名言.   </p>
 <p>从html中提取感兴趣的内容, 一种选择是用正则表达式, 不过正则表达式写起来太蛋疼了 — <code>(?&lt;=blablah).*(?=blah)</code>之类的, 每次用都得从新查. 而且处理html代码时经常容易出错.   </p>
 <p>html语言可以看做是一种xml语言, 而xml语言其实是分层次的(可以parse为一个xml树), 操作xml元素的神器就是xpath语言了.  </p>
-<h3 id="xpathji-chu-yu-fa">xpath基础语法</h3>
+<h3 id="xpath">xpath基础语法</h3>
 <p>xpath的语法其实不难, 入门的话话二十分钟看看<a href="http://www.w3school.com.cn/xpath/xpath_syntax.asp">这里</a>估计就差不多. 这里简单列一下:   </p>
 <p><strong>选取节点</strong>的语法有:   </p>
 <ul>
@@ -306,45 +334,45 @@ mx's blog            </a>
 <li><code>[@lang="eng"]</code> 选取属性lang等于"eng"的元素  </li>
 </ul>
 <p>遇到更复杂的xpath不会写的话 尝试翻译成英文然后Google一下, 几乎总会找到答案.   </p>
-<h3 id="shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath">使用chrome-dev-tool获得元素的xpath</h3>
-<p>可以直接用chrome的开发者工具获取网页元素的xpath, 在该网页上按下crtl-shift-I就可以打开devtool了:<br>
-<img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image002.png"> </img></br></p>
+<h3 id="chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</h3>
+<p>可以直接用chrome的开发者工具获取网页元素的xpath, 在该网页上按下crtl-shift-I就可以打开devtool了:<br/>
+<img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image002.png"/> </p>
 <p>点击左上角那个指针的小图标, 然后再在网页上点击想要查找的元素, 就可以快速定位到它在html里对应的代码了:  </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/chromedev-elem-picker.gif"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/chromedev-elem-picker.gif"/> </p>
 <p>在代码中点击右键, 可以得到xpath:   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image003.png"/> </p>
 <p>不过一般chrome找到的xpath并不具有通用性, 所以最好还是自己分析得到合适的xpath代码.   </p>
 <p>chrome给找到的xpath是<code>//*[@id="mw-content-text"]/ul[1]/li[1]</code>, 经过分析和测试, <code>//div[@id="mw-content-text"]/ul[position()&lt;last()]/li/text()</code>应该是比较正确的所有名言的xpath代码. 为了测试xpath, 可以直接在chrome-dev-tool里面按下ctrl-F查找xpath:   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image004.png"> </img></p>
-<h3 id="yong-lxmletreecao-zuo-xpath">用lxml.etree操作xpath</h3>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image004.png"/> </p>
+<h3 id="lxmletreexpath">用lxml.etree操作xpath</h3>
 <p>学会了xpath, 接下来要在Python里使用xpath则需要lxml.   </p>
 <p>步骤是: 首先用网页html内容建立一个etree对象, 然后在使用它的<code>xpath</code>方法, 传入之前得到的xpath语句. 返回的结果为一个list, list里面就是所有匹配的元素了.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span>
-<span class="code-line">r = requests.get(url)  </span>
-<span class="code-line">sel = etree.HTML(r.text)  </span>
-<span class="code-line">for quote in sel.xpath('//div[@id="mw-content-text"]/ul[position()&lt;last()]/li/text()'):  </span>
-<span class="code-line">    print quote.strip()</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
+<span class="code-line"><span class="err">r = requests.get(url)  </span></span>
+<span class="code-line"><span class="err">sel = etree.HTML(r.text)  </span></span>
+<span class="code-line"><span class="err">for quote in sel.xpath('//div[@id="mw-content-text"]/ul[position()&lt;last()]/li/text()'):  </span></span>
+<span class="code-line"><span class="err">    print quote.strip()</span></span>
 </pre></div>
-<h3 id="xpathshi-yong-ji-qiao">xpath使用技巧</h3>
+<h3 id="xpath_1">xpath使用技巧</h3>
 <p>这里说一下xpath的实际使用技巧. 正好前面的代码也不完善, 结合这个例子来说.   </p>
 <ol>
 <li><strong>先抓大再抓小</strong> </li>
 </ol>
 <p>其实之前的xpath还有不完美的地方, 比如爱因斯坦的页面中有不少名言还有"原文"这一信息:   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image005.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image005.png"/> </p>
 <p>在一个<code>li</code>节点下面有可能还有东西, 所以我们可以先获得这一个个<code>li</code>元素, 然后再在每个<code>li</code>元素里面尝试查找"原文"的信息. 代码如下:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>for li in sel.xpath('//div[@id="mw-content-text"]/ul[position()&lt;last()]/li'):  </span>
-<span class="code-line">    quote = li.xpath('./text()')[0]  </span>
-<span class="code-line">    print quote.strip()  </span>
-<span class="code-line">    origin = li.xpath('./ul/li/span/i/text()')  </span>
-<span class="code-line">    if len(origin)&gt;0: print 'origin:', origin[0]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">for li in sel.xpath('//div[@id="mw-content-text"]/ul[position()&lt;last()]/li'):  </span></span>
+<span class="code-line"><span class="err">    quote = li.xpath('./text()')[0]  </span></span>
+<span class="code-line"><span class="err">    print quote.strip()  </span></span>
+<span class="code-line"><span class="err">    origin = li.xpath('./ul/li/span/i/text()')  </span></span>
+<span class="code-line"><span class="err">    if len(origin)&gt;0: print 'origin:', origin[0]</span></span>
 </pre></div>
 <p>更复杂的例子比如豆瓣电影的页面, 每一个电影的entry都有电影名/上映时间/国家等好多信息. 处理这样的页面, 必须要先把大的元素(整个电影信息的div)抓取, 然后再在每个大元素里分别提取信息.   </p>
 <ol>
 <li><strong>用</strong><code>string()</code><strong>获得nested节点文字内容</strong> </li>
 </ol>
 <p>上面的代码运行结果还有不满意的地方: 对于一些带有超链接的名言, 我们的程序不能获取那些带有超链接的文字, 比如这句话:   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image006.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image006.png"/> </p>
 <p>它的html代码是这样的:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="nt">&lt;li&gt;</span>  </span>
 <span class="code-line">一个  </span>
@@ -359,43 +387,43 @@ mx's blog            </a>
 <li><strong>删除不想要的节点</strong> </li>
 </ol>
 <p>进行了上面的修改, 又引入了新的问题: 对于那些有"原文"信息的li元素而言, 用string()函数的话会把这些原文信息也包括在内了, 这不是我们想要的结果. 比如这样的节点:   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image007.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image007.png"/> </p>
 <p>这时, 可以用lxml提供的<code>remove</code>函数, 在li节点中把不需要的节点先去掉, 然后再使用string()就不会有不需要的内容了.   </p>
 <p>最终的代码为:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">sel</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'//div[@id="mw-content-text"]/ul[position()&lt;last()]/li'</span><span class="p">):</span>  </span>
-<span class="code-line">    <span class="k">print</span> <span class="s1">'---'</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="s1">'---'</span>  </span>
 <span class="code-line">    <span class="n">origin</span> <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'./ul'</span><span class="p">)</span>   </span>
 <span class="code-line">    <span class="n">badnodes</span> <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'./ul'</span><span class="p">)</span> <span class="c1"># remove 'origin' stuff in the li element  </span></span>
 <span class="code-line">    <span class="k">for</span> <span class="n">bad</span> <span class="ow">in</span> <span class="n">badnodes</span><span class="p">:</span>   </span>
 <span class="code-line">        <span class="n">bad</span><span class="o">.</span><span class="n">getparent</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">bad</span><span class="p">)</span>  </span>
 <span class="code-line">    <span class="n">quote</span> <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'string(.)'</span><span class="p">)</span>  </span>
-<span class="code-line">    <span class="k">print</span> <span class="n">quote</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="n">quote</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  </span>
 <span class="code-line">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>   </span>
-<span class="code-line">        <span class="k">print</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'string(.)'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  </span>
+<span class="code-line">        <span class="nb">print</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'string(.)'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  </span>
 </pre></div>
-<h1 id="dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1">动态页面/模拟登录: 善用chrome-dev-tools</h1>
+<h1 id="chrome-dev-tools_1">动态页面/模拟登录: 善用chrome-dev-tools</h1>
 <p>上面的维基语录的例子还算比较简单, 对于那些需要动态加载的网页或者需要登录才可以查看的内容, 就需要多用chrome开发者工具了. 由于这方面要根据不同网站去试验(+猜测), 所以这里介绍的不会太详细...   </p>
 <p>一般来说, 对于动态加载的网页, 可以打开ctrl-shift-I打开devtools以后, 选择network标签页然后刷新, 在最开始的地方一般会有form提交(可以用<code>requests.post</code>模拟)或者url请求之类的东西, 一路追踪过去即可.   </p>
 <p>这里展示一下用cookies模拟登录微博的过程. weibo电脑版的页面太过凌乱, 用微博手机版(weibo.cn).   </p>
-<h3 id="yong-dev-toolshuo-qu-deng-lu-cookies">用dev-tools获取登录cookies</h3>
+<h3 id="dev-toolscookies">用dev-tools获取登录cookies</h3>
 <p>cookies就是一小段(加密后的)字符串, 它的大概是本地存储的保留用户信息的加密字符, 有的网站点选"下次自动登录"时, 其实就是生成了一个cookie保存在本地, 下次登录时只要向网站发送这串cookies字符, 如果cookies没有过期的话就可以直接登录了.   </p>
 <p>在要点击登录前, 打开devtools并选择network标签. 然后在登录以后, 找开头的几个requests, 定位到一个header带有cookie的request上面, cookie就在这里了(我试验发现, 好像需要登录以后再刷新一下, 这时dev-tools得到的cookies才是可用的):   </p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image008.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image008.png"/> </p>
 <p>另一种办法是用chrome自带的监测页面 <chrome: #events="" net-internals="">, (设置capture→Include the actual bytes sent/received), 也可以得到cookies:   </chrome:></p>
-<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image009.png"> </img></p>
-<h3 id="zai-requestsli-shi-yong-cookies">在requests里使用cookies</h3>
+<p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image009.png"/> </p>
+<h3 id="requestscookies">在requests里使用cookies</h3>
 <p>一旦获得了cookies字符串, 模拟登录就很简单: 在requests.get里传入headers参数:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
 <span class="code-line"><span class="n">hea</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Cookie'</span><span class="p">:</span><span class="s1">'_T_WM=3a52fbed11ed299552cf910553be7d3b; SUB=_2A251Y_geDeTxGedG6lUQ9SrKyj2IHXVWr5hWrDV6PUJbkdAKLUejkW1CLxUVXEMZZq8EFgsGuIYNqC6MqQ..; gsid_CTandWM=4uno88c512gBK6O5nyuKd7CIW9R'</span><span class="p">}</span>  </span>
 <span class="code-line"><span class="n">url</span> <span class="o">=</span> <span class="s1">'http://weibo.cn'</span>  </span>
 <span class="code-line"><span class="n">html</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">cook</span><span class="p">)</span><span class="o">.</span><span class="n">content</span> <span class="c1"># use content instead of text   </span></span>
-<span class="code-line"><span class="k">print</span> <span class="n">html</span>  </span>
+<span class="code-line"><span class="nb">print</span> <span class="n">html</span>  </span>
 </pre></div>
-<h1 id="bao-cun-pa-qu-de-nei-rong_1">保存爬取的内容</h1>
-<h3 id="bao-cun-wen-ben-nei-rong-csv">保存文本内容: csv</h3>
+<h1 id="_3">保存爬取的内容</h1>
+<h3 id="csv">保存文本内容: csv</h3>
 <p>保存文本信息我一般喜欢放进csv里面, 而用<code>pandas</code>操作csv文件会比较方便: 在程序中, 把每一个抓取的条目(item)放进一个字典, 然后append到dataframe里面, 最后直接<code>to_csv</code>搞定.   </p>
 <p>下面是个简单的示意代码, 假设我们要抓取一些文章的title, date和发表地点三个信息:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>  </span>
 <span class="code-line"><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>  </span>
 <span class="code-line"><span class="c1"># ...  </span></span>
 <span class="code-line"><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">__loop__</span><span class="p">:</span>  </span>
@@ -403,27 +431,27 @@ mx's blog            </a>
 <span class="code-line">  <span class="n">title</span><span class="p">,</span> <span class="n">place</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">__code_for_extracting_these_fields__</span>   </span>
 <span class="code-line">  <span class="c1">#...  </span></span>
 <span class="code-line">  <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s1">'title'</span><span class="p">:</span><span class="n">title</span><span class="p">,</span> <span class="s1">'place'</span><span class="p">:</span><span class="n">place</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">:</span><span class="n">date</span><span class="p">})</span>  </span>
-<span class="code-line">  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  </span>
+<span class="code-line">  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  </span>
 <span class="code-line"><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'place'</span><span class="p">]]</span> <span class="c1"># adjust column order  </span></span>
-<span class="code-line"><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'melanthon.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span>    </span>
+<span class="code-line"><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'melanthon.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span>    </span>
 </pre></div>
-<h3 id="bao-cun-fei-wen-ben-nei-rong">保存非文本内容</h3>
+<h3 id="_4">保存非文本内容</h3>
 <p>有些时候我们要下载图片/视频等非文本的信息, 我们可以用xpath定位到图片/视频的链接地址处, 那么下载到本地文件, 我查的有两个办法.  </p>
 <p>第一个方法简单粗暴: 用urlretrieve, 直接往函数里传入url和本地路径即可:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlretrieve</span>    </span>
 <span class="code-line"><span class="n">urlretrieve</span><span class="p">(</span><span class="n">img_url</span><span class="p">,</span> <span class="n">fpath</span><span class="p">)</span></span>
 </pre></div>
 <p>另一个方法还是用requests, 用分片的方式获取文件(我猜这种更适合大文件的下载?):   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>resp = requests.get(url, stream=True)  </span>
-<span class="code-line">f = open(fpath, 'wb')  </span>
-<span class="code-line">for chunk in resp.iter_content(chunk_size=1024):  </span>
-<span class="code-line">       if chunk: # filter out keep-alive new chunks  </span>
-<span class="code-line">           f.write(chunk)  </span>
-<span class="code-line">f.close()</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">resp = requests.get(url, stream=True)  </span></span>
+<span class="code-line"><span class="err">f = open(fpath, 'wb')  </span></span>
+<span class="code-line"><span class="err">for chunk in resp.iter_content(chunk_size=1024):  </span></span>
+<span class="code-line"><span class="err">       if chunk: # filter out keep-alive new chunks  </span></span>
+<span class="code-line"><span class="err">           f.write(chunk)  </span></span>
+<span class="code-line"><span class="err">f.close()</span></span>
 </pre></div>
-<h3 id="bing-xing-xia-zai">并行下载</h3>
-<p>在下载大文件的时候可以非常明显感受到, 下载文件的过程占据了大部分程序的执行时间. <br>
-比较简单的加速办法就是, 先把所有要下载的文件url(以及本地保存的fpath)放进一个list里, 最后在一起下载, 这时就可以使用Python的多进程模块进行加速了.   </br></p>
+<h3 id="_5">并行下载</h3>
+<p>在下载大文件的时候可以非常明显感受到, 下载文件的过程占据了大部分程序的执行时间. <br/>
+比较简单的加速办法就是, 先把所有要下载的文件url(以及本地保存的fpath)放进一个list里, 最后在一起下载, 这时就可以使用Python的多进程模块进行加速了.   </p>
 <p>核心的代码只其实就是pool.map, 把爬去的函数map到要爬的url列表上:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span>  </span>
 <span class="code-line"><span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  </span>
@@ -434,28 +462,28 @@ mx's blog            </a>
 <p>下面是个实际的例子, 首先定义了一个download函数用于下载视频, 然后download_videos函数, 多线程下载视频.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="nf">download</span><span class="p">((</span><span class="n">url</span><span class="p">,</span> <span class="n">fpath</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="p">{}):</span>  </span>
 <span class="code-line">    <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">fpath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  </span>
-<span class="code-line">    <span class="k">print</span> <span class="s1">'start downloading </span><span class="si">%s</span><span class="s1"> ...'</span> <span class="o">%</span> <span class="n">fname</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="s1">'start downloading </span><span class="si">%s</span><span class="s1"> ...'</span> <span class="o">%</span> <span class="n">fname</span>  </span>
 <span class="code-line">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  </span>
 <span class="code-line">        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>  </span>
-<span class="code-line">            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">);</span> <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>  </span>
+<span class="code-line">            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">);</span> <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>  </span>
 <span class="code-line">            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span> <span class="k">break</span>  </span>
-<span class="code-line">            <span class="k">print</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span>  </span>
+<span class="code-line">            <span class="nb">print</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span>  </span>
 <span class="code-line">        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">):</span>  </span>
 <span class="code-line">            <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span> <span class="c1"># filter out keep-alive new chunks  </span></span>
 <span class="code-line">                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>  </span>
-<span class="code-line">    <span class="k">print</span> <span class="s1">'download finished: </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="n">fpath</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="s1">'download finished: </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="n">fpath</span>  </span>
 <span class="code-line"></span>
 <span class="code-line"><span class="k">def</span> <span class="nf">download_videos</span><span class="p">(</span><span class="n">video_urls_list</span><span class="p">):</span><span class="c1"># input = list of (url,fpath) pairs  </span></span>
-<span class="code-line">    <span class="k">print</span> <span class="s1">'downloading </span><span class="si">%d</span><span class="s1"> files in parallel...'</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">video_urls_list</span><span class="p">)</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="s1">'downloading </span><span class="si">%d</span><span class="s1"> files in parallel...'</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">video_urls_list</span><span class="p">)</span>  </span>
 <span class="code-line">    <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>  </span>
 <span class="code-line">    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  </span>
 <span class="code-line">    <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">download</span><span class="p">,</span> <span class="n">video_urls_list</span><span class="p">)</span>  </span>
 <span class="code-line">    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  </span>
 <span class="code-line">    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>      </span>
-<span class="code-line">    <span class="k">print</span> <span class="s1">'all downloading finished !'</span>  </span>
+<span class="code-line">    <span class="nb">print</span> <span class="s1">'all downloading finished !'</span>  </span>
 </pre></div>
-<p>最后, 我写了一个极客学院课程视频的下载脚本, 用cookies模拟登录. 一百来行的代码, 跑一晚上可以下载好几十G的视频... <br>
-gist放在: <a href="https://gist.github.com/X-Wei/46817a6614e3677391ab13e420b4cb9f">https://gist.github.com/X-Wei/46817a6614e3677391ab13e420b4cb9f</a>  (不过这里用的cookies早就过期了)  </br></p>
+<p>最后, 我写了一个极客学院课程视频的下载脚本, 用cookies模拟登录. 一百来行的代码, 跑一晚上可以下载好几十G的视频... <br/>
+gist放在: <a href="https://gist.github.com/X-Wei/46817a6614e3677391ab13e420b4cb9f">https://gist.github.com/X-Wei/46817a6614e3677391ab13e420b4cb9f</a>  (不过这里用的cookies早就过期了)  </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -853,7 +881,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requestsji-chu-yong-fa" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#zhua-qu-htmlnei-rong" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#bian-ma-wen-ti" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#xiu-gai-header-wei-zhuang-liu-lan-qi" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlyi-ji-xpathyu-fa_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpathji-chu-yu-fa" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#yong-lxmletreecao-zuo-xpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpathshi-yong-ji-qiao" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#yong-dev-toolshuo-qu-deng-lu-cookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#zai-requestsli-shi-yong-cookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#bao-cun-pa-qu-de-nei-rong_1" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#bao-cun-wen-ben-nei-rong-csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#bao-cun-fei-wen-ben-nei-rong" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#bing-xing-xia-zai" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requests" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#html" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#_1" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#scrapy-shellhtml" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#header" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlxpath_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpath" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#chrome-dev-toolxpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#lxmletreexpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpath_1" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#dev-toolscookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#requestscookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#_3" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#_4" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#_5" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

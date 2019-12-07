@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. API and elementary implementations Collection: data struct for inserting and deleting items (ex. stack and queue). Priority queue: a special kind of collection — remove largest/smallest element. API: public class Max&lt;Kye implements Comparable&lt;Key&gt;&gt;{ public MaxPQ(); public void insert(Key k); public Key delMax(); public boolean isEmpty …" />
+        <meta name="description" content="1. API and elementary implementations PQ client example elementary(naive) implementations 2. Binary Heaps Array representation of binary heap Implementation Analysis 3. Heapsort Implementation Analysis 4. Event-driven simulation model Event driven simulation Implementation 1. API and elementary implementations Collection: data struct for inserting and deleting items (ex. stack and queue ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week 4-1 Priority Queue"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week4_1.html"/>
-        <meta property="og:description" content="[TOC] 1. API and elementary implementations Collection: data struct for inserting and deleting items (ex. stack and queue). Priority queue: a special kind of collection — remove largest/smallest element. API: public class Max&lt;Kye implements Comparable&lt;Key&gt;&gt;{ public MaxPQ(); public void insert(Key k); public Key delMax(); public boolean isEmpty …"/>
+        <meta property="og:description" content="1. API and elementary implementations PQ client example elementary(naive) implementations 2. Binary Heaps Array representation of binary heap Implementation Analysis 3. Heapsort Implementation Analysis 4. Event-driven simulation model Event driven simulation Implementation 1. API and elementary implementations Collection: data struct for inserting and deleting items (ex. stack and queue ..."/>
         <meta property="article:published_time" content="2015-08-24" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,43 +210,68 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 4-1 Priority Queue">[Algorithms I] Week 4-1 Priority Queue</a><ul><li><a class="toc-href" href="#1-api-and-elementary-implementations" title="1. API and elementary implementations">1. API and elementary implementations</a><ul><li><a class="toc-href" href="#pq-client-example" title="PQ client example">PQ client example</a></li><li><a class="toc-href" href="#elementarynaive-implementations" title="elementary(naive) implementations">elementary(naive) implementations</a></li></ul></li><li><a class="toc-href" href="#2-binary-heaps_1" title="2. Binary Heaps">2. Binary Heaps</a><ul><li><a class="toc-href" href="#array-representation-of-binary-heap" title="Array representation of binary heap">Array representation of binary heap</a></li><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#3-heapsort_1" title="3. Heapsort">3. Heapsort</a><ul><li><a class="toc-href" href="#implementation_1" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-event-driven-simulation_1" title="4. Event-driven simulation">4. Event-driven simulation</a><ul><li><a class="toc-href" href="#model" title="model">model</a></li><li><a class="toc-href" href="#event-driven-simulation" title="Event driven simulation">Event driven simulation</a></li><li><a class="toc-href" href="#implementation_2" title="Implementation">Implementation</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-api-and-elementary-implementations">1. API and elementary implementations</a><ul>
+<li><a href="#pq-client-example">PQ client example</a></li>
+<li><a href="#elementarynaive-implementations">elementary(naive) implementations</a></li>
+</ul>
+</li>
+<li><a href="#2-binary-heaps">2. Binary Heaps</a><ul>
+<li><a href="#array-representation-of-binary-heap">Array representation of binary heap</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#analysis">Analysis</a></li>
+</ul>
+</li>
+<li><a href="#3-heapsort">3. Heapsort</a><ul>
+<li><a href="#implementation_1">Implementation</a></li>
+<li><a href="#analysis_1">Analysis</a></li>
+</ul>
+</li>
+<li><a href="#4-event-driven-simulation">4. Event-driven simulation</a><ul>
+<li><a href="#model">model</a></li>
+<li><a href="#event-driven-simulation">Event driven simulation</a></li>
+<li><a href="#implementation_2">Implementation</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-api-and-elementary-implementations">1. API and elementary implementations</h1>
-<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br>
-Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </br></p>
+<p>Collection: data struct for inserting and deleting items (ex. stack and queue).  <br/>
+Priority queue: a special kind of collection — remove <em>largest/smallest</em> element.    </p>
 <p>API:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Max&lt;Kye implements Comparable&lt;Key&gt;&gt;{   </span>
-<span class="code-line">    public MaxPQ();    </span>
-<span class="code-line">    public void insert(Key k);   </span>
-<span class="code-line">    public Key delMax();    </span>
-<span class="code-line">    public boolean isEmpty();     </span>
-<span class="code-line">    public Key max();   </span>
-<span class="code-line">    int size();</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span> <span class="k">class</span> <span class="k">Max</span><span class="o">&lt;</span><span class="n">Kye</span> <span class="n">implements</span> <span class="n">Comparable</span><span class="o">&lt;</span><span class="k">Key</span><span class="o">&gt;&gt;</span><span class="err">{</span>   </span>
+<span class="code-line">    <span class="k">public</span> <span class="n">MaxPQ</span><span class="p">();</span>    </span>
+<span class="code-line">    <span class="k">public</span> <span class="n">void</span> <span class="k">insert</span><span class="p">(</span><span class="k">Key</span> <span class="n">k</span><span class="p">);</span>   </span>
+<span class="code-line">    <span class="k">public</span> <span class="k">Key</span> <span class="n">delMax</span><span class="p">();</span>    </span>
+<span class="code-line">    <span class="k">public</span> <span class="nb">boolean</span> <span class="n">isEmpty</span><span class="p">();</span>     </span>
+<span class="code-line">    <span class="k">public</span> <span class="k">Key</span> <span class="k">max</span><span class="p">();</span>   </span>
+<span class="code-line">    <span class="nb">int</span> <span class="k">size</span><span class="p">();</span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="pq-client-example">PQ client example</h2>
-<p>find <em>M largest</em> elements from N items. (N is too huge to store) <br>
-⇒ 思路: 用 <strong>Min</strong><em>PQ</em>, 当size&gt;M时删掉最小元素 — 最后剩下的就是最大的M个元素了.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image.png"> </img></br></br></p>
+<p>find <em>M largest</em> elements from N items. (N is too huge to store) <br/>
+⇒ 思路: 用 <strong>Min</strong><em>PQ</em>, 当size&gt;M时删掉最小元素 — 最后剩下的就是最大的M个元素了.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image.png"/> </p>
 <h2 id="elementarynaive-implementations">elementary(naive) implementations</h2>
-<p><strong>unordered array implementation</strong> <br>
-insert ~1,  <br>
-remove ~N   </br></br></p>
-<p><strong>ordered array implementation</strong> <br>
-insert ~N — ~ insertion sort, <br>
-remove ~1   </br></br></p>
-<p><strong>goal</strong>:  <br>
-insert O(lgN) &amp; remove max O(lgN)   </br></p>
+<p><strong>unordered array implementation</strong> <br/>
+insert ~1,  <br/>
+remove ~N   </p>
+<p><strong>ordered array implementation</strong> <br/>
+insert ~N — ~ insertion sort, <br/>
+remove ~1   </p>
+<p><strong>goal</strong>:  <br/>
+insert O(lgN) &amp; remove max O(lgN)   </p>
 <h1 id="2-binary-heaps_1">2. Binary Heaps</h1>
 <p>binary heap: a special kind of <em>complete binary tree</em>.    </p>
-<p>def. "<strong>complete binary tree"</strong> <br>
-All level except the last level are full, all nodes in the last level are as far left as possible.   <br>
-完全二叉树大概长这个样子:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image001.png"> </img></br></br></br></p>
+<p>def. "<strong>complete binary tree"</strong> <br/>
+All level except the last level are full, all nodes in the last level are as far left as possible.   <br/>
+完全二叉树大概长这个样子:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image001.png"/> </p>
 <p>property: a complete binary tree with N items has height = lgN.    </p>
-<p>def. <strong>binary heap</strong> <br>
-Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of its 2 children</em> ("heap ordering").    </br></p>
+<p>def. <strong>binary heap</strong> <br/>
+Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of its 2 children</em> ("heap ordering").    </p>
 <p>property of binary heap:    </p>
 <ul>
 <li>max element is root   </li>
@@ -260,63 +285,63 @@ Binary heap is a complete binary tree that satisfies: <em>each node &gt;= any of
 <li>for node at index <code>i</code>, its children are: <code>i*2</code> and <code>i*2+1</code> </li>
 <li>for node at index <code>i</code> (i&gt;1), its parent is: <code>i/2</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image002.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image002.png"/> </p>
 <h2 id="implementation">Implementation</h2>
-<p>简言之就是:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image003.png"> </img></br></p>
+<p>简言之就是:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image003.png"/> </p>
 <p>内部成员变量:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class MaxPQ&lt;Key implements Comparable&lt;Key&gt;&gt;{   </span>
-<span class="code-line">    private Key[] a;   </span>
-<span class="code-line">    private int N;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class MaxPQ&lt;Key implements Comparable&lt;Key&gt;&gt;{   </span></span>
+<span class="code-line"><span class="err">    private Key[] a;   </span></span>
+<span class="code-line"><span class="err">    private int N;   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p><strong>siftup (swim)</strong> <br>
-if a node is larger than its parent: <em>exchange with parent until heap ordering is restored.</em> </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void swim(int k){   </span>
-<span class="code-line">    while(k&gt;1 &amp;&amp; less(a[k/2], a[k]){   </span>
-<span class="code-line">        exch(a,k,k/2);   </span>
-<span class="code-line">        k /= 2;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<p><strong>siftup (swim)</strong> <br/>
+if a node is larger than its parent: <em>exchange with parent until heap ordering is restored.</em> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">swim</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">k/2</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">k</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p>⇒ <strong>use siftup for inserting elements</strong> <br>
-when inserting an element, first append it to the end of the array, then siftup the element to its right position.    </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void insert(Key k){    </span>
-<span class="code-line">a[N++]=x;   </span>
-<span class="code-line">swim(N);   </span>
-<span class="code-line">}</span>
+<p>⇒ <strong>use siftup for inserting elements</strong> <br/>
+when inserting an element, first append it to the end of the array, then siftup the element to its right position.    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void insert(Key k){    </span></span>
+<span class="code-line"><span class="err">a[N++]=x;   </span></span>
+<span class="code-line"><span class="err">swim(N);   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p><strong>siftdown (sink)</strong> <br>
-if a node is smaller than its children: <em>exchange it with the bigger child.</em> 用公司高层变动来类比很形象...    </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void sink(int k){   </span>
-<span class="code-line">    while(k*2&lt;=N){   </span>
-<span class="code-line">        int maxIndex = less(a[k],a[k*2])? k*2 : k;   </span>
-<span class="code-line">        if(k*2+1&lt;=N &amp;&amp; less(a[maxIndex],a[k*2+1]) maxIndex = 2*k+1;   </span>
-<span class="code-line">        if(maxIndex==k) break;   </span>
-<span class="code-line">        exch(a,k,maxIndex);   </span>
-<span class="code-line">        k = maxIndex;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<p><strong>siftdown (sink)</strong> <br/>
+if a node is smaller than its children: <em>exchange it with the bigger child.</em> 用公司高层变动来类比很形象...    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sink</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="n">N</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">maxIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">,</span><span class="n">a</span><span class="o">[</span><span class="n">k*2</span><span class="o">]</span><span class="p">)</span><span class="vm">?</span><span class="w"> </span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">maxIndex</span><span class="o">]</span><span class="p">,</span><span class="n">a</span><span class="o">[</span><span class="n">k*2+1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">maxIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">maxIndex</span><span class="o">==</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">maxIndex</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maxIndex</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p><strong>⇒ use siftdown for deleting max operation</strong> <br>
-First put a[N] to the position of root, then sink. (注意要防止loitering)   </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public Key delMax(){   </span>
-<span class="code-line">    Key ret = a[1];   </span>
-<span class="code-line">    a[1] = a[N];   </span>
-<span class="code-line">    a[N--] = null; // avoid loitering   </span>
-<span class="code-line">    sink(1);   </span>
-<span class="code-line">    return ret;   </span>
-<span class="code-line">}</span>
+<p><strong>⇒ use siftdown for deleting max operation</strong> <br/>
+First put a[N] to the position of root, then sink. (注意要防止loitering)   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">Key</span><span class="w"> </span><span class="n">delMax</span><span class="p">()</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">Key</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">a</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">N</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">a</span><span class="o">[</span><span class="n">N--</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">avoid</span><span class="w"> </span><span class="n">loitering</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">sink</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="analysis">Analysis</h2>
-<p>insert: ~lgN <br>
-remove max: ~lgN   </br></p>
+<p>insert: ~lgN <br/>
+remove max: ~lgN   </p>
 <p>improvements:    </p>
 <ul>
 <li>use a <strong>d-way heap</strong> instead of a 2-way heap (for ex. 3-way heap, the children of i are i<em>3, i</em>3+1, i*3+2, the parent of i is i/3)   </li>
 <li>Fibonacci heap: insert is <em>~1</em>, remove max still ~lgN, (but too complicated to use in practice).    </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image004.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image004.png"/> </p>
 <p>considerations:    </p>
 <ul>
 <li>use immutable keys to avoid client from changing the keys (<code>final</code> keyword in java)   </li>
@@ -330,54 +355,54 @@ remove max: ~lgN   </br></p>
 <li>then repeatedly remove all N items <strong>("sortdown")</strong> </li>
 </ul>
 <h2 id="implementation_1">Implementation</h2>
-<p><strong>heap construction</strong> <br>
-Construct the heap using a <strong>bottom-up</strong> method: build the heaps with small size first.    </br></p>
+<p><strong>heap construction</strong> <br/>
+Construct the heap using a <strong>bottom-up</strong> method: build the heaps with small size first.    </p>
 <ul>
 <li>one-node heaps (jus leaf node of heap): need not consider   </li>
 <li>larger heaps: children(subtrees) are already heap-order → just perform sink operation for root   </li>
 </ul>
 <p>⇒ <em>sink elements at indices from N/2 to 1</em> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>for(int k=N/2; k&gt;=1; k++)   </span>
-<span class="code-line">sink(k);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">for(int k=N/2; k&gt;=1; k++)   </span></span>
+<span class="code-line"><span class="err">sink(k);</span></span>
 </pre></div>
 <p>→ complexity is <strong>linear</strong>, see analysis below.    </p>
-<p><strong>heap destruction </strong> <br>
-now that we have a max-heap, to get the sorted array <em>in-place,</em> simply do:    </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>while(N&gt;1){   </span>
-<span class="code-line">exch(a,1, N--);   </span>
-<span class="code-line">sink(1);   </span>
-<span class="code-line">}</span>
+<p><strong>heap destruction </strong> <br/>
+now that we have a max-heap, to get the sorted array <em>in-place,</em> simply do:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">while(N&gt;1){   </span></span>
+<span class="code-line"><span class="err">exch(a,1, N--);   </span></span>
+<span class="code-line"><span class="err">sink(1);   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="analysis_1">Analysis</h2>
-<p><strong>proposition</strong> <br>
-Heap construction uses <strong>&lt;2N</strong> compares and exchanges.  <br>
-<em>proof</em> <br>
-一个有h层的heap, 高度为k的subtree有 2^(h-k)个, 每个subtree最多可以交换k次(从root交换到最底层)  <br>
-→ 每一层最多有 k*2^(h-k) 次交换  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image007.png"> <br>
-(第一个等式可以用数学归纳法证...)  <br>
-<a href="">详细证明见http://algs4.cs.princeton.edu/24pq/</a>  (Q20答案)   </br></br></img></br></br></br></br></br></p>
-<p><strong>proposition</strong> <br>
-Heapsort use &lt; 2NlgN compares and exchanges.    </br></p>
-<p>Heapsort is the first <em>in-place</em> sorting algorithm with NlgN <em>worst-case</em> performance.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image005.png"> </img></br></p>
+<p><strong>proposition</strong> <br/>
+Heap construction uses <strong>&lt;2N</strong> compares and exchanges.  <br/>
+<em>proof</em> <br/>
+一个有h层的heap, 高度为k的subtree有 2^(h-k)个, 每个subtree最多可以交换k次(从root交换到最底层)  <br/>
+→ 每一层最多有 k*2^(h-k) 次交换  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image007.png"/> <br/>
+(第一个等式可以用数学归纳法证...)  <br/>
+<a href="">详细证明见http://algs4.cs.princeton.edu/24pq/</a>  (Q20答案)   </p>
+<p><strong>proposition</strong> <br/>
+Heapsort use &lt; 2NlgN compares and exchanges.    </p>
+<p>Heapsort is the first <em>in-place</em> sorting algorithm with NlgN <em>worst-case</em> performance.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image005.png"/> </p>
 <p>⇒ heapsort is <em>optimal for time and space</em>, but:   </p>
 <ul>
 <li>inner loop is longer than quicksort   </li>
 <li>poor use of cache memory (too many references to cache — look far away from the array entry when going down through the tree)   </li>
 <li>not stable: because it does long-distance exchanges   </li>
 </ul>
-<p>Summary:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image006.png"> </img></br></p>
+<p>Summary:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image006.png"/> </p>
 <h1 id="4-event-driven-simulation_1">4. Event-driven simulation</h1>
-<p>Goal: simulating the motion of N particles in elastic collision (using a priority queue).  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image008.png"> </img></br></p>
+<p>Goal: simulating the motion of N particles in elastic collision (using a priority queue).  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image008.png"/> </p>
 <h2 id="model">model</h2>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image009.png"> <br>
-bouncing balls (without collision) <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image010.png"> </img></br></br></img></p>
-<p>Ball class:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image011.png"> </img></br></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image009.png"/> <br/>
+bouncing balls (without collision) <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image010.png"/> </p>
+<p>Ball class:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image011.png"/> </p>
 <p>challenge: which objects to check? How to do it efficently ?   </p>
 <p><strong>Time driven simulation</strong> </p>
 <ul>
@@ -397,15 +422,15 @@ bouncing balls (without collision) <br>
 <li>→ collision time can be <em>predicted</em> </li>
 <li>maintain PQ for collisions, key=collision time    </li>
 </ul>
-<p><strong>collision prediction</strong> <br>
-input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, velocity <code>(vx, vy)</code>. <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image013.png"> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image014.png"> <br>
-(美国高中物理这么凶残?...)   </br></img></br></img></br></br></p>
+<p><strong>collision prediction</strong> <br/>
+input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, velocity <code>(vx, vy)</code>. <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image013.png"/> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image014.png"/> <br/>
+(美国高中物理这么凶残?...)   </p>
 <h2 id="implementation_2">Implementation</h2>
-<p>anyway, 这个是封装好的类: <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image015.png"> <br>
-注意, 使用了count记录一个particle到目前为止的碰撞次数.    </br></img></br></p>
+<p>anyway, 这个是封装好的类: <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image015.png"/> <br/>
+注意, 使用了count记录一个particle到目前为止的碰撞次数.    </p>
 <p>initialization: <strong>quadratic</strong> </p>
 <ul>
 <li>Fill PQ with all <em>potential</em>  particle-particle collisions   </li>
@@ -419,14 +444,14 @@ input: each particle has radius <code>s</code>, position <code>(rx, ry)</code>, 
 <li>update velocities   </li>
 <li>predict future collisions and insert to PQ   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image018.png"> <br>
-判断invalidate:  <br>
-一个event构造(predict)时记录粒子构造时刻的碰撞次数(countA, countB), <br>
-然后在调用invalidate的时候, 如果粒子的碰撞次数发生了改变, 则返回false.  <br>
-(详见他们的代码: <a href="http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html">http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html</a>)   </br></br></br></br></img></p>
-<p>Event class:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image016.png"> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image017.png"> </img></br></img></br></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image018.png"/> <br/>
+判断invalidate:  <br/>
+一个event构造(predict)时记录粒子构造时刻的碰撞次数(countA, countB), <br/>
+然后在调用invalidate的时候, 如果粒子的碰撞次数发生了改变, 则返回false.  <br/>
+(详见他们的代码: <a href="http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html">http://algs4.cs.princeton.edu/61event/CollisionSystem.java.html</a>)   </p>
+<p>Event class:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image016.png"/> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_1/pasted_image017.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

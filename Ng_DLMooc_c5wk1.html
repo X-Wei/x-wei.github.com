@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] week1 Created Friday 02 February 2018 Why sequence models examples of seq data (either input or output): speech recognition music generation sentiment classification DNA seq analysis Machine translation video activity recognition name entity recognition (NER) → in this course: learn models applicable to these different settings. Notation motivating example: NER …" />
+        <meta name="description" content="week1 Why sequence models Notation Recurrent Neural Network Model RNN RNN Forward prop Backpropagation through time Different types of RNNs Language model and sequence generation Sampling novel sequences Vanishing gradients with RNNs Gated Recurrent Unit (GRU) Long Short Term Memory (LSTM) Bidirectional RNN Deep RNNs week1 Created Friday 02 February ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Sequential Models] week1. Recurrent Neural Networks"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c5wk1.html"/>
-        <meta property="og:description" content="[TOC] week1 Created Friday 02 February 2018 Why sequence models examples of seq data (either input or output): speech recognition music generation sentiment classification DNA seq analysis Machine translation video activity recognition name entity recognition (NER) → in this course: learn models applicable to these different settings. Notation motivating example: NER …"/>
+        <meta property="og:description" content="week1 Why sequence models Notation Recurrent Neural Network Model RNN RNN Forward prop Backpropagation through time Different types of RNNs Language model and sequence generation Sampling novel sequences Vanishing gradients with RNNs Gated Recurrent Unit (GRU) Long Short Term Memory (LSTM) Bidirectional RNN Deep RNNs week1 Created Friday 02 February ..."/>
         <meta property="article:published_time" content="2018-02-02" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,29 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Sequential Models] week1. Recurrent Neural Networks">[Sequential Models] week1. Recurrent Neural Networks</a><ul><li><a class="toc-href" href="#week1" title="week1">week1</a><ul><li><a class="toc-href" href="#why-sequence-models" title="Why sequence models">Why sequence models</a></li><li><a class="toc-href" href="#notation" title="Notation">Notation</a></li><li><a class="toc-href" href="#recurrent-neural-network-model" title="Recurrent Neural Network Model">Recurrent Neural Network Model</a><ul><li><a class="toc-href" href="#rnn" title="RNN">RNN</a></li><li><a class="toc-href" href="#rnn-forward-prop" title="RNN Forward prop">RNN Forward prop</a></li></ul></li><li><a class="toc-href" href="#backpropagation-through-time_1" title="Backpropagation through time">Backpropagation through time</a></li><li><a class="toc-href" href="#different-types-of-rnns" title="Different types of RNNs">Different types of RNNs</a></li><li><a class="toc-href" href="#language-model-and-sequence-generation" title="Language model and sequence generation">Language model and sequence generation</a></li><li><a class="toc-href" href="#sampling-novel-sequences" title="Sampling novel sequences">Sampling novel sequences</a></li><li><a class="toc-href" href="#vanishing-gradients-with-rnns" title="Vanishing gradients with RNNs">Vanishing gradients with RNNs</a></li><li><a class="toc-href" href="#gated-recurrent-unit-gru" title="Gated Recurrent Unit (GRU)">Gated Recurrent Unit (GRU)</a></li><li><a class="toc-href" href="#long-short-term-memory-lstm" title="Long Short Term Memory (LSTM)">Long Short Term Memory (LSTM)</a></li><li><a class="toc-href" href="#bidirectional-rnn" title="Bidirectional RNN">Bidirectional RNN</a></li><li><a class="toc-href" href="#deep-rnns" title="Deep RNNs">Deep RNNs</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]    </p>
+                <div class="toc">
+<ul>
+<li><a href="#week1">week1</a><ul>
+<li><a href="#why-sequence-models">Why sequence models</a></li>
+<li><a href="#notation">Notation</a></li>
+<li><a href="#recurrent-neural-network-model">Recurrent Neural Network Model</a><ul>
+<li><a href="#rnn">RNN</a></li>
+<li><a href="#rnn-forward-prop">RNN Forward prop</a></li>
+</ul>
+</li>
+<li><a href="#backpropagation-through-time">Backpropagation through time</a></li>
+<li><a href="#different-types-of-rnns">Different types of RNNs</a></li>
+<li><a href="#language-model-and-sequence-generation">Language model and sequence generation</a></li>
+<li><a href="#sampling-novel-sequences">Sampling novel sequences</a></li>
+<li><a href="#vanishing-gradients-with-rnns">Vanishing gradients with RNNs</a></li>
+<li><a href="#gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</a></li>
+<li><a href="#long-short-term-memory-lstm">Long Short Term Memory (LSTM)</a></li>
+<li><a href="#bidirectional-rnn">Bidirectional RNN</a></li>
+<li><a href="#deep-rnns">Deep RNNs</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="week1">week1</h1>
 <p>Created Friday 02 February 2018  </p>
 <h3 id="why-sequence-models">Why sequence models</h3>
@@ -232,13 +254,13 @@ mx's blog            </a>
 <li><code>X^(i)</code>: i-th training example  </li>
 <li><code>T_x^(i)</code>: length of i-th training example sequence  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image001.png"><br>
-<strong>how to repr each words in a sentences (x<i>)</i></strong> </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image001.png"/><br/>
+<strong>how to repr each words in a sentences (x<i>)</i></strong> </p>
 <ul>
 <li><em>vocabulary</em>: list of ~10k possible tokens (+"<unk>" for unknown words)  </unk></li>
 <li><em>one-hot</em> repr for each word   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image003.png"/> </p>
 <h3 id="recurrent-neural-network-model">Recurrent Neural Network Model</h3>
 <p><strong>why not a standard NN</strong> </p>
 <ul>
@@ -254,47 +276,47 @@ mx's blog            </a>
 <li>parameters <code>W_ax</code> / <code>W_aa</code> / <code>W_ya</code> are shared across all time steps.  </li>
 </ul>
 <p>⇒ <code>y&lt;t&gt;</code> depends on <code>x&lt;1&gt;...x&lt;t&gt;</code>, limit: only depend on <em>previous</em> words ("unidirectional").  </p>
-<p>Unrolled diagram:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image006.png"><br>
-Or drawing a recurrent loop (harder to understand than unrolled version):<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image007.png"> </img></br></br></img></br></p>
+<p>Unrolled diagram:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image006.png"/><br/>
+Or drawing a recurrent loop (harder to understand than unrolled version):<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image007.png"/> </p>
 <h4 id="rnn-forward-prop">RNN Forward prop</h4>
-<p>formula to calculate <code>a&lt;t&gt;</code> and <code>y&lt;t&gt;</code>:<br>
-    a<t> = g(W_aa * a<t-1> + W_ax * x<t> + b_a)<br>
-    y<t> = g(W_ya * a<t> + b_y)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image008.png"><br>
-Simplified annotation: stack <code>a&lt;t-1&gt;</code> and <code>x&lt;t&gt;</code>, <code>W_a = [W_aa, W_ax]</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image009.png"> </img></br></br></img></br></t></t></br></t></t-1></t></br></p>
+<p>formula to calculate <code>a&lt;t&gt;</code> and <code>y&lt;t&gt;</code>:<br/>
+    a<t> = g(W_aa * a<t-1> + W_ax * x<t> + b_a)<br/>
+    y<t> = g(W_ya * a<t> + b_y)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image008.png"/><br/>
+Simplified annotation: stack <code>a&lt;t-1&gt;</code> and <code>x&lt;t&gt;</code>, <code>W_a = [W_aa, W_ax]</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image009.png"/> </t></t></t></t-1></t></p>
 <h3 id="backpropagation-through-time_1">Backpropagation through time</h3>
-<p>Parameters: <code>W_y</code> and <code>W_a</code><br>
-loss function: log loss at each timestep (assume predictions y<t> are binary)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image011.png"><br>
-→ backporp through the computation graph:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image012.png"> </img></br></br></img></br></t></br></p>
+<p>Parameters: <code>W_y</code> and <code>W_a</code><br/>
+loss function: log loss at each timestep (assume predictions y<t> are binary)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image011.png"/><br/>
+→ backporp through the computation graph:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image012.png"/> </t></p>
 <h3 id="different-types-of-rnns">Different types of RNNs</h3>
 <p><strong>many-to-many</strong>:  </p>
 <ul>
 <li>T_x = T_y, one prediction per timestep.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image013.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image013.png"/> </p>
 <ul>
 <li>T_x != T_y, e.g. machine translation  </li>
 </ul>
-<p>having a <em>encoder</em> and a <em>decoder</em>:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image017.png"><br>
-<strong>many-to-one</strong>:<br>
-e.g. sentence classification<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image014.png"><br>
-<strong>one-to-many</strong>:<br>
-e.g. music generation<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image015.png"> </img></br></br></br></img></br></br></br></img></br></p>
+<p>having a <em>encoder</em> and a <em>decoder</em>:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image017.png"/><br/>
+<strong>many-to-one</strong>:<br/>
+e.g. sentence classification<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image014.png"/><br/>
+<strong>one-to-many</strong>:<br/>
+e.g. music generation<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image015.png"/> </p>
 <h3 id="language-model-and-sequence-generation">Language model and sequence generation</h3>
-<p><strong>Language model</strong><br>
-motivation example: speech recognition, <br>
-<em>"The apple and the pear salad" </em>VS<em> "The apple and the pair salad"</em><br>
-language model: <em>give probability of a sentence</em> P(sentence).  </br></br></br></p>
-<p><strong>Building language model with RNN</strong><br>
-Training set: large corpus of text.  </br></p>
+<p><strong>Language model</strong><br/>
+motivation example: speech recognition, <br/>
+<em>"The apple and the pear salad" </em>VS<em> "The apple and the pair salad"</em><br/>
+language model: <em>give probability of a sentence</em> P(sentence).  </p>
+<p><strong>Building language model with RNN</strong><br/>
+Training set: large corpus of text.  </p>
 <ul>
 <li>tokenize  </li>
 <li>vocabulary size  </li>
@@ -306,52 +328,52 @@ Training set: large corpus of text.  </br></p>
 <li><code>y&lt;t+1&gt;</code>: make prediction <em>given the correct previous word</em> </li>
 <li>like this predict one word at a time.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image019.png"><br>
-Loss function: cross entropy (<em>actual word VS probability of this word</em>) at each timestep.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image020.png"> </img></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image019.png"/><br/>
+Loss function: cross entropy (<em>actual word VS probability of this word</em>) at each timestep.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image020.png"/> </p>
 <h3 id="sampling-novel-sequences">Sampling novel sequences</h3>
-<p>Get a sense of what's learned: sample nouvel seqs.<br>
-From training, the RNN has a distribution of sequences <code>P(y&lt;t&gt; | y&lt;1...t-1&gt;)</code>.<br>
-In sample: let the model generate sequences  (<code>np.random.choice</code>):  </br></br></p>
+<p>Get a sense of what's learned: sample nouvel seqs.<br/>
+From training, the RNN has a distribution of sequences <code>P(y&lt;t&gt; | y&lt;1...t-1&gt;)</code>.<br/>
+In sample: let the model generate sequences  (<code>np.random.choice</code>):  </p>
 <ul>
 <li>feed previously gen word as input to next step  </li>
 <li>include <eos> token in vocab to finish  </eos></li>
 <li>reject <unk> tokens  </unk></li>
 </ul>
-<p><strong>char-level language model</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image021.png"> </img></br></p>
+<p><strong>char-level language model</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image021.png"/> </p>
 <ul>
 <li>pro: no <unk> token  </unk></li>
 <li>con: much longer sequences, more expensive to train.  </li>
 </ul>
 <h3 id="vanishing-gradients-with-rnns">Vanishing gradients with RNNs</h3>
-<p>long-range dependencies are hard to capture: <br>
-e.g. "<em>the cat ........ was full</em>" VS "<em>the cats ...... were full</em>"  </br></p>
-<p>this is due to vanishing gradients:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image022.png"> </img></br></p>
+<p>long-range dependencies are hard to capture: <br/>
+e.g. "<em>the cat ........ was full</em>" VS "<em>the cats ...... were full</em>"  </p>
+<p>this is due to vanishing gradients:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image022.png"/> </p>
 <p>For exploding gradients: apply <em>gradient clipping</em> (restrict gradient norm).  </p>
 <h3 id="gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</h3>
 <p>Modification of RNN to capture long range dependencies.  </p>
-<p><em>Visualization of a RNN unit:</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image023.png"> </img></br></p>
+<p><em>Visualization of a RNN unit:</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image023.png"/> </p>
 <p><strong>(simplified) GRU</strong> </p>
 <ul>
 <li>Extra <em>memory cell</em>: <code>c&lt;t&gt;=a&lt;t&gt;</code>, (replaces output activation).  </li>
 <li><em>Candidate</em> value of c<t>: <code>c_tilde&lt;t&gt;=tanh(Wc * [c&lt;t-1&gt;, x&lt;t&gt;] + b_c)</code> </t></li>
 <li><strong>Gate</strong><em> (between 0 and 1, conceptually consider it as binary)</em>:   </li>
 </ul>
-<p><code>Gamme_u = sigmoid(W_u * [c&lt;t-1&gt;, x&lt;t&gt;] + b_u)</code><br>
-subscript "<em>u</em>" stands for "<em>update</em>", i.e. whether we want to update current memory cell  </br></p>
+<p><code>Gamme_u = sigmoid(W_u * [c&lt;t-1&gt;, x&lt;t&gt;] + b_u)</code><br/>
+subscript "<em>u</em>" stands for "<em>update</em>", i.e. whether we want to update current memory cell  </p>
 <ul>
 <li>Actual value of <code>c&lt;t&gt; = Gamme_u * c_tilde&lt;t&gt; + (1-Gamma_u) * c&lt;t-1&gt;</code> (<code>*</code> is element-wise multiplication)  </li>
 </ul>
-<p>i.e. <code>c&lt;t&gt;</code> can be conserved for long range before being updated<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image024.png"><br>
-Visualization of GRU unit (maybe equations are more understandable...):<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image025.png"> </img></br></br></img></br></p>
-<p><strong>full GRU</strong><br>
-for candidate <code>c_tilde&lt;t&gt;</code>, add one more gate <code>Gamme_r</code>: controlling how much <code>c&lt;t-1&gt;</code> contributes to <code>c_tilde&lt;t&gt;</code>("<em>r</em>" for "<em>relevance</em>", i.e. how relevant <code>c&lt;t-1&gt;</code> is for <code>c_tilde&lt;t&gt;</code>)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image026.png"> </img></br></br></p>
+<p>i.e. <code>c&lt;t&gt;</code> can be conserved for long range before being updated<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image024.png"/><br/>
+Visualization of GRU unit (maybe equations are more understandable...):<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image025.png"/> </p>
+<p><strong>full GRU</strong><br/>
+for candidate <code>c_tilde&lt;t&gt;</code>, add one more gate <code>Gamme_r</code>: controlling how much <code>c&lt;t-1&gt;</code> contributes to <code>c_tilde&lt;t&gt;</code>("<em>r</em>" for "<em>relevance</em>", i.e. how relevant <code>c&lt;t-1&gt;</code> is for <code>c_tilde&lt;t&gt;</code>)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image026.png"/> </p>
 <h3 id="long-short-term-memory-lstm">Long Short Term Memory (LSTM)</h3>
 <p>More powerful and general version of GRU.  </p>
 <ul>
@@ -362,13 +384,13 @@ for candidate <code>c_tilde&lt;t&gt;</code>, add one more gate <code>Gamme_r</co
 <li>value of <code>c&lt;t&gt; = Gamma_u * c_tilde&lt;t&gt; + Gamma_f  * c&lt;t-1&gt;</code> </li>
 <li>value of <code>a&lt;t&gt; = Gamma_o * c&lt;t&gt;</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image027.png"><br>
-Visualization:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image028.png"><br>
-Intuition: c<t> can be kept for long time if gates are set properly.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image029.png"> </img></br></t></br></img></br></br></img></p>
-<p>Variant: let the gates depend on c<t-1> as well ("<em>peephole connection</em>")<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image030.png"> </img></br></t-1></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image027.png"/><br/>
+Visualization:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image028.png"/><br/>
+Intuition: c<t> can be kept for long time if gates are set properly.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image029.png"/> </t></p>
+<p>Variant: let the gates depend on c<t-1> as well ("<em>peephole connection</em>")<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image030.png"/> </t-1></p>
 <p><strong>GRU vs LSTM</strong> </p>
 <ul>
 <li>LSTM is proposed earlier  </li>
@@ -377,9 +399,9 @@ Intuition: c<t> can be kept for long time if gates are set properly.<br>
 <li>LSTM more powerful, recommended default choice to try  </li>
 </ul>
 <h3 id="bidirectional-rnn">Bidirectional RNN</h3>
-<p>Getting information from the future.<br>
-motivation example: <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image031.png"> </img></br></br></p>
+<p>Getting information from the future.<br/>
+motivation example: <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image031.png"/> </p>
 <p><strong>Bidirectional RNN (BRNN)</strong> </p>
 <ul>
 <li><em>forward and backword</em> recurrent components  </li>
@@ -387,11 +409,11 @@ motivation example: <br>
 <li>at t, both information from the past and the future are passed in  </li>
 <li><em>BRNN with LSTM blocks</em> are typically the first thing to try in NLP problems  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image032.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image032.png"/> </p>
 <h3 id="deep-rnns">Deep RNNs</h3>
-<p>Complex NN: stack multiple RNNs (having 3 RNN layers is already a lot).0<br>
-notation: <code>a[l]&lt;t&gt;</code> for activation in layer <code>l</code> and time <code>t</code>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image033.png"> </img></br></br></p>
+<p>Complex NN: stack multiple RNNs (having 3 RNN layers is already a lot).0<br/>
+notation: <code>a[l]&lt;t&gt;</code> for activation in layer <code>l</code> and time <code>t</code>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c5wk1/pasted_image033.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

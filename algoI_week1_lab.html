@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] model &amp; problem (原文描述太啰嗦了) A system using an N-by-N grid of sites. → Each site is either open or blocked. → A full site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.) → We …" />
+        <meta name="description" content="model &amp; problem Method Code backwash问题 model &amp; problem (原文描述太啰嗦了) A system using an N-by-N grid of sites. → Each site is either open or blocked. → A full site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week1-Lab: Percolation"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week1_lab.html"/>
-        <meta property="og:description" content="[TOC] model &amp; problem (原文描述太啰嗦了) A system using an N-by-N grid of sites. → Each site is either open or blocked. → A full site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.) → We …"/>
+        <meta property="og:description" content="model &amp; problem Method Code backwash问题 model &amp; problem (原文描述太啰嗦了) A system using an N-by-N grid of sites. → Each site is either open or blocked. → A full site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 ..."/>
         <meta property="article:published_time" content="2015-07-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -207,34 +207,43 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week1-Lab: Percolation">[Algorithms I] Week1-Lab: Percolation</a><ul><li><a class="toc-href" href="#model-problem" title="model &amp; problem">model &amp; problem</a></li><li><a class="toc-href" href="#method" title="Method">Method</a></li><li><a class="toc-href" href="#code" title="Code">Code</a><ul><li><a class="toc-href" href="#backwashwen-ti" title="backwash问题">backwash问题</a></li></ul></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week1-Lab: Percolation">[Algorithms I] Week1-Lab: Percolation</a><ul><li><a class="toc-href" href="#model-problem" title="model &amp; problem">model &amp; problem</a></li><li><a class="toc-href" href="#method" title="Method">Method</a></li><li><a class="toc-href" href="#code" title="Code">Code</a><ul><li><a class="toc-href" href="#backwash" title="backwash问题">backwash问题</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#model-problem">model &amp; problem</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a><ul>
+<li><a href="#backwash">backwash问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="model-problem">model &amp; problem</h1>
-<p>(原文描述太啰嗦了)<br>
-A system using an N-by-N grid of sites. <br>
-→ Each site is either open or blocked. <br>
-→ A <strong>full</strong> site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)<br>
-→ We say the system <strong>percolates</strong> if there is a path of connected open sites form the top row to the bottom row.   </br></br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png"> </img></p>
-<p>⇒ pb: if sites are independently set to be open with probability <strong>p</strong>, what is the probability that the system percolates? <br>
-<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png"> <br>
-→ When N is sufficiently large, there is a threshold value **p<strong><em> such that when p &lt; p</em> a random N-by-N grid almost never percolates, and when p &gt; p<em>, a random N-by-N grid almost always percolates. <br>
-→ No mathematical solution for determining the percolation threshold p</br></em> has yet been derived. <br>
-⇒ Your task is to *write a computer program to estimate p</br></strong>.   </br></img></br></p>
+<p>(原文描述太啰嗦了)<br/>
+A system using an N-by-N grid of sites. <br/>
+→ Each site is either open or blocked. <br/>
+→ A <strong>full</strong> site is an open site that can be connected to an open site in the top row via a chain of neighboring open sites. (这个full的定义有玄机 而且导致后面写程序时有个问题, 看论坛想了半天才想出来, 见后文.)<br/>
+→ We say the system <strong>percolates</strong> if there is a path of connected open sites form the top row to the bottom row.   </p>
+<p><img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image.png"/> </p>
+<p>⇒ pb: if sites are independently set to be open with probability <strong>p</strong>, what is the probability that the system percolates? <br/>
+<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image001.png"/> <br/>
+→ When N is sufficiently large, there is a threshold value **p<strong><em> such that when p &lt; p</em> a random N-by-N grid almost never percolates, and when p &gt; p<em>, a random N-by-N grid almost always percolates. <br/>
+→ No mathematical solution for determining the percolation threshold p</em> has yet been derived. <br/>
+⇒ Your task is to *write a computer program to estimate p</strong>.   </p>
 <h1 id="method">Method</h1>
 <ul>
 <li>
 <p>API:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Percolation {</span>
-<span class="code-line">   public Percolation(int N)               // create N-by-N grid, with all sites blocked</span>
-<span class="code-line">   public void open(int i, int j)          // open site (row i, column j) if it is not open already</span>
-<span class="code-line">   public boolean isOpen(int i, int j)     // is site (row i, column j) open?</span>
-<span class="code-line">   public boolean isFull(int i, int j)     // is site (row i, column j) full?</span>
-<span class="code-line">   public boolean percolates()             // does the system percolate?</span>
-<span class="code-line">   public static void main(String[] args   // test client (optional)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class Percolation {</span></span>
+<span class="code-line"><span class="err">   public Percolation(int N)               // create N-by-N grid, with all sites blocked</span></span>
+<span class="code-line"><span class="err">   public void open(int i, int j)          // open site (row i, column j) if it is not open already</span></span>
+<span class="code-line"><span class="err">   public boolean isOpen(int i, int j)     // is site (row i, column j) open?</span></span>
+<span class="code-line"><span class="err">   public boolean isFull(int i, int j)     // is site (row i, column j) full?</span></span>
+<span class="code-line"><span class="err">   public boolean percolates()             // does the system percolate?</span></span>
+<span class="code-line"><span class="err">   public static void main(String[] args   // test client (optional)</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 </li>
 <li>
@@ -259,58 +268,58 @@ if N&lt;=0 in constructor: <code>java.lang.IllegalArgumentException</code></p>
 <p>ex. 20*20 grid, when percolated: </p>
 </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image002.png"> <br>
-⇒ estimated p* = 204/400=0.51</br></img></p>
+<p><img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image002.png"/> <br/>
+⇒ estimated p* = 204/400=0.51</p>
 <ul>
 <li>
 <p>repeat the estimation for T times, get T estimations </p>
-<p>→ get mean and std:  <br>
-<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image003.png"> <br>
-→ 95% 置信区间: <br>
-<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image004.png"> </img></br></br></img></br></p>
+<p>→ get mean and std:  <br/>
+<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image003.png"/> <br/>
+→ 95% 置信区间: <br/>
+<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image004.png"/> </p>
 </li>
 <li>
 <p>create API for this simulation: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class PercolationStats {</span>
-<span class="code-line">   public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid</span>
-<span class="code-line">   public double mean()                      // sample mean of percolation threshold</span>
-<span class="code-line">   public double stddev()                    // sample standard deviation of percolation threshold</span>
-<span class="code-line">   public double confidenceLo()              // low  endpoint of 95% confidence interval</span>
-<span class="code-line">   public double confidenceHi()              // high endpoint of 95% confidence interval</span>
-<span class="code-line">   public static void main(String[] args)    // test client (described below)</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class PercolationStats {</span></span>
+<span class="code-line"><span class="err">   public PercolationStats(int N, int T)     // perform T independent experiments on an N-by-N grid</span></span>
+<span class="code-line"><span class="err">   public double mean()                      // sample mean of percolation threshold</span></span>
+<span class="code-line"><span class="err">   public double stddev()                    // sample standard deviation of percolation threshold</span></span>
+<span class="code-line"><span class="err">   public double confidenceLo()              // low  endpoint of 95% confidence interval</span></span>
+<span class="code-line"><span class="err">   public double confidenceHi()              // high endpoint of 95% confidence interval</span></span>
+<span class="code-line"><span class="err">   public static void main(String[] args)    // test client (described below)</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>-if  N ≤ 0 or T ≤ 0: <code>java.lang.IllegalArgumentException</code><br>
--<code>main()</code> : takes two command-line arguments N and T<br>
-⇒ performs T independent computational experiments on an N-by-N grid, and prints out the mean, standard deviation, and the 95% confidence interval for p*. <br>
-(Use <a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdRandom.html">standard random</a> from our standard libraries to generate random numbers; use <a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdStats.html">standard statistics</a> to compute the sample mean and standard deviation. <br>
-Here is the algo API: <a href="http://algs4.cs.princeton.edu/code/index.php">http://algs4.cs.princeton.edu/code/index.php</a>)  </br></br></br></br></p>
+<p>-if  N ≤ 0 or T ≤ 0: <code>java.lang.IllegalArgumentException</code><br/>
+-<code>main()</code> : takes two command-line arguments N and T<br/>
+⇒ performs T independent computational experiments on an N-by-N grid, and prints out the mean, standard deviation, and the 95% confidence interval for p*. <br/>
+(Use <a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdRandom.html">standard random</a> from our standard libraries to generate random numbers; use <a href="http://introcs.cs.princeton.edu/java/stdlib/javadoc/StdStats.html">standard statistics</a> to compute the sample mean and standard deviation. <br/>
+Here is the algo API: <a href="http://algs4.cs.princeton.edu/code/index.php">http://algs4.cs.princeton.edu/code/index.php</a>)  </p>
 </li>
 </ul>
 <h1 id="code">Code</h1>
-<p>注意一定要用它们提供的那些库, 否则自己写的话代码就长了.... <br>
-shuffle, mean, stddev什么的直接用他们的函数库就可以做到. <br>
-<a href="http://algs4.cs.princeton.edu/code/index.php">http://algs4.cs.princeton.edu/code/index.php</a> <br>
-另外UF也是用他们写好的, WeightedQuickUnionUF.   </br></br></br></p>
+<p>注意一定要用它们提供的那些库, 否则自己写的话代码就长了.... <br/>
+shuffle, mean, stddev什么的直接用他们的函数库就可以做到. <br/>
+<a href="http://algs4.cs.princeton.edu/code/index.php">http://algs4.cs.princeton.edu/code/index.php</a> <br/>
+另外UF也是用他们写好的, WeightedQuickUnionUF.   </p>
 <p>按照提示, 除了格子的N^2个节点以外再增加两个节点: 顶部和底部的虚拟节点. 这里写的时候注意一开始也是不恩能够把它们与第一行/最后一行相连的 — 要在一个格子open以后再相连. </p>
-<h3 id="backwashwen-ti">backwash问题</h3>
-<p>这次题目有一点比较困难就是, 需要实现isFull()函数, 这个函数判断一个格子(i,j)是否和顶部相连. 这里如果直接用UF的connected()判断是否和顶部虚拟节点相连的话是有问题的, 如下图: <br>
-<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image005.png"> <br>
-白色格子表示格子是open的, 蓝色格子表示格子是open并且是<em>full</em>的(i.e. 和顶部相连的), 左边图片里的状态是对的, 右边图片里底下部分的格子状态则不对: 如左下角的格子, 其实是没有和顶部联通的, 如果我们用两个虚拟节点的话, 由于底部虚拟节点和顶部虚拟节点相连, 所以和底部虚拟节点相连的左下角部分就被判断成了full的. </br></img></br></p>
-<p>这个问题一开始我以为可以很简单解决, 后来发现没那么容易... (注意题目还要求isFull()也要在常数时间给出结果).<br>
-一个不优雅的办法是, 建立两个UF, 一个用来判断percolation, 另一个UF里没有底部虚拟节点所以可以专门用来判断isFull(). </br></p>
+<h3 id="backwash">backwash问题</h3>
+<p>这次题目有一点比较困难就是, 需要实现isFull()函数, 这个函数判断一个格子(i,j)是否和顶部相连. 这里如果直接用UF的connected()判断是否和顶部虚拟节点相连的话是有问题的, 如下图: <br/>
+<img alt="" class="img-responsive" src="../images/file:///home/wx/Dropbox/ZIM_NOTES/0._TmpNotes/Algorithms%2C_4th_ed/Week1-Assignment-Percolation/pasted_image005.png"/> <br/>
+白色格子表示格子是open的, 蓝色格子表示格子是open并且是<em>full</em>的(i.e. 和顶部相连的), 左边图片里的状态是对的, 右边图片里底下部分的格子状态则不对: 如左下角的格子, 其实是没有和顶部联通的, 如果我们用两个虚拟节点的话, 由于底部虚拟节点和顶部虚拟节点相连, 所以和底部虚拟节点相连的左下角部分就被判断成了full的. </p>
+<p>这个问题一开始我以为可以很简单解决, 后来发现没那么容易... (注意题目还要求isFull()也要在常数时间给出结果).<br/>
+一个不优雅的办法是, 建立两个UF, 一个用来判断percolation, 另一个UF里没有底部虚拟节点所以可以专门用来判断isFull(). </p>
 <p>这样解决的话使可以通过测试, 不过非常不好看, 另外一个UF的内存占用是8N^2(内部有size[]和id[]两个int数组), 比较大. </p>
 <p>在论坛上找了半天, 看了一些人的分享终于想到了这个非常妙的办法: </p>
 <ol>
 <li>UF只建立顶部虚拟节点, 不建立底部虚拟节点. </li>
 <li>判断isFull只需要用UF的connected()一下就好了</li>
-<li>问题是怎么判断percolation: <br>
-    a. 建立一个数组 <code>boolean connectedToBottom[]</code>, 指示某一点是否和底部相连 <br>
-    b. trick在这里: 不必修改一个联通分支的所有点的<code>connectedToBottom</code>的值, <strong>只需要修改联通分支的root(UF的find)即可</strong>. 在进行union的时候先查看两个component的root是不是连到底部, 然后有一个连到底部的话, 在union以后把合并后的联通分支的<code>connectedToBottom</code>状态改为true即可 <br>
-    c. 然后判断percolate: 先找到顶部虚拟节点锁在component的root, 然后看这个root是否连到底部即可!   </br></br></br></li>
+<li>问题是怎么判断percolation: <br/>
+    a. 建立一个数组 <code>boolean connectedToBottom[]</code>, 指示某一点是否和底部相连 <br/>
+    b. trick在这里: 不必修改一个联通分支的所有点的<code>connectedToBottom</code>的值, <strong>只需要修改联通分支的root(UF的find)即可</strong>. 在进行union的时候先查看两个component的root是不是连到底部, 然后有一个连到底部的话, 在union以后把合并后的联通分支的<code>connectedToBottom</code>状态改为true即可 <br/>
+    c. 然后判断percolate: 先找到顶部虚拟节点锁在component的root, 然后看这个root是否连到底部即可!   </li>
 </ol>
-<p>这样用一个boolean数组(N^2内存)代替了一个新的UF(8N^2内存), 而且实现也更加优雅.  <br>
-非常有意思的练习...</br></p>
+<p>这样用一个boolean数组(N^2内存)代替了一个新的UF(8N^2内存), 而且实现也更加优雅.  <br/>
+非常有意思的练习...</p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -742,7 +751,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week1-Lab: Percolation">[Algorithms I] Week1-Lab: Percolation</a><ul><li><a class="toc-href" href="#model-problem" title="model &amp; problem">model &amp; problem</a></li><li><a class="toc-href" href="#method" title="Method">Method</a></li><li><a class="toc-href" href="#code" title="Code">Code</a><ul><li><a class="toc-href" href="#backwashwen-ti" title="backwash问题">backwash问题</a></li></ul></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week1-Lab: Percolation">[Algorithms I] Week1-Lab: Percolation</a><ul><li><a class="toc-href" href="#model-problem" title="model &amp; problem">model &amp; problem</a></li><li><a class="toc-href" href="#method" title="Method">Method</a></li><li><a class="toc-href" href="#code" title="Code">Code</a><ul><li><a class="toc-href" href="#backwash" title="backwash问题">backwash问题</a></li></ul></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

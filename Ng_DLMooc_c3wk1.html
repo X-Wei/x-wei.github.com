@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] I-Introduction to ML Strategy Why ML Strategy A lot of ideas of improving ML performance: strategy on how to choose. → how to figure out which ones to pursue and which ones to discard ? Orthogonalization How to tune hyperparams &amp; what to expect. TV tuning example: each knob does only one …" />
+        <meta name="description" content="I-Introduction to ML Strategy Why ML Strategy Orthogonalization II-Setting up your goal Single number evaluation metric Satisficing and Optimizing metric Train-dev-test distributions Size of the dev and test sets When to change dev/test sets and metrics III-Comparing to human-level performance Why human-level performance? Avoidable bias Understanding human-level performance Surpassing ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Structuring Machine Learning Projects] week1. ML Strategy (1)"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c3wk1.html"/>
-        <meta property="og:description" content="[TOC] I-Introduction to ML Strategy Why ML Strategy A lot of ideas of improving ML performance: strategy on how to choose. → how to figure out which ones to pursue and which ones to discard ? Orthogonalization How to tune hyperparams &amp; what to expect. TV tuning example: each knob does only one …"/>
+        <meta property="og:description" content="I-Introduction to ML Strategy Why ML Strategy Orthogonalization II-Setting up your goal Single number evaluation metric Satisficing and Optimizing metric Train-dev-test distributions Size of the dev and test sets When to change dev/test sets and metrics III-Comparing to human-level performance Why human-level performance? Avoidable bias Understanding human-level performance Surpassing ..."/>
         <meta property="article:published_time" content="2017-11-15" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,93 +210,117 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Structuring Machine Learning Projects] week1. ML Strategy (1)">[Structuring Machine Learning Projects] week1. ML Strategy (1)</a><ul><li><a class="toc-href" href="#i-introduction-to-ml-strategy" title="I-Introduction to ML Strategy">I-Introduction to ML Strategy</a><ul><li><a class="toc-href" href="#why-ml-strategy" title="Why ML Strategy">Why ML Strategy</a></li><li><a class="toc-href" href="#orthogonalization" title="Orthogonalization">Orthogonalization</a></li></ul></li><li><a class="toc-href" href="#ii-setting-up-your-goal_1" title="II-Setting up your goal">II-Setting up your goal</a><ul><li><a class="toc-href" href="#single-number-evaluation-metric" title="Single number evaluation metric">Single number evaluation metric</a></li><li><a class="toc-href" href="#satisficing-and-optimizing-metric" title="Satisficing and Optimizing metric">Satisficing and Optimizing metric</a></li><li><a class="toc-href" href="#train-dev-test-distributions" title="Train-dev-test distributions">Train-dev-test distributions</a></li><li><a class="toc-href" href="#size-of-the-dev-and-test-sets" title="Size of the dev and test sets">Size of the dev and test sets</a></li><li><a class="toc-href" href="#when-to-change-devtest-sets-and-metrics" title="When to change dev/test sets and metrics">When to change dev/test sets and metrics</a></li></ul></li><li><a class="toc-href" href="#iii-comparing-to-human-level-performance_1" title="III-Comparing to human-level performance">III-Comparing to human-level performance</a><ul><li><a class="toc-href" href="#why-human-level-performance" title="Why human-level performance?">Why human-level performance?</a></li><li><a class="toc-href" href="#avoidable-bias" title="Avoidable bias">Avoidable bias</a></li><li><a class="toc-href" href="#understanding-human-level-performance" title="Understanding human-level performance">Understanding human-level performance</a></li><li><a class="toc-href" href="#surpassing-human-level-performance" title="Surpassing human-level performance">Surpassing human-level performance</a></li><li><a class="toc-href" href="#improving-your-model-performance" title="Improving your model performance">Improving your model performance</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#i-introduction-to-ml-strategy">I-Introduction to ML Strategy</a><ul>
+<li><a href="#why-ml-strategy">Why ML Strategy</a></li>
+<li><a href="#orthogonalization">Orthogonalization</a></li>
+</ul>
+</li>
+<li><a href="#ii-setting-up-your-goal">II-Setting up your goal</a><ul>
+<li><a href="#single-number-evaluation-metric">Single number evaluation metric</a></li>
+<li><a href="#satisficing-and-optimizing-metric">Satisficing and Optimizing metric</a></li>
+<li><a href="#train-dev-test-distributions">Train-dev-test distributions</a></li>
+<li><a href="#size-of-the-dev-and-test-sets">Size of the dev and test sets</a></li>
+<li><a href="#when-to-change-devtest-sets-and-metrics">When to change dev/test sets and metrics</a></li>
+</ul>
+</li>
+<li><a href="#iii-comparing-to-human-level-performance">III-Comparing to human-level performance</a><ul>
+<li><a href="#why-human-level-performance">Why human-level performance?</a></li>
+<li><a href="#avoidable-bias">Avoidable bias</a></li>
+<li><a href="#understanding-human-level-performance">Understanding human-level performance</a></li>
+<li><a href="#surpassing-human-level-performance">Surpassing human-level performance</a></li>
+<li><a href="#improving-your-model-performance">Improving your model performance</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="i-introduction-to-ml-strategy">I-Introduction to ML Strategy</h2>
 <h3 id="why-ml-strategy">Why ML Strategy</h3>
-<p>A lot of ideas of improving ML performance: <em>strategy on how to choose</em>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image.png"> </img></br></p>
+<p>A lot of ideas of improving ML performance: <em>strategy on how to choose</em>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image.png"/> </p>
 <p>→ how to figure out which ones to pursue and which ones to discard ?  </p>
 <h3 id="orthogonalization">Orthogonalization</h3>
 <p>How to tune hyperparams &amp; what to expect.  </p>
-<p>TV tuning example: each knob does only one thing.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image001.png"> </img></br></p>
-<p><strong>Chain of assumptions in ML</strong>:<br>
-training set performance → dev set → test set → real world  </br></p>
+<p>TV tuning example: each knob does only one thing.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image001.png"/> </p>
+<p><strong>Chain of assumptions in ML</strong>:<br/>
+training set performance → dev set → test set → real world  </p>
 <ul>
 <li>"one knob for each chain"  </li>
 <li>Will go through these "knobs" in this course.  </li>
 <li>Don't use early stopping: this is not orthogonalized enough  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image005.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image005.png"/> </p>
 <h2 id="ii-setting-up-your-goal_1">II-Setting up your goal</h2>
 <h3 id="single-number-evaluation-metric">Single number evaluation metric</h3>
 <p>Faster progress if only have <em>one single real number evaluation metric</em>. → more efficient in making decisions.  </p>
-<p>example:<br>
-Using both percision and recall as metric is not good → <em>difficule to pick the best model to keep on iterating from.</em><br>
-→ Use F1 score instead.  </br></br></p>
+<p>example:<br/>
+Using both percision and recall as metric is not good → <em>difficule to pick the best model to keep on iterating from.</em><br/>
+→ Use F1 score instead.  </p>
 <h3 id="satisficing-and-optimizing-metric">Satisficing and Optimizing metric</h3>
 <p>When it's difficult to pick a single real number eval metric → <em>set up satisficing and optimizing metrics.</em> </p>
-<p>example: accuracy &amp; running time trade-off<br>
-Instead of doing a linear combination of the two, use this:<br>
-    maximize accuracy<br>
-    subject to running time &lt;= 100 ms<br>
-In this case: accuracy is <em>optimizing metric</em>, running time is <em>satisficing metric</em>.  </br></br></br></br></p>
-<p>In general:<br>
-if having N metrics → <em>pick 1 as optimizing metric, the N-1 rest as satisficing metric</em>.  </br></p>
-<p>example: assistant wake-up word accuracy VS false positive.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image006.png"> </img></br></p>
+<p>example: accuracy &amp; running time trade-off<br/>
+Instead of doing a linear combination of the two, use this:<br/>
+    maximize accuracy<br/>
+    subject to running time &lt;= 100 ms<br/>
+In this case: accuracy is <em>optimizing metric</em>, running time is <em>satisficing metric</em>.  </p>
+<p>In general:<br/>
+if having N metrics → <em>pick 1 as optimizing metric, the N-1 rest as satisficing metric</em>.  </p>
+<p>example: assistant wake-up word accuracy VS false positive.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image006.png"/> </p>
 <h3 id="train-dev-test-distributions">Train-dev-test distributions</h3>
-<p>How to setup dev/test sets.<br>
-Idea: dev/test sets come from the same distribution.  </br></p>
-<p>example: cat classification in different regions.<br>
-This is bad dev/test setup:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image007.png"><br>
-Good practice: random shuffle data and split into dev/test sets.  </br></img></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image008.png"> </img></p>
+<p>How to setup dev/test sets.<br/>
+Idea: dev/test sets come from the same distribution.  </p>
+<p>example: cat classification in different regions.<br/>
+This is bad dev/test setup:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image007.png"/><br/>
+Good practice: random shuffle data and split into dev/test sets.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image008.png"/> </p>
 <h3 id="size-of-the-dev-and-test-sets">Size of the dev and test sets</h3>
-<p>Pre-DL era, old way of splitting data: 70/30 or 60/30/10 split.<br>
-→ resonable when datasets are small. (100~10k examples)  </br></p>
-<p>In DL era: much more training (~1M) examples.<br>
-⇒  98/1/1 split is more resonable.  </br></p>
+<p>Pre-DL era, old way of splitting data: 70/30 or 60/30/10 split.<br/>
+→ resonable when datasets are small. (100~10k examples)  </p>
+<p>In DL era: much more training (~1M) examples.<br/>
+⇒  98/1/1 split is more resonable.  </p>
 <ul>
 <li><strong>Size of test/dev set</strong>: <em>big enough to give high confidence in system's performance</em>.  </li>
 <li>OK to not have a test set, but not recommended.  </li>
 </ul>
 <h3 id="when-to-change-devtest-sets-and-metrics">When to change dev/test sets and metrics</h3>
-<p><strong>example 1</strong><br>
-cat classification: algo A has pornographic false positives.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image009.png"><br>
-→ change metric to penalize heavily pornographic FPs.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image011.png"><br>
-to implement this weighting, need to go through dev/test sets.  </br></img></br></br></img></br></br></p>
-<p><strong>example 2</strong><br>
-Cat classification: user's upload is blury while trained on high quality images.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image012.png"> </img></br></br></p>
+<p><strong>example 1</strong><br/>
+cat classification: algo A has pornographic false positives.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image009.png"/><br/>
+→ change metric to penalize heavily pornographic FPs.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image011.png"/><br/>
+to implement this weighting, need to go through dev/test sets.  </p>
+<p><strong>example 2</strong><br/>
+Cat classification: user's upload is blury while trained on high quality images.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image012.png"/> </p>
 <h2 id="iii-comparing-to-human-level-performance_1">III-Comparing to human-level performance</h2>
 <h3 id="why-human-level-performance">Why human-level performance?</h3>
 <p>Workflow ML can be more efficient when trying to match human level performance.  </p>
 <p>Bayes optional error: best possible error, <em>theoritical optimal</em>.  </p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image013.png"><br>
-ML progress usually slows down after surpassing human-level performance:  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image013.png"/><br/>
+ML progress usually slows down after surpassing human-level performance:  </p>
 <ul>
 <li>usually human-level is not far from Bayes optimal  </li>
 <li>as long as ML performace &lt; human, there are tools to improve performance.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image014.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image014.png"/> </p>
 <h3 id="avoidable-bias">Avoidable bias</h3>
-<p>Using human rating can prevent overfitting on training set.<br>
-exapmle: compare training set error with human performance.  </br></p>
+<p>Using human rating can prevent overfitting on training set.<br/>
+exapmle: compare training set error with human performance.  </p>
 <ul>
 <li>err_train &gt; err_human ⇒ focus on reducing bias (e.g. bigger NN)  </li>
 <li>err_train ~= err_human ⇒ focus on reducing variance (e.g. regularize, more training data)  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image015.png"><br>
-→ Use human-level error as a proxy for Bayes error.  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image015.png"/><br/>
+→ Use human-level error as a proxy for Bayes error.  </p>
 <p>Terminology:  </p>
 <ul>
 <li>
-<p><strong>Avoidable bias</strong> is the <em>gap</em> between training err and Bayes err.<br>
-  (interpretataion: some errors are inavoidable because <em>Bayes err is not 0</em>.)  </br></p>
+<p><strong>Avoidable bias</strong> is the <em>gap</em> between training err and Bayes err.<br/>
+  (interpretataion: some errors are inavoidable because <em>Bayes err is not 0</em>.)  </p>
 </li>
 <li>
 <p><strong>Variance</strong>: gap between training err and dev err.  </p>
@@ -304,17 +328,17 @@ exapmle: compare training set error with human performance.  </br></p>
 </ul>
 <h3 id="understanding-human-level-performance">Understanding human-level performance</h3>
 <p>"<em>Human level error as proxy for Bayes error</em>"  </p>
-<p>example: Medical image classification.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image016.png"><br>
-⇒ Should pick lowest human error as an estimate (upper bound) of Bayes error.  </br></img></br></p>
-<p>Error analysis example (which human-err to pick to estimate avoidable bias):<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image018.png"> </img></br></p>
+<p>example: Medical image classification.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image016.png"/><br/>
+⇒ Should pick lowest human error as an estimate (upper bound) of Bayes error.  </p>
+<p>Error analysis example (which human-err to pick to estimate avoidable bias):<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image018.png"/> </p>
 <h3 id="surpassing-human-level-performance">Surpassing human-level performance</h3>
-<p>What's the avoidable bias when err_train and err_dev are smaller than err_human ?<br>
-→ less clear in choosing directions.  </br></p>
-<p>examples of tasks where ML &gt;&gt; human performance:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image019.png"><br>
-⇒ all these tasks are:  </br></img></br></p>
+<p>What's the avoidable bias when err_train and err_dev are smaller than err_human ?<br/>
+→ less clear in choosing directions.  </p>
+<p>examples of tasks where ML &gt;&gt; human performance:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image019.png"/><br/>
+⇒ all these tasks are:  </p>
 <ul>
 <li>learned from structured data  </li>
 <li>are not natural perception tasks  </li>
@@ -326,8 +350,8 @@ exapmle: compare training set error with human performance.  </br></p>
 <li>You can fit training set well (achieve to ~= avoidable bias)  </li>
 <li>The performance on training set generalize well to dev/test sets. (achieve low variance)  </li>
 </ul>
-<p>The big roadmap:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image020.png"> </img></br></p>
+<p>The big roadmap:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c3wk1/pasted_image020.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

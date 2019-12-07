@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Introduction rearanging array of size N into ascending order test client code: Insertion.sort(a); sort any datatype callback callback = reference to executable code i.e. passing functions as argument to sort() method sort() function calls object&#39;s compareTo() method → implement the Comparable interface: public class XX implements Comparable …" />
+        <meta name="description" content="1. Introduction callback helper functions 2. Selection Sort invariants implementation analysis 3. Insertion sort invariants implementation analysis best case and worst case partially sorted arrays 4. Shell Sort implementation analysis of compares &lt; Cte * N * (# of h used ) 5. shuffling shuffle array using sort Knuth shuffle example: online poker 6. Convex ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week 2-2 Elementary Sorts"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week2_2.html"/>
-        <meta property="og:description" content="[TOC] 1. Introduction rearanging array of size N into ascending order test client code: Insertion.sort(a); sort any datatype callback callback = reference to executable code i.e. passing functions as argument to sort() method sort() function calls object&#39;s compareTo() method → implement the Comparable interface: public class XX implements Comparable …"/>
+        <meta property="og:description" content="1. Introduction callback helper functions 2. Selection Sort invariants implementation analysis 3. Insertion sort invariants implementation analysis best case and worst case partially sorted arrays 4. Shell Sort implementation analysis of compares &lt; Cte * N * (# of h used ) 5. shuffling shuffle array using sort Knuth shuffle example: online poker 6. Convex ..."/>
         <meta property="article:published_time" content="2015-08-18" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,34 +210,76 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 2-2 Elementary Sorts">[Algorithms I] Week 2-2 Elementary Sorts</a><ul><li><a class="toc-href" href="#1-introduction" title="1. Introduction">1. Introduction</a><ul><li><a class="toc-href" href="#callback" title="callback">callback</a></li><li><a class="toc-href" href="#helper-functions" title="helper functions">helper functions</a></li></ul></li><li><a class="toc-href" href="#2-selection-sort_1" title="2. Selection Sort">2. Selection Sort</a><ul><li><a class="toc-href" href="#invariants" title="invariants">invariants</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-insertion-sort_1" title="3. Insertion sort">3. Insertion sort</a><ul><li><a class="toc-href" href="#invariants_1" title="invariants">invariants</a></li><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a><ul><li><a class="toc-href" href="#best-case-and-worst-case" title="best case and worst case">best case and worst case</a></li><li><a class="toc-href" href="#partially-sorted-arrays" title="partially  sorted arrays">partially  sorted arrays</a></li></ul></li></ul></li><li><a class="toc-href" href="#4-shell-sort_2" title="4. Shell Sort">4. Shell Sort</a><ul><li><a class="toc-href" href="#implementation_2" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_2" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#of-compares-cte-n-of-h-used_1" title="of compares &lt; Cte * N * (# of h used )">of compares &lt; Cte * N * (# of h used )</a></li><li><a class="toc-href" href="#5-shuffling" title="5. shuffling">5. shuffling</a><ul><li><a class="toc-href" href="#shuffle-array-using-sort" title="shuffle array using sort">shuffle array using sort</a></li><li><a class="toc-href" href="#knuth-shuffle" title="Knuth shuffle">Knuth shuffle</a></li><li><a class="toc-href" href="#example-online-poker" title="example: online poker">example: online poker</a></li></ul></li><li><a class="toc-href" href="#6-convex-hull_1" title="6. Convex Hull">6. Convex Hull</a><ul><li><a class="toc-href" href="#convex-hull" title="convex hull">convex hull</a></li><li><a class="toc-href" href="#algo" title="Algo">Algo</a></li><li><a class="toc-href" href="#implementation_3" title="implementation">implementation</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-introduction">1. Introduction</a><ul>
+<li><a href="#callback">callback</a></li>
+<li><a href="#helper-functions">helper functions</a></li>
+</ul>
+</li>
+<li><a href="#2-selection-sort">2. Selection Sort</a><ul>
+<li><a href="#invariants">invariants</a></li>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#3-insertion-sort">3. Insertion sort</a><ul>
+<li><a href="#invariants_1">invariants</a></li>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#analysis_1">analysis</a><ul>
+<li><a href="#best-case-and-worst-case">best case and worst case</a></li>
+<li><a href="#partially-sorted-arrays">partially  sorted arrays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-shell-sort">4. Shell Sort</a><ul>
+<li><a href="#implementation_2">implementation</a></li>
+<li><a href="#analysis_2">analysis</a></li>
+</ul>
+</li>
+<li><a href="#of-compares-cte-n-of-h-used">of compares &lt; Cte * N * (# of h used )</a></li>
+<li><a href="#5-shuffling">5. shuffling</a><ul>
+<li><a href="#shuffle-array-using-sort">shuffle array using sort</a></li>
+<li><a href="#knuth-shuffle">Knuth shuffle</a></li>
+<li><a href="#example-online-poker">example: online poker</a></li>
+</ul>
+</li>
+<li><a href="#6-convex-hull">6. Convex Hull</a><ul>
+<li><a href="#convex-hull">convex hull</a></li>
+<li><a href="#algo">Algo</a></li>
+<li><a href="#implementation_3">implementation</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-introduction">1. Introduction</h1>
-<p>rearanging array of size N into ascending order <br>
-test client code: <code>Insertion.sort(a);</code> </br></p>
+<p>rearanging array of size N into ascending order <br/>
+test client code: <code>Insertion.sort(a);</code> </p>
 <p>sort <em>any</em> datatype </p>
 <h3 id="callback">callback</h3>
-<p><em>callback = reference to executable code</em> <br>
-i.e. passing functions as argument to sort() method<br>
-sort() function calls object's <code>compareTo()</code> method  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image.png"> <br>
-→ implement the <code>Comparable</code> interface:    </br></img></br></br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public class XX implements Comparable&lt;XX&gt;{</span>
-<span class="code-line">    ...</span>
-<span class="code-line">    }</span>
+<p><em>callback = reference to executable code</em> <br/>
+i.e. passing functions as argument to sort() method<br/>
+sort() function calls object's <code>compareTo()</code> method  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image.png"/> <br/>
+→ implement the <code>Comparable</code> interface:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">    public class XX implements Comparable&lt;XX&gt;{</span></span>
+<span class="code-line"><span class="err">    ...</span></span>
+<span class="code-line"><span class="err">    }</span></span>
 </pre></div>
 <p>the interface: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public interface Comparable&lt;Item&gt;{</span>
-<span class="code-line">        public int compareTo(Item that);</span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">    public interface Comparable&lt;Item&gt;{</span></span>
+<span class="code-line"><span class="err">        public int compareTo(Item that);</span></span>
+<span class="code-line"><span class="err">    }</span></span>
 </pre></div>
-<p>compareTo():<br>
+<p>compareTo():<br/>
 return -1 (if this&lt;that)/+1/0; 
 needs a <em>total order.</em> 
-→ in the sort() implementation:<br>
-has not dependencies on type of data.  </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public static void sort(Comparable[] a){</span>
-<span class="code-line">        if(a[i].compareTo(a[j])&gt;0)...</span>
-<span class="code-line">    }</span>
+→ in the sort() implementation:<br/>
+has not dependencies on type of data.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)...</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="helper-functions">helper functions</h3>
 <ul>
@@ -263,26 +305,26 @@ returnv.compareTo(u)&lt;0;
 if algo passes the test using only less ant swap, then it's correct. </p>
 <h1 id="2-selection-sort_1">2. Selection Sort</h1>
 <p>Idea: each time<em>: find the minimum from the remaining items.</em>
-<strong>a[min] is the smallest element to right of a[i] ⇒ swap a[i] and a[min]</strong> (elements to left of i are sorted) <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image002.png"> </img></br></p>
+<strong>a[min] is the smallest element to right of a[i] ⇒ swap a[i] and a[min]</strong> (elements to left of i are sorted) <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image002.png"/> </p>
 <h2 id="invariants">invariants</h2>
 <ul>
 <li>entries to the left of i are in sorted order, and are fixed (<em>in final position</em>) ever since</li>
 <li>no entry to the right of i is smaller than any entry to the left of i</li>
 </ul>
 <h2 id="implementation">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class SelectionSort extends AbstractSorting{</span>
-<span class="code-line">//...</span>
-<span class="code-line">public static void sort(Comparable[] a){</span>
-<span class="code-line">    for(int i = 0; i&lt;a.length; i++){</span>
-<span class="code-line">        int min = i;</span>
-<span class="code-line">        for(int j = i+1; j&lt;a.length; j++)</span>
-<span class="code-line">            if(less(a[j],a[min])) </span>
-<span class="code-line">                min = j;</span>
-<span class="code-line">        exch(a,min,i);</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">SelectionSort</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">AbstractSorting</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="p">...</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="nf">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">,</span><span class="n">a</span><span class="o">[</span><span class="n">min</span><span class="o">]</span><span class="p">))</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">                </span><span class="nf">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="nf">min</span><span class="p">,</span><span class="n">i</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="analysis">analysis</h2>
 <p><strong>proposition:</strong>
@@ -295,34 +337,34 @@ selection sort uses <em>N-1 + N-2 + ... + 1 = ~N^2/2</em> compares, and <em>N</e
 </ul>
 <h1 id="3-insertion-sort_1">3. Insertion sort</h1>
 <p>quite different performance characteritics than selection sort. </p>
-<p>Idea: <strong>In iteration i: move all entries larger than a[i] to its left.</strong> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image004.png"> </img></br></p>
+<p>Idea: <strong>In iteration i: move all entries larger than a[i] to its left.</strong> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image004.png"/> </p>
 <h2 id="invariants_1">invariants</h2>
 <ul>
 <li>entries to the left of i are in ascending order (but <em>not</em> in final position)</li>
 <li>entries to the right of i are not yet been seen   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image005.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image005.png"/> </p>
 <h2 id="implementation_1">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>publc class InsertionSorting extends AbstractSorting{</span>
-<span class="code-line">    public static void sort(Comparable[] a){</span>
-<span class="code-line">        for(int i=1; i&lt;a.length; i++)</span>
-<span class="code-line">            for(int j=i; j&gt;0; j--){</span>
-<span class="code-line">                if(less(a[j],a[j-1]))</span>
-<span class="code-line">                    exch(a,j,j-1);</span>
-<span class="code-line">                else break;</span>
-<span class="code-line">            }</span>
-<span class="code-line">    }</span>
-<span class="code-line">    //...</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">publc</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">InsertionSorting</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">AbstractSorting</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="c1">--){</span></span>
+<span class="code-line"><span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">,</span><span class="n">a</span><span class="o">[</span><span class="n">j-1</span><span class="o">]</span><span class="p">))</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                    </span><span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="k">else</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="p">...</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="analysis_1">analysis</h2>
-<p><strong>proposition </strong>(average case): <br>
-(the performance <em>on average</em> — <em>for randomly sorted array</em> ) <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image007.png"> <br>
+<p><strong>proposition </strong>(average case): <br/>
+(the performance <em>on average</em> — <em>for randomly sorted array</em> ) <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image007.png"/> <br/>
 <em>proof:</em>
-<em>expect each entry to move halfway back</em> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image008.png"> </img></br></br></img></br></br></p>
+<em>expect each entry to move halfway back</em> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image008.png"/> </p>
 <h3 id="best-case-and-worst-case">best case and worst case</h3>
 <p><strong>best case</strong>
 if array already sorted min ascending order: 
@@ -333,64 +375,64 @@ every element goes all the way back → 1/2<em>N^2 compares,  1/2</em>N^2 exchan
 <h3 id="partially-sorted-arrays">partially  sorted arrays</h3>
 <p>def.<strong>" inversion"</strong>
 an inversion is a pair of entries that are out of order. </p>
-<p>def. <strong>"partially sorted"</strong><br>
-An array is called partially sorted if the <em>number of inversions is &lt;= c</em>N. *</br></p>
-<p><strong>proposition. </strong><br>
+<p>def. <strong>"partially sorted"</strong><br/>
+An array is called partially sorted if the <em>number of inversions is &lt;= c</em>N. *</p>
+<p><strong>proposition. </strong><br/>
 <strong>Insertion sort runs in linear time for partially sorted array.</strong>
 <em>proof.</em>
 <em>number of exchanges = number of inversions. </em>
-<em>number of compares = number of exchanges + N-1</em></br></p>
+<em>number of compares = number of exchanges + N-1</em></p>
 <h1 id="4-shell-sort_2">4. Shell Sort</h1>
 <p>First non-trival sorting methode: an improvement of insertion sort. </p>
-<p>def. <strong>"h-sorted array"</strong><br>
-an array is h-sorted if every h-interleaved subarray is sorted. (h=1: just a sorted array)  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image009.png"> </img></br></br></p>
+<p>def. <strong>"h-sorted array"</strong><br/>
+an array is h-sorted if every h-interleaved subarray is sorted. (h=1: just a sorted array)  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image009.png"/> </p>
 <p>Idea: move entries &gt;1 position at a time by <em>h-sorting</em> the array, then decrease h.   </p>
-<p>use decreasing sequences of value h:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image010.png"> </img></br></p>
+<p>use decreasing sequences of value h:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image010.png"/> </p>
 <h2 id="implementation_2">implementation</h2>
-<p><strong>How to h -sort  </strong><br>
-simply insertion sort with <em>stride length=h</em>.<br>
-why insertion sort: <br>
-for big h: small subarray <br>
-for small h: nearly in order   </br></br></br></br></p>
-<p><strong>proposition</strong><br>
-A g-sorted array <em>remains g-sorted</em> after h-sorting it.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image011.png"> <br>
-(subtle to prove...)  </br></img></br></br></p>
+<p><strong>How to h -sort  </strong><br/>
+simply insertion sort with <em>stride length=h</em>.<br/>
+why insertion sort: <br/>
+for big h: small subarray <br/>
+for small h: nearly in order   </p>
+<p><strong>proposition</strong><br/>
+A g-sorted array <em>remains g-sorted</em> after h-sorting it.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image011.png"/> <br/>
+(subtle to prove...)  </p>
 <p><strong>which sequence of h to use</strong>
 <code>3x+1</code> sequence proposed by Knuth. <em>1,4,13,40....</em></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class ShellSort extends AbstractSort{</span>
-<span class="code-line">    public static void sort(Comparable[] a){</span>
-<span class="code-line">        int h = 1, N=a.length;</span>
-<span class="code-line">        while(h&lt;N/3) h = h*3+1;//find the beginning h (N&gt;h&gt;N/3)</span>
-<span class="code-line">        while(h&gt;=1){//performs h-sort</span>
-<span class="code-line">            for(int i= h;i&lt;N;i+=h)</span>
-<span class="code-line">                for(int j = i;j-h&gt;=0;j-=h)</span>
-<span class="code-line">                    if( less(a[j],a[j-h]) )</span>
-<span class="code-line">                        exch(a,j,j-h)</span>
-<span class="code-line">                    else break;</span>
-<span class="code-line">            h = h/3;</span>
-<span class="code-line">        }</span>
-<span class="code-line">    }</span>
-<span class="code-line">    //...</span>
-<span class="code-line">    private static boolean isHsorted(Comparable[] a, int h) {</span>
-<span class="code-line">        for (int i = h; i &lt; a.length; i++)</span>
-<span class="code-line">            if (less(a[i], a[i-h])) return false;</span>
-<span class="code-line">        return true;</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">ShellSort</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="n">AbstractSort</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">sort</span><span class="p">(</span><span class="n">Comparable</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">h</span><span class="o">&lt;</span><span class="n">N</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="o">//</span><span class="n">find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">beginning</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="p">(</span><span class="n">N</span><span class="o">&gt;</span><span class="n">h</span><span class="o">&gt;</span><span class="n">N</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">h</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">)</span><span class="err">{</span><span class="o">//</span><span class="n">performs</span><span class="w"> </span><span class="n">h</span><span class="o">-</span><span class="n">sort</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">+=</span><span class="n">h</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">-</span><span class="n">h</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">-=</span><span class="n">h</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                    </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">,</span><span class="n">a</span><span class="o">[</span><span class="n">j-h</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                        </span><span class="n">exch</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="n">h</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                    </span><span class="k">else</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="p">...</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">isHsorted</span><span class="p">(</span><span class="n">Comparable</span><span class="err">[]</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">h</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">less</span><span class="p">(</span><span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">i-h</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>每次hsort, 外围的循环是<code>for(int i= h;i&lt;N;i+=h)</code>, 需要理解一下: i移动一次以后, 进行的是另一个subarray 的插入排序, 当移动到N-1的时候所有subarray的插入排序才结束. (也就是说不是先完成一个subarray的插入排序再完成另一个, 这些是插入排序是同步进行的)</p>
 <h2 id="analysis_2">analysis</h2>
-<p><strong>proposition (for worst case   )</strong><br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image012.png"> <br>
-→ better than quadratic time !     </br></img></br></p>
+<p><strong>proposition (for worst case   )</strong><br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image012.png"/> <br/>
+→ better than quadratic time !     </p>
 <p><strong>property  (found in practice)</strong></p>
 <h1 id="of-compares-cte-n-of-h-used_1">of compares &lt; Cte * N * (# of <em>h</em> used )</h1>
-<p>→ #compares &lt; NlgN * Cte <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image013.png"> <br>
-*accurate model has not been discovered  *</br></img></br></p>
+<p>→ #compares &lt; NlgN * Cte <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image013.png"/> <br/>
+*accurate model has not been discovered  *</p>
 <p>(所以shellsort在实际使用中几乎和快速排序一样快! — 尽管没有数学证明来保证)</p>
 <p><strong>why we are interested in shell sort</strong>
 useful in practice: </p>
@@ -412,39 +454,39 @@ useful in practice: </p>
 <li>sort the array of real numbers</li>
 <li>⇒ the original array is shuffled !</li>
 </ol>
-<p><strong>proposition  </strong><br>
-this shuffle sort produces a uniformly random permutation of input array <br>
-<em>drawback:  cost for sorting...</em></br></br></p>
+<p><strong>proposition  </strong><br/>
+this shuffle sort produces a uniformly random permutation of input array <br/>
+<em>drawback:  cost for sorting...</em></p>
 <p>Goal: get uniformly random permutation in <em>linear time</em>.   </p>
 <h2 id="knuth-shuffle">Knuth shuffle</h2>
 <p>algo:  </p>
 <blockquote>
-<p>for i = [0,N):<br>
-    - r = rand( [0~i<strong>]</strong> ) or rand( <strong>[</strong>i, N-1] ) <br>
-    - swap a[r] and a[i]   </br></br></p>
+<p>for i = [0,N):<br/>
+    - r = rand( [0~i<strong>]</strong> ) or rand( <strong>[</strong>i, N-1] ) <br/>
+    - swap a[r] and a[i]   </p>
 </blockquote>
 <p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image014.png"/></p>
 <p>implementation: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static void shuffle(Object[] a){</span>
-<span class="code-line">    for(int i=0;i&lt;a.length;i++){</span>
-<span class="code-line">        int r = StdRandom.uniform(i+1);</span>
-<span class="code-line">        exch(a,r,i);</span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static void shuffle(Object[] a){</span></span>
+<span class="code-line"><span class="err">    for(int i=0;i&lt;a.length;i++){</span></span>
+<span class="code-line"><span class="err">        int r = StdRandom.uniform(i+1);</span></span>
+<span class="code-line"><span class="err">        exch(a,r,i);</span></span>
+<span class="code-line"><span class="err">    }   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p><strong>proposition</strong><br>
-Knuth algo produces an uniformly random permutation of input array. </br></p>
-<p><em>proof.</em><br>
-Sufficient to prove that, for card i and position j, the proba(card i comes to position j) = 1/N. </br></p>
+<p><strong>proposition</strong><br/>
+Knuth algo produces an uniformly random permutation of input array. </p>
+<p><em>proof.</em><br/>
+Sufficient to prove that, for card i and position j, the proba(card i comes to position j) = 1/N. </p>
 <ol>
 <li>if i&lt;=j, P = 1/j * j/(j+1) * (j+1)/(j+2) * ... * (N-1)/N</li>
 <li>if j&lt;i, P = 1/i * i/(i+1) * (i+1)/(i+2) * ... * (N-1)/N</li>
 </ol>
 <p>CQFD.</p>
 <h2 id="example-online-poker">example: online poker</h2>
-<p><a href="https://www.cigital.com/papers/download/developer_gambling.php">https://www.cigital.com/papers/download/developer_gambling.php</a>  ←那个扑克网站已经被黑出翔了...  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image015.png"> <br>
-bugs: </br></img></br></p>
+<p><a href="https://www.cigital.com/papers/download/developer_gambling.php">https://www.cigital.com/papers/download/developer_gambling.php</a>  ←那个扑克网站已经被黑出翔了...  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image015.png"/> <br/>
+bugs: </p>
 <ol>
 <li>r never get 52 (52th card never moved)</li>
 <li>r = rand(N) instead of rand(0~i), → shuffle not uniform</li>
@@ -454,8 +496,8 @@ bugs: </br></img></br></p>
 <h1 id="6-convex-hull_1">6. Convex Hull</h1>
 <p>application of sorting for the field of computational geometry.  </p>
 <h2 id="convex-hull">convex hull</h2>
-<p>smallest polygoneenclosing all N points. <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image017.png"> </img></br></p>
+<p>smallest polygoneenclosing all N points. <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image017.png"/> </p>
 <ul>
 <li>input: N points</li>
 <li>output: sequence of <em>vertices</em> in counterclockwise (<em>ccw</em>) order. </li>
@@ -466,49 +508,49 @@ bugs: </br></img></br></p>
 <li>can traverse convex hull by making only ccw turns</li>
 <li>let p be the point with lowest y-coord, wrt p, vertices appear in increasing order of polar angle.   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image018.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image018.png"/> </p>
 <h2 id="algo">Algo</h2>
 <blockquote>
-<p><strong>Graham scan algorithm:</strong><br>
-    * choose p with smallest y coord <br>
-    * <em>sort points by polar angle</em> with p <br>
-    * consider points in order (stack is used), <em>discard unless creates a ccw turn</em>.   </br></br></br></p>
+<p><strong>Graham scan algorithm:</strong><br/>
+    * choose p with smallest y coord <br/>
+    * <em>sort points by polar angle</em> with p <br/>
+    * consider points in order (stack is used), <em>discard unless creates a ccw turn</em>.   </p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image019.png"> <img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image020.png"> <img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image021.png"> </img></img></img></p>
-<p><strong>CCW</strong> <br>
-given three points a b c, returns if a→b→c is a CCW turn.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image023.png"> <br>
-(assumption: no 3 points on a line)<br>
- ⇒ calculate <em>cross product of ab and bc ⇒ determinants!</em> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image024.png"> <br>
-area&gt;0 ⇔ CCW   </br></img></br></br></br></img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image019.png"/> <img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image020.png"/> <img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image021.png"/> </p>
+<p><strong>CCW</strong> <br/>
+given three points a b c, returns if a→b→c is a CCW turn.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image023.png"/> <br/>
+(assumption: no 3 points on a line)<br/>
+ ⇒ calculate <em>cross product of ab and bc ⇒ determinants!</em> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week2_2/pasted_image024.png"/> <br/>
+area&gt;0 ⇔ CCW   </p>
 <h2 id="implementation_3">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class Point2D{</span>
-<span class="code-line">private double x,y;</span>
-<span class="code-line">public static boolean ccw(Point2D a,Point2D b,Point2D c){</span>
-<span class="code-line">    double area2 = (b.x-a.x)*(c.y-a.y) - (b.y-a.y)*(c.x-a.x);</span>
-<span class="code-line">    return area2&gt;0;</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span> <span class="k">class</span> <span class="n">Point2D</span><span class="err">{</span></span>
+<span class="code-line"><span class="n">private</span> <span class="n">double</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">;</span></span>
+<span class="code-line"><span class="k">public</span> <span class="k">static</span> <span class="nb">boolean</span> <span class="n">ccw</span><span class="p">(</span><span class="n">Point2D</span> <span class="n">a</span><span class="p">,</span><span class="n">Point2D</span> <span class="n">b</span><span class="p">,</span><span class="n">Point2D</span> <span class="k">c</span><span class="p">)</span><span class="err">{</span></span>
+<span class="code-line">    <span class="n">double</span> <span class="n">area2</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">x</span><span class="o">-</span><span class="n">a</span><span class="p">.</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">y</span><span class="o">-</span><span class="n">a</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">y</span><span class="o">-</span><span class="n">a</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="k">c</span><span class="p">.</span><span class="n">x</span><span class="o">-</span><span class="n">a</span><span class="p">.</span><span class="n">x</span><span class="p">);</span></span>
+<span class="code-line">    <span class="k">return</span> <span class="n">area2</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">;</span></span>
+<span class="code-line"><span class="err">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>convex hull:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static Stack&lt;Point2D&gt; GrahamScan(Point2D[] p){</span>
-<span class="code-line">    //* assumes that points are sorted by polar angle in p[]</span>
-<span class="code-line">    Stack&lt;Point2D&gt; hull = new Stack&lt;Point2D&gt;();</span>
-<span class="code-line">    hull.push(p[0]);</span>
-<span class="code-line">    hull.push(p[1]);</span>
-<span class="code-line">    for(int i=2;i&lt;p.length;i++){</span>
-<span class="code-line">        Point2D b = hull.pop(), a = hull.peek(), c = p[i];</span>
-<span class="code-line">        while(!Point2D.ccw(a,b,c)){</span>
-<span class="code-line">            b = hull.pop();</span>
-<span class="code-line">            a = hull.peek();</span>
-<span class="code-line">        }</span>
-<span class="code-line">        //now a,b,c makes a ccw turn:</span>
-<span class="code-line">        hull.push(b);</span>
-<span class="code-line">        hull.push(c);</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">Point2D</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GrahamScan</span><span class="p">(</span><span class="n">Point2D</span><span class="err">[]</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">/</span><span class="cm">/* assumes that points are sorted by polar angle in p[]</span></span>
+<span class="code-line"><span class="cm">    Stack&lt;Point2D&gt; hull = new Stack&lt;Point2D&gt;();</span></span>
+<span class="code-line"><span class="cm">    hull.push(p[0]);</span></span>
+<span class="code-line"><span class="cm">    hull.push(p[1]);</span></span>
+<span class="code-line"><span class="cm">    for(int i=2;i&lt;p.length;i++){</span></span>
+<span class="code-line"><span class="cm">        Point2D b = hull.pop(), a = hull.peek(), c = p[i];</span></span>
+<span class="code-line"><span class="cm">        while(!Point2D.ccw(a,b,c)){</span></span>
+<span class="code-line"><span class="cm">            b = hull.pop();</span></span>
+<span class="code-line"><span class="cm">            a = hull.peek();</span></span>
+<span class="code-line"><span class="cm">        }</span></span>
+<span class="code-line"><span class="cm">        //now a,b,c makes a ccw turn:</span></span>
+<span class="code-line"><span class="cm">        hull.push(b);</span></span>
+<span class="code-line"><span class="cm">        hull.push(c);</span></span>
+<span class="code-line"><span class="cm">    }</span></span>
+<span class="code-line"><span class="cm">}</span></span>
 </pre></div>
 <p>running time: <em>NlgN for sorting and linear for the rest.</em> </p>
             </div>

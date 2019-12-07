@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="R" />
-        <meta name="description" content="[TOC] R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median …" />
+        <meta name="description" content="Theory linear model Nadaraya-Watson kernel smoother Local Polynomial smoother Smoothing Spline fit model formula fit models predict, fitted/residuals bandwidth&amp;df: Hat Matrix CV and Hat Matrix R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="R语言从入门到放弃 (4). 统计回归"/>
         <meta property="og:url" content="http://x-wei.github.io/Rnotes-4-regression.html"/>
-        <meta property="og:description" content="[TOC] R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median …"/>
+        <meta property="og:description" content="Theory linear model Nadaraya-Watson kernel smoother Local Polynomial smoother Smoothing Spline fit model formula fit models predict, fitted/residuals bandwidth&amp;df: Hat Matrix CV and Hat Matrix R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m ..."/>
         <meta property="article:published_time" content="2016-07-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="R" />
@@ -210,22 +210,40 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="R语言从入门到放弃 (4). 统计回归">R语言从入门到放弃 (4). 统计回归</a><ul><li><a class="toc-href" href="#theory" title="Theory">Theory</a><ul><li><a class="toc-href" href="#linear-model" title="linear model">linear model</a></li><li><a class="toc-href" href="#nadaraya-watson-kernel-smoother" title="Nadaraya-Watson kernel smoother">Nadaraya-Watson kernel smoother</a></li><li><a class="toc-href" href="#local-polynomial-smoother" title="Local Polynomial smoother">Local Polynomial smoother</a></li><li><a class="toc-href" href="#smoothing-spline" title="Smoothing Spline">Smoothing Spline</a></li></ul></li><li><a class="toc-href" href="#fit-model_1" title="fit model">fit model</a><ul><li><a class="toc-href" href="#formula" title="formula">formula</a></li><li><a class="toc-href" href="#fit-models" title="fit models">fit models</a></li></ul></li><li><a class="toc-href" href="#predict-fittedresiduals_1" title="predict, fitted/residuals">predict, fitted/residuals</a></li><li><a class="toc-href" href="#bandwidthdf-hat-matrix" title="bandwidth&amp;df: Hat Matrix">bandwidth&amp;df;: Hat Matrix</a></li><li><a class="toc-href" href="#cv-and-hat-matrix" title="CV and Hat Matrix">CV and Hat Matrix</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#theory">Theory</a><ul>
+<li><a href="#linear-model">linear model</a></li>
+<li><a href="#nadaraya-watson-kernel-smoother">Nadaraya-Watson kernel smoother</a></li>
+<li><a href="#local-polynomial-smoother">Local Polynomial smoother</a></li>
+<li><a href="#smoothing-spline">Smoothing Spline</a></li>
+</ul>
+</li>
+<li><a href="#fit-model">fit model</a><ul>
+<li><a href="#formula">formula</a></li>
+<li><a href="#fit-models">fit models</a></li>
+</ul>
+</li>
+<li><a href="#predict-fittedresiduals">predict, fitted/residuals</a></li>
+<li><a href="#bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</a></li>
+<li><a href="#cv-and-hat-matrix">CV and Hat Matrix</a></li>
+</ul>
+</div>
 <p>R里面的统计函数有很多, 这里只用线性模型<code>lm</code>以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(<strong>NW, </strong><code>ksmooth</code>), Local Polynomial(<strong>LP, </strong><code>loess</code>), Smoothing Spline(<strong>SS, </strong><code>smooth.spline</code>). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. </p>
 <p>数据的形式是:　</p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image002.png"/></p>
 <p>目标是估计函数m(). 例子使用R自带的<code>cars</code>数据集, 它包含两列: 汽车速度speed和刹车距离dist. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt; data(cars)</span>
-<span class="code-line">&gt; summary(cars)</span>
-<span class="code-line">     speed           dist       </span>
-<span class="code-line"> Min.   : 4.0   Min.   :  2.00  </span>
-<span class="code-line"> 1st Qu.:12.0   1st Qu.: 26.00  </span>
-<span class="code-line"> Median :15.0   Median : 36.00  </span>
-<span class="code-line"> Mean   :15.4   Mean   : 42.98  </span>
-<span class="code-line"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span>
-<span class="code-line"> Max.   :25.0   Max.   :120.00  </span>
-<span class="code-line">&gt; ?cars</span>
-<span class="code-line">&gt; plot(cars$speed, cars$dist)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt; data(cars)</span></span>
+<span class="code-line"><span class="err">&gt; summary(cars)</span></span>
+<span class="code-line"><span class="err">     speed           dist       </span></span>
+<span class="code-line"><span class="err"> Min.   : 4.0   Min.   :  2.00  </span></span>
+<span class="code-line"><span class="err"> 1st Qu.:12.0   1st Qu.: 26.00  </span></span>
+<span class="code-line"><span class="err"> Median :15.0   Median : 36.00  </span></span>
+<span class="code-line"><span class="err"> Mean   :15.4   Mean   : 42.98  </span></span>
+<span class="code-line"><span class="err"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span></span>
+<span class="code-line"><span class="err"> Max.   :25.0   Max.   :120.00  </span></span>
+<span class="code-line"><span class="err">&gt; ?cars</span></span>
+<span class="code-line"><span class="err">&gt; plot(cars$speed, cars$dist)</span></span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image003.png"/></p>
 <h1 id="theory">Theory</h1>
@@ -258,38 +276,38 @@ mx's blog            </a>
 </ul>
 <h3 id="fit-models">fit models</h3>
 <p>这几个函数的fit写法各不相同, 有的要提供formula, 有的要提供x和y值, 需要看文档: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>fit.lm <span class="o">&lt;-</span> lm<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span></span>
-<span class="code-line">fit.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">)</span></span>
-<span class="code-line">fit.lp <span class="o">&lt;-</span> loess<span class="p">(</span>dist<span class="o">~</span>speed<span class="p">,</span> data<span class="o">=</span>cars<span class="p">)</span></span>
-<span class="code-line">fit.ss <span class="o">&lt;-</span> smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">fit.lm</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fit.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fit.lp</span> <span class="o">&lt;-</span> <span class="nf">loess</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fit.ss</span> <span class="o">&lt;-</span> <span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span></span>
 </pre></div>
 <h1 id="predict-fittedresiduals_1">predict, fitted/residuals</h1>
 <p>predict的写法也是各不相同, 一般都是用<code>predict</code>函数, 然而这个函数在作用到不同smoother上面, 参数和返回值也都不一样......orz 关于<code>xx</code>smoother的predict函数用法参考?<code>predict.xx</code>. 最奇葩的是NW, 它不能用<code>predict</code>函数, 而要fit的时候在<code>skmooth</code>函数里传入<code>x.points</code>参数... </p>
 <p>看predict例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>newspeed <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">26</span></span>
-<span class="code-line">pred.lm <span class="o">&lt;-</span> predict<span class="p">(</span>fit.lm<span class="p">,</span> newdata <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>speed <span class="o">=</span> newspeed<span class="p">),</span> interval <span class="o">=</span> <span class="s">"prediction"</span><span class="p">)[,</span><span class="s">"fit"</span><span class="p">]</span></span>
-<span class="code-line">pred.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>newspeed<span class="p">)</span><span class="o">$</span>y</span>
-<span class="code-line">pred.lp <span class="o">&lt;-</span> predict<span class="p">(</span>fit.lp<span class="p">,</span> newdata<span class="o">=</span>newspeed<span class="p">)</span></span>
-<span class="code-line">pred.ss <span class="o">&lt;-</span> predict<span class="p">(</span>fit.ss<span class="p">,</span> x<span class="o">=</span>newspeed<span class="p">)</span><span class="o">$</span>y</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">newspeed</span> <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">26</span></span>
+<span class="code-line"><span class="n">pred.lm</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">,</span> <span class="n">newdata</span> <span class="o">=</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">speed</span> <span class="o">=</span> <span class="n">newspeed</span><span class="p">),</span> <span class="n">interval</span> <span class="o">=</span> <span class="s">"prediction"</span><span class="p">)</span><span class="n">[</span><span class="p">,</span><span class="s">"fit"</span><span class="n">]</span></span>
+<span class="code-line"><span class="n">pred.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="n">pred.lp</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">,</span> <span class="n">newdata</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">pred.ss</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
 </pre></div>
 <p>另外, 如果想看smoother在design points(Xi)处的预测值, 可以用<code>fitted</code>函数(NW还是不能用), 例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>fitted.lm <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.lm<span class="p">)</span></span>
-<span class="code-line">fitted.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>cars<span class="o">$</span>speed<span class="p">)</span><span class="o">$</span>y</span>
-<span class="code-line">fitted.lp <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.lp<span class="p">)</span></span>
-<span class="code-line">fitted.ss <span class="o">&lt;-</span> fitted<span class="p">(</span>fit.ss<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">fitted.lm</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fitted.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="n">fitted.lp</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fitted.ss</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
 </pre></div>
 <p>要看每个点的residual ri=yi-yhat_i, 用<code>residuals</code>函数(NW不行):</p>
-<div class="highlight"><pre><span class="code-line"><span></span>resd.lm <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.lm<span class="p">)</span></span>
-<span class="code-line">resd.nw <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> cars<span class="o">$</span>dist<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>cars<span class="o">$</span>dist<span class="p">)</span><span class="o">$</span>y <span class="o">-</span> cars<span class="o">$</span>dist </span>
-<span class="code-line">resd.lp <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.lp<span class="p">)</span></span>
-<span class="code-line">resd.ss <span class="o">&lt;-</span> residuals<span class="p">(</span>fit.ss<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">resd.lm</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">resd.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span><span class="o">$</span><span class="n">y</span> <span class="o">-</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span> </span>
+<span class="code-line"><span class="n">resd.lp</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">resd.ss</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
 </pre></div>
 <p>可以画出这几个方法的fit: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>abline(fit.lm, lty=1, col=1) # linear model is just a straigh line</span>
-<span class="code-line">lines(newspeed, pred.nw, lty=2, col=2)</span>
-<span class="code-line">lines(newspeed, pred.lp, lty=3, col=3)</span>
-<span class="code-line">lines(newspeed, pred.ss, lty=4, col=4)</span>
-<span class="code-line">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">abline(fit.lm, lty=1, col=1) # linear model is just a straigh line</span></span>
+<span class="code-line"><span class="err">lines(newspeed, pred.nw, lty=2, col=2)</span></span>
+<span class="code-line"><span class="err">lines(newspeed, pred.lp, lty=3, col=3)</span></span>
+<span class="code-line"><span class="err">lines(newspeed, pred.ss, lty=4, col=4)</span></span>
+<span class="code-line"><span class="err">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span></span>
 </pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image009.png"/></p>
 <h1 id="bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</h1>
@@ -301,95 +319,95 @@ mx's blog            </a>
 <p>根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image012.png"/></p>
 <p>所以计算S可以用下面的代码: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>n <span class="o">&lt;-</span> <span class="kp">nrow</span><span class="p">(</span>cars<span class="p">)</span></span>
-<span class="code-line">Snw <span class="o">&lt;-</span> Slp <span class="o">&lt;-</span> Sss <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> nrow<span class="o">=</span>n<span class="p">,</span> ncol<span class="o">=</span>n<span class="p">)</span></span>
-<span class="code-line">In <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>n<span class="p">)</span> <span class="c1"># identity matrix</span></span>
-<span class="code-line"><span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">){</span></span>
-<span class="code-line">  y <span class="o">&lt;-</span> In<span class="p">[,</span>j<span class="p">]</span> <span class="c1"># unit vector ej</span></span>
-<span class="code-line">  Snw<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> ksmooth<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span>y<span class="p">,</span>kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> bandwidth <span class="o">=</span> <span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>x<span class="p">)</span><span class="o">$</span>y</span>
-<span class="code-line">  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>loess<span class="p">(</span>y<span class="o">~</span>cars<span class="o">$</span>speed<span class="p">))</span></span>
-<span class="code-line">  Sss<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="p">))</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">n</span> <span class="o">&lt;-</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">Snw</span> <span class="o">&lt;-</span> <span class="n">Slp</span> <span class="o">&lt;-</span> <span class="n">Sss</span> <span class="o">&lt;-</span> <span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">In</span> <span class="o">&lt;-</span> <span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># identity matrix</span></span>
+<span class="code-line"><span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
+<span class="code-line">  <span class="n">y</span> <span class="o">&lt;-</span> <span class="n">In[</span><span class="p">,</span><span class="n">j]</span> <span class="c1"># unit vector ej</span></span>
+<span class="code-line">  <span class="n">Snw[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">))</span></span>
+<span class="code-line">  <span class="n">Sss[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></span>
 <span class="code-line"><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">df.nw <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Snw<span class="p">))</span></span>
-<span class="code-line">df.lp <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span></span>
-<span class="code-line">df.ss <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Sss<span class="p">))</span></span>
+<span class="code-line"><span class="n">df.nw</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span></span>
+<span class="code-line"><span class="n">df.lp</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span></span>
+<span class="code-line"><span class="n">df.ss</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Sss</span><span class="p">))</span></span>
 </pre></div>
 <p>发现三个非参smoother的自由度不同, 所以上面画图的比较并没有意义, 为了让三者的自由度相同, 可以设定ksmooth/loess/smooth.spline的参数.</p>
 <p>控制带宽, Lp的参数为<code>span</code>, SS的参数为<code>spar</code>; 而指定想要的自由度则分别是<code>enp.target</code>和<code>df</code>. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kp">cat</span><span class="p">(</span><span class="s">"let all 3 np smoother use the same df="</span><span class="p">,</span> df.nw<span class="p">)</span></span>
-<span class="code-line">Slp <span class="o">&lt;-</span> Sss <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> nrow<span class="o">=</span>n<span class="p">,</span> ncol<span class="o">=</span>n<span class="p">)</span></span>
-<span class="code-line">In <span class="o">&lt;-</span> <span class="kp">diag</span><span class="p">(</span>n<span class="p">)</span> <span class="c1"># identity matrix</span></span>
-<span class="code-line"><span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">){</span></span>
-<span class="code-line">  y <span class="o">&lt;-</span> In<span class="p">[,</span>j<span class="p">]</span></span>
-<span class="code-line">  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>loess<span class="p">(</span>y<span class="o">~</span>cars<span class="o">$</span>speed<span class="p">,</span> enp.target<span class="o">=</span>df.nw<span class="p">))</span></span>
-<span class="code-line">  Sss<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> fitted<span class="p">(</span>smooth.spline<span class="p">(</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="p">,</span> df<span class="o">=</span>df.nw<span class="p">))</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">cat</span><span class="p">(</span><span class="s">"let all 3 np smoother use the same df="</span><span class="p">,</span> <span class="n">df.nw</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">Slp</span> <span class="o">&lt;-</span> <span class="n">Sss</span> <span class="o">&lt;-</span> <span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">In</span> <span class="o">&lt;-</span> <span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># identity matrix</span></span>
+<span class="code-line"><span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
+<span class="code-line">  <span class="n">y</span> <span class="o">&lt;-</span> <span class="n">In[</span><span class="p">,</span><span class="n">j]</span></span>
+<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">enp.target</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
+<span class="code-line">  <span class="n">Sss[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
 <span class="code-line"><span class="p">}</span></span>
-<span class="code-line"><span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span></span>
-<span class="code-line"><span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Sss<span class="p">))</span></span>
+<span class="code-line"><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span></span>
+<span class="code-line"><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Sss</span><span class="p">))</span></span>
 </pre></div>
 <p>发现SS的df参数使用以后控制的非常接近NW的df了, 不过lp的df还是不够接近, 用span来控制应该更准确一些, 为了找到合适的span, 用以下代码来寻找使得df=df.nw的span取值: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>dflp <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>span<span class="p">,</span> val<span class="p">){</span></span>
-<span class="code-line">  <span class="kr">for</span><span class="p">(</span>j <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">)</span></span>
-<span class="code-line">  Slp<span class="p">[,</span>j<span class="p">]</span> <span class="o">&lt;-</span> loess<span class="p">(</span>In<span class="p">[,</span>j<span class="p">]</span> <span class="o">~</span> cars<span class="o">$</span>speed<span class="p">,</span> span <span class="o">=</span> span<span class="p">)</span><span class="o">$</span>fitted</span>
-<span class="code-line">  <span class="kr">return</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span><span class="kp">diag</span><span class="p">(</span>Slp<span class="p">))</span> <span class="o">-</span> val<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">dflp</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">val</span><span class="p">){</span></span>
+<span class="code-line">  <span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">loess</span><span class="p">(</span><span class="n">In[</span><span class="p">,</span><span class="n">j]</span> <span class="o">~</span> <span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">span</span> <span class="o">=</span> <span class="n">span</span><span class="p">)</span><span class="o">$</span><span class="n">fitted</span></span>
+<span class="code-line">  <span class="nf">return</span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span> <span class="o">-</span> <span class="n">val</span><span class="p">)</span></span>
 <span class="code-line"><span class="p">}</span></span>
-<span class="code-line">chosen_span <span class="o">&lt;-</span> uniroot<span class="p">(</span>dflp<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> val <span class="o">=</span> df.nw<span class="p">)</span><span class="o">$</span>root</span>
+<span class="code-line"><span class="n">chosen_span</span> <span class="o">&lt;-</span> <span class="nf">uniroot</span><span class="p">(</span><span class="n">dflp</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> <span class="n">val</span> <span class="o">=</span> <span class="n">df.nw</span><span class="p">)</span><span class="o">$</span><span class="n">root</span></span>
 </pre></div>
 <p>如果不用这个循环计算的话, 可以用<code>sfsmisc</code>包里的<code>hatMat</code>函数: </p>
-<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"/> </p>
 <p>参数<code>trace</code>取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>hatMat(cars$speed, T, </span>
-<span class="code-line">       pred.sm = function(x,y) </span>
-<span class="code-line">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)$y )</span>
-<span class="code-line">hatMat(cars$speed, T, </span>
-<span class="code-line">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span>
-<span class="code-line">hatMat(cars$speed, T, </span>
-<span class="code-line">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">hatMat(cars$speed, T, </span></span>
+<span class="code-line"><span class="err">       pred.sm = function(x,y) </span></span>
+<span class="code-line"><span class="err">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)$y )</span></span>
+<span class="code-line"><span class="err">hatMat(cars$speed, T, </span></span>
+<span class="code-line"><span class="err">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span></span>
+<span class="code-line"><span class="err">hatMat(cars$speed, T, </span></span>
+<span class="code-line"><span class="err">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span></span>
 </pre></div>
 <h1 id="cv-and-hat-matrix">CV and Hat Matrix</h1>
 <p>为了预测smoother的performance, 用loo CV来估计MSE(mean sq err)的值. </p>
 <p>loo CV可以用下面这个通用函数得到(注意看对于参数的要求): </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1">##' Calculates the LOO CV score for given data and regression prediction function</span></span>
-<span class="code-line"><span class="c1">##'</span></span>
-<span class="code-line"><span class="c1">##' @param reg.data: regression data; data.frame with columns 'x', 'y'</span></span>
-<span class="code-line"><span class="c1">##' @param reg.fcn:  regr.prediction function; arguments:</span></span>
-<span class="code-line"><span class="c1">##'                    reg.x: regression x-values</span></span>
-<span class="code-line"><span class="c1">##'                    reg.y: regression y-values</span></span>
-<span class="code-line"><span class="c1">##'                    x:     x-value(s) of evaluation point(s)</span></span>
-<span class="code-line"><span class="c1">##'                  value: prediction at point(s) x</span></span>
-<span class="code-line"><span class="c1">##' @return LOOCV score</span></span>
-<span class="code-line">loocv <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>reg.data<span class="p">,</span> reg.fcn<span class="p">){</span></span>
-<span class="code-line">  <span class="c1">## Help function to calculate leave-one-out regression values</span></span>
-<span class="code-line">  loo.reg.value <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>i<span class="p">,</span> reg.data<span class="p">,</span> reg.fcn<span class="p">)</span></span>
-<span class="code-line">    <span class="kr">return</span><span class="p">(</span>reg.fcn<span class="p">(</span>reg.data<span class="o">$</span>x<span class="p">[</span><span class="o">-</span>i<span class="p">],</span> reg.data<span class="o">$</span>y<span class="p">[</span><span class="o">-</span>i<span class="p">],</span> reg.data<span class="o">$</span>x<span class="p">[</span>i<span class="p">]))</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">##</span><span class="s1">' Calculates the LOO CV score for given data and regression prediction function</span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w"></span></span>
+<span class="code-line"><span class="err">##</span><span class="s1">' @param reg.data: regression data; data.frame with columns '</span><span class="n">x</span><span class="s1">', '</span><span class="n">y</span><span class="s1">'</span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="nl">fcn</span><span class="p">:</span><span class="w">  </span><span class="n">regr</span><span class="p">.</span><span class="n">prediction</span><span class="w"> </span><span class="k">function</span><span class="p">;</span><span class="w"> </span><span class="nl">arguments</span><span class="p">:</span><span class="w"></span></span>
+<span class="code-line"><span class="err">##</span><span class="s1">'                    reg.x: regression x-values</span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w">                    </span><span class="n">reg</span><span class="p">.</span><span class="nl">y</span><span class="p">:</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="n">y</span><span class="o">-</span><span class="k">values</span><span class="w"></span></span>
+<span class="code-line"><span class="err">##</span><span class="s1">'                    x:     x-value(s) of evaluation point(s)</span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w">                  </span><span class="k">value</span><span class="err">:</span><span class="w"> </span><span class="n">prediction</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">point</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w"></span></span>
+<span class="code-line"><span class="err">##'</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">LOOCV</span><span class="w"> </span><span class="n">score</span><span class="w"></span></span>
+<span class="code-line"><span class="n">loocv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">leave</span><span class="o">-</span><span class="n">one</span><span class="o">-</span><span class="k">out</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">  <span class="c1">## Calculate LOO regression values using the help function above</span></span>
-<span class="code-line">  n <span class="o">&lt;-</span> <span class="kp">nrow</span><span class="p">(</span>reg.data<span class="p">)</span></span>
-<span class="code-line">  loo.values <span class="o">&lt;-</span> <span class="kp">sapply</span><span class="p">(</span><span class="m">1</span><span class="o">:</span>n<span class="p">,</span> loo.reg.value<span class="p">,</span> reg.data<span class="p">,</span> reg.fcn<span class="p">)</span></span>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="n">LOO</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">above</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sapply</span><span class="p">(</span><span class="mi">1</span><span class="err">:</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">  <span class="c1">## Calculate and return MSE</span></span>
-<span class="code-line">  <span class="kr">return</span><span class="p">(</span> <span class="kp">mean</span><span class="p">(</span> <span class="p">(</span>loo.values<span class="o">-</span>reg.data<span class="o">$</span>y<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="p">)</span></span>
-<span class="code-line"><span class="p">}</span></span>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">MSE</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="o">-</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>比如, 为了计算NW的CV数值, 需要这样: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>regfcn.nw <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>regx<span class="p">,</span> regy<span class="p">,</span> x<span class="p">)</span></span>
-<span class="code-line">  ksmooth<span class="p">(</span>regx<span class="p">,</span> regy<span class="p">,</span> kernel<span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> bandwidth<span class="o">=</span><span class="m">2</span><span class="p">,</span> x.points<span class="o">=</span>x<span class="p">)</span><span class="o">$</span>y</span>
-<span class="code-line">loocv<span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span>x<span class="o">=</span>cars<span class="o">$</span>speed<span class="p">,</span> y<span class="o">=</span>cars<span class="o">$</span>dist<span class="p">),</span> regfcn.nw<span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">regfcn.nw</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span> <span class="n">regy</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></span>
+<span class="code-line">  <span class="nf">ksmooth</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span> <span class="n">regy</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="nf">loocv</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">),</span> <span class="n">regfcn.nw</span><span class="p">)</span></span>
 </pre></div>
 <p>不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image014.png"/></p>
 <p>试一下: </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># compute CV using shortcut euqation</span></span>
-<span class="code-line">yhat.nw <span class="o">&lt;-</span> Snw <span class="o">%*%</span> cars<span class="o">$</span>y <span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span></span>
-<span class="code-line"><span class="kp">mean</span><span class="p">(</span>  <span class="p">(</span> <span class="p">(</span>cars<span class="o">$</span>y<span class="o">-</span>yhat.nw<span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="kp">diag</span><span class="p">(</span>Snw<span class="p">))</span> <span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="p">)</span></span>
+<span class="code-line"><span class="n">yhat.nw</span> <span class="o">&lt;-</span> <span class="n">Snw</span> <span class="o">%*%</span> <span class="n">cars</span><span class="o">$</span><span class="n">y</span> <span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span></span>
+<span class="code-line"><span class="nf">mean</span><span class="p">(</span>  <span class="p">(</span> <span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">y</span><span class="o">-</span><span class="n">yhat.nw</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span> <span class="p">)</span><span class="n">^2</span> <span class="p">)</span></span>
 </pre></div>
 <p>得到的结果和之前用loocv一样, 都是253.9128 !~ </p>
 <p>或者只用df, 计算generalized CV, 公式为: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image015.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span>#compute GCV</span>
-<span class="code-line">mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">#compute GCV</span></span>
+<span class="code-line"><span class="err">mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span></span>
 </pre></div>
 <p>得到gcv=269.3911, 和looCV也比较接近. </p>
             </div>

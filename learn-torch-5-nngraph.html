@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="torch" />
-        <meta name="description" content="[TOC] ref: http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/ doc: https://github.com/torch/nngraph/ The aim of this library is to provide users of nn package with tools to easily create complicated architectures. luarocks install nngraph optionally can install graphvis for graph visualization. From previous posts, to build …" />
+        <meta name="description" content="nngraph.Node Simple sequential example DAG example Annotations of nodes ref: http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/ doc: https://github.com/torch/nngraph/ The aim of this library is to provide users of nn package with tools to easily create complicated architectures. luarocks install nngraph optionally can install ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[learning torch] 5. nngraph (another way to construct nn)"/>
         <meta property="og:url" content="http://x-wei.github.io/learn-torch-5-nngraph.html"/>
-        <meta property="og:description" content="[TOC] ref: http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/ doc: https://github.com/torch/nngraph/ The aim of this library is to provide users of nn package with tools to easily create complicated architectures. luarocks install nngraph optionally can install graphvis for graph visualization. From previous posts, to build …"/>
+        <meta property="og:description" content="nngraph.Node Simple sequential example DAG example Annotations of nodes ref: http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/ doc: https://github.com/torch/nngraph/ The aim of this library is to provide users of nn package with tools to easily create complicated architectures. luarocks install nngraph optionally can install ..."/>
         <meta property="article:published_time" content="2016-10-08" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="torch" />
@@ -210,9 +210,16 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[learning torch] 5. nngraph (another way to construct nn)">[learning torch] 5. nngraph (another way to construct nn)</a><ul><li><a class="toc-href" href="#nngraphnode" title="nngraph.Node">nngraph.Node</a></li><li><a class="toc-href" href="#simple-sequential-example" title="Simple sequential example">Simple sequential example</a></li><li><a class="toc-href" href="#dag-example" title="DAG example">DAG example</a></li><li><a class="toc-href" href="#annotations-of-nodes" title="Annotations of nodes">Annotations of nodes</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
-<p>ref: <a href="http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/">http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/</a> <br>
-doc: <a href="https://github.com/torch/nngraph/">https://github.com/torch/nngraph/</a> </br></p>
+                <div class="toc">
+<ul>
+<li><a href="#nngraphnode">nngraph.Node</a></li>
+<li><a href="#simple-sequential-example">Simple sequential example</a></li>
+<li><a href="#dag-example">DAG example</a></li>
+<li><a href="#annotations-of-nodes">Annotations of nodes</a></li>
+</ul>
+</div>
+<p>ref: <a href="http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/">http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/</a> <br/>
+doc: <a href="https://github.com/torch/nngraph/">https://github.com/torch/nngraph/</a> </p>
 <p>The aim of this library is to provide users of nn package with tools to easily create complicated architectures.  </p>
 <p><code>luarocks install nngraph</code> </p>
 <p>optionally can install <code>graphvis</code> for graph visualization.  </p>
@@ -227,64 +234,64 @@ doc: <a href="https://github.com/torch/nngraph/">https://github.com/torch/nngrap
 <h2 id="nngraphnode">nngraph.Node</h2>
 <p>Any <code>Module</code> can be wrapped into a <code>nngraph.Node</code>.  </p>
 <p>For all <code>nn.Module</code>, nngraph overrides the <code>__call__</code> meta method (the function call operator <code>()</code>), by <em>calling</em> a module, a <code>Node</code> is returned:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>th&gt; require 'nngraph'; </span>
-<span class="code-line">                                                                      [0.0000s]  </span>
-<span class="code-line">th&gt; module = nn.Identity() </span>
-<span class="code-line">                                                                      [0.0001s]  </span>
-<span class="code-line">th&gt; module </span>
-<span class="code-line">nn.Identity </span>
-<span class="code-line">                                                                      [0.0000s]  </span>
-<span class="code-line">th&gt; module() </span>
-<span class="code-line">nngraph.Node </span>
-<span class="code-line">                                                                      [0.0000s]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">th&gt; require 'nngraph'; </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0000s]  </span></span>
+<span class="code-line"><span class="err">th&gt; module = nn.Identity() </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0001s]  </span></span>
+<span class="code-line"><span class="err">th&gt; module </span></span>
+<span class="code-line"><span class="err">nn.Identity </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0000s]  </span></span>
+<span class="code-line"><span class="err">th&gt; module() </span></span>
+<span class="code-line"><span class="err">nngraph.Node </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0000s]</span></span>
 </pre></div>
 <p>The arguments of  <code>__call__</code> are other (parent) nodes that come into this node, in this way we specify which module(s) will feed into the current node/module: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>th&gt; h1 = nn.Linear(20, 10)() </span>
-<span class="code-line">                                                                      [0.0001s]  </span>
-<span class="code-line">th&gt; h2 = nn.Linear(10, 1)(h1) -- h1 is input of h2  </span>
-<span class="code-line">                                                                      [0.0001s]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">th&gt; h1 = nn.Linear(20, 10)() </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0001s]  </span></span>
+<span class="code-line"><span class="err">th&gt; h2 = nn.Linear(10, 1)(h1) -- h1 is input of h2  </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0001s]</span></span>
 </pre></div>
 <h2 id="simple-sequential-example">Simple sequential example</h2>
 <p>We make a network by calling <code>nn.gModulet()</code>, this takes 2 arguments: a table of <code>inputs</code>, and a table of <code>outputs</code>:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>th&gt; mlp = nn.gModule({h1}, {h2}) </span>
-<span class="code-line">                                                                      [0.0002s]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">th&gt; mlp = nn.gModule({h1}, {h2}) </span></span>
+<span class="code-line"><span class="err">                                                                      [0.0002s]</span></span>
 </pre></div>
 <p>Then we can plot the model using graphviz:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>-- draw graph (the forward graph, '.fg'), use it with itorch notebook </span>
-<span class="code-line">graph.dot(model.fg, 'MLP') </span>
-<span class="code-line">-- or save graph to file MLP.svg and MLP.dot </span>
-<span class="code-line">graph.dot(model.fg, 'MLP', 'MLP')</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">-- draw graph (the forward graph, '.fg'), use it with itorch notebook </span></span>
+<span class="code-line"><span class="err">graph.dot(model.fg, 'MLP') </span></span>
+<span class="code-line"><span class="err">-- or save graph to file MLP.svg and MLP.dot </span></span>
+<span class="code-line"><span class="err">graph.dot(model.fg, 'MLP', 'MLP')</span></span>
 </pre></div>
-<p><img alt="" class="img-responsive" src="../images/learn-torch-5-nngraph/pasted_image.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/learn-torch-5-nngraph/pasted_image.png"/> </p>
 <p>(The first and last nodes are dummy nodes and regroup all inputs and outputs of the graph.) </p>
 <h2 id="dag-example">DAG example</h2>
 <p><a href="https://github.com/torch/nngraph#a-network-with-2-inputs-and-2-outputs">https://github.com/torch/nngraph#a-network-with-2-inputs-and-2-outputs</a> </p>
 <p>Here is an example to build a model with 2 inputs and 2 outputs:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>h1 = nn.Linear(20, 20)() </span>
-<span class="code-line">h2 = nn.Linear(10, 10)() </span>
-<span class="code-line">hh1 = nn.Linear(20, 1)(nn.Tanh()(h1)) </span>
-<span class="code-line">hh2 = nn.Linear(10, 1)(nn.Tanh()(h2)) </span>
-<span class="code-line">madd = nn.CAddTable()({hh1, hh2}) </span>
-<span class="code-line">oA = nn.Sigmoid()(madd) </span>
-<span class="code-line">oB = nn.Tanh()(madd) </span>
-<span class="code-line">gmod = nn.gModule({h1, h2}, {oA, oB})</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">h1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)()</span> </span>
+<span class="code-line"><span class="n">h2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)()</span> </span>
+<span class="code-line"><span class="n">hh1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="n">nn</span><span class="p">.</span><span class="n">Tanh</span><span class="p">()(</span><span class="n">h1</span><span class="p">))</span> </span>
+<span class="code-line"><span class="n">hh2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="n">nn</span><span class="p">.</span><span class="n">Tanh</span><span class="p">()(</span><span class="n">h2</span><span class="p">))</span> </span>
+<span class="code-line"><span class="n">madd</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CAddTable</span><span class="p">()(</span><span class="err">{</span><span class="n">hh1</span><span class="p">,</span> <span class="n">hh2</span><span class="err">}</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">oA</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Sigmoid</span><span class="p">()(</span><span class="n">madd</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">oB</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Tanh</span><span class="p">()(</span><span class="n">madd</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">gmod</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">gModule</span><span class="p">(</span><span class="err">{</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="err">}</span><span class="p">,</span> <span class="err">{</span><span class="n">oA</span><span class="p">,</span> <span class="n">oB</span><span class="err">}</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">x1 = torch.rand(20) </span>
-<span class="code-line">x2 = torch.rand(10)</span>
+<span class="code-line"><span class="n">x1</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">x2</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line">gmod:updateOutput({x1, x2}) </span>
-<span class="code-line">gmod:updateGradInput({x1, x2}, {torch.rand(1), torch.rand(1)}) </span>
-<span class="code-line">graph.dot(gmod.fg, 'Big MLP')</span>
+<span class="code-line"><span class="n">gmod</span><span class="p">:</span><span class="n">updateOutput</span><span class="p">(</span><span class="err">{</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="err">}</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">gmod</span><span class="p">:</span><span class="n">updateGradInput</span><span class="p">(</span><span class="err">{</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="err">}</span><span class="p">,</span> <span class="err">{</span><span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="err">}</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">graph</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">gmod</span><span class="p">.</span><span class="n">fg</span><span class="p">,</span> <span class="s1">'Big MLP'</span><span class="p">)</span></span>
 </pre></div>
 <p>alternatively, <strong>use </strong><code>-</code><strong> to make your code looks like the data flow</strong>: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>h1 = - nn.Linear(20,20) </span>
-<span class="code-line">h2 = - nn.Linear(10,10) </span>
-<span class="code-line">hh1 = h1 - nn.Tanh() - nn.Linear(20,1) </span>
-<span class="code-line">hh2 = h2 - nn.Tanh() - nn.Linear(10,1) </span>
-<span class="code-line">madd = {hh1,hh2} - nn.CAddTable() </span>
-<span class="code-line">oA = madd - nn.Sigmoid() </span>
-<span class="code-line">oB = madd - nn.Tanh() </span>
-<span class="code-line">gmod = nn.gModule( {h1,h2}, {oA,oB} )</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">h1 = - nn.Linear(20,20) </span></span>
+<span class="code-line"><span class="err">h2 = - nn.Linear(10,10) </span></span>
+<span class="code-line"><span class="err">hh1 = h1 - nn.Tanh() - nn.Linear(20,1) </span></span>
+<span class="code-line"><span class="err">hh2 = h2 - nn.Tanh() - nn.Linear(10,1) </span></span>
+<span class="code-line"><span class="err">madd = {hh1,hh2} - nn.CAddTable() </span></span>
+<span class="code-line"><span class="err">oA = madd - nn.Sigmoid() </span></span>
+<span class="code-line"><span class="err">oB = madd - nn.Tanh() </span></span>
+<span class="code-line"><span class="err">gmod = nn.gModule( {h1,h2}, {oA,oB} )</span></span>
 </pre></div>
 <h2 id="annotations-of-nodes">Annotations of nodes</h2>
 <p><a href="https://github.com/torch/nngraph#annotations">https://github.com/torch/nngraph#annotations</a> </p>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Setting up your Maching Learning Application Train / Dev / Test sets Applied ML: highly iterative process. idea-code-exp loop splitting data splitting data in order to speed up the idea-code-exp loop: *training set / dev(hold-out/cross-validataion) set / test set * split ratio: with 100~10000 examples: 70/30 or 60/20/20 …" />
+        <meta name="description" content="Setting up your Maching Learning Application Train / Dev / Test sets Bias / Variance Basic Recipe for Machine Learning Regularizing your neural network Regularization example: logistic regression example: NN Why regularization reduces overfitting? Dropout Regularization dropout implementation: &#34;inverted dropout&#34; Understanding Dropout Other regularization methods data augmentation early stopping Setting up your optimization ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Improving Deep Neural Networks] week1. Practical aspects of Deep Learning"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c2wk1.html"/>
-        <meta property="og:description" content="[TOC] Setting up your Maching Learning Application Train / Dev / Test sets Applied ML: highly iterative process. idea-code-exp loop splitting data splitting data in order to speed up the idea-code-exp loop: *training set / dev(hold-out/cross-validataion) set / test set * split ratio: with 100~10000 examples: 70/30 or 60/20/20 …"/>
+        <meta property="og:description" content="Setting up your Maching Learning Application Train / Dev / Test sets Bias / Variance Basic Recipe for Machine Learning Regularizing your neural network Regularization example: logistic regression example: NN Why regularization reduces overfitting? Dropout Regularization dropout implementation: &#34;inverted dropout&#34; Understanding Dropout Other regularization methods data augmentation early stopping Setting up your optimization ..."/>
         <meta property="article:published_time" content="2017-10-21" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,21 +210,60 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Improving Deep Neural Networks] week1. Practical aspects of Deep Learning">[Improving Deep Neural Networks] week1. Practical aspects of Deep Learning</a><ul><li><a class="toc-href" href="#setting-up-your-maching-learning-application" title="Setting up your Maching Learning Application">Setting up your Maching Learning Application</a><ul><li><a class="toc-href" href="#train-dev-test-sets" title="Train / Dev / Test sets">Train / Dev / Test sets</a></li><li><a class="toc-href" href="#bias-variance" title="Bias / Variance">Bias / Variance</a></li><li><a class="toc-href" href="#basic-recipe-for-machine-learning" title="Basic Recipe for Machine Learning">Basic Recipe for Machine Learning</a></li></ul></li><li><a class="toc-href" href="#regularizing-your-neural-network_1" title="Regularizing your neural network">Regularizing your neural network</a><ul><li><a class="toc-href" href="#regularization" title="Regularization">Regularization</a><ul><li><a class="toc-href" href="#example-logistic-regression" title="example: logistic regression">example: logistic regression</a></li><li><a class="toc-href" href="#example-nn" title="example: NN">example: NN</a></li></ul></li><li><a class="toc-href" href="#why-regularization-reduces-overfitting_1" title="Why regularization reduces overfitting?">Why regularization reduces overfitting?</a></li><li><a class="toc-href" href="#dropout-regularization" title="Dropout Regularization">Dropout Regularization</a><ul><li><a class="toc-href" href="#dropout-implementation-inverted-dropout" title='dropout implementation: "inverted dropout"'>dropout implementation: "inverted dropout"</a></li></ul></li><li><a class="toc-href" href="#understanding-dropout_1" title="Understanding Dropout">Understanding Dropout</a></li><li><a class="toc-href" href="#other-regularization-methods" title="Other regularization methods">Other regularization methods</a><ul><li><a class="toc-href" href="#data-augmentation" title="data augmentation">data augmentation</a></li><li><a class="toc-href" href="#early-stopping" title="early stopping">early stopping</a></li></ul></li></ul></li><li><a class="toc-href" href="#setting-up-your-optimization-problem_2" title="Setting up your optimization problem">Setting up your optimization problem</a><ul><li><a class="toc-href" href="#normalizing-inputs" title="Normalizing inputs">Normalizing inputs</a><ul><li><a class="toc-href" href="#vanishing-exploding-gradients" title="Vanishing / Exploding gradients">Vanishing / Exploding gradients</a></li></ul></li><li><a class="toc-href" href="#weight-initialization-for-deep-networks_1" title="Weight Initialization for Deep Networks">Weight Initialization for Deep Networks</a></li><li><a class="toc-href" href="#numerical-approximation-of-gradients" title="Numerical approximation of gradients">Numerical approximation of gradients</a></li><li><a class="toc-href" href="#gradient-checking" title="Gradient checking">Gradient checking</a></li><li><a class="toc-href" href="#gradient-checking-implementation-notes" title="Gradient Checking Implementation Notes">Gradient Checking Implementation Notes</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#setting-up-your-maching-learning-application">Setting up your Maching Learning Application</a><ul>
+<li><a href="#train-dev-test-sets">Train / Dev / Test sets</a></li>
+<li><a href="#bias-variance">Bias / Variance</a></li>
+<li><a href="#basic-recipe-for-machine-learning">Basic Recipe for Machine Learning</a></li>
+</ul>
+</li>
+<li><a href="#regularizing-your-neural-network">Regularizing your neural network</a><ul>
+<li><a href="#regularization">Regularization</a><ul>
+<li><a href="#example-logistic-regression">example: logistic regression</a></li>
+<li><a href="#example-nn">example: NN</a></li>
+</ul>
+</li>
+<li><a href="#why-regularization-reduces-overfitting">Why regularization reduces overfitting?</a></li>
+<li><a href="#dropout-regularization">Dropout Regularization</a><ul>
+<li><a href="#dropout-implementation-inverted-dropout">dropout implementation: "inverted dropout"</a></li>
+</ul>
+</li>
+<li><a href="#understanding-dropout">Understanding Dropout</a></li>
+<li><a href="#other-regularization-methods">Other regularization methods</a><ul>
+<li><a href="#data-augmentation">data augmentation</a></li>
+<li><a href="#early-stopping">early stopping</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#setting-up-your-optimization-problem">Setting up your optimization problem</a><ul>
+<li><a href="#normalizing-inputs">Normalizing inputs</a><ul>
+<li><a href="#vanishing-exploding-gradients">Vanishing / Exploding gradients</a></li>
+</ul>
+</li>
+<li><a href="#weight-initialization-for-deep-networks">Weight Initialization for Deep Networks</a></li>
+<li><a href="#numerical-approximation-of-gradients">Numerical approximation of gradients</a></li>
+<li><a href="#gradient-checking">Gradient checking</a></li>
+<li><a href="#gradient-checking-implementation-notes">Gradient Checking Implementation Notes</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="setting-up-your-maching-learning-application">Setting up your Maching Learning Application</h1>
 <h2 id="train-dev-test-sets">Train / Dev / Test sets</h2>
 <p>Applied ML: highly iterative process. <em>idea-code-exp loop</em> </p>
-<p><strong>splitting data</strong><br>
-splitting data in order to speed up the idea-code-exp loop:  <br>
-*training set / dev(hold-out/cross-validataion) set / test set *  </br></br></p>
+<p><strong>splitting data</strong><br/>
+splitting data in order to speed up the idea-code-exp loop:  <br/>
+*training set / dev(hold-out/cross-validataion) set / test set *  </p>
 <p><strong>split ratio</strong>:  </p>
 <ul>
 <li>with 100~10000 examples: 70/30 or 60/20/20  </li>
 <li>with ~1M examples: dev/test set can have much smaller ratio, e.g. 98/1/1  </li>
 </ul>
-<p><strong>mismatched train/test distribution</strong><br>
-training and test set don't come from the same dist.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image.png"> </img></br></br></p>
+<p><strong>mismatched train/test distribution</strong><br/>
+training and test set don't come from the same dist.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image.png"/> </p>
 <ul>
 <li>rule of thumb: <strong>make sure</strong> <strong>dev and test set come from the same distribution.</strong> </li>
 <li>might be OK to only have dev set. — thought  in this case no longer have unbiased estimate of performance.  </li>
@@ -234,17 +273,17 @@ training and test set don't come from the same dist.<br>
 <li>high variance: <em>overfitting</em> </li>
 <li>high bias: <em>underfitting</em> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image001.png"><br>
-high base and high variance (worse case): high bias in some region and high variance elsewhere<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image004.png"> </img></br></br></img></p>
-<p><strong>how to estimate bias&amp;variance</strong><br>
-→ <em>look at train and dev set error</em> </br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image001.png"/><br/>
+high base and high variance (worse case): high bias in some region and high variance elsewhere<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image004.png"/> </p>
+<p><strong>how to estimate bias&amp;variance</strong><br/>
+→ <em>look at train and dev set error</em> </p>
 <ul>
 <li>high variance: Err_train &lt;&lt; Err_dev — not generalize well  </li>
 <li>high bias: Err_train ~= Err_dev, and Err_train &gt;&gt; Err_human — not learning well even on training set  </li>
 <li>high bias <em>and</em> high variance (worse): Err_train &gt;&gt; Err_human, Err_train &gt;&gt; Err_dev  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image003.png"/> </p>
 <h2 id="basic-recipe-for-machine-learning">Basic Recipe for Machine Learning</h2>
 <p>basic recipe:  </p>
 <ol>
@@ -258,7 +297,7 @@ high base and high variance (worse case): high bias in some region and high vari
 </ul>
 </li>
 </ol>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image005.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image005.png"/> </p>
 <p><strong>bias-variance tradeoff</strong> </p>
 <ul>
 <li>in pre-DL era, bias and variance are tradeoff (decrease one → increase the other)  </li>
@@ -273,51 +312,51 @@ high base and high variance (worse case): high bias in some region and high vari
 <li>params: <code>w</code>, <code>b</code> </li>
 <li>cost function <code>J(w,b) = 1/m * L(yhat_i, yi)</code> </li>
 </ul>
-<p>→ add one more term to cost <code>J</code>: adding L2 norm of <code>w</code>(<em>L2 regularization</em>)<br>
-(lambda: regularization param)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image006.png"><br>
-<em>just omit regularizing b</em>: <code>w</code> is high dim, <code>b</code> is single number.  </br></img></br></br></p>
-<p>L1 regularization: L1 norm of <code>w</code> → <em>w will be sparse → </em>compressing the model (just a little bit)<br>
-⇒ <em>L2-reg is much often used</em> </br></p>
+<p>→ add one more term to cost <code>J</code>: adding L2 norm of <code>w</code>(<em>L2 regularization</em>)<br/>
+(lambda: regularization param)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image006.png"/><br/>
+<em>just omit regularizing b</em>: <code>w</code> is high dim, <code>b</code> is single number.  </p>
+<p>L1 regularization: L1 norm of <code>w</code> → <em>w will be sparse → </em>compressing the model (just a little bit)<br/>
+⇒ <em>L2-reg is much often used</em> </p>
 <h3 id="example-nn">example: NN</h3>
 <ul>
 <li>params: <code>w[l]</code>, <code>b[l]</code> for l = 1..N  </li>
 <li>sum of the norms of each <code>w[l]</code> matrix.  </li>
 </ul>
-<p>⇒ <em>"Frobenius norm"</em> of a matrix: sum (each element squared)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image007.png"> </img></br></p>
-<p><strong>gradient descent</strong>: adding one more term from backprop<br>
-d(1/2m * ||w||) = lambda / m <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image008.png"> </img></br></br></p>
-<p>L2-reg also called "<strong>weight decay</strong>": <br>
-with L2-reg, looks as if doing the backprop updating, with w being w' = (1-alpha*lambda/m) * w (decayed w)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image009.png"> </img></br></br></p>
+<p>⇒ <em>"Frobenius norm"</em> of a matrix: sum (each element squared)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image007.png"/> </p>
+<p><strong>gradient descent</strong>: adding one more term from backprop<br/>
+d(1/2m * ||w||) = lambda / m <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image008.png"/> </p>
+<p>L2-reg also called "<strong>weight decay</strong>": <br/>
+with L2-reg, looks as if doing the backprop updating, with w being w' = (1-alpha*lambda/m) * w (decayed w)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image009.png"/> </p>
 <h2 id="why-regularization-reduces-overfitting_1">Why regularization reduces overfitting?</h2>
 <p><em>why imposing small params prevents overfitting?</em> </p>
-<p><strong>intuition 1</strong><br>
-→ heavy regularization <br>
-→ weight ~= 0 <br>
-→ many hidden units' impact are "<em>zeroed-out"</em><br>
-→ simpler NN<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image010.png"> </img></br></br></br></br></br></p>
-<p><strong>intuition 2</strong><br>
-e.g. activation g(z) = tanh(z)<br>
-small z → g(z) ~= linear, <br>
-large z → g(z) flattend<br>
-⇒ large lambda → small w <br>
-→ z small <br>
-→ every layer ~linear<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image011.png"> </img></br></br></br></br></br></br></br></p>
+<p><strong>intuition 1</strong><br/>
+→ heavy regularization <br/>
+→ weight ~= 0 <br/>
+→ many hidden units' impact are "<em>zeroed-out"</em><br/>
+→ simpler NN<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image010.png"/> </p>
+<p><strong>intuition 2</strong><br/>
+e.g. activation g(z) = tanh(z)<br/>
+small z → g(z) ~= linear, <br/>
+large z → g(z) flattend<br/>
+⇒ large lambda → small w <br/>
+→ z small <br/>
+→ every layer ~linear<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image011.png"/> </p>
 <h2 id="dropout-regularization">Dropout Regularization</h2>
-<p>another powerful method of regularization<br>
-<strong>dropout</strong>: <em>For each training example</em>, in each layer, <em>eliminate randomly some of its output values.</em> <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image012.png"> <img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image013.png"> </img></img></br></br></p>
+<p>another powerful method of regularization<br/>
+<strong>dropout</strong>: <em>For each training example</em>, in each layer, <em>eliminate randomly some of its output values.</em> <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image012.png"/> <img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image013.png"/> </p>
 <h3 id="dropout-implementation-inverted-dropout">dropout implementation: "inverted dropout"</h3>
-<p>example: dropout of <em>layer 3</em>, keep_prob = 0.8 (prob of keeping hidden unit)<br>
-→ generate a rand matrix of shape the same shape as activation <code>a[3]</code> </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>d3 = np.random.rand(a3.shape[0], a3.shape[1]) &lt; keep_prob  # d3 is bool matrix  </span>
-<span class="code-line">a3 = np.multiply(a3, d3)  # element-wise multiply  </span>
-<span class="code-line">a3 /= keep_prob  # ****"inverted dropout"****</span>
+<p>example: dropout of <em>layer 3</em>, keep_prob = 0.8 (prob of keeping hidden unit)<br/>
+→ generate a rand matrix of shape the same shape as activation <code>a[3]</code> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">d3 = np.random.rand(a3.shape[0], a3.shape[1]) &lt; keep_prob  # d3 is bool matrix  </span></span>
+<span class="code-line"><span class="err">a3 = np.multiply(a3, d3)  # element-wise multiply  </span></span>
+<span class="code-line"><span class="err">a3 /= keep_prob  # ****"inverted dropout"****</span></span>
 </pre></div>
 <p><strong>"inverted dropout": why a3 /= keep_prob (i.e. make a3 larger)?</strong> </p>
 <ul>
@@ -325,21 +364,21 @@ large z → g(z) flattend<br>
 <li>→ ~10 units shut off  </li>
 <li><code>z[4] = w[4] * a[3] + b[4]</code> </li>
 </ul>
-<p>⇒ a[3] have random 20% units shut off <br>
-→ <em>w[4]</em>a[3] will be reduced by 20% in expection*  </br></p>
+<p>⇒ a[3] have random 20% units shut off <br/>
+→ <em>w[4]</em>a[3] will be reduced by 20% in expection*  </p>
 <ul>
 <li>inverted dropout: a3 /= keep_prob, to <em>keep expected value a3 remains unchanged</em>.  </li>
 <li>(No dropout at test time) → inverted dropout <em>avoids scaling problem at test time</em> </li>
 </ul>
-<p><strong>making predictions at test time</strong><br>
-NOT use dropout at test time ⇒ don't want output to be random at test time...  </br></p>
+<p><strong>making predictions at test time</strong><br/>
+NOT use dropout at test time ⇒ don't want output to be random at test time...  </p>
 <h2 id="understanding-dropout_1">Understanding Dropout</h2>
 <p><em>why randomly shut units prevents overfitting ?</em> </p>
-<p><strong>Intuition: can't rely on any one input feature → have to spread out weight</strong><br>
-spread weights ~→ smaller L2 norm (shrink weights)<br>
-Can be formally proven: dropout is equal to <em>adaptive</em> L2-reg, with penalty of different weight being different.  </br></br></p>
-<p>For one hidden unit: any of it input features (from prev layer) can go out at random<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image014.png"> </img></br></p>
+<p><strong>Intuition: can't rely on any one input feature → have to spread out weight</strong><br/>
+spread weights ~→ smaller L2 norm (shrink weights)<br/>
+Can be formally proven: dropout is equal to <em>adaptive</em> L2-reg, with penalty of different weight being different.  </p>
+<p>For one hidden unit: any of it input features (from prev layer) can go out at random<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image014.png"/> </p>
 <p><strong>Implementation details</strong> </p>
 <ul>
 <li>vary keep_prob for different layer   </li>
@@ -348,21 +387,21 @@ Can be formally proven: dropout is equal to <em>adaptive</em> L2-reg, with penal
 <ul>
 <li>usually no dropout (or very small dropout) for input layer...  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image016.png"> </img></p>
-<p><strong>Downside of dropout</strong><br>
-cost function J <em>no longer well-defined </em>(because output yhat is random)<br>
-→ can no longer plot cost-iter curve<br>
-→ turn off dropout before plotting the curve  </br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image016.png"/> </p>
+<p><strong>Downside of dropout</strong><br/>
+cost function J <em>no longer well-defined </em>(because output yhat is random)<br/>
+→ can no longer plot cost-iter curve<br/>
+→ turn off dropout before plotting the curve  </p>
 <h2 id="other-regularization-methods">Other regularization methods</h2>
 <h3 id="data-augmentation">data augmentation</h3>
-<p>adding more training example is expensive <br>
-→ vary existing training data (e.g. flipping/rand-distortions of training image for cats)  </br></p>
+<p>adding more training example is expensive <br/>
+→ vary existing training data (e.g. flipping/rand-distortions of training image for cats)  </p>
 <h3 id="early-stopping">early stopping</h3>
-<p>plot Err or J to #iterations <em>for both train and dev set.</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image017.png"> </img></br></p>
-<p><strong>Downside of early-stopping</strong>: <br>
-<em>optimization cost J</em> and <em>not overfitting</em> should be separated task ("Orthogonalization")<br>
-→ early-stopping couples the two jobs.  </br></br></p>
+<p>plot Err or J to #iterations <em>for both train and dev set.</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image017.png"/> </p>
+<p><strong>Downside of early-stopping</strong>: <br/>
+<em>optimization cost J</em> and <em>not overfitting</em> should be separated task ("Orthogonalization")<br/>
+→ early-stopping couples the two jobs.  </p>
 <p>upside of early stopping: no need to try different values of regularization param (lambda) → finds "mid-size w" at once.  </p>
 <h1 id="setting-up-your-optimization-problem_2">Setting up your optimization problem</h1>
 <p>How to speed up training (i.e. optimize J)  </p>
@@ -372,50 +411,50 @@ cost function J <em>no longer well-defined </em>(because output yhat is random)<
 <li>substract mean   </li>
 <li>normalize variance  </li>
 </ol>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image018.png"><br>
-detail: in data splitting, <em>use the same meu/sigma to normalize test set !</em> </br></img></p>
-<p><strong>why normalizing input ?</strong><br>
-if features x1 x2 are on different scales → w1 and w2 not same scale<br>
-J is more symmetric, easier to optimize<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image019.png"> </img></br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image018.png"/><br/>
+detail: in data splitting, <em>use the same meu/sigma to normalize test set !</em> </p>
+<p><strong>why normalizing input ?</strong><br/>
+if features x1 x2 are on different scales → w1 and w2 not same scale<br/>
+J is more symmetric, easier to optimize<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image019.png"/> </p>
 <h3 id="vanishing-exploding-gradients">Vanishing / Exploding gradients</h3>
 <p>One problem in training very deep NN: vanishing/exploding gradients.  </p>
-<p>example: a very deep NN, each layer 2 units, linear activation g(z)=z, ignore bias b[l] = 0.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image021.png"><br>
-linear activations → y is just a linear transformation of x<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image022.png"> </img></br></br></img></br></p>
+<p>example: a very deep NN, each layer 2 units, linear activation g(z)=z, ignore bias b[l] = 0.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image021.png"/><br/>
+linear activations → y is just a linear transformation of x<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image022.png"/> </p>
 <ul>
 <li>assuming each w[l] = 1.5 * Identity_matrix ⇒ activations increase exponentially  </li>
 <li>assuming each w[l] = 0.5 * Id ⇒ activations decrease exponentially  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image023.png"><br>
-yhat too large or too small → hard to train  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image023.png"/><br/>
+yhat too large or too small → hard to train  </p>
 <h2 id="weight-initialization-for-deep-networks_1">Weight Initialization for Deep Networks</h2>
 <p>A partial solution of vanishing/exploding gradient problem: <em>carefully initialize weights</em>.  </p>
-<p><strong>single neuron example:</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image024.png"> </img></br></p>
+<p><strong>single neuron example:</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image024.png"/> </p>
 <ul>
 <li>y = g(w*x), g = relu  </li>
 <li>n = # inputs for   </li>
 </ul>
-<p>z = w1<em>x1 + ... + wn</em>xn, <br>
-if wi are initzed randomly<br>
-→ large ns ⇒ z will be large ! <br>
-⇒ <strong>set var(wi) = 1/n</strong> (2/n in practice) to keep z in similar scale for diffent #inputs<br>
-initialization code: <br>
-<code>w[l] = np.random.randn(shape[l]) * np.sqrt( 2 / n[l-1] )  # n[l-1] = #inputs for layer-l</code> </br></br></br></br></br></p>
-<p><strong>other variants</strong><br>
-when activation function g = tanh <br>
-⇒ use var(wi) = 1/n ("<strong>Xavier initialization</strong>")<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image025.png"> </img></br></br></br></p>
+<p>z = w1<em>x1 + ... + wn</em>xn, <br/>
+if wi are initzed randomly<br/>
+→ large ns ⇒ z will be large ! <br/>
+⇒ <strong>set var(wi) = 1/n</strong> (2/n in practice) to keep z in similar scale for diffent #inputs<br/>
+initialization code: <br/>
+<code>w[l] = np.random.randn(shape[l]) * np.sqrt( 2 / n[l-1] )  # n[l-1] = #inputs for layer-l</code> </p>
+<p><strong>other variants</strong><br/>
+when activation function g = tanh <br/>
+⇒ use var(wi) = 1/n ("<strong>Xavier initialization</strong>")<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image025.png"/> </p>
 <h2 id="numerical-approximation-of-gradients">Numerical approximation of gradients</h2>
-<p><strong>checking the derivative computation</strong><br>
-example: f(x) = x ^ 3<br>
-→ <em>vary x by epsilon</em> to approximate f'(x), <em>use 2-sided difference</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image026.png"> </img></br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image027.png"> </img></p>
-<p>error order = O(epsilon^2) for 2-sided difference<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image028.png"> </img></br></p>
+<p><strong>checking the derivative computation</strong><br/>
+example: f(x) = x ^ 3<br/>
+→ <em>vary x by epsilon</em> to approximate f'(x), <em>use 2-sided difference</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image026.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image027.png"/> </p>
+<p>error order = O(epsilon^2) for 2-sided difference<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image028.png"/> </p>
 <h2 id="gradient-checking">Gradient checking</h2>
 <p><strong>Verify</strong> that your implementation is correct. — help finding out bugs in implementation early.  </p>
 <ul>
@@ -423,11 +462,11 @@ example: f(x) = x ^ 3<br>
 <li>concat all dW[l] db[l] into big vector <code>d_theta</code> </li>
 <li>to <strong>check if d_theta is correct</strong>: construct a <code>d_theta_approx</code> vector  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image029.png"><br>
-⇒ <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image030.png"> </img></br></br></img></p>
-<p>How to check "approximate":<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image031.png"> </img></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image029.png"/><br/>
+⇒ <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image030.png"/> </p>
+<p>How to check "approximate":<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk1//pasted_image031.png"/> </p>
 <h2 id="gradient-checking-implementation-notes">Gradient Checking Implementation Notes</h2>
 <ul>
 <li>Dont' use checking in training: constructing d_theta_approx is slow  </li>

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="OCaml" />
-        <meta name="description" content="[TOC] this week: programming-in-the-large using the module system of OCaml. 1. STRUCTURING SOFTWARE WITH MODULES in large project: mangage high number of definitions → abstractions built on top of other abstractions. layers of abstractions: hide information divide program into components identifiers organised to avoid naming conflicts module as namespace dot-notation: access …" />
+        <meta name="description" content="1. STRUCTURING SOFTWARE WITH MODULES module as namespace hierachical module structure 2. INFORMATION HIDING module signatures abstract types 3. CASE STUDY: A MODULE FOR DICTIONARIES 4. FUNCTORS example: Set and Map this week: programming-in-the-large using the module system of OCaml. 1. STRUCTURING SOFTWARE WITH MODULES in large project: mangage high ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION"/>
         <meta property="og:url" content="http://x-wei.github.io/ocamlMOOC_wk6_modules.html"/>
-        <meta property="og:description" content="[TOC] this week: programming-in-the-large using the module system of OCaml. 1. STRUCTURING SOFTWARE WITH MODULES in large project: mangage high number of definitions → abstractions built on top of other abstractions. layers of abstractions: hide information divide program into components identifiers organised to avoid naming conflicts module as namespace dot-notation: access …"/>
+        <meta property="og:description" content="1. STRUCTURING SOFTWARE WITH MODULES module as namespace hierachical module structure 2. INFORMATION HIDING module signatures abstract types 3. CASE STUDY: A MODULE FOR DICTIONARIES 4. FUNCTORS example: Set and Map this week: programming-in-the-large using the module system of OCaml. 1. STRUCTURING SOFTWARE WITH MODULES in large project: mangage high ..."/>
         <meta property="article:published_time" content="2016-11-26" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="OCaml" />
@@ -210,7 +210,25 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION">[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION</a><ul><li><a class="toc-href" href="#1-structuring-software-with-modules" title="1. STRUCTURING SOFTWARE WITH MODULES">1. STRUCTURING SOFTWARE WITH MODULES</a><ul><li><a class="toc-href" href="#module-as-namespace" title="module as namespace">module as namespace</a></li><li><a class="toc-href" href="#hierachical-module-structure" title="hierachical module structure">hierachical module structure</a></li></ul></li><li><a class="toc-href" href="#2-information-hiding_1" title="2. INFORMATION HIDING">2. INFORMATION HIDING</a><ul><li><a class="toc-href" href="#module-signatures" title="module signatures">module signatures</a></li><li><a class="toc-href" href="#abstract-types" title="abstract types">abstract types</a></li></ul></li><li><a class="toc-href" href="#3-case-study-a-module-for-dictionaries_1" title="3. CASE STUDY: A MODULE FOR DICTIONARIES">3. CASE STUDY: A MODULE FOR DICTIONARIES</a></li><li><a class="toc-href" href="#4-functors" title="4. FUNCTORS">4. FUNCTORS</a><ul><li><a class="toc-href" href="#example-set-and-map" title="example: Set and Map">example: Set and Map</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-structuring-software-with-modules">1. STRUCTURING SOFTWARE WITH MODULES</a><ul>
+<li><a href="#module-as-namespace">module as namespace</a></li>
+<li><a href="#hierachical-module-structure">hierachical module structure</a></li>
+</ul>
+</li>
+<li><a href="#2-information-hiding">2. INFORMATION HIDING</a><ul>
+<li><a href="#module-signatures">module signatures</a></li>
+<li><a href="#abstract-types">abstract types</a></li>
+</ul>
+</li>
+<li><a href="#3-case-study-a-module-for-dictionaries">3. CASE STUDY: A MODULE FOR DICTIONARIES</a></li>
+<li><a href="#4-functors">4. FUNCTORS</a><ul>
+<li><a href="#example-set-and-map">example: Set and Map</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>this week: programming-in-the-large using the module system of OCaml.  </p>
 <h1 id="1-structuring-software-with-modules">1. STRUCTURING SOFTWARE WITH MODULES</h1>
 <p>in large project: mangage high number of definitions → abstractions built on top of other abstractions.   </p>
@@ -221,9 +239,9 @@ mx's blog            </a>
 </ul>
 <h3 id="module-as-namespace">module as namespace</h3>
 <p>dot-notation: access module component.   </p>
-<p>ex. <code>List.length</code> <br>
-or first <code>open List</code> then just call <code>length</code> <br>
-if open 2 modules having identical identifiers, the last opened module will be used.   </br></br></p>
+<p>ex. <code>List.length</code> <br/>
+or first <code>open List</code> then just call <code>length</code> <br/>
+if open 2 modules having identical identifiers, the last opened module will be used.   </p>
 <p>to define a module:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">module</span> <span class="nc">SomeModuleIdentifier</span> <span class="o">=</span> <span class="k">struct</span>  </span>
 <span class="code-line">  <span class="c">(* a seq of definitions *)</span>  </span>
@@ -343,9 +361,9 @@ if open 2 modules having identical identifiers, the last opened module will be u
 <span class="code-line"><span class="k">end</span>   </span>
 </pre></div>
 <p>then calling pred (-1) will cause an error.   </p>
-<p>→ we have hiddent the definition of the type t<br>
-the sig don't publish t's implementation anymore, so the checker ensures clients can't use that fact<br>
-t is called an <strong>abstract type</strong>.  </br></br></p>
+<p>→ we have hiddent the definition of the type t<br/>
+the sig don't publish t's implementation anymore, so the checker ensures clients can't use that fact<br/>
+t is called an <strong>abstract type</strong>.  </p>
 <p>With abstract type, users can't do pattern matching, to allow pattern matching while forbidding the direct application of data constructors, OCaml provides a mechanism called <strong>private types</strong>. see <a href="http://caml.inria.fr/pub/docs/manual-ocaml-400/manual021.html#toc76">here</a>.  </p>
 <h1 id="3-case-study-a-module-for-dictionaries_1">3. CASE STUDY: A MODULE FOR DICTIONARIES</h1>
 <p>An example of using abstract types to increase the modularity of programs.   </p>
@@ -379,7 +397,7 @@ t is called an <strong>abstract type</strong>.  </br></br></p>
 <span class="code-line">  <span class="o">|</span> <span class="nc">Node</span> <span class="k">of</span> <span class="o">(</span><span class="k">'</span><span class="n">key</span><span class="o">,</span> <span class="k">'value</span><span class="o">)</span> <span class="n">t</span> <span class="o">*</span> <span class="k">'</span><span class="n">key</span> <span class="o">*</span> <span class="k">'value</span> <span class="o">*</span> <span class="o">(</span><span class="k">'</span><span class="n">key</span><span class="o">,</span> <span class="k">'value</span><span class="o">)</span> <span class="n">t</span>  </span>
 </pre></div>
 <p>→ change the signature of module to abstract type.   </p>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk6_modules/pasted_image.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk6_modules/pasted_image.png"/> </p>
 <h1 id="4-functors">4. FUNCTORS</h1>
 <p><em>Functors are functions from modules to modules. In other words, a functor is a module parameterized by another module.</em> </p>
 <p>Continue the last example, we want to choose a Dict implementation externally. → <strong>module functor</strong> </p>

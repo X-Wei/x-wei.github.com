@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="OCaml" />
-        <meta name="description" content="[TOC] this week: structure code with types: tuples, records, arrays. 1. USER-DEFINED TYPES primary use of types: document your code use type type_identifier = some_type to define a new type (type_identifier is synonym/abbrevation of some_type) type_identifier must start with lowercase letter already known types: int, bool, string, char ... use : to …" />
+        <meta name="description" content="1. USER-DEFINED TYPES primary use of types: document your code pitfalls 2. TUPLES: positioned components pattern matching: observing components of tuple tuples in the machine structrual equality VS physical equaliity pitfalls 3. RECORDS: naming components pitfalls: shadowing a field name 4. ARRAYS 5. CASE STUDY: A SMALL TYPED DATABASE this ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[OCaml MOOC] week2: BASIC DATA STRUCTURES"/>
         <meta property="og:url" content="http://x-wei.github.io/ocamlMOOC_wk2_basics_ds.html"/>
-        <meta property="og:description" content="[TOC] this week: structure code with types: tuples, records, arrays. 1. USER-DEFINED TYPES primary use of types: document your code use type type_identifier = some_type to define a new type (type_identifier is synonym/abbrevation of some_type) type_identifier must start with lowercase letter already known types: int, bool, string, char ... use : to …"/>
+        <meta property="og:description" content="1. USER-DEFINED TYPES primary use of types: document your code pitfalls 2. TUPLES: positioned components pattern matching: observing components of tuple tuples in the machine structrual equality VS physical equaliity pitfalls 3. RECORDS: naming components pitfalls: shadowing a field name 4. ARRAYS 5. CASE STUDY: A SMALL TYPED DATABASE this ..."/>
         <meta property="article:published_time" content="2016-11-12" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="OCaml" />
@@ -210,11 +210,32 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week2: BASIC DATA STRUCTURES">[OCaml MOOC] week2: BASIC DATA STRUCTURES</a><ul><li><a class="toc-href" href="#1-user-defined-types" title="1. USER-DEFINED TYPES">1. USER-DEFINED TYPES</a><ul><li><a class="toc-href" href="#primary-use-of-types-document-your-code" title="primary use of types:  document your code">primary use of types:  document your code</a></li><li><a class="toc-href" href="#pitfalls" title="pitfalls">pitfalls</a></li></ul></li><li><a class="toc-href" href="#2-tuples-positioned-components_1" title="2. TUPLES: positioned components">2. TUPLES: positioned components</a><ul><li><a class="toc-href" href="#pattern-matching-observing-components-of-tuple" title="pattern matching: observing components of tuple">pattern matching: observing components of tuple</a></li><li><a class="toc-href" href="#tuples-in-the-machine" title="tuples in the machine">tuples in the machine</a></li><li><a class="toc-href" href="#structrual-equality-vs-physical-equaliity" title="structrual equality VS physical equaliity">structrual equality VS physical equaliity</a></li><li><a class="toc-href" href="#pitfalls_1" title="pitfalls">pitfalls</a></li></ul></li><li><a class="toc-href" href="#3-records-naming-components_1" title="3. RECORDS: naming components">3. RECORDS: naming components</a><ul><li><a class="toc-href" href="#pitfalls-shadowing-a-field-name" title="pitfalls: shadowing a field name">pitfalls: shadowing a field name</a></li></ul></li><li><a class="toc-href" href="#4-arrays_1" title="4. ARRAYS">4. ARRAYS</a></li><li><a class="toc-href" href="#5-case-study-a-small-typed-database" title="5. CASE STUDY: A SMALL TYPED DATABASE">5. CASE STUDY: A SMALL TYPED DATABASE</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-user-defined-types">1. USER-DEFINED TYPES</a><ul>
+<li><a href="#primary-use-of-types-document-your-code">primary use of types:  document your code</a></li>
+<li><a href="#pitfalls">pitfalls</a></li>
+</ul>
+</li>
+<li><a href="#2-tuples-positioned-components">2. TUPLES: positioned components</a><ul>
+<li><a href="#pattern-matching-observing-components-of-tuple">pattern matching: observing components of tuple</a></li>
+<li><a href="#tuples-in-the-machine">tuples in the machine</a></li>
+<li><a href="#structrual-equality-vs-physical-equaliity">structrual equality VS physical equaliity</a></li>
+<li><a href="#pitfalls_1">pitfalls</a></li>
+</ul>
+</li>
+<li><a href="#3-records-naming-components">3. RECORDS: naming components</a><ul>
+<li><a href="#pitfalls-shadowing-a-field-name">pitfalls: shadowing a field name</a></li>
+</ul>
+</li>
+<li><a href="#4-arrays">4. ARRAYS</a></li>
+<li><a href="#5-case-study-a-small-typed-database">5. CASE STUDY: A SMALL TYPED DATABASE</a></li>
+</ul>
+</div>
 <p>this week: structure code with types: tuples, records, arrays.   </p>
 <h1 id="1-user-defined-types">1. USER-DEFINED TYPES</h1>
 <h3 id="primary-use-of-types-document-your-code">primary use of types:  document your code</h3>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image.png"/> </p>
 <ul>
 <li>use <code>type type_identifier = some_type</code> to define a new type (<code>type_identifier</code> is synonym/abbrevation of <code>some_type</code>)  </li>
 <li><code>type_identifier</code> <em>must start with lowercase letter</em> </li>
@@ -259,8 +280,8 @@ mx's blog            </a>
 <ul>
 <li>limitations of type synonyms  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image001.png"><br>
-⇒ but ocaml has ways to define more precise types to avoid such error statically  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image001.png"/><br/>
+⇒ but ocaml has ways to define more precise types to avoid such error statically  </p>
 <h1 id="2-tuples-positioned-components_1">2. TUPLES: positioned components</h1>
 <p>Some objects are naturally made of several components, example: 2d point.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">origin</span> <span class="o">=</span> <span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">);;</span>  </span>
@@ -297,10 +318,10 @@ mx's blog            </a>
 <span class="code-line"><span class="k">val</span> <span class="n">y_coord</span> <span class="o">:</span> <span class="k">'</span><span class="n">a</span> <span class="o">*</span> <span class="k">'</span><span class="n">b</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">b</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>   </span>
 </pre></div>
 <h3 id="tuples-in-the-machine">tuples in the machine</h3>
-<p>tuple is a block of memory, program holds <em>pointer</em> to the block, <br>
-<img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image003.png"><br>
-pointers can be <em>shared</em>:<br>
-<img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image002.png"> </img></br></br></img></br></p>
+<p>tuple is a block of memory, program holds <em>pointer</em> to the block, <br/>
+<img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image003.png"/><br/>
+pointers can be <em>shared</em>:<br/>
+<img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image002.png"/> </p>
 <h3 id="structrual-equality-vs-physical-equaliity">structrual equality VS physical equaliity</h3>
 <p>in ocaml there are 2 types of equalities:  </p>
 <ul>
@@ -348,15 +369,15 @@ pointers can be <em>shared</em>:<br>
 </pre></div>
 <p>decalre a record type:   </p>
 <p><code>type som_type_identifier = {field_name: some_type; ...; field_name: some_type}</code> </p>
-<p>construct a record:<br>
-<code>{field_name = some_expr; ...; field_name = som_expr}</code> </br></p>
-<p>observe a field: <br>
-<code>some_expr.field_name</code> </br></p>
-<p>observe several fields: use record <em>patterns</em>:<br>
-<code>{field_name = some_pattern; ...; field_name = some_pattern}</code><br>
-(don't have to write all fields here)  </br></br></p>
+<p>construct a record:<br/>
+<code>{field_name = some_expr; ...; field_name = som_expr}</code> </p>
+<p>observe a field: <br/>
+<code>some_expr.field_name</code> </p>
+<p>observe several fields: use record <em>patterns</em>:<br/>
+<code>{field_name = some_pattern; ...; field_name = some_pattern}</code><br/>
+(don't have to write all fields here)  </p>
 <p>in the machine: like a tuple, a block of memory  </p>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image004.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image004.png"/> </p>
 <h3 id="pitfalls-shadowing-a-field-name">pitfalls: shadowing a field name</h3>
 <p>if 2 records share some identical field names:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">type</span> <span class="n">a</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">;</span> <span class="n">b</span><span class="o">:</span><span class="kt">int</span><span class="o">};;</span>  </span>
@@ -377,8 +398,8 @@ pointers can be <em>shared</em>:<br>
 <p>advice: NOT share field names between records!  </p>
 <h1 id="4-arrays_1">4. ARRAYS</h1>
 <p>tuple/record: sizes are statically bounded.   </p>
-<p>array: <em>dynamically</em> change sequence size,<br>
-but all array elements must have <em>same type</em>.   </br></p>
+<p>array: <em>dynamically</em> change sequence size,<br/>
+but all array elements must have <em>same type</em>.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">p</span> <span class="o">=</span> <span class="o">[|</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;|];;</span>  </span>
 <span class="code-line"><span class="k">val</span> <span class="n">p</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">array</span> <span class="o">=</span> <span class="o">[|</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">|]</span>  </span>
 <span class="code-line"><span class="o">#</span> <span class="k">let</span> <span class="n">square</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="o">;;</span>  </span>
@@ -412,10 +433,10 @@ but all array elements must have <em>same type</em>.   </br></p>
 <span class="code-line"><span class="nc">Exception</span><span class="o">:</span> <span class="nc">Match_failure</span> <span class="o">(</span><span class="s2">"//toplevel//"</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">9</span><span class="o">).</span>   </span>
 </pre></div>
 <p>in the machine: a memory block, like a record  </p>
-<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image005.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk2_basics_ds/pasted_image005.png"/> </p>
 <h1 id="5-case-study-a-small-typed-database">5. CASE STUDY: A SMALL TYPED DATABASE</h1>
-<p>a toy db for contacts, <br>
-3 queries: <code>insert, delete, search</code>.   </br></p>
+<p>a toy db for contacts, <br/>
+3 queries: <code>insert, delete, search</code>.   </p>
 <p>These functions have type: <code>database -&gt; query_contact -&gt; status * database * contact</code> </p>
 <p>define the phone number/contact/database types:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="k">type</span> <span class="n">phone_number</span> <span class="o">=</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span> <span class="o">*</span> <span class="kt">int</span><span class="o">;;</span>  </span>

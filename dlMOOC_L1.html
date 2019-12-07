@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] 这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... https://www.udacity.com/course/deep-learning--ud730 Softmax function socres yi ⇒ probabilities pi property: smaller scores ⇒ less certain about result Onehot encoding Cross entropy measure how well the probability vector S corresponds to the label vector L. ⇒ cross entropy D(S,L)( D&gt;=0, the smaller the …" />
+        <meta name="description" content="Softmax function Onehot encoding Cross entropy Minimizing cross entropy numerical stability weight initialization training, validation and test dataset SGD Momentum Learning rate decay parameter tuning 这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... https://www.udacity.com/course/deep-learning--ud730 Softmax function socres yi ⇒ probabilities pi property: smaller scores ⇒ less certain about result Onehot encoding Cross ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="(DeepLearning MOOC) Lesson 1: From Machine Learning to Deep Learning"/>
         <meta property="og:url" content="http://x-wei.github.io/dlMOOC_L1.html"/>
-        <meta property="og:description" content="[TOC] 这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... https://www.udacity.com/course/deep-learning--ud730 Softmax function socres yi ⇒ probabilities pi property: smaller scores ⇒ less certain about result Onehot encoding Cross entropy measure how well the probability vector S corresponds to the label vector L. ⇒ cross entropy D(S,L)( D&gt;=0, the smaller the …"/>
+        <meta property="og:description" content="Softmax function Onehot encoding Cross entropy Minimizing cross entropy numerical stability weight initialization training, validation and test dataset SGD Momentum Learning rate decay parameter tuning 这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... https://www.udacity.com/course/deep-learning--ud730 Softmax function socres yi ⇒ probabilities pi property: smaller scores ⇒ less certain about result Onehot encoding Cross ..."/>
         <meta property="article:published_time" content="2016-06-05" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,21 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="(DeepLearning MOOC) Lesson 1: From Machine Learning to Deep Learning">(DeepLearning MOOC) Lesson 1: From Machine Learning to Deep Learning</a><ul><li><a class="toc-href" href="#softmax-function" title="Softmax function">Softmax function</a></li><li><a class="toc-href" href="#onehot-encoding" title="Onehot encoding">Onehot encoding</a></li><li><a class="toc-href" href="#cross-entropy" title="Cross entropy">Cross entropy</a></li><li><a class="toc-href" href="#minimizing-cross-entropy" title="Minimizing cross entropy">Minimizing cross entropy</a></li><li><a class="toc-href" href="#numerical-stability" title="numerical stability">numerical stability</a></li><li><a class="toc-href" href="#weight-initialization" title="weight initialization">weight initialization</a></li><li><a class="toc-href" href="#training-validation-and-test-dataset" title="training, validation and test dataset">training, validation and test dataset</a></li><li><a class="toc-href" href="#sgd" title="SGD">SGD</a></li><li><a class="toc-href" href="#momentum" title="Momentum">Momentum</a></li><li><a class="toc-href" href="#learning-rate-decay" title="Learning rate decay">Learning rate decay</a></li><li><a class="toc-href" href="#parameter-tuning" title="parameter tuning">parameter tuning</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#softmax-function">Softmax function</a></li>
+<li><a href="#onehot-encoding">Onehot encoding</a></li>
+<li><a href="#cross-entropy">Cross entropy</a></li>
+<li><a href="#minimizing-cross-entropy">Minimizing cross entropy</a></li>
+<li><a href="#numerical-stability">numerical stability</a></li>
+<li><a href="#weight-initialization">weight initialization</a></li>
+<li><a href="#training-validation-and-test-dataset">training, validation and test dataset</a></li>
+<li><a href="#sgd">SGD</a></li>
+<li><a href="#momentum">Momentum</a></li>
+<li><a href="#learning-rate-decay">Learning rate decay</a></li>
+<li><a href="#parameter-tuning">parameter tuning</a></li>
+</ul>
+</div>
 <p>这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... 
 <a href="https://www.udacity.com/course/deep-learning--ud730">https://www.udacity.com/course/deep-learning--ud730</a></p>
 <h2 id="softmax-function">Softmax function</h2>
@@ -229,9 +243,9 @@ mx's blog            </a>
 <img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image004.png"/></p>
 <h2 id="minimizing-cross-entropy">Minimizing cross entropy</h2>
 <p>take avg D as loss function: 
-<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image008.png">
+<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image008.png"/>
 ⇒ optimization, for example, by grad-desc: 
-<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image007.png"/></img></p>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image007.png"/></p>
 <p>for the moment, take the optimizer as black box. </p>
 <p>two practical problems: </p>
 <ol>
@@ -241,11 +255,11 @@ mx's blog            </a>
 <h2 id="numerical-stability">numerical stability</h2>
 <p>adding very small values to very large values will introduce a lot of errors ! 
 ex. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; a = 1e9</span>
-<span class="code-line">&gt;&gt;&gt; for _ in xrange(1000000):</span>
-<span class="code-line">...     a += 1e-6</span>
-<span class="code-line">&gt;&gt;&gt; a - 1e9</span>
-<span class="code-line">0.95367431640625</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; a = 1e9</span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; for _ in xrange(1000000):</span></span>
+<span class="code-line"><span class="err">...     a += 1e-6</span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; a - 1e9</span></span>
+<span class="code-line"><span class="err">0.95367431640625</span></span>
 </pre></div>
 <p>⇒ the result is not 1... </p>
 <p>⇒ normalize input ! ⇒ <strong>0 mean, 1 variance</strong></p>
@@ -259,16 +273,16 @@ small sigma means small outputs → uncertain about result.
 ⇒ take small sigma for initialization 
 <img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image011.png"/></p>
 <p>recap: </p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image012.png">
-⇒ feed this loss fcn to the optimizer </img></p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image012.png"/>
+⇒ feed this loss fcn to the optimizer </p>
 <h2 id="training-validation-and-test-dataset">training, validation and test dataset</h2>
 <p><strong>rule of thumb (30)</strong>: 
 a change that affects 30 examples in the validation set is statically significant. 
 ⇒ in most cases use &gt;30000 samples in validation set → changes in 0.1% is significant. </p>
 <h2 id="sgd">SGD</h2>
 <p>rule of thumb: computing <code>grad(L)</code> takes 3x time than computing loss fcn <code>L</code>. → pb for scaling.. </p>
-<p><img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image014.png">
-SGD is the only fast enough model in practice. </img></p>
+<p><img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image014.png"/>
+SGD is the only fast enough model in practice. </p>
 <p>tricks to help SGD: </p>
 <ol>
 <li>normalize data (0 mean, uni-var)</li>
@@ -285,9 +299,9 @@ SGD is the only fast enough model in practice. </img></p>
 e.g. alpha decays exponentially...<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image016.png"/></p>
 <h2 id="parameter-tuning">parameter tuning</h2>
 <p>how quickly you learning != how well you train.. 
-<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image017.png">
+<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image017.png"/>
 balck magics in deep learning: 
-<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image018.png"/></img></p>
+<img alt="" class="img-responsive" src="../images/dlMOOC_L1/pasted_image018.png"/></p>
 <p><strong>Adagrad</strong>
 variant of SGD, implicitly decays momentum and learning rate. </p>
 <p>recap: 

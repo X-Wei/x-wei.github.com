@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Hyperparameter parameters Tips for hyperparam-tuning. Tuning process Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple): How to select set of values to explore ? Do NOT use grid search (grid of n * n) — this was OK in pre-DL era. try random values. reason: difficule to know which …" />
+        <meta name="description" content="Hyperparameter parameters Tuning process Using an appropriate scale to pick hyperparameters Hyperparameters tuning in practice: Pandas vs. Caviar Batch Normalization Normalizing activations in a network Fitting Batch Norm into a neural network Why does Batch Norm work? Batch Norm at test time Multiclass classification Softmax Regression Training a softmax classifier ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c2wk3.html"/>
-        <meta property="og:description" content="[TOC] Hyperparameter parameters Tips for hyperparam-tuning. Tuning process Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple): How to select set of values to explore ? Do NOT use grid search (grid of n * n) — this was OK in pre-DL era. try random values. reason: difficule to know which …"/>
+        <meta property="og:description" content="Hyperparameter parameters Tuning process Using an appropriate scale to pick hyperparameters Hyperparameters tuning in practice: Pandas vs. Caviar Batch Normalization Normalizing activations in a network Fitting Batch Norm into a neural network Why does Batch Norm work? Batch Norm at test time Multiclass classification Softmax Regression Training a softmax classifier ..."/>
         <meta property="article:published_time" content="2017-10-23" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,12 +210,38 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</a><ul><li><a class="toc-href" href="#hyperparameter-parameters" title="Hyperparameter parameters">Hyperparameter parameters</a><ul><li><a class="toc-href" href="#tuning-process" title="Tuning process">Tuning process</a></li><li><a class="toc-href" href="#using-an-appropriate-scale-to-pick-hyperparameters" title="Using an appropriate scale to pick hyperparameters">Using an appropriate scale to pick hyperparameters</a></li><li><a class="toc-href" href="#hyperparameters-tuning-in-practice-pandas-vs-caviar" title="Hyperparameters tuning in practice: Pandas vs. Caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</a></li></ul></li><li><a class="toc-href" href="#batch-normalization_1" title="Batch Normalization">Batch Normalization</a><ul><li><a class="toc-href" href="#normalizing-activations-in-a-network" title="Normalizing activations in a network">Normalizing activations in a network</a></li><li><a class="toc-href" href="#fitting-batch-norm-into-a-neural-network" title="Fitting Batch Norm into a neural network">Fitting Batch Norm into a neural network</a></li><li><a class="toc-href" href="#why-does-batch-norm-work" title="Why does Batch Norm work?">Why does Batch Norm work?</a></li><li><a class="toc-href" href="#batch-norm-at-test-time" title="Batch Norm at test time">Batch Norm at test time</a></li></ul></li><li><a class="toc-href" href="#multiclass-classification_1" title="Multiclass classification">Multiclass classification</a><ul><li><a class="toc-href" href="#softmax-regression" title="Softmax Regression">Softmax Regression</a></li><li><a class="toc-href" href="#training-a-softmax-classifier" title="Training a softmax classifier">Training a softmax classifier</a></li></ul></li><li><a class="toc-href" href="#introduction-to-programming-frameworks_1" title="Introduction to programming frameworks">Introduction to programming frameworks</a><ul><li><a class="toc-href" href="#deep-learning-frameworks" title="Deep learning frameworks">Deep learning frameworks</a></li><li><a class="toc-href" href="#tensorflow" title="TensorFlow">TensorFlow</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#hyperparameter-parameters">Hyperparameter parameters</a><ul>
+<li><a href="#tuning-process">Tuning process</a></li>
+<li><a href="#using-an-appropriate-scale-to-pick-hyperparameters">Using an appropriate scale to pick hyperparameters</a></li>
+<li><a href="#hyperparameters-tuning-in-practice-pandas-vs-caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</a></li>
+</ul>
+</li>
+<li><a href="#batch-normalization">Batch Normalization</a><ul>
+<li><a href="#normalizing-activations-in-a-network">Normalizing activations in a network</a></li>
+<li><a href="#fitting-batch-norm-into-a-neural-network">Fitting Batch Norm into a neural network</a></li>
+<li><a href="#why-does-batch-norm-work">Why does Batch Norm work?</a></li>
+<li><a href="#batch-norm-at-test-time">Batch Norm at test time</a></li>
+</ul>
+</li>
+<li><a href="#multiclass-classification">Multiclass classification</a><ul>
+<li><a href="#softmax-regression">Softmax Regression</a></li>
+<li><a href="#training-a-softmax-classifier">Training a softmax classifier</a></li>
+</ul>
+</li>
+<li><a href="#introduction-to-programming-frameworks">Introduction to programming frameworks</a><ul>
+<li><a href="#deep-learning-frameworks">Deep learning frameworks</a></li>
+<li><a href="#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="hyperparameter-parameters">Hyperparameter parameters</h2>
 <p>Tips for hyperparam-tuning.  </p>
 <h3 id="tuning-process">Tuning process</h3>
-<p>Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple):<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image.png"> </img></br></p>
+<p>Many hyperparams to tune, mark importance by colors (red &gt; yellow &gt; purple):<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image.png"/> </p>
 <p>How to select set of values to explore ?  </p>
 <ul>
 <li>Do <strong>NOT</strong> use grid search (grid of n * n)  </li>
@@ -224,28 +250,28 @@ mx's blog            </a>
 <ul>
 <li><strong>try random values.</strong> </li>
 </ul>
-<p>reason: difficule to know which hyperparam is most important, by randomization, <em>can try out n</em>n distinct values for each hyperparam.*<br>
-In extreme case, one is <code>alpha</code>, the other is <code>epislon</code>.  </br></p>
+<p>reason: difficule to know which hyperparam is most important, by randomization, <em>can try out n</em>n distinct values for each hyperparam.*<br/>
+In extreme case, one is <code>alpha</code>, the other is <code>epislon</code>.  </p>
 <ul>
 <li>in grid search: only n distinct values of alpha are tried  </li>
 <li>in random choice: can have n*n distinct values of alpha  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image001.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image001.png"/> </p>
 <ul>
 <li><strong>Coarse to fine</strong> sample scheme: zoom in to smaller regions of hyperparam space and re-sample more densely.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image002.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image002.png"/> </p>
 <h3 id="using-an-appropriate-scale-to-pick-hyperparameters">Using an appropriate scale to pick hyperparameters</h3>
-<p>"Sampling at random", but at <em>appropriate scale, not uniformly.</em><br>
-example: choice of alpha in [0.001, 1]<br>
-→ <em>sample uniformly at log scale</em> is more resonable: equal resources are used to search at each scale.  </br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image003.png"> </img></p>
+<p>"Sampling at random", but at <em>appropriate scale, not uniformly.</em><br/>
+example: choice of alpha in [0.001, 1]<br/>
+→ <em>sample uniformly at log scale</em> is more resonable: equal resources are used to search at each scale.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image003.png"/> </p>
 <p>implementation:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>r = -4 * np.random.rand()  # -4 &lt;= r &lt;= 0, uniformly at randome  </span>
-<span class="code-line">alpha = np.exp(10, r) # 10e-4 &lt;= alpha &lt;= 1.0</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">r = -4 * np.random.rand()  # -4 &lt;= r &lt;= 0, uniformly at randome  </span></span>
+<span class="code-line"><span class="err">alpha = np.exp(10, r) # 10e-4 &lt;= alpha &lt;= 1.0</span></span>
 </pre></div>
-<p><em>sampling beta for exp-weighted-avg: </em>sample in the range of [0.9, 0.999]<br>
-→ convert to sampling 1-beta, which is in range [0.0001, 0.1]  </br></p>
+<p><em>sampling beta for exp-weighted-avg: </em>sample in the range of [0.9, 0.999]<br/>
+→ convert to sampling 1-beta, which is in range [0.0001, 0.1]  </p>
 <h3 id="hyperparameters-tuning-in-practice-pandas-vs-caviar">Hyperparameters tuning in practice: Pandas vs. Caviar</h3>
 <p>Tricks on how to <em>organize</em> hyper-param-tuning process.  </p>
 <p><em>re-test hyperparams occasionally:</em> intuitions get stale, re-evaluate hyperparams every several months.  </p>
@@ -253,101 +279,101 @@ example: choice of alpha in [0.001, 1]<br>
 <ul>
 <li><strong>Panda approach</strong>: <em>babysitting one model</em> </li>
 </ul>
-<p>Huge dataset, limited computing resources, can only train one model → babysit the model as it's training. Watch learning curve, try changing hyparams once a day.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image004.png"> </img></br></p>
+<p>Huge dataset, limited computing resources, can only train one model → babysit the model as it's training. Watch learning curve, try changing hyparams once a day.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image004.png"/> </p>
 <ul>
 <li><strong>Caviar approach</strong>: <em>train many models in parallel</em> </li>
 </ul>
-<p>Have enough computation power.<br>
-  Different model/hyperparams being trained at the same time in parallel, pick the best one.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image005.png"> </img></br></br></p>
+<p>Have enough computation power.<br/>
+  Different model/hyperparams being trained at the same time in parallel, pick the best one.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image005.png"/> </p>
 <h2 id="batch-normalization_1">Batch Normalization</h2>
-<p><strong>Batch normalization</strong>:<br>
-(in some cases) <em>makes NN much more robust, and DNN much easier to train.</em> </br></p>
+<p><strong>Batch normalization</strong>:<br/>
+(in some cases) <em>makes NN much more robust, and DNN much easier to train.</em> </p>
 <h3 id="normalizing-activations-in-a-network">Normalizing activations in a network</h3>
-<p>In pre-DL: normalize inputs to speedup learning. "make contours round"<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image007.png"><br>
-In NN: normalize the activation <code>a[l-1]</code> from previous layer could help (in practice, usually normalize <code>z[l-1]</code>.)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image009.png"> </img></br></br></img></br></p>
-<p><strong>BatchNorm algo</strong>:<br>
-intermediate values at each layer: <code>z[l]</code><br>
-→ compute mean &amp; variance<br>
-⇒ get normalized <code>z[l]_normed</code>. (mean=0, std=1)<br>
-→ <strong>trasform</strong> <code>z[l]_normed</code> to <code>z_tilde[l]</code> (mean=<code>beta</code>, std=<code>gamma</code>, <em>beta and gamma are learnable params</em>),<br>
-reason: for hidden units, want to move/stretch the support of hidden inputs, so as to profit from non-linearity of activation function.  </br></br></br></br></br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image011.png"> </img></p>
+<p>In pre-DL: normalize inputs to speedup learning. "make contours round"<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image007.png"/><br/>
+In NN: normalize the activation <code>a[l-1]</code> from previous layer could help (in practice, usually normalize <code>z[l-1]</code>.)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image009.png"/> </p>
+<p><strong>BatchNorm algo</strong>:<br/>
+intermediate values at each layer: <code>z[l]</code><br/>
+→ compute mean &amp; variance<br/>
+⇒ get normalized <code>z[l]_normed</code>. (mean=0, std=1)<br/>
+→ <strong>trasform</strong> <code>z[l]_normed</code> to <code>z_tilde[l]</code> (mean=<code>beta</code>, std=<code>gamma</code>, <em>beta and gamma are learnable params</em>),<br/>
+reason: for hidden units, want to move/stretch the support of hidden inputs, so as to profit from non-linearity of activation function.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image011.png"/> </p>
 <h3 id="fitting-batch-norm-into-a-neural-network">Fitting Batch Norm into a neural network</h3>
-<p>Add batchnorm to NN: replace z[l] to z_tilde[l] at each layer before activation g[l].<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image012.png"> </img></br></p>
+<p>Add batchnorm to NN: replace z[l] to z_tilde[l] at each layer before activation g[l].<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image012.png"/> </p>
 <p>Extra params to learn: <code>gamma[l]</code> and <code>beta[l]</code> at each layer.  </p>
 <p>In practice: no need to implement all details of BN, use DL framework.  </p>
-<p><strong>No bias term (b) in BN</strong>:<br>
-z[l] = W[l] * a[l-1] + b[l]<br>
-but z[l] will be centered anyway → <code>b[l]</code> is not useful.<br>
-→ <code>b[l]</code> is replaced by <code>beta[l]</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image014.png"><br>
-Dimension of beta[l], gamma[l]: the same as b[l] ( = n[l] * 1).  </br></img></br></br></br></br></p>
+<p><strong>No bias term (b) in BN</strong>:<br/>
+z[l] = W[l] * a[l-1] + b[l]<br/>
+but z[l] will be centered anyway → <code>b[l]</code> is not useful.<br/>
+→ <code>b[l]</code> is replaced by <code>beta[l]</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image014.png"/><br/>
+Dimension of beta[l], gamma[l]: the same as b[l] ( = n[l] * 1).  </p>
 <h3 id="why-does-batch-norm-work">Why does Batch Norm work?</h3>
 <p><strong>intuition 1</strong>: similar to normalizing input ("make contours round")  </p>
-<p><strong>intuition 2</strong>: weights in deeper layers are more robust to changes in ealier layer weights.<br>
-i.e. Robost to <em>data distribution changing</em>. ("<strong>covariant shift</strong>")  </br></p>
-<p>motivating example:<br>
-cat-classification, <em>trained all with black cats, but applied to colored cats</em>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image016.png"> </img></br></br></p>
-<p>For NN, consider the 3rd layer's units:<br>
-input features: a[2],<br>
-if cover the first 2 layers, this is a NN to map from a[2] to y_hat<br>
-⇒ but when weights w[2],b[2] are updated in GD, <em>a[2]'s distribution is always changing</em>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image017.png"><br>
-<strong>intuition</strong>: With BN, a[2] are ensured to <em>always have the same mean/variance</em><br>
-  → "data distribution" is unchanged → later layers can learn more easily, independent of previous layer's weights' change.  </br></br></img></br></br></br></br></p>
-<p><strong>intuition 2</strong>: BN as <em>regularization</em><br>
-  each minibatch is scaled by mean/var of just that minibatch<br>
-  → <em>add noise</em> to the transformation from z[l] to z_tilde[l].<br>
-  ⇒ similar to dropout, add noise to each layer's activations.<br>
-  therefore BN have (<em>slight</em>) regularization effect (thie regularization effect gets smaller as minibatch size grows).<br>
-  (This is an unintended side effect.)  </br></br></br></br></br></p>
+<p><strong>intuition 2</strong>: weights in deeper layers are more robust to changes in ealier layer weights.<br/>
+i.e. Robost to <em>data distribution changing</em>. ("<strong>covariant shift</strong>")  </p>
+<p>motivating example:<br/>
+cat-classification, <em>trained all with black cats, but applied to colored cats</em>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image016.png"/> </p>
+<p>For NN, consider the 3rd layer's units:<br/>
+input features: a[2],<br/>
+if cover the first 2 layers, this is a NN to map from a[2] to y_hat<br/>
+⇒ but when weights w[2],b[2] are updated in GD, <em>a[2]'s distribution is always changing</em>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image017.png"/><br/>
+<strong>intuition</strong>: With BN, a[2] are ensured to <em>always have the same mean/variance</em><br/>
+  → "data distribution" is unchanged → later layers can learn more easily, independent of previous layer's weights' change.  </p>
+<p><strong>intuition 2</strong>: BN as <em>regularization</em><br/>
+  each minibatch is scaled by mean/var of just that minibatch<br/>
+  → <em>add noise</em> to the transformation from z[l] to z_tilde[l].<br/>
+  ⇒ similar to dropout, add noise to each layer's activations.<br/>
+  therefore BN have (<em>slight</em>) regularization effect (thie regularization effect gets smaller as minibatch size grows).<br/>
+  (This is an unintended side effect.)  </p>
 <h3 id="batch-norm-at-test-time">Batch Norm at test time</h3>
-<p><em>At training time</em>, z[l] is standarlized <em>over each minibatch</em>.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image018.png"><br>
-⇒ But at test time needs to treat examples one at a time.<br>
-→ estimate the value of meu/sigma2<br>
-⇒ using<em> exp-weighted-avg</em> estimator across minibatchs (with beta close to 1 → ~running average).<br>
-at test time, just use the latest value of this exp-weighted-avg estimation as meu/sigma2.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image019.png"> </img></br></br></br></br></br></img></br></p>
+<p><em>At training time</em>, z[l] is standarlized <em>over each minibatch</em>.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image018.png"/><br/>
+⇒ But at test time needs to treat examples one at a time.<br/>
+→ estimate the value of meu/sigma2<br/>
+⇒ using<em> exp-weighted-avg</em> estimator across minibatchs (with beta close to 1 → ~running average).<br/>
+at test time, just use the latest value of this exp-weighted-avg estimation as meu/sigma2.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image019.png"/> </p>
 <h2 id="multiclass-classification_1">Multiclass classification</h2>
 <h3 id="softmax-regression">Softmax Regression</h3>
-<p>So far: only binary classification<br>
-generalize logistic regression to &gt;2 classes ⇒ <em>softmax regression</em>.  </br></p>
-<p><code>C</code> = #classes, = #units in output layer<br>
-each component in y_hat is probability of one class, y_hat is normalized.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image021.png"> </img></br></br></p>
+<p>So far: only binary classification<br/>
+generalize logistic regression to &gt;2 classes ⇒ <em>softmax regression</em>.  </p>
+<p><code>C</code> = #classes, = #units in output layer<br/>
+each component in y_hat is probability of one class, y_hat is normalized.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image021.png"/> </p>
 <p><strong>softmax layer</strong>:  </p>
 <ul>
 <li>z[L] = W[L] * a[l-1] + b[L] — same as before  </li>
 <li>a[L] = y_hat = g(z[L])  </li>
 </ul>
-<p>activation function: <em>softmax</em><br>
-take exp(z[L]) --element-wise, and then normalize:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image023.png"> </img></br></br></p>
-<p>The softmax activation function is unusual because it takes a <em>vector</em> instead of scalar.<br>
-Softmax is generalization of logistic regression: decision boundary of a <em>single-layer (no hidden layer)</em> softmax is also <em>linear</em>:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image025.png"> </img></br></br></p>
+<p>activation function: <em>softmax</em><br/>
+take exp(z[L]) --element-wise, and then normalize:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image023.png"/> </p>
+<p>The softmax activation function is unusual because it takes a <em>vector</em> instead of scalar.<br/>
+Softmax is generalization of logistic regression: decision boundary of a <em>single-layer (no hidden layer)</em> softmax is also <em>linear</em>:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image025.png"/> </p>
 <h3 id="training-a-softmax-classifier">Training a softmax classifier</h3>
 <p><strong>understanding softmax</strong> </p>
 <ul>
 <li>"softmax" is in contrast to "<em>hardmax</em>":  </li>
 </ul>
-<p>hardmax[i]= 1 if z_i=max else 0.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image026.png"> </img></br></p>
+<p>hardmax[i]= 1 if z_i=max else 0.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image026.png"/> </p>
 <ul>
 <li>When C = 2, softmax reduces to logistic regression.  </li>
 </ul>
 <p>softmax(C=2) = [logistic-reg(), 1-logistic-reg]  </p>
-<p><strong>loss function</strong><br>
-recall: loss function in logistic regression<br>
-L(y, y_hat) = -1 * sum( y_i * log yhat_i + (1-y_i) * log(yhat_i) )<br>
-→ want y_hat big when y_i=1, small when y_i=0  </br></br></br></p>
+<p><strong>loss function</strong><br/>
+recall: loss function in logistic regression<br/>
+L(y, y_hat) = -1 * sum( y_i * log yhat_i + (1-y_i) * log(yhat_i) )<br/>
+→ want y_hat big when y_i=1, small when y_i=0  </p>
 <ul>
 <li>training label y: one-hot encoding.  </li>
 <li>prediciton y_hat: probability vector  </li>
@@ -356,51 +382,51 @@ L(y, y_hat) = -1 * sum( y_i * log yhat_i + (1-y_i) * log(yhat_i) )<br>
 <ul>
 <li>if y_k=1, want to make yhat_k big  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image027.png"><br>
-→ max-likelihood estimation.  </br></img></p>
-<p><strong>GD with softmax</strong><br>
-fwdprop:<br>
-Z[L] --(softmax)--&gt; a[L]=y_hat → L(y_hat, y)<br>
-backprop:<br>
-<em>dZ[L] = y_hat - y</em> </br></br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image027.png"/><br/>
+→ max-likelihood estimation.  </p>
+<p><strong>GD with softmax</strong><br/>
+fwdprop:<br/>
+Z[L] --(softmax)--&gt; a[L]=y_hat → L(y_hat, y)<br/>
+backprop:<br/>
+<em>dZ[L] = y_hat - y</em> </p>
 <h2 id="introduction-to-programming-frameworks_1">Introduction to programming frameworks</h2>
 <h3 id="deep-learning-frameworks">Deep learning frameworks</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image029.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image029.png"/> </p>
 <h3 id="tensorflow">TensorFlow</h3>
 <p>motivating problem: minimize cost function <code>J(w) = (w-5)^2</code> </p>
 <ul>
 <li><code>import tensorflow as tf</code> </li>
 <li>
-<p>define <em>parameter</em> to optimize:<br>
-<code>w = tf.Variable(0, dtype=tf.float32)</code> </br></p>
+<p>define <em>parameter</em> to optimize:<br/>
+<code>w = tf.Variable(0, dtype=tf.float32)</code> </p>
 </li>
 <li>
-<p>define cost function:<br>
+<p>define cost function:<br/>
 <code>cost = tf.add(tf.add(w**2), tf.multiply(-10., w)), 25)  # w^2 - 10w + 25  
   # also possible to use tf-reloaded operators:  
-  cost = w**2 - 10 * w + 25</code></br></p>
+  cost = w**2 - 10 * w + 25</code></p>
 </li>
 <li>
 <p>tells tf to minimize the cost with GD optimizer:  </p>
 </li>
 </ul>
-<p><code>train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)</code><br>
-till now the <em>computation graph</em> is defined → backward derivatives are auto-computed.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image030.png"> </img></br></br></p>
+<p><code>train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)</code><br/>
+till now the <em>computation graph</em> is defined → backward derivatives are auto-computed.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c2wk3/pasted_image030.png"/> </p>
 <ul>
 <li>start the training  </li>
 </ul>
-<p>Quite idiomatic process:<br>
-initialize vars → create session → run operations in session  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>init = tf.global_variables_initializer()  </span>
-<span class="code-line">session = tf.Session()  </span>
-<span class="code-line">session.run(init)  </span>
-<span class="code-line">session.run(train) # run 1 iteration of training</span>
+<p>Quite idiomatic process:<br/>
+initialize vars → create session → run operations in session  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">init = tf.global_variables_initializer()  </span></span>
+<span class="code-line"><span class="err">session = tf.Session()  </span></span>
+<span class="code-line"><span class="err">session.run(init)  </span></span>
+<span class="code-line"><span class="err">session.run(train) # run 1 iteration of training</span></span>
 </pre></div>
 <p>alternative format:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>with tf.Session() as session:  </span>
-<span class="code-line">  session.run(init)  </span>
-<span class="code-line">  session.run(train)</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">with tf.Session() as session:  </span></span>
+<span class="code-line"><span class="err">  session.run(init)  </span></span>
+<span class="code-line"><span class="err">  session.run(train)</span></span>
 </pre></div>
 <ul>
 <li>To inspect the value of a parameter: <code>print(session.run(w))</code> </li>
@@ -413,10 +439,10 @@ initialize vars → create session → run operations in session  </br></p>
 <p><strong>Let loss function depends on training data:</strong> </p>
 <ul>
 <li>
-<p>define training data as <em>placer holder</em>.<br>
-  a placerholder is a variable whose value will be assigned later.<br>
+<p>define training data as <em>placer holder</em>.<br/>
+  a placerholder is a variable whose value will be assigned later.<br/>
 <code>x = tf.placeholder(tf.float32, [3,1])  
-    cost = x[0][0] * w**2 + x[1][0] * w + x[2][0]</code></br></br></p>
+    cost = x[0][0] * w**2 + x[1][0] * w + x[2][0]</code></p>
 </li>
 <li>
 <p>feed actual data value to placerholder: use <em>feed_dict</em> in session.run()  </p>

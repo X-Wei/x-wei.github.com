@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="scala" />
-        <meta name="description" content="[TOC] this week: discuss how to handle events in user-interface — MVC, functional reactive programming. Lecture 4.1 - Imperative Event Handling: The Observer Pattern Traditional way of handling events: observer Pattern (MVC). Used when views need to react to change in a model. MVC: model-view-controller for user interface Views can announce …" />
+        <meta name="description" content="Lecture 4.1 - Imperative Event Handling: The Observer Pattern Lecture 4.2 - Functional Reactive Programming Signal opeartions example: bank account Lecture 4.3 - A Simple FRP Implementation implemention idea Signal caller Lecture 4.4/4.5 - Latency as an Effect Lecture 4.6/4.7/4.8/4.9/4 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Scala MOOC II] Lec4 - Timely Effects"/>
         <meta property="og:url" content="http://x-wei.github.io/progfun2_lec4_var.html"/>
-        <meta property="og:description" content="[TOC] this week: discuss how to handle events in user-interface — MVC, functional reactive programming. Lecture 4.1 - Imperative Event Handling: The Observer Pattern Traditional way of handling events: observer Pattern (MVC). Used when views need to react to change in a model. MVC: model-view-controller for user interface Views can announce …"/>
+        <meta property="og:description" content="Lecture 4.1 - Imperative Event Handling: The Observer Pattern Lecture 4.2 - Functional Reactive Programming Signal opeartions example: bank account Lecture 4.3 - A Simple FRP Implementation implemention idea Signal caller Lecture 4.4/4.5 - Latency as an Effect Lecture 4.6/4.7/4.8/4.9/4 ..."/>
         <meta property="article:published_time" content="2016-11-09" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="scala" />
@@ -210,7 +210,28 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Scala MOOC II] Lec4 - Timely Effects">[Scala MOOC II] Lec4 - Timely Effects</a><ul><li><a class="toc-href" href="#lecture-41-imperative-event-handling-the-observer-pattern" title="Lecture 4.1 - Imperative Event Handling: The Observer Pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</a></li><li><a class="toc-href" href="#lecture-42-functional-reactive-programming" title="Lecture 4.2 - Functional Reactive Programming">Lecture 4.2 - Functional Reactive Programming</a><ul><li><a class="toc-href" href="#signal-opeartions" title="Signal opeartions">Signal opeartions</a></li><li><a class="toc-href" href="#example-bank-account" title="example: bank account">example: bank account</a></li></ul></li><li><a class="toc-href" href="#lecture-43-a-simple-frp-implementation_1" title="Lecture 4.3 - A Simple FRP Implementation">Lecture 4.3 - A Simple FRP Implementation</a><ul><li><a class="toc-href" href="#implemention-idea" title="implemention idea">implemention idea</a><ul><li><a class="toc-href" href="#signal" title="Signal">Signal</a></li><li><a class="toc-href" href="#caller" title="caller">caller</a></li></ul></li></ul></li><li><a class="toc-href" href="#lecture-4445-latency-as-an-effect_2" title="Lecture 4.4/4.5 - Latency as an Effect">Lecture 4.4/4.5 - Latency as an Effect</a></li><li><a class="toc-href" href="#lecture-46474849410-combinators-on-futurescomposing-futures" title="Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures">Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</a></li><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li><li><a class="toc-href" href="#exercice-calculator" title="exercice: calculator">exercice: calculator</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]    </p>
+                <div class="toc">
+<ul>
+<li><a href="#lecture-41-imperative-event-handling-the-observer-pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</a></li>
+<li><a href="#lecture-42-functional-reactive-programming">Lecture 4.2 - Functional Reactive Programming</a><ul>
+<li><a href="#signal-opeartions">Signal opeartions</a></li>
+<li><a href="#example-bank-account">example: bank account</a></li>
+</ul>
+</li>
+<li><a href="#lecture-43-a-simple-frp-implementation">Lecture 4.3 - A Simple FRP Implementation</a><ul>
+<li><a href="#implemention-idea">implemention idea</a><ul>
+<li><a href="#signal">Signal</a></li>
+<li><a href="#caller">caller</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#lecture-4445-latency-as-an-effect">Lecture 4.4/4.5 - Latency as an Effect</a></li>
+<li><a href="#lecture-46474849410-combinators-on-futurescomposing-futures">Lecture 4.6/4.7/4.8/4.9/4.10 - Combinators on Futures/Composing Futures</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#exercice-calculator">exercice: calculator</a></li>
+</ul>
+</div>
 <p>this week: discuss how to handle events in user-interface — MVC, functional reactive programming.  </p>
 <h1 id="lecture-41-imperative-event-handling-the-observer-pattern">Lecture 4.1 - Imperative Event Handling: The Observer Pattern</h1>
 <p>Traditional way of handling events: <em>observer Pattern (MVC)</em>. Used when views need to react to change in a model.  </p>
@@ -230,9 +251,9 @@ mx's blog            </a>
 <span class="code-line"><span class="o">}</span> </span>
 </pre></div>
 <p>make the <code>BankAccount</code> a <code>Publisher</code>:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image.png"/> </p>
 <p>create a <code>Consolidator</code> that displays bank accounts:  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image001.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image001.png"/> </p>
 <p>Advantages of MVC: </p>
 <ul>
 <li>decouples views from stat </li>
@@ -260,10 +281,10 @@ mx's blog            </a>
 <li>define new signals from existing ones (instead of having <em>mutable</em> state) </li>
 </ul>
 <p><strong>example: move mouse positions</strong> </p>
-<p><strong>event-based view:</strong><br>
-whenever mouse moves, an event <code>MouseMoved(toPos: Position)</code> is fired </br></p>
-<p><strong>FRP view:</strong><br>
-use a signal(function): <code>mousePosition: Signal[Position]</code> , which at any point represents a current mouse position </br></p>
+<p><strong>event-based view:</strong><br/>
+whenever mouse moves, an event <code>MouseMoved(toPos: Position)</code> is fired </p>
+<p><strong>FRP view:</strong><br/>
+use a signal(function): <code>mousePosition: Signal[Position]</code> , which at any point represents a current mouse position </p>
 <h3 id="signal-opeartions">Signal opeartions</h3>
 <p>2 fundamental ops on signals:  </p>
 <ul>
@@ -382,8 +403,8 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 <li><code>caller.withValue(sig:Signal[T])(expr: () =&gt; [T])</code>:  </li>
 </ul>
 <p>first add <code>sig</code> to the top of stack; then evaluate <code>expr</code>; finally pop <code>sig</code> off the stack.  </p>
-<p>Here is the implementation of the <code>caller</code> : <br>
-<img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image005.png"> </img></br></p>
+<p>Here is the implementation of the <code>caller</code> : <br/>
+<img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image005.png"/> </p>
 <ul>
 <li>So whenever <code>sig</code> want to know who depends on it, it just use <code>caller.value</code>;  </li>
 </ul>
@@ -435,7 +456,7 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 <p>fallbackTo:  </p>
 <p>retry: deal with failure...  </p>
 <p>turn recursion to foldleft/foldright...  </p>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image009.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image009.png"/> </p>
 <h1 id="conclusion">Conclusion</h1>
 <ul>
 <li>lazy evaluation: infinite data structure </li>
@@ -448,7 +469,7 @@ simplistic way: maintain a <em>global</em> data structure (stack-fashion) referr
 <li>FRP </li>
 <li>monads </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image010.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec4_var/pasted_image010.png"/> </p>
 <h1 id="exercice-calculator">exercice: calculator</h1>
 <p>Use Function Reactive Programming (FRP), with the Signal[A] class that you have seen in the lectures, to implement a spreadsheet-like calculator. In this calculator, cells can depend on the value of other cells, and are recomputed automatically when the latter change.  </p>
 <p><a href="https://github.com/X-Wei/Coursera-progfun2/tree/master/hw4-calculator">https://github.com/X-Wei/Coursera-progfun2/tree/master/hw4-calculator</a> </p>

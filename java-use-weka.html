@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="ml,weka,java" />
-        <meta name="description" content="[TOC] 之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka. 1. Include jars into project weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...). weka的文档在解压缩的文件里有, 另外在线文档在: http://weka.sourceforge.net/doc.stable-3-8/ about libsvm... 关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: 在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, wekafiles/packages/LibSVM/目录下就是libsvm的内容. 需要指出的一点是, 要使用libsvm的话, 需要同时引用两个jar文件, 而且都叫libsvm.jar …" />
+        <meta name="description" content="1. Include jars into project about libsvm... 2. terminology 3. 在程序里构建数据 新建Attribute 新建Instances(dataset) 新建Instance 4. 在程序里训练model 5. 从文件读入数据和model 6. 输出Evaluation统计 7. 输出预测结果 之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka. 1. Include jars into project weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...). weka的文档在解压缩的文件里有, 另外在线文档在: http://weka.sourceforge.net/doc.stable-3-8/ about libsvm ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="在java程序里使用weka进行机器学习"/>
         <meta property="og:url" content="http://x-wei.github.io/java-use-weka.html"/>
-        <meta property="og:description" content="[TOC] 之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka. 1. Include jars into project weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...). weka的文档在解压缩的文件里有, 另外在线文档在: http://weka.sourceforge.net/doc.stable-3-8/ about libsvm... 关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: 在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, wekafiles/packages/LibSVM/目录下就是libsvm的内容. 需要指出的一点是, 要使用libsvm的话, 需要同时引用两个jar文件, 而且都叫libsvm.jar …"/>
+        <meta property="og:description" content="1. Include jars into project about libsvm... 2. terminology 3. 在程序里构建数据 新建Attribute 新建Instances(dataset) 新建Instance 4. 在程序里训练model 5. 从文件读入数据和model 6. 输出Evaluation统计 7. 输出预测结果 之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka. 1. Include jars into project weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...). weka的文档在解压缩的文件里有, 另外在线文档在: http://weka.sourceforge.net/doc.stable-3-8/ about libsvm ..."/>
         <meta property="article:published_time" content="2016-05-21" />
             <meta property="article:section" content="soft" />
             <meta property="article:tag" content="ml" />
@@ -209,18 +209,36 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="在java程序里使用weka进行机器学习">在java程序里使用weka进行机器学习</a><ul><li><a class="toc-href" href="#1-include-jars-into-project" title="1. Include jars into project">1. Include jars into project</a><ul><li><a class="toc-href" href="#about-libsvm" title="about libsvm...">about libsvm...</a></li></ul></li><li><a class="toc-href" href="#2-terminology_1" title="2. terminology">2. terminology</a></li><li><a class="toc-href" href="#3-zai-cheng-xu-li-gou-jian-shu-ju" title="3. 在程序里构建数据">3. 在程序里构建数据</a><ul><li><a class="toc-href" href="#xin-jian-attribute" title="新建Attribute">新建Attribute</a></li><li><a class="toc-href" href="#xin-jian-instancesdataset" title="新建Instances(dataset)">新建Instances(dataset)</a></li><li><a class="toc-href" href="#xin-jian-instance" title="新建Instance">新建Instance</a></li></ul></li><li><a class="toc-href" href="#4-zai-cheng-xu-li-xun-lian-model_1" title="4. 在程序里训练model">4. 在程序里训练model</a></li><li><a class="toc-href" href="#5-cong-wen-jian-du-ru-shu-ju-he-model" title="5. 从文件读入数据和model">5. 从文件读入数据和model</a></li><li><a class="toc-href" href="#6-shu-chu-evaluationtong-ji" title="6. 输出Evaluation统计">6. 输出Evaluation统计</a></li><li><a class="toc-href" href="#7-shu-chu-yu-ce-jie-guo" title="7. 输出预测结果">7. 输出预测结果</a></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="在java程序里使用weka进行机器学习">在java程序里使用weka进行机器学习</a><ul><li><a class="toc-href" href="#1-include-jars-into-project" title="1. Include jars into project">1. Include jars into project</a><ul><li><a class="toc-href" href="#about-libsvm" title="about libsvm...">about libsvm...</a></li></ul></li><li><a class="toc-href" href="#2-terminology_1" title="2. terminology">2. terminology</a></li><li><a class="toc-href" href="#3" title="3. 在程序里构建数据">3. 在程序里构建数据</a><ul><li><a class="toc-href" href="#attribute" title="新建Attribute">新建Attribute</a></li><li><a class="toc-href" href="#instancesdataset" title="新建Instances(dataset)">新建Instances(dataset)</a></li><li><a class="toc-href" href="#instance" title="新建Instance">新建Instance</a></li></ul></li><li><a class="toc-href" href="#4-model_1" title="4. 在程序里训练model">4. 在程序里训练model</a></li><li><a class="toc-href" href="#5-model" title="5. 从文件读入数据和model">5. 从文件读入数据和model</a></li><li><a class="toc-href" href="#6-evaluation" title="6. 输出Evaluation统计">6. 输出Evaluation统计</a></li><li><a class="toc-href" href="#7" title="7. 输出预测结果">7. 输出预测结果</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-include-jars-into-project">1. Include jars into project</a><ul>
+<li><a href="#about-libsvm">about libsvm...</a></li>
+</ul>
+</li>
+<li><a href="#2-terminology">2. terminology</a></li>
+<li><a href="#3">3. 在程序里构建数据</a><ul>
+<li><a href="#attribute">新建Attribute</a></li>
+<li><a href="#instancesdataset">新建Instances(dataset)</a></li>
+<li><a href="#instance">新建Instance</a></li>
+</ul>
+</li>
+<li><a href="#4-model">4. 在程序里训练model</a></li>
+<li><a href="#5-model">5. 从文件读入数据和model</a></li>
+<li><a href="#6-evaluation">6. 输出Evaluation统计</a></li>
+<li><a href="#7">7. 输出预测结果</a></li>
+</ul>
+</div>
 <p>之前一直用weka的GUI界面做机器学习的任务, 感觉这个软件虽然界面丑, 不过确实是快速开展机器学期的利器. 关于GUI的weka使用以后有时间再写. 今天这篇记录一下最近使用的java版本的weka.   </p>
 <h1 id="1-include-jars-into-project">1. Include jars into project</h1>
 <p>weka官网的下载链接里选择linux版本的weka压缩包即可, 下载以后找到weka.jar文件, 在工程里将其include一下就可以使用了(btw, 现在开始放弃eclipse, 进入IDEA的怀抱了...).   </p>
 <p>weka的文档在解压缩的文件里有, 另外在线文档在: <a href="http://weka.sourceforge.net/doc.stable-3-8/">http://weka.sourceforge.net/doc.stable-3-8/</a> </p>
 <h3 id="about-libsvm">about libsvm...</h3>
-<p>关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: <br>
-<img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image002.png"><br>
-在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, <code>wekafiles/packages/LibSVM/</code>目录下就是libsvm的内容.   </br></img></br></p>
+<p>关于libsvm需要有一点特别指出. weka自带的算法里是不包含libsvm的 (有个类似的SMO, 不过还是libsvm久经考验啊...), 需要使用weka的package manager安装. 打开package manager是在weka主界面的菜单里: <br/>
+<img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image002.png"/><br/>
+在package manager里搜索到libsvm安装即可. 然后(linux下)在主目录可以看到有个wekafiles文件夹, <code>wekafiles/packages/LibSVM/</code>目录下就是libsvm的内容.   </p>
 <p>需要指出的一点是, 要使用libsvm的话, <a href="http://stackoverflow.com/questions/30821926/solved-weka-api-libsvm-classpath-not-found">需要同时引用两个jar文件</a>, 而且都叫libsvm.jar!!   </p>
 <p>这两个jar, 一个叫<code>LibSVM.jar</code>, 在<code>wekafiles/packages/LibSVM/</code>下, 另一个叫<code>libsvm.jar</code>, 在<code>wekafiles/packages/LibSVM/lib/</code>下...orz  </p>
 <p>如果只include第一个jar的话, 就会报错: "java.lang.Exception: libsvm classes not in CLASSPATH! ".   </p>
@@ -233,56 +251,56 @@ mx's blog            </a>
 <li><code>Classifier</code>: weka里的Classifer其实是也包含了regressor或者cluster... 后面都称之为model  </li>
 <li><code>Evaluation</code>: 给定一个model和一个dataset, 给出evaluation的数据, 类似GUI界面给出的那些内容  </li>
 </ul>
-<h1 id="3-zai-cheng-xu-li-gou-jian-shu-ju">3. 在程序里构建数据</h1>
+<h1 id="3">3. 在程序里构建数据</h1>
 <p>这也是为什么要在java里用weka的原因: 如果数据可以直接以csv或者arff文件的方式得到, 那么直接在GUI界面下就可以搞了...  </p>
-<h3 id="xin-jian-attribute">新建Attribute</h3>
-<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html</a> <br>
-新建numeric的attribue只要简单的在构造函数里传入一个attribute的名字即可:   </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>// Create numeric attributes "length" and "weight"   </span>
-<span class="code-line">Attribute length = new Attribute("length");   </span>
-<span class="code-line">Attribute weight = new Attribute("weight");</span>
+<h3 id="attribute">新建Attribute</h3>
+<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Attribute.html</a> <br/>
+新建numeric的attribue只要简单的在构造函数里传入一个attribute的名字即可:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// Create numeric attributes "length" and "weight"   </span></span>
+<span class="code-line"><span class="err">Attribute length = new Attribute("length");   </span></span>
+<span class="code-line"><span class="err">Attribute weight = new Attribute("weight");</span></span>
 </pre></div>
 <p>新建离散(normial)的attribue则需要一个list乘放所有可能的数值:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// Create list to hold nominal values "first", "second", "third"   </span>
-<span class="code-line">List my_nominal_values = new ArrayList(3);   </span>
-<span class="code-line">my_nominal_values.add("first");   </span>
-<span class="code-line">my_nominal_values.add("second");   </span>
-<span class="code-line">my_nominal_values.add("third");   </span>
-<span class="code-line">// Create nominal attribute "position"   </span>
-<span class="code-line">Attribute position = new Attribute("position", my_nominal_values);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// Create list to hold nominal values "first", "second", "third"   </span></span>
+<span class="code-line"><span class="err">List my_nominal_values = new ArrayList(3);   </span></span>
+<span class="code-line"><span class="err">my_nominal_values.add("first");   </span></span>
+<span class="code-line"><span class="err">my_nominal_values.add("second");   </span></span>
+<span class="code-line"><span class="err">my_nominal_values.add("third");   </span></span>
+<span class="code-line"><span class="err">// Create nominal attribute "position"   </span></span>
+<span class="code-line"><span class="err">Attribute position = new Attribute("position", my_nominal_values);</span></span>
 </pre></div>
-<h3 id="xin-jian-instancesdataset">新建Instances(dataset)</h3>
-<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html</a><br>
-<code>Instances</code>实际上就是一个<code>Instance</code>的集合, Instances可以类比为pandas里面的DataFrame, 然后每个instance相当于一行. 另外<code>Instances</code>比<code>Instance</code>多的就是Attribute信息(类比为pandas里DataFrame的表头head).   </br></p>
+<h3 id="instancesdataset">新建Instances(dataset)</h3>
+<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instances.html</a><br/>
+<code>Instances</code>实际上就是一个<code>Instance</code>的集合, Instances可以类比为pandas里面的DataFrame, 然后每个instance相当于一行. 另外<code>Instances</code>比<code>Instance</code>多的就是Attribute信息(类比为pandas里DataFrame的表头head).   </p>
 <p><code>Instances</code>的构造函数有两种, 一种是直接在arff文件里读取, 这个后面再说. 另一种构造函数是在java函数里构建Instance时用的, 它构造一个空的Instance集合, 构造函数提供dataset的名字, attribute的集合(arraylist)以及初始的capacity:   </p>
 <p><code>Instances(String name, ArrayList&lt;Attribute&gt; attInfo, int capacity)</code> </p>
 <p>其中的第二个参数attInfo其实就相当于是表头信息了, 它是一个Attribute的ArrayList.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>ArrayList&lt;Attribute&gt; atts = new ArrayList&lt;Attribute&gt;();  </span>
-<span class="code-line">atts.add(length);  </span>
-<span class="code-line">atts.add(weight);  </span>
-<span class="code-line">atts.add(position);  </span>
-<span class="code-line">Instances adataset = new Instances("aDataSet", atts, 10);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">ArrayList&lt;Attribute&gt; atts = new ArrayList&lt;Attribute&gt;();  </span></span>
+<span class="code-line"><span class="err">atts.add(length);  </span></span>
+<span class="code-line"><span class="err">atts.add(weight);  </span></span>
+<span class="code-line"><span class="err">atts.add(position);  </span></span>
+<span class="code-line"><span class="err">Instances adataset = new Instances("aDataSet", atts, 10);</span></span>
 </pre></div>
 <p>(上面代码里的<code>length</code>, <code>weight</code> 和<code>position</code>都是前面声明的Attribute对象)  </p>
 <p>Instances还可以指定哪一列对应的是class label (单个Instance则不能 — 因为单个Instance并没有表头信息attInfo):   </p>
 <p><code>void setClassIndex(int classIndex)</code> </p>
-<h3 id="xin-jian-instance">新建Instance</h3>
-<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html</a><br>
-<code>Instance</code>是一个接口而不是一个类, 一半常用的是<code>DenseInstance</code>类(它又继承自<code>AbstractInstance</code>抽象类)   </br></p>
+<h3 id="instance">新建Instance</h3>
+<p><a href="http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html">http://weka.sourceforge.net/doc.stable-3-8/weka/core/Instance.html</a><br/>
+<code>Instance</code>是一个接口而不是一个类, 一半常用的是<code>DenseInstance</code>类(它又继承自<code>AbstractInstance</code>抽象类)   </p>
 <p>这里有一个坑: 一定要指定Instance所属的DataSet(既它属于哪一个Instances对象)再使用setValue函数, 否则在调用setValue的时候可能会有问题!!!   </p>
 <p><code>void setDataset(Instances instances)</code> </p>
 <p>构造函数里只需要提供这个instance的attribute数量即可. 然后使用<code>setValue</code>函数可以给每个attribue指定数值. setValue函数的第一个参数接收一个Attribue对象, 第二个参数就是这个attribue的数值(double或者string).   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// Create empty instance with three attribute values   </span>
-<span class="code-line">Instance inst = new DenseInstance(3);   </span>
-<span class="code-line">instance.setDataset(  adataset); // before calling setValue, should first set the Dataset!``  </span>
-<span class="code-line">// Set instance's values for the attributes "length", "weight", and "position"  </span>
-<span class="code-line">inst.setValue(length, 5.3);   </span>
-<span class="code-line">inst.setValue(weight, 300);   </span>
-<span class="code-line">inst.setValue(position, "first");</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// Create empty instance with three attribute values   </span></span>
+<span class="code-line"><span class="err">Instance inst = new DenseInstance(3);   </span></span>
+<span class="code-line"><span class="err">instance.setDataset(  adataset); // before calling setValue, should first set the Dataset!``  </span></span>
+<span class="code-line"><span class="err">// Set instance's values for the attributes "length", "weight", and "position"  </span></span>
+<span class="code-line"><span class="err">inst.setValue(length, 5.3);   </span></span>
+<span class="code-line"><span class="err">inst.setValue(weight, 300);   </span></span>
+<span class="code-line"><span class="err">inst.setValue(position, "first");</span></span>
 </pre></div>
-<h1 id="4-zai-cheng-xu-li-xun-lian-model_1">4. 在程序里训练model</h1>
-<p>这里只做classification的例子好了. <br>
-<a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html">http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html</a> </br></p>
+<h1 id="4-model_1">4. 在程序里训练model</h1>
+<p>这里只做classification的例子好了. <br/>
+<a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html">http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/Classifier.html</a> </p>
 <p>Classifier是一个Interface, 可以在文档里看到有很多类都实现了这个interface, 主要是三个常用的函数:   </p>
 <ul>
 <li><code>void buildClassifier(Instances data)</code> : 用data数据进行训练  </li>
@@ -290,31 +308,31 @@ mx's blog            </a>
 <li><code>double[] distributionForInstance(Instance instance)</code> :对于每一个可能的类, 给一个probability, 返回一个double数组  </li>
 </ul>
 <p>所以程序里训练model只需要调用<code>buildClassifier()</code>函数即可.   </p>
-<h1 id="5-cong-wen-jian-du-ru-shu-ju-he-model">5. 从文件读入数据和model</h1>
+<h1 id="5-model">5. 从文件读入数据和model</h1>
 <p>之前讲的是在程序里得到数据, 在程序里储存结果的方法, 而如果可以保存数据到文件的话, 在GUI界面下调试模型应该更加放方便.   </p>
-<p>预先已经得到了数据的话, 可以先把数据保存问arff格式, 然后用GUI的weka训练和调试参数. 当得到满意的结果以后可以在GUI界面里选择保存训练好的模型(一个.model文件): <br>
-<img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image001.png"> </img></br></p>
-<p>然后, weka提供了非常方便的方法, 直接从arff文件里得到<code>Instances</code>对象, 从model文件里得到<code>Classifier</code>对象: <br>
-(参考链接: <a href="https://weka.wikispaces.com/Serialization">https://weka.wikispaces.com/Serialization</a> 以及 <a href="https://weka.wikispaces.com/Use+Weka+in+your+Java+code">https://weka.wikispaces.com/Use+Weka+in+your+Java+code</a>)  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>Classifier clf = (Classifier) weka.core.SerializationHelper.read("/some/where/j48.model");  </span>
-<span class="code-line">Instances testset = new Instances(new BufferedReader(new FileReader("/some/where/test.arff")));``</span>
+<p>预先已经得到了数据的话, 可以先把数据保存问arff格式, 然后用GUI的weka训练和调试参数. 当得到满意的结果以后可以在GUI界面里选择保存训练好的模型(一个.model文件): <br/>
+<img alt="" class="img-responsive" src="../images/java-use-weka/pasted_image001.png"/> </p>
+<p>然后, weka提供了非常方便的方法, 直接从arff文件里得到<code>Instances</code>对象, 从model文件里得到<code>Classifier</code>对象: <br/>
+(参考链接: <a href="https://weka.wikispaces.com/Serialization">https://weka.wikispaces.com/Serialization</a> 以及 <a href="https://weka.wikispaces.com/Use+Weka+in+your+Java+code">https://weka.wikispaces.com/Use+Weka+in+your+Java+code</a>)  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">Classifier clf = (Classifier) weka.core.SerializationHelper.read("/some/where/j48.model");  </span></span>
+<span class="code-line"><span class="err">Instances testset = new Instances(new BufferedReader(new FileReader("/some/where/test.arff")));``</span></span>
 </pre></div>
-<h1 id="6-shu-chu-evaluationtong-ji">6. 输出Evaluation统计</h1>
-<p>当得到了训练好的模型<code>clf</code>以及要使用的测试数据<code>testset</code>以后, 可以在testset上测试模型, 并输出结果的统计数据. 这些是靠<code>Evaluation</code>类完成的.<br>
-<a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html">http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html</a><br>
-Evaluation的构造函数里提供的Instances应该为training set, 这个训练集的作用是"to get some header information and prior class distribution information", 如果构造时给的是testing set的话, 应该调用<code>useNoPriors()</code>函数一下.   </br></br></p>
+<h1 id="6-evaluation">6. 输出Evaluation统计</h1>
+<p>当得到了训练好的模型<code>clf</code>以及要使用的测试数据<code>testset</code>以后, 可以在testset上测试模型, 并输出结果的统计数据. 这些是靠<code>Evaluation</code>类完成的.<br/>
+<a href="http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html">http://weka.sourceforge.net/doc.stable-3-8/weka/classifiers/evaluation/Evaluation.html</a><br/>
+Evaluation的构造函数里提供的Instances应该为training set, 这个训练集的作用是"to get some header information and prior class distribution information", 如果构造时给的是testing set的话, 应该调用<code>useNoPriors()</code>函数一下.   </p>
 <p>构造了evalation对象以后, 只要使用 <code>evaluateModel(Classifier classifier, Instances data)</code> 函数即可, 第一个参数为训练好了的模型(<code>clf</code>), 第二个参数为要用来测试的数据(<code>testset</code>).   </p>
 <p>然后可以输出统计信息, 就像在wekaGUI界面一样, 主要靠<code>toSummaryString()</code>和<code>toMatrixString()</code>两个函数.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>Instances trainInstances = ... instances got from somewhere  </span>
-<span class="code-line">Instances testInstances = ... instances got from somewhere  </span>
-<span class="code-line">Classifier scheme = ... scheme got from somewhere</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">Instances</span> <span class="n">trainInstances</span> <span class="o">=</span> <span class="p">...</span> <span class="n">instances</span> <span class="n">got</span> <span class="k">from</span> <span class="n">somewhere</span>  </span>
+<span class="code-line"><span class="n">Instances</span> <span class="n">testInstances</span> <span class="o">=</span> <span class="p">...</span> <span class="n">instances</span> <span class="n">got</span> <span class="k">from</span> <span class="n">somewhere</span>  </span>
+<span class="code-line"><span class="n">Classifier</span> <span class="n">scheme</span> <span class="o">=</span> <span class="p">...</span> <span class="n">scheme</span> <span class="n">got</span> <span class="k">from</span> <span class="n">somewhere</span></span>
 <span class="code-line"></span>
-<span class="code-line">Evaluation evaluation = new Evaluation(trainInstances);  </span>
-<span class="code-line">evaluation.evaluateModel(scheme, testInstances);  </span>
-<span class="code-line">System.out.println(evaluation.toSummaryString());  </span>
-<span class="code-line">System.out.println(evaluation.toMatrixString());</span>
+<span class="code-line"><span class="n">Evaluation</span> <span class="n">evaluation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Evaluation</span><span class="p">(</span><span class="n">trainInstances</span><span class="p">);</span>  </span>
+<span class="code-line"><span class="n">evaluation</span><span class="p">.</span><span class="n">evaluateModel</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">testInstances</span><span class="p">);</span>  </span>
+<span class="code-line"><span class="k">System</span><span class="p">.</span><span class="k">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">evaluation</span><span class="p">.</span><span class="n">toSummaryString</span><span class="p">());</span>  </span>
+<span class="code-line"><span class="k">System</span><span class="p">.</span><span class="k">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">evaluation</span><span class="p">.</span><span class="n">toMatrixString</span><span class="p">());</span></span>
 </pre></div>
-<h1 id="7-shu-chu-yu-ce-jie-guo">7. 输出预测结果</h1>
+<h1 id="7">7. 输出预测结果</h1>
 <p>对于每一个Instance, 只需要调用Classifier的<code>classifyInstance(Instance instance)</code>或者<code>distributionForInstance(Instance instance)</code>函数, 即可得到预测结果...   </p>
 <p>Voila, 大概就是这样, weka这个工具还是蛮好用的(只要能忍受它界面的丑), 而且也算没有太多的坑...   </p>
             </div>
@@ -714,7 +732,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="在java程序里使用weka进行机器学习">在java程序里使用weka进行机器学习</a><ul><li><a class="toc-href" href="#1-include-jars-into-project" title="1. Include jars into project">1. Include jars into project</a><ul><li><a class="toc-href" href="#about-libsvm" title="about libsvm...">about libsvm...</a></li></ul></li><li><a class="toc-href" href="#2-terminology_1" title="2. terminology">2. terminology</a></li><li><a class="toc-href" href="#3-zai-cheng-xu-li-gou-jian-shu-ju" title="3. 在程序里构建数据">3. 在程序里构建数据</a><ul><li><a class="toc-href" href="#xin-jian-attribute" title="新建Attribute">新建Attribute</a></li><li><a class="toc-href" href="#xin-jian-instancesdataset" title="新建Instances(dataset)">新建Instances(dataset)</a></li><li><a class="toc-href" href="#xin-jian-instance" title="新建Instance">新建Instance</a></li></ul></li><li><a class="toc-href" href="#4-zai-cheng-xu-li-xun-lian-model_1" title="4. 在程序里训练model">4. 在程序里训练model</a></li><li><a class="toc-href" href="#5-cong-wen-jian-du-ru-shu-ju-he-model" title="5. 从文件读入数据和model">5. 从文件读入数据和model</a></li><li><a class="toc-href" href="#6-shu-chu-evaluationtong-ji" title="6. 输出Evaluation统计">6. 输出Evaluation统计</a></li><li><a class="toc-href" href="#7-shu-chu-yu-ce-jie-guo" title="7. 输出预测结果">7. 输出预测结果</a></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="在java程序里使用weka进行机器学习">在java程序里使用weka进行机器学习</a><ul><li><a class="toc-href" href="#1-include-jars-into-project" title="1. Include jars into project">1. Include jars into project</a><ul><li><a class="toc-href" href="#about-libsvm" title="about libsvm...">about libsvm...</a></li></ul></li><li><a class="toc-href" href="#2-terminology_1" title="2. terminology">2. terminology</a></li><li><a class="toc-href" href="#3" title="3. 在程序里构建数据">3. 在程序里构建数据</a><ul><li><a class="toc-href" href="#attribute" title="新建Attribute">新建Attribute</a></li><li><a class="toc-href" href="#instancesdataset" title="新建Instances(dataset)">新建Instances(dataset)</a></li><li><a class="toc-href" href="#instance" title="新建Instance">新建Instance</a></li></ul></li><li><a class="toc-href" href="#4-model_1" title="4. 在程序里训练model">4. 在程序里训练model</a></li><li><a class="toc-href" href="#5-model" title="5. 从文件读入数据和model">5. 从文件读入数据和model</a></li><li><a class="toc-href" href="#6-evaluation" title="6. 输出Evaluation统计">6. 输出Evaluation统计</a></li><li><a class="toc-href" href="#7" title="7. 输出预测结果">7. 输出预测结果</a></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

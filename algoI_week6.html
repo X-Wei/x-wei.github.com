@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] Can we do better than BST if we do not need ordered operations ? (No compare methods, use equals method) Idea: save items in an array. Hash function: method for calclulating the array index of a key. Issues: computing hash function equality tests collision resolution Classic space-time tradeoff. 1. Hash …" />
+        <meta name="description" content="1. Hash Functions Java&#39;s hashing Modeular hasing uniform hasing assumption 2. Separate Chaining implementation analysis 3. Linear Probing implementation cluster 4. Hash Table Context Seperate chaining VS linear probing variations ST choice: hash tables VS balanced search trees Can we do better than BST if we do not need ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week 6 Hash Tables"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week6.html"/>
-        <meta property="og:description" content="[TOC] Can we do better than BST if we do not need ordered operations ? (No compare methods, use equals method) Idea: save items in an array. Hash function: method for calclulating the array index of a key. Issues: computing hash function equality tests collision resolution Classic space-time tradeoff. 1. Hash …"/>
+        <meta property="og:description" content="1. Hash Functions Java&#39;s hashing Modeular hasing uniform hasing assumption 2. Separate Chaining implementation analysis 3. Linear Probing implementation cluster 4. Hash Table Context Seperate chaining VS linear probing variations ST choice: hash tables VS balanced search trees Can we do better than BST if we do not need ..."/>
         <meta property="article:published_time" content="2015-09-01" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,11 +210,36 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 6 Hash Tables">[Algorithms I] Week 6 Hash Tables</a><ul><li><a class="toc-href" href="#1-hash-functions" title="1. Hash Functions">1. Hash Functions</a><ul><li><a class="toc-href" hashing'="" href="#javas-hashing" s="" title="Java">Java's hashing</a></li><li><a class="toc-href" href="#modeular-hasing" title="Modeular hasing">Modeular hasing</a></li><li><a class="toc-href" href="#uniform-hasing-assumption" title="uniform hasing assumption">uniform hasing assumption</a></li></ul></li><li><a class="toc-href" href="#2-separate-chaining_1" title="2. Separate Chaining">2. Separate Chaining</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#3-linear-probing_1" title="3. Linear Probing">3. Linear Probing</a><ul><li><a class="toc-href" href="#implementation_1" title="implementation">implementation</a></li><li><a class="toc-href" href="#cluster" title="cluster">cluster</a></li></ul></li><li><a class="toc-href" href="#4-hash-table-context_1" title="4. Hash Table Context">4. Hash Table Context</a><ul><li><a class="toc-href" href="#seperate-chaining-vs-linear-probing" title="Seperate chaining VS linear probing">Seperate chaining VS linear probing</a></li><li><a class="toc-href" href="#variations" title="variations">variations</a></li><li><a class="toc-href" href="#st-choice-hash-tables-vs-balanced-search-trees" title="ST choice: hash tables VS balanced search trees">ST choice: hash tables VS balanced search trees</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-hash-functions">1. Hash Functions</a><ul>
+<li><a href="#javas-hashing">Java's hashing</a></li>
+<li><a href="#modeular-hasing">Modeular hasing</a></li>
+<li><a href="#uniform-hasing-assumption">uniform hasing assumption</a></li>
+</ul>
+</li>
+<li><a href="#2-separate-chaining">2. Separate Chaining</a><ul>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#3-linear-probing">3. Linear Probing</a><ul>
+<li><a href="#implementation_1">implementation</a></li>
+<li><a href="#cluster">cluster</a></li>
+</ul>
+</li>
+<li><a href="#4-hash-table-context">4. Hash Table Context</a><ul>
+<li><a href="#seperate-chaining-vs-linear-probing">Seperate chaining VS linear probing</a></li>
+<li><a href="#variations">variations</a></li>
+<li><a href="#st-choice-hash-tables-vs-balanced-search-trees">ST choice: hash tables VS balanced search trees</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p><em>Can we do better than BST if we do not need ordered operations ?</em> </p>
 <p>(No compare methods, use equals method)   </p>
-<p>Idea: save items in an array.  <br>
-<strong>Hash function</strong>: method for calclulating the array index of  a key.    </br></p>
+<p>Idea: save items in an array.  <br/>
+<strong>Hash function</strong>: method for calclulating the array index of  a key.    </p>
 <p>Issues:    </p>
 <ul>
 <li>computing hash function   </li>
@@ -230,8 +255,8 @@ mx's blog            </a>
 </ul>
 <p>challenge: need different approach for different key types.    </p>
 <h2 id="javas-hashing">Java's hashing</h2>
-<p>All java object has a methode <code>int hashCode()</code> <br>
-requirement:    </br></p>
+<p>All java object has a methode <code>int hashCode()</code> <br/>
+requirement:    </p>
 <ul>
 <li>if x.equals(y) ⇒ x.hashCode()==y.hashCode()   </li>
 <li>
@@ -242,11 +267,11 @@ requirement:    </br></p>
 </li>
 <li>Custom implementations for standard types: Integer, Double, String, File, URL, Date...   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image.png"> <br>
-Strings: Horner's method — compute a polynome.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image001.png"> <br>
-recipe for user-defined types:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image002.png"> </img></br></br></img></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image.png"/> <br/>
+Strings: Horner's method — compute a polynome.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image001.png"/> <br/>
+recipe for user-defined types:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image002.png"/> </p>
 <h2 id="modeular-hasing">Modeular hasing</h2>
 <p>(hash code VS hash function)   </p>
 <ul>
@@ -254,68 +279,68 @@ recipe for user-defined types:  <br>
 <li><em>Hash function</em>: integer between 0 and M-1 (used directly as array index, should &gt;=0)   </li>
 </ul>
 <p><strong>BUG code:</strong> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private int hash(Key k){   </span>
-<span class="code-line">    return k.hashCode()%M;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private int hash(Key k){   </span></span>
+<span class="code-line"><span class="err">    return k.hashCode()%M;   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>→ bug: <em>number returned can be negative !</em> </p>
-<p><strong>1-in-billion bug code:</strong> <br>
-<code>return Math.abs(k.hashCode()) % M;</code> </br></p>
-<p>→ bug: Math.abs() returns negative numbers for -2^31 <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image003.png"> </img></br></p>
-<p><strong>correct code:</strong> <br>
-just take the first 31 bits: x&amp;0x7fffffff <br>
-<code>return k.hashCode()&amp;0x7fffffff % M;</code> </br></br></p>
+<p><strong>1-in-billion bug code:</strong> <br/>
+<code>return Math.abs(k.hashCode()) % M;</code> </p>
+<p>→ bug: Math.abs() returns negative numbers for -2^31 <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image003.png"/> </p>
+<p><strong>correct code:</strong> <br/>
+just take the first 31 bits: x&amp;0x7fffffff <br/>
+<code>return k.hashCode()&amp;0x7fffffff % M;</code> </p>
 <p>另一个hash的思路是用random(用hashcode作为随机种子)   </p>
 <h2 id="uniform-hasing-assumption">uniform hasing assumption</h2>
 <p>each key is equally likely to hash to an integer between 0 and M-1   </p>
-<p>一些数学结论:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image004.png"> </img></br></p>
+<p>一些数学结论:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image004.png"/> </p>
 <h1 id="2-separate-chaining_1">2. Separate Chaining</h1>
-<p><em>one strategy for collision resolution.</em> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image005.png"> </img></br></p>
+<p><em>one strategy for collision resolution.</em> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image005.png"/> </p>
 <p><strong>idea</strong>: Using a table of size M &lt; N,  build a list for each of the table positions.    </p>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image006.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image006.png"/> </p>
 <h2 id="implementation">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class SeparateChainingHashST&lt;Key, Value&gt;{   </span>
-<span class="code-line">    private int M = 97;   </span>
-<span class="code-line">    private Node[] st = new Node[97];   </span>
-<span class="code-line">    private static class Node{   </span>
-<span class="code-line">        Object key, val; // no generic array creation!    </span>
-<span class="code-line">        Node next;   </span>
-<span class="code-line">        public Node(Key k, Value v, Node nxt){...}   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    int hash(Key k){   </span>
-<span class="code-line">        return (k.hashCode()&amp;0x7fffffff) % M;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    public Value get(Key k){   </span>
-<span class="code-line">        int h = hash(k);   </span>
-<span class="code-line">        for(Node x=st[h]; x!=null; x=x.next)   </span>
-<span class="code-line">            if(k.equals(x.val)) return (Value)x.val; //cast   </span>
-<span class="code-line">        return null;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    public void put(Key k, Value v){   </span>
-<span class="code-line">        int h = hash(k);   </span>
-<span class="code-line">        for(Node x=st[h]; x!=null; x=x.next)   </span>
-<span class="code-line">            if(k.equals(x.val))    </span>
-<span class="code-line">                {x.val = v; return;}   </span>
-<span class="code-line">        st[h] = new Node(k,v,st[h]);   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">SeparateChainingHashST</span><span class="o">&lt;</span><span class="k">Key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="o">&gt;</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">97</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="err">[]</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="o">[</span><span class="n">97</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Node</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">Object</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="k">array</span><span class="w"> </span><span class="n">creation</span><span class="err">!</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="k">next</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">nxt</span><span class="p">)</span><span class="err">{</span><span class="p">...</span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">hashCode</span><span class="p">()</span><span class="o">&amp;</span><span class="mh">0x7fffffff</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">st</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">!=</span><span class="k">null</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="k">Value</span><span class="p">)</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="nf">cast</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">st</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">!=</span><span class="k">null</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">))</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">                </span><span class="err">{</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">st</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">st</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>注意内部类Node里用的是Object — 因为不能声明generic array.    </p>
 <h2 id="analysis">analysis</h2>
-<p><strong>proposition</strong> <br>
-Under the assumption of uniform hashing, the number of keys in a list is within a constant factor to N/M.  <br>
-<em>proof.</em> <br>
-binominal distribution.   </br></br></br></p>
-<p>M times faster than sequential search <br>
-→ typical choice: M ~ N/5   </br></p>
+<p><strong>proposition</strong> <br/>
+Under the assumption of uniform hashing, the number of keys in a list is within a constant factor to N/M.  <br/>
+<em>proof.</em> <br/>
+binominal distribution.   </p>
+<p>M times faster than sequential search <br/>
+→ typical choice: M ~ N/5   </p>
 <h1 id="3-linear-probing_1">3. Linear Probing</h1>
 <p>Another approch for collision resolution.    </p>
-<p>idea: <strong>open addressing</strong> <br>
-Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next open slot</em>.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image007.png"> </img></br></br></p>
+<p>idea: <strong>open addressing</strong> <br/>
+Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next open slot</em>.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image007.png"/> </p>
 <ul>
 <li>insert: when occupied, move pointer until got open slot   </li>
 <li>search: when not found, move pointer until find or reach open slot   </li>
@@ -323,55 +348,55 @@ Use an array of size <strong>M&gt;N</strong>, when a key collides, <em>find next
 </ul>
 <p>array M <em>must</em> be larger than N ⇒ array resizing is necessary.    </p>
 <h2 id="implementation_1">implementation</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class LinearProbingHashST&lt;Key, Value&gt;{   </span>
-<span class="code-line">    private int M, N;   </span>
-<span class="code-line">    private Object[] keys;//cannot use generic array   </span>
-<span class="code-line">    private Object[] vals;   </span>
-<span class="code-line">    public void put(Key k, Value v){   </span>
-<span class="code-line">        int i = hash(k);   </span>
-<span class="code-line">        for(;keys[i]!=null;i=(i+1)%M)   </span>
-<span class="code-line">            if(keys[i].equals(k))    </span>
-<span class="code-line">                {vals[i]=v; return;}   </span>
-<span class="code-line">        keys[i]=k;   </span>
-<span class="code-line">        vals[i]=v;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    public Value get(Key k){   </span>
-<span class="code-line">        int h=hash(k);   </span>
-<span class="code-line">        for(;keys[h]!=null;h=(h+1)%M)   </span>
-<span class="code-line">            if(k.equals(keys[h])) return (Value)vals[h];//ugly cast   </span>
-<span class="code-line">        return null;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">LinearProbingHashST</span><span class="o">&lt;</span><span class="k">Key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="o">&gt;</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="err">[]</span><span class="w"> </span><span class="n">keys</span><span class="p">;</span><span class="o">//</span><span class="n">cannot</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="k">array</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="err">[]</span><span class="w"> </span><span class="n">vals</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(;</span><span class="n">keys</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span><span class="k">null</span><span class="p">;</span><span class="n">i</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">M</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">keys</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">                </span><span class="err">{</span><span class="n">vals</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="n">v</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">keys</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="n">k</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">vals</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="n">v</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">h</span><span class="o">=</span><span class="n">hash</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(;</span><span class="n">keys</span><span class="o">[</span><span class="n">h</span><span class="o">]!=</span><span class="k">null</span><span class="p">;</span><span class="n">h</span><span class="o">=</span><span class="p">(</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">M</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="n">keys</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="k">Value</span><span class="p">)</span><span class="n">vals</span><span class="o">[</span><span class="n">h</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="n">ugly</span><span class="w"> </span><span class="nf">cast</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="cluster">cluster</h2>
-<p>def. <strong>cluster</strong> <br>
-A contiguous block of items.    </br></p>
+<p>def. <strong>cluster</strong> <br/>
+A contiguous block of items.    </p>
 <p>New keys are more likely to hash into a cluster.    </p>
-<p>Knuth parking pb:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image008.png"> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image010.png"> <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image009.png"> <br>
-(当年Knuth就是在证明了这个以后决定写那套书)   </br></img></br></img></br></img></br></p>
+<p>Knuth parking pb:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image008.png"/> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image010.png"/> <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image009.png"/> <br/>
+(当年Knuth就是在证明了这个以后决定写那套书)   </p>
 <p>Typical choice: <strong>N/M ~ 1/2</strong> (3/2 for search hit and 5/2 for search miss)   </p>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image011.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image011.png"/> </p>
 <h1 id="4-hash-table-context_1">4. Hash Table Context</h1>
 <p>widely used in applicataions.    </p>
-<p>cost for computing hash VS cost for searching:  <br>
-hashCode() for strings in java 1.1: exemain only 8-9 evenly spaced characters to save time. <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image012.png"> </img></br></br></p>
-<p>uniform hashing assumption: performance not guaranteed... <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image013.png"> </img></br></p>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image014.png"> </img></p>
-<p><strong>one-way hash functions</strong> <br>
-Hard to find a key that hash to a desired value, or 2 keys having the same hash value.  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image015.png"> <br>
-used for fingurprints or store passwords, but too expensive for ST implementations.    </br></img></br></br></p>
+<p>cost for computing hash VS cost for searching:  <br/>
+hashCode() for strings in java 1.1: exemain only 8-9 evenly spaced characters to save time. <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image012.png"/> </p>
+<p>uniform hashing assumption: performance not guaranteed... <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image013.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image014.png"/> </p>
+<p><strong>one-way hash functions</strong> <br/>
+Hard to find a key that hash to a desired value, or 2 keys having the same hash value.  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image015.png"/> <br/>
+used for fingurprints or store passwords, but too expensive for ST implementations.    </p>
 <h2 id="seperate-chaining-vs-linear-probing">Seperate chaining VS linear probing</h2>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image016.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image016.png"/> </p>
 <h2 id="variations">variations</h2>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image017.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image017.png"/> </p>
 <h2 id="st-choice-hash-tables-vs-balanced-search-trees">ST choice: hash tables VS balanced search trees</h2>
-<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image018.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week6/pasted_image018.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm,codejam,python" />
-        <meta name="description" content="[TOC] 总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库. collections py自带的一些好用的数据结构... https://docs.python.org/2/library/collections.html from collections import Counter, deque, defaultdict itertools 主要是用来穷举的时候它里面一些函数很好用... https://docs.python.org/2/library/itertools.html &gt;&gt;&gt; from itertools import product, combinations &gt;&gt;&gt; a = &#39;ABCD&#39;; b=&#39;EFG&#39; &gt;&gt;&gt; for p in product(a,b …" />
+        <meta name="description" content="collections itertools bitmap use bitmap for combinations (2^N possibilities) set/clean Kth bit count nb of 1s in a bitmap networkx constructing graph DiGraph: topo-sort, cycle-detection, strongly connected component Undirected Graph: connected component, MST maxflow maximum matching pulp 总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库. collections py自带的一些好用的数据结构... https ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="codejam常用(python)解题工具"/>
         <meta property="og:url" content="http://x-wei.github.io/codejam-python-tools.html"/>
-        <meta property="og:description" content="[TOC] 总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库. collections py自带的一些好用的数据结构... https://docs.python.org/2/library/collections.html from collections import Counter, deque, defaultdict itertools 主要是用来穷举的时候它里面一些函数很好用... https://docs.python.org/2/library/itertools.html &gt;&gt;&gt; from itertools import product, combinations &gt;&gt;&gt; a = &#39;ABCD&#39;; b=&#39;EFG&#39; &gt;&gt;&gt; for p in product(a,b …"/>
+        <meta property="og:description" content="collections itertools bitmap use bitmap for combinations (2^N possibilities) set/clean Kth bit count nb of 1s in a bitmap networkx constructing graph DiGraph: topo-sort, cycle-detection, strongly connected component Undirected Graph: connected component, MST maxflow maximum matching pulp 总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库. collections py自带的一些好用的数据结构... https ..."/>
         <meta property="article:published_time" content="2016-05-27" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -212,11 +212,31 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="codejam常用(python)解题工具">codejam常用(python)解题工具</a><ul><li><a class="toc-href" href="#collections" title="collections">collections</a></li><li><a class="toc-href" href="#itertools" title="itertools">itertools</a></li><li><a class="toc-href" href="#bitmap" title="bitmap">bitmap</a><ul><li><a class="toc-href" href="#use-bitmap-for-combinations-2n-possibilities" title="use bitmap for combinations (2^N possibilities)">use bitmap for combinations (2^N possibilities)</a></li><li><a class="toc-href" href="#setclean-kth-bit" title="set/clean Kth bit">set/clean Kth bit</a></li><li><a class="toc-href" href="#count-nb-of-1s-in-a-bitmap" title="count nb of 1s in a bitmap">count nb of 1s in a bitmap</a></li></ul></li><li><a class="toc-href" href="#networkx_1" title="networkx">networkx</a><ul><li><a class="toc-href" href="#constructing-graph" title="constructing graph">constructing graph</a></li><li><a class="toc-href" href="#digraph-topo-sort-cycle-detection-strongly-connected-component" title="DiGraph: topo-sort, cycle-detection, strongly connected component">DiGraph: topo-sort, cycle-detection, strongly connected component</a></li><li><a class="toc-href" href="#undirected-graph-connected-component-mst" title="Undirected Graph: connected component, MST">Undirected Graph: connected component, MST</a></li><li><a class="toc-href" href="#maxflow" title="maxflow">maxflow</a></li><li><a class="toc-href" href="#maximum-matching" title="maximum matching">maximum matching</a></li></ul></li><li><a class="toc-href" href="#pulp_1" title="pulp">pulp</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#collections">collections</a></li>
+<li><a href="#itertools">itertools</a></li>
+<li><a href="#bitmap">bitmap</a><ul>
+<li><a href="#use-bitmap-for-combinations-2n-possibilities">use bitmap for combinations (2^N possibilities)</a></li>
+<li><a href="#setclean-kth-bit">set/clean Kth bit</a></li>
+<li><a href="#count-nb-of-1s-in-a-bitmap">count nb of 1s in a bitmap</a></li>
+</ul>
+</li>
+<li><a href="#networkx">networkx</a><ul>
+<li><a href="#constructing-graph">constructing graph</a></li>
+<li><a href="#digraph-topo-sort-cycle-detection-strongly-connected-component">DiGraph: topo-sort, cycle-detection, strongly connected component</a></li>
+<li><a href="#undirected-graph-connected-component-mst">Undirected Graph: connected component, MST</a></li>
+<li><a href="#maxflow">maxflow</a></li>
+<li><a href="#maximum-matching">maximum matching</a></li>
+</ul>
+</li>
+<li><a href="#pulp">pulp</a></li>
+</ul>
+</div>
 <p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
 <h1 id="collections">collections</h1>
-<p>py自带的一些好用的数据结构...<br>
-<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </br></p>
+<p>py自带的一些好用的数据结构...<br/>
+<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </p>
 <p><code>from collections import Counter, deque, defaultdict</code> </p>
 <h1 id="itertools">itertools</h1>
 <p>主要是用来穷举的时候它里面一些函数很好用... </p>
@@ -258,8 +278,8 @@ mx's blog            </a>
 <h1 id="bitmap">bitmap</h1>
 <p>聪明一点的穷举需要用bitmap... 实测可以加速十倍...</p>
 <h3 id="use-bitmap-for-combinations-2n-possibilities">use bitmap for combinations (2^N possibilities)</h3>
-<p>(N elements, each element 2 choices) <br>
-<code>for mask in xrange(1&lt;&lt;N): ...</code> </br></p>
+<p>(N elements, each element 2 choices) <br/>
+<code>for mask in xrange(1&lt;&lt;N): ...</code> </p>
 <h3 id="setclean-kth-bit">set/clean Kth bit</h3>
 <p>set: <code>bm |= 1&lt;&lt;k</code> </p>
 <p>clean: <code>bm &amp;= ~(1&lt;&lt;k)</code> </p>
@@ -322,17 +342,17 @@ mx's blog            </a>
 </pre></div>
 <h3 id="undirected-graph-connected-component-mst">Undirected Graph: connected component, MST</h3>
 <p><a href="http://networkx.readthedocs.io/en/networkx-1.11/reference/generated/networkx.algorithms.mst.minimum_spanning_tree.html#networkx.algorithms.mst.minimum_spanning_tree">http://networkx.readthedocs.io/en/networkx-1.11/reference/generated/networkx.algorithms.mst.minimum_spanning_tree.html#networkx.algorithms.mst.minimum_spanning_tree</a> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; G = nx.Graph()   </span>
-<span class="code-line">&gt;&gt;&gt; G.add_edge(1,2); G.add_edge(1,3); G.add_edge('a','b')   </span>
-<span class="code-line">&gt;&gt;&gt; list( nx.connected_components(G) )   </span>
-<span class="code-line">[set(['a', 'b']), set([1, 2, 3])]   </span>
-<span class="code-line">&gt;&gt;&gt; G.add_edge(2,3)   </span>
-<span class="code-line">&gt;&gt;&gt; mst =  nx.minimum_spanning_tree(G) # returns a new graph   </span>
-<span class="code-line">&gt;&gt;&gt; mst.edges()   </span>
-<span class="code-line">[('a', 'b'), (1, 2), (1, 3)]   </span>
-<span class="code-line">&gt;&gt;&gt; G.add_edge(1,3,weight=2) # mst takes attribut 'weight', if no present, weight=1   </span>
-<span class="code-line">&gt;&gt;&gt; nx.minimum_spanning_tree(G).edges()   </span>
-<span class="code-line">[('a', 'b'), (1, 2), (2, 3)]</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; G = nx.Graph()   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; G.add_edge(1,2); G.add_edge(1,3); G.add_edge('a','b')   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; list( nx.connected_components(G) )   </span></span>
+<span class="code-line"><span class="err">[set(['a', 'b']), set([1, 2, 3])]   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; G.add_edge(2,3)   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; mst =  nx.minimum_spanning_tree(G) # returns a new graph   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; mst.edges()   </span></span>
+<span class="code-line"><span class="err">[('a', 'b'), (1, 2), (1, 3)]   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; G.add_edge(1,3,weight=2) # mst takes attribut 'weight', if no present, weight=1   </span></span>
+<span class="code-line"><span class="err">&gt;&gt;&gt; nx.minimum_spanning_tree(G).edges()   </span></span>
+<span class="code-line"><span class="err">[('a', 'b'), (1, 2), (2, 3)]</span></span>
 </pre></div>
 <h3 id="maxflow">maxflow</h3>
 <p><a href="http://networkx.readthedocs.io/en/networkx-1.11/reference/algorithms.flow.html">http://networkx.readthedocs.io/en/networkx-1.11/reference/algorithms.flow.html</a> </p>
@@ -353,20 +373,20 @@ mx's blog            </a>
 <span class="code-line"><span class="mf">1.0</span></span>
 </pre></div>
 <h3 id="maximum-matching">maximum matching</h3>
-<p>NB: maxi<strong>mum</strong> matching != maxim<strong>al</strong> matching... <br>
-there are maximum-matching functions for general undir graph (<code>max_weight_matching</code>) and for bipartitie graph (<code>maximum_matching</code>), the one for bipartite graph is faster, the general one takes O(V**3).   </br></p>
+<p>NB: maxi<strong>mum</strong> matching != maxim<strong>al</strong> matching... <br/>
+there are maximum-matching functions for general undir graph (<code>max_weight_matching</code>) and for bipartitie graph (<code>maximum_matching</code>), the one for bipartite graph is faster, the general one takes O(V**3).   </p>
 <p><a href="http://networkx.readthedocs.io/en/stable/reference/generated/networkx.algorithms.matching.max_weight_matching.html?highlight=maximum_matching">http://networkx.readthedocs.io/en/stable/reference/generated/networkx.algorithms.matching.max_weight_matching.html?highlight=maximum_matching</a> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>&gt;&gt;&gt; G = nx.Graph()   </span>
-<span class="code-line">&gt;&gt;&gt; G.add_edges_from([(1,2),(2,3),(3,4),(4,5)])   </span>
-<span class="code-line">&gt;&gt;&gt; mate = nx.max_weight_matching(G, maxcardinality=True)#mate[v] == w if node v   </span>
-<span class="code-line"> is matched to node w.   </span>
-<span class="code-line">&gt;&gt;&gt; mate   </span>
-<span class="code-line">{2: 3, 3: 2, 4: 5, 5: 4}   </span>
-<span class="code-line">&gt;&gt;&gt; nx.is_bipartite(G)   </span>
-<span class="code-line">True   </span>
-<span class="code-line">&gt;&gt;&gt; mate=nx.bipartite.maximum_matching(G)   </span>
-<span class="code-line">&gt;&gt;&gt; mate   </span>
-<span class="code-line">{1: 2, 2: 1, 3: 4, 4: 3}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">G</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">G</span><span class="p">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="o">[</span><span class="n">(1,2),(2,3),(3,4),(4,5)</span><span class="o">]</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">mate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nx</span><span class="p">.</span><span class="n">max_weight_matching</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">maxcardinality</span><span class="o">=</span><span class="k">True</span><span class="p">)</span><span class="n">#mate</span><span class="o">[</span><span class="n">v</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">v</span><span class="w">   </span></span>
+<span class="code-line"><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">matched</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">mate</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">{</span><span class="mi">2</span><span class="err">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="err">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="err">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="err">:</span><span class="w"> </span><span class="mi">4</span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">nx</span><span class="p">.</span><span class="n">is_bipartite</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="k">True</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">mate</span><span class="o">=</span><span class="n">nx</span><span class="p">.</span><span class="n">bipartite</span><span class="p">.</span><span class="n">maximum_matching</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">mate</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">{</span><span class="mi">1</span><span class="err">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="err">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="err">:</span><span class="w"> </span><span class="mi">3</span><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>and there are vertex cover algorithms as well......     </p>
 <h1 id="pulp_1">pulp</h1>

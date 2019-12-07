@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级 …" />
+        <meta name="description" content="logical structure of PQ array representation of PQ PQ implementation siftup siftdown implementation of add and poll PQ application heapsort heapify top K elements of a stream median of a stream more about heap k-way heap more &#34;flexible&#34; heap 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Priority Queue/Heap (优先队列/堆)小结"/>
         <meta property="og:url" content="http://x-wei.github.io/heap-summary.html"/>
-        <meta property="og:description" content="[TOC] 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级 …"/>
+        <meta property="og:description" content="logical structure of PQ array representation of PQ PQ implementation siftup siftdown implementation of add and poll PQ application heapsort heapify top K elements of a stream median of a stream more about heap k-way heap more &#34;flexible&#34; heap 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出 ..."/>
         <meta property="article:published_time" content="2015-12-09" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -210,7 +210,30 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="Priority Queue/Heap (优先队列/堆)小结">Priority Queue/Heap (优先队列/堆)小结</a><ul><li><a class="toc-href" href="#logical-structure-of-pq" title="logical structure of PQ">logical structure of PQ</a></li><li><a class="toc-href" href="#array-representation-of-pq" title="array representation of PQ">array representation of PQ</a></li><li><a class="toc-href" href="#pq-implementation" title="PQ implementation">PQ implementation</a><ul><li><a class="toc-href" href="#siftup" title="siftup">siftup</a></li><li><a class="toc-href" href="#siftdown" title="siftdown">siftdown</a></li><li><a class="toc-href" href="#implementation-of-add-and-poll_1" title="implementation of add and poll">implementation of add and poll</a></li></ul></li><li><a class="toc-href" href="#pq-application_1" title="PQ application">PQ application</a><ul><li><a class="toc-href" href="#heapsort" title="heapsort">heapsort</a></li><li><a class="toc-href" href="#heapify" title="heapify">heapify</a></li><li><a class="toc-href" href="#top-k-elements-of-a-stream" title="top K elements of a stream">top K elements of a stream</a></li><li><a class="toc-href" href="#median-of-a-stream" title="median of a stream">median of a stream</a></li></ul></li><li><a class="toc-href" href="#more-about-heap_1" title="more about heap">more about heap</a><ul><li><a class="toc-href" href="#k-way-heap" title="k-way heap">k-way heap</a></li><li><a class="toc-href" href="#more-flexible-heap" title='more "flexible" heap'>more "flexible" heap</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#logical-structure-of-pq">logical structure of PQ</a></li>
+<li><a href="#array-representation-of-pq">array representation of PQ</a></li>
+<li><a href="#pq-implementation">PQ implementation</a><ul>
+<li><a href="#siftup">siftup</a></li>
+<li><a href="#siftdown">siftdown</a></li>
+<li><a href="#implementation-of-add-and-poll">implementation of add and poll</a></li>
+</ul>
+</li>
+<li><a href="#pq-application">PQ application</a><ul>
+<li><a href="#heapsort">heapsort</a></li>
+<li><a href="#heapify">heapify</a></li>
+<li><a href="#top-k-elements-of-a-stream">top K elements of a stream</a></li>
+<li><a href="#median-of-a-stream">median of a stream</a></li>
+</ul>
+</li>
+<li><a href="#more-about-heap">more about heap</a><ul>
+<li><a href="#k-way-heap">k-way heap</a></li>
+<li><a href="#more-flexible-heap">more "flexible" heap</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
 <p>PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   </p>
 <h1 id="logical-structure-of-pq">logical structure of PQ</h1>
@@ -222,14 +245,14 @@ mx's blog            </a>
 <li>最后一层的所有非空节点都排在左边  </li>
 </ul>
 </blockquote>
-<p>一张图可以直观说明, 完全二叉树其实就是长得像这样:<br>
-<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image.png"> </img></br></p>
+<p>一张图可以直观说明, 完全二叉树其实就是长得像这样:<br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image.png"/> </p>
 <p>一个完全二叉树能被成为PQ的话, 要满足的条件就是:   </p>
 <blockquote>
 <p>对于任何一个节点, 它的优先级都大于左右子节点的优先级.   </p>
 </blockquote>
-<p>比如下图(圆圈里数字代表优先级):<br>
-<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image001.png"> </img></br></p>
+<p>比如下图(圆圈里数字代表优先级):<br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image001.png"/> </p>
 <p>这样看上去的话, 确实像是"一堆"东西的形状(码的还挺整齐的), 而且我们知道在这一堆节点里, 优先级最高的就是最顶上的那个节点了.   </p>
 <p>我很喜欢这个比喻: 一个heap就像是一个<em>公司的hirachy结构:</em> 子节点就是下属, 父节点就是上司, 每一个上司的能力都比他的下属强(优先级比子节点搞). 能力最强(优先级最高)的人在最上面.  </p>
 <h1 id="array-representation-of-pq">array representation of PQ</h1>
@@ -252,72 +275,72 @@ mx's blog            </a>
 </blockquote>
 <h1 id="pq-implementation">PQ implementation</h1>
 <p>先写一下代码框架:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class PQ{// maxPQ of integers  </span>
-<span class="code-line">    int pq[];  </span>
-<span class="code-line">    int MAX_CAPACITY=1000;// if we use ArrayList we do not need MAX_CAPACITY  </span>
-<span class="code-line">    int size;// pq[size] is the index of last element (rightmost node in last level)   </span>
-<span class="code-line">    public PQ(){  </span>
-<span class="code-line">        pq = new int[MAX_CAPACITY+1];  </span>
-<span class="code-line">        size = 0;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public boolean isEmpty(){  </span>
-<span class="code-line">        return size==0;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public int top(){ // get top element  </span>
-<span class="code-line">        assert !isEmpty();  </span>
-<span class="code-line">        return pq[1];  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public void add(int n); // insert element to PQ --&gt; stay tuned  </span>
-<span class="code-line">    public int poll(); // get and remove top element --&gt; stay tuned  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">PQ</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">maxPQ</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">pq</span><span class="err">[]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="o">=</span><span class="mi">1000</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">ArrayList</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="p">(</span><span class="n">rightmost</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">PQ</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">pq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">MAX_CAPACITY+1</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">isEmpty</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">size</span><span class="o">==</span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">top</span><span class="p">()</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">element</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">assert</span><span class="w"> </span><span class="err">!</span><span class="n">isEmpty</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">add</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">insert</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">PQ</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">poll</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>最关键的两个函数是<code>add</code>和<code>poll</code>, 实现这两个操作的关键在于两个基本操作: <code>siftup()</code>和<code>siftdown()</code>. 在PQ的性质被扰乱的时候, 使用这两个操作可以使PQ恢复性质(所谓的"调整").   </p>
 <h3 id="siftup">siftup</h3>
 <p>如果一个新元素到来, 首先将其放在最后(最底层最右边的节点), 如果新来节点的优先级比较高, 可以用siftup将其提升到一个合适的层次. 用公司结构来类比就是新入职的员工由于能力强被提高到了高层, 而提升的办法就是: 和上司交换岗位(也就是和父节点交换位置).   </p>
 <p>所以这个操作只要不断把该元素与父节点交换, 直到遇到一个优先级大于该节点的父节点或者已经到了最高处停止. 代码很短:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void siftup(){  </span>
-<span class="code-line">    int i = size;// i is the index of the newly added element     </span>
-<span class="code-line">    for(;i&gt;1 &amp;&amp; pq[i/2]&lt;pq[i]; i/=2)  </span>
-<span class="code-line">        swap(pq, i/2, i);  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftup</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">newly</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="k">element</span><span class="w">     </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">i/2</span><span class="o">]&lt;</span><span class="n">pq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">/=</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="siftdown">siftdown</h3>
 <p>siftdown的功能和siftup相反: 如果在最高处是一个优先级很低的元素, 需要将其"下放". 方法就是把它和子节点里面优先级较高的进行交换.   </p>
 <p>代码也不长, 不过第一次写可能不太简洁:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private void siftdown(){  </span>
-<span class="code-line">    if(isEmpty()) return;// nothing to sift when empty  </span>
-<span class="code-line">    int i=1;// siftdown root node  </span>
-<span class="code-line">    while(i*2&lt;=size){ // while the node is not in last level  </span>
-<span class="code-line">        int max=pq[i], j=i;// j is the element to swap  </span>
-<span class="code-line">        if (pq[i*2]&gt;max) // left child  </span>
-<span class="code-line">            {j=i*2; max=pq[i*2];}  </span>
-<span class="code-line">        if (i*2+1&lt;=size &amp;&amp; pq[i*2+1]&gt;max) // right node  </span>
-<span class="code-line">            {j=i*2+1; max=pq[i*2+1];}  </span>
-<span class="code-line">        if (j==i) return;// stop when node is bigger than both child  </span>
-<span class="code-line">        swap(pq, i, j);  </span>
-<span class="code-line">        i = j;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftdown</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">nothing</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sift</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">empty</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">siftdown</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="n">node</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="k">size</span><span class="p">)</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">swap</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2</span><span class="o">]&gt;</span><span class="nf">max</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="n">child</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2</span><span class="o">]</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="k">size</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">i*2+1</span><span class="o">]&gt;</span><span class="nf">max</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="n">node</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2+1</span><span class="o">]</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">bigger</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">child</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="implementation-of-add-and-poll_1">implementation of add and poll</h2>
-<p>有了这两个sift的基本操作, add和poll的操作就简单了. <br>
-<strong>add</strong><br>
-加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public void add(int n){ // insert element to PQ  </span>
-<span class="code-line">    assert size+1&lt;MAX_CAPACITY;  </span>
-<span class="code-line">    pq[++size] = n;  </span>
-<span class="code-line">    siftup();  </span>
-<span class="code-line">}</span>
+<p>有了这两个sift的基本操作, add和poll的操作就简单了. <br/>
+<strong>add</strong><br/>
+加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void add(int n){ // insert element to PQ  </span></span>
+<span class="code-line"><span class="err">    assert size+1&lt;MAX_CAPACITY;  </span></span>
+<span class="code-line"><span class="err">    pq[++size] = n;  </span></span>
+<span class="code-line"><span class="err">    siftup();  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p><strong>poll</strong><br>
-堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public int poll(){ // get and remove top element  </span>
-<span class="code-line">    assert !isEmpty();  </span>
-<span class="code-line">    int top = pq[1];  </span>
-<span class="code-line">    pq[1] = pq[size--];// put last element on the top  </span>
-<span class="code-line">    siftdown();  </span>
-<span class="code-line">    return top;  </span>
-<span class="code-line">}</span>
+<p><strong>poll</strong><br/>
+堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public int poll(){ // get and remove top element  </span></span>
+<span class="code-line"><span class="err">    assert !isEmpty();  </span></span>
+<span class="code-line"><span class="err">    int top = pq[1];  </span></span>
+<span class="code-line"><span class="err">    pq[1] = pq[size--];// put last element on the top  </span></span>
+<span class="code-line"><span class="err">    siftdown();  </span></span>
+<span class="code-line"><span class="err">    return top;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h1 id="pq-application_1">PQ application</h1>
 <p>接下来讲一下PQ的应用.   </p>
@@ -328,18 +351,18 @@ mx's blog            </a>
 <p>首先前面的siftdown函数很明显可以修改一下加上一个参数变为<code>siftdown(int i)</code>(i代表要向下调整的元素的下标).   </p>
 <p>在heapsort里第一步是要建立一个PQ. 最naive的建堆操作就是新建一个空的heap然后不断向里面加入数组<code>a</code>里的元素(空间复杂度N, 时间复杂度NlgN). 其实这个操作可以做的更好: 我们<em>先直接把数组a当作pq[]数组</em>, 现在显然它不满足PQ性质, 只需要<em>多次使用siftdown</em>进行调整即可.   </p>
 <p>假设一共有h(=lgN)层, 由于最后一层的节点不必调用siftdown, 我们只要从倒数第二层开始调用siftdown即可, 结合前面提到的pq的性质(N/2以后的节点都在最后一层), 写法很简单(简单起见认为a也是把第0个元素空出来好了):   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static void heapify(int[] a){  </span>
-<span class="code-line">    int N = a.length;  </span>
-<span class="code-line">    for(int i=N/2;i&lt;=1;i--){  </span>
-<span class="code-line">        siftdown(a, i);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static void heapify(int[] a){  </span></span>
+<span class="code-line"><span class="err">    int N = a.length;  </span></span>
+<span class="code-line"><span class="err">    for(int i=N/2;i&lt;=1;i--){  </span></span>
+<span class="code-line"><span class="err">        siftdown(a, i);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>这个操作的时间复杂度是O(N)的 ! 为什么呢?<br>
-→ 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式: <br>
-<code>Sigma( 2^k * (h-k) ) for k=0,...,h-1</code><br>
-<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image002.png"><br>
-(具体见 <a href="http://algs4.cs.princeton.edu/24pq/">http://algs4.cs.princeton.edu/24pq/</a> 里面Q20的答案)  </br></img></br></br></br></p>
+<p>这个操作的时间复杂度是O(N)的 ! 为什么呢?<br/>
+→ 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式: <br/>
+<code>Sigma( 2^k * (h-k) ) for k=0,...,h-1</code><br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image002.png"/><br/>
+(具体见 <a href="http://algs4.cs.princeton.edu/24pq/">http://algs4.cs.princeton.edu/24pq/</a> 里面Q20的答案)  </p>
 <h3 id="top-k-elements-of-a-stream">top K elements of a stream</h3>
 <p>问题描述: 一系列数字一个一个到达, 当所有数(假设有N个)都到达以后, 求最大的K个数字.   </p>
 <p>这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:  </p>
@@ -352,13 +375,13 @@ mx's blog            </a>
 </li>
 </ul>
 <h3 id="median-of-a-stream">median of a stream</h3>
-<p>问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?<br>
-这个的解法是使用<em>两个PQ</em>, 一个最大堆<code>maxpq</code>一个最小堆<code>minpq</code>, 然后<em>maxpq里存放较<strong><em>小</em></strong>的一半数字, minpq里存放较<strong><em>大</em></strong>的一半数字: </em><code>maxpq.top()&lt;=minpq.top()</code>. <br>
-并且我们要求: <code>minpq.size &lt;= maxpq.size &lt;= minpq.size+1</code><br>
-⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  </br></br></br></p>
-<p>初始时两个pq都是空的, 每次数字n到来时:<br>
-<em> 先把n放进maxpq里<br>
-</br></em> 如果<code>maxpq.size&gt;minpq.size+1</code>的话: <code>minpq.add(maxpq.poll())</code> </br></p>
+<p>问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?<br/>
+这个的解法是使用<em>两个PQ</em>, 一个最大堆<code>maxpq</code>一个最小堆<code>minpq</code>, 然后<em>maxpq里存放较<strong><em>小</em></strong>的一半数字, minpq里存放较<strong><em>大</em></strong>的一半数字: </em><code>maxpq.top()&lt;=minpq.top()</code>. <br/>
+并且我们要求: <code>minpq.size &lt;= maxpq.size &lt;= minpq.size+1</code><br/>
+⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  </p>
+<p>初始时两个pq都是空的, 每次数字n到来时:<br/>
+<em> 先把n放进maxpq里<br/>
+</em> 如果<code>maxpq.size&gt;minpq.size+1</code>的话: <code>minpq.add(maxpq.poll())</code> </p>
 <h1 id="more-about-heap_1">more about heap</h1>
 <h3 id="k-way-heap">k-way heap</h3>
 <p>这里介绍的PQ其实是binary heap, 即这棵树是一个完全<strong>二</strong>叉树, 但是我们完全可以做成完全<strong>K</strong>叉树, 就是所谓的K-way heap了.  </p>

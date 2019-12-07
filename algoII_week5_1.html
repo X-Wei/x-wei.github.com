@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Regular Expressions pb: pattern matching. regular expression Is a notation to specify a set of strings. basic operations: concatenation or closure: &#34;0 or more appearances of chars&#34; parentheses additional operations (added for convinence): ex. [A-C]+ is equivalent to (A|B|C)(A|B|C)*. 吐槽名句: 2. REs and …" />
+        <meta name="description" content="1. Regular Expressions regular expression 2. REs and NFAs first attempt of pattern matching NFA 3. NFA Simulation algorithm concrete example reachability Java implementation Analysis 4. NFA Construction buiding a NFA from a re (parsing) implementation Analysis 5. Regular Expression Applications grep regexp in other languages Harvesting information Not-so-regular expressions ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 5-1 Regular Expressions"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week5_1.html"/>
-        <meta property="og:description" content="[TOC] 1. Regular Expressions pb: pattern matching. regular expression Is a notation to specify a set of strings. basic operations: concatenation or closure: &#34;0 or more appearances of chars&#34; parentheses additional operations (added for convinence): ex. [A-C]+ is equivalent to (A|B|C)(A|B|C)*. 吐槽名句: 2. REs and …"/>
+        <meta property="og:description" content="1. Regular Expressions regular expression 2. REs and NFAs first attempt of pattern matching NFA 3. NFA Simulation algorithm concrete example reachability Java implementation Analysis 4. NFA Construction buiding a NFA from a re (parsing) implementation Analysis 5. Regular Expression Applications grep regexp in other languages Harvesting information Not-so-regular expressions ..."/>
         <meta property="article:published_time" content="2015-12-27" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,25 +210,59 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 5-1 Regular Expressions">[Algorithms II] Week 5-1 Regular Expressions</a><ul><li><a class="toc-href" href="#1-regular-expressions" title="1. Regular Expressions">1. Regular Expressions</a><ul><li><a class="toc-href" href="#regular-expression" title="regular expression">regular expression</a></li></ul></li><li><a class="toc-href" href="#2-res-and-nfas_1" title="2. REs and NFAs">2. REs and NFAs</a><ul><li><a class="toc-href" href="#first-attempt-of-pattern-matching" title="first attempt of pattern matching">first attempt of pattern matching</a></li><li><a class="toc-href" href="#nfa" title="NFA">NFA</a></li></ul></li><li><a class="toc-href" href="#3-nfa-simulation_1" title="3. NFA Simulation">3. NFA Simulation</a><ul><li><a class="toc-href" href="#algorithm" title="algorithm">algorithm</a></li><li><a class="toc-href" href="#concrete-example" title="concrete example">concrete example</a></li><li><a class="toc-href" href="#reachability" title="reachability">reachability</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#4-nfa-construction_1" title="4. NFA Construction">4. NFA Construction</a><ul><li><a class="toc-href" href="#buiding-a-nfa-from-a-re-parsing" title="buiding a NFA from a re (parsing)">buiding a NFA from a re (parsing)</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis_1" title="Analysis">Analysis</a></li></ul></li><li><a class="toc-href" href="#5-regular-expression-applications_1" title="5. Regular Expression Applications">5. Regular Expression Applications</a><ul><li><a class="toc-href" href="#grep" title="grep">grep</a></li><li><a class="toc-href" href="#regexp-in-other-languages" title="regexp in other languages">regexp in other languages</a></li><li><a class="toc-href" href="#harvesting-information" title="Harvesting information">Harvesting information</a></li><li><a class="toc-href" href="#not-so-regular-expressions" title="Not-so-regular expressions">Not-so-regular expressions</a></li><li><a class="toc-href" href="#summary" title="Summary">Summary</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-regular-expressions">1. Regular Expressions</a><ul>
+<li><a href="#regular-expression">regular expression</a></li>
+</ul>
+</li>
+<li><a href="#2-res-and-nfas">2. REs and NFAs</a><ul>
+<li><a href="#first-attempt-of-pattern-matching">first attempt of pattern matching</a></li>
+<li><a href="#nfa">NFA</a></li>
+</ul>
+</li>
+<li><a href="#3-nfa-simulation">3. NFA Simulation</a><ul>
+<li><a href="#algorithm">algorithm</a></li>
+<li><a href="#concrete-example">concrete example</a></li>
+<li><a href="#reachability">reachability</a></li>
+<li><a href="#java-implementation">Java implementation</a></li>
+<li><a href="#analysis">Analysis</a></li>
+</ul>
+</li>
+<li><a href="#4-nfa-construction">4. NFA Construction</a><ul>
+<li><a href="#buiding-a-nfa-from-a-re-parsing">buiding a NFA from a re (parsing)</a></li>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis_1">Analysis</a></li>
+</ul>
+</li>
+<li><a href="#5-regular-expression-applications">5. Regular Expression Applications</a><ul>
+<li><a href="#grep">grep</a></li>
+<li><a href="#regexp-in-other-languages">regexp in other languages</a></li>
+<li><a href="#harvesting-information">Harvesting information</a></li>
+<li><a href="#not-so-regular-expressions">Not-so-regular expressions</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <h1 id="1-regular-expressions">1. Regular Expressions</h1>
-<p>pb: pattern matching. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image.png"> </img></br></p>
+<p>pb: pattern matching. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image.png"/> </p>
 <h3 id="regular-expression">regular expression</h3>
-<p>Is a notation to specify a set of strings. <br>
-basic operations:   </br></p>
+<p>Is a notation to specify a set of strings. <br/>
+basic operations:   </p>
 <ul>
 <li>concatenation   </li>
 <li>or  </li>
 <li>closure: "0 or more appearances of chars"  </li>
 <li>parentheses  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image001.png"><br>
-additional operations (<em>added for convinence</em>):<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image002.png"><br>
-ex. <code>[A-C]+</code> is equivalent to <code>(A|B|C)(A|B|C)*</code>.  </br></img></br></br></img></p>
-<p>吐槽名句: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image003.png"> </img></br></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image001.png"/><br/>
+additional operations (<em>added for convinence</em>):<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image002.png"/><br/>
+ex. <code>[A-C]+</code> is equivalent to <code>(A|B|C)(A|B|C)*</code>.  </p>
+<p>吐槽名句: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image003.png"/> </p>
 <h1 id="2-res-and-nfas_1">2. REs and NFAs</h1>
 <p><strong>duality</strong> between RE and DFA:   </p>
 <ul>
@@ -237,19 +271,19 @@ ex. <code>[A-C]+</code> is equivalent to <code>(A|B|C)(A|B|C)*</code>.  </br></i
 </ul>
 <p><strong>[Kleene's therom]</strong> </p>
 <blockquote>
-<p>For any DFA, there exists a RE that describes the same set of strings;<br>
-For any RE, there exists a DFA that recognizes the same set of strings.  </br></p>
+<p>For any DFA, there exists a RE that describes the same set of strings;<br/>
+For any RE, there exists a DFA that recognizes the same set of strings.  </p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image004.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image004.png"/> </p>
 <h3 id="first-attempt-of-pattern-matching">first attempt of pattern matching</h3>
-<p>(Ken Tompson) same as KMP — no backup.<br>
-basic plan:  </br></p>
+<p>(Ken Tompson) same as KMP — no backup.<br/>
+basic plan:  </p>
 <ul>
 <li>construct the DFA  </li>
 <li>simulate the DFA with text   </li>
 </ul>
-<p>bad news: DFA may have exponential nb of states. <br>
-⇒ change to <strong>NFA</strong> (nondeterministic finite automaton).  </br></p>
+<p>bad news: DFA may have exponential nb of states. <br/>
+⇒ change to <strong>NFA</strong> (nondeterministic finite automaton).  </p>
 <h3 id="nfa">NFA</h3>
 <blockquote></blockquote>
 <ul>
@@ -259,15 +293,15 @@ basic plan:  </br></p>
 <li><strong>match-transition</strong> (black links below): change state, but also have to scan next char in text, <em>match transition is added after each alphabetic char</em> </li>
 <li>success (accept) if <em>any sequence</em> of transitions (after scanning all text) end at state-M.   </li>
 </ul>
-<p>亦可理解为, DFA是每一条边对应一个可能的(字母表内的)char, 而NFA只有match-transition对应于pattern里的(alphabetic) char, 其他epsilon transition的边对应空字符串(也就是epsilon string). <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image005.png"><br>
-example:<br>
-is "AAAABD" a match ?<br>
-→ yes. (和上一节substring的插图进行一下比对, 还是有很大不同)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image006.png"> </img></br></br></br></br></img></br></p>
-<p>pb: non-determinism<br>
-How to determine whether a string is a match of a NFA (ie. <em>how to select the right sequence</em> of transition) ? <br>
-⇒ sysematically  consider <em>all</em> possible transition sequences.   </br></br></p>
+<p>亦可理解为, DFA是每一条边对应一个可能的(字母表内的)char, 而NFA只有match-transition对应于pattern里的(alphabetic) char, 其他epsilon transition的边对应空字符串(也就是epsilon string). <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image005.png"/><br/>
+example:<br/>
+is "AAAABD" a match ?<br/>
+→ yes. (和上一节substring的插图进行一下比对, 还是有很大不同)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image006.png"/> </p>
+<p>pb: non-determinism<br/>
+How to determine whether a string is a match of a NFA (ie. <em>how to select the right sequence</em> of transition) ? <br/>
+⇒ sysematically  consider <em>all</em> possible transition sequences.   </p>
 <h1 id="3-nfa-simulation_1">3. NFA Simulation</h1>
 <ul>
 <li>state names: 0 to M. (M+1 states in total, M=length of RE string).   </li>
@@ -278,11 +312,11 @@ How to determine whether a string is a match of a NFA (ie. <em>how to select the
 <blockquote>
 <p>maintain a <em>set</em> of all state that NFA could be in after reading first i chars in text.   </p>
 </blockquote>
-<p>at each iteration: check all reachable state wrt the transitions, then update reachable states. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image007.png"> </img></br></p>
+<p>at each iteration: check all reachable state wrt the transitions, then update reachable states. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image007.png"/> </p>
 <h3 id="algorithm">algorithm</h3>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image008.png"><br>
-(for the NFA above, 注意为了方便已经加了 必要的括号)  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image008.png"/><br/>
+(for the NFA above, 注意为了方便已经加了 必要的括号)  </p>
 <p><strong>[Algo]</strong> </p>
 <blockquote>
 <ul>
@@ -303,64 +337,64 @@ How to determine whether a string is a match of a NFA (ie. <em>how to select the
 <ul>
 <li>init:  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image010.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image010.png"/> </p>
 <ul>
 <li>when <em>matching A</em> from text: state 2 or 6  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image011.png"><br>
-using match transition of A, we can get to state 3 or 7<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image012.png"><br>
-if we add epsilon transitions: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image013.png"><br>
-so reachable states after reading 1st A are: 2, 3, 4, 7<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image014.png"> </img></br></br></img></br></br></img></br></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image011.png"/><br/>
+using match transition of A, we can get to state 3 or 7<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image012.png"/><br/>
+if we add epsilon transitions: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image013.png"/><br/>
+so reachable states after reading 1st A are: 2, 3, 4, 7<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image014.png"/> </p>
 <ul>
 <li>matching 2nd A from text: state 2  </li>
 </ul>
-<p>using match transition we can only get to state 3. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image015.png"><br>
-using epsilon transitions from state 3: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image016.png"><br>
- (<em>the only state after matching A is state 2 3 4</em>)  </br></img></br></br></img></br></p>
+<p>using match transition we can only get to state 3. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image015.png"/><br/>
+using epsilon transitions from state 3: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image016.png"/><br/>
+ (<em>the only state after matching A is state 2 3 4</em>)  </p>
 <ul>
 <li>etc...   </li>
 </ul>
 <p>或者直接看这张图:   </p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image017.png"><br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image018.png"> </img></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image017.png"/><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image018.png"/> </p>
 <h3 id="reachability">reachability</h3>
-<p>All reachable vertices from <em>a set of</em> source vertices → just DFS. <br>
-⇒ directly use the API from the digraph section: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image019.png"><br>
-running time linear to E+V  </br></img></br></br></p>
+<p>All reachable vertices from <em>a set of</em> source vertices → just DFS. <br/>
+⇒ directly use the API from the digraph section: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image019.png"/><br/>
+running time linear to E+V  </p>
 <h3 id="java-implementation">Java implementation</h3>
 <p>API:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class NFA{  </span>
-<span class="code-line">    private int M;  </span>
-<span class="code-line">    private char[] re;  </span>
-<span class="code-line">    private Digraph G;// digraph of the epsilon-transitions  </span>
-<span class="code-line">    public NFA(String regexp){  </span>
-<span class="code-line">        M = regexp.length();  </span>
-<span class="code-line">        re = regexp.toCharArray();  </span>
-<span class="code-line">        G = buildEpsilonTransitionGraph();// helper function to build the graph G  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public boolean matches(String text);// does text match the regexp?  </span>
-<span class="code-line">    private Digraph buildEpsilonTransitionGraph();// private helper function  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class NFA{  </span></span>
+<span class="code-line"><span class="err">    private int M;  </span></span>
+<span class="code-line"><span class="err">    private char[] re;  </span></span>
+<span class="code-line"><span class="err">    private Digraph G;// digraph of the epsilon-transitions  </span></span>
+<span class="code-line"><span class="err">    public NFA(String regexp){  </span></span>
+<span class="code-line"><span class="err">        M = regexp.length();  </span></span>
+<span class="code-line"><span class="err">        re = regexp.toCharArray();  </span></span>
+<span class="code-line"><span class="err">        G = buildEpsilonTransitionGraph();// helper function to build the graph G  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    public boolean matches(String text);// does text match the regexp?  </span></span>
+<span class="code-line"><span class="err">    private Digraph buildEpsilonTransitionGraph();// private helper function  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>The function <code>buildEpsilonTransitionGraph()</code>will be attacked in next session, for now we focus on the NFA simulation code — that is, the <code>mathes()</code> method.   </p>
 <p>For simplicity let's assume we have a function <code>reachableVertices(Digraph G, Bag&lt;Integer&gt; sourceSet)</code> and  <code>reachableVertices(Digraph G, int source)</code> that gives the reachable states from (a set of) source vertices, including the sources. Or we can directly use the <code>DirectedDFS</code> api as listed above.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public boolean matches(String text){ //does text match the regexp?  </span>
-<span class="code-line">        Bag&lt;Integer&gt; rechableStates = reachableVertices(G,0);// init reachable   </span>
-<span class="code-line">        for(char c: text){  </span>
-<span class="code-line">            Bag&lt;Integer&gt; newRechableStatesBymatch = new Bag&lt;Integer&gt;();  </span>
-<span class="code-line">            for(int i:rechableStates)  </span>
-<span class="code-line">                if(re[i]==c || re[i]=='.')   </span>
-<span class="code-line">                    newRechableStatesBymatch.add(i+1);// match transition  </span>
-<span class="code-line">            rechableStates = reachableVertices(G,newRechableStates);//epsilon transition  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">        return reachableStates.contains(M);  </span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">matches</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="nc">text</span><span class="p">)</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="n">does</span><span class="w"> </span><span class="nc">text</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">regexp</span><span class="vm">?</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rechableStates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reachableVertices</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="n">reachable</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">char</span><span class="w"> </span><span class="nl">c</span><span class="p">:</span><span class="w"> </span><span class="nc">text</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newRechableStatesBymatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bag</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="nl">i</span><span class="p">:</span><span class="n">rechableStates</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="n">c</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">'.'</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                    </span><span class="n">newRechableStatesBymatch</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">transition</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">rechableStates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reachableVertices</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="n">newRechableStates</span><span class="p">);</span><span class="o">//</span><span class="n">epsilon</span><span class="w"> </span><span class="n">transition</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">reachableStates</span><span class="p">.</span><span class="k">contains</span><span class="p">(</span><span class="n">M</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>(代码虽然短但是这个过程我理解了好久.. 另外上面的代码有点伪).   </p>
 <h3 id="analysis">Analysis</h3>
@@ -378,25 +412,25 @@ running time linear to E+V  </br></img></br></br></p>
 <ul>
 <li><strong>paretheses </strong><code>( )</code> </li>
 </ul>
-<p>simply put a epsilon-transition to the next state<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image020.png"> </img></br></p>
+<p>simply put a epsilon-transition to the next state<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image020.png"/> </p>
 <ul>
 <li><strong>closure </strong><code>*</code> </li>
 </ul>
-<p>星号前面只可能是字母(包括<code>.</code>)或者右括号<code>)</code>, 所以分两种情况讨论一下, 需要向前看一位, 这里就比较subtle<br>
-for each <code>*</code> state, add 3 transitions as below: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image021.png"><br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image022.png"> </img></br></img></br></br></p>
+<p>星号前面只可能是字母(包括<code>.</code>)或者右括号<code>)</code>, 所以分两种情况讨论一下, 需要向前看一位, 这里就比较subtle<br/>
+for each <code>*</code> state, add 3 transitions as below: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image021.png"/><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image022.png"/> </p>
 <ul>
 <li><strong>or</strong> <code>|</code> </li>
 </ul>
-<p>or符号肯定在一个括号里面<br>
-add 2 epsilon transitions wrt parethese: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image023.png"><br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image024.png"> </img></br></img></br></br></p>
+<p>or符号肯定在一个括号里面<br/>
+add 2 epsilon transitions wrt parethese: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image023.png"/><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image024.png"/> </p>
 <p>以上就是NFA建立G的时候要处理的三种情形, 这三种情形都要知道一个左括号(<code>lp</code>)的位置 ⇒ use a stack !   </p>
 <h3 id="implementation">implementation</h3>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image025.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image025.png"/> </p>
 <ul>
 <li>for alphabetic chars: do one-char <em>lookahead</em> → if next is <code>*</code>, add transitions.   </li>
 <li>for left parenthese <code>(</code>: add transition to next state, and push to stack  </li>
@@ -404,95 +438,95 @@ add 2 epsilon transitions wrt parethese: <br>
 <li>for right parenthese <code>)</code>: pop the stack to deal with or and lp; and also do lookahead.   </li>
 </ul>
 <p>code is not trival... look carefully:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private Digraph buildEpsilonTransitionGraph(){// private helper function  </span>
-<span class="code-line">    Digraph G = new Digraph(M+1);  </span>
-<span class="code-line">    Stack&lt;Integer&gt; stk = new Stack&lt;Integer&gt;();  </span>
-<span class="code-line">    int lp;  </span>
-<span class="code-line">    for(int i=0; i&lt;M; i++){  </span>
-<span class="code-line">        if(re[i]=='|' || re[i]=='(')   </span>
-<span class="code-line">            stk.push(i);  </span>
-<span class="code-line">        if(re[i]=='(' || re[i]==')' || re[i]=='*')   </span>
-<span class="code-line">            G.addEdge(i,i+1);  </span>
-<span class="code-line">        else if(re[i]==')'){// need to pop until get a lp  </span>
-<span class="code-line">            int j = stk.pop();  </span>
-<span class="code-line">            if(re[j]=='|'){  </span>
-<span class="code-line">                lp = stk.pop();  </span>
-<span class="code-line">                int or = j;  </span>
-<span class="code-line">                G.addEdge(lp, or+1);// add edge for the `or` case   </span>
-<span class="code-line">                G.addEdge(or, i);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">Digraph</span><span class="w"> </span><span class="n">buildEpsilonTransitionGraph</span><span class="p">()</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="n">helper</span><span class="w"> </span><span class="k">function</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Digraph</span><span class="w"> </span><span class="n">G</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Digraph</span><span class="p">(</span><span class="n">M</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Stack</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Stack</span><span class="o">&lt;</span><span class="k">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">lp</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">'|'</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">'('</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">stk</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">'('</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">')'</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">'*'</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">')'</span><span class="p">)</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">pop</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">lp</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stk</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">j</span><span class="o">]==</span><span class="s1">'|'</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">lp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stk</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="nc">int</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span><span class="w"> </span><span class="ow">or</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">edge</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="err">`</span><span class="ow">or</span><span class="err">`</span><span class="w"> </span><span class="k">case</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="ow">or</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">            }  </span>
-<span class="code-line">            else lp = j;  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">        // do the lookahead:   </span>
-<span class="code-line">        if(re[i+1]=='*'){  </span>
-<span class="code-line">            if(re[i]==')'){ // case 1 of closure: a rp before `*`  </span>
-<span class="code-line">                G.addEdge(lp, i+1);  </span>
-<span class="code-line">                G.addEdge(i+1, lp);  </span>
-<span class="code-line">            }else{ // case 2 of closure: an alphabetic char before `*`  </span>
-<span class="code-line">                G.addEdge(i, i+1);  </span>
-<span class="code-line">                G.addEdge(i+1, i);  </span>
-<span class="code-line">            }  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">    }// go through each char in re  </span>
-<span class="code-line">    return G;  </span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="n">lp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="nl">lookahead</span><span class="p">:</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i+1</span><span class="o">]==</span><span class="s1">'*'</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="s1">')'</span><span class="p">)</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nl">closure</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">rp</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="err">`</span><span class="o">*</span><span class="err">`</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lp</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="k">else</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nl">closure</span><span class="p">:</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">alphabetic</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="err">`</span><span class="o">*</span><span class="err">`</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">G</span><span class="p">.</span><span class="n">addEdge</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="o">//</span><span class="w"> </span><span class="k">go</span><span class="w"> </span><span class="n">through</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">re</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">G</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="analysis_1">Analysis</h3>
-<p><strong>prop</strong>. building an NFA takes linear time and space in M. <br>
-pf. for each char, the nb of operations is const.   </br></p>
+<p><strong>prop</strong>. building an NFA takes linear time and space in M. <br/>
+pf. for each char, the nb of operations is const.   </p>
 <p>真不愧是most ingenius algorithm we met in this course......   </p>
 <h1 id="5-regular-expression-applications_1">5. Regular Expression Applications</h1>
 <h3 id="grep">grep</h3>
-<p>"<strong>G</strong>eneralized <strong>R</strong>egular <strong>E</strong>xpression <strong>P</strong>rint"<br>
-print out all lines (from stdin) having a substring of an RE.<br>
-⇒ equal to adding a <code>.*</code> to the beginning and end of the RE to make a match.   </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class GREP{  </span>
-<span class="code-line">    public void main(String[] args){  </span>
-<span class="code-line">        String re = ".*"+args[0]+".*";  </span>
-<span class="code-line">        NFA nfa = new NFA(re);  </span>
-<span class="code-line">        while(StdIn.hasNextLine){  </span>
-<span class="code-line">            String line = StdIn.readLine();  </span>
-<span class="code-line">            if(nfa.matches(line)) StdOut.println(line);  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<p>"<strong>G</strong>eneralized <strong>R</strong>egular <strong>E</strong>xpression <strong>P</strong>rint"<br/>
+print out all lines (from stdin) having a substring of an RE.<br/>
+⇒ equal to adding a <code>.*</code> to the beginning and end of the RE to make a match.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GREP{  </span></span>
+<span class="code-line"><span class="err">    public void main(String[] args){  </span></span>
+<span class="code-line"><span class="err">        String re = ".*"+args[0]+".*";  </span></span>
+<span class="code-line"><span class="err">        NFA nfa = new NFA(re);  </span></span>
+<span class="code-line"><span class="err">        while(StdIn.hasNextLine){  </span></span>
+<span class="code-line"><span class="err">            String line = StdIn.readLine();  </span></span>
+<span class="code-line"><span class="err">            if(nfa.matches(line)) StdOut.println(line);  </span></span>
+<span class="code-line"><span class="err">        }  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>the grep has NM worst case running time — same as brute force substring search — amazing...  </p>
-<p>grep application: crossword puzzles<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image026.png"><br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image027.png"> </img></br></img></br></p>
+<p>grep application: crossword puzzles<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image026.png"/><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image027.png"/> </p>
 <h3 id="regexp-in-other-languages">regexp in other languages</h3>
 <ul>
 <li>unix: grep, awk  </li>
 <li>script: python, <em>perl</em> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image028.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image028.png"/> </p>
 <ul>
 <li>java: <code>String.matches(regexp)</code> </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image029.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image029.png"/> </p>
 <h3 id="harvesting-information">Harvesting information</h3>
-<p>goal: print <em>all substrings</em> of input that match an RE. <br>
-use <code>Pattern</code> and <code>Matcher</code> class in <code>java.util.regexp</code>. <br>
-first compile the regexp, then build the matcher<br>
-→ so that we can iterate through all matches of the input using <code>find()</code> and <code>group()</code> of the matcher <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image030.png"> </img></br></br></br></br></p>
-<p><em>Caveat</em>: performance NOT guaranteed ! <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image031.png"><br>
-→ exponential time growth! <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image032.png"> </img></br></br></img></br></p>
+<p>goal: print <em>all substrings</em> of input that match an RE. <br/>
+use <code>Pattern</code> and <code>Matcher</code> class in <code>java.util.regexp</code>. <br/>
+first compile the regexp, then build the matcher<br/>
+→ so that we can iterate through all matches of the input using <code>find()</code> and <code>group()</code> of the matcher <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image030.png"/> </p>
+<p><em>Caveat</em>: performance NOT guaranteed ! <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image031.png"/><br/>
+→ exponential time growth! <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image032.png"/> </p>
 <h3 id="not-so-regular-expressions">Not-so-regular expressions</h3>
-<p>"not rugular" means Kleene's Th doesn't hold <br>
-→ efficient performance not tractable......<br>
-<strong>back-reference</strong><br>
-<code>\1</code> matches <em>subexpressions</em> that was matched earliser<br>
-limitations of regular languages: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image034.png"> </img></br></br></br></br></br></p>
+<p>"not rugular" means Kleene's Th doesn't hold <br/>
+→ efficient performance not tractable......<br/>
+<strong>back-reference</strong><br/>
+<code>\1</code> matches <em>subexpressions</em> that was matched earliser<br/>
+limitations of regular languages: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image034.png"/> </p>
 <h3 id="summary">Summary</h3>
-<p>the substring and regexp are examples of compilers ! (from string to a NFA/DFA/bytecode)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image033.png"> </img></br></p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image035.png"> </img></p>
+<p>the substring and regexp are examples of compilers ! (from string to a NFA/DFA/bytecode)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image033.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week5_1/pasted_image035.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

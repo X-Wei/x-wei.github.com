@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] I-Case studies Why look at case studies? Good way to get intuition of different component of CNN: case study &amp; reading paper. Outline classic networks: LeNet-5 AlexNet VGG ResNet (152-layer NN) Inception Classic Networks LeNet-5(1998) Goal: recognize hand-written digits. image → 2 CONV-MEANPOOL layers, all CONV are valid (without padding …" />
+        <meta name="description" content="I-Case studies Why look at case studies? Classic Networks ResNets Why ResNets Work Networks in Networks and 1x1 Convolutions Inception Network Motivation computation = 11192 * 282816 + 5516 * 282832 = 12.4M Inception Network II-Practical advice for using ConvNets Using Open-Source Implementation Transfer Learning Data Augmentation State of Computer Vision I-Case studies Why ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Convolutional Neural Networks] week2. Deep convolutional models: case studies"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c4wk2.html"/>
-        <meta property="og:description" content="[TOC] I-Case studies Why look at case studies? Good way to get intuition of different component of CNN: case study &amp; reading paper. Outline classic networks: LeNet-5 AlexNet VGG ResNet (152-layer NN) Inception Classic Networks LeNet-5(1998) Goal: recognize hand-written digits. image → 2 CONV-MEANPOOL layers, all CONV are valid (without padding …"/>
+        <meta property="og:description" content="I-Case studies Why look at case studies? Classic Networks ResNets Why ResNets Work Networks in Networks and 1x1 Convolutions Inception Network Motivation computation = 11192 * 282816 + 5516 * 282832 = 12.4M Inception Network II-Practical advice for using ConvNets Using Open-Source Implementation Transfer Learning Data Augmentation State of Computer Vision I-Case studies Why ..."/>
         <meta property="article:published_time" content="2017-11-22" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,11 +210,34 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Convolutional Neural Networks] week2. Deep convolutional models: case studies">[Convolutional Neural Networks] week2. Deep convolutional models: case studies</a><ul><li><a class="toc-href" href="#i-case-studies" title="I-Case studies">I-Case studies</a><ul><li><a class="toc-href" href="#why-look-at-case-studies" title="Why look at case studies?">Why look at case studies?</a></li><li><a class="toc-href" href="#classic-networks" title="Classic Networks">Classic Networks</a></li><li><a class="toc-href" href="#resnets" title="ResNets">ResNets</a></li><li><a class="toc-href" href="#why-resnets-work" title="Why ResNets Work">Why ResNets Work</a></li><li><a class="toc-href" href="#networks-in-networks-and-1x1-convolutions" title="Networks in Networks and 1x1 Convolutions">Networks in Networks and 1x1 Convolutions</a></li><li><a class="toc-href" href="#inception-network-motivation" title="Inception Network Motivation">Inception Network Motivation</a></li></ul></li><li><a class="toc-href" href="#computation-11192-282816-5516-282832-124m_2" title="computation = 11192 * 282816 + 5516 * 282832 = 12.4M">computation = 11192 * 282816 + 5516 * 282832 = 12.4M</a><ul><li><a class="toc-href" href="#inception-network" title="Inception Network">Inception Network</a></li><li><a class="toc-href" href="#ii-practical-advice-for-using-convnets_1" title="II-Practical advice for using ConvNets">II-Practical advice for using ConvNets</a><ul><li><a class="toc-href" href="#using-open-source-implementation" title="Using Open-Source Implementation">Using Open-Source Implementation</a></li><li><a class="toc-href" href="#transfer-learning" title="Transfer Learning">Transfer Learning</a></li><li><a class="toc-href" href="#data-augmentation" title="Data Augmentation">Data Augmentation</a></li><li><a class="toc-href" href="#state-of-computer-vision" title="State of Computer Vision">State of Computer Vision</a></li></ul></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]  </p>
+                <div class="toc">
+<ul>
+<li><a href="#i-case-studies">I-Case studies</a><ul>
+<li><a href="#why-look-at-case-studies">Why look at case studies?</a></li>
+<li><a href="#classic-networks">Classic Networks</a></li>
+<li><a href="#resnets">ResNets</a></li>
+<li><a href="#why-resnets-work">Why ResNets Work</a></li>
+<li><a href="#networks-in-networks-and-1x1-convolutions">Networks in Networks and 1x1 Convolutions</a></li>
+<li><a href="#inception-network-motivation">Inception Network Motivation</a></li>
+</ul>
+</li>
+<li><a href="#computation-11192-282816-5516-282832-124m">computation = 11192 * 282816 + 5516 * 282832 = 12.4M</a><ul>
+<li><a href="#inception-network">Inception Network</a></li>
+<li><a href="#ii-practical-advice-for-using-convnets">II-Practical advice for using ConvNets</a><ul>
+<li><a href="#using-open-source-implementation">Using Open-Source Implementation</a></li>
+<li><a href="#transfer-learning">Transfer Learning</a></li>
+<li><a href="#data-augmentation">Data Augmentation</a></li>
+<li><a href="#state-of-computer-vision">State of Computer Vision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 <h2 id="i-case-studies">I-Case studies</h2>
 <h3 id="why-look-at-case-studies">Why look at case studies?</h3>
-<p>Good way to get intuition of different component of CNN: case study &amp; reading paper.<br>
-<strong>Outline</strong> </br></p>
+<p>Good way to get intuition of different component of CNN: case study &amp; reading paper.<br/>
+<strong>Outline</strong> </p>
 <ul>
 <li>classic networks:  <ul>
 <li>LeNet-5  </li>
@@ -226,12 +249,12 @@ mx's blog            </a>
 <li>Inception  </li>
 </ul>
 <h3 id="classic-networks">Classic Networks</h3>
-<p><strong>LeNet-5</strong>(1998)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image002.png"><br>
-Goal: recognize hand-written digits.<br>
-image → 2 CONV-MEANPOOL layers, all CONV are valid (without padding) → 2 FC → softmax<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image.png"><br>
-takeaway (patterns still used today):  </br></img></br></br></br></img></br></p>
+<p><strong>LeNet-5</strong>(1998)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image002.png"/><br/>
+Goal: recognize hand-written digits.<br/>
+image → 2 CONV-MEANPOOL layers, all CONV are valid (without padding) → 2 FC → softmax<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image.png"/><br/>
+takeaway (patterns still used today):  </p>
 <ul>
 <li>as go deeper, n_H, n_W goes down, n_C goes up  </li>
 <li>conv-pool repeated some times, then FC-FC-output  </li>
@@ -242,24 +265,24 @@ takeaway (patterns still used today):  </br></img></br></br></br></img></br></p>
 <li>has non-linearity after pooling  </li>
 <li>orignial paper hard to read  </li>
 </ul>
-<p><strong>AlexNet</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image006.png"><br>
-Same pattern: conv-maxpool layers → FC layers → softmax<br>
-but much more params.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image004.png"><br>
-sidenote:  </br></img></br></br></br></img></br></p>
+<p><strong>AlexNet</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image006.png"/><br/>
+Same pattern: conv-maxpool layers → FC layers → softmax<br/>
+but much more params.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image004.png"/><br/>
+sidenote:  </p>
 <ul>
 <li>use ReLU as activation  </li>
 <li>multi-GPU training  </li>
 <li>"local response normalization" (LRN): normalize across all channels (not widely used today).  </li>
 <li>a lot hparams to pick  </li>
 </ul>
-<p><strong>VGG-16</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image007.png"><br>
-Much less hparams:<br>
-All <strong>CONV: 3<em>3,s=1,padding=same, MAXPOOL: 2</em>2,s=2</strong><br>
-→ e.g. "(CONV 64) * 2" meaning 2 conv layers (3*3,s=1,padding=same) of 64 channels.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image008.png"> </img></br></br></br></br></img></br></p>
+<p><strong>VGG-16</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image007.png"/><br/>
+Much less hparams:<br/>
+All <strong>CONV: 3<em>3,s=1,padding=same, MAXPOOL: 2</em>2,s=2</strong><br/>
+→ e.g. "(CONV 64) * 2" meaning 2 conv layers (3*3,s=1,padding=same) of 64 channels.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image008.png"/> </p>
 <p>note:  </p>
 <ul>
 <li>pretty large even by modern standard: 138M params  </li>
@@ -267,122 +290,122 @@ All <strong>CONV: 3<em>3,s=1,padding=same, MAXPOOL: 2</em>2,s=2</strong><br>
 </ul>
 <h3 id="resnets">ResNets</h3>
 <p>Very deep NN are hard to train → ResNet: <em>skip connections</em>, to be able to train ~100 layers NN.  </p>
-<p><strong>Residual block</strong><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image012.png"><br>
-Normal NN: from a[l] to a[l+2], two linear &amp; ReLU operations. <em>"main path"</em>.<br>
-ResNet: a[l] taks shortcut and <em>goes directly to a[l+2]'s non-linearity</em>. "<em>shortcut</em>" / "<em>skip connection</em>".<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image010.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image009.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image039.png"> </img></br></img></br></img></br></br></br></img></br></p>
-<p>Using residual block allows training <em>very deep</em> NN:<br>
-stack them to get ResNet (i.e. add shortcuts to "plain" NN).  </br></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image013.png"> </img></p>
-<p>Problem of training  plain NN: <em>training error goes up (in practice) when having deeper NN</em>.<br>
-Because deeper NN are harder to train (vanishing/exploding gradients, etc.)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image016.png"><br>
-With ResNet: training error goes down even with deeper layers.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image015.png"> </img></br></br></img></br></br></p>
+<p><strong>Residual block</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image012.png"/><br/>
+Normal NN: from a[l] to a[l+2], two linear &amp; ReLU operations. <em>"main path"</em>.<br/>
+ResNet: a[l] taks shortcut and <em>goes directly to a[l+2]'s non-linearity</em>. "<em>shortcut</em>" / "<em>skip connection</em>".<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image010.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image009.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image039.png"/> </p>
+<p>Using residual block allows training <em>very deep</em> NN:<br/>
+stack them to get ResNet (i.e. add shortcuts to "plain" NN).  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image013.png"/> </p>
+<p>Problem of training  plain NN: <em>training error goes up (in practice) when having deeper NN</em>.<br/>
+Because deeper NN are harder to train (vanishing/exploding gradients, etc.)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image016.png"/><br/>
+With ResNet: training error goes down even with deeper layers.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image015.png"/> </p>
 <h3 id="why-resnets-work">Why ResNets Work</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>a[l+2] = g(z[l+2] + a[l])  </span>
-<span class="code-line">  = g(w[l+1] * a[l+1] + b[l+1] + a[l])</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">a</span><span class="o">[</span><span class="n">l+2</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="p">(</span><span class="n">z</span><span class="o">[</span><span class="n">l+2</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="p">(</span><span class="n">w</span><span class="o">[</span><span class="n">l+1</span><span class="o">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l+1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">[</span><span class="n">l+1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="o">[</span><span class="n">l</span><span class="o">]</span><span class="p">)</span><span class="w"></span></span>
 </pre></div>
-<p>→ note: when applying weight decay, w can be small (w~=0, b~=0)<br>
-⇒ a[l+2] ~= g(a[l]) = a[l] (assume g=ReLU)<br>
-⇒ it's easy to get a[l+2]=a[l], i.e. <em>identity function from a[l] to a[l+2] is easily learned</em><br>
-→ whereas in plain NN, it's difficult to learn an identity function between layers, thus more layers make result <em>worse</em><br>
-→ adding 2 layers doesn't hurt the network to learn a shallower NN's function, i.e. performance is not hurt when increasing #layers.<br>
-→ when necessary can do even better than learning identity function<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image017.png"> </img></br></br></br></br></br></br></p>
+<p>→ note: when applying weight decay, w can be small (w~=0, b~=0)<br/>
+⇒ a[l+2] ~= g(a[l]) = a[l] (assume g=ReLU)<br/>
+⇒ it's easy to get a[l+2]=a[l], i.e. <em>identity function from a[l] to a[l+2] is easily learned</em><br/>
+→ whereas in plain NN, it's difficult to learn an identity function between layers, thus more layers make result <em>worse</em><br/>
+→ adding 2 layers doesn't hurt the network to learn a shallower NN's function, i.e. performance is not hurt when increasing #layers.<br/>
+→ when necessary can do even better than learning identity function<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image017.png"/> </p>
 <p>Side note:  </p>
 <ul>
 <li><code>z[l+2]</code> and <code>a[l]</code> have the same dimension (so that they can be added in g) → i.e. many "same" padding are used to preserve dimension.  </li>
 <li>If  their dimensions are not matched (e.g. for pooling layers) → add extra <code>w_s</code> to be applied on <code>a[l]</code>.  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image018.png"> </img></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image019.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image018.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image019.png"/> </p>
 <h3 id="networks-in-networks-and-1x1-convolutions">Networks in Networks and 1x1 Convolutions</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image021.png"><br>
-Using 1*1 conv: for one single channel, just multiply the input image(slice) by a constant...<br>
-But for &gt;1 channels: each output number is inner prod of input channel "slice" and conv filter.  </br></br></img></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image020.png"> </img></p>
-<p>1<em>1 conv: ~= fully-connected layer applied to each of n_H</em>n_W slices, adds non-linearity to NN.<br>
-→ 1<em>1 conv also called "</em>network in network*"  </br></p>
-<p>example:<br>
-To <em>shrink</em> #channels via 1*1 conv.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image022.png"> </img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image021.png"/><br/>
+Using 1*1 conv: for one single channel, just multiply the input image(slice) by a constant...<br/>
+But for &gt;1 channels: each output number is inner prod of input channel "slice" and conv filter.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image020.png"/> </p>
+<p>1<em>1 conv: ~= fully-connected layer applied to each of n_H</em>n_W slices, adds non-linearity to NN.<br/>
+→ 1<em>1 conv also called "</em>network in network*"  </p>
+<p>example:<br/>
+To <em>shrink</em> #channels via 1*1 conv.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image022.png"/> </p>
 <h3 id="inception-network-motivation">Inception Network Motivation</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image023.png"><br>
-Instead of choosing filter size, <em>do them all in parallel.</em><br>
-note: use SAME padding &amp; stride=1 to have the same n_H, n_W<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image024.png"> </img></br></br></br></img></p>
-<p>Problem: computation cost.<br>
-example: input shape = 28<em>28</em>192, filter 5<em>5</em>192, 32 filters, output shape = 28<em>28</em>32<br>
-totoal #multiplication = 28 * 28 * 32 * 5 * 5 * 192 = 120M<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image025.png"><br>
-→ <strong>reduce #computation with 1*1 conv</strong><br>
-Reduce n_C of input by 1<em>1 conv ("bottleneck-layer") before doing the 5</em>5 conv.  </br></br></img></br></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image023.png"/><br/>
+Instead of choosing filter size, <em>do them all in parallel.</em><br/>
+note: use SAME padding &amp; stride=1 to have the same n_H, n_W<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image024.png"/> </p>
+<p>Problem: computation cost.<br/>
+example: input shape = 28<em>28</em>192, filter 5<em>5</em>192, 32 filters, output shape = 28<em>28</em>32<br/>
+totoal #multiplication = 28 * 28 * 32 * 5 * 5 * 192 = 120M<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image025.png"/><br/>
+→ <strong>reduce #computation with 1*1 conv</strong><br/>
+Reduce n_C of input by 1<em>1 conv ("bottleneck-layer") before doing the 5</em>5 conv.  </p>
 <h1 id="computation-11192-282816-5516-282832-124m_2">computation = 1<em>1</em>192 * 28<em>28</em>16 + 5<em>5</em>16 * 28<em>28</em>32 = 12.4M</h1>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image027.png"><br>
-Does bottleneck layer hurt model performance ? → no.  </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image027.png"/><br/>
+Does bottleneck layer hurt model performance ? → no.  </p>
 <h3 id="inception-network">Inception Network</h3>
-<p><strong>Inception module</strong>:<br>
-For max pooling layer, out n_C equals input n_C → <em>use a 1</em>1 conv to shrink n_C*.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image028.png"> </img></br></br></p>
+<p><strong>Inception module</strong>:<br/>
+For max pooling layer, out n_C equals input n_C → <em>use a 1</em>1 conv to shrink n_C*.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image028.png"/> </p>
 <p><strong>Inception network:</strong> </p>
 <ul>
 <li>Putting inception modules together.  </li>
 <li>Have <em>side branches</em>: taking hidden layer and feed to FC for output.  </li>
 </ul>
-<p>— ensure features from hidden units at intermediate layers are not too bad for prediction — kind of regularization<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image030.png"> </img></br></p>
-<p>The name "inception" come from: a meme...<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image031.png"> </img></br></p>
+<p>— ensure features from hidden units at intermediate layers are not too bad for prediction — kind of regularization<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image030.png"/> </p>
+<p>The name "inception" come from: a meme...<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image031.png"/> </p>
 <h2 id="ii-practical-advice-for-using-convnets_1">II-Practical advice for using ConvNets</h2>
 <p>Advices on how to use these classical CNN models.  </p>
 <h3 id="using-open-source-implementation">Using Open-Source Implementation</h3>
-<p>Difficult to replicate the work just from paper: a lot of details&amp;hparams<br>
-→ use open-sourced version.  </br></p>
+<p>Difficult to replicate the work just from paper: a lot of details&amp;hparams<br/>
+→ use open-sourced version.  </p>
 <h3 id="transfer-learning">Transfer Learning</h3>
-<p>Download weights of other's NN as pretrained params.<br>
-→ pretrained params are trained on huge datasets, and takes weeks to train on multiple GPUs.<br>
-example: cat detector  </br></br></p>
+<p>Download weights of other's NN as pretrained params.<br/>
+→ pretrained params are trained on huge datasets, and takes weeks to train on multiple GPUs.<br/>
+example: cat detector  </p>
 <ul>
 <li>3 class: tigger/misty/neither  </li>
 <li>training set at hand is small  </li>
 <li>→ download both code and weights online  </li>
 </ul>
-<p>e.g. ImageNet NN<br>
-→ change last layer's softmax<br>
-→ all Conv/Pool layers set <em>frozen</em> (not trainable)<br>
-→ only training softmax layer's weight with training set.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image032.png"><br>
-OR:<br>
-<em>Precompute</em> the hidden layer (fixed function mapping from x to feature vector) and save to disk.<br>
-→ train a shallow model on top. → save computation.  </br></br></br></img></br></br></br></br></p>
-<p>If have a large training set at hand ⇒ freeze a few layers and train the rest.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image033.png"> </img></br></p>
+<p>e.g. ImageNet NN<br/>
+→ change last layer's softmax<br/>
+→ all Conv/Pool layers set <em>frozen</em> (not trainable)<br/>
+→ only training softmax layer's weight with training set.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image032.png"/><br/>
+OR:<br/>
+<em>Precompute</em> the hidden layer (fixed function mapping from x to feature vector) and save to disk.<br/>
+→ train a shallow model on top. → save computation.  </p>
+<p>If have a large training set at hand ⇒ freeze a few layers and train the rest.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image033.png"/> </p>
 <p>If have a <em>huge</em>  dataset: train the whole NN.  </p>
 <h3 id="data-augmentation">Data Augmentation</h3>
-<p>More data are alway welcome.<br>
-<strong>Common augmentation method</strong>:  </br></p>
+<p>More data are alway welcome.<br/>
+<strong>Common augmentation method</strong>:  </p>
 <ul>
 <li>Mirroring  </li>
 <li>Randome cropping  </li>
 <li>Rotation/Shearing/Local warping: used a bit less in practice  </li>
 <li>Color shifting  </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image035.png"><br>
-In practice: shifts drawn from some random distribution.<br>
-e.g. PCA-color-augmentation (details in AlexNet paper): ~keep overall color the same.  </br></br></img></p>
-<p><strong>Implementaing distortions during training</strong><br>
-If data is huge → CPU thread to get <em>stream</em> of images → add distortion for each image → form minibatch of data → pass to training.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image036.png"> </img></br></br></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image035.png"/><br/>
+In practice: shifts drawn from some random distribution.<br/>
+e.g. PCA-color-augmentation (details in AlexNet paper): ~keep overall color the same.  </p>
+<p><strong>Implementaing distortions during training</strong><br/>
+If data is huge → CPU thread to get <em>stream</em> of images → add distortion for each image → form minibatch of data → pass to training.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image036.png"/> </p>
 <h3 id="state-of-computer-vision">State of Computer Vision</h3>
 <p>Observations for DL for CV.  </p>
-<p><strong>Data VS. hand-engineering</strong><br>
-As more data are available → simpler algo, less hand-engineering.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image037.png"><br>
-Learing algo has 2 sources of knowledge:  </br></img></br></br></p>
+<p><strong>Data VS. hand-engineering</strong><br/>
+As more data are available → simpler algo, less hand-engineering.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image037.png"/><br/>
+Learing algo has 2 sources of knowledge:  </p>
 <ul>
 <li>labeled data  </li>
 <li>hand engineered features / network architecture / specialized components  </li>
@@ -396,9 +419,9 @@ Learing algo has 2 sources of knowledge:  </br></img></br></br></p>
 <ul>
 <li><em>Multi-crop at test time</em> </li>
 </ul>
-<p>Predict on multiple versions of test images and average results.<br>
-e.g. 10-crop at test time<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image038.png"> </img></br></br></p>
+<p>Predict on multiple versions of test images and average results.<br/>
+e.g. 10-crop at test time<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk2/pasted_image038.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

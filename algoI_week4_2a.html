@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Symbol Table API key-value pair abstraction insert a value with a key given a key, search for its value Association array abstraction Associate a value to a key — generalized array: a[key]=val. public class ST&lt;Key, Value&gt;{ void put(Key k, Value v);//remove key if value …" />
+        <meta name="description" content="1. Symbol Table API Association array abstraction 2. Elementary implementations using unordered linked list using ordered array 3. Ordered Opeartions 1. Symbol Table API key-value pair abstraction insert a value with a key given a key, search for its value Association array abstraction Associate a value to a key — generalized ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms I] Week 4-2a Elementry Symbol Tables"/>
         <meta property="og:url" content="http://x-wei.github.io/algoI_week4_2a.html"/>
-        <meta property="og:description" content="[TOC] 1. Symbol Table API key-value pair abstraction insert a value with a key given a key, search for its value Association array abstraction Associate a value to a key — generalized array: a[key]=val. public class ST&lt;Key, Value&gt;{ void put(Key k, Value v);//remove key if value …"/>
+        <meta property="og:description" content="1. Symbol Table API Association array abstraction 2. Elementary implementations using unordered linked list using ordered array 3. Ordered Opeartions 1. Symbol Table API key-value pair abstraction insert a value with a key given a key, search for its value Association array abstraction Associate a value to a key — generalized ..."/>
         <meta property="article:published_time" content="2015-08-25" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,7 +210,20 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms I] Week 4-2a Elementry Symbol Tables">[Algorithms I] Week 4-2a Elementry Symbol Tables</a><ul><li><a class="toc-href" href="#1-symbol-table-api" title="1. Symbol Table API">1. Symbol Table API</a><ul><li><a class="toc-href" href="#association-array-abstraction" title="Association array abstraction">Association array abstraction</a></li></ul></li><li><a class="toc-href" href="#2-elementary-implementations_1" title="2. Elementary implementations">2. Elementary implementations</a><ul><li><a class="toc-href" href="#using-unordered-linked-list" title="using unordered linked list">using unordered linked list</a></li><li><a class="toc-href" href="#using-ordered-array" title="using ordered array">using ordered array</a></li></ul></li><li><a class="toc-href" href="#3-ordered-opeartions_1" title="3. Ordered Opeartions">3. Ordered Opeartions</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#1-symbol-table-api">1. Symbol Table API</a><ul>
+<li><a href="#association-array-abstraction">Association array abstraction</a></li>
+</ul>
+</li>
+<li><a href="#2-elementary-implementations">2. Elementary implementations</a><ul>
+<li><a href="#using-unordered-linked-list">using unordered linked list</a></li>
+<li><a href="#using-ordered-array">using ordered array</a></li>
+</ul>
+</li>
+<li><a href="#3-ordered-opeartions">3. Ordered Opeartions</a></li>
+</ul>
+</div>
 <h1 id="1-symbol-table-api">1. Symbol Table API</h1>
 <p>key-value pair abstraction    </p>
 <ul>
@@ -219,15 +232,15 @@ mx's blog            </a>
 </ul>
 <h2 id="association-array-abstraction">Association array abstraction</h2>
 <p>Associate a value to a key — generalized array: <em>a[key]=val</em>.    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class ST&lt;Key, Value&gt;{   </span>
-<span class="code-line">    void put(Key k, Value v);//remove key if value=null   </span>
-<span class="code-line">    Value get(Key k);//return null if key is absent   </span>
-<span class="code-line">    void delete(Key k);   </span>
-<span class="code-line">    boolean contains(Key k);   </span>
-<span class="code-line">    boolean isEmpty();   </span>
-<span class="code-line">    int size();   </span>
-<span class="code-line">    Iterable&lt;Key&gt; keys();//better to return an ordered sequence of keys   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class ST&lt;Key, Value&gt;{   </span></span>
+<span class="code-line"><span class="err">    void put(Key k, Value v);//remove key if value=null   </span></span>
+<span class="code-line"><span class="err">    Value get(Key k);//return null if key is absent   </span></span>
+<span class="code-line"><span class="err">    void delete(Key k);   </span></span>
+<span class="code-line"><span class="err">    boolean contains(Key k);   </span></span>
+<span class="code-line"><span class="err">    boolean isEmpty();   </span></span>
+<span class="code-line"><span class="err">    int size();   </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;Key&gt; keys();//better to return an ordered sequence of keys   </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>conventions:    </p>
 <ul>
@@ -240,10 +253,10 @@ mx's blog            </a>
 <li>contains: <code>return get(k)!=null;</code> </li>
 <li>delete: <code>put(k, null);</code> </li>
 </ul>
-<p>Assume keys to be comparable: <code>class ST&lt;Key implements Comparable&lt;Key&gt;, Value&gt;</code>— can thus use <code>compareTo()</code> method.  <br>
-Else →  we can only use the <code>equals()</code> method...  <br>
-Be careful when implementing the equals method: 坑不少...  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image.png"> </img></br></br></br></p>
+<p>Assume keys to be comparable: <code>class ST&lt;Key implements Comparable&lt;Key&gt;, Value&gt;</code>— can thus use <code>compareTo()</code> method.  <br/>
+Else →  we can only use the <code>equals()</code> method...  <br/>
+Be careful when implementing the equals method: 坑不少...  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image.png"/> </p>
 <h1 id="2-elementary-implementations_1">2. Elementary implementations</h1>
 <p>naive implementations   </p>
 <h2 id="using-unordered-linked-list">using unordered linked list</h2>
@@ -252,39 +265,39 @@ Be careful when implementing the equals method: 坑不少...  <br>
 <li>search: scan through all keys ~N   </li>
 <li>insert: scan through, if not found, add to front ~N   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image001.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image001.png"/> </p>
 <h2 id="using-ordered-array">using ordered array</h2>
-<p>using 2 arrays: <em>keys[] (sorted), vals[]</em> <br>
-⇒ can improve performance by binary search   </br></p>
-<p><strong>search operation</strong> <br>
-write a function rank() that returns the number of keys &lt; k searched.  <br>
-找不到的时候: <em>比k小的元素个数=lo (lo&gt;hi, 可以想想当hi=lo以后是怎么移动的)</em> </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private int rank(Key k){   </span>
-<span class="code-line">    int lo=0, hi=keys.length-1;   </span>
-<span class="code-line">    while(hi&gt;=lo){   </span>
-<span class="code-line">        int mid = lo + (hi-lo)/2;   </span>
-<span class="code-line">        int cmp = keys[mid].compareTo(keys[k]);   </span>
-<span class="code-line">        if(cmp==0) return mid;   </span>
-<span class="code-line">        else if(cmp&gt;0) hi = mid-1;   </span>
-<span class="code-line">        else lo = mid+1;   </span>
-<span class="code-line">    }   </span>
-<span class="code-line">    return lo;   </span>
-<span class="code-line">}</span>
+<p>using 2 arrays: <em>keys[] (sorted), vals[]</em> <br/>
+⇒ can improve performance by binary search   </p>
+<p><strong>search operation</strong> <br/>
+write a function rank() that returns the number of keys &lt; k searched.  <br/>
+找不到的时候: <em>比k小的元素个数=lo (lo&gt;hi, 可以想想当hi=lo以后是怎么移动的)</em> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="nf">rank</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">lo</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hi</span><span class="o">=</span><span class="n">keys</span><span class="p">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">hi</span><span class="o">&gt;=</span><span class="n">lo</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">hi</span><span class="o">-</span><span class="n">lo</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="n">cmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keys</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">keys</span><span class="o">[</span><span class="n">k</span><span class="o">]</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">mid</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">cmp</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">hi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="n">lo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lo</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>Using rank() to implement the get() method:    </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public Value get(Key k){   </span>
-<span class="code-line">    int rk = rank(k);   </span>
-<span class="code-line">    if(rk&lt;N &amp;&amp; keys[rk].compareTo(k)==0) return vals[rk];   </span>
-<span class="code-line">    return null;   </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="k">Key</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">rk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rank</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">rk</span><span class="o">&lt;</span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">keys</span><span class="o">[</span><span class="n">rk</span><span class="o">]</span><span class="p">.</span><span class="n">compareTo</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">vals</span><span class="o">[</span><span class="n">rk</span><span class="o">]</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p><strong>insert operation</strong> <br>
-Like insertion sort, time complexity is ~N for each insert.    </br></p>
-<p>summery:  <br>
-<img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image002.png"> </img></br></p>
+<p><strong>insert operation</strong> <br/>
+Like insertion sort, time complexity is ~N for each insert.    </p>
+<p>summery:  <br/>
+<img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image002.png"/> </p>
 <h1 id="3-ordered-opeartions_1">3. Ordered Opeartions</h1>
-<p>When keys are comparable ⇒ provide <em>more functionalities</em> in the API.  <br>
-for example:    </br></p>
+<p>When keys are comparable ⇒ provide <em>more functionalities</em> in the API.  <br/>
+for example:    </p>
 <ul>
 <li><code>min()/max()</code>: min/max key   </li>
 <li><code>deleteMin()/deleteMax()</code> </li>
@@ -293,8 +306,8 @@ for example:    </br></p>
 <li><code>select(int i)</code>: key with rank=i   </li>
 <li><code>Iterator&lt;Key&gt; keys(lo, hi)</code>: iterates through [lo, hi]   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image004.png"> </img></p>
-<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image004.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/algoI_week4_2a/pasted_image003.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] More efficient version of symbol-table where the keys are strings. 1. R-way Tries Two implementations of symbol tables that we&#39;ve seen: when keys are strings: (L=string length, N=number of strings, R=radix) for string keys ⇒ do better by avoiding examing the entire key. goal: faster than hashtable …" />
+        <meta name="description" content="1. R-way Tries String Symbol Table API R-way tries Java implementation analysis 2. Ternary Search Tries Implementation Hybrid of TST and Rway trie analysis Hashing vs. TST 3. Character-Based Operations API keys(): ordered iteration prefix match longest prefix application: T9 texting Other Variants Patricia trie suffix tree Summery More efficient ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 4-1 Tries"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week4_1.html"/>
-        <meta property="og:description" content="[TOC] More efficient version of symbol-table where the keys are strings. 1. R-way Tries Two implementations of symbol tables that we&#39;ve seen: when keys are strings: (L=string length, N=number of strings, R=radix) for string keys ⇒ do better by avoiding examing the entire key. goal: faster than hashtable …"/>
+        <meta property="og:description" content="1. R-way Tries String Symbol Table API R-way tries Java implementation analysis 2. Ternary Search Tries Implementation Hybrid of TST and Rway trie analysis Hashing vs. TST 3. Character-Based Operations API keys(): ordered iteration prefix match longest prefix application: T9 texting Other Variants Patricia trie suffix tree Summery More efficient ..."/>
         <meta property="article:published_time" content="2015-12-05" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,22 +210,55 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-1 Tries">[Algorithms II] Week 4-1 Tries</a><ul><li><a class="toc-href" href="#1-r-way-tries" title="1. R-way Tries">1. R-way Tries</a><ul><li><a class="toc-href" href="#string-symbol-table-api" title="String Symbol Table API">String Symbol Table API</a></li><li><a class="toc-href" href="#r-way-tries" title="R-way tries">R-way tries</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#2-ternary-search-tries_1" title="2. Ternary Search Tries">2. Ternary Search Tries</a><ul><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#hybrid-of-tst-and-rway-trie" title="Hybrid of TST and Rway trie">Hybrid of TST and Rway trie</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#hashing-vs-tst" title="Hashing vs. TST">Hashing vs. TST</a></li></ul></li><li><a class="toc-href" href="#3-character-based-operations_1" title="3. Character-Based Operations">3. Character-Based Operations</a><ul><li><a class="toc-href" href="#api" title="API">API</a></li><li><a class="toc-href" href="#keys-ordered-iteration" title="keys(): ordered iteration">keys(): ordered iteration</a></li><li><a class="toc-href" href="#prefix-match" title="prefix match">prefix match</a></li><li><a class="toc-href" href="#longest-prefix" title="longest prefix">longest prefix</a><ul><li><a class="toc-href" href="#application-t9-texting" title="application: T9 texting">application: T9 texting</a></li></ul></li><li><a class="toc-href" href="#other-variants_1" title="Other Variants">Other Variants</a><ul><li><a class="toc-href" href="#patricia-trie" title="Patricia trie">Patricia trie</a></li><li><a class="toc-href" href="#suffix-tree" title="suffix tree">suffix tree</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-r-way-tries">1. R-way Tries</a><ul>
+<li><a href="#string-symbol-table-api">String Symbol Table API</a></li>
+<li><a href="#r-way-tries">R-way tries</a></li>
+<li><a href="#java-implementation">Java implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#2-ternary-search-tries">2. Ternary Search Tries</a><ul>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#hybrid-of-tst-and-rway-trie">Hybrid of TST and Rway trie</a></li>
+<li><a href="#analysis_1">analysis</a></li>
+<li><a href="#hashing-vs-tst">Hashing vs. TST</a></li>
+</ul>
+</li>
+<li><a href="#3-character-based-operations">3. Character-Based Operations</a><ul>
+<li><a href="#api">API</a></li>
+<li><a href="#keys-ordered-iteration">keys(): ordered iteration</a></li>
+<li><a href="#prefix-match">prefix match</a></li>
+<li><a href="#longest-prefix">longest prefix</a><ul>
+<li><a href="#application-t9-texting">application: T9 texting</a></li>
+</ul>
+</li>
+<li><a href="#other-variants">Other Variants</a><ul>
+<li><a href="#patricia-trie">Patricia trie</a></li>
+<li><a href="#suffix-tree">suffix tree</a></li>
+</ul>
+</li>
+<li><a href="#summery">Summery</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>More efficient version of symbol-table where the keys are strings.   </p>
 <h1 id="1-r-way-tries">1. R-way Tries</h1>
-<p>Two implementations of symbol tables that we've seen: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image.png"><br>
-when keys are strings:<br>
-(<code>L</code>=string length, <code>N</code>=number of strings, <code>R</code>=radix)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image001.png"> </img></br></br></br></img></br></p>
+<p>Two implementations of symbol tables that we've seen: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image.png"/><br/>
+when keys are strings:<br/>
+(<code>L</code>=string length, <code>N</code>=number of strings, <code>R</code>=radix)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image001.png"/> </p>
 <p>for string keys ⇒ do better by avoiding examing the entire key.  </p>
 <p>goal: faster than hashtable, more flexible than BST !  </p>
 <h2 id="string-symbol-table-api">String Symbol Table API</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class StringST&lt;V&gt;{// implements ST&lt;String, V&gt;  </span>
-<span class="code-line">    public void put(String key, V val);  </span>
-<span class="code-line">    public V get(String key);  </span>
-<span class="code-line">    public void delete(String key);  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class StringST&lt;V&gt;{// implements ST&lt;String, V&gt;  </span></span>
+<span class="code-line"><span class="err">    public void put(String key, V val);  </span></span>
+<span class="code-line"><span class="err">    public V get(String key);  </span></span>
+<span class="code-line"><span class="err">    public void delete(String key);  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="r-way-tries">R-way tries</h2>
 <p>A trie is a tree where:   </p>
@@ -234,87 +267,87 @@ when keys are strings:<br>
 <li>each node has R children  </li>
 <li>store <em>value</em> in node if the node corresponds to the<em> last char</em> in key.   </li>
 </ul>
-<p>example: (<em>a trie<integer>)</integer></em><br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image002.png"> </img></br></p>
+<p>example: (<em>a trie<integer>)</integer></em><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image002.png"/> </p>
 <ul>
 <li><strong>search in a trie </strong><code>get()</code> </li>
 </ul>
-<p><em>hit</em> if when search ends the node has a non-null value<br>
-<em>miss</em> if reach a null link or have null value when search ends.   </br></p>
+<p><em>hit</em> if when search ends the node has a non-null value<br/>
+<em>miss</em> if reach a null link or have null value when search ends.   </p>
 <ul>
 <li><strong>insertion in a trie</strong> <code>put()</code> </li>
 </ul>
-<p>follow the links as the chars indicate in the key<br>
-→ if meet null links: create new node<br>
-→ when reach last char in key: set the value of the node  </br></br></p>
+<p>follow the links as the chars indicate in the key<br/>
+→ if meet null links: create new node<br/>
+→ when reach last char in key: set the value of the node  </p>
 <h2 id="java-implementation">Java implementation</h2>
-<p>trie node class:<br>
-in each node use an array of size R to store links...  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private static class Node{  </span>
-<span class="code-line">    private Object val;// because cannot create arries of generic type (array of Node)  </span>
-<span class="code-line">    private Node[] next = new Node[R];// chars are implicitly defined by link index  </span>
-<span class="code-line">}</span>
+<p>trie node class:<br/>
+in each node use an array of size R to store links...  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Node</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">arries</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="p">(</span><span class="k">array</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Node</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="err">[]</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="o">[</span><span class="n">R</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">implicitly</span><span class="w"> </span><span class="n">defined</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="k">index</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p>另外关于为什么内部类Node声明为static, 参考这里: <br>
-<a href="http://www.geeksforgeeks.org/static-class-in-java/">http://www.geeksforgeeks.org/static-class-in-java/</a> </br></p>
+<p>另外关于为什么内部类Node声明为static, 参考这里: <br/>
+<a href="http://www.geeksforgeeks.org/static-class-in-java/">http://www.geeksforgeeks.org/static-class-in-java/</a> </p>
 <p>implementation: use private recursive methods, 和BST的实现类似, 定义一个递归的private函数, 返回插入后的Node, 很有用.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class TrieST&lt;Value&gt; {  </span>
-<span class="code-line">    pirvate final int R = 256; // ASCII chars  </span>
-<span class="code-line">    private Node root = new Node();  </span>
-<span class="code-line">    private static class Node{  </span>
-<span class="code-line">        private Object val;// because cannot create arries of generic type (array of Node)  </span>
-<span class="code-line">        private Node[] next = new Node[R];// chars are implicitly defined by link index  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public void put(String key, Value val){  </span>
-<span class="code-line">        this.put(root, key, val, 0);// use private recursive helper method  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    private Node put(Node x, String key, Value val, int d){  </span>
-<span class="code-line">        // `d` is the index of char to put  </span>
-<span class="code-line">        // returns the inserted node</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">TrieST</span><span class="o">&lt;</span><span class="k">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pirvate</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">ASCII</span><span class="w"> </span><span class="n">chars</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Node</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">arries</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="p">(</span><span class="k">array</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Node</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="err">[]</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="o">[</span><span class="n">R</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">implicitly</span><span class="w"> </span><span class="n">defined</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="k">index</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="k">recursive</span><span class="w"> </span><span class="n">helper</span><span class="w"> </span><span class="k">method</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="err">`</span><span class="n">d</span><span class="err">`</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">put</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">inserted</span><span class="w"> </span><span class="n">node</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">        if (x==null) x = new Node();  </span>
-<span class="code-line">        if (key.length()==d) x.val = val;  </span>
-<span class="code-line">        else{  </span>
-<span class="code-line">            char c = key.charAt(d);</span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">key</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="o">==</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">key</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">            x.next[c] = put(x.next[c], key, val, d+1);  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">        return x;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public boolean contains(String key){return get(key)!=null;}  </span>
-<span class="code-line">    public Value get(String key){  </span>
-<span class="code-line">        Node nd = this.get(root, key, 0);  </span>
-<span class="code-line">        if(nd==null) return null;  </span>
-<span class="code-line">        return (Value) x.val; // cast back  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    private Node get(Node x, String key, int d){  </span>
-<span class="code-line">        // returns the node that contains val for key  </span>
-<span class="code-line">        if(x==null) return null;  </span>
-<span class="code-line">        if(d==key.length()) return x;  </span>
-<span class="code-line">        char c = key.charAt(d);</span>
+<span class="code-line"><span class="w">            </span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="k">contains</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">)</span><span class="err">{</span><span class="k">return</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="k">key</span><span class="p">)</span><span class="o">!=</span><span class="k">null</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">nd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="k">Value</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">cast</span><span class="w"> </span><span class="n">back</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">key</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="k">key</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">key</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">        else return get(x.next[c], key, d+1);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>delete node in trie:  </p>
 <ul>
 <li>find the node and set the val to null  </li>
 <li>if a node has 0 links(leaf)  and val==null: delete it and recursivly go up.   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image003.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image003.png"/> </p>
 <h2 id="analysis">analysis</h2>
-<p><strong>time:</strong><br>
-search hit —  L nodes examined. <br>
-serach miss —  sublinear in L<br>
-<strong>space:</strong> <br>
-each node has R links (possibly null) — <em>too much memory for large R</em> !<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image004.png"><br>
-<strong>Application</strong><br>
-interview question: data structure for spell checking.   </br></br></img></br></br></br></br></br></p>
+<p><strong>time:</strong><br/>
+search hit —  L nodes examined. <br/>
+serach miss —  sublinear in L<br/>
+<strong>space:</strong> <br/>
+each node has R links (possibly null) — <em>too much memory for large R</em> !<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image004.png"/><br/>
+<strong>Application</strong><br/>
+interview question: data structure for spell checking.   </p>
 <h1 id="2-ternary-search-tries_1">2. Ternary Search Tries</h1>
-<p>Solution to the memory issue of R-way tries —  much fewer null links. ternery=tuple of 3...<br>
-TST:  </br></p>
+<p>Solution to the memory issue of R-way tries —  much fewer null links. ternery=tuple of 3...<br/>
+TST:  </p>
 <ul>
 <li>store chars (and vals) <em>explicitly</em> in nodes  </li>
 <li>each node has <strong>3</strong> children:   <ul>
@@ -324,63 +357,63 @@ TST:  </br></p>
 </ul>
 </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image005.png"><br>
-类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   </br></img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image005.png"/><br/>
+类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   </p>
 <p><strong>searching</strong> in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  </p>
 <h2 id="implementation">Implementation</h2>
 <p>Node class:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private class Node{  </span>
-<span class="code-line">    private Value val;  </span>
-<span class="code-line">    private char c;// store char explicitly  </span>
-<span class="code-line">    private Node left, mid, right;  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private class Node{  </span></span>
+<span class="code-line"><span class="err">    private Value val;  </span></span>
+<span class="code-line"><span class="err">    private char c;// store char explicitly  </span></span>
+<span class="code-line"><span class="err">    private Node left, mid, right;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p>TST class (again use recursive helper functions)<br>
-有一种写BST代码的感觉, 另外由于这次char是显式存在node里, 代码反而更好理解了...  </br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public class TST&lt;Value&gt;{  </span>
-<span class="code-line">    private class Node{...};  </span>
-<span class="code-line">    private Node root;  </span>
-<span class="code-line">    public void put(String key, Value val){  </span>
-<span class="code-line">        this.put(root, key, val, 0);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    private Node put(Node x, String key, Value val, int d){  </span>
-<span class="code-line">        char c = key.charAt(d);// char to process  </span>
-<span class="code-line">        if(x==null) x = new Node(c);  </span>
-<span class="code-line">        if(c==x.c) {  </span>
-<span class="code-line">            if(d==key.length()-1) x.val = val;  </span>
-<span class="code-line">            else x.mid = put(x.mid, key, val, d+1);// d+1 means we go down one level  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">        else if (c&lt;x.c) x.left = put(x.left, key, val, d);// do not increment if the current char is not matchd  </span>
-<span class="code-line">        else x.right = put(x.right, key, val, d);  </span>
-<span class="code-line">        return x;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    public Value get(String key){  </span>
-<span class="code-line">        Node nd = this.get(root, key, 0);  </span>
-<span class="code-line">        if(nd==null) return null;  </span>
-<span class="code-line">        return nd.val;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    private Node get(Node x, String key, int d){  </span>
-<span class="code-line">        if(x==null) return null;  </span>
-<span class="code-line">        char c = key.charAt(d);  </span>
-<span class="code-line">        if(x.c==c) {  </span>
-<span class="code-line">            if(d==key.length()-1) return x;  </span>
-<span class="code-line">            else return get(x.mid, key, d+1);  </span>
-<span class="code-line">        }  </span>
-<span class="code-line">        else if(c&lt;x.c) return get(x.left, key, d);  </span>
-<span class="code-line">        else return get(x.right, d);  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<p>TST class (again use recursive helper functions)<br/>
+有一种写BST代码的感觉, 另外由于这次char是显式存在node里, 代码反而更好理解了...  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class TST&lt;Value&gt;{  </span></span>
+<span class="code-line"><span class="err">    private class Node{...};  </span></span>
+<span class="code-line"><span class="err">    private Node root;  </span></span>
+<span class="code-line"><span class="err">    public void put(String key, Value val){  </span></span>
+<span class="code-line"><span class="err">        this.put(root, key, val, 0);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    private Node put(Node x, String key, Value val, int d){  </span></span>
+<span class="code-line"><span class="err">        char c = key.charAt(d);// char to process  </span></span>
+<span class="code-line"><span class="err">        if(x==null) x = new Node(c);  </span></span>
+<span class="code-line"><span class="err">        if(c==x.c) {  </span></span>
+<span class="code-line"><span class="err">            if(d==key.length()-1) x.val = val;  </span></span>
+<span class="code-line"><span class="err">            else x.mid = put(x.mid, key, val, d+1);// d+1 means we go down one level  </span></span>
+<span class="code-line"><span class="err">        }  </span></span>
+<span class="code-line"><span class="err">        else if (c&lt;x.c) x.left = put(x.left, key, val, d);// do not increment if the current char is not matchd  </span></span>
+<span class="code-line"><span class="err">        else x.right = put(x.right, key, val, d);  </span></span>
+<span class="code-line"><span class="err">        return x;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    public Value get(String key){  </span></span>
+<span class="code-line"><span class="err">        Node nd = this.get(root, key, 0);  </span></span>
+<span class="code-line"><span class="err">        if(nd==null) return null;  </span></span>
+<span class="code-line"><span class="err">        return nd.val;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    private Node get(Node x, String key, int d){  </span></span>
+<span class="code-line"><span class="err">        if(x==null) return null;  </span></span>
+<span class="code-line"><span class="err">        char c = key.charAt(d);  </span></span>
+<span class="code-line"><span class="err">        if(x.c==c) {  </span></span>
+<span class="code-line"><span class="err">            if(d==key.length()-1) return x;  </span></span>
+<span class="code-line"><span class="err">            else return get(x.mid, key, d+1);  </span></span>
+<span class="code-line"><span class="err">        }  </span></span>
+<span class="code-line"><span class="err">        else if(c&lt;x.c) return get(x.left, key, d);  </span></span>
+<span class="code-line"><span class="err">        else return get(x.right, d);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="hybrid-of-tst-and-rway-trie">Hybrid of TST and Rway trie</h2>
 <ul>
 <li>at root: do <em>R^2 branching</em> </li>
 <li>other nodes are TSTs   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image007.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image007.png"/> </p>
 <h2 id="analysis_1">analysis</h2>
-<p>space cost: linear in N.<br>
-time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image008.png"> </img></br></br></p>
+<p>space cost: linear in N.<br/>
+time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image008.png"/> </p>
 <h2 id="hashing-vs-tst">Hashing vs. TST</h2>
 <p>Hashing:   </p>
 <ul>
@@ -401,54 +434,54 @@ time: if keys arrive in rand order... (can use rotation to get worst-case guaran
 <li><strong>longest prefix</strong>: find the key that is the longest prefix of a string  </li>
 </ul>
 <h2 id="api">API</h2>
-<div class="highlight"><pre><span class="code-line"><span></span>public class TrieST&lt;Value&gt;{  </span>
-<span class="code-line">    // functions decalred before..  </span>
-<span class="code-line">    Iterable&lt;String&gt; keys;  </span>
-<span class="code-line">    Iterable&lt;String&gt; keysWithPrefix(String s);  </span>
-<span class="code-line">    Iterable&lt;String&gt; keysThatMatch(String s);  </span>
-<span class="code-line">    Iterable&lt;String&gt; longestPrefixOf(String s);</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class TrieST&lt;Value&gt;{  </span></span>
+<span class="code-line"><span class="err">    // functions decalred before..  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keys;  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keysWithPrefix(String s);  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keysThatMatch(String s);  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; longestPrefixOf(String s);</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="keys-ordered-iteration">keys(): ordered iteration</h2>
-<p><code>keys()</code>: just an inorder-traversal of the <em>Rway trie</em> →dfs, + maintain the chars in the path (root to current node). <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image009.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public Iterable&lt;String&gt; keys(){  </span>
-<span class="code-line">    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  </span>
-<span class="code-line">    collect(root, "", q);// helper fcn  </span>
-<span class="code-line">    return q;  </span>
-<span class="code-line">}  </span>
-<span class="code-line">private void collect(Node x, String pathstr, Queue q){  </span>
-<span class="code-line">    if(x==null) return;  </span>
-<span class="code-line">    if(x.val!=null)// if this is a key  </span>
-<span class="code-line">        q.enqueue(pathstr);// pathstr is the string of chars from root to x  </span>
-<span class="code-line">    for(char c=0;c&lt;R;c++) // dfs  </span>
-<span class="code-line">        collect(x.next[c], pathstr+c, q);  </span>
-<span class="code-line">}</span>
+<p><code>keys()</code>: just an inorder-traversal of the <em>Rway trie</em> →dfs, + maintain the chars in the path (root to current node). <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image009.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">keys</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">collect</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="ss">""</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">helper</span><span class="w"> </span><span class="n">fcn</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">collect</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pathstr</span><span class="p">,</span><span class="w"> </span><span class="n">Queue</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">key</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">q</span><span class="p">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">pathstr</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">pathstr</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">x</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">c</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">dfs</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">collect</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">pathstr</span><span class="o">+</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h2 id="prefix-match">prefix match</h2>
-<p>very useful: ex. autocomplete, search bar, ...<br>
-implementation⇒ just find the end of that prefix, then call <code>keys()</code> on the <em>subtrie</em>.<br>
-之前写的俩helper function这里发挥作用了:   </br></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public Iterable&lt;String&gt; keysWithPrefix(String prefix){  </span>
-<span class="code-line">    Node subtrieRoot = get(root, prefix, 0);  </span>
-<span class="code-line">    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  </span>
-<span class="code-line">    collect(subtrieRoot, prefix, q);  </span>
-<span class="code-line">    return q;  </span>
-<span class="code-line">}</span>
+<p>very useful: ex. autocomplete, search bar, ...<br/>
+implementation⇒ just find the end of that prefix, then call <code>keys()</code> on the <em>subtrie</em>.<br/>
+之前写的俩helper function这里发挥作用了:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public Iterable&lt;String&gt; keysWithPrefix(String prefix){  </span></span>
+<span class="code-line"><span class="err">    Node subtrieRoot = get(root, prefix, 0);  </span></span>
+<span class="code-line"><span class="err">    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  </span></span>
+<span class="code-line"><span class="err">    collect(subtrieRoot, prefix, q);  </span></span>
+<span class="code-line"><span class="err">    return q;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="longest-prefix">longest prefix</h2>
 <p>⇒ just do a search and keep track of the longest key that we encounterd.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public String longestPrefixOf(String s){  </span>
-<span class="code-line">    int len = search(root, s, 0, 0);  </span>
-<span class="code-line">    return s.substring(0, len);  </span>
-<span class="code-line">}  </span>
-<span class="code-line">private int search(Node x, String s, int d, int len){  </span>
-<span class="code-line">    if(x==null) return len;  </span>
-<span class="code-line">    if(x.val!=null) len=d;// this is the current longest prefix  </span>
-<span class="code-line">    if(d==s.length()) return length;   </span>
-<span class="code-line">    char c = s.charAt(d);  </span>
-<span class="code-line">    return search(x.next[c], s, d+1, len);  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">longestPrefixOf</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="nf">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="nf">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="nf">len</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nf">len</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="nf">len</span><span class="o">=</span><span class="n">d</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="n">longest</span><span class="w"> </span><span class="k">prefix</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">length</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="application-t9-texting">application: T9 texting</h3>
 <p>classique... G面试以及X的TP里都有涉及过...   </p>
@@ -458,8 +491,8 @@ implementation⇒ just find the end of that prefix, then call <code>keys()</code
 </ul>
 <h2 id="other-variants_1">Other Variants</h2>
 <h3 id="patricia-trie">Patricia trie</h3>
-<p>improvement: remove the one-eay branching (put &gt;1 chars in a node).<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image010.png"> </img></br></p>
+<p>improvement: remove the one-eay branching (put &gt;1 chars in a node).<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image010.png"/> </p>
 <h3 id="suffix-tree">suffix tree</h3>
 <ul>
 <li>patricia tree of the suffix  </li>
@@ -467,7 +500,7 @@ implementation⇒ just find the end of that prefix, then call <code>keys()</code
 <li>ongest repeated substring, longest common substring, longest palindromic substring, substring search, tandem repeats... 好有用!!...   </li>
 </ul>
 <h2 id="summery_1">Summery</h2>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image011.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image011.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

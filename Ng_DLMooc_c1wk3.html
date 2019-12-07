@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="deep learning" />
-        <meta name="description" content="[TOC] Neural Networks Overview new notation: superscript [i] for quantities in layer i. (compared to superscript (i) for ith training example). subscript i for ith unit in a layer Neural Network Representation notation: a^[i]: activation at layer i. input layer: x, layer 0. hidden layer output layer: prediction (yhat …" />
+        <meta name="description" content="Neural Networks Overview Neural Network Representation Computing a Neural Network&#39;s Output Vectorizing across multiple examples Explanation for Vectorized Implementation Activation functions Why do you need non-linear activation functions? Derivatives of activation functions g = sigmoid g = tanh g = ReLU / Leaky ReLU Gradient descent for Neural Networks Backpropagation intuition (optional) Random ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Neural Networks and Deep Learning] week3. Shallow Neural Network"/>
         <meta property="og:url" content="http://x-wei.github.io/Ng_DLMooc_c1wk3.html"/>
-        <meta property="og:description" content="[TOC] Neural Networks Overview new notation: superscript [i] for quantities in layer i. (compared to superscript (i) for ith training example). subscript i for ith unit in a layer Neural Network Representation notation: a^[i]: activation at layer i. input layer: x, layer 0. hidden layer output layer: prediction (yhat …"/>
+        <meta property="og:description" content="Neural Networks Overview Neural Network Representation Computing a Neural Network&#39;s Output Vectorizing across multiple examples Explanation for Vectorized Implementation Activation functions Why do you need non-linear activation functions? Derivatives of activation functions g = sigmoid g = tanh g = ReLU / Leaky ReLU Gradient descent for Neural Networks Backpropagation intuition (optional) Random ..."/>
         <meta property="article:published_time" content="2017-09-19" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="deep learning" />
@@ -210,7 +210,26 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Neural Networks and Deep Learning] week3. Shallow Neural Network">[Neural Networks and Deep Learning] week3. Shallow Neural Network</a><ul><li><a class="toc-href" href="#neural-networks-overview" title="Neural Networks Overview">Neural Networks Overview</a></li><li><a class="toc-href" href="#neural-network-representation" title="Neural Network Representation">Neural Network Representation</a></li><li><a class="toc-href" href="#computing-a-neural-networks-output" output'="" s="" title="Computing a Neural Network">Computing a Neural Network's Output</a></li><li><a class="toc-href" href="#vectorizing-across-multiple-examples" title="Vectorizing across multiple examples">Vectorizing across multiple examples</a></li><li><a class="toc-href" href="#explanation-for-vectorized-implementation" title="Explanation for Vectorized Implementation">Explanation for Vectorized Implementation</a></li><li><a class="toc-href" href="#activation-functions" title="Activation functions">Activation functions</a></li><li><a class="toc-href" href="#why-do-you-need-non-linear-activation-functions" title="Why do you need non-linear activation functions?">Why do you need non-linear activation functions?</a></li><li><a class="toc-href" href="#derivatives-of-activation-functions" title="Derivatives of activation functions">Derivatives of activation functions</a><ul><li><a class="toc-href" href="#g-sigmoid" title="g = sigmoid">g = sigmoid</a></li><li><a class="toc-href" href="#g-tanh" title="g = tanh">g = tanh</a></li><li><a class="toc-href" href="#g-relu-leaky-relu" title="g = ReLU / Leaky ReLU">g = ReLU / Leaky ReLU</a></li></ul></li><li><a class="toc-href" href="#gradient-descent-for-neural-networks_1" title="Gradient descent for Neural Networks">Gradient descent for Neural Networks</a></li><li><a class="toc-href" href="#backpropagation-intuition-optional" title="Backpropagation intuition (optional)">Backpropagation intuition (optional)</a></li><li><a class="toc-href" href="#random-initialization" title="Random Initialization">Random Initialization</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#neural-networks-overview">Neural Networks Overview</a></li>
+<li><a href="#neural-network-representation">Neural Network Representation</a></li>
+<li><a href="#computing-a-neural-networks-output">Computing a Neural Network's Output</a></li>
+<li><a href="#vectorizing-across-multiple-examples">Vectorizing across multiple examples</a></li>
+<li><a href="#explanation-for-vectorized-implementation">Explanation for Vectorized Implementation</a></li>
+<li><a href="#activation-functions">Activation functions</a></li>
+<li><a href="#why-do-you-need-non-linear-activation-functions">Why do you need non-linear activation functions?</a></li>
+<li><a href="#derivatives-of-activation-functions">Derivatives of activation functions</a><ul>
+<li><a href="#g-sigmoid">g = sigmoid</a></li>
+<li><a href="#g-tanh">g = tanh</a></li>
+<li><a href="#g-relu-leaky-relu">g = ReLU / Leaky ReLU</a></li>
+</ul>
+</li>
+<li><a href="#gradient-descent-for-neural-networks">Gradient descent for Neural Networks</a></li>
+<li><a href="#backpropagation-intuition-optional">Backpropagation intuition (optional)</a></li>
+<li><a href="#random-initialization">Random Initialization</a></li>
+</ul>
+</div>
 <h2 id="neural-networks-overview">Neural Networks Overview</h2>
 <p>new notation: </p>
 <ul>
@@ -226,8 +245,8 @@ mx's blog            </a>
 <li>output layer: prediction (yhat)</li>
 <li>don't count input layer as a layer</li>
 </ul>
-<p>a 2 layer NN:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image.png"/></br></p>
+<p>a 2 layer NN:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image.png"/></p>
 <h2 id="computing-a-neural-networks-output">Computing a Neural Network's Output</h2>
 <p>each node in NN: 2 step computation</p>
 <ul>
@@ -235,13 +254,13 @@ mx's blog            </a>
 <li>a = sigmoid(z)</li>
 </ul>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image001.png"/></p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image002.png"><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image003.png"/></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image002.png"/><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image003.png"/></p>
 <p><code>z^[1]</code> = stacking <code>z[1]_i</code>s vertically
 <code>a^[1]</code> = sigmoid(<code>z^[1]</code>)
-vectorize computing <code>z^[1]</code>: W = <em>stacking rows of wi.T</em><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image005.png"><br>
+vectorize computing <code>z^[1]</code>: W = <em>stacking rows of wi.T</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image005.png"/><br/>
 W.shape = (4,3)
-b.shape = (4,1)</br></img></br></p>
+b.shape = (4,1)</p>
 <ul>
 <li>input at layer i = <code>a^[i-1]</code> (<code>x = a[0]</code>)</li>
 <li>output of each layer: <code>a[i] = sigmoid(W[i] a^[i-1] + b[i])</code></li>
@@ -249,18 +268,18 @@ b.shape = (4,1)</br></img></br></p>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image006.png"/></p>
 <h2 id="vectorizing-across-multiple-examples">Vectorizing across multiple examples</h2>
 <p>vectorize the computation acrosse m examples.
-training examples: x^(1)...x^(m)<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image007.png"><br>
-computing all yhat(i) using forloop:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image008.png"/></br></br></img></br></p>
+training examples: x^(1)...x^(m)<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image007.png"/><br/>
+computing all yhat(i) using forloop:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image008.png"/></p>
 <p>X = <em>stacking columns of x(i)</em>, <code>X = [x(1)...x(m)]</code>
 Z[1] = stacking columns of z<a href="i">1</a> = [z<a href="1">1</a>...z<a href="m">1</a>]
 A = stacking columns of a(i)</p>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image010.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image009.png"><br>
-<strong>horizontal index = training example</strong> <code>^(i)</code><br>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image010.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image009.png"/><br/>
+<strong>horizontal index = training example</strong> <code>^(i)</code><br/>
 <strong>vertical index = nodes in layer </strong><code>_i</code><strong>/ input feature</strong><code>x_i</code>
-⇒ </br></br></img></br></img></p>
+⇒ </p>
 <ul>
 <li>Z[1] = W[1] * X + b[1]</li>
 <li>A[1] = sigmoid(Z[1])</li>
@@ -270,24 +289,24 @@ A = stacking columns of a(i)</p>
 <h2 id="explanation-for-vectorized-implementation">Explanation for Vectorized Implementation</h2>
 <p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image012.png"/></p>
 <p><strong>Recap</strong>:
-stacking columns of training examples <code>x(i)</code> and activations <code>a[l](i)</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image013.png"><br>
-⇒ <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image014.png"> </img></br></br></img></br></p>
+stacking columns of training examples <code>x(i)</code> and activations <code>a[l](i)</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image013.png"/><br/>
+⇒ <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image014.png"/> </p>
 <h2 id="activation-functions">Activation functions</h2>
 <p>general case: <code>a = g(z)</code>, where g() is a nonlinear function.</p>
 <ul>
 <li>sigmoid: <code>a = 1 / (1 + exp(-z))</code></li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image018.png"><br>
-  a ∈ [0,1]</br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image018.png"/><br/>
+  a ∈ [0,1]</p>
 <ul>
 <li>tanh: <code>a = (exp(z) - exp(-z)) / (exp(z) + exp(-z))</code></li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image019.png"><br>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image019.png"/><br/>
   a ∈ [-1, 1] — shifted sigmoid function 
   ⇒ data is <em>centered, learning for next layer easier</em>
-<em>almost always better than sigmoid</em>, except for output layer (yhat = probability ∈[0,1])</br></img></p>
+<em>almost always better than sigmoid</em>, except for output layer (yhat = probability ∈[0,1])</p>
 <p>downside of sigmoid and tanh: <em>slope very small when |z| is large</em> — GD slow.
 ⇒ ReLU</p>
 <ul>
@@ -296,9 +315,9 @@ stacking columns of training examples <code>x(i)</code> and activations <code>a[
 <p>da/dz = 1 or 0
   NN learns faster because slope is constant when |z| large
   disadvantage: da/dz = 0 when z&lt;0
-  → leaky ReLU: small slope when z&lt;0<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image020.png"><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image021.png"/></br></img></br></p>
+  → leaky ReLU: small slope when z&lt;0<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image020.png"/><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image021.png"/></p>
 <p><strong>Rules of thumb</strong>:</p>
 <ul>
 <li>output layer: sigmoid for binary classification (output probability), <em>otherwise never use sigmoid</em></li>
@@ -306,22 +325,22 @@ stacking columns of training examples <code>x(i)</code> and activations <code>a[
 </ul>
 <h2 id="why-do-you-need-non-linear-activation-functions">Why do you need non-linear activation functions?</h2>
 <p>use a linear activation function g(z) = z ?
-⇒ <code>yhat</code> will just be a <em>linear function</em> of <code>x</code>. <code>yhat = Wx+b</code><br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image022.png"><br>
-one single place when using linear activation: in output layer ( y∈R )when doing regression</br></img></br></p>
+⇒ <code>yhat</code> will just be a <em>linear function</em> of <code>x</code>. <code>yhat = Wx+b</code><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image022.png"/><br/>
+one single place when using linear activation: in output layer ( y∈R )when doing regression</p>
 <h2 id="derivatives-of-activation-functions">Derivatives of activation functions</h2>
 <p><em>formulas for g'(z)</em></p>
 <h3 id="g-sigmoid">g = sigmoid</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image023.png"><br>
-⇒ <code>g'(z) = g(z) * (1 - g(z)) = a * (1-a)</code></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image023.png"/><br/>
+⇒ <code>g'(z) = g(z) * (1 - g(z)) = a * (1-a)</code></p>
 <ul>
 <li>when z = +inf, g(z) = 1, g'(z) = 1*(1-1) = 0</li>
 <li>when z = -inf, g(z) = 0, g'(z) = 0</li>
 <li>when z = 0, g(z) = 0.5, g'(z) = 0.25</li>
 </ul>
 <h3 id="g-tanh">g = tanh</h3>
-<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image024.png"><br>
-⇒ <code>g'(z) = 1 - tanh(z)^2 = 1 - a^2</code></br></img></p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image024.png"/><br/>
+⇒ <code>g'(z) = 1 - tanh(z)^2 = 1 - a^2</code></p>
 <ul>
 <li>when z = +inf, tanh(z) = 1, g' = 0</li>
 <li>when z = -inf, tanh(z) = -1, g' = 0</li>
@@ -359,29 +378,29 @@ params: w[1], b[1], w[2], b[2]</p>
 </ul>
 </li>
 </ul>
-<p>Fwd prop:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image026.png"><br>
-general formular for <code>l</code>th layer:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image034.png"> </img></br></br></img></br></p>
+<p>Fwd prop:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image026.png"/><br/>
+general formular for <code>l</code>th layer:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image034.png"/> </p>
 <p>Bck prop: 
 computing derivatives <code>dw</code>, <code>db</code>
-note: use <code>keepdims = True</code> or  <code>.rehape()</code> to avoid rank-1 arraies.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image027.png"/></br></p>
+note: use <code>keepdims = True</code> or  <code>.rehape()</code> to avoid rank-1 arraies.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image027.png"/></p>
 <h2 id="backpropagation-intuition-optional">Backpropagation intuition (optional)</h2>
-<p>Derive the formulas using computation graph + chain rule.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image028.png"/></br></p>
-<p>gradient for a single example <code>x=x(i), y=y(i)</code>:<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image029.png"/></br></p>
+<p>Derive the formulas using computation graph + chain rule.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image028.png"/></p>
+<p>gradient for a single example <code>x=x(i), y=y(i)</code>:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image029.png"/></p>
 <p>vectorized implementation for i=1,..,m:
 <strong>stacking columns</strong>:<code>X = [x(1),..,x(m)]</code>, <code>Z = [z(1)...z(m)]</code>, <code>Y = [y(1)..y(m)]</code>, 
-→ <br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image031.png"> </img></br></p>
+→ <br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image031.png"/> </p>
 <h2 id="random-initialization">Random Initialization</h2>
 <p>Unlike logistic regression, needs init params randomly.</p>
 <p>If we init all <code>w</code> and <code>b</code> to zeros: all activations <code>a_i</code> and <code>a_j</code> will be equal → <code>dz_i = dz_j</code> → <em>all hidden units completely identical</em>
 ⇒ needs to init all params <em>random, small</em> number (small because we want have larger derivatives for sigmoid, which is at small values, to speed up gd).
-when w is init to small rand, b don't need random init.<br>
-<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image033.png"/></br></p>
+when w is init to small rand, b don't need random init.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c1wk3/pasted_image033.png"/></p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">

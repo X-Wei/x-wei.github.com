@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android" />
-        <meta name="description" content="[TOC] Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume …" />
+        <meta name="description" content="onSavedInstanceState() AsyncTasks and Loader Using Loaders implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask implement onLoadFinished — onPostExecute for AsyncTask in makeGithubSearchQuery(): create bundle, create a loder, start it Caching with loaders Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Android Dev] 2.1 Lifecycles"/>
         <meta property="og:url" content="http://x-wei.github.io/andev_p2e1_lifecycle.html"/>
-        <meta property="og:description" content="[TOC] Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume …"/>
+        <meta property="og:description" content="onSavedInstanceState() AsyncTasks and Loader Using Loaders implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask implement onLoadFinished — onPostExecute for AsyncTask in makeGithubSearchQuery(): create bundle, create a loder, start it Caching with loaders Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with ..."/>
         <meta property="article:published_time" content="2017-02-11" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="android" />
@@ -210,7 +210,19 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Android Dev] 2.1 Lifecycles">[Android Dev] 2.1 Lifecycles</a><ul><li><a class="toc-href" href="#onsavedinstancestate" title="onSavedInstanceState()">onSavedInstanceState()</a></li><li><a class="toc-href" href="#asynctasks-and-loader" title="AsyncTasks and Loader">AsyncTasks and Loader</a></li><li><a class="toc-href" href="#using-loaders" title="Using Loaders">Using Loaders</a><ul><li><a class="toc-href" href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask" title="implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask">implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask</a></li><li><a class="toc-href" href="#implement-onloadfinished-onpostexecute-for-asynctask" title="implement onLoadFinished &mdash; onPostExecute for AsyncTask">implement onLoadFinished &mdash; onPostExecute for AsyncTask</a></li><li><a class="toc-href" href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it" title="in makeGithubSearchQuery(): create bundle, create a loder, start it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li></ul></li><li><a class="toc-href" href="#caching-with-loaders_1" title="Caching with loaders">Caching with loaders</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC]</p>
+                <div class="toc">
+<ul>
+<li><a href="#onsavedinstancestate">onSavedInstanceState()</a></li>
+<li><a href="#asynctasks-and-loader">AsyncTasks and Loader</a></li>
+<li><a href="#using-loaders">Using Loaders</a><ul>
+<li><a href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</a></li>
+<li><a href="#implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</a></li>
+<li><a href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li>
+</ul>
+</li>
+<li><a href="#caching-with-loaders">Caching with loaders</a></li>
+</ul>
+</div>
 <p>Android kills background apps !! </p>
 <p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image001.png"/></p>
 <p>→ <code>onCreate()</code> → <strong>Created</strong> →<code>onStart()</code> →  <strong>Visible(</strong>can be seen on screen) → <code>onResume()</code> → <strong>Active</strong>(get focus, can interact with)</p>
@@ -223,47 +235,47 @@ mx's blog            </a>
 <p>parameter: a <code>Bundle</code> to keep state into key-value pairs. 
 to pass objects via Bundle: implement the <code>Parcelble</code> interface. </p>
 <p>Override this <code>onSavedInstanceState()</code> function → put useful objects into the bundle parameter. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (3) Override onSaveInstanceState to persist data across Activity recreation</span>
-<span class="code-line">// Do the following steps within onSaveInstanceState</span>
-<span class="code-line">// TODO (4) Make sure super.onSaveInstanceState is called before doing anything else</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">persist</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">across</span><span class="w"> </span><span class="n">Activity</span><span class="w"> </span><span class="n">recreation</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">steps</span><span class="w"> </span><span class="k">within</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">Make</span><span class="w"> </span><span class="n">sure</span><span class="w"> </span><span class="n">super</span><span class="p">.</span><span class="n">onSaveInstanceState</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">called</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">doing</span><span class="w"> </span><span class="n">anything</span><span class="w"> </span><span class="k">else</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">// TODO (5) Put the contents of the TextView that contains our URL into a variable</span>
-<span class="code-line">// TODO (6) Using the key for the query URL, put the string in the outState Bundle</span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">Put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">contents</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">TextView</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">variable</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">URL</span><span class="p">,</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">outState</span><span class="w"> </span><span class="n">Bundle</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">// TODO (7) Put the contents of the TextView that contains our raw JSON search results into a variable</span>
-<span class="code-line">// TODO (8) Using the key for the raw JSON search results, put the search results into the outState Bundle</span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="n">Put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">contents</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">TextView</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">variable</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="p">,</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">outState</span><span class="w"> </span><span class="n">Bundle</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onSaveInstanceState(Bundle outState) {</span>
-<span class="code-line">    super.onSaveInstanceState(outState);</span>
-<span class="code-line">    outState.putString(QUERYURL_KEY, mUrlDisplayTextView.getText().toString());</span>
-<span class="code-line">    outState.putString(RAW_JSON_KEY, mSearchResultsTextView.getText().toString());</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="p">(</span><span class="n">Bundle</span><span class="w"> </span><span class="n">outState</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">onSaveInstanceState</span><span class="p">(</span><span class="n">outState</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">outState</span><span class="p">.</span><span class="n">putString</span><span class="p">(</span><span class="n">QUERYURL_KEY</span><span class="p">,</span><span class="w"> </span><span class="n">mUrlDisplayTextView</span><span class="p">.</span><span class="n">getText</span><span class="p">().</span><span class="n">toString</span><span class="p">());</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">outState</span><span class="p">.</span><span class="n">putString</span><span class="p">(</span><span class="n">RAW_JSON_KEY</span><span class="p">,</span><span class="w"> </span><span class="n">mSearchResultsTextView</span><span class="p">.</span><span class="n">getText</span><span class="p">().</span><span class="n">toString</span><span class="p">());</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>in <code>onCreate</code>: try to extract objects form bundle <code>savedInstanceState</code> (if it's not null). </p>
-<div class="highlight"><pre><span class="code-line"><span></span>@Override</span>
-<span class="code-line">protected void onCreate(Bundle savedInstanceState) {</span>
-<span class="code-line">    super.onCreate(savedInstanceState);</span>
-<span class="code-line">    setContentView(R.layout.activity_main);</span>
-<span class="code-line">    mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);</span>
-<span class="code-line">    mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);</span>
-<span class="code-line">    mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);</span>
-<span class="code-line">    mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);</span>
-<span class="code-line">    mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);</span>
-<span class="code-line">    // TODO (9) If the savedInstanceState bundle is not null, set the text of the URL and search results TextView respectively</span>
-<span class="code-line">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(QUERYURL_KEY))</span>
-<span class="code-line">        mUrlDisplayTextView.setText(savedInstanceState.getString(QUERYURL_KEY));</span>
-<span class="code-line">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(RAW_JSON_KEY))</span>
-<span class="code-line">        mSearchResultsTextView.setText(savedInstanceState.getString(RAW_JSON_KEY));</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">@Override</span></span>
+<span class="code-line"><span class="err">protected void onCreate(Bundle savedInstanceState) {</span></span>
+<span class="code-line"><span class="err">    super.onCreate(savedInstanceState);</span></span>
+<span class="code-line"><span class="err">    setContentView(R.layout.activity_main);</span></span>
+<span class="code-line"><span class="err">    mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);</span></span>
+<span class="code-line"><span class="err">    mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);</span></span>
+<span class="code-line"><span class="err">    mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);</span></span>
+<span class="code-line"><span class="err">    mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);</span></span>
+<span class="code-line"><span class="err">    mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);</span></span>
+<span class="code-line"><span class="err">    // TODO (9) If the savedInstanceState bundle is not null, set the text of the URL and search results TextView respectively</span></span>
+<span class="code-line"><span class="err">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(QUERYURL_KEY))</span></span>
+<span class="code-line"><span class="err">        mUrlDisplayTextView.setText(savedInstanceState.getString(QUERYURL_KEY));</span></span>
+<span class="code-line"><span class="err">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(RAW_JSON_KEY))</span></span>
+<span class="code-line"><span class="err">        mSearchResultsTextView.setText(savedInstanceState.getString(RAW_JSON_KEY));</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h2 id="asynctasks-and-loader">AsyncTasks and Loader</h2>
 <p>edgecase: rotate when async task is performing → asynctask runs on separate thread → the zombie activities will not be killed !!
 ⇒ <code>Loader</code>
 Loader is identified by a loader ID, thus preventing several loaders running in the same time. 
-<img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image002.png">
+<img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image002.png"/>
 <code>AsyncTaskLoader</code> lifecycle: 
-it is bounded to an Activity instead of an async task ⇒ when device rotates, the loader will feed the results of tasks to the right activity. </img></p>
+it is bounded to an Activity instead of an async task ⇒ when device rotates, the loader will feed the results of tasks to the right activity. </p>
 <p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image003.png"/></p>
 <h2 id="using-loaders">Using Loaders</h2>
 <ol>
@@ -273,108 +285,108 @@ it is bounded to an Activity instead of an async task ⇒ when device rotates, t
 </ol>
 <p>let <code>MainActivty</code> implement <code>LoaderManager.LoaderCallbacks&lt;String&gt;</code></p>
 <h3 id="implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (3) Override onCreateLoader</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public Loader&lt;String&gt; onCreateLoader(int id, final Bundle bundle) {// !make bundle final so that can access it below</span>
-<span class="code-line">    // TODO (4) Return a new AsyncTaskLoader&lt;String&gt; as an anonymous inner class with this as the constructor's parameter</span>
-<span class="code-line">    return new AsyncTaskLoader&lt;String&gt;(this) {</span>
-<span class="code-line">        @Override</span>
-<span class="code-line">        public String loadInBackground() {</span>
-<span class="code-line">            return null;</span>
-<span class="code-line">        }</span>
-<span class="code-line">        // TODO (5) Override onStartLoading</span>
-<span class="code-line">        @Override</span>
-<span class="code-line">        protected void onStartLoading() {</span>
-<span class="code-line">            super.onStartLoading();</span>
-<span class="code-line">            // TODO (6) If bundle is null, return.</span>
-<span class="code-line">            if (bundle==null) return;</span>
-<span class="code-line">            // TODO (7) move the content of onPrecuter in the AsyncTask class</span>
-<span class="code-line">            mLoadingIndicator.setVisibility(View.VISIBLE);</span>
-<span class="code-line">            // TODO (8) Force a load</span>
-<span class="code-line">            forceLoad();</span>
-<span class="code-line">        }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onCreateLoader</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onCreateLoader</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">Bundle</span><span class="w"> </span><span class="n">bundle</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="err">!</span><span class="n">make</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">so</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">below</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AsyncTaskLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">anonymous</span><span class="w"> </span><span class="k">inner</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">constructor</span><span class="s1">'s parameter</span></span>
+<span class="code-line"><span class="s1">    return new AsyncTaskLoader&lt;String&gt;(this) {</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        public String loadInBackground() {</span></span>
+<span class="code-line"><span class="s1">            return null;</span></span>
+<span class="code-line"><span class="s1">        }</span></span>
+<span class="code-line"><span class="s1">        // TODO (5) Override onStartLoading</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        protected void onStartLoading() {</span></span>
+<span class="code-line"><span class="s1">            super.onStartLoading();</span></span>
+<span class="code-line"><span class="s1">            // TODO (6) If bundle is null, return.</span></span>
+<span class="code-line"><span class="s1">            if (bundle==null) return;</span></span>
+<span class="code-line"><span class="s1">            // TODO (7) move the content of onPrecuter in the AsyncTask class</span></span>
+<span class="code-line"><span class="s1">            mLoadingIndicator.setVisibility(View.VISIBLE);</span></span>
+<span class="code-line"><span class="s1">            // TODO (8) Force a load</span></span>
+<span class="code-line"><span class="s1">            forceLoad();</span></span>
+<span class="code-line"><span class="s1">        }</span></span>
 <span class="code-line"></span>
-<span class="code-line">        // TODO (9) Override loadInBackground</span>
-<span class="code-line">        @Override</span>
-<span class="code-line">        protected String onLoadInBackground() {</span>
-<span class="code-line">            // TODO (10) Get the String for our URL from the bundle passed to onCreateLoader</span>
-<span class="code-line">            String searchUrlstr= bundle.getString(SEARCH_QUERY_URL_EXTRA);</span>
-<span class="code-line">            // TODO (11) If the URL is null or empty, return null</span>
-<span class="code-line">            if(searchUrlstr==null || TextUtils.isEmpty(searchUrlstr)) return null;</span>
-<span class="code-line">            // TODO (12) Copy the try / catch block from the AsyncTask's doInBackground method</span>
-<span class="code-line">            String githubSearchResults = null;</span>
-<span class="code-line">            try {</span>
-<span class="code-line">                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(new URL(searchUrlstr));</span>
-<span class="code-line">            } catch (IOException e) {</span>
-<span class="code-line">                e.printStackTrace();</span>
-<span class="code-line">            }</span>
-<span class="code-line">            return githubSearchResults;</span>
-<span class="code-line">        }</span>
-<span class="code-line">    };</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="s1">        // TODO (9) Override loadInBackground</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        protected String onLoadInBackground() {</span></span>
+<span class="code-line"><span class="s1">            // TODO (10) Get the String for our URL from the bundle passed to onCreateLoader</span></span>
+<span class="code-line"><span class="s1">            String searchUrlstr= bundle.getString(SEARCH_QUERY_URL_EXTRA);</span></span>
+<span class="code-line"><span class="s1">            // TODO (11) If the URL is null or empty, return null</span></span>
+<span class="code-line"><span class="s1">            if(searchUrlstr==null || TextUtils.isEmpty(searchUrlstr)) return null;</span></span>
+<span class="code-line"><span class="s1">            // TODO (12) Copy the try / catch block from the AsyncTask'</span><span class="n">s</span><span class="w"> </span><span class="n">doInBackground</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NetworkUtils</span><span class="p">.</span><span class="n">getResponseFromHttpUrl</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">URL</span><span class="p">(</span><span class="n">searchUrlstr</span><span class="p">));</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="n">printStackTrace</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</h3>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (13) Override onLoadFinished</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onLoadFinished(Loader&lt;String&gt; loader, String githubSearchResults) {</span>
-<span class="code-line">    // TODO (15) Use the same logic used in onPostExecute to show the data or the error message</span>
-<span class="code-line">    mLoadingIndicator.setVisibility(View.INVISIBLE);</span>
-<span class="code-line">    if (githubSearchResults != null &amp;&amp; !githubSearchResults.equals("")) {</span>
-<span class="code-line">        showJsonDataView();</span>
-<span class="code-line">        mSearchResultsTextView.setText(githubSearchResults);</span>
-<span class="code-line">    } else {</span>
-<span class="code-line">        showErrorMessage();</span>
-<span class="code-line">    }</span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">13</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onLoadFinished</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onLoadFinished</span><span class="p">(</span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loader</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="k">Use</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">logic</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">onPostExecute</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">show</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">message</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mLoadingIndicator</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="k">View</span><span class="p">.</span><span class="n">INVISIBLE</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">!</span><span class="n">githubSearchResults</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="ss">""</span><span class="p">))</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">showJsonDataView</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">mSearchResultsTextView</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">githubSearchResults</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">showErrorMessage</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">// TODO (16) Override onLoaderReset as it is part of the interface we implement, but don't do anything in this method</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void onLoaderReset(Loader&lt;String&gt; loader) {</span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onLoaderReset</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">implement</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">don</span><span class="err">'</span><span class="n">t</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">anything</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onLoaderReset</span><span class="p">(</span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loader</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <h3 id="in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</h3>
 <p>instead of staring an <code>AsyncTask</code>, we get a Loader and re-run it via a loader manager. </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (19) Create a bundle called queryBundle</span>
-<span class="code-line">Bundle queryBundle = new Bundle();</span>
-<span class="code-line">// TODO (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value</span>
-<span class="code-line">queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());</span>
-<span class="code-line">// TODO (21) Call getSupportLoaderManager and store it in a LoaderManager variable</span>
-<span class="code-line">LoaderManager loaderManager = getSupportLoaderManager();</span>
-<span class="code-line">// TODO (22) Get our Loader by calling getLoader and passing the ID we specified</span>
-<span class="code-line">Loader loader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);</span>
-<span class="code-line">// TODO (23) If the Loader was null, initialize it. Else, restart it.</span>
-<span class="code-line">if(loader==null) loader = loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span>
-<span class="code-line">else loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (19) Create a bundle called queryBundle</span></span>
+<span class="code-line"><span class="err">Bundle queryBundle = new Bundle();</span></span>
+<span class="code-line"><span class="err">// TODO (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value</span></span>
+<span class="code-line"><span class="err">queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());</span></span>
+<span class="code-line"><span class="err">// TODO (21) Call getSupportLoaderManager and store it in a LoaderManager variable</span></span>
+<span class="code-line"><span class="err">LoaderManager loaderManager = getSupportLoaderManager();</span></span>
+<span class="code-line"><span class="err">// TODO (22) Get our Loader by calling getLoader and passing the ID we specified</span></span>
+<span class="code-line"><span class="err">Loader loader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);</span></span>
+<span class="code-line"><span class="err">// TODO (23) If the Loader was null, initialize it. Else, restart it.</span></span>
+<span class="code-line"><span class="err">if(loader==null) loader = loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span></span>
+<span class="code-line"><span class="err">else loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span></span>
 </pre></div>
 <h2 id="caching-with-loaders_1">Caching with loaders</h2>
 <p>Loaders will reload if activity is destroyed and re-created. This overhead can be avoided by caching the results in the <code>AsyncTaskLoader</code> (created in <code>onCreateLoader()</code>). </p>
-<div class="highlight"><pre><span class="code-line"><span></span>// TODO (1) Create a String member variable called mGithubJson that will store the raw JSON</span>
-<span class="code-line">String mGithubJson; // cached results</span>
-<span class="code-line">@Override</span>
-<span class="code-line">protected void onStartLoading() {</span>
-<span class="code-line">    /* If no arguments were passed, we don't have a query to perform. Simply return. */</span>
-<span class="code-line">    if (args == null) {</span>
-<span class="code-line">        return;</span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">member</span><span class="w"> </span><span class="k">variable</span><span class="w"> </span><span class="k">called</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"></span></span>
+<span class="code-line"><span class="n">String</span><span class="w"> </span><span class="n">mGithubJson</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">cached</span><span class="w"> </span><span class="n">results</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onStartLoading</span><span class="p">()</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="cm">/* If no arguments were passed, we don't have a query to perform. Simply return. */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">args</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    /*</span>
-<span class="code-line">        * When we initially begin loading in the background, we want to display the</span>
-<span class="code-line">        * loading indicator to the user</span>
-<span class="code-line">        */</span>
-<span class="code-line">    mLoadingIndicator.setVisibility(View.VISIBLE);</span>
+<span class="code-line"><span class="w">    </span><span class="cm">/*</span></span>
+<span class="code-line"><span class="cm">        * When we initially begin loading in the background, we want to display the</span></span>
+<span class="code-line"><span class="cm">        * loading indicator to the user</span></span>
+<span class="code-line"><span class="cm">        */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mLoadingIndicator</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="k">View</span><span class="p">.</span><span class="n">VISIBLE</span><span class="p">);</span><span class="w"></span></span>
 <span class="code-line"></span>
-<span class="code-line">    // TODO (2) If mGithubJson is not null, deliver that result. Otherwise, force a load</span>
-<span class="code-line">    if(mGithubJson!=null) deliverResult(mGithubJson);</span>
-<span class="code-line">    else forceLoad();</span>
-<span class="code-line">}</span>
-<span class="code-line">// TODO (3) Override deliverResult and store the data in mGithubJson</span>
-<span class="code-line">@Override</span>
-<span class="code-line">public void deliverResult(String data) {</span>
-<span class="code-line">    mGithubJson = data;</span>
-<span class="code-line">// TODO (4) Call super.deliverResult after storing the data</span>
-<span class="code-line">    super.deliverResult(data);</span>
-<span class="code-line">}</span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">deliver</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">result</span><span class="p">.</span><span class="w"> </span><span class="n">Otherwise</span><span class="p">,</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">load</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">mGithubJson</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">deliverResult</span><span class="p">(</span><span class="n">mGithubJson</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="n">forceLoad</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">deliverResult</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">deliverResult</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">data</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mGithubJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">data</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">Call</span><span class="w"> </span><span class="n">super</span><span class="p">.</span><span class="n">deliverResult</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">storing</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">deliverResult</span><span class="p">(</span><span class="k">data</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">

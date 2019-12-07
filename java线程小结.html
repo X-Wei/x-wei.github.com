@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="android,java" />
-        <meta name="description" content="[TOC] INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. 创建进程 为了实现多线程, 需要定义一个新的class, 有两种方法: 或者继承自Thread类, 或者实现Runnable接口(关键是重载run()方法). 继承自Thread类 写法1: 定义一个继承自Thread的内部类-- class [类名] extends Thread{ 方法1; 方法2； … public void run(){ // … } 属性1； 属性2； … } 或者用下面种内联(inline)的写法, 不用给这个类起名字了(不过还要给这个实例取名字): private Thread [实例名] = new Thread () { public void run …" />
+        <meta name="description" content="创建进程 继承自Thread类 实现Runnable接口 android上需要注意的一点 例子 Process, Thread和Runnable的区别? INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. 创建进程 为了实现多线程, 需要定义一个新的class, 有两种方法: 或者继承自Thread类, 或者实现Runnable接口(关键是重载run()方法). 继承自Thread类 写法1: 定义一个继承自Thread的内部类-- class [类名] extends Thread{ 方法1; 方法2； … public void run(){ // … } 属性1； 属性2； … } 或者用下面种内联(inline)的写法, 不用给这个类起名字了(不过还要给这个实例取名字): private Thread [实例名] = new Thread () { public ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="java线程小结"/>
         <meta property="og:url" content="http://x-wei.github.io/java线程小结.html"/>
-        <meta property="og:description" content="[TOC] INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. 创建进程 为了实现多线程, 需要定义一个新的class, 有两种方法: 或者继承自Thread类, 或者实现Runnable接口(关键是重载run()方法). 继承自Thread类 写法1: 定义一个继承自Thread的内部类-- class [类名] extends Thread{ 方法1; 方法2； … public void run(){ // … } 属性1； 属性2； … } 或者用下面种内联(inline)的写法, 不用给这个类起名字了(不过还要给这个实例取名字): private Thread [实例名] = new Thread () { public void run …"/>
+        <meta property="og:description" content="创建进程 继承自Thread类 实现Runnable接口 android上需要注意的一点 例子 Process, Thread和Runnable的区别? INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. 创建进程 为了实现多线程, 需要定义一个新的class, 有两种方法: 或者继承自Thread类, 或者实现Runnable接口(关键是重载run()方法). 继承自Thread类 写法1: 定义一个继承自Thread的内部类-- class [类名] extends Thread{ 方法1; 方法2； … public void run(){ // … } 属性1； 属性2； … } 或者用下面种内联(inline)的写法, 不用给这个类起名字了(不过还要给这个实例取名字): private Thread [实例名] = new Thread () { public ..."/>
         <meta property="article:published_time" content="2013-11-29" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="android" />
@@ -207,72 +207,83 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="java线程小结">java线程小结</a><ul><li><a class="toc-href" href="#chuang-jian-jin-cheng" title="创建进程">创建进程</a><ul><li><a class="toc-href" href="#ji-cheng-zi-threadlei" title="继承自Thread类">继承自Thread类</a></li><li><a class="toc-href" href="#shi-xian-runnablejie-kou" title="实现Runnable接口">实现Runnable接口</a></li></ul></li><li><a class="toc-href" href="#androidshang-xu-yao-zhu-yi-de-yi-dian_1" title="android上需要注意的一点">android上需要注意的一点</a></li><li><a class="toc-href" href="#li-zi" title="例子">例子</a></li><li><a class="toc-href" href="#process-threadhe-runnablede-qu-bie" title="Process, Thread和Runnable的区别?">Process, Thread和Runnable的区别?</a></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="java线程小结">java线程小结</a><ul><li><a class="toc-href" href="#_1" title="创建进程">创建进程</a><ul><li><a class="toc-href" href="#thread" title="继承自Thread类">继承自Thread类</a></li><li><a class="toc-href" href="#runnable" title="实现Runnable接口">实现Runnable接口</a></li></ul></li><li><a class="toc-href" href="#android_1" title="android上需要注意的一点">android上需要注意的一点</a></li><li><a class="toc-href" href="#_2" title="例子">例子</a></li><li><a class="toc-href" href="#process-threadrunnable" title="Process, Thread和Runnable的区别?">Process, Thread和Runnable的区别?</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#_1">创建进程</a><ul>
+<li><a href="#thread">继承自Thread类</a></li>
+<li><a href="#runnable">实现Runnable接口</a></li>
+</ul>
+</li>
+<li><a href="#android">android上需要注意的一点</a></li>
+<li><a href="#_2">例子</a></li>
+<li><a href="#process-threadrunnable">Process, Thread和Runnable的区别?</a></li>
+</ul>
+</div>
 <p>INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. </p>
-<h2 id="chuang-jian-jin-cheng">创建进程</h2>
+<h2 id="_1">创建进程</h2>
 <p>为了实现多线程, 需要定义一个新的class, 有两种方法: 
 <strong>或者继承自</strong><code>Thread</code><strong>类, 或者实现</strong><code>Runnable</code><strong>接口</strong>(关键是重载run()方法). </p>
-<h3 id="ji-cheng-zi-threadlei">继承自Thread类</h3>
+<h3 id="thread">继承自Thread类</h3>
 <ul>
 <li>
 <p>写法1: 定义一个继承自Thread的内部类--</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">class</span> <span class="p">[</span><span class="err">类名</span><span class="p">]</span> <span class="kr">extends</span> <span class="nx">Thread</span><span class="p">{</span></span>
-<span class="code-line"><span class="err">方法</span><span class="mi">1</span><span class="p">;</span></span>
-<span class="code-line"><span class="err">方法</span><span class="mi">2</span><span class="err">；</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">class [类名] extends Thread{</span></span>
+<span class="code-line"><span class="err">方法1;</span></span>
+<span class="code-line"><span class="err">方法2；</span></span>
 <span class="code-line"><span class="err">…</span></span>
-<span class="code-line"><span class="kr">public</span> <span class="k">void</span> <span class="nx">run</span><span class="p">(){</span></span>
-<span class="code-line"><span class="c1">// …</span></span>
-<span class="code-line"><span class="p">}</span></span>
-<span class="code-line"><span class="err">属性</span><span class="mi">1</span><span class="err">；</span></span>
-<span class="code-line"><span class="err">属性</span><span class="mi">2</span><span class="err">；</span></span>
+<span class="code-line"><span class="err">public void run(){</span></span>
+<span class="code-line"><span class="err">// …</span></span>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"><span class="err">属性1；</span></span>
+<span class="code-line"><span class="err">属性2；</span></span>
 <span class="code-line"><span class="err">…</span></span>
-<span class="code-line"><span class="p">}</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 </li>
 <li>
 <p>或者用下面种<strong>内联(inline)</strong>的写法, 不用给这个类起名字了(不过还要给这个实例取名字): </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private Thread [实例名] = new Thread () {</span>
-<span class="code-line">    public void run() {</span>
-<span class="code-line">    // ...</span>
-<span class="code-line">    }</span>
-<span class="code-line">} ;</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private Thread [实例名] = new Thread () {</span></span>
+<span class="code-line"><span class="err">    public void run() {</span></span>
+<span class="code-line"><span class="err">    // ...</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">} ;</span></span>
 </pre></div>
 </li>
 </ul>
 <p>然后让进程开始, 就是: 
 <code>t.start();</code>
 如果用<code>t.run()</code>的话, 则依然是并行执行的, 可能达不到多线程效果...</p>
-<h3 id="shi-xian-runnablejie-kou">实现Runnable接口</h3>
+<h3 id="runnable">实现Runnable接口</h3>
 <ul>
 <li>
 <p>方法1, 代码: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kr">class</span> <span class="p">[</span><span class="err">类名</span><span class="p">]</span> <span class="kr">implements</span> <span class="nx">Runnable</span><span class="p">{</span></span>
-<span class="code-line"><span class="err">方法</span><span class="mi">1</span><span class="p">;</span></span>
-<span class="code-line"><span class="err">方法</span><span class="mi">2</span><span class="err">；</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">class [类名] implements Runnable{</span></span>
+<span class="code-line"><span class="err">方法1;</span></span>
+<span class="code-line"><span class="err">方法2；</span></span>
 <span class="code-line"><span class="err">…</span></span>
-<span class="code-line"><span class="kr">public</span> <span class="k">void</span> <span class="nx">run</span><span class="p">(){</span></span>
-<span class="code-line">    <span class="c1">// other code…</span></span>
-<span class="code-line"><span class="p">}</span></span>
-<span class="code-line"><span class="err">属性</span><span class="mi">1</span><span class="err">；</span></span>
-<span class="code-line"><span class="err">属性</span><span class="mi">2</span><span class="err">；</span></span>
+<span class="code-line"><span class="err">public void run(){</span></span>
+<span class="code-line"><span class="err">    // other code…</span></span>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"><span class="err">属性1；</span></span>
+<span class="code-line"><span class="err">属性2；</span></span>
 <span class="code-line"><span class="err">…</span></span>
-<span class="code-line"><span class="p">}</span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 </li>
 <li>
 <p>方法2, 内联写法:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>private Runnable [实例名] = new Runnable() {</span>
-<span class="code-line">public void run() {</span>
-<span class="code-line">    //...</span>
-<span class="code-line"> }</span>
-<span class="code-line">};</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private Runnable [实例名] = new Runnable() {</span></span>
+<span class="code-line"><span class="err">public void run() {</span></span>
+<span class="code-line"><span class="err">    //...</span></span>
+<span class="code-line"><span class="err"> }</span></span>
+<span class="code-line"><span class="err">};</span></span>
 </pre></div>
 </li>
 </ul>
-<h2 id="androidshang-xu-yao-zhu-yi-de-yi-dian_1">android上需要注意的一点</h2>
+<h2 id="android_1">android上需要注意的一点</h2>
 <blockquote>
 <blockquote>
 <p>"Android modifies the user interface and handles input events from <strong>one single</strong> user interface thread. This thread is also called <strong>the main thread</strong>."</p>
@@ -304,7 +315,7 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 <p>如果在Activity类的声明里声明handler为一个属性: 
 <code>private Handler handler = new Handler();</code>
 这个构造函数没有参数, 根据文档, "Default constructor associates this handler with the Looper for the current thread." 所以这个handler关联到了current thread, 也就是main Thread.....</p>
-<h2 id="li-zi">例子</h2>
+<h2 id="_2">例子</h2>
 <p>所以, 多线程计算, 计算结束后修改屏幕显示的话, 需要以下__三个步骤__(比上面的俩步骤多了一个, 不知道是否还可以简化): </p>
 <ol>
 <li>在主线程里声明handler, (声明成Activity的一个属性): </li>
@@ -313,22 +324,22 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 <ol>
 <li>
 <p>写一个用于修改屏幕显示的Runnable r(也声明成一个属性了):</p>
-<div class="highlight"><pre><span class="code-line"><span></span>private Runnable r = new Runnable() {</span>
-<span class="code-line">public void run() {</span>
-<span class="code-line">//code to update graphic display...</span>
-<span class="code-line">}</span>
-<span class="code-line">};</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private Runnable r = new Runnable() {</span></span>
+<span class="code-line"><span class="err">public void run() {</span></span>
+<span class="code-line"><span class="err">//code to update graphic display...</span></span>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"><span class="err">};</span></span>
 </pre></div>
 </li>
 <li>
 <p>再写一个进行计算的Thread t, 在计算结束后, 用handler.post(r)实现刷新显示的效果: </p>
-<div class="highlight"><pre><span class="code-line"><span></span>private final Thread t = new Thread() {</span>
-<span class="code-line">    public void run() {</span>
-<span class="code-line">//...code for calculating...</span>
-<span class="code-line">//结束计算以后, 刷新屏幕:</span>
-<span class="code-line">handler.post(r);</span>
-<span class="code-line">    }</span>
-<span class="code-line">};</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private final Thread t = new Thread() {</span></span>
+<span class="code-line"><span class="err">    public void run() {</span></span>
+<span class="code-line"><span class="err">//...code for calculating...</span></span>
+<span class="code-line"><span class="err">//结束计算以后, 刷新屏幕:</span></span>
+<span class="code-line"><span class="err">handler.post(r);</span></span>
+<span class="code-line"><span class="err">    }</span></span>
+<span class="code-line"><span class="err">};</span></span>
 </pre></div>
 </li>
 <li>
@@ -340,17 +351,17 @@ Returns true if the Runnable was successfully placed in to the message queue. Re
 <li>需要让t一直循环(监视某个flag), 当flag变为true的时候, 进行计算.</li>
 </ol>
 <p>为了达到这个效果, Thread t里面的run()方法需要这样写:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>    public void run() {</span>
-<span class="code-line">        while(true) {</span>
-<span class="code-line">            if(flag){</span>
-<span class="code-line">            //...do the calculation...</span>
-<span class="code-line">            handler.post(r);</span>
-<span class="code-line">            flag=false;</span>
-<span class="code-line">            }</span>
-<span class="code-line">        }   </span>
-<span class="code-line">    }</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">    public void run() {</span></span>
+<span class="code-line"><span class="err">        while(true) {</span></span>
+<span class="code-line"><span class="err">            if(flag){</span></span>
+<span class="code-line"><span class="err">            //...do the calculation...</span></span>
+<span class="code-line"><span class="err">            handler.post(r);</span></span>
+<span class="code-line"><span class="err">            flag=false;</span></span>
+<span class="code-line"><span class="err">            }</span></span>
+<span class="code-line"><span class="err">        }   </span></span>
+<span class="code-line"><span class="err">    }</span></span>
 </pre></div>
-<h2 id="process-threadhe-runnablede-qu-bie">Process, Thread和Runnable的区别?</h2>
+<h2 id="process-threadrunnable">Process, Thread和Runnable的区别?</h2>
 <p>线程(Thread)是指进程(Process)中的一个执行流程，一个进程中可以运行多个线程。比如java.exe进程中可以运行很多线程。线程总是属于某个进程，进程中的多个线程共享进程的内存。</p>
 <p>参考链接: 
 <a href="http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html">http://www.vogella.com/articles/AndroidBackgroundProcessing/article.html</a>
@@ -754,7 +765,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="java线程小结">java线程小结</a><ul><li><a class="toc-href" href="#chuang-jian-jin-cheng" title="创建进程">创建进程</a><ul><li><a class="toc-href" href="#ji-cheng-zi-threadlei" title="继承自Thread类">继承自Thread类</a></li><li><a class="toc-href" href="#shi-xian-runnablejie-kou" title="实现Runnable接口">实现Runnable接口</a></li></ul></li><li><a class="toc-href" href="#androidshang-xu-yao-zhu-yi-de-yi-dian_1" title="android上需要注意的一点">android上需要注意的一点</a></li><li><a class="toc-href" href="#li-zi" title="例子">例子</a></li><li><a class="toc-href" href="#process-threadhe-runnablede-qu-bie" title="Process, Thread和Runnable的区别?">Process, Thread和Runnable的区别?</a></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="java线程小结">java线程小结</a><ul><li><a class="toc-href" href="#_1" title="创建进程">创建进程</a><ul><li><a class="toc-href" href="#thread" title="继承自Thread类">继承自Thread类</a></li><li><a class="toc-href" href="#runnable" title="实现Runnable接口">实现Runnable接口</a></li></ul></li><li><a class="toc-href" href="#android_1" title="android上需要注意的一点">android上需要注意的一点</a></li><li><a class="toc-href" href="#_2" title="例子">例子</a></li><li><a class="toc-href" href="#process-threadrunnable" title="Process, Thread和Runnable的区别?">Process, Thread和Runnable的区别?</a></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

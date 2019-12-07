@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="[TOC] 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String …" />
+        <meta name="description" content="1. Introduction to substring search 2. Brute-Force Substring Search 3. Knuth-Morris-Pratt intuition Deterministic finite state automaton (DFA) DFA construction 4. Boyer-Moore intuition mismatch character heuristic implementation analysis 5. Rabin-Karp intuition computing the hash function efficiently analysis Summery 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[Algorithms II] Week 4-2 Substring Search"/>
         <meta property="og:url" content="http://x-wei.github.io/algoII_week4_2.html"/>
-        <meta property="og:description" content="[TOC] 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far&#34; pb. having two strings, pattern and text, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text. ex. indexOf method of String in java. 2. Brute-Force Substring Search function signature: public static int search(String …"/>
+        <meta property="og:description" content="1. Introduction to substring search 2. Brute-Force Substring Search 3. Knuth-Morris-Pratt intuition Deterministic finite state automaton (DFA) DFA construction 4. Boyer-Moore intuition mismatch character heuristic implementation analysis 5. Rabin-Karp intuition computing the hash function efficiently analysis Summery 1. Introduction to substring search &#34;most ingenious algorithm we&#39;ve seen so far ..."/>
         <meta property="article:published_time" content="2015-12-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="algorithm" />
@@ -210,64 +210,89 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[Algorithms II] Week 4-2 Substring Search">[Algorithms II] Week 4-2 Substring Search</a><ul><li><a class="toc-href" href="#1-introduction-to-substring-search" title="1. Introduction to substring search">1. Introduction to substring search</a></li><li><a class="toc-href" href="#2-brute-force-substring-search" title="2. Brute-Force Substring Search">2. Brute-Force Substring Search</a></li><li><a class="toc-href" href="#3-knuth-morris-pratt" title="3. Knuth-Morris-Pratt">3. Knuth-Morris-Pratt</a><ul><li><a class="toc-href" href="#intuition" title="intuition">intuition</a></li><li><a class="toc-href" href="#deterministic-finite-state-automaton-dfa" title="Deterministic finite state automaton (DFA)">Deterministic finite state automaton (DFA)</a></li><li><a class="toc-href" href="#dfa-construction" title="DFA construction">DFA construction</a></li></ul></li><li><a class="toc-href" href="#4-boyer-moore_1" title="4. Boyer-Moore">4. Boyer-Moore</a><ul><li><a class="toc-href" href="#intuition_1" title="intuition">intuition</a></li><li><a class="toc-href" href="#mismatch-character-heuristic" title="mismatch character heuristic">mismatch character heuristic</a></li><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#5-rabin-karp_1" title="5. Rabin-Karp">5. Rabin-Karp</a><ul><li><a class="toc-href" href="#intuition_2" title="intuition">intuition</a></li><li><a class="toc-href" href="#computing-the-hash-function-efficiently" title="computing the hash function efficiently">computing the hash function efficiently</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <p>[TOC] </p>
+                <div class="toc">
+<ul>
+<li><a href="#1-introduction-to-substring-search">1. Introduction to substring search</a></li>
+<li><a href="#2-brute-force-substring-search">2. Brute-Force Substring Search</a></li>
+<li><a href="#3-knuth-morris-pratt">3. Knuth-Morris-Pratt</a><ul>
+<li><a href="#intuition">intuition</a></li>
+<li><a href="#deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</a></li>
+<li><a href="#dfa-construction">DFA construction</a></li>
+</ul>
+</li>
+<li><a href="#4-boyer-moore">4. Boyer-Moore</a><ul>
+<li><a href="#intuition_1">intuition</a></li>
+<li><a href="#mismatch-character-heuristic">mismatch character heuristic</a></li>
+<li><a href="#implementation">implementation</a></li>
+<li><a href="#analysis">analysis</a></li>
+</ul>
+</li>
+<li><a href="#5-rabin-karp">5. Rabin-Karp</a><ul>
+<li><a href="#intuition_2">intuition</a></li>
+<li><a href="#computing-the-hash-function-efficiently">computing the hash function efficiently</a></li>
+<li><a href="#analysis_1">analysis</a></li>
+</ul>
+</li>
+<li><a href="#summery">Summery</a></li>
+</ul>
+</div>
 <h1 id="1-introduction-to-substring-search">1. Introduction to substring search</h1>
-<p>"most ingenious algorithm we've seen so far"<br>
-<strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </br></p>
+<p>"most ingenious algorithm we've seen so far"<br/>
+<strong>pb. </strong>having two strings, <code>pattern</code> and <code>text</code>, len(pattern)=M &lt;&lt; len(text)=N, try to find pattern in text.   </p>
 <p>ex. <code>indexOf</code> method of String in java.   </p>
 <h1 id="2-brute-force-substring-search">2. Brute-Force Substring Search</h1>
-<p>function signature: <br>
-<code>public static int search(String pat, String txt);</code> </br></p>
+<p>function signature: <br/>
+<code>public static int search(String pat, String txt);</code> </p>
 <p>brute-force algo: look for <code>pattern</code> at every position of <code>text</code>.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static int search(String pat, String txt){  </span>
-<span class="code-line">    int N=txt.length(), M=pat.length();  </span>
-<span class="code-line">    for(int i=0; i&lt;=N-M; i++){  </span>
-<span class="code-line">        int j;  </span>
-<span class="code-line">        for(j=0; j&lt;M &amp;&amp; pat.charAt(j)==txt.charAt(i+j); j++);  </span>
-<span class="code-line">        if(j==M) return i;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    return N;// not found  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static int search(String pat, String txt){  </span></span>
+<span class="code-line"><span class="err">    int N=txt.length(), M=pat.length();  </span></span>
+<span class="code-line"><span class="err">    for(int i=0; i&lt;=N-M; i++){  </span></span>
+<span class="code-line"><span class="err">        int j;  </span></span>
+<span class="code-line"><span class="err">        for(j=0; j&lt;M &amp;&amp; pat.charAt(j)==txt.charAt(i+j); j++);  </span></span>
+<span class="code-line"><span class="err">        if(j==M) return i;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    return N;// not found  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
-<p><strong>worst case: </strong>when txt/pat are repetitive → MN compares. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image.png"><br>
-problem with brute-force: always <em>backup</em> when mismatch. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image001.png"><br>
-<strong>brute-force alternative</strong> </br></img></br></br></img></br></p>
+<p><strong>worst case: </strong>when txt/pat are repetitive → MN compares. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image.png"/><br/>
+problem with brute-force: always <em>backup</em> when mismatch. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image001.png"/><br/>
+<strong>brute-force alternative</strong> </p>
 <ul>
 <li>j := number of matched chars in pattern  </li>
 <li>i := index of the end of matched char in text  </li>
 </ul>
 <p>⇒ do explicite backup when mismatch by <code>i -= j</code> </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static int search(String pat, String txt){  </span>
-<span class="code-line">    int N=txt.length(), M=pat.length(), i=0, j=0;  </span>
-<span class="code-line">    while(i&lt;N &amp;&amp; j&lt;M){  </span>
-<span class="code-line">        if(pat.charAt(j)==txt.charAt(i))   </span>
-<span class="code-line">            {j=i++; j++;}  </span>
-<span class="code-line">        else   </span>
-<span class="code-line">            {i=i-j+1; j=0}// &lt;==backup  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    return j==M ? i-M : N;  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static int search(String pat, String txt){  </span></span>
+<span class="code-line"><span class="err">    int N=txt.length(), M=pat.length(), i=0, j=0;  </span></span>
+<span class="code-line"><span class="err">    while(i&lt;N &amp;&amp; j&lt;M){  </span></span>
+<span class="code-line"><span class="err">        if(pat.charAt(j)==txt.charAt(i))   </span></span>
+<span class="code-line"><span class="err">            {j=i++; j++;}  </span></span>
+<span class="code-line"><span class="err">        else   </span></span>
+<span class="code-line"><span class="err">            {i=i-j+1; j=0}// &lt;==backup  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    return j==M ? i-M : N;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>challenge: want linear-time guarantee, and want to avoid backup.   </p>
 <h1 id="3-knuth-morris-pratt">3. Knuth-Morris-Pratt</h1>
 <p><em>"one of the coolest/trickiest algorithm covered in this course"</em> </p>
 <h3 id="intuition">intuition</h3>
-<p>suppose pattern = "BAAAAA", <br>
-if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </br></p>
+<p>suppose pattern = "BAAAAA", <br/>
+if we matched 5 chars in pattern and get mismatch on 6th char ⇒ we know the previous 5 chars are "BAAAA"  → no need to backup the i pointer.   </p>
 <p>KMP algorithm: clever method that <em>always</em> avoid backup !  </p>
 <h3 id="deterministic-finite-state-automaton-dfa">Deterministic finite state automaton (DFA)</h3>
 <ul>
 <li>finite states ,including start and halt state, indexed by j in the subtring pb  </li>
 <li>for each state: exactly one transition for each char in alphabet  </li>
 </ul>
-<p>ex. <br>
-states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   </br></p>
+<p>ex. <br/>
+states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,B,C}, finish if we reach state-6.   </p>
 <blockquote>
 <p><code>dfa[c][i]</code> = the next state if we are currently in state-i and encoutered char-c.  </p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image002.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image002.png"/> </p>
 <p><strong>interpretation of DFA for KMP algo</strong> </p>
 <blockquote>
 <p>in the DFA after reading <code>txt[i]</code>, the index of state is the <strong>number of matched chars</strong> in pattern, or length of *longest prefix of pat that is a suffix of txt[0:i]. *  </p>
@@ -277,23 +302,23 @@ states are 0~6, pat="ABABAC", transitions are indexed by chars in alphabet = {A,
 <li>the pointer i <em>never</em> decrements (thus we can do it in a <em>streaming</em> manner)  </li>
 </ul>
 <p>→ <em>if</em> <code>dfa[][]</code> <em>is precomputed</em>, java code is very very simple:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static int search(String pat, String txt, int[][] dfa){  </span>
-<span class="code-line">    int N=txt.length(), M=pat.length(), i, j=0;  </span>
-<span class="code-line">    for(i=0; i&lt;N &amp;&amp; j&lt;M; i++)  </span>
-<span class="code-line">        j = dfa[txt.charAt(i)][j];  </span>
-<span class="code-line">    return j==M ? i-M : N;  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">pat</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">txt</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="err">[][]</span><span class="w"> </span><span class="n">dfa</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="n">txt</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span><span class="w"> </span><span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfa</span><span class="o">[</span><span class="n">txt.charAt(i)</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">j</span><span class="o">==</span><span class="n">M</span><span class="w"> </span><span class="vm">?</span><span class="w"> </span><span class="n">i</span><span class="o">-</span><span class="n">M</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
-<p>running time: linear.<br>
-→ key pb: <em>how to build dfa efficiently</em> ?  </br></p>
+<p>running time: linear.<br/>
+→ key pb: <em>how to build dfa efficiently</em> ?  </p>
 <h3 id="dfa-construction">DFA construction</h3>
 <ul>
 <li><strong>match transition </strong>(easy part)  </li>
 </ul>
-<p>when at state j, for the char <code>c0==pat.charAt(j+1)</code>, just go on matching: <code>dfa[c0][j] = j+1</code><br>
-ex. (<em>pat="ABABAC"</em>)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image003.png"><br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image004.png"> </img></br></img></br></br></p>
+<p>when at state j, for the char <code>c0==pat.charAt(j+1)</code>, just go on matching: <code>dfa[c0][j] = j+1</code><br/>
+ex. (<em>pat="ABABAC"</em>)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image003.png"/><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image004.png"/> </p>
 <ul>
 <li><strong>mismatch transition</strong> (hard part)  </li>
 </ul>
@@ -306,8 +331,8 @@ ex. (<em>pat="ABABAC"</em>)<br>
 <li>if we go back to set j=0, and set i = i-j+1, then i is pointing at <code>pat[1]</code>, the text become <code>pat[1...j-1]+c</code>. We then let this string go through our dfa, the state that it achieves is the value of <code>dfa[c][j]</code>.   </li>
 </ul>
 </blockquote>
-<p><em>here is</em> <em>a concrete example:</em> <br>
-pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'  </br></p>
+<p><em>here is</em> <em>a concrete example:</em> <br/>
+pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'  </p>
 <blockquote>
 <ul>
 <li>we know the last 6 chars of the input = <code>pat[0...j-1]+c="ABABA"+"B"="ABABAB"</code> </li>
@@ -316,14 +341,14 @@ pattern = <code>"ABABAC"</code>, state <code>j=5</code>, char <code>c='B</code>'
 <li>so we know <code>dfa['B'][5]=4</code> </li>
 </ul>
 </blockquote>
-<p>similarly we can get <code>dfa['A'][5]=1</code>, as indicated below: <br>
-(<em>pat="ABABAC"</em>)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image005.png"> </img></br></br></p>
-<p>one concern: seems this simulation needs <code>j</code> steps ?<br>
-⇒ can be changed to be constant time if we maintain a <strong>state X := the state of simulating of input=pat[1...j-1]</strong><br>
-we maintain this state <code>X</code>, then for each <em>mismatched</em> char c, we just need to look at <code>dfa[c][X]</code>. <br>
-(<em>pat="ABABAC"</em>)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image006.png"> </img></br></br></br></br></p>
+<p>similarly we can get <code>dfa['A'][5]=1</code>, as indicated below: <br/>
+(<em>pat="ABABAC"</em>)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image005.png"/> </p>
+<p>one concern: seems this simulation needs <code>j</code> steps ?<br/>
+⇒ can be changed to be constant time if we maintain a <strong>state X := the state of simulating of input=pat[1...j-1]</strong><br/>
+we maintain this state <code>X</code>, then for each <em>mismatched</em> char c, we just need to look at <code>dfa[c][X]</code>. <br/>
+(<em>pat="ABABAC"</em>)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image006.png"/> </p>
 <p><strong>[Algo]</strong> </p>
 <blockquote>
 <ul>
@@ -338,145 +363,145 @@ we maintain this state <code>X</code>, then for each <em>mismatched</em> char c,
 </ul>
 </blockquote>
 <p>java code (can be written to be more compate):   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public int[][] constructDFA(String pat){  </span>
-<span class="code-line">    int R=256;//ASCII code    </span>
-<span class="code-line">    int M=pat.length();  </span>
-<span class="code-line">    int[][] dfa = new int[R][M];  </span>
-<span class="code-line">    // 1. fill matched transitions: dfa[pat.charAt(j)][j] = j+1   </span>
-<span class="code-line">    for(int j=0;j&lt;M;j++)  </span>
-<span class="code-line">        dfa[pat.charAt(j)][j] = j+1;  </span>
-<span class="code-line">    // 2. fill 1st column --&gt; can be ignored as java int default val=0  </span>
-<span class="code-line">    // 3. fill mismatched transitions     </span>
-<span class="code-line">    int X = 0;  </span>
-<span class="code-line">    for(int j=1;j&lt;M;j++){  </span>
-<span class="code-line">        for(int c=0;c&lt;R;c++)  </span>
-<span class="code-line">            if(c!=pat.charAt(j))  </span>
-<span class="code-line">                dfa[c][j] = dfa[c][X];  </span>
-<span class="code-line">        X = dfa[pat.charAt(j)][X];  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    return dfa;  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="err">[][]</span><span class="w"> </span><span class="n">constructDFA</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">pat</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">R</span><span class="o">=</span><span class="mi">256</span><span class="p">;</span><span class="o">//</span><span class="nf">ASCII</span><span class="w"> </span><span class="n">code</span><span class="w">    </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">M</span><span class="o">=</span><span class="n">pat</span><span class="p">.</span><span class="n">length</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="err">[][]</span><span class="w"> </span><span class="n">dfa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">R</span><span class="o">][</span><span class="n">M</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="n">matched</span><span class="w"> </span><span class="nl">transitions</span><span class="p">:</span><span class="w"> </span><span class="n">dfa</span><span class="o">[</span><span class="n">pat.charAt(j)</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">dfa</span><span class="o">[</span><span class="n">pat.charAt(j)</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="mi">1</span><span class="n">st</span><span class="w"> </span><span class="k">column</span><span class="w"> </span><span class="c1">--&gt; can be ignored as java int default val=0  </span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="n">mismatched</span><span class="w"> </span><span class="n">transitions</span><span class="w">     </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">c</span><span class="o">++</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="o">!=</span><span class="n">pat</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">j</span><span class="p">))</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                </span><span class="n">dfa</span><span class="o">[</span><span class="n">c</span><span class="o">][</span><span class="n">j</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfa</span><span class="o">[</span><span class="n">c</span><span class="o">][</span><span class="n">X</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfa</span><span class="o">[</span><span class="n">pat.charAt(j)</span><span class="o">][</span><span class="n">X</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dfa</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>running time and space: <strong>O(M*R)</strong>.  </p>
-<p><strong>prop.</strong> <br>
-KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   </br></p>
+<p><strong>prop.</strong> <br/>
+KMP algorithm runs in O(M+N) time, and constructs the dfa in O(M*R) time/space.   </p>
 <p>这个KMP算法, 我曾经想过好几个小时, 然后最后写出了特别复杂的代码, 虽然可以用但是基本写了就忘掉了. 但是经过老爷子这么一讲, 感觉这次印象深刻了好多. 老爷子NB...  </p>
-<p>八卦时间: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image007.png"> </img></br></p>
+<p>八卦时间: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image007.png"/> </p>
 <h1 id="4-boyer-moore_1">4. Boyer-Moore</h1>
-<p>Heuristic in practice.<br>
-i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </br></p>
+<p>Heuristic in practice.<br/>
+i does not necessarily go through all txt chars ⇒ i may <em>skip</em> some chars.   </p>
 <h3 id="intuition_1">intuition</h3>
 <ul>
 <li>for matching: scan chars <em>from right to left</em> (j will decrease when checking)  </li>
 <li>when encoutered a mismatch: we can skip &lt;= M chars (if the char is not in pattern)  </li>
 </ul>
-<p>ex. (pat="NEEDLE")<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image008.png"> </img></br></p>
+<p>ex. (pat="NEEDLE")<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image008.png"/> </p>
 <p>→ pb: how to skip?   </p>
 <h3 id="mismatch-character-heuristic">mismatch character heuristic</h3>
 <p><em>note</em>: the <code>i</code> always points to the <em>beginning</em> of the substring (<code>txt[i,...,i+M-1]</code>) to be checked for match.  </p>
-<p><strong>case 1. mismatched char not in pattern</strong><br>
-easy case → just move i to the right of this char. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image009.png"> </img></br></br></p>
+<p><strong>case 1. mismatched char not in pattern</strong><br/>
+easy case → just move i to the right of this char. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image009.png"/> </p>
 <p><strong>case 2. mismatched char in pattern</strong> </p>
 <blockquote>
-<p><strong>heuristic:</strong> line up i with the <strong>rightmost</strong><em> char in pattern</em>.<br>
-<code>i += skip</code><br>
-where <em>skip length = j - index of rightmost char in pattern</em> </br></br></p>
+<p><strong>heuristic:</strong> line up i with the <strong>rightmost</strong><em> char in pattern</em>.<br/>
+<code>i += skip</code><br/>
+where <em>skip length = j - index of rightmost char in pattern</em> </p>
 </blockquote>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image010.png"> </img></p>
-<p>note: this does not always help, in the example below, i even <em>backups</em>: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image011.png"><br>
-to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </br></img></br></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image010.png"/> </p>
+<p>note: this does not always help, in the example below, i even <em>backups</em>: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image011.png"/><br/>
+to avoid backup, in this case we just <em>increment i by 1</em> (heuristic doesn't help in this case).  </p>
 <h3 id="implementation">implementation</h3>
-<p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image012.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>int[] right = new int[M];  </span>
-<span class="code-line">for(int i=0;i&lt;R;i++) right[i] = -1;//value for chars not in pattern  </span>
-<span class="code-line">for(int j=0;j&lt;M;j++){  </span>
-<span class="code-line">    right[pat.charAt(j)]=j;  </span>
-<span class="code-line">}</span>
+<p>use an array <code>right[]</code> as <em>skip table</em>, <code>right[c]</code> is the index of rightmost occurrence of char c (-1 if c not in pat). <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image012.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nc">int</span><span class="err">[]</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">M</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="nf">right</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="o">//</span><span class="k">value</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">pattern</span><span class="w">  </span></span>
+<span class="code-line"><span class="k">for</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nf">right</span><span class="o">[</span><span class="n">pat.charAt(j)</span><span class="o">]=</span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
 </pre></div>
 <p>using this table we can implemente the heuristic algorithm:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static int search(String pat, String txt, int[] right){  </span>
-<span class="code-line">    int N=txt.length(), M=pat.length();  </span>
-<span class="code-line">    int skip;  </span>
-<span class="code-line">    for(int i=0;i&lt;N-M;i+=skip){  </span>
-<span class="code-line">        skip = 0;  </span>
-<span class="code-line">        for(int j=M-1;j&gt;=0;j++)  </span>
-<span class="code-line">            if(pat.charAt(j)!=txt.charAt(i+j)){// when mismatch happens  </span>
-<span class="code-line">                skip = Math.max(1,j - right[txt.charAt(i+j)]);// skip if we can, else just increment i by 1  </span>
-<span class="code-line">                break;  </span>
-<span class="code-line">            }  </span>
-<span class="code-line">        if(skip==0)// if the above for loop finishes without changing skip --&gt; we are done.    </span>
-<span class="code-line">            return i;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">    return N;// pattern not found  </span>
-<span class="code-line">}</span>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static int search(String pat, String txt, int[] right){  </span></span>
+<span class="code-line"><span class="err">    int N=txt.length(), M=pat.length();  </span></span>
+<span class="code-line"><span class="err">    int skip;  </span></span>
+<span class="code-line"><span class="err">    for(int i=0;i&lt;N-M;i+=skip){  </span></span>
+<span class="code-line"><span class="err">        skip = 0;  </span></span>
+<span class="code-line"><span class="err">        for(int j=M-1;j&gt;=0;j++)  </span></span>
+<span class="code-line"><span class="err">            if(pat.charAt(j)!=txt.charAt(i+j)){// when mismatch happens  </span></span>
+<span class="code-line"><span class="err">                skip = Math.max(1,j - right[txt.charAt(i+j)]);// skip if we can, else just increment i by 1  </span></span>
+<span class="code-line"><span class="err">                break;  </span></span>
+<span class="code-line"><span class="err">            }  </span></span>
+<span class="code-line"><span class="err">        if(skip==0)// if the above for loop finishes without changing skip --&gt; we are done.    </span></span>
+<span class="code-line"><span class="err">            return i;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    return N;// pattern not found  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <h3 id="analysis">analysis</h3>
 <p><strong>property</strong>. the Boyer-Moore heuristic (in practice) takes about <strong>N/M</strong> (sublinear!) compares to search.   </p>
 <p>好神奇, 比KMP还要简单的算法, 实际效率这么高...  </p>
-<p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image013.png"><br>
-→ can be improved...   </br></img></br></p>
+<p>worst-case performance: <strong>N*M</strong>... 这一点不如KMP. <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image013.png"/><br/>
+→ can be improved...   </p>
 <h1 id="5-rabin-karp_1">5. Rabin-Karp</h1>
 <p>两个图灵奖的大神发明的算法..   </p>
 <h3 id="intuition_2">intuition</h3>
-<p>basic idea: <strong>modular hashing</strong><br>
-ex. for strings of numbers   </br></p>
+<p>basic idea: <strong>modular hashing</strong><br/>
+ex. for strings of numbers   </p>
 <ul>
 <li>compute hash fcn (for number strings is easy: take the string and treat it as a number, then %Q where Q is a big prime number).   </li>
 <li>for a pointer i →corresponds to the substring <code>txt[i, ..., i+M-1]</code>  → check hash for match  </li>
 </ul>
-<p>(below: text=3141592653589793, pattern=26535)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image014.png"> </img></br></p>
+<p>(below: text=3141592653589793, pattern=26535)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image014.png"/> </p>
 <h3 id="computing-the-hash-function-efficiently">computing the hash function efficiently</h3>
-<p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image015.png"><br>
-⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </br></img></br></p>
+<p>let ti be the ith char in txt, the hashcode for substring <code>txt[i,...,i+M-1]</code> is: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image015.png"/><br/>
+⇒ just an M-digit base-R integer modulo Q ! <code>poly(M, R) % Q</code>*. *  </p>
 <ul>
 <li><strong>Honor's method</strong> </li>
 </ul>
-<p>linear time algorithm for evaluating polynomial. <br>
-recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </br></p>
-<p>ex. (R=10, M=5)<br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image016.png"> </img></br></p>
-<div class="highlight"><pre><span class="code-line"><span></span>private long hash(String key, int M){  </span>
-<span class="code-line">    long h=0;  </span>
-<span class="code-line">    for(int i=0;i&lt;M;i++)  </span>
-<span class="code-line">        h = ( h*R + key.charAt(i) ) % Q  </span>
-<span class="code-line">    return h;  </span>
-<span class="code-line">}</span>
+<p>linear time algorithm for evaluating polynomial. <br/>
+recursive equation: <code>poly(i, R) = poly(i-1, R)*R+ti</code> </p>
+<p>ex. (R=10, M=5)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image016.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private long hash(String key, int M){  </span></span>
+<span class="code-line"><span class="err">    long h=0;  </span></span>
+<span class="code-line"><span class="err">    for(int i=0;i&lt;M;i++)  </span></span>
+<span class="code-line"><span class="err">        h = ( h*R + key.charAt(i) ) % Q  </span></span>
+<span class="code-line"><span class="err">    return h;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <ul>
 <li>if we know x_i, the x_i+1 can be infered:   </li>
 </ul>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image017.png"><br>
-⇒ x_i+1 can be computed in constant time: <br>
-<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image018.png"><br>
-⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </br></img></br></br></img></p>
-<div class="highlight"><pre><span class="code-line"><span></span>public static int search(String txt, String pat){  </span>
-<span class="code-line">    int N=txt.length(), M=pat.length();  </span>
-<span class="code-line">    long pathash = hash(pat, M);      </span>
-<span class="code-line">    int RM = R^(M-1);// &lt;-- pseudo code, store value of R^(M-1)  </span>
-<span class="code-line">    long txthash = hash(txt, M);// txthash will be maintained  </span>
-<span class="code-line">    for(int i=0;i&lt;N-M;i++){  </span>
-<span class="code-line">        if(txthash==pathash &amp;&amp; checkMatch(i,txt,pat))   </span>
-<span class="code-line">            return i;  </span>
-<span class="code-line">        txthash = ( (txthash - txt.charAt(i)*RM)*R + txt.charAt(i+M) ) % Q;  </span>
-<span class="code-line">    }  </span>
-<span class="code-line">}</span>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image017.png"/><br/>
+⇒ x_i+1 can be computed in constant time: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image018.png"/><br/>
+⇒ we precompute R^(M-1) and maintain the hash number, and check for match !   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static int search(String txt, String pat){  </span></span>
+<span class="code-line"><span class="err">    int N=txt.length(), M=pat.length();  </span></span>
+<span class="code-line"><span class="err">    long pathash = hash(pat, M);      </span></span>
+<span class="code-line"><span class="err">    int RM = R^(M-1);// &lt;-- pseudo code, store value of R^(M-1)  </span></span>
+<span class="code-line"><span class="err">    long txthash = hash(txt, M);// txthash will be maintained  </span></span>
+<span class="code-line"><span class="err">    for(int i=0;i&lt;N-M;i++){  </span></span>
+<span class="code-line"><span class="err">        if(txthash==pathash &amp;&amp; checkMatch(i,txt,pat))   </span></span>
+<span class="code-line"><span class="err">            return i;  </span></span>
+<span class="code-line"><span class="err">        txthash = ( (txthash - txt.charAt(i)*RM)*R + txt.charAt(i+M) ) % Q;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
 </pre></div>
 <p>更新txthash的地方可能会有modulo造成的问题... 不过先这样写吧..   </p>
 <p>for collisions: <em>Monte Carlo</em> vs. <em>Las Vegas</em> </p>
 <h3 id="analysis_1">analysis</h3>
-<p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br>
-<strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </br></p>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image019.png"> </img></p>
+<p><strong>Theory</strong>: if Q is sufficiently large (~M*N^2), the probability of collision is ~1/N. <br/>
+<strong>Practice</strong>: choose Q to be sufficiently large, and collision probability is ~1/Q.   </p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image019.png"/> </p>
 <h1 id="summery_1">Summery</h1>
-<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image020.png"> </img></p>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_2/pasted_image020.png"/> </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
