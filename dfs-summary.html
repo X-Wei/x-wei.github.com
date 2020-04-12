@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="Recursive DFS Non-recursive DFS (for Trees) DFS with depth DFS for binary tree: Preorder traversal DFS with path Cycle Detection Topology Sort 今天总结一下也许是搜索问题里最重要的算法: DFS ! 由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息: public class GraphNode{ int val; List&lt;GraphNode&gt; neighbors; } 为了防止重复, 仍然用一个HaseSet记录走过的节点: HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;(); Recursive DFS 首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点 ..." />
+        <meta name="description" content="今天总结一下也许是搜索问题里最重要的算法: DFS ! 由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息: public class GraphNode{ int val; List&lt;GraphNode&gt; neighbors; } 为了防止重复, 仍然用一个HaseSet记录走过的节点: HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;(); Recursive DFS 首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS. 递归的DFS代码非常简洁: public void DFS(GraphNode nd){ System.out.println(nd.val); visited.add(nd); for(GraphNode next: nd.neighbors){ if ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="深度优先搜索(DFS)小结"/>
         <meta property="og:url" content="http://x-wei.github.io/dfs-summary.html"/>
-        <meta property="og:description" content="Recursive DFS Non-recursive DFS (for Trees) DFS with depth DFS for binary tree: Preorder traversal DFS with path Cycle Detection Topology Sort 今天总结一下也许是搜索问题里最重要的算法: DFS ! 由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息: public class GraphNode{ int val; List&lt;GraphNode&gt; neighbors; } 为了防止重复, 仍然用一个HaseSet记录走过的节点: HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;(); Recursive DFS 首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点 ..."/>
+        <meta property="og:description" content="今天总结一下也许是搜索问题里最重要的算法: DFS ! 由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息: public class GraphNode{ int val; List&lt;GraphNode&gt; neighbors; } 为了防止重复, 仍然用一个HaseSet记录走过的节点: HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;(); Recursive DFS 首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS. 递归的DFS代码非常简洁: public void DFS(GraphNode nd){ System.out.println(nd.val); visited.add(nd); for(GraphNode next: nd.neighbors){ if ..."/>
         <meta property="article:published_time" content="2015-10-18" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -210,18 +210,7 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="深度优先搜索(DFS)小结">深度优先搜索(DFS)小结</a><ul><li><a class="toc-href" href="#recursive-dfs" title="Recursive DFS">Recursive DFS</a></li><li><a class="toc-href" href="#non-recursive-dfs" title="Non-recursive DFS">Non-recursive DFS</a></li><li><a class="toc-href" href="#for-trees-dfs-with-depth" title="(for Trees) DFS with depth">(for Trees) DFS with depth</a></li><li><a class="toc-href" href="#dfs-for-binary-tree-preorder-traversal" title="DFS for binary tree: Preorder traversal">DFS for binary tree: Preorder traversal</a></li><li><a class="toc-href" href="#dfs-with-path" title="DFS with path">DFS with path</a></li><li><a class="toc-href" href="#cycle-detection" title="Cycle Detection">Cycle Detection</a></li><li><a class="toc-href" href="#topology-sort" title="Topology Sort">Topology Sort</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <div class="toc">
-<ul>
-<li><a href="#recursive-dfs">Recursive DFS</a></li>
-<li><a href="#non-recursive-dfs">Non-recursive DFS</a></li>
-<li><a href="#for-trees-dfs-with-depth">(for Trees) DFS with depth</a></li>
-<li><a href="#dfs-for-binary-tree-preorder-traversal">DFS for binary tree: Preorder traversal</a></li>
-<li><a href="#dfs-with-path">DFS with path</a></li>
-<li><a href="#cycle-detection">Cycle Detection</a></li>
-<li><a href="#topology-sort">Topology Sort</a></li>
-</ul>
-</div>
-<p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
+                <p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
 <p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{      </span></span>
 <span class="code-line"><span class="err">    int val;      </span></span>

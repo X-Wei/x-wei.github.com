@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="http://x-wei.github.io/" rel="alternate"></link><link href="http://x-wei.github.io/feeds/tag-ssh.atom.xml" rel="self"></link><id>http://x-wei.github.io/</id><updated>2016-07-26T00:00:00+02:00</updated><entry><title>两层ssh连接(2-hop ssh connection)代理配置</title><link href="http://x-wei.github.io/double-hop-ssh.html" rel="alternate"></link><published>2016-07-26T00:00:00+02:00</published><updated>2016-07-26T00:00:00+02:00</updated><author><name>syf</name></author><id>tag:x-wei.github.io,2016-07-26:double-hop-ssh.html</id><summary type="html">&lt;p&gt;问题: 
 现在本地ssh连接eth的daint服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到daint. 现在配置本地的ssh代理使之可以一次完成. &lt;/p&gt;
-&lt;h1 id="sshkey"&gt;第一步: 生成sshkey&lt;/h1&gt;
+&lt;h1 id="di-yi-bu-sheng-cheng-sshkey"&gt;第一步: 生成sshkey&lt;/h1&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;ssh-keygen&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="err"&gt;cat ~/.ssh/id_rsa.pub | ssh your_username@ela.cscs.ch 'cat &amp;gt;&amp;gt; ~/.ssh/authorized_keys'&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="err"&gt;ssh your_username@ela.cscs.ch&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1 id="sshconfig"&gt;第二步: 修改.ssh/config文件内容&lt;/h1&gt;
+&lt;h1 id="di-er-bu-xiu-gai-sshconfigwen-jian-nei-rong"&gt;第二步: 修改.ssh/config文件内容&lt;/h1&gt;
 &lt;p&gt;用文本编辑器打开&lt;code&gt;.ssh/config&lt;/code&gt;文件, 添加如下内容: &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;Host daint&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="err"&gt;    Hostname daint101&lt;/span&gt;&lt;/span&gt;
@@ -17,18 +17,18 @@
 &lt;span class="code-line"&gt;&lt;span class="err"&gt;    IdentityFile ~/.ssh/id_rsa&lt;/span&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;&lt;span class="err"&gt;    ProxyCommand ssh -q -Y your_username@ela.cscs.ch netcat %h %p -w 10&lt;/span&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;h1 id="ssh"&gt;直连第二层ssh&lt;/h1&gt;
+&lt;h1 id="zhi-lian-di-er-ceng-ssh"&gt;直连第二层ssh&lt;/h1&gt;
 &lt;p&gt;进行了以上配置以后, 连接到cscs就不再需要两层ssh的命令了, 直接:  &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;$ssh daint&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;即可 !&lt;/p&gt;
-&lt;h1 id="rsync"&gt;用rsync同步远程文件夹&lt;/h1&gt;
+&lt;h1 id="yong-rsynctong-bu-yuan-cheng-wen-jian-jia"&gt;用rsync同步远程文件夹&lt;/h1&gt;
 &lt;p&gt;例子: 把本地文件夹同步到第二层ssh的目录下.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;rsync -a --progress ~/Downloads/nn_coref-master daint:/scratch/daint/your_username/code&lt;/code&gt;&lt;/p&gt;</summary><category term="ssh"></category></entry><entry><title>putty使用备忘</title><link href="http://x-wei.github.io/putty%E4%BD%BF%E7%94%A8%E5%A4%87%E5%BF%98.html" rel="alternate"></link><published>2014-07-28T00:00:00+02:00</published><updated>2014-07-28T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2014-07-28:putty使用备忘.html</id><summary type="html">&lt;p&gt;最近要用SSH连接服务器, Windows下面当然就是用putty了, 遇到的问题总结一下. &lt;/p&gt;
-&lt;h2 id="session"&gt;保存session&lt;/h2&gt;
+&lt;h2 id="bao-cun-session"&gt;保存session&lt;/h2&gt;
 &lt;p&gt;打开putty.exe以后, 输入服务器ip, 之后先别点击登录, 先保存一下session下一次就不用再输入了: &lt;/p&gt;
 &lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/putty使用备忘/pasted_image.png"/&gt;&lt;/p&gt;
 &lt;p&gt;之后点击登录就好了. &lt;/p&gt;
-&lt;h2 id="_1"&gt;本地和服务器之间传输文件&lt;/h2&gt;
+&lt;h2 id="ben-di-he-fu-wu-qi-zhi-jian-chuan-shu-wen-jian"&gt;本地和服务器之间传输文件&lt;/h2&gt;
 &lt;p&gt;传输的时候貌似不能用linux里的scp命令, 而需要使用另一个putty的工具: &lt;code&gt;psftp&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;下载的时候那个putty.zip压缩包里有一个&lt;code&gt;psftp.exe&lt;/code&gt;, 点击它就打开了. psftp也是一个命令行的工具, 和ssh类似, 用&lt;code&gt;pwd/ls/cd&lt;/code&gt;等在&lt;strong&gt;服务器的&lt;/strong&gt;文件系统里进行移动. &lt;/p&gt;
 &lt;p&gt;而在&lt;strong&gt;本地的&lt;/strong&gt;文件系统里移动的话, 用&lt;code&gt;lpwd/lcd/lls.&lt;/code&gt;&lt;/p&gt;

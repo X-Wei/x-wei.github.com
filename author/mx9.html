@@ -197,23 +197,19 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#floyd-warshall">任意两点最短路径: Floyd-Warshall</a></li>
-<li><a href="#dijkstra">单源最短路径: Dijkstra</a></li>
-<li><a href="#bellman-ford">有负权边的单源最短路径: Bellman-Ford</a></li>
-<li><a href="#more">More</a></li>
-</ul>
-</div>
-<p>weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    </p>
+                    <div class="summary"><p>weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    </p>
 <p>简单起见(这回只写伪代码好了), 对于图的定义如下:   </p>
 <ul>
 <li>node index = <code>{1,2,...,n}</code> </li>
 <li><code>e[u,v]</code> = distance of edge(u,v); if (u,v) is not an edge, <code>e[u,v]=INF</code> </li>
 <li>令N=点的数量, M=边的数量   </li>
 </ul>
-<h1 id="floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
-<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source ...</p>
+<h1 id="ren-yi-liang-dian-zui-duan-lu-jing-floyd-warshall">任意两点最短路径: Floyd-Warshall</h1>
+<p>Floyd算法解决的问题是: 对于<strong>任意</strong>两个节点<code>s</code>(source)和<code>t</code>(target), 求s到达t的最短路径.    </p>
+<p>Floyd算法的思想是动态规划:    </p>
+<blockquote>
+<ul>
+<li>定义<code>d ...</code></li></ul></blockquote>
                     </div>
                 </div>
             </article>
@@ -254,18 +250,7 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#recursive-dfs">Recursive DFS</a></li>
-<li><a href="#non-recursive-dfs">Non-recursive DFS</a></li>
-<li><a href="#for-trees-dfs-with-depth">(for Trees) DFS with depth</a></li>
-<li><a href="#dfs-for-binary-tree-preorder-traversal">DFS for binary tree: Preorder traversal</a></li>
-<li><a href="#dfs-with-path">DFS with path</a></li>
-<li><a href="#cycle-detection">Cycle Detection</a></li>
-<li><a href="#topology-sort">Topology Sort</a></li>
-</ul>
-</div>
-<p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
+                    <div class="summary"><p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
 <p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{      </span></span>
 <span class="code-line"><span class="err">    int val;      </span></span>
@@ -275,7 +260,13 @@ mx's blog            </a>
 <p>为了防止重复, 仍然用一个HaseSet记录走过的节点:    </p>
 <p><code>HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();</code> </p>
 <h2 id="recursive-dfs">Recursive DFS</h2>
-<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点 ...</p>
+<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
+<p>递归的DFS代码非常简洁:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void DFS(GraphNode nd){      </span></span>
+<span class="code-line"><span class="err">    System.out.println(nd.val);    </span></span>
+<span class="code-line"><span class="err">    visited.add(nd);   </span></span>
+<span class="code-line"><span class="err">    for(GraphNode next: nd.neighbors){   </span></span>
+<span class="code-line"><span class="err">        if ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -366,16 +357,7 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#bfs-for-treesgraphs">BFS for trees/graphs</a></li>
-<li><a href="#bfs-with-distance">BFS with distance</a></li>
-<li><a href="#properties">properties</a></li>
-<li><a href="#bfs-by-layer">BFS "by layer"</a></li>
-<li><a href="#complexity">complexity</a></li>
-</ul>
-</div>
-<p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br/>
+                    <div class="summary"><p>今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.  <br/>
 由于树的BFS只是图的BFS的一种特殊情况, 而且比较简单不需要visited标记, 这里只写一下图的BFS好了.  <br/>
 先定义一个Graph类, 这里在每一个节点保存邻居信息:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{   </span></span>
@@ -386,7 +368,10 @@ mx's blog            </a>
 <h2 id="bfs-for-treesgraphs">BFS for trees/graphs</h2>
 <p>图的遍历需要注意不走重复节点, 所以需要一个HashSet(名字叫visited)来保存哪些节点已经访问过了. 需要注意的是, <em>在把一个节点放进队列queue的时刻就要把它放进visited</em>, 而不是在队列里取出来的时刻再放.    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void BFS(GraphNode start){   </span></span>
-<span class="code-line"><span class="err">    LinkedList&lt;GraphNode&gt; q = new ...</span></span></pre></div>
+<span class="code-line"><span class="err">    LinkedList&lt;GraphNode&gt; q = new LinkedList&lt;GraphNode&gt;();   </span></span>
+<span class="code-line"><span class="err">    HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();   </span></span>
+<span class="code-line"><span class="err">    q.push(start);   </span></span>
+<span class="code-line"><span class="err">    visited ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -427,10 +412,7 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul></ul>
-</div>
-<p>Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    </p>
+                    <div class="summary"><p>Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    </p>
 <p><img alt="" class="img-responsive" src="../images/algo-ds-mindmap/Algo%20%26%20DS.png"/> </p>
 <p>I shall update its content later on. And maybe write some blog entries on some of the items.   </p>
 <p>This mindmap is drawn using <a href="http://www.xmind.net/">xmind</a>.   </p>
@@ -521,12 +503,12 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>当年装mint 17.1的时候心想我的电脑有4GB内存怎么可能不够用, 于是果断没有分一个swap分区, 呵呵...   </p>
 <p>然后就看到chrome这几年来吃内存越来越严重, 导致我开多几个标签页再开eclipse的话电脑就很有可能直接卡死... 郁闷啊 ! 于是决定给系统增加一个swap分区. 之前给<a href="http://thealternative.ch/index.php?view=linuxdays">thealternative</a>写邮件询问这件事, Sandro Kalbermatter同学热情回复了我告诉我怎么做, 按照他说的果然成功了, 特此一记.    </p>
-<h2 id="step1-swap">step1. 建立swap分区</h2>
+<h2 id="step1-jian-li-swapfen-qu">step1. 建立swap分区</h2>
 <p>首先, 用gparted调整磁盘分区, 缩小一个磁盘的大小, 然后用空出来的空间新建一个swap分区.    </p>
 <p>关于swap分区应该多大, 根据<a href="http://www.linux.com/news/software/applications/8208-all-about-linux-swap-space">这个帖子</a>, 大约是内存的2-3倍, 不过我只是分了和内存一样大的4G空间, 感觉这样应该够用了(吧).   </p>
 <p>我是把存放文件的500G分区缩小, 这个过程会比较慢, 大概二十多分钟以后才结束:  <br/>
 <img alt="" class="img-responsive" src="../images/linux-swap/pasted_image.png"/> </p>
-<h2 id="step2-fstab">step2. 编辑fstab</h2>
+<h2 id="step2-bian-ji-fstab">step2. 编辑fstab</h2>
 <p>建立好了swap分区以后, 打开终端, 输入<code>sudo blkid</code>查看所有的磁盘分区.    </p>
 <div class="highlight"><pre><span class="code-line"><span></span>$ sudo blkid   </span>
 <span class="code-line">/dev/sda1: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">"FILES"</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">"ddefc0a7-30a1-42fb-a71a-0aebb55cb0b3"</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext2 ...</span></span></pre></div>
@@ -629,11 +611,11 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>python科学计算包的基础是numpy, 里面的array类型经常遇到. 一开始可能把这个array和python内建的列表(list)混淆, 这里简单总结一下列表(list), 多维数组(np.ndarray)和矩阵(np.matrix)的区别.    </p>
-<h2 id="list">list列表</h2>
+<h2 id="listlie-biao">list列表</h2>
 <p>列表属于python的三种基本集合类型之一, 其他两种是元组(tuple)和字典(dict). tuple和list区别主要在于是不是mutable的.    </p>
 <p>list和java里的数组不同之处在于, python的list可以包含任意类型的对象, 一个list里可以包含int, string或者其他任何对象, 另外list是可变长度的(list有<code>append</code>, <code>extend</code>和<code>pop</code>等方法).   </p>
 <p>所以, python内建的所谓"列表"其实是功能很强大的数组, 类比一下可以说它对应于java里面的<code>ArrayList&lt;Object&gt;</code> .    </p>
-<h2 id="ndarray">ndarray多维数组</h2>
+<h2 id="ndarrayduo-wei-shu-zu">ndarray多维数组</h2>
 <p>ndarray是numpy的基石, 其实它更像一个java里面的标准数组: 所有元素有一个相同数据类型(dtype), 不过大小不是固定的.    </p>
 <p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ ...</code></p>
                     </div>
@@ -676,33 +658,18 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
+                    <div class="summary"><p><em>Can we do better than BST if we do not need ordered operations ?</em> </p>
+<p>(No compare methods, use equals method)   </p>
+<p>Idea: save items in an array.  <br/>
+<strong>Hash function</strong>: method for calclulating the array index of  a key.    </p>
+<p>Issues:    </p>
 <ul>
-<li><a href="#1-hash-functions">1. Hash Functions</a><ul>
-<li><a href="#javas-hashing">Java's hashing</a></li>
-<li><a href="#modeular-hasing">Modeular hasing</a></li>
-<li><a href="#uniform-hasing-assumption">uniform hasing assumption</a></li>
+<li>computing hash function   </li>
+<li>equality tests   </li>
+<li>collision resolution   </li>
 </ul>
-</li>
-<li><a href="#2-separate-chaining">2. Separate Chaining</a><ul>
-<li><a href="#implementation">implementation</a></li>
-<li><a href="#analysis">analysis</a></li>
-</ul>
-</li>
-<li><a href="#3-linear-probing">3. Linear Probing</a><ul>
-<li><a href="#implementation_1">implementation</a></li>
-<li><a href="#cluster">cluster</a></li>
-</ul>
-</li>
-<li><a href="#4-hash-table-context">4. Hash Table Context</a><ul>
-<li><a href="#seperate-chaining-vs-linear-probing">Seperate chaining VS linear probing</a></li>
-<li><a href="#variations">variations</a></li>
-<li><a href="#st-choice-hash-tables-vs-balanced-search-trees">ST choice: hash tables VS balanced search trees</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p><em>Can we do better than BST if we do not need ...</em></p>
+<p><em>Classic space-time tradeoff.</em> </p>
+<h1 id="1-hash-functions">1. Hash Functions ...</h1>
                     </div>
                 </div>
             </article>

@@ -195,41 +195,19 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#requests">requests基础用法</a><ul>
-<li><a href="#html">抓取html内容</a></li>
-<li><a href="#_1">编码问题</a></li>
-<li><a href="#scrapy-shellhtml">用scrapy shell检查得到的html文件内容</a></li>
-<li><a href="#header">修改header, 伪装浏览器</a></li>
-</ul>
-</li>
-<li><a href="#lxmlxpath">lxml以及xpath语法</a><ul>
-<li><a href="#xpath">xpath基础语法</a></li>
-<li><a href="#chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</a></li>
-<li><a href="#lxmletreexpath">用lxml.etree操作xpath</a></li>
-<li><a href="#xpath_1">xpath使用技巧</a></li>
-</ul>
-</li>
-<li><a href="#chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul>
-<li><a href="#dev-toolscookies">用dev-tools获取登录cookies</a></li>
-<li><a href="#requestscookies">在requests里使用cookies</a></li>
-</ul>
-</li>
-<li><a href="#_2">保存爬取的内容</a><ul>
-<li><a href="#csv">保存文本内容: csv</a></li>
-<li><a href="#_3">保存非文本内容</a></li>
-<li><a href="#_4">并行下载</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
+                    <div class="summary"><p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
 <p>安装需要的库(python2):   </p>
 <p><code>pip install requests, lxml</code> </p>
 <p>然后在Python程序最开始导入:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
-<span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import ...</span></span></pre></div>
+<span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span></span>
+</pre></div>
+<h1 id="requestsji-chu-yong-fa">requests基础用法</h1>
+<h3 id="zhua-qu-htmlnei-rong">抓取html内容</h3>
+<p>用requests获取目标网址的html代码非常简单, 只需要用<code>requests.get</code>方法, 传入网址URL即可.   </p>
+<p>举个例子, 想要抓取<a href="https://zh.wikiquote.org/wiki/Wikiquote:%E9%A6%96%E9%A1%B5">维基语录</a>的HTML内容, 代码很简单:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
+<span class="code-line"><span class="err">r ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -270,31 +248,18 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#collections">collections</a></li>
-<li><a href="#itertools">itertools</a></li>
-<li><a href="#bitmap">bitmap</a><ul>
-<li><a href="#use-bitmap-for-combinations-2n-possibilities">use bitmap for combinations (2^N possibilities)</a></li>
-<li><a href="#setclean-kth-bit">set/clean Kth bit</a></li>
-<li><a href="#count-nb-of-1s-in-a-bitmap">count nb of 1s in a bitmap</a></li>
-</ul>
-</li>
-<li><a href="#networkx">networkx</a><ul>
-<li><a href="#constructing-graph">constructing graph</a></li>
-<li><a href="#digraph-topo-sort-cycle-detection-strongly-connected-component">DiGraph: topo-sort, cycle-detection, strongly connected component</a></li>
-<li><a href="#undirected-graph-connected-component-mst">Undirected Graph: connected component, MST</a></li>
-<li><a href="#maxflow">maxflow</a></li>
-<li><a href="#maximum-matching">maximum matching</a></li>
-</ul>
-</li>
-<li><a href="#pulp">pulp</a></li>
-</ul>
-</div>
-<p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
+                    <div class="summary"><p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
 <h1 id="collections">collections</h1>
 <p>py自带的一些好用的数据结构...<br/>
-<a href="https://docs.python.org/2/library/collections.html">https ...</a></br/></p>
+<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </p>
+<p><code>from collections import Counter, deque, defaultdict</code> </p>
+<h1 id="itertools">itertools</h1>
+<p>主要是用来穷举的时候它里面一些函数很好用... </p>
+<p><a href="https://docs.python.org/2/library/itertools.html">https://docs.python.org/2/library/itertools.html</a> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">combinations</span>   </span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">'ABCD'</span><span class="p">;</span> <span class="n">b</span><span class="o">=</span><span class="s1">'EFG'</span>   </span>
+<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    </span>
+<span class="code-line"><span class="k">print ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -335,49 +300,20 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#_1">模块和包</a><ul>
-<li><a href="#_2">导入模块</a></li>
-<li><a href="#_3">动态导入模块</a></li>
-<li><a href="#__future__">使用__future__</a></li>
-<li><a href="#_4">安装第三方模块</a></li>
-</ul>
-</li>
-<li><a href="#_5">面向对象编程基础</a><ul>
-<li><a href="#_6">初始化实例属性</a></li>
-<li><a href="#_7">访问限制</a></li>
-<li><a href="#_8">创建类属性</a></li>
-<li><a href="#_9">定义实例方法</a></li>
-<li><a href="#_10">定义类方法</a></li>
-</ul>
-</li>
-<li><a href="#_11">类的继承</a><ul>
-<li><a href="#_12">判断类型</a></li>
-<li><a href="#_13">多态</a></li>
-<li><a href="#_14">多重继承</a></li>
-<li><a href="#_15">获取对象信息</a></li>
-</ul>
-</li>
-<li><a href="#_16">定制类</a><ul>
-<li><a href="#_17">特殊方法</a></li>
-<li><a href="#str-repr">str 和 repr</a></li>
-<li><a href="#cmp">cmp</a></li>
-<li><a href="#len">len</a></li>
-<li><a href="#_18">数学运算</a></li>
-<li><a href="#_19">类型转换</a></li>
-<li><a href="#property">@property</a></li>
-<li><a href="#slots">slots</a></li>
-<li><a href="#call">call</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p><a href="http://www.imooc.com/learn/317">http://www.imooc.com/learn/317</a></p>
-<h1 id="_1">模块和包</h1>
+                    <div class="summary"><p><a href="http://www.imooc.com/learn/317">http://www.imooc.com/learn/317</a></p>
+<h1 id="mo-kuai-he-bao">模块和包</h1>
 <p><strong>包</strong>: 文件夹 (可以有多级), 且包含<code>__init__.py</code>文件(每层都要有) 
 <strong>模块</strong>: py文件</p>
-<p>代码分开放在多个py文件(<strong>模块</strong>名=文件名). 同名变量互不影响 ...</p>
+<p>代码分开放在多个py文件(<strong>模块</strong>名=文件名). 同名变量互不影响. </p>
+<p>模块名冲突: 把同名模块放在不同<strong>包</strong>中. </p>
+<h3 id="dao-ru-mo-kuai">导入模块</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span></span>
+<span class="code-line"><span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">logger</span></span>
+</pre></div>
+<p>引用时: 使用完整的路径(包+模块名). ex. <code>p1.util.f()</code></p>
+<h3 id="dong-tai-dao-ru-mo-kuai">动态导入模块</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">try</span><span class="p">:</span></span>
+<span class="code-line">    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import ...</span></span></pre></div>
                     </div>
                 </div>
             </article>
@@ -418,28 +354,7 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#_1">高阶函数</a><ul>
-<li><a href="#map">map()</a></li>
-<li><a href="#reduce">reduce()</a></li>
-<li><a href="#filter">filter()</a></li>
-<li><a href="#sorted">自定义sorted()</a></li>
-<li><a href="#_2">返回函数</a></li>
-<li><a href="#_3">闭包</a></li>
-<li><a href="#_4">匿名函数</a></li>
-</ul>
-</li>
-<li><a href="#_5">装饰器</a><ul>
-<li><a href="#decorator">无参数decorator</a></li>
-<li><a href="#decorator_1">带参数decorator</a></li>
-<li><a href="#decorator_2">完善decorator</a></li>
-<li><a href="#_6">偏函数</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p><a href="http://www.imooc.com/learn/317">http://www.imooc.com/learn/317</a></p>
+                    <div class="summary"><p><a href="http://www.imooc.com/learn/317">http://www.imooc.com/learn/317</a></p>
 <p>函数式编程: 更抽象, 更脱离指令(计算机), 更贴近计算(数学).   </p>
 <ul>
 <li>不需要变量 (python允许有变量, 所以python非纯函数式)  </li>
@@ -447,14 +362,19 @@ mx's blog            </a>
 <li>闭包: 返回函数  </li>
 <li>匿名函数  </li>
 </ul>
-<h2 id="_1">高阶函数</h2>
+<h2 id="gao-jie-han-shu">高阶函数</h2>
 <ul>
 <li>变量可以指向函数 <code>f=abs; f(-10)</code> </li>
 <li>函数名: 就是指向函数的变量 <code>abs=len</code> </li>
 <li>
 <p>高阶函数: 接收函数作为参数的函数  </p>
 <p>def add(x,y,f): <br/>
-    return ...</br/></p></li></ul>
+    return f(x)+f(y)<br/>
+add(-5, 9, abs)  </p>
+</li>
+</ul>
+<h3 id="map">map()</h3>
+<p><code>map()</code>是 Python 内置的高阶函数 ...</p>
                     </div>
                 </div>
             </article>
@@ -494,11 +414,11 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>python科学计算包的基础是numpy, 里面的array类型经常遇到. 一开始可能把这个array和python内建的列表(list)混淆, 这里简单总结一下列表(list), 多维数组(np.ndarray)和矩阵(np.matrix)的区别.    </p>
-<h2 id="list">list列表</h2>
+<h2 id="listlie-biao">list列表</h2>
 <p>列表属于python的三种基本集合类型之一, 其他两种是元组(tuple)和字典(dict). tuple和list区别主要在于是不是mutable的.    </p>
 <p>list和java里的数组不同之处在于, python的list可以包含任意类型的对象, 一个list里可以包含int, string或者其他任何对象, 另外list是可变长度的(list有<code>append</code>, <code>extend</code>和<code>pop</code>等方法).   </p>
 <p>所以, python内建的所谓"列表"其实是功能很强大的数组, 类比一下可以说它对应于java里面的<code>ArrayList&lt;Object&gt;</code> .    </p>
-<h2 id="ndarray">ndarray多维数组</h2>
+<h2 id="ndarrayduo-wei-shu-zu">ndarray多维数组</h2>
 <p>ndarray是numpy的基石, 其实它更像一个java里面的标准数组: 所有元素有一个相同数据类型(dtype), 不过大小不是固定的.    </p>
 <p>ndarray对于大计算量的性能非常好, 所以list要做运算的时候一定要先转为array(<code>np.array(_a_list_ ...</code></p>
                     </div>
@@ -540,31 +460,22 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#i-installation">I. installation</a></li>
-<li><a href="#ii-prerequisite">II. prerequisite</a><ul>
-<li><a href="#xpath">XPath</a></li>
-<li><a href="#_1">审查元素</a></li>
-</ul>
-</li>
-<li><a href="#iii-scrapy-shell">III. scrapy shell</a></li>
-<li><a href="#iv-scrapy-project">IV. scrapy project</a><ul>
-<li><a href="#1">1. 自定义爬虫</a></li>
-<li><a href="#2-item">2. 保存抓取的信息到item</a></li>
-<li><a href="#3">3. 运行爬虫</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>Scrapy是用来爬取数据的很流行的包, 这里小记一下. 以前几天做的<a href="https://github.com/X-Wei/OneArticleCrawler">一个爬虫</a>为例子, 这个爬虫把韩寒一个app的前九百多期的文章抓了下来. </p>
+                    <div class="summary"><p>Scrapy是用来爬取数据的很流行的包, 这里小记一下. 以前几天做的<a href="https://github.com/X-Wei/OneArticleCrawler">一个爬虫</a>为例子, 这个爬虫把韩寒一个app的前九百多期的文章抓了下来. </p>
 <h2 id="i-installation">I. installation</h2>
 <p>scrapy的安装参考: <a href="http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html">http://scrapy-chs.readthedocs.org/zh_CN/latest/topics/ubuntu.html</a></p>
 <p>(直接pip安装的好像缺少什么包)</p>
 <h2 id="ii-prerequisite">II. prerequisite</h2>
 <h3 id="xpath">XPath</h3>
 <p>需要学习scrapy首先需要会XPath, 这是一种方便与在html/xml文档里查找所需元素的语句. 这个还是很好学的, 其实只需要花一刻钟时间看看w3school的<a href="http://www.w3school.com.cn/xpath/">教程</a>, 就可以掌握够用的知识进行下一步了. </p>
-<p>这里总结一下我觉得会用到的语句(不全, 不过经常用到 ...</p>
+<p>这里总结一下我觉得会用到的语句(不全, 不过经常用到): </p>
+<ul>
+<li><code>//book</code>    选取所有名字叫做book的元素</li>
+<li><code>bookstore/book</code> 选取bookstore的子元素中所有叫book的元素</li>
+<li><code>//title[@lang='eng']</code> 选取lang属性为"eng"的所有title元素</li>
+<li><code>//titile/text()</code> 选取title元素的文字内容</li>
+<li><code>descendant-or-self::text()</code>: 选取自己或者所有后代节点的文字内容</li>
+</ul>
+<p>另外还有个在线测试XPath语句的网站 ...</p>
                     </div>
                 </div>
             </article>
@@ -653,31 +564,17 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
+                    <div class="summary"><p><a href="http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book">Learning IPython for Interactive Computing and Data Visualization</a>这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. </p>
+<p>(在开始系统学IPython之前简单使用过IPython, 那时候我还是更喜欢bpython的代码提示功能...)</p>
+<h1 id="ch1-10-ipython-essentials">ch1: 10 IPython essentials</h1>
 <ul>
-<li><a href="#ch1-10-ipython-essentials">ch1: 10 IPython essentials</a><ul>
-<li><a href="#magic-commands">magic commands</a></li>
-<li><a href="#ipython-notebook">IPython Notebook</a></li>
-<li><a href="#customizing-ipython">customizing IPython</a></li>
+<li>在任何变量后面加问号<code>?</code>或者双问号<code>??</code>, 将会输出详细的信息(按<code>q</code>退出), <code>??</code>的信息更加详细些</li>
+<li>Tab Completion: 没啥好说的 没有bpython做的好 也凑合吧...</li>
+<li><code>_, __, ___</code>保存最近三次的输出;  <code>_i, __i, ___i</code>保存最近三次的输入(作为字符串保存)</li>
 </ul>
-</li>
-<li><a href="#ch2-interavtive-work-with-ipython">ch2: Interavtive Work with IPython</a><ul>
-<li><a href="#navigating-the-file-system">navigating the file system</a></li>
-<li><a href="#accessing-system-shell-with-ipython">Accessing system shell with IPython</a></li>
-<li><a href="#the-extended-python-console">The Extended Python Console</a><ul>
-<li><a href="#debug">debug</a></li>
-<li><a href="#benchmarking">benchmarking("基准测试")</a></li>
-</ul>
-</li>
-<li><a href="#using-the-ipython-notebook">Using the IPython notebook</a><ul>
-<li><a href="#notebook">notebook的一些快捷键</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<p><a href="http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book">Learning IPython for Interactive Computing and Data Visualization</a>这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy ...</p>
+<h2 id="magic-commands">magic commands</h2>
+<ul>
+<li>在IPython里面可以使用一些标准unix命令, 比如<code>cd</code>, <code>pwd,ls</code>等 ...</li></ul>
                     </div>
                 </div>
             </article>
@@ -717,25 +614,14 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><div class="toc">
-<ul>
-<li><a href="#_1">基本操作</a><ul>
-<li><a href="#csv">读写csv文件</a></li>
-<li><a href="#indexing-slicing">indexing &amp; slicing</a></li>
-<li><a href="#addingdeleting-columns">adding/deleting columns</a></li>
-<li><a href="#apply-map-agg">apply() &amp; map() &amp; agg()</a></li>
-<li><a href="#plotting">Plotting</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>首先, 导入pandas
+                    <div class="summary"><p>首先, 导入pandas
 <code>import pandas as pd</code></p>
 <p>以及开启pylab: IPython里输入<code>%pylab</code></p>
 <p><a href="http://www.bearrelroll.com/2013/05/python-pandas-tutorial/">http://www.bearrelroll.com/2013/05/python-pandas-tutorial/</a></p>
-<h1 id="_1">基本操作</h1>
+<h1 id="ji-ben-cao-zuo">基本操作</h1>
 <p><a href="http://cloga.info/python/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/2013/09/17/pandas_intro/">http://cloga.info/python/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/2013/09/17/pandas_intro/</a></p>
-<p><strong>pandas和numpy的关系</strong>: pandas是建立在numpy上面的 ...</p>
+<p><strong>pandas和numpy的关系</strong>: pandas是建立在numpy上面的, pandas可以处理不同类型的数据集合(heterogeneous data set: <strong>DataFrame</strong>), numpy处理的是相同类型的数据集合(homogeneous data set: <strong>ndarray</strong>)</p>
+<h2 id="du-xie-csvwen-jian">读写csv文件 ...</h2>
                     </div>
                 </div>
             </article>

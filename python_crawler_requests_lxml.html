@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="python" />
-        <meta name="description" content="requests基础用法 抓取html内容 编码问题 用scrapy shell检查得到的html文件内容 修改header, 伪装浏览器 lxml以及xpath语法 xpath基础语法 使用chrome-dev-tool获得元素的xpath 用lxml.etree操作xpath xpath使用技巧 动态页面/模拟登录: 善用chrome-dev-tools 用dev-tools获取登录cookies 在requests里使用cookies 保存爬取的内容 保存文本内容: csv 保存非文本内容 并行下载 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import ..." />
+        <meta name="description" content="前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import etree requests基础用法 抓取html内容 用requests获取目标网址的html代码非常简单, 只需要用requests.get方法, 传入网址URL即可. 举个例子, 想要抓取维基语录的HTML内容, 代码很简单: url = &#39;https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦&#39; r ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="使用requests和lxml编写python爬虫小记"/>
         <meta property="og:url" content="http://x-wei.github.io/python_crawler_requests_lxml.html"/>
-        <meta property="og:description" content="requests基础用法 抓取html内容 编码问题 用scrapy shell检查得到的html文件内容 修改header, 伪装浏览器 lxml以及xpath语法 xpath基础语法 使用chrome-dev-tool获得元素的xpath 用lxml.etree操作xpath xpath使用技巧 动态页面/模拟登录: 善用chrome-dev-tools 用dev-tools获取登录cookies 在requests里使用cookies 保存爬取的内容 保存文本内容: csv 保存非文本内容 并行下载 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import ..."/>
+        <meta property="og:description" content="前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些教程, 现在来简单总结一下. 主要介绍用requests + lxml的方式, scrapy的话之前写过一篇介绍性的文章, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式... 安装需要的库(python2): pip install requests, lxml 然后在Python程序最开始导入: import requests from lxml import etree requests基础用法 抓取html内容 用requests获取目标网址的html代码非常简单, 只需要用requests.get方法, 传入网址URL即可. 举个例子, 想要抓取维基语录的HTML内容, 代码很简单: url = &#39;https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦&#39; r ..."/>
         <meta property="article:published_time" content="2016-12-29" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="python" />
@@ -205,47 +205,18 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requests" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#html" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#_1" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#scrapy-shellhtml" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#header" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlxpath_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpath" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#chrome-dev-toolxpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#lxmletreexpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpath_1" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#dev-toolscookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#requestscookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#_3" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#_4" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#_5" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requestsji-chu-yong-fa" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#zhua-qu-htmlnei-rong" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#bian-ma-wen-ti" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#xiu-gai-header-wei-zhuang-liu-lan-qi" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlyi-ji-xpathyu-fa_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpathji-chu-yu-fa" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#yong-lxmletreecao-zuo-xpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpathshi-yong-ji-qiao" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#yong-dev-toolshuo-qu-deng-lu-cookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#zai-requestsli-shi-yong-cookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#bao-cun-pa-qu-de-nei-rong_1" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#bao-cun-wen-ben-nei-rong-csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#bao-cun-fei-wen-ben-nei-rong" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#bing-xing-xia-zai" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <div class="toc">
-<ul>
-<li><a href="#requests">requests基础用法</a><ul>
-<li><a href="#html">抓取html内容</a></li>
-<li><a href="#_1">编码问题</a></li>
-<li><a href="#scrapy-shellhtml">用scrapy shell检查得到的html文件内容</a></li>
-<li><a href="#header">修改header, 伪装浏览器</a></li>
-</ul>
-</li>
-<li><a href="#lxmlxpath">lxml以及xpath语法</a><ul>
-<li><a href="#xpath">xpath基础语法</a></li>
-<li><a href="#chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</a></li>
-<li><a href="#lxmletreexpath">用lxml.etree操作xpath</a></li>
-<li><a href="#xpath_1">xpath使用技巧</a></li>
-</ul>
-</li>
-<li><a href="#chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul>
-<li><a href="#dev-toolscookies">用dev-tools获取登录cookies</a></li>
-<li><a href="#requestscookies">在requests里使用cookies</a></li>
-</ul>
-</li>
-<li><a href="#_2">保存爬取的内容</a><ul>
-<li><a href="#csv">保存文本内容: csv</a></li>
-<li><a href="#_3">保存非文本内容</a></li>
-<li><a href="#_4">并行下载</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
+                <p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
 <p>安装需要的库(python2):   </p>
 <p><code>pip install requests, lxml</code> </p>
 <p>然后在Python程序最开始导入:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
 <span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span></span>
 </pre></div>
-<h1 id="requests">requests基础用法</h1>
-<h3 id="html">抓取html内容</h3>
+<h1 id="requestsji-chu-yong-fa">requests基础用法</h1>
+<h3 id="zhua-qu-htmlnei-rong">抓取html内容</h3>
 <p>用requests获取目标网址的html代码非常简单, 只需要用<code>requests.get</code>方法, 传入网址URL即可.   </p>
 <p>举个例子, 想要抓取<a href="https://zh.wikiquote.org/wiki/Wikiquote:%E9%A6%96%E9%A1%B5">维基语录</a>的HTML内容, 代码很简单:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
@@ -253,7 +224,7 @@ mx's blog            </a>
 <span class="code-line"><span class="err">html = r.text</span></span>
 </pre></div>
 <p><code>requests.get()</code>返回一个response对象<code>r</code>, 可以用<code>r.ok</code>或者<code>r.status_code</code>检查对象是否正常返回(status code=200).   </p>
-<h3 id="_1">编码问题</h3>
+<h3 id="bian-ma-wen-ti">编码问题</h3>
 <p>处理非英文网页时经常遇到的问题就是编码的问题了(不知道py3是不是对Unicode支持好一点?), 前面得到的html其实并非字符串而是Unicode对象:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; type(html)  </span></span>
 <span class="code-line"><span class="err">&lt;type 'unicode'&gt;</span></span>
@@ -274,7 +245,7 @@ mx's blog            </a>
 <span class="code-line"><span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>  </span>
 </pre></div>
 <p>不过, 看到有人说这种方式<a href="http://blog.ernest.me/post/python-setdefaultencoding-unicode-bytes">并不好</a>, 所以最好别用这么暴力的方式吧...  </p>
-<h3 id="scrapy-shellhtml">用scrapy shell检查得到的html文件内容</h3>
+<h3 id="yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong">用scrapy shell检查得到的html文件内容</h3>
 <p>需要注意的一点是, requests.get得到的html内容<strong>并不一定</strong>和在浏览器打开链接得到的内容相同!   </p>
 <p>为了检查是否得到了想要的html内容, 有两个方式, 一个是把得到的内容输出为一个.html文件, 然后用浏览器打开, 比如这样:  </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt;&gt;&gt; with open('tmp.html', 'w') as f:  </span></span>
@@ -302,17 +273,17 @@ mx's blog            </a>
 <span class="code-line"><span class="ow">In</span><span class="w"> </span><span class="o">[</span><span class="n">3</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="k">view</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="w">  </span></span>
 <span class="code-line"><span class="k">Out</span><span class="o">[</span><span class="n">3</span><span class="o">]</span><span class="err">:</span><span class="w"> </span><span class="k">True</span><span class="w"></span></span>
 </pre></div>
-<h3 id="header">修改header, 伪装浏览器</h3>
+<h3 id="xiu-gai-header-wei-zhuang-liu-lan-qi">修改header, 伪装浏览器</h3>
 <p>对于有些网站, 直接用<code>requests.get</code>抓取会得到403forbidden错误, 这时就要修改一下get函数的<code>headers</code>参数了, 把一个Python字典传给headers参数, 这个字典理, 'user-agent'对应chrome/firefox使用的内容. 例子:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">hea = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36'}  </span></span>
 <span class="code-line"><span class="err">r = requests.get('http://jp.tingroom.com/yuedu/yd300p/', headers = hea)</span></span>
 </pre></div>
 <p>headers参数对于那些不太好爬的网站非常有用, 不过关于如何知道往header里放什么东西, 需要用chrome-dev-tools, 这个后面再说.   </p>
-<h1 id="lxmlxpath_1">lxml以及xpath语法</h1>
+<h1 id="lxmlyi-ji-xpathyu-fa_1">lxml以及xpath语法</h1>
 <p>还是继续上面维基语录的例子, 假设现在已经获取了网页的html文件, 下一步就是在html文件里提取想要的内容了. 比如我们想要从维基语录上抓取<a href="https://zh.wikiquote.org/wiki/%E9%98%BF%E7%88%BE%E4%BC%AF%E7%89%B9%C2%B7%E6%84%9B%E5%9B%A0%E6%96%AF%E5%9D%A6">爱因斯坦</a>的所有名言.   </p>
 <p>从html中提取感兴趣的内容, 一种选择是用正则表达式, 不过正则表达式写起来太蛋疼了 — <code>(?&lt;=blablah).*(?=blah)</code>之类的, 每次用都得从新查. 而且处理html代码时经常容易出错.   </p>
 <p>html语言可以看做是一种xml语言, 而xml语言其实是分层次的(可以parse为一个xml树), 操作xml元素的神器就是xpath语言了.  </p>
-<h3 id="xpath">xpath基础语法</h3>
+<h3 id="xpathji-chu-yu-fa">xpath基础语法</h3>
 <p>xpath的语法其实不难, 入门的话话二十分钟看看<a href="http://www.w3school.com.cn/xpath/xpath_syntax.asp">这里</a>估计就差不多. 这里简单列一下:   </p>
 <p><strong>选取节点</strong>的语法有:   </p>
 <ul>
@@ -334,7 +305,7 @@ mx's blog            </a>
 <li><code>[@lang="eng"]</code> 选取属性lang等于"eng"的元素  </li>
 </ul>
 <p>遇到更复杂的xpath不会写的话 尝试翻译成英文然后Google一下, 几乎总会找到答案.   </p>
-<h3 id="chrome-dev-toolxpath">使用chrome-dev-tool获得元素的xpath</h3>
+<h3 id="shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath">使用chrome-dev-tool获得元素的xpath</h3>
 <p>可以直接用chrome的开发者工具获取网页元素的xpath, 在该网页上按下crtl-shift-I就可以打开devtool了:<br/>
 <img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image002.png"/> </p>
 <p>点击左上角那个指针的小图标, 然后再在网页上点击想要查找的元素, 就可以快速定位到它在html里对应的代码了:  </p>
@@ -344,7 +315,7 @@ mx's blog            </a>
 <p>不过一般chrome找到的xpath并不具有通用性, 所以最好还是自己分析得到合适的xpath代码.   </p>
 <p>chrome给找到的xpath是<code>//*[@id="mw-content-text"]/ul[1]/li[1]</code>, 经过分析和测试, <code>//div[@id="mw-content-text"]/ul[position()&lt;last()]/li/text()</code>应该是比较正确的所有名言的xpath代码. 为了测试xpath, 可以直接在chrome-dev-tool里面按下ctrl-F查找xpath:   </p>
 <p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image004.png"/> </p>
-<h3 id="lxmletreexpath">用lxml.etree操作xpath</h3>
+<h3 id="yong-lxmletreecao-zuo-xpath">用lxml.etree操作xpath</h3>
 <p>学会了xpath, 接下来要在Python里使用xpath则需要lxml.   </p>
 <p>步骤是: 首先用网页html内容建立一个etree对象, 然后在使用它的<code>xpath</code>方法, 传入之前得到的xpath语句. 返回的结果为一个list, list里面就是所有匹配的元素了.   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
@@ -353,7 +324,7 @@ mx's blog            </a>
 <span class="code-line"><span class="err">for quote in sel.xpath('//div[@id="mw-content-text"]/ul[position()&lt;last()]/li/text()'):  </span></span>
 <span class="code-line"><span class="err">    print quote.strip()</span></span>
 </pre></div>
-<h3 id="xpath_1">xpath使用技巧</h3>
+<h3 id="xpathshi-yong-ji-qiao">xpath使用技巧</h3>
 <p>这里说一下xpath的实际使用技巧. 正好前面的代码也不完善, 结合这个例子来说.   </p>
 <ol>
 <li><strong>先抓大再抓小</strong> </li>
@@ -401,17 +372,17 @@ mx's blog            </a>
 <span class="code-line">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>   </span>
 <span class="code-line">        <span class="nb">print</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">'string(.)'</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  </span>
 </pre></div>
-<h1 id="chrome-dev-tools_1">动态页面/模拟登录: 善用chrome-dev-tools</h1>
+<h1 id="dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1">动态页面/模拟登录: 善用chrome-dev-tools</h1>
 <p>上面的维基语录的例子还算比较简单, 对于那些需要动态加载的网页或者需要登录才可以查看的内容, 就需要多用chrome开发者工具了. 由于这方面要根据不同网站去试验(+猜测), 所以这里介绍的不会太详细...   </p>
 <p>一般来说, 对于动态加载的网页, 可以打开ctrl-shift-I打开devtools以后, 选择network标签页然后刷新, 在最开始的地方一般会有form提交(可以用<code>requests.post</code>模拟)或者url请求之类的东西, 一路追踪过去即可.   </p>
 <p>这里展示一下用cookies模拟登录微博的过程. weibo电脑版的页面太过凌乱, 用微博手机版(weibo.cn).   </p>
-<h3 id="dev-toolscookies">用dev-tools获取登录cookies</h3>
+<h3 id="yong-dev-toolshuo-qu-deng-lu-cookies">用dev-tools获取登录cookies</h3>
 <p>cookies就是一小段(加密后的)字符串, 它的大概是本地存储的保留用户信息的加密字符, 有的网站点选"下次自动登录"时, 其实就是生成了一个cookie保存在本地, 下次登录时只要向网站发送这串cookies字符, 如果cookies没有过期的话就可以直接登录了.   </p>
 <p>在要点击登录前, 打开devtools并选择network标签. 然后在登录以后, 找开头的几个requests, 定位到一个header带有cookie的request上面, cookie就在这里了(我试验发现, 好像需要登录以后再刷新一下, 这时dev-tools得到的cookies才是可用的):   </p>
 <p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image008.png"/> </p>
 <p>另一种办法是用chrome自带的监测页面 <chrome: #events="" net-internals="">, (设置capture→Include the actual bytes sent/received), 也可以得到cookies:   </chrome:></p>
 <p><img alt="" class="img-responsive" src="../images/python_crawler_requests_lxml/pasted_image009.png"/> </p>
-<h3 id="requestscookies">在requests里使用cookies</h3>
+<h3 id="zai-requestsli-shi-yong-cookies">在requests里使用cookies</h3>
 <p>一旦获得了cookies字符串, 模拟登录就很简单: 在requests.get里传入headers参数:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
 <span class="code-line"><span class="n">hea</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Cookie'</span><span class="p">:</span><span class="s1">'_T_WM=3a52fbed11ed299552cf910553be7d3b; SUB=_2A251Y_geDeTxGedG6lUQ9SrKyj2IHXVWr5hWrDV6PUJbkdAKLUejkW1CLxUVXEMZZq8EFgsGuIYNqC6MqQ..; gsid_CTandWM=4uno88c512gBK6O5nyuKd7CIW9R'</span><span class="p">}</span>  </span>
@@ -419,8 +390,8 @@ mx's blog            </a>
 <span class="code-line"><span class="n">html</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">cook</span><span class="p">)</span><span class="o">.</span><span class="n">content</span> <span class="c1"># use content instead of text   </span></span>
 <span class="code-line"><span class="nb">print</span> <span class="n">html</span>  </span>
 </pre></div>
-<h1 id="_3">保存爬取的内容</h1>
-<h3 id="csv">保存文本内容: csv</h3>
+<h1 id="bao-cun-pa-qu-de-nei-rong_1">保存爬取的内容</h1>
+<h3 id="bao-cun-wen-ben-nei-rong-csv">保存文本内容: csv</h3>
 <p>保存文本信息我一般喜欢放进csv里面, 而用<code>pandas</code>操作csv文件会比较方便: 在程序中, 把每一个抓取的条目(item)放进一个字典, 然后append到dataframe里面, 最后直接<code>to_csv</code>搞定.   </p>
 <p>下面是个简单的示意代码, 假设我们要抓取一些文章的title, date和发表地点三个信息:    </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>  </span>
@@ -435,7 +406,7 @@ mx's blog            </a>
 <span class="code-line"><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'place'</span><span class="p">]]</span> <span class="c1"># adjust column order  </span></span>
 <span class="code-line"><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'melanthon.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span>    </span>
 </pre></div>
-<h3 id="_4">保存非文本内容</h3>
+<h3 id="bao-cun-fei-wen-ben-nei-rong">保存非文本内容</h3>
 <p>有些时候我们要下载图片/视频等非文本的信息, 我们可以用xpath定位到图片/视频的链接地址处, 那么下载到本地文件, 我查的有两个办法.  </p>
 <p>第一个方法简单粗暴: 用urlretrieve, 直接往函数里传入url和本地路径即可:   </p>
 <div class="highlight"><pre><span class="code-line"><span></span><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlretrieve</span>    </span>
@@ -449,7 +420,7 @@ mx's blog            </a>
 <span class="code-line"><span class="err">           f.write(chunk)  </span></span>
 <span class="code-line"><span class="err">f.close()</span></span>
 </pre></div>
-<h3 id="_5">并行下载</h3>
+<h3 id="bing-xing-xia-zai">并行下载</h3>
 <p>在下载大文件的时候可以非常明显感受到, 下载文件的过程占据了大部分程序的执行时间. <br/>
 比较简单的加速办法就是, 先把所有要下载的文件url(以及本地保存的fpath)放进一个list里, 最后在一起下载, 这时就可以使用Python的多进程模块进行加速了.   </p>
 <p>核心的代码只其实就是pool.map, 把爬去的函数map到要爬的url列表上:   </p>
@@ -881,7 +852,7 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requests" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#html" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#_1" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#scrapy-shellhtml" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#header" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlxpath_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpath" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#chrome-dev-toolxpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#lxmletreexpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpath_1" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#dev-toolscookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#requestscookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#_3" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#_4" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#_5" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#" title="使用requests和lxml编写python爬虫小记">使用requests和lxml编写python爬虫小记</a><ul><li><a class="toc-href" href="#requestsji-chu-yong-fa" title="requests基础用法">requests基础用法</a><ul><li><a class="toc-href" href="#zhua-qu-htmlnei-rong" title="抓取html内容">抓取html内容</a></li><li><a class="toc-href" href="#bian-ma-wen-ti" title="编码问题">编码问题</a></li><li><a class="toc-href" href="#yong-scrapy-shelljian-cha-de-dao-de-htmlwen-jian-nei-rong" title="用scrapy shell检查得到的html文件内容">用scrapy shell检查得到的html文件内容</a></li><li><a class="toc-href" href="#xiu-gai-header-wei-zhuang-liu-lan-qi" title="修改header, 伪装浏览器">修改header, 伪装浏览器</a></li></ul></li><li><a class="toc-href" href="#lxmlyi-ji-xpathyu-fa_1" title="lxml以及xpath语法">lxml以及xpath语法</a><ul><li><a class="toc-href" href="#xpathji-chu-yu-fa" title="xpath基础语法">xpath基础语法</a></li><li><a class="toc-href" href="#shi-yong-chrome-dev-toolhuo-de-yuan-su-de-xpath" title="使用chrome-dev-tool获得元素的xpath">使用chrome-dev-tool获得元素的xpath</a></li><li><a class="toc-href" href="#yong-lxmletreecao-zuo-xpath" title="用lxml.etree操作xpath">用lxml.etree操作xpath</a></li><li><a class="toc-href" href="#xpathshi-yong-ji-qiao" title="xpath使用技巧">xpath使用技巧</a></li></ul></li><li><a class="toc-href" href="#dong-tai-ye-mian-mo-ni-deng-lu-shan-yong-chrome-dev-tools_1" title="动态页面/模拟登录: 善用chrome-dev-tools">动态页面/模拟登录: 善用chrome-dev-tools</a><ul><li><a class="toc-href" href="#yong-dev-toolshuo-qu-deng-lu-cookies" title="用dev-tools获取登录cookies">用dev-tools获取登录cookies</a></li><li><a class="toc-href" href="#zai-requestsli-shi-yong-cookies" title="在requests里使用cookies">在requests里使用cookies</a></li></ul></li><li><a class="toc-href" href="#bao-cun-pa-qu-de-nei-rong_1" title="保存爬取的内容">保存爬取的内容</a><ul><li><a class="toc-href" href="#bao-cun-wen-ben-nei-rong-csv" title="保存文本内容: csv">保存文本内容: csv</a></li><li><a class="toc-href" href="#bao-cun-fei-wen-ben-nei-rong" title="保存非文本内容">保存非文本内容</a></li><li><a class="toc-href" href="#bing-xing-xia-zai" title="并行下载">并行下载</a></li></ul></li></ul></li></ul></div>
             </div>
         </div>
             </aside>

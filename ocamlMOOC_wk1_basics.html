@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="OCaml" />
-        <meta name="description" content="1. BASIC DATA TYPES: int, bool int bool 2. MORE DATA TYPES: float, char, string float char string 3. EXPRESSIONS: if-then-else, func-applications and operators conditional expr function application Polymorphic operators 4. DEFINITIONS global definition local definition Simultaneous Definitions 5. FUNCTIONS func definition lexical scoping identifiers are NOT variables 6. RECURSION ..." />
+        <meta name="description" content="1. BASIC DATA TYPES: int, bool Rich type system and polymorphism in ocaml. Types are infered not declared. Basic types: int, bool, float, string, char, ... int value: \(-2^{62}\) ~ \(2^{62}-1\) on 64-bit machines. ops: +, -, *, /, mod (reminder: / is integer division) # 3+2*4-1;; - : int = 10 # 5/2;; - : int ...if (!document.getElementById(&#39;mathjaxscript_pelican_#%@#$@#&#39;)) { var align = &#34;center&#34;, indent = &#34;0em&#34;, linebreak = &#34;false&#34;; if (false) { align = (screen.width" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[OCaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS"/>
         <meta property="og:url" content="http://x-wei.github.io/ocamlMOOC_wk1_basics.html"/>
-        <meta property="og:description" content="1. BASIC DATA TYPES: int, bool int bool 2. MORE DATA TYPES: float, char, string float char string 3. EXPRESSIONS: if-then-else, func-applications and operators conditional expr function application Polymorphic operators 4. DEFINITIONS global definition local definition Simultaneous Definitions 5. FUNCTIONS func definition lexical scoping identifiers are NOT variables 6. RECURSION ..."/>
+        <meta property="og:description" content="1. BASIC DATA TYPES: int, bool Rich type system and polymorphism in ocaml. Types are infered not declared. Basic types: int, bool, float, string, char, ... int value: \(-2^{62}\) ~ \(2^{62}-1\) on 64-bit machines. ops: +, -, *, /, mod (reminder: / is integer division) # 3+2*4-1;; - : int = 10 # 5/2;; - : int ...if (!document.getElementById(&#39;mathjaxscript_pelican_#%@#$@#&#39;)) { var align = &#34;center&#34;, indent = &#34;0em&#34;, linebreak = &#34;false&#34;; if (false) { align = (screen.width"/>
         <meta property="article:published_time" content="2016-10-23" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="OCaml" />
@@ -210,46 +210,7 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="[OCaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS">[OCaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS</a><ul><li><a class="toc-href" href="#1-basic-data-types-int-bool" title="1. BASIC DATA TYPES: int, bool">1. BASIC DATA TYPES: int, bool</a><ul><li><a class="toc-href" href="#int" title="int">int</a></li><li><a class="toc-href" href="#bool" title="bool">bool</a></li></ul></li><li><a class="toc-href" href="#2-more-data-types-float-char-string_1" title="2. MORE DATA TYPES: float, char, string">2. MORE DATA TYPES: float, char, string</a><ul><li><a class="toc-href" href="#float" title="float">float</a></li><li><a class="toc-href" href="#char" title="char">char</a></li><li><a class="toc-href" href="#string" title="string">string</a></li></ul></li><li><a class="toc-href" href="#3-expressions-if-then-else-func-applications-and-operators_1" title="3. EXPRESSIONS: if-then-else, func-applications and operators">3. EXPRESSIONS: if-then-else, func-applications and operators</a><ul><li><a class="toc-href" href="#conditional-expr" title="conditional expr">conditional expr</a></li><li><a class="toc-href" href="#function-application" title="function application">function application</a></li><li><a class="toc-href" href="#polymorphic-operators" title="Polymorphic operators">Polymorphic operators</a></li></ul></li><li><a class="toc-href" href="#4-definitions_1" title="4. DEFINITIONS">4. DEFINITIONS</a><ul><li><a class="toc-href" href="#global-definition" title="global definition">global definition</a></li><li><a class="toc-href" href="#local-definition" title="local definition">local definition</a></li><li><a class="toc-href" href="#simultaneous-definitions" title="Simultaneous Definitions">Simultaneous Definitions</a></li></ul></li><li><a class="toc-href" href="#5-functions_1" title="5. FUNCTIONS">5. FUNCTIONS</a><ul><li><a class="toc-href" href="#func-definition" title="func definition">func definition</a></li><li><a class="toc-href" href="#lexical-scoping" title="lexical scoping">lexical scoping</a></li><li><a class="toc-href" href="#identifiers-are-not-variables" title="identifiers are NOT variables">identifiers are NOT variables</a></li></ul></li><li><a class="toc-href" href="#6-recursion_1" title="6. RECURSION">6. RECURSION</a><ul><li><a class="toc-href" href="#recursive-definition" title="recursive definition">recursive definition</a></li><li><a class="toc-href" href="#mutually-recursive-function" title="mutually recursive function">mutually recursive function</a></li></ul></li><li><a class="toc-href" href="#exercices_1" title="exercices">exercices</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <div class="toc">
-<ul>
-<li><a href="#1-basic-data-types-int-bool">1. BASIC DATA TYPES: int, bool</a><ul>
-<li><a href="#int">int</a></li>
-<li><a href="#bool">bool</a></li>
-</ul>
-</li>
-<li><a href="#2-more-data-types-float-char-string">2. MORE DATA TYPES: float, char, string</a><ul>
-<li><a href="#float">float</a></li>
-<li><a href="#char">char</a></li>
-<li><a href="#string">string</a></li>
-</ul>
-</li>
-<li><a href="#3-expressions-if-then-else-func-applications-and-operators">3. EXPRESSIONS: if-then-else, func-applications and operators</a><ul>
-<li><a href="#conditional-expr">conditional expr</a></li>
-<li><a href="#function-application">function application</a></li>
-<li><a href="#polymorphic-operators">Polymorphic operators</a></li>
-</ul>
-</li>
-<li><a href="#4-definitions">4. DEFINITIONS</a><ul>
-<li><a href="#global-definition">global definition</a></li>
-<li><a href="#local-definition">local definition</a></li>
-<li><a href="#simultaneous-definitions">Simultaneous Definitions</a></li>
-</ul>
-</li>
-<li><a href="#5-functions">5. FUNCTIONS</a><ul>
-<li><a href="#func-definition">func definition</a></li>
-<li><a href="#lexical-scoping">lexical scoping</a></li>
-<li><a href="#identifiers-are-not-variables">identifiers are NOT variables</a></li>
-</ul>
-</li>
-<li><a href="#6-recursion">6. RECURSION</a><ul>
-<li><a href="#recursive-definition">recursive definition</a></li>
-<li><a href="#mutually-recursive-function">mutually recursive function</a></li>
-</ul>
-</li>
-<li><a href="#exercices">exercices</a></li>
-</ul>
-</div>
-<h1 id="1-basic-data-types-int-bool">1. BASIC DATA TYPES: int, bool</h1>
+                <h1 id="1-basic-data-types-int-bool">1. BASIC DATA TYPES: int, bool</h1>
 <p>Rich type system and polymorphism in ocaml. Types are <em>infered</em> not declared.  </p>
 <p><strong>Basic types</strong>: int, bool, float, string, char, ... </p>
 <h3 id="int">int</h3>

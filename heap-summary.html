@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="logical structure of PQ array representation of PQ PQ implementation siftup siftdown implementation of add and poll PQ application heapsort heapify top K elements of a stream median of a stream more about heap k-way heap more &#34;flexible&#34; heap 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出 ..." />
+        <meta name="description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Priority Queue/Heap (优先队列/堆)小结"/>
         <meta property="og:url" content="http://x-wei.github.io/heap-summary.html"/>
-        <meta property="og:description" content="logical structure of PQ array representation of PQ PQ implementation siftup siftdown implementation of add and poll PQ application heapsort heapify top K elements of a stream median of a stream more about heap k-way heap more &#34;flexible&#34; heap 今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出 ..."/>
+        <meta property="og:description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..."/>
         <meta property="article:published_time" content="2015-12-09" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -210,31 +210,7 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#" title="Priority Queue/Heap (优先队列/堆)小结">Priority Queue/Heap (优先队列/堆)小结</a><ul><li><a class="toc-href" href="#logical-structure-of-pq" title="logical structure of PQ">logical structure of PQ</a></li><li><a class="toc-href" href="#array-representation-of-pq" title="array representation of PQ">array representation of PQ</a></li><li><a class="toc-href" href="#pq-implementation" title="PQ implementation">PQ implementation</a><ul><li><a class="toc-href" href="#siftup" title="siftup">siftup</a></li><li><a class="toc-href" href="#siftdown" title="siftdown">siftdown</a></li><li><a class="toc-href" href="#implementation-of-add-and-poll_1" title="implementation of add and poll">implementation of add and poll</a></li></ul></li><li><a class="toc-href" href="#pq-application_1" title="PQ application">PQ application</a><ul><li><a class="toc-href" href="#heapsort" title="heapsort">heapsort</a></li><li><a class="toc-href" href="#heapify" title="heapify">heapify</a></li><li><a class="toc-href" href="#top-k-elements-of-a-stream" title="top K elements of a stream">top K elements of a stream</a></li><li><a class="toc-href" href="#median-of-a-stream" title="median of a stream">median of a stream</a></li></ul></li><li><a class="toc-href" href="#more-about-heap_1" title="more about heap">more about heap</a><ul><li><a class="toc-href" href="#k-way-heap" title="k-way heap">k-way heap</a></li><li><a class="toc-href" href="#more-flexible-heap" title='more "flexible" heap'>more "flexible" heap</a></li></ul></li></ul></li></ul></div>
                         </div>
                     </div>
-                <div class="toc">
-<ul>
-<li><a href="#logical-structure-of-pq">logical structure of PQ</a></li>
-<li><a href="#array-representation-of-pq">array representation of PQ</a></li>
-<li><a href="#pq-implementation">PQ implementation</a><ul>
-<li><a href="#siftup">siftup</a></li>
-<li><a href="#siftdown">siftdown</a></li>
-<li><a href="#implementation-of-add-and-poll">implementation of add and poll</a></li>
-</ul>
-</li>
-<li><a href="#pq-application">PQ application</a><ul>
-<li><a href="#heapsort">heapsort</a></li>
-<li><a href="#heapify">heapify</a></li>
-<li><a href="#top-k-elements-of-a-stream">top K elements of a stream</a></li>
-<li><a href="#median-of-a-stream">median of a stream</a></li>
-</ul>
-</li>
-<li><a href="#more-about-heap">more about heap</a><ul>
-<li><a href="#k-way-heap">k-way heap</a></li>
-<li><a href="#more-flexible-heap">more "flexible" heap</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
+                <p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
 <p>PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   </p>
 <h1 id="logical-structure-of-pq">logical structure of PQ</h1>
 <p>个人感觉"堆"这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种<strong>完全二叉树(complete binary tree)</strong>: 没错, PQ是一种满足某些条件的完全二叉树.   </p>
