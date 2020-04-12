@@ -4,7 +4,6 @@ Slug:  andev_p2e2_pref
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 
 Save settings and configurations. 

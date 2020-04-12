@@ -4,7 +4,6 @@ Slug:  algoI_week6
 Tags: algorithm     
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
    
 *Can we do better than BST if we do not need ordered operations ?*   
    

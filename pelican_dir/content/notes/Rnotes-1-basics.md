@@ -4,7 +4,6 @@ Slug:  Rnotes-1-basics
 Tags: R
 Series: R语言从入门到放弃
  
-[TOC]
 
 
 这个"从入门到放弃"系列是为了应付eth的[computational statistics](https://stat.ethz.ch/education/semesters/ss2016/CompStat)这门课... 对R无爱... 

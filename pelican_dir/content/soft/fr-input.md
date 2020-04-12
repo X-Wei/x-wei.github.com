@@ -3,7 +3,6 @@ Date: 2014-05-23
 Slug: fr-input
 Tags: fr
  
-[TOC] 
  
 Well, to be brief...
 -----------------

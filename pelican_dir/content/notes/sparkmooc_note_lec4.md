@@ -4,7 +4,6 @@ Slug: sparkmooc_note_lec4
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 
 PYTHON SPARK (PYSPARK)

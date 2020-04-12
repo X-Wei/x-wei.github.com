@@ -3,7 +3,6 @@ Slug: android开发教程第一季笔记
 Date: 2013-07-31
 Tags: android
  
-[TOC] 
 
 S01E02: 开发环境搭建
 ==============

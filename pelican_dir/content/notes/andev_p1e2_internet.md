@@ -4,7 +4,6 @@ Slug:  andev_p1e2_internet
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 
 logging

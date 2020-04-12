@@ -4,7 +4,6 @@ Slug:  algoII_week2_2
 Tags: algorithm      
 Series: Algorithms Princeton MOOC II 
  
-[TOC]
     
 1. Shortest Paths APIs   
 ======================   

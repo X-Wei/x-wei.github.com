@@ -4,7 +4,6 @@ Slug: shortest-path-summary
 Tags: algorithm      
 Series: 算法笔记
  
-[TOC] 
 
    
 weighted graph的最短路径问题有三个非常有名的算法, 分别以三个大牛的名字命名, 今天用尽量简洁的篇幅一一介绍.    

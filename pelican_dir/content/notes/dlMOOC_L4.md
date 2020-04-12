@@ -4,7 +4,6 @@ Slug: dlMOOC_L4
 Tags: deep learning    
 Series: Deep Learning udacity MOOC
  
-[TOC]
 
   
 problems with text:   

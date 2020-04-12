@@ -3,7 +3,6 @@ Date: 2012-04-13
 Slug: pelican_github_blog
 Tags: pelican, git
  
-[TOC] 
 
 >**2016更新**  
 >新博客用了pelican3, 参考[这里](http://x-wei.github.io/pelican3_blog_and_theme.html)  

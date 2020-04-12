@@ -3,7 +3,6 @@ Date: 2016-12-31
 Slug:  scala-ocaml-impression  
 Tags: scala, OCaml  
    
-[TOC]  
   
   
 2016年的最后几小时, 随便写写关于Scala和OCaml的一些入门体验好了.   

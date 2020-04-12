@@ -4,7 +4,6 @@ Slug:  Rnotes-4-regression
 Tags: R
 Series: R语言从入门到放弃
  
-[TOC]
 
 
 R里面的统计函数有很多, 这里只用线性模型``lm``以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(**NW, **``ksmooth``), Local Polynomial(**LP, **``loess``), Smoothing Spline(**SS, **``smooth.spline``). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 

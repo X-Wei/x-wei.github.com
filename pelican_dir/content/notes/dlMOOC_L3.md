@@ -4,7 +4,6 @@ Slug: dlMOOC_L3
 Tags: deep learning  
 Series: Deep Learning udacity MOOC
  
-[TOC]
   
   
 statistical invariance → **weight sharing**  

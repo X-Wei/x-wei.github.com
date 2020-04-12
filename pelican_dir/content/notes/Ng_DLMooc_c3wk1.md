@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c3wk1
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
   
-[TOC]  
   
 I-Introduction to ML Strategy  
 -----------------------------  

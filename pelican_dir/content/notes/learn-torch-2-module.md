@@ -4,7 +4,6 @@ Slug:  learn-torch-2-module
 Tags: torch 
 Series: torch学习笔记 
  
-[TOC]
       
  
 ``Module`` is an abstract class which defines fundamental methods necessary for a *Layer*. 

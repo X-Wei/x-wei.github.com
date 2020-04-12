@@ -4,7 +4,6 @@ Slug: algo-ds-mindmap
 Tags: algorithm
 Series: 算法笔记
  
-[TOC] 
 
 Here is a mindmap of the common algorithms and data structures, it can give an overview of the algorithmic terms.    
 

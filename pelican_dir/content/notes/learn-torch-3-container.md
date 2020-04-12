@@ -4,7 +4,6 @@ Slug:  learn-torch-3-container
 Tags: torch 
 Series: torch学习笔记 
  
-[TOC]
       
  
 doc: <https://github.com/torch/nn/blob/master/doc/containers.md>     

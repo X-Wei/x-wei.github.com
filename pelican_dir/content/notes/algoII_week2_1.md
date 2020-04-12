@@ -4,7 +4,6 @@ Slug:  algoII_week2_1
 Tags: algorithm   
 Series: Algorithms Princeton MOOC II 
  
-[TOC]
     
    
 1. Introduction to MSTs   

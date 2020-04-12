@@ -4,7 +4,6 @@ Slug:  algoI_week1_lab
 Tags: algorithm
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
  
 model & problem
 ===============

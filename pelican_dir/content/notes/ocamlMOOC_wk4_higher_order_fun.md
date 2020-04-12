@@ -4,7 +4,6 @@ Slug: ocamlMOOC_wk4_higher_order_fun
 Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
-[TOC]  
   
   
 1. FUNCTIONAL EXPRESSIONS  

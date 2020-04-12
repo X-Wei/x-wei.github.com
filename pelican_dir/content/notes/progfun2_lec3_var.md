@@ -4,7 +4,6 @@ Slug: progfun2_lec3_var
 Tags: scala    
 Series: Functional Program Design in Scala 
    
-[TOC]   
   
   
   

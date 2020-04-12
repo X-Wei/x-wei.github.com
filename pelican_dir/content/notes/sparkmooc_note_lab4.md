@@ -4,7 +4,6 @@ Slug: sparkmooc_notelab4
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 Part 0: Preliminaries
 =====================

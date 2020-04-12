@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c4wk1
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
   
-[TOC]  
   
 ### Computer Vision  
 CV with DL: rapid progress in past two years.  

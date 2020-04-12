@@ -3,7 +3,6 @@ Date: 2012-09-09 11:21
 Slug: GT-summery
 Tags: 出国,Toefl, GRE
 
-[TOC]
 
 这个暑假马上结束, 再不写这篇文章就再也没心情写了...... 
 

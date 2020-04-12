@@ -4,7 +4,6 @@ Slug:  imooc_py_functional
 Tags: python  
 Series: python进阶课程
  
-[TOC]  
    
 <http://www.imooc.com/learn/317>
   

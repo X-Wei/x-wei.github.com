@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c4wk4
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
   
-[TOC]  
   
   
 This week: two special application of ConvNet.  

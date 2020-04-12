@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c4wk2
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
   
-[TOC]  
   
 I-Case studies  
 --------------  

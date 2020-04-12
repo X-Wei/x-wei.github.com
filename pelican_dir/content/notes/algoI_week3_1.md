@@ -4,7 +4,6 @@ Slug:  algoI_week3_1
 Tags: algorithm   
 Series: Algorithms Princeton MOOC I 
  
-[TOC]   
    
 Two classical sorting algorithms: mergesort, quicksort.    
    

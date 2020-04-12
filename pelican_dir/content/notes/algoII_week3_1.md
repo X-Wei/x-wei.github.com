@@ -4,7 +4,6 @@ Slug:  algoII_week3_1
 Tags: algorithm         
 Series: Algorithms Princeton MOOC II 
  
-[TOC]
     
 1. Introduction to Maxflow   
 ==========================   

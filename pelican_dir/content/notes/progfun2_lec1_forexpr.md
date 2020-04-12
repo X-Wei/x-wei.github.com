@@ -4,7 +4,6 @@ Slug:  progfun2_lec1_forexpr
 Tags: scala 
 Series: Functional Program Design in Scala 
 
-[TOC] 
 
 Recap: Functions and Pattern Matching
 =====================================

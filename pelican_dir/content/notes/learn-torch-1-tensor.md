@@ -4,7 +4,6 @@ Slug:  learn-torch-1-tensor
 Tags: torch 
 Series: torch学习笔记 
  
-[TOC]
       
  
 A `Tensor` is the fondamental data type in torch, (similar to numpy for tensorflow), it's a potentially multi-dimensional matrix. 

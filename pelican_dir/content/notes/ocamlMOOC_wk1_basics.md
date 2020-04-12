@@ -5,7 +5,6 @@ Tags: OCaml
 Series: Introduction to Functional Programming in OCaml 
  
 
-[TOC]
 
 1. BASIC DATA TYPES: int, bool 
 ============================== 

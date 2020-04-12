@@ -2,7 +2,6 @@ Title: 2015年终总结
 Date: 2015-12-31    
 Slug:  2015-summary  
 
-[TOC]
   
 I. 工作  
 =====  

@@ -4,7 +4,6 @@ Slug:  andev_p1e1_basics
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 1 create project sunshine
 =========================

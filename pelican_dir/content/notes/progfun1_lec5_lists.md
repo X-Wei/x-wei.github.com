@@ -4,7 +4,6 @@ Slug:  progfun1_lec5_lists
 Tags: scala 
 Series: Functional Programming Principles in Scala
  
-[TOC]
 
 
 5.1 - More Functions on Lists

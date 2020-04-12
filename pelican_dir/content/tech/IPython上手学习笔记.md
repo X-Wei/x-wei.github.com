@@ -3,7 +3,6 @@ Date: 2014-07-22
 Slug: IPython上手学习笔记
 Tags: python
  
-[TOC] 
  
 [Learning IPython for Interactive Computing and Data Visualization](http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book)这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. 
 

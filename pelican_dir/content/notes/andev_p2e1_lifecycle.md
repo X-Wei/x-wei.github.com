@@ -4,7 +4,6 @@ Slug:  andev_p2e1_lifecycle
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 
 Android kills background apps !! 

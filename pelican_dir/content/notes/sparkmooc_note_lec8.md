@@ -4,7 +4,6 @@ Slug: sparkmooc_note_lec8
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES
 -------------------------------------------------------

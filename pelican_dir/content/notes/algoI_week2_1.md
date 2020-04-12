@@ -4,7 +4,6 @@ Slug:  algoI_week2_1
 Tags: algorithm
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
 
 fundamental data types: stacks and queues
 operations: 

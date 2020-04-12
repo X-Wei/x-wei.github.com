@@ -4,7 +4,6 @@ Slug:  algoII_week6_3_intractability
 Tags: algorithm            
 Series: Algorithms Princeton MOOC II 
  
-[TOC]
  
 # 1. Introduction to Intractability   
      

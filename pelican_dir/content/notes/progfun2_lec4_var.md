@@ -4,7 +4,6 @@ Slug: progfun2_lec4_var
 Tags: scala     
 Series: Functional Program Design in Scala  
     
-[TOC]    
  
  
 this week: discuss how to handle events in user-interface — MVC, functional reactive programming.  

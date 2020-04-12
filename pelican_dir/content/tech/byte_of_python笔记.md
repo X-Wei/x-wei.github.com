@@ -3,7 +3,6 @@ Date: 2014-04-10
 Tags: python
 Slug: byte_of_python笔记
  
-[TOC] 
 
 
 

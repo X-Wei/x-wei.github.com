@@ -4,7 +4,6 @@ Slug:  progfun1_lec6_collections
 Tags: scala 
 Series: Functional Programming Principles in Scala
  
-[TOC]
 
 6.1 - Other Collections
 =======================

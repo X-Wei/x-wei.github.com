@@ -4,7 +4,6 @@ Slug:  algoI_week1_1
 Tags: algorithm
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
 
 1. Dynamic Connectivity pb
 ==========================

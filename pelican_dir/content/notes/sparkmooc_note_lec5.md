@@ -4,7 +4,6 @@ Slug: sparkmooc_note_lec5
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 KEY DATA MANAGEMENT CONCEPTS
 ----------------------------

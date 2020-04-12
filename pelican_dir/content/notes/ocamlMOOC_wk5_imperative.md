@@ -4,7 +4,6 @@ Slug: ocamlMOOC_wk5_imperative
 Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
-[TOC]  
   
   
 1. IMPERATIVE FEATURES IN OCAML  

@@ -3,7 +3,6 @@ Date: 2016-05-27
 Slug: codejam-2015-r2pbC     
 Tags: algorithm, codejam   
  
-[TOC] 
    
 昨天做的一道codejam题目, 这个题目的三种解法都非常有代表性, 特此一记.    
    

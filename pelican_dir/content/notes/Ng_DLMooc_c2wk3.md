@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c2wk3
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
   
-[TOC]  
   
 Hyperparameter parameters  
 -------------------------  

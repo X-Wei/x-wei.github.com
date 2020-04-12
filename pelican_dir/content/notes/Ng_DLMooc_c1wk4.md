@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c1wk4
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
  
-[TOC]
 
 Deep L-layer neural network
 ---------------------------

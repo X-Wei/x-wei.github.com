@@ -4,7 +4,6 @@ Slug:  progfun2_lec2_lazyeval
 Tags: scala  
 Series: Functional Program Design in Scala 
  
-[TOC] 
  
 Lecture 2.1 - Structural Induction on Trees (optional) 
 ====================================================== 

@@ -4,7 +4,6 @@ Slug: sparkmooc_note_lec6
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 RELATIONAL DATABASE
 -------------------

@@ -3,7 +3,6 @@ Date: 2013-11-29
 Tags: android, java
 Slug: java线程小结
  
-[TOC] 
 
 
 INF422的TD2, 这节TD是要做一个多线程筛选质数的程序, 关于java的多线程, 以前用过但是不知道啥意思, 在这里总结下. 

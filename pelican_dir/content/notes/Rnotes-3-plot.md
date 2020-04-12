@@ -4,7 +4,6 @@ Slug:  Rnotes-3-plot
 Tags: R
 Series: R语言从入门到放弃
  
-[TOC]
 
 
 R关于绘图应该可以写很多, 不过这里只列举在compstat这门课里最经常用的几个函数. 关于R的绘图, 详细了解可以运行 ``demo(graphics)``或者 ``example("plot")``.

@@ -3,7 +3,6 @@ date: 2015-02-02
 Slug: hashcode2014-solved-by-LP
 Tags: LP, algorithm
 
-[TOC]
 
 INF580(programmation par contraintes) 大概是在X学到的最有用的一门课, 它让我能够用把运筹学(MAP557)里学到的东西和计算机结合起来: 用电脑的力量解决(大规模)运筹问题. 
 

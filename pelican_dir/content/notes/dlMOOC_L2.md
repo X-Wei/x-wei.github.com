@@ -4,7 +4,6 @@ Slug: dlMOOC_L2
 Tags: deep learning   
 Series: Deep Learning udacity MOOC
  
-[TOC]
   
   
 Linear models  

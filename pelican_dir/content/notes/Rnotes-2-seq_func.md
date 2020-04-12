@@ -4,7 +4,6 @@ Slug:  Rnotes-2-seq_func
 Tags: R
 Series: R语言从入门到放弃
  
-[TOC]
 
 
 首先, R似乎默认所有的变量都为向量vector, 即使一个单独的数字也是长度为1的, 所以``1``等价于``c(1)``.  

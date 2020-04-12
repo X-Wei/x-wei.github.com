@@ -4,7 +4,6 @@ Slug: sparkmooc_note_lec7
 Tags: spark
 Series: spark MOOC
  
-[TOC]  
 
 DATA CLEANING
 -------------

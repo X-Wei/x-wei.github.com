@@ -4,7 +4,6 @@ Slug:  algoI_week4_2b
 Tags: algorithm   
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
  
 (BST是锻炼递归代码的好题目)   
    

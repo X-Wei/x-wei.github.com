@@ -4,7 +4,6 @@ Slug:  progfun1_lec4_pattern_matching
 Tags: scala    
 Series: Functional Programming Principles in Scala 
  
-[TOC]
  
 4.1 - Objects Everywhere 
 ------------------------ 

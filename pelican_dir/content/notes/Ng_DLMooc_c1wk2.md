@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c1wk2
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
  
-[TOC]
 
 This week: **logistic regression**.
 

@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c5wk1
 Tags: deep learning    
 Series: Andrew Ng Deep Learning MOOC    
     
-[TOC]    
     
     
 week1  

@@ -4,7 +4,6 @@ Slug: ocamlMOOC_wk0_intro
 Tags: OCaml  
 Series: Introduction to Functional Programming in OCaml 
 
-[TOC]
 
 Intro
 =====

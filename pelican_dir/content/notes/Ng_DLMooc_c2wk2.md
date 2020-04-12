@@ -4,7 +4,6 @@ Slug:  Ng_DLMooc_c2wk2
 Tags: deep learning  
 Series: Andrew Ng Deep Learning MOOC  
      
-[TOC]    
   
 This week: optimization algos to faster train NN, on large dataset.  
   

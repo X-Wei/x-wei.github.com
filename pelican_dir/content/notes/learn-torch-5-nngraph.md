@@ -4,7 +4,6 @@ Slug: learn-torch-5-nngraph
 Tags: torch   
 Series: torch学习笔记 
  
-[TOC]
       
  
 ref: <http://rnduja.github.io/2015/10/07/deep_learning_with_torch_step_4_nngraph/>   

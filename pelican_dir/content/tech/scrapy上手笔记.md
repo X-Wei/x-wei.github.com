@@ -3,7 +3,6 @@ date: 2015-04-19
 Slug: Scrapy 上手笔记
 Tags: python, scrapy
  
-[TOC] 
 
 Scrapy是用来爬取数据的很流行的包, 这里小记一下. 以前几天做的[一个爬虫](https://github.com/X-Wei/OneArticleCrawler)为例子, 这个爬虫把韩寒一个app的前九百多期的文章抓了下来. 
 

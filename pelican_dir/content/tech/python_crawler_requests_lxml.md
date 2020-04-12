@@ -3,7 +3,6 @@ date: 2016-12-29
 Slug: python_crawler_requests_lxml  
 Tags: python  
    
-[TOC]   
   
 前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些[教程](http://ke.jikexueyuan.com/xilie/116), 现在来简单总结一下. 主要介绍用``requests`` + ``lxml``的方式, ``scrapy``的话之前写过一篇介绍性的[文章](http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html), 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   
   

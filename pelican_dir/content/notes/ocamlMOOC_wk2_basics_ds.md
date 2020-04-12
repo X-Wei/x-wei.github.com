@@ -5,7 +5,6 @@ Tags: OCaml
 Series: Introduction to Functional Programming in OCaml  
    
   
-[TOC]  
   
   
   

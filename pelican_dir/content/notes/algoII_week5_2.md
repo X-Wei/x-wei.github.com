@@ -4,7 +4,6 @@ Slug:  algoII_week5_2
 Tags: algorithm             
 Series: Algorithms Princeton MOOC II 
  
-[TOC]  
   
 1. Introduction to Data Compression  
 ===================================  

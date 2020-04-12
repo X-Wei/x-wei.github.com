@@ -4,7 +4,6 @@ Slug:  andev_p1e4_intents
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 
 So far: single screen with a single activity. 

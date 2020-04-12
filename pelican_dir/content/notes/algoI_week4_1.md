@@ -4,7 +4,6 @@ Slug:  algoI_week4_1
 Tags: algorithm   
 Series: Algorithms Princeton MOOC I 
  
-[TOC]  
    
 1. API and elementary implementations   
 =====================================   

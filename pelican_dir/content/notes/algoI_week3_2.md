@@ -4,7 +4,6 @@ Slug:  algoI_week3_2
 Tags: algorithm      
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
 
    
 (maybe best algorithm for sorting.)   

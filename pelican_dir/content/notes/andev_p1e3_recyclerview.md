@@ -4,7 +4,6 @@ Slug:  andev_p1e3_recyclerview
 Tags: android    
 Series: Associate Android Developer Fast Track 
  
-[TOC]
 
 
 Recycler View, Adaper, ViewHolder

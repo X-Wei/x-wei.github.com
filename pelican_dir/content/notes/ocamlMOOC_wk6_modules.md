@@ -4,7 +4,6 @@ Slug: ocamlMOOC_wk6_modules
 Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml 
    
-[TOC]  
   
 this week: programming-in-the-large using the module system of OCaml.  
   

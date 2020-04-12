@@ -4,7 +4,6 @@ Slug:  algoI_week4_2a
 Tags: algorithm   
 Series: Algorithms Princeton MOOC I 
  
-[TOC]
     
 1. Symbol Table API   
 ===================   

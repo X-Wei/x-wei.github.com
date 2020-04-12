@@ -4,7 +4,6 @@ Slug: dfs-summary
 Tags: algorithm      
 Series: 算法笔记
  
-[TOC] 
    
 今天总结一下也许是搜索问题里最重要的算法: DFS !    
    

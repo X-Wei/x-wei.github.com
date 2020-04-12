@@ -4,7 +4,6 @@ Slug: bfs-summary
 Tags: algorithm   
 Series: 算法笔记
  
-[TOC] 
    
    
 今天总结一下广度优先搜索(BFS). BFS是树/图的遍历的常用算法之一, 对于没有边权重的图来说可以计算最短路径.    

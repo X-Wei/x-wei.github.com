@@ -4,7 +4,6 @@ Slug:  algoI_week5_2
 Tags: algorithm       
 Series: Algorithms Princeton MOOC I 
  
-[TOC]   
    
 1. 1d Range Search   
 ==================   

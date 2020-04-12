@@ -4,7 +4,6 @@ Slug:  algoII_week6_1_reductions
 Tags: algorithm         
 Series: Algorithms Princeton MOOC II 
  
-[TOC]  
   
   
 Goal: classify problems according to computational requirements.   

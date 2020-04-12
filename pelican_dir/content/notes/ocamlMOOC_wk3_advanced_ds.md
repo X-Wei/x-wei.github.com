@@ -4,7 +4,6 @@ Slug: ocamlMOOC_wk3_advanced_ds
 Tags: OCaml   
 Series: Introduction to Functional Programming in OCaml   
    
-[TOC]  
   
 Last week, we only defined *flat data structures* which are nice to aggregate values but quite limited when you try to structure values.   
   

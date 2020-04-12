@@ -4,7 +4,6 @@ Slug: dlMOOC_L1
 Tags: deep learning 
 Series: Deep Learning udacity MOOC
  
-[TOC]
 
 这是udacity上deeplearning的笔记, 做得非常粗糙, 而且这门课也只是介绍性质的... 
 <https://www.udacity.com/course/deep-learning--ud730>

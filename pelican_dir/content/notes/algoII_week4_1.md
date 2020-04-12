@@ -4,7 +4,6 @@ Slug:  algoII_week4_1
 Tags: algorithm       
 Series: Algorithms Princeton MOOC II 
  
-[TOC] 
 
   
 More efficient version of symbol-table where the keys are strings.   

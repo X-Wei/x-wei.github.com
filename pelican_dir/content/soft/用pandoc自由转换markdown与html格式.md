@@ -3,7 +3,6 @@ Slug: 用pandoc自由转换markdown与html格式
 Tags: markdown
 Date: 2012-06-07
  
-[TOC] 
  
 markdown虽然写起来方便, 但是要预览的话还要用ReText打开, 而且ReText好像是Qt程序, 打开文件时不如别的编辑器那么流畅. 所以想找一个可以把markdown文件变成html格式的工具.
 

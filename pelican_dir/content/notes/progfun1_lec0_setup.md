@@ -4,7 +4,6 @@ Slug:  progfun1_lec0_setup
 Tags: scala
 Series: Functional Programming Principles in Scala
  
-[TOC]
  
 >Get up and running with Scala on your computer. Complete an example assignment to familiarize yourself with our unique way of submitting assignments.
 
