@@ -143,7 +143,6 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 PLUGIN_PATHS = ['pelican-plugins']
 
 MD_EXTENSIONS = ['admonition',
-                 'toc',
                  'codehilite(css_class=highlight,linenums=False)',
                  'extra']
 
