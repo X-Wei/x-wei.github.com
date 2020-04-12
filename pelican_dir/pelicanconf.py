@@ -19,14 +19,15 @@ DEFAULT_LANG = 'zh'
 LOCALE = 'zh_CN.utf8'
 
 DATE_FORMATS = {
-    'zh': ((u'en_US', 'utf8'), u'%a, %d %b %Y',),
+    'zh': (
+        (u'en_US', 'utf8'),
+        u'%a, %d %b %Y',
+    ),
 }
-
 
 DISQUS_SITENAME = 'xweisblog'
 DISQUS_DISPLAY_COUNTS = False
 GOOGLE_ANALYTICS = 'UA-30756331-1'
-
 
 
 LINKS_SITE = (
@@ -43,17 +44,23 @@ CATEGORY_FEED_ATOM = None
 
 DEFAULT_PAGINATION = 10
 
-STATIC_PATHS = ['pages',
-                'static',
-                'images',
-                'images/favicon.ico',
-                'static/CNAME']
+STATIC_PATHS = [
+    'pages', 'static', 'images', 'images/favicon.ico', 'static/CNAME'
+]
 
 EXTRA_PATH_METADATA = {
-    'images/favicon.ico': {'path': 'favicon.ico'},
-    'static/CNAME': {'path': 'CNAME'},
-    'static/robots.txt': {'path': 'robots.txt'},
-    'static/manifest.json': {'path': 'manifest.json'},
+    'images/favicon.ico': {
+        'path': 'favicon.ico'
+    },
+    'static/CNAME': {
+        'path': 'CNAME'
+    },
+    'static/robots.txt': {
+        'path': 'robots.txt'
+    },
+    'static/manifest.json': {
+        'path': 'manifest.json'
+    },
     #~ 'tag/images': {'path': '../images'}
 }
 
@@ -84,7 +91,8 @@ DISPLAY_CATEGORY_IN_BREADCRUMBS = True
 CC_LICENSE = "CC-BY-NC-SA"
 OUTPUT_SOURCES = False
 
-DIRECT_TEMPLATES = (('search', 'index', 'categories', 'authors', 'archives','tags'))
+DIRECT_TEMPLATES = (('search', 'index', 'categories', 'authors', 'archives',
+                     'tags'))
 AVATAR = 'images/mx.jpg'
 ABOUT_PAGE = "about.html"
 ABOUT_ME = ur"""
@@ -138,27 +146,41 @@ s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff
 
 # ------- end theme settings -------
 
-
 # ------- plugin settings ----------
 PLUGIN_PATHS = ['pelican-plugins']
 
-MD_EXTENSIONS = ['admonition',
-                 'codehilite(css_class=highlight,linenums=False)',
-                 'extra']
+MARKDOWN = {
+    'extension_configs': {
+        'admonition': {},
+        'toc': {},
+        'codehilite': {
+            'css_class': 'highlight',
+            'linenums': False
+        },
+        'extra': {}
+    }
+}
 
-PLUGINS = [#"i18n_subsites",
-           "better_codeblock_line_numbering",
-           #~ 'better_figures_and_images',
-           'pelican-toc',
-           'tipue_search',
-           'neighbors',
-           'series',
-           'bootstrapify',
-           "render_math",
-        #    'extract_toc',
-           'tag_cloud',
-           'sitemap',
-           'summary']
+TOC = {
+    'TOC_HEADERS'       : '^h[1-6]',
+    'TOC_RUN'           : 'true',
+    'TOC_INCLUDE_TITLE': 'false',
+}
+
+PLUGINS = [  #"i18n_subsites",
+    "better_codeblock_line_numbering",
+    #~ 'better_figures_and_images',
+    'pelican-toc',
+    'tipue_search',
+    'neighbors',
+    'series',
+    'bootstrapify',
+    "render_math",
+    # 'extract_toc',
+    'tag_cloud',
+    'sitemap',
+    'summary'
+]
 
 SITEMAP = {
     'format': 'xml',
@@ -171,6 +193,4 @@ RELATIVE_URLS = True
 CHECK_MODIFIED_METHOD = "md5"
 LOAD_CONTENT_CACHE = True
 CACHE_CONTENT = True
-
-
 

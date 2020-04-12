@@ -22,8 +22,6 @@ USE_LESS = False
 
 # Following items are often useful when publishing
 
-
-
 DISQUS_SITENAME = 'xweisblog'
 DISQUS_DISPLAY_COUNTS = False
 GOOGLE_ANALYTICS = 'UA-30756331-1'
