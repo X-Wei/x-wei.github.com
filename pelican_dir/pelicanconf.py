@@ -135,7 +135,7 @@ ABOUT_ME = ur"""
 <br>
 <h4 class="widget-title">Who are visiting</h4>
 <div class="textwidget" >
-<script type="text/javascript" src="https://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
+<script type="text/javascript" src="http://jf.revolvermaps.com/2/1.js?i=59olkba9w7e&amp;
 s=180&amp;z=11&amp;m=3&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async">
 </script></div>
 
