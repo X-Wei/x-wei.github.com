@@ -8,7 +8,7 @@ SITENAME = "mx's blog"
 
 SITEURL = '//' + getenv("SITEURL", default='localhost:8000')
 
-SITEURL = 'http://x-wei.github.io'
+SITEURL = 'https://x-wei.github.io'
 
 OUTPUT_PATH = 'output/'
 
