@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Scala MOOC II] Lec2: Lazy Evaluation - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="scala" />
+        <meta name="description" content="Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1)&amp;...&amp;P ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Scala MOOC II] Lec2: Lazy Evaluation"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html"/>
+        <meta property="og:description" content="Lecture 2.1 - Structural Induction on Trees (optional) Generalize the structural induction on list to general structures like trees. To prove a property P(t) for all trees t: * show for any leave l, P(l) holds * for each internal node t with subtrees s1...sn, show P(s1)&amp;...&amp;P ..."/>
+        <meta property="article:published_time" content="2016-10-22" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="scala" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/progfun2_lec2_lazyeval.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Scala MOOC II] Lec2: Lazy Evaluation - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[Scala MOOC II] Lec2: Lazy Evaluation</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Scala MOOC II] Lec2: Lazy Evaluation
+                        <a href="https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Scala MOOC II] Lec2: Lazy Evaluation 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-10-22T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 22 Oct 2016</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/scala.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> scala</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 2 of «Functional Program Design in Scala» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#lecture-21-structural-induction-on-trees-optional" title="Lecture 2.1 - Structural Induction on Trees (optional)">Lecture 2.1 - Structural Induction on Trees (optional)</a><ul><li><a class="toc-href" href="#example-prove-correctness-for-intsets" title="Example: Prove correctness for IntSets">Example: Prove correctness for IntSets</a></li></ul></li><li><a class="toc-href" href="#lecture-22-streams_1" title="Lecture 2.2 - Streams">Lecture 2.2 - Streams</a><ul><li><a class="toc-href" href="#stream-class" title="Stream class">Stream class</a></li><li><a class="toc-href" href="#implementation-of-streams" title="Implementation of Streams">Implementation of Streams</a></li></ul></li><li><a class="toc-href" href="#lecture-23-lazy-evaluation_1" title="Lecture 2.3 - Lazy Evaluation">Lecture 2.3 - Lazy Evaluation</a></li><li><a class="toc-href" href="#lecture-24-computing-with-infinite-sequences" title="Lecture 2.4 - Computing with Infinite Sequences">Lecture 2.4 - Computing with Infinite Sequences</a><ul><li><a class="toc-href" href="#example2-square-root" title="example2: square root">example2: square root</a></li></ul></li><li><a class="toc-href" href="#lecture-25-case-study-the-water-pouring-problem_1" title="Lecture 2.5 - Case Study: the Water Pouring Problem">Lecture 2.5 - Case Study: the Water Pouring Problem</a></li><li><a class="toc-href" href="#programming-assignment-bloxorz" title="Programming Assignment: Bloxorz">Programming Assignment: Bloxorz</a></li></ul></div>
+                        </div>
+                    </div>
+                <h1 id="lecture-21-structural-induction-on-trees-optional">Lecture 2.1 - Structural Induction on Trees (optional)</h1>
+<p>Generalize the structural induction on list to general structures like trees.  </p>
+<blockquote>
+<p>To prove a property <code>P(t)</code> for all trees <code>t</code>: <br/>
+    * show for any leave l, <code>P(l)</code> holds<br/>
+    * for each internal node <code>t</code> with subtrees <code>s1...sn</code>, show <code>P(s1)&amp;...&amp;P(sn)</code> holds  </p>
+</blockquote>
+<h2 id="example-prove-correctness-for-intsets">Example: Prove correctness for IntSets</h2>
+<p>recall the <code>IntSet</code> def: empty set or non-empty set organized in a binary (search) tree structure. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="nc">IntSet</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">incl</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntSet</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">contains</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> </span>
+<span class="code-line"><span class="o">}</span> </span>
+<span class="code-line"><span class="k">object</span> <span class="nc">Empty</span> <span class="k">extends</span> <span class="nc">IntSet</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">contains</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">incl</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntSet</span> <span class="o">=</span> <span class="nc">NonEmpty</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="nc">Empty</span><span class="o">,</span> <span class="nc">Empty</span><span class="o">)</span> </span>
+<span class="code-line"><span class="o">}</span> </span>
+<span class="code-line"><span class="k">class</span> <span class="nc">NonEmpty</span><span class="o">(</span><span class="n">elem</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">left</span><span class="k">:</span> <span class="kt">IntSet</span><span class="o">,</span> <span class="n">right</span><span class="k">:</span> <span class="kt">IntSet</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">IntSet</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="c1">// NonEmpty is just a BST </span></span>
+<span class="code-line">    <span class="k">def</span> <span class="n">contains</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>  </span>
+<span class="code-line">        <span class="k">if</span> <span class="o">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">elem</span><span class="o">)</span> <span class="n">left</span> <span class="n">contains</span> <span class="n">x</span> </span>
+<span class="code-line">        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">elem</span><span class="o">)</span> <span class="n">right</span> <span class="n">contains</span> <span class="n">x</span> </span>
+<span class="code-line">        <span class="k">else</span> <span class="kc">true</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">incl</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">IntSet</span> <span class="o">=</span>  </span>
+<span class="code-line">        <span class="k">if</span> <span class="o">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">elem</span><span class="o">)</span> <span class="nc">NonEmpty</span><span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">left</span> <span class="n">incl</span> <span class="n">x</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> </span>
+<span class="code-line">        <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">elem</span><span class="o">)</span> <span class="nc">NonEmpty</span><span class="o">(</span><span class="n">elem</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span> <span class="n">incl</span> <span class="n">x</span><span class="o">)</span> </span>
+<span class="code-line">        <span class="k">else</span> <span class="k">this</span> </span>
+<span class="code-line"><span class="o">}</span> </span>
+</pre></div>
+<p><strong>Prove the correctness</strong> of this implementation: show that it respects certain laws:  </p>
+<p><strong>prop1:</strong> <code>Empty contains x = false</code> </p>
+<p>pf: easy... </p>
+<p><strong>prop2:</strong> <code>(s incl x) contains x = true</code> </p>
+<p>pf: proof by structual induction on <code>s</code> </p>
+<ul>
+<li>
+<p>base case: <code>s = Empty</code>,  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">(Empty incl x) = NonEmpty(x, Empty, Empty) </span></span>
+<span class="code-line"><span class="err">NonEmpty(x, Empty, Empty) contains x = true</span></span>
+</pre></div>
+</li>
+<li>
+<p>induction step: <code>s=NonEmpty(z,l,r)</code> </p>
+<ul>
+<li>first case, <code>z=x</code> 
+        s incl x = NonEmpty(x,l,r) incl x = NonEmpty(x,l,r) </li>
+</ul>
+<p>so <code>NonEmpty(x, l, r) contains x = true</code> 
+- second case, z&lt;x 
+<code>s incl x = NonEmpty(z,l,r) incl x = NonEmpty(z,l,r incl x)</code> 
+so: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">(s incl x) contains x  </span></span>
+<span class="code-line"><span class="err">= NonEmpty(z,l,r incl x) contains x  </span></span>
+<span class="code-line"><span class="err">= (r incl x) contains x = ture // by induction hypothesis</span></span>
+</pre></div>
+<ul>
+<li>third case, z&gt;x: symmetric ... </li>
+</ul>
+</li>
+</ul>
+<p><strong>prop3:</strong> if x!=y, <code>(s incl x) contains y = s contains y</code> </p>
+<p>pf: by structual induction </p>
+<ul>
+<li>base case: <code>s = Empty</code> </li>
+<li>induction step: <code>s=NonEmpty(z,l,r)</code> 
+    5 cases to consider... <ul>
+<li>z=x </li>
+<li>z=y </li>
+<li>z&lt;y&lt;x </li>
+<li>y&lt;z&lt;x </li>
+<li>y&lt;x&lt;z </li>
+</ul>
+</li>
+</ul>
+<h1 id="lecture-22-streams_1">Lecture 2.2 - Streams</h1>
+<p>motivation: 2nd prime number between 1000 and 10000:  </p>
+<p>elegant, but not efficient solution:<br/>
+<code>( (1000 to 10000) filter isPrime) (1)</code> </p>
+<p>→ ALL prime numbers are constructed in the code, only use the first 2 elements...  </p>
+<p>⇒ *avoid computing the tail of a seq until necessary * </p>
+<p>→ new data structure: <code>Stream</code>s, like lists, but <em>tail is eval only on demand</em> </p>
+<h2 id="stream-class">Stream class</h2>
+<p><strong>constructor</strong> 
+Streams defined from either constant <code>Stream.empty</code> and constructor <code>Stream.cons</code> 
+ex: <code>val xs = Stream.cons(1, Stram.cons(2, Stream.empty))</code> </p>
+<p>(Stream.empty~=<code>Nil</code>, Stream.cons~=<code>::</code>) </p>
+<p>or by using the <code>Stream</code> object as a factory (like other collections): <code>val xs = Stream(1,2,3)</code> </p>
+<p><strong>toStream()</strong>
+<code>toStream</code> on a collection will turn the collection into a stream.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>    <span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">1000</span><span class="o">).</span><span class="n">toStream</span> </span>
+<span class="code-line">    <span class="n">res1</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Stream</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="o">?)</span> <span class="c1">// the tail is (?) -- not evaled </span></span>
+</pre></div>
+<p>The tail is not evaled! </p>
+<p>let's write a function to return a range as Stream ( returns <code>(lo until hi).toStream)</code> ):  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="n">streamRange</span><span class="o">(</span><span class="n">lo</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">hi</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span>  </span>
+<span class="code-line">    <span class="k">if</span> <span class="o">(</span><span class="n">lo</span><span class="o">&gt;</span><span class="n">hi</span><span class="o">)</span> <span class="n">stream</span><span class="o">.</span><span class="n">empty</span><span class="o">)</span> </span>
+<span class="code-line">    <span class="k">else</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">lo</span><span class="o">,</span> <span class="n">stramRange</span><span class="o">(</span><span class="n">lo</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">))</span> </span>
+</pre></div>
+<p><strong>other methods</strong>
+<code>Stream</code> supports almost all method of a <code>List</code> </p>
+<p><code>((1000 to 10000).toStream filter isPrime)(1)</code> </p>
+<p>Exception: concat operator <code>::</code> will always return a list instead of a stream. 
+→ alternative: <code>#::</code> returns a stream 
+<code>x#::xs == Stream.cons(x,xs)</code> </p>
+<h2 id="implementation-of-streams">Implementation of Streams</h2>
+<p>similar to the implementation of lists.  </p>
+<p><code>scala
+trait Stream[+A] extends Seq[A]{ 
+    def isEmpty: Boolean 
+    def head: A 
+    def tail: Stream [A] 
+}</code></p>
+<p>concrete implementations are in the <code>Stream</code> <em>companion object</em>: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">object</span> <span class="nc">Stream</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">cons</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">hd</span><span class="k">:</span><span class="kt">T</span><span class="o">,</span> <span class="n">tl</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span> <span class="c1">// **`=&gt;`: tl is by name, will be evaled later!  </span></span>
+<span class="code-line">        <span class="k">new</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">]{</span> </span>
+<span class="code-line">            <span class="k">def</span> <span class="n">isEmpty</span> <span class="k">=</span> <span class="kc">false</span> </span>
+<span class="code-line">            <span class="k">def</span> <span class="n">head</span> <span class="k">=</span> <span class="n">hd</span> </span>
+<span class="code-line">            <span class="k">def</span> <span class="n">tail</span> <span class="k">=</span> <span class="n">tl</span> </span>
+<span class="code-line">        <span class="o">}</span> </span>
+<span class="code-line">    <span class="k">val</span> <span class="n">empty</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">Nothing</span><span class="o">]{</span> </span>
+<span class="code-line">        <span class="k">def</span> <span class="n">isEmpty</span> <span class="k">=</span> <span class="kc">true</span> </span>
+<span class="code-line">        <span class="k">def</span> <span class="n">head</span> <span class="k">=</span> <span class="k">throw</span> <span class="k">new</span> <span class="nc">NoSuchElementException</span><span class="o">(</span><span class="s">"empty.head"</span><span class="o">)</span> </span>
+<span class="code-line">        <span class="k">def</span> <span class="n">tail</span> <span class="k">=</span> <span class="k">throw</span> <span class="k">new</span> <span class="nc">NoSuchElementException</span><span class="o">(</span><span class="s">"empty.tail"</span><span class="o">)</span> </span>
+<span class="code-line">    <span class="o">}</span> </span>
+<span class="code-line"><span class="o">}</span></span>
+</pre></div>
+<p>all other methods are implemented similar to list counterparts...<br/>
+ex:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">+T</span><span class="o">]{</span> </span>
+<span class="code-line"><span class="c1">//... </span></span>
+<span class="code-line">  <span class="k">def</span> <span class="n">filter</span><span class="o">(</span><span class="n">p</span><span class="k">:</span> <span class="kt">T</span><span class="o">=&gt;</span><span class="nc">Boolean</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">]</span> <span class="k">=</span>  </span>
+<span class="code-line">    <span class="k">if</span> <span class="o">(</span><span class="n">isEmpty</span><span class="o">)</span> <span class="k">this</span></span>
+<span class="code-line">    <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">p</span><span class="o">(</span><span class="n">head</span><span class="o">))</span> <span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">p</span><span class="o">))</span><span class="c1">// tail.filter(p) will be evaled on demande</span></span>
+<span class="code-line">    <span class="k">else</span> <span class="n">tail</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">p</span><span class="o">)</span></span>
+<span class="code-line">    <span class="c1">//... </span></span>
+<span class="code-line"><span class="o">}</span> </span>
+</pre></div>
+<h1 id="lecture-23-lazy-evaluation_1">Lecture 2.3 - Lazy Evaluation</h1>
+<p>pb with the last implementation of Streams: if tail is called several times, the corresponding stram will be re-computed each time.  </p>
+<p>→ can store the 1st result of the eval and use it later. (As in FP, the eval result never change) </p>
+<p>⇒ this scheme is called <strong>lazy evaluation</strong>, as opposed to both by-name evaluation (<code>def x</code>) and strict-evaluation (<code>val x</code>). avoids both unnessary and repeated eval.  </p>
+<p><code>lazy val x = expr</code> </p>
+<p>exercice:  </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image.png"/> 
+→ this will print: "xzyz" </p>
+<p>adapt the lazy scheme for Stream implementation:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="n">cons</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">hd</span><span class="k">:</span> <span class="kt">T</span><span class="o">,</span> <span class="n">tl</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">])</span> <span class="k">=</span>  </span>
+<span class="code-line"><span class="k">new</span> <span class="nc">Stream</span><span class="o">[</span><span class="kt">T</span><span class="o">]{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">head</span> <span class="k">=</span> <span class="n">hd</span> </span>
+<span class="code-line">    <span class="k">lazy</span> <span class="k">val</span> <span class="n">tail</span> <span class="k">=</span> <span class="n">tl</span> <span class="c1">// **lazy instead of `def`** </span></span>
+<span class="code-line">    <span class="c1">//... </span></span>
+<span class="code-line">    <span class="o">}</span> </span>
+</pre></div>
+<h1 id="lecture-24-computing-with-infinite-sequences">Lecture 2.4 - Computing with Infinite Sequences</h1>
+<p>with lazyness, can deal with inf seqs. ⇒ <em>infinite Streams</em> </p>
+<p>example: the stream of all integers starting from a given number:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="k">from</span><span class="p">(</span><span class="nl">n</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">Stream</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w">  </span></span>
+<span class="code-line"><span class="n">n</span><span class="w"> </span><span class="err">#</span><span class="o">::</span><span class="w"> </span><span class="k">from</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">non</span><span class="o">-</span><span class="n">terminating</span><span class="w"> </span><span class="k">recursive</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="n">here</span><span class="w"></span></span>
+</pre></div>
+<p>all natural numbers:<br/>
+<code>val nats = from(0)</code> 
+all multiples of 4:<br/>
+<code>nats map (_ * 4)</code> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">n</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">n</span> <span class="o">#::</span> <span class="n">from</span><span class="o">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span> </span>
+<span class="code-line"><span class="n">from</span><span class="k">:</span> <span class="o">(</span><span class="kt">n:</span> <span class="kt">Int</span><span class="o">)</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">nats</span> <span class="k">=</span> <span class="n">from</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> </span>
+<span class="code-line"><span class="n">nats</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Stream</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">?)</span> </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">m4s</span> <span class="k">=</span> <span class="n">nats</span> <span class="n">map</span> <span class="o">(</span><span class="k">_</span> <span class="o">*</span> <span class="mi">4</span><span class="o">)</span> </span>
+<span class="code-line"><span class="n">m4s</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Stream</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">?)</span> </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">m4s</span> <span class="n">take</span> <span class="mi">10</span><span class="o">).</span><span class="n">toList</span> </span>
+<span class="code-line"><span class="n">res2</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">12</span><span class="o">,</span> <span class="mi">16</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">24</span><span class="o">,</span> <span class="mi">28</span><span class="o">,</span> <span class="mi">32</span><span class="o">,</span> <span class="mi">36</span><span class="o">)</span> </span>
+<span class="code-line"> <span class="err">``</span><span class="n">`</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">example1: Sieve of Eratosthenes </span></span>
+<span class="code-line"><span class="n">------------------------------- </span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">![](../images/progfun2_lec2_lazyeval/pasted_image001.png) </span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">written in scala:  </span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">`</span><span class="err">``</span><span class="n">scala</span> </span>
+<span class="code-line"><span class="k">def</span> <span class="n">sieve</span><span class="o">(</span><span class="n">s</span><span class="k">:</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="c1">// param s is the prime numbers for sieve </span></span>
+<span class="code-line"><span class="n">s</span><span class="o">.</span><span class="n">head</span> <span class="o">#::</span> <span class="n">sieve</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="n">tail</span> <span class="n">filter</span> <span class="o">(</span><span class="k">_</span> <span class="o">%</span> <span class="n">s</span><span class="o">.</span><span class="n">head</span><span class="o">!=</span><span class="mi">0</span><span class="o">))</span> </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">primes</span> <span class="k">=</span> <span class="n">sieve</span><span class="o">(</span><span class="n">from</span><span class="o">(</span><span class="mi">2</span><span class="o">))</span> </span>
+<span class="code-line"><span class="n">primes</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Stream</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="o">?)</span> </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">scala</span><span class="o">&gt;</span> <span class="n">primes</span><span class="o">.</span><span class="n">take</span><span class="o">(</span><span class="mi">100</span><span class="o">).</span><span class="n">toList</span> </span>
+<span class="code-line"><span class="n">res0</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">13</span><span class="o">,</span> <span class="mi">17</span><span class="o">,</span> <span class="mi">19</span><span class="o">,</span> <span class="mi">23</span><span class="o">,</span> <span class="mi">29</span><span class="o">,</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">37</span><span class="o">,</span> <span class="mi">41</span><span class="o">,</span> <span class="mi">43</span><span class="o">,</span> <span class="mi">47</span><span class="o">,</span> <span class="mi">53</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">61</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">71</span><span class="o">,</span> <span class="mi">73</span><span class="o">,</span> <span class="mi">79</span><span class="o">,</span> <span class="mi">83</span><span class="o">,</span> <span class="mi">89</span><span class="o">,</span> <span class="mi">97</span><span class="o">,</span> <span class="mi">101</span><span class="o">,</span> <span class="mi">103</span><span class="o">,</span> <span class="mi">107</span><span class="o">,</span> <span class="mi">109</span><span class="o">,</span> <span class="mi">113</span><span class="o">,</span> <span class="mi">127</span><span class="o">,</span> <span class="mi">131</span><span class="o">,</span> <span class="mi">137</span><span class="o">,</span> <span class="mi">139</span><span class="o">,</span> <span class="mi">149</span><span class="o">,</span> <span class="mi">151</span><span class="o">,</span> <span class="mi">157</span><span class="o">,</span> <span class="mi">163</span><span class="o">,</span> <span class="mi">167</span><span class="o">,</span> <span class="mi">173</span><span class="o">,</span> <span class="mi">179</span><span class="o">,</span> <span class="mi">181</span><span class="o">,</span> <span class="mi">191</span><span class="o">,</span> <span class="mi">193</span><span class="o">,</span> <span class="mi">197</span><span class="o">,</span> <span class="mi">199</span><span class="o">,</span> <span class="mi">211</span><span class="o">,</span> <span class="mi">223</span><span class="o">,</span> <span class="mi">227</span><span class="o">,</span> <span class="mi">229</span><span class="o">,</span> <span class="mi">233</span><span class="o">,</span> <span class="mi">239</span><span class="o">,</span> <span class="mi">241</span><span class="o">,</span> <span class="mi">251</span><span class="o">,</span> <span class="mi">257</span><span class="o">,</span> <span class="mi">263</span><span class="o">,</span> <span class="mi">269</span><span class="o">,</span> <span class="mi">271</span><span class="o">,</span> <span class="mi">277</span><span class="o">,</span> <span class="mi">281</span><span class="o">,</span> <span class="mi">283</span><span class="o">,</span> <span class="mi">293</span><span class="o">,</span> <span class="mi">307</span><span class="o">,</span> <span class="mi">311</span><span class="o">,</span> <span class="mi">313</span><span class="o">,</span> <span class="mi">317</span><span class="o">,</span> <span class="mi">331</span><span class="o">,</span> <span class="mi">337</span><span class="o">,</span> <span class="mi">347</span><span class="o">,</span> <span class="mi">349</span><span class="o">,</span> <span class="mi">353</span><span class="o">,</span> <span class="mi">359</span><span class="o">,</span> <span class="mi">367</span><span class="o">,</span> <span class="mi">373</span><span class="o">,</span> <span class="mi">379</span><span class="o">,</span> <span class="mi">383</span><span class="o">,</span> <span class="mi">389</span><span class="o">,</span> <span class="mi">397</span><span class="o">,</span> <span class="mi">401</span><span class="o">,</span> <span class="mi">409</span><span class="o">,</span> <span class="mi">419</span><span class="o">,</span> <span class="mi">421</span><span class="o">,</span> <span class="mi">431</span><span class="o">,</span> <span class="mi">433</span><span class="o">,</span> <span class="mi">439</span><span class="o">,</span> <span class="mi">443</span><span class="o">,</span> <span class="mi">449</span><span class="o">,</span> <span class="mi">457</span><span class="o">,</span> <span class="mi">461</span><span class="o">,</span> <span class="mi">463</span><span class="o">,</span> <span class="mi">467</span><span class="o">,</span> <span class="mi">479</span><span class="o">,</span> <span class="mi">487</span><span class="o">,</span> <span class="mi">491</span><span class="o">,</span> <span class="mi">499</span><span class="o">,</span> <span class="mi">503</span><span class="o">,</span> <span class="mi">509</span><span class="o">,</span> <span class="mi">521</span><span class="o">,</span> <span class="mi">523</span><span class="o">,</span> <span class="mi">541</span><span class="o">)</span> </span>
+</pre></div>
+<h2 id="example2-square-root">example2: square root</h2>
+<p>previous implementation: use <code>isGoodEnough</code> test termination. 
+now: express the converging seq without having to worry about when to terminate:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">def</span> <span class="n">sqrtStream</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">improve</span><span class="o">(</span><span class="n">guess</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="n">guess</span> <span class="o">+</span> <span class="n">x</span><span class="o">/</span><span class="n">guess</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span> </span>
+<span class="code-line">    <span class="k">lazy</span> <span class="k">val</span> <span class="n">guesses</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Double</span><span class="o">]</span> <span class="k">=</span> <span class="mi">1</span> <span class="o">#::</span> <span class="o">(</span><span class="n">guesses</span> <span class="n">map</span> <span class="n">improve</span><span class="o">)</span> <span class="c1">//**this will not explod!** </span></span>
+<span class="code-line">    <span class="n">guesses</span> </span>
+<span class="code-line"><span class="o">}</span> </span>
+<span class="code-line"><span class="k">def</span> <span class="n">isGoodEnough</span><span class="o">(</span><span class="n">guess</span><span class="k">:</span> <span class="kt">Double</span><span class="o">,</span> <span class="n">x</span><span class="k">:</span> <span class="kt">Double</span><span class="o">)</span> <span class="k">=</span> </span>
+<span class="code-line">    <span class="n">math</span><span class="o">.</span><span class="n">abs</span><span class="o">((</span><span class="n">guess</span> <span class="o">*</span> <span class="n">guess</span> <span class="o">-</span> <span class="n">x</span><span class="o">)</span> <span class="o">/</span> <span class="n">x</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mf">0.0001</span> </span>
+<span class="code-line"><span class="o">(</span><span class="n">sqrtStream</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span> <span class="n">filter</span> <span class="o">(</span><span class="n">isGoodEnough</span><span class="o">(</span><span class="k">_</span><span class="o">,</span> <span class="mi">4</span><span class="o">))</span> <span class="o">)</span> <span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="c1">// get the 1st guess that is good enough </span></span>
+</pre></div>
+<h1 id="lecture-25-case-study-the-water-pouring-problem_1">Lecture 2.5 - Case Study: the Water Pouring Problem</h1>
+<p><strong>task: "water pouring problem"</strong> 
+given: source, sink, glasses of different sizes, target size...<br/>
+goal: fill/empty/move water from 1 glass to another 
+<img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image002.png"/> </p>
+<p><strong>Model</strong> 
+Glass: <code>Int</code> 
+State: <code>Vector[Int]</code> one entry per glass 
+Moves:<br/>
+<code>Empty(glass), Fill(glass), Pour(from, to)</code> </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image004.png"/> 
+question: how to find the correct sequence of moves ?<br/>
+⇒ BFS, generate all possible paths (from initial state where all glasses are empty) of length=1,2,3,...  </p>
+<p><strong>Implementation</strong> </p>
+<p>first: define Move classes, they have a change method, take one state as param and return a state:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Pouring</span><span class="o">(</span><span class="n">capacity</span><span class="k">:</span><span class="kt">Vector</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="o">{</span> </span>
+<span class="code-line">  <span class="k">type</span> <span class="kt">State</span> <span class="o">=</span> <span class="nc">Vector</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> </span>
+<span class="code-line">  <span class="k">val</span> <span class="n">initialState</span> <span class="k">=</span> <span class="n">capacity</span> <span class="n">map</span> <span class="o">(</span> <span class="n">x</span> <span class="k">=&gt;</span> <span class="mi">0</span> <span class="o">)</span> </span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="k">trait</span> <span class="nc">Move</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">change</span><span class="o">(</span><span class="n">state</span><span class="k">:</span><span class="kt">State</span><span class="o">)</span><span class="k">:</span><span class="kt">State</span> </span>
+<span class="code-line">  <span class="o">}</span> </span>
+<span class="code-line">  <span class="k">case</span> <span class="k">class</span> <span class="nc">Empty</span><span class="o">(</span><span class="n">glass</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Move</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">change</span><span class="o">(</span><span class="n">state</span><span class="k">:</span> <span class="kt">State</span><span class="o">)</span> <span class="k">=</span> <span class="n">state</span><span class="o">.</span><span class="n">updated</span><span class="o">(</span><span class="n">glass</span><span class="o">,</span><span class="mi">0</span><span class="o">)</span> </span>
+<span class="code-line">  <span class="o">}</span> </span>
+<span class="code-line">  <span class="k">case</span> <span class="k">class</span> <span class="nc">Fill</span><span class="o">(</span><span class="n">glass</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Move</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">change</span><span class="o">(</span><span class="n">state</span><span class="k">:</span> <span class="kt">State</span><span class="o">)</span> <span class="k">=</span> <span class="n">state</span><span class="o">.</span><span class="n">updated</span><span class="o">(</span><span class="n">glass</span><span class="o">,</span><span class="n">capacity</span><span class="o">(</span><span class="n">glass</span><span class="o">))</span> </span>
+<span class="code-line">  <span class="o">}</span> </span>
+<span class="code-line">  <span class="k">case</span> <span class="k">class</span> <span class="nc">Pour</span><span class="o">(</span><span class="n">from</span><span class="k">:</span><span class="kt">Int</span><span class="o">,</span> <span class="n">to</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Move</span><span class="o">{</span> </span>
+<span class="code-line">    <span class="k">def</span> <span class="n">change</span><span class="o">(</span><span class="n">state</span><span class="k">:</span> <span class="kt">State</span><span class="o">)</span> <span class="o">={</span> </span>
+<span class="code-line">      <span class="k">val</span> <span class="n">amount</span> <span class="k">=</span> <span class="n">state</span><span class="o">(</span><span class="n">from</span><span class="o">)</span> <span class="n">min</span> <span class="o">(</span><span class="n">capacity</span><span class="o">(</span><span class="n">to</span><span class="o">)-</span><span class="n">state</span><span class="o">(</span><span class="n">to</span><span class="o">))</span> <span class="c1">//the amount to move </span></span>
+<span class="code-line">      <span class="n">state</span> <span class="n">updated</span> <span class="o">(</span><span class="n">from</span><span class="o">,</span> <span class="n">state</span><span class="o">(</span><span class="n">from</span><span class="o">)-</span><span class="n">amount</span><span class="o">)</span> <span class="n">updated</span> <span class="o">(</span><span class="n">to</span><span class="o">,</span> <span class="n">state</span><span class="o">(</span><span class="n">to</span><span class="o">)+</span><span class="n">amount</span><span class="o">)</span> </span>
+<span class="code-line">    <span class="o">}</span> </span>
+<span class="code-line">  <span class="o">}</span> </span>
+<span class="code-line">  <span class="o">...</span> </span>
+<span class="code-line"><span class="o">}</span> </span>
+</pre></div>
+<p>generate all possible moves:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">val</span> <span class="n">glasses</span> <span class="k">=</span> <span class="n">capacity</span><span class="o">.</span><span class="n">indices</span> <span class="c1">// equal to `0 until capacity.length` </span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="k">val</span> <span class="n">moves</span> <span class="k">=</span>  <span class="c1">// all possible moves </span></span>
+<span class="code-line"><span class="o">(</span> <span class="k">for</span><span class="o">(</span><span class="n">g</span><span class="k">&lt;-</span><span class="n">glasses</span><span class="o">)</span> <span class="k">yield</span> <span class="nc">Empty</span><span class="o">(</span><span class="n">g</span><span class="o">)</span> <span class="o">)</span> <span class="o">++</span> </span>
+<span class="code-line">  <span class="o">(</span> <span class="k">for</span><span class="o">(</span><span class="n">g</span><span class="k">&lt;-</span><span class="n">glasses</span><span class="o">)</span> <span class="k">yield</span> <span class="nc">Fill</span><span class="o">(</span><span class="n">g</span><span class="o">)</span> <span class="o">)</span> <span class="o">++</span> </span>
+<span class="code-line">  <span class="o">(</span> <span class="k">for</span><span class="o">(</span><span class="n">gfrom</span><span class="k">&lt;-</span><span class="n">glasses</span><span class="o">;</span> <span class="n">gto</span><span class="k">&lt;-</span><span class="n">glasses</span><span class="o">;</span> <span class="k">if</span> <span class="n">gfrom</span><span class="o">!=</span><span class="n">gto</span><span class="o">)</span> <span class="k">yield</span> <span class="nc">Pour</span><span class="o">(</span><span class="n">gfrom</span><span class="o">,</span> <span class="n">gto</span><span class="o">)</span> <span class="o">)</span> </span>
+</pre></div>
+<p>Then define a <code>Path</code> class: </p>
+<div class="highlight"><pre><span class="code-line"><span></span>  <span class="k">class</span> <span class="nc">Path</span><span class="o">(</span><span class="n">history</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Move</span><span class="o">]){</span><span class="c1">// history: moves in reversed order</span></span>
+<span class="code-line">    <span class="k">def</span> <span class="n">endState</span><span class="k">:</span><span class="kt">State</span> <span class="o">=</span> <span class="c1">// given a path (list ot moves), return the final state by following the path</span></span>
+<span class="code-line">      <span class="o">(</span><span class="n">history</span> <span class="n">foldRight</span><span class="o">(</span><span class="n">initialState</span><span class="o">))</span> <span class="o">(</span> <span class="o">(</span><span class="n">mv</span><span class="k">:</span><span class="kt">Move</span><span class="o">,</span> <span class="n">stt</span><span class="k">:</span><span class="kt">State</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">mv</span> <span class="n">change</span> <span class="n">stt</span><span class="o">)</span> <span class="c1">// as in the list are reversed order of moves, use foldright</span></span>
+<span class="code-line"></span>
+<span class="code-line">    <span class="k">def</span> <span class="n">extend</span><span class="o">(</span><span class="n">move</span><span class="k">:</span> <span class="kt">Move</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="n">move</span><span class="o">::</span><span class="n">history</span><span class="o">)</span></span>
+<span class="code-line"></span>
+<span class="code-line">    <span class="k">override</span> <span class="k">def</span> <span class="n">toString</span> <span class="k">=</span></span>
+<span class="code-line">      <span class="o">(</span> <span class="n">history</span><span class="o">.</span><span class="n">reverse</span> <span class="n">mkString</span> <span class="s">" "</span> <span class="o">)</span> <span class="o">+</span> <span class="s">"--&gt;"</span> <span class="o">+</span> <span class="n">endState</span></span>
+<span class="code-line">  <span class="o">}</span></span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="k">val</span> <span class="n">initialPath</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="nc">Nil</span><span class="o">)</span></span>
+</pre></div>
+<p>Then define a <code>Stream</code> of path sets: given current (set of) paths, extend one move and generate (a set of) paths of longer length:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>  <span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">paths</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">]]</span> <span class="o">={</span></span>
+<span class="code-line">    <span class="k">if</span><span class="o">(</span><span class="n">paths</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span></span>
+<span class="code-line">    <span class="k">else</span> <span class="o">{</span></span>
+<span class="code-line">      <span class="k">val</span> <span class="n">more</span> <span class="k">=</span> <span class="k">for</span><span class="o">{</span></span>
+<span class="code-line">        <span class="n">path</span><span class="k">&lt;-</span><span class="n">paths</span></span>
+<span class="code-line">        <span class="n">next</span> <span class="k">&lt;-</span> <span class="n">moves</span> <span class="n">map</span> <span class="n">path</span><span class="o">.</span><span class="n">extend</span></span>
+<span class="code-line">      <span class="o">}</span><span class="k">yield</span> <span class="n">next</span></span>
+<span class="code-line">      <span class="n">paths</span> <span class="o">#::</span> <span class="n">from</span><span class="o">(</span><span class="n">more</span><span class="o">)</span></span>
+<span class="code-line">    <span class="o">}</span></span>
+<span class="code-line">  <span class="o">}</span></span>
+<span class="code-line">  <span class="k">val</span> <span class="n">pathSets</span> <span class="k">=</span> <span class="n">from</span><span class="o">(</span><span class="nc">Set</span><span class="o">(</span><span class="n">initialPath</span><span class="o">))</span></span>
+</pre></div>
+<p>finally, solve the problem: for each path, track its end state, and if the target value is in the end state, return the path.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>  <span class="k">def</span> <span class="n">solutions</span><span class="o">(</span><span class="n">target</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span><span class="k">:</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Path</span><span class="o">]</span> <span class="k">=</span></span>
+<span class="code-line">    <span class="k">for</span><span class="o">{</span></span>
+<span class="code-line">      <span class="n">pathsets</span> <span class="k">&lt;-</span> <span class="n">pathSets</span></span>
+<span class="code-line">      <span class="n">path</span> <span class="k">&lt;-</span> <span class="n">pathsets</span></span>
+<span class="code-line">      <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endState</span> <span class="n">contains</span> <span class="n">target</span></span>
+<span class="code-line">    <span class="o">}</span> <span class="k">yield</span> <span class="n">path</span></span>
+</pre></div>
+<p>pb: too slow for some case 
+→ we generate ALL paths of a certain length in the stream, but in the paths, we should avoid returning to a preivous state !<br/>
+→ re-define the <code>from</code> function: add a param of explored set of states.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span>  <span class="k">def</span> <span class="n">from</span><span class="o">(</span><span class="n">paths</span><span class="k">:</span> <span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">],</span> <span class="n">explored</span><span class="k">:</span><span class="kt">Set</span><span class="o">[</span><span class="kt">State</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Set</span><span class="o">[</span><span class="kt">Path</span><span class="o">]]</span> <span class="o">={</span></span>
+<span class="code-line">    <span class="k">if</span><span class="o">(</span><span class="n">paths</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span></span>
+<span class="code-line">    <span class="k">else</span> <span class="o">{</span></span>
+<span class="code-line">      <span class="k">val</span> <span class="n">more</span> <span class="k">=</span> <span class="k">for</span><span class="o">{</span></span>
+<span class="code-line">        <span class="n">path</span><span class="k">&lt;-</span><span class="n">paths</span></span>
+<span class="code-line">        <span class="n">nextpath</span> <span class="k">&lt;-</span> <span class="n">moves</span> <span class="n">map</span> <span class="n">path</span><span class="o">.</span><span class="n">extend</span></span>
+<span class="code-line">        <span class="k">if</span> <span class="o">(</span><span class="n">explored</span> <span class="n">contains</span> <span class="n">nextpath</span><span class="o">.</span><span class="n">endState</span><span class="o">)==</span><span class="kc">false</span></span>
+<span class="code-line">      <span class="o">}</span><span class="k">yield</span> <span class="n">nextpath</span></span>
+<span class="code-line">      <span class="k">val</span> <span class="n">newstates</span> <span class="k">=</span> <span class="n">more</span> <span class="n">map</span> <span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">endState</span><span class="o">)</span></span>
+<span class="code-line">      <span class="n">paths</span> <span class="o">#::</span> <span class="n">from</span><span class="o">(</span><span class="n">more</span><span class="o">,</span> <span class="n">explored</span><span class="o">.</span><span class="n">union</span><span class="o">(</span><span class="n">newstates</span><span class="o">))</span></span>
+<span class="code-line">    <span class="o">}</span></span>
+<span class="code-line">  <span class="o">}</span></span>
+<span class="code-line">  <span class="k">val</span> <span class="n">pathSets</span> <span class="k">=</span> <span class="n">from</span><span class="o">(</span><span class="nc">Set</span><span class="o">(</span><span class="n">initialPath</span><span class="o">),</span> <span class="nc">Set</span><span class="o">(</span><span class="n">initialState</span><span class="o">))</span></span>
+</pre></div>
+<p>→ more improvement: avoid computing <code>endState</code>(a <code>foldRight</code>) over and over again — add to class param.  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">class</span> <span class="nc">Path</span><span class="o">(</span><span class="n">history</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Move</span><span class="o">],</span> <span class="k">val</span> <span class="n">endState</span><span class="k">:</span><span class="kt">State</span><span class="o">){</span><span class="c1">// history: moves in reversed order</span></span>
+<span class="code-line">  <span class="k">def</span> <span class="n">extend</span><span class="o">(</span><span class="n">move</span><span class="k">:</span> <span class="kt">Move</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Path</span><span class="o">(</span><span class="n">move</span><span class="o">::</span><span class="n">history</span><span class="o">,</span> <span class="n">move</span> <span class="n">change</span> <span class="n">endState</span><span class="o">)</span></span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="k">override</span> <span class="k">def</span> <span class="n">toString</span> <span class="k">=</span></span>
+<span class="code-line">    <span class="o">(</span> <span class="n">history</span><span class="o">.</span><span class="n">reverse</span> <span class="n">mkString</span> <span class="s">" "</span> <span class="o">)</span> <span class="o">+</span> <span class="s">"--&gt;"</span> <span class="o">+</span> <span class="n">endState</span> </span>
+<span class="code-line"><span class="o">}</span></span>
+</pre></div>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec2_lazyeval/pasted_image005.png"/> </p>
+<h1 id="programming-assignment-bloxorz">Programming Assignment: Bloxorz</h1>
+<p>https://github.com/X-Wei/Coursera-progfun2/tree/master/hw2-stream-bloxorz/streams</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/soft/pelican3_blog_and_theme.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        pelican3建立github博客&主题配置
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/ocamlMOOC_wk1_basics.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [OCaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 2 of series «Functional Program Design in Scala»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec1_forexpr.html' style="text-align:left">[Scala MOOC II] Lec1: For Expressions and Monads</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html' style="text-align:left">[Scala MOOC II] Lec2: Lazy Evaluation</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec3_var.html' style="text-align:left">[Scala MOOC II] Lec 3: Functions and State</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec4_var.html' style="text-align:left">[Scala MOOC II] Lec4 - Timely Effects</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'progfun2_lec2_lazyeval';
+                        var disqus_url = 'https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/notes/progfun2_lec1_forexpr.html">[Scala MOOC II] Lec1: For Expressions and Monads</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/progfun2_lec3_var.html">[Scala MOOC II] Lec 3: Functions and State</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#lecture-21-structural-induction-on-trees-optional" title="Lecture 2.1 - Structural Induction on Trees (optional)">Lecture 2.1 - Structural Induction on Trees (optional)</a><ul><li><a class="toc-href" href="#example-prove-correctness-for-intsets" title="Example: Prove correctness for IntSets">Example: Prove correctness for IntSets</a></li></ul></li><li><a class="toc-href" href="#lecture-22-streams_1" title="Lecture 2.2 - Streams">Lecture 2.2 - Streams</a><ul><li><a class="toc-href" href="#stream-class" title="Stream class">Stream class</a></li><li><a class="toc-href" href="#implementation-of-streams" title="Implementation of Streams">Implementation of Streams</a></li></ul></li><li><a class="toc-href" href="#lecture-23-lazy-evaluation_1" title="Lecture 2.3 - Lazy Evaluation">Lecture 2.3 - Lazy Evaluation</a></li><li><a class="toc-href" href="#lecture-24-computing-with-infinite-sequences" title="Lecture 2.4 - Computing with Infinite Sequences">Lecture 2.4 - Computing with Infinite Sequences</a><ul><li><a class="toc-href" href="#example2-square-root" title="example2: square root">example2: square root</a></li></ul></li><li><a class="toc-href" href="#lecture-25-case-study-the-water-pouring-problem_1" title="Lecture 2.5 - Case Study: the Water Pouring Problem">Lecture 2.5 - Case Study: the Water Pouring Problem</a></li><li><a class="toc-href" href="#programming-assignment-bloxorz" title="Programming Assignment: Bloxorz">Programming Assignment: Bloxorz</a></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

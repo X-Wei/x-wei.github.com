@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>Priority Queue/Heap (优先队列/堆)小结 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/tech/heap-summary.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="algorithm" />
+        <meta name="description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Priority Queue/Heap (优先队列/堆)小结"/>
+        <meta property="og:url" content="https://x-wei.github.io/tech/heap-summary.html"/>
+        <meta property="og:description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..."/>
+        <meta property="article:published_time" content="2015-12-09" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="algorithm" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/heap-summary.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">Priority Queue/Heap (优先队列/堆)小结 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/tech/index.html" title="tech">tech</a></li>
+                <li class="active">Priority Queue/Heap (优先队列/堆)小结</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        Priority Queue/Heap (优先队列/堆)小结
+                        <a href="https://x-wei.github.io/tech/heap-summary.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 Priority Queue/Heap (优先队列/堆)小结 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-12-09T00:00:00+01:00"><i class="fa fa-calendar"></i> Wed, 09 Dec 2015</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/tech/index.html">tech</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 6 of «算法笔记» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#logical-structure-of-pq" title="logical structure of PQ">logical structure of PQ</a></li><li><a class="toc-href" href="#array-representation-of-pq" title="array representation of PQ">array representation of PQ</a></li><li><a class="toc-href" href="#pq-implementation" title="PQ implementation">PQ implementation</a><ul><li><a class="toc-href" href="#siftup" title="siftup">siftup</a></li><li><a class="toc-href" href="#siftdown" title="siftdown">siftdown</a></li><li><a class="toc-href" href="#implementation-of-add-and-poll_1" title="implementation of add and poll">implementation of add and poll</a></li></ul></li><li><a class="toc-href" href="#pq-application_1" title="PQ application">PQ application</a><ul><li><a class="toc-href" href="#heapsort" title="heapsort">heapsort</a></li><li><a class="toc-href" href="#heapify" title="heapify">heapify</a></li><li><a class="toc-href" href="#top-k-elements-of-a-stream" title="top K elements of a stream">top K elements of a stream</a></li><li><a class="toc-href" href="#median-of-a-stream" title="median of a stream">median of a stream</a></li></ul></li><li><a class="toc-href" href="#more-about-heap_1" title="more about heap">more about heap</a><ul><li><a class="toc-href" href="#k-way-heap" title="k-way heap">k-way heap</a></li><li><a class="toc-href" href="#more-flexible-heap" title='more "flexible" heap'>more "flexible" heap</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <p>今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现.  </p>
+<p>PQ又叫"堆"(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的.   </p>
+<h1 id="logical-structure-of-pq">logical structure of PQ</h1>
+<p>个人感觉"堆"这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种<strong>完全二叉树(complete binary tree)</strong>: 没错, PQ是一种满足某些条件的完全二叉树.   </p>
+<p>所谓的"完全二叉树", 要满足:  </p>
+<blockquote>
+<ul>
+<li>除了最后一层, 所有层都排满(没有非空节点)  </li>
+<li>最后一层的所有非空节点都排在左边  </li>
+</ul>
+</blockquote>
+<p>一张图可以直观说明, 完全二叉树其实就是长得像这样:<br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image.png"/> </p>
+<p>一个完全二叉树能被成为PQ的话, 要满足的条件就是:   </p>
+<blockquote>
+<p>对于任何一个节点, 它的优先级都大于左右子节点的优先级.   </p>
+</blockquote>
+<p>比如下图(圆圈里数字代表优先级):<br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image001.png"/> </p>
+<p>这样看上去的话, 确实像是"一堆"东西的形状(码的还挺整齐的), 而且我们知道在这一堆节点里, 优先级最高的就是最顶上的那个节点了.   </p>
+<p>我很喜欢这个比喻: 一个heap就像是一个<em>公司的hirachy结构:</em> 子节点就是下属, 父节点就是上司, 每一个上司的能力都比他的下属强(优先级比子节点搞). 能力最强(优先级最高)的人在最上面.  </p>
+<h1 id="array-representation-of-pq">array representation of PQ</h1>
+<p>对于一个完全二叉树, 没有必要用常规的树结构(使用指针)来表示, 因为如果从上到下走过每层(每层内从左到右)给所有节点编号(根节点的编号为1)的话, 完全二叉树有以下性质:   </p>
+<blockquote>
+<ul>
+<li><code>father(i) = i/2</code> 其中father(i)表示编号为i的节点的父节点的下标   </li>
+<li><code>leftchild(i) = i*2, rightchild(i) = i*2+1</code> </li>
+</ul>
+</blockquote>
+<p>既然用数组表示的时候, 任何节点的父亲节点和左右子节点都可以轻松得到, 就没有必要使用指针了. 所以只需要一个数组即可表示PQ ! 比如一个int的PQ在内部只要表示为: <code>int pq[]</code>.   </p>
+<p>另外注意, 上面的公式成立的前提是数组下标从1开始, 实现的时候我们把数组的第0个元素空出来即可.   </p>
+<p>不难看出一个PQ有以下性质:   </p>
+<blockquote>
+<ul>
+<li>高度为lgN  </li>
+<li>第k层有 2^k 个节点 (root是第0层)  </li>
+<li>最后一层的节点对应的下标&gt;=N/2  </li>
+</ul>
+</blockquote>
+<h1 id="pq-implementation">PQ implementation</h1>
+<p>先写一下代码框架:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">PQ</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">maxPQ</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">pq</span><span class="err">[]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="o">=</span><span class="mi">1000</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">ArrayList</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="p">(</span><span class="n">rightmost</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="p">)</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">PQ</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">pq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">int</span><span class="o">[</span><span class="n">MAX_CAPACITY+1</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="n">isEmpty</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">size</span><span class="o">==</span><span class="mi">0</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">top</span><span class="p">()</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">element</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">assert</span><span class="w"> </span><span class="err">!</span><span class="n">isEmpty</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">add</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">insert</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">PQ</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">poll</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>最关键的两个函数是<code>add</code>和<code>poll</code>, 实现这两个操作的关键在于两个基本操作: <code>siftup()</code>和<code>siftdown()</code>. 在PQ的性质被扰乱的时候, 使用这两个操作可以使PQ恢复性质(所谓的"调整").   </p>
+<h3 id="siftup">siftup</h3>
+<p>如果一个新元素到来, 首先将其放在最后(最底层最右边的节点), 如果新来节点的优先级比较高, 可以用siftup将其提升到一个合适的层次. 用公司结构来类比就是新入职的员工由于能力强被提高到了高层, 而提升的办法就是: 和上司交换岗位(也就是和父节点交换位置).   </p>
+<p>所以这个操作只要不断把该元素与父节点交换, 直到遇到一个优先级大于该节点的父节点或者已经到了最高处停止. 代码很短:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftup</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">newly</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="k">element</span><span class="w">     </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">i/2</span><span class="o">]&lt;</span><span class="n">pq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">/=</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h3 id="siftdown">siftdown</h3>
+<p>siftdown的功能和siftup相反: 如果在最高处是一个优先级很低的元素, 需要将其"下放". 方法就是把它和子节点里面优先级较高的进行交换.   </p>
+<p>代码也不长, 不过第一次写可能不太简洁:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftdown</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">nothing</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sift</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">empty</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">siftdown</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="n">node</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="k">size</span><span class="p">)</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">int</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">swap</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2</span><span class="o">]&gt;</span><span class="nf">max</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">left</span><span class="w"> </span><span class="n">child</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2</span><span class="o">]</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;=</span><span class="k">size</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">i*2+1</span><span class="o">]&gt;</span><span class="nf">max</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">right</span><span class="w"> </span><span class="n">node</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="err">{</span><span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="nf">max</span><span class="o">=</span><span class="n">pq</span><span class="o">[</span><span class="n">i*2+1</span><span class="o">]</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">bigger</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="k">both</span><span class="w"> </span><span class="n">child</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h2 id="implementation-of-add-and-poll_1">implementation of add and poll</h2>
+<p>有了这两个sift的基本操作, add和poll的操作就简单了. <br/>
+<strong>add</strong><br/>
+加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void add(int n){ // insert element to PQ  </span></span>
+<span class="code-line"><span class="err">    assert size+1&lt;MAX_CAPACITY;  </span></span>
+<span class="code-line"><span class="err">    pq[++size] = n;  </span></span>
+<span class="code-line"><span class="err">    siftup();  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p><strong>poll</strong><br/>
+堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public int poll(){ // get and remove top element  </span></span>
+<span class="code-line"><span class="err">    assert !isEmpty();  </span></span>
+<span class="code-line"><span class="err">    int top = pq[1];  </span></span>
+<span class="code-line"><span class="err">    pq[1] = pq[size--];// put last element on the top  </span></span>
+<span class="code-line"><span class="err">    siftdown();  </span></span>
+<span class="code-line"><span class="err">    return top;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h1 id="pq-application_1">PQ application</h1>
+<p>接下来讲一下PQ的应用.   </p>
+<h3 id="heapsort">heapsort</h3>
+<p>由于每次出队的都是在剩下元素里面最大(小)的, 所以只要把数组的元素放到一个pq里, 然后依次poll出来, 得到的序列就是排序好了的.   </p>
+<p>不管是插入还是删除操作, 每次调整的复杂度为log(n) (堆的高度), 所以算法复杂度为 O(NlgN). 实际使用的时候效率比快速排序/合并排序略差, 以后专门写一篇关于排序算法的文章时再聊.   </p>
+<h3 id="heapify">heapify</h3>
+<p>首先前面的siftdown函数很明显可以修改一下加上一个参数变为<code>siftdown(int i)</code>(i代表要向下调整的元素的下标).   </p>
+<p>在heapsort里第一步是要建立一个PQ. 最naive的建堆操作就是新建一个空的heap然后不断向里面加入数组<code>a</code>里的元素(空间复杂度N, 时间复杂度NlgN). 其实这个操作可以做的更好: 我们<em>先直接把数组a当作pq[]数组</em>, 现在显然它不满足PQ性质, 只需要<em>多次使用siftdown</em>进行调整即可.   </p>
+<p>假设一共有h(=lgN)层, 由于最后一层的节点不必调用siftdown, 我们只要从倒数第二层开始调用siftdown即可, 结合前面提到的pq的性质(N/2以后的节点都在最后一层), 写法很简单(简单起见认为a也是把第0个元素空出来好了):   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static void heapify(int[] a){  </span></span>
+<span class="code-line"><span class="err">    int N = a.length;  </span></span>
+<span class="code-line"><span class="err">    for(int i=N/2;i&lt;=1;i--){  </span></span>
+<span class="code-line"><span class="err">        siftdown(a, i);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>这个操作的时间复杂度是O(N)的 ! 为什么呢?<br/>
+→ 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式: <br/>
+<code>Sigma( 2^k * (h-k) ) for k=0,...,h-1</code><br/>
+<img alt="" class="img-responsive" src="../images/heap-summary/pasted_image002.png"/><br/>
+(具体见 <a href="http://algs4.cs.princeton.edu/24pq/">http://algs4.cs.princeton.edu/24pq/</a> 里面Q20的答案)  </p>
+<h3 id="top-k-elements-of-a-stream">top K elements of a stream</h3>
+<p>问题描述: 一系列数字一个一个到达, 当所有数(假设有N个)都到达以后, 求最大的K个数字.   </p>
+<p>这是一个经典的PQ应用 ⇒ 使用一个最小堆(minPQ)即可达到这个效果: 新建一个minPQ(最小的数字在最上面, 每次当一个数字n到达时:  </p>
+<ul>
+<li>if minPQ.size&lt;K → <code>minPQ.add(n)</code> </li>
+<li>if minPQ.size==K → 比较n和minPQ.top():   <ul>
+<li>if n&gt;minPQ.top(): <code>minPQ.poll(); minPQ.add(n)</code> </li>
+<li>else pass...  </li>
+</ul>
+</li>
+</ul>
+<h3 id="median-of-a-stream">median of a stream</h3>
+<p>问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?<br/>
+这个的解法是使用<em>两个PQ</em>, 一个最大堆<code>maxpq</code>一个最小堆<code>minpq</code>, 然后<em>maxpq里存放较<strong><em>小</em></strong>的一半数字, minpq里存放较<strong><em>大</em></strong>的一半数字: </em><code>maxpq.top()&lt;=minpq.top()</code>. <br/>
+并且我们要求: <code>minpq.size &lt;= maxpq.size &lt;= minpq.size+1</code><br/>
+⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  </p>
+<p>初始时两个pq都是空的, 每次数字n到来时:<br/>
+<em> 先把n放进maxpq里<br/>
+</em> 如果<code>maxpq.size&gt;minpq.size+1</code>的话: <code>minpq.add(maxpq.poll())</code> </p>
+<h1 id="more-about-heap_1">more about heap</h1>
+<h3 id="k-way-heap">k-way heap</h3>
+<p>这里介绍的PQ其实是binary heap, 即这棵树是一个完全<strong>二</strong>叉树, 但是我们完全可以做成完全<strong>K</strong>叉树, 就是所谓的K-way heap了.  </p>
+<p>这样的好处是heap的高度会变得更小(从log2(N)变为logK(N)), 不过由于每个分叉变成了K个, 所以siftdown每次循环的操作复杂度也会增加(从2变为K).   </p>
+<h3 id="more-flexible-heap">more "flexible" heap</h3>
+<p>在某些应用中(比如Dijkstra算法), 我们希望在插入后修改某个元素的优先级, 这时候需要对这个标准的heap做一些修改, 需要用一个数组把元素的"逻辑编号"和在pq数组里的"实际编号"相互转换.   </p>
+<p>不过这个会比较subtle(其实我已经记不起来了...), 见: <a href="http://x-wei.github.io/algoII_week2_2.html">http://x-wei.github.io/algoII_week2_2.html</a> (IndexedPQ部分)</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/algoII_week4_2.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Algorithms II] Week 4-2 Substring Search
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/algoII_week5_1.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Algorithms II] Week 5-1 Regular Expressions<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 6 of series «算法笔记»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/tech/algo-ds-mindmap.html' style="text-align:left">Mindmap of algorithms & data structures</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/tech/bfs-summary.html' style="text-align:left">广度优先搜索(BFS)小结</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/tech/dfs-summary.html' style="text-align:left">深度优先搜索(DFS)小结</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/tech/shortest-path-summary.html' style="text-align:left">最短路径三剑客: Floyd, Dijkstra, Bellman</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/tech/quick-sort-and-more.html' style="text-align:left">quick sort and more: 快速排序算法总结</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/tech/heap-summary.html' style="text-align:left">Priority Queue/Heap (优先队列/堆)小结</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'heap-summary';
+                        var disqus_url = 'https://x-wei.github.io/tech/heap-summary.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/tech/quick-sort-and-more.html">quick sort and more: 快速排序算法总结</a>
+                            </li>
+                            <li class="list-group-item">
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#logical-structure-of-pq" title="logical structure of PQ">logical structure of PQ</a></li><li><a class="toc-href" href="#array-representation-of-pq" title="array representation of PQ">array representation of PQ</a></li><li><a class="toc-href" href="#pq-implementation" title="PQ implementation">PQ implementation</a><ul><li><a class="toc-href" href="#siftup" title="siftup">siftup</a></li><li><a class="toc-href" href="#siftdown" title="siftdown">siftdown</a></li><li><a class="toc-href" href="#implementation-of-add-and-poll_1" title="implementation of add and poll">implementation of add and poll</a></li></ul></li><li><a class="toc-href" href="#pq-application_1" title="PQ application">PQ application</a><ul><li><a class="toc-href" href="#heapsort" title="heapsort">heapsort</a></li><li><a class="toc-href" href="#heapify" title="heapify">heapify</a></li><li><a class="toc-href" href="#top-k-elements-of-a-stream" title="top K elements of a stream">top K elements of a stream</a></li><li><a class="toc-href" href="#median-of-a-stream" title="median of a stream">median of a stream</a></li></ul></li><li><a class="toc-href" href="#more-about-heap_1" title="more about heap">more about heap</a><ul><li><a class="toc-href" href="#k-way-heap" title="k-way heap">k-way heap</a></li><li><a class="toc-href" href="#more-flexible-heap" title='more "flexible" heap'>more "flexible" heap</a></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

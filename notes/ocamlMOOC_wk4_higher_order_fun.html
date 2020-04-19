@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/ocamlMOOC_wk4_higher_order_fun.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="OCaml" />
+        <meta name="description" content="1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the functional expr is t1 -&gt; t2 where t1 is the type of some_identifier, t2 is type of some_expr ex. function x -&gt; x + 1;; (function x -&gt; 2*x) 5;; (*annonymous function*) the previous way of defining function: let ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/ocamlMOOC_wk4_higher_order_fun.html"/>
+        <meta property="og:description" content="1. FUNCTIONAL EXPRESSIONS syntax for functional expr: function some_identifier -&gt; some_expr the type of the functional expr is t1 -&gt; t2 where t1 is the type of some_identifier, t2 is type of some_expr ex. function x -&gt; x + 1;; (function x -&gt; 2*x) 5;; (*annonymous function*) the previous way of defining function: let ..."/>
+        <meta property="article:published_time" content="2016-11-22" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="OCaml" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/ocamlMOOC_wk4_higher_order_fun.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [OCaml MOOC] week4: HIGHER ORDER FUNCTIONS
+                        <a href="https://x-wei.github.io/notes/ocamlMOOC_wk4_higher_order_fun.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [OCaml MOOC] week4: HIGHER ORDER FUNCTIONS 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-11-22T00:00:00+01:00"><i class="fa fa-calendar"></i> Tue, 22 Nov 2016</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/ocaml.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> OCaml</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 5 of «Introduction to Functional Programming in OCaml» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#1-functional-expressions" title="1. FUNCTIONAL EXPRESSIONS">1. FUNCTIONAL EXPRESSIONS</a></li><li><a class="toc-href" href="#2-functions-as-first-class-values" title="2. FUNCTIONS AS FIRST-CLASS VALUES">2. FUNCTIONS AS FIRST-CLASS VALUES</a><ul><li><a class="toc-href" href="#function-pitfalls" title="function pitfalls">function pitfalls</a></li></ul></li><li><a class="toc-href" href="#3-functions-with-multiple-arguments_1" title="3. FUNCTIONS WITH MULTIPLE ARGUMENTS">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</a></li><li><a class="toc-href" href="#4-partial-function-application" title="4. PARTIAL FUNCTION APPLICATION">4. PARTIAL FUNCTION APPLICATION</a><ul><li><a class="toc-href" href="#partial-evaluation" title="partial evaluation">partial evaluation</a></li></ul></li><li><a class="toc-href" href="#5-mapping-functions-on-lists_1" title="5. MAPPING FUNCTIONS ON LISTS">5. MAPPING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#examples" title="examples">examples</a></li></ul></li><li><a class="toc-href" href="#6-folding-functions-on-lists_1" title="6. FOLDING FUNCTIONS ON LISTS">6. FOLDING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#fold_right" title="fold_right">fold_right</a></li><li><a class="toc-href" href="#fold_left" title="fold_left">fold_left</a></li><li><a class="toc-href" href="#examples_1" title="examples">examples</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <h1 id="1-functional-expressions">1. FUNCTIONAL EXPRESSIONS</h1>
+<p>syntax for functional expr: <code>function some_identifier -&gt; some_expr</code><br/>
+the type of the functional expr is <code>t1 -&gt; t2</code> where t1 is the type of some_identifier, t2 is type of some_expr  </p>
+<p>ex.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="mi">5</span><span class="o">;;</span> <span class="c">(*annonymous function*)</span>   </span>
+</pre></div>
+<p>the previous way of defining function:   </p>
+<p><code>let f x = e</code>,   </p>
+<p>is just an abbreviation for common let-binding:   </p>
+<p><code>let f = function x -&gt; e</code> </p>
+<p>In fact, the most general form of a function definitoin contains a seq of pattern matching:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">function</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">pattern_1</span> <span class="o">-&gt;</span> <span class="n">expr_1</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">pattern_2</span> <span class="o">-&gt;</span> <span class="n">expr_2</span>   </span>
+</pre></div>
+<p>When only 1 pattern, the <code>|</code> is omitted.  </p>
+<p>example   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">rc</span> <span class="n">length</span> <span class="o">=</span> <span class="k">function</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">0</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="o">_::</span><span class="n">r</span> <span class="o">-&gt;</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">length</span> <span class="n">r</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">type</span> <span class="n">expr</span> <span class="o">=</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="nc">Int</span> <span class="k">of</span> <span class="kt">int</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="nc">Add</span> <span class="k">of</span> <span class="n">expr</span> <span class="o">*</span> <span class="n">expr</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="k">rec</span> <span class="n">eval</span> <span class="o">=</span> <span class="k">function</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="nc">Int</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">n</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="nc">Add</span><span class="o">(</span><span class="n">e1</span><span class="o">,</span> <span class="n">e2</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">eval</span> <span class="n">e1</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">eval</span> <span class="n">e2</span><span class="o">);;</span>   </span>
+</pre></div>
+<h1 id="2-functions-as-first-class-values">2. FUNCTIONS AS FIRST-CLASS VALUES</h1>
+<p>functional types are just values of a particular type, thus this allows the uniform way of naming a value let x = ...   </p>
+<p>Types govern function application. We can apply e1 to e2 when:   </p>
+<ul>
+<li>e1 has type t1 -&gt; t2  </li>
+<li>t1 matchs the type of e2  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f1</span> <span class="o">=</span> <span class="o">[(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)];;</span>  </span>
+<span class="code-line"><span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="n">fl</span><span class="o">)</span> <span class="mi">17</span><span class="o">;;</span>  </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="k">let</span> <span class="n">apply_twice</span> <span class="n">f</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">apply_twice</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="mi">1</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="k">rec</span> <span class="n">apply_n_times</span> <span class="n">f</span> <span class="n">n</span> <span class="n">x</span> <span class="o">=</span>   </span>
+<span class="code-line">  <span class="k">if</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">0</span> <span class="k">then</span> <span class="n">x</span>  </span>
+<span class="code-line">  <span class="k">else</span> <span class="n">apply_n_times</span> <span class="n">f</span> <span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">(</span><span class="n">f</span> <span class="n">x</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">apply_n_times</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="mi">10</span> <span class="mi">1</span><span class="o">;;</span>  </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="k">let</span> <span class="n">compose</span> <span class="n">f</span> <span class="n">g</span> <span class="o">=</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span> <span class="n">x</span><span class="o">));;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">fg</span> <span class="o">=</span> <span class="n">compose</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span><span class="o">-&gt;</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="k">in</span>  </span>
+<span class="code-line"><span class="n">fg</span> <span class="mi">10</span><span class="o">;;</span>   </span>
+</pre></div>
+<h3 id="function-pitfalls">function pitfalls</h3>
+<p>function apply from left to right (<em>function application associates to the left</em>):   </p>
+<p><code>exp1 exp2 exp3</code> <br/>
+is equivalent to: <code>(exp1 exp2) exp3</code> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">double</span> <span class="o">=</span> <span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">double</span> <span class="n">double</span> <span class="mi">5</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">double</span> <span class="o">(</span><span class="n">double</span> <span class="mi">5</span><span class="o">);;</span>   </span>
+</pre></div>
+<h1 id="3-functions-with-multiple-arguments_1">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</h1>
+<p>anonymous function with several arguments: use keyword <code>fun</code>:<br/>
+<code>fun p1 ... pn -&gt; exp</code> </p>
+<p>unlike <code>function</code> keyword, <code>fun</code> <em>only admits one case/branch</em> </p>
+<p>remark: funs with several arguments are just abbrevations for single-argument functions that returns a function:  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f1</span> <span class="o">=</span> <span class="k">function</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">+</span><span class="n">x</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="o">(</span><span class="n">f1</span> <span class="mi">17</span><span class="o">)</span> <span class="mi">73</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">f1</span> <span class="mi">17</span> <span class="mi">73</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">f2</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">n</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">n</span><span class="o">+</span><span class="n">x</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">f2</span> <span class="mi">17</span> <span class="mi">73</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="o">(</span><span class="n">f2</span> <span class="mi">17</span><span class="o">)</span> <span class="mi">73</span><span class="o">;;</span>   </span>
+</pre></div>
+<p>in fact, <code>fun x1 ... xn -&gt; e</code> is just abbreviation for: <code>function x1 -&gt; (..(function x2 -&gt; ... -&gt; (function xn -&gt; e)..)</code> </p>
+<h1 id="4-partial-function-application">4. PARTIAL FUNCTION APPLICATION</h1>
+<p><code>let f = fun x y -&gt; exp</code> is equivalent to: <code>let f = function x -&gt; (function y -&gt; exp)</code> </p>
+<p>⇒ partially apply f (ie, <code>f x</code>) will give a function.    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f1</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span><span class="n">z</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span> <span class="mi">1</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">f3</span> <span class="o">=</span> <span class="n">f2</span> <span class="mi">2</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">f3</span> <span class="mi">4</span><span class="o">;;</span>   </span>
+</pre></div>
+<p>what happens at func-application:<br/>
+when applying <code>f = function x-&gt;e</code> to <code>a</code>:<br/>
+→ evaluate <code>e</code> in the context <code>x=a</code><br/>
+→ the arrow <code>-&gt;</code> will <strong>block</strong> any evaluation  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">f</span> <span class="o">=</span> <span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="n">y</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span> <span class="mi">17</span><span class="o">;;</span> <span class="c">(*error will not happen here, as the `-&gt;` blocks the evaluation!*)</span>  </span>
+<span class="code-line"><span class="n">f2</span> <span class="mi">42</span><span class="o">;;</span>   </span>
+</pre></div>
+<h3 id="partial-evaluation">partial evaluation</h3>
+<p>sometimes we can do part of a calculation as soon as we have the frist few arguments <br/>
+⇒ extract that part of calculation before the arrow !   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">egal</span> <span class="n">l1</span> <span class="n">l2</span> <span class="o">=</span>   </span>
+<span class="code-line">  <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l1</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l2</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">egalp</span> <span class="n">l1</span> <span class="o">=</span>   </span>
+<span class="code-line">  <span class="k">let</span> <span class="n">l1sorted</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l1</span> <span class="k">in</span> <span class="c">(*sort the 1st argument before going to the next functional abstraction*)</span>  </span>
+<span class="code-line">  <span class="k">function</span> <span class="n">l2</span> <span class="o">-&gt;</span> <span class="n">l1sorted</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">sort</span> <span class="n">compare</span> <span class="n">l2</span><span class="o">;</span>   </span>
+</pre></div>
+<h1 id="5-mapping-functions-on-lists_1">5. MAPPING FUNCTIONS ON LISTS</h1>
+<p>many useful functions in the <code>List</code> module, either <code>open List</code> at beginning, or with pointed notation (<code>List.hd</code>)  </p>
+<h3 id="implementation">implementation</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">map</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">[]</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">f</span> <span class="n">h</span><span class="o">):(</span><span class="n">map</span> <span class="n">f</span> <span class="n">r</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">map</span> <span class="o">(</span><span class="k">function</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">];;</span>  </span>
+<span class="code-line"></span>
+<span class="code-line"><span class="k">let</span> <span class="n">map2</span> <span class="n">f</span> <span class="n">l1</span> <span class="n">l2</span> <span class="o">=</span> <span class="k">match</span> <span class="o">(</span><span class="n">l1</span><span class="o">,</span> <span class="n">l2</span><span class="o">)</span> <span class="k">with</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span><span class="o">,</span><span class="bp">[]</span> <span class="o">-&gt;</span> <span class="bp">[]</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">h1</span><span class="o">::</span><span class="n">r1</span><span class="o">,</span> <span class="n">h2</span><span class="o">::</span><span class="n">r2</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">f</span> <span class="n">h1</span> <span class="n">h2</span><span class="o">)::(</span><span class="n">map2</span> <span class="n">f</span> <span class="n">r1</span> <span class="n">r2</span><span class="o">)</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="o">(</span><span class="nc">Invalid_argument</span> <span class="s2">"List.map2"</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">map2</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">)</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">10</span><span class="o">;</span><span class="mi">20</span><span class="o">;</span><span class="mi">30</span><span class="o">];;</span>   </span>
+</pre></div>
+<h3 id="examples">examples</h3>
+<p>example1: int vectors/matrices  </p>
+<p>row vector: int list<br/>
+matrix: list of row vectors<br/>
+turn infix operators into functions : using parentheses <code>(+) (/) ( * )</code> ...(note: spaces are necessary for <code>*</code>, otherwise this turns into comments...  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">vsum</span>  <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(+);;</span> <span class="c">(* use partial application *)</span>  </span>
+<span class="code-line"><span class="n">vsum</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">10</span><span class="o">;</span><span class="mi">20</span><span class="o">;</span><span class="mi">30</span><span class="o">];;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">msum</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(+));;</span> <span class="c">(* nested partial application *)</span>  </span>
+<span class="code-line"><span class="n">msum</span> <span class="o">[[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;];</span> <span class="o">[</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">]]</span> <span class="o">[[</span><span class="mi">10</span><span class="o">;</span><span class="mi">20</span><span class="o">];</span> <span class="o">[</span><span class="mi">30</span><span class="o">;</span><span class="mi">40</span><span class="o">]];;</span>   </span>
+</pre></div>
+<p>example2: get <em>all sublists</em> of a list<br/>
+type: <code>a' list -&gt; 'a list list</code><br/>
+write using induction:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">sublists</span> <span class="o">=</span> <span class="k">function</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="o">[</span> <span class="bp">[]</span> <span class="o">]</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span>   </span>
+<span class="code-line">        <span class="k">let</span> <span class="n">rp</span> <span class="o">=</span> <span class="n">sublists</span> <span class="n">r</span>  </span>
+<span class="code-line">        <span class="k">let</span> <span class="n">appendh</span> <span class="o">=</span> <span class="k">function</span> <span class="n">lst</span> <span class="o">-&gt;</span> <span class="n">h</span><span class="o">::</span><span class="n">lst</span> <span class="k">in</span>  </span>
+<span class="code-line">        <span class="n">rp</span> <span class="o">@</span> <span class="o">(</span><span class="n">map</span> <span class="n">appendh</span> <span class="n">rp</span><span class="o">)</span>   </span>
+</pre></div>
+<h1 id="6-folding-functions-on-lists_1">6. FOLDING FUNCTIONS ON LISTS</h1>
+<ul>
+<li>map: apping a <em>unary</em> function on list, all elements considered isolated.   </li>
+<li>folding: combining all elements of a list using a <em>binary operator</em>.   </li>
+<li>2 different ways of folding: fold-left/fold-right  </li>
+</ul>
+<h3 id="fold_right">fold_right</h3>
+<p><code>fold_right: ('a -&gt; 'b -&gt; 'b) -&gt; 'a list -&gt; 'b -&gt; 'b</code> </p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image002.png"/> </p>
+<p>implementation and usage:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fold_right</span> <span class="n">f</span> <span class="n">l</span> <span class="n">b</span> <span class="o">=</span> <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>   </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">b</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span>  <span class="n">f</span> <span class="n">h</span> <span class="o">(</span><span class="n">fold_right</span> <span class="n">f</span> <span class="n">r</span> <span class="n">b</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">fold_right</span> <span class="o">(+)</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">]</span> <span class="mi">0</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">concat</span> <span class="o">=</span> <span class="n">fold_right</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">x</span><span class="o">::</span><span class="n">y</span><span class="o">);;</span> <span class="o">(</span><span class="n">partial</span> <span class="n">application</span> <span class="k">of</span> <span class="n">fold_right</span><span class="o">)</span>  </span>
+<span class="code-line"><span class="n">concat</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">];;</span>   </span>
+</pre></div>
+<h3 id="fold_left">fold_left</h3>
+<p><code>fold_left: ('a -&gt; 'b -&gt; 'a) -&gt; 'a -&gt; 'b list -&gt; 'a</code> <br/>
+note: the default value's position is different from that of fold_right !   </p>
+<p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk4_higher_order_fun/pasted_image003.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">fold_left</span> <span class="n">f</span> <span class="n">a</span> <span class="n">l</span> <span class="o">=</span> <span class="k">match</span> <span class="n">l</span> <span class="k">with</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="n">a</span>  </span>
+<span class="code-line">  <span class="o">|</span> <span class="n">h</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span> <span class="n">fold_left</span> <span class="n">f</span> <span class="o">(</span><span class="n">f</span> <span class="n">a</span> <span class="n">h</span><span class="o">)</span> <span class="n">r</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">fold_left</span> <span class="o">(+)</span> <span class="mi">0</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">];;</span>  </span>
+<span class="code-line"><span class="k">let</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">fold_left</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">y</span><span class="o">::</span><span class="n">x</span><span class="o">)</span> <span class="bp">[]</span><span class="o">;;</span> <span class="c">(* partial application *)</span>  </span>
+<span class="code-line"><span class="n">reverse</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">];;</span>   </span>
+</pre></div>
+<h3 id="examples_1">examples</h3>
+<p>example1: Inner product of int vectors <br/>
+first get pairwise product, then sum up.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">product</span> <span class="n">v1</span> <span class="n">v2</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span> <span class="o">(+)</span> <span class="mi">0</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">map2</span> <span class="o">(</span> <span class="o">*</span> <span class="o">)</span> <span class="n">v1</span> <span class="n">v2</span><span class="o">);;</span>  </span>
+<span class="code-line"><span class="n">product</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">]</span> <span class="o">[</span><span class="mi">4</span><span class="o">;</span><span class="mi">5</span><span class="o">;</span><span class="mi">6</span><span class="o">];;</span>   </span>
+</pre></div>
+<p>example2: countif  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">countif</span> <span class="n">p</span> <span class="n">l</span> <span class="o">=</span> <span class="nn">List</span><span class="p">.</span><span class="n">fold_left</span>   </span>
+<span class="code-line">  <span class="o">(</span><span class="k">fun</span> <span class="n">acc</span> <span class="n">elem</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">p</span> <span class="n">elem</span> <span class="k">then</span> <span class="n">acc</span><span class="o">+</span><span class="mi">1</span> <span class="k">else</span> <span class="n">acc</span><span class="o">)</span> <span class="mi">0</span> <span class="n">l</span><span class="o">;;</span>  </span>
+<span class="code-line"><span class="n">countif</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span><span class="o">-&gt;</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="o">)</span> <span class="o">[</span><span class="mi">3</span><span class="o">;</span><span class="mi">1</span><span class="o">;-</span><span class="mi">2</span><span class="o">;</span><span class="mi">0</span><span class="o">;</span><span class="mi">4</span><span class="o">];;</span>   </span>
+</pre></div>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/ocamlMOOC_wk3_advanced_ds.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/ocamlMOOC_wk5_imperative.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [OCaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 5 of series «Introduction to Functional Programming in OCaml»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk0_intro.html' style="text-align:left">[OCaml MOOC] week0: intro and overview</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk1_basics.html' style="text-align:left">[OCaml MOOC] week1: BASIC TYPES, DEFINITIONS AND FUNCTIONS</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk2_basics_ds.html' style="text-align:left">[OCaml MOOC] week2: BASIC DATA STRUCTURES</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk3_advanced_ds.html' style="text-align:left">[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/ocamlMOOC_wk4_higher_order_fun.html' style="text-align:left">[OCaml MOOC] week4: HIGHER ORDER FUNCTIONS</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk5_imperative.html' style="text-align:left">[OCaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/ocamlMOOC_wk6_modules.html' style="text-align:left">[OCaml MOOC] week6: MODULES AND DATA ABSTRACTION</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'ocamlMOOC_wk4_higher_order_fun';
+                        var disqus_url = 'https://x-wei.github.io/notes/ocamlMOOC_wk4_higher_order_fun.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/notes/ocamlMOOC_wk3_advanced_ds.html">[OCaml MOOC] week3: MORE ADVANCED DATA STRUCTURES</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/ocamlMOOC_wk5_imperative.html">[OCaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#1-functional-expressions" title="1. FUNCTIONAL EXPRESSIONS">1. FUNCTIONAL EXPRESSIONS</a></li><li><a class="toc-href" href="#2-functions-as-first-class-values" title="2. FUNCTIONS AS FIRST-CLASS VALUES">2. FUNCTIONS AS FIRST-CLASS VALUES</a><ul><li><a class="toc-href" href="#function-pitfalls" title="function pitfalls">function pitfalls</a></li></ul></li><li><a class="toc-href" href="#3-functions-with-multiple-arguments_1" title="3. FUNCTIONS WITH MULTIPLE ARGUMENTS">3. FUNCTIONS WITH MULTIPLE ARGUMENTS</a></li><li><a class="toc-href" href="#4-partial-function-application" title="4. PARTIAL FUNCTION APPLICATION">4. PARTIAL FUNCTION APPLICATION</a><ul><li><a class="toc-href" href="#partial-evaluation" title="partial evaluation">partial evaluation</a></li></ul></li><li><a class="toc-href" href="#5-mapping-functions-on-lists_1" title="5. MAPPING FUNCTIONS ON LISTS">5. MAPPING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#implementation" title="implementation">implementation</a></li><li><a class="toc-href" href="#examples" title="examples">examples</a></li></ul></li><li><a class="toc-href" href="#6-folding-functions-on-lists_1" title="6. FOLDING FUNCTIONS ON LISTS">6. FOLDING FUNCTIONS ON LISTS</a><ul><li><a class="toc-href" href="#fold_right" title="fold_right">fold_right</a></li><li><a class="toc-href" href="#fold_left" title="fold_left">fold_left</a></li><li><a class="toc-href" href="#examples_1" title="examples">examples</a></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

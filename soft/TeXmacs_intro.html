@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>学术文章写作利器: TeXmacs介绍 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/soft/TeXmacs_intro.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="tex,TeXmacs" />
+        <meta name="description" content="今天介绍一个论文写作的神器: TeXmacs ! 0. Why TeXmacs? 一说到&#34;论文写作神器&#34;一般大家首先想到的就是LaTeX, 确实LaTeX写出来的数学公式和文章的排版非常漂亮. 但是作为一个几年来用过LaTeX写过几次报告的小白用户, 说句实话我从来都没有喜欢上过LaTeX. 根本的原因大概是: LaTeX的语法是一种标记语言(markup language), 本质上是给机器看而不是给人看的—就像html源代码是为了给浏览器看而不是直接给人看的. 0.0 LaTeX强迫症自测 矩阵A的转置, 你用tex会怎么写? ⇒ 如果你不能容忍直接写成$A^T$, 而一定要写成类似$\textbf{A}^\intercal$的话... 请直接忽略本文 &amp; 继续用LaTeX, 好走不送...... (另: 强迫症可以去这里看到底怎么打转置: http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose) 如果你认为这样的细节不重要, 好好描述数学问题本身才最重要的话, 请继续阅读. 0.1 TeXmacs是什么 简言之, TeXmacs是一个所见即所得的编辑器 ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="学术文章写作利器: TeXmacs介绍"/>
+        <meta property="og:url" content="https://x-wei.github.io/soft/TeXmacs_intro.html"/>
+        <meta property="og:description" content="今天介绍一个论文写作的神器: TeXmacs ! 0. Why TeXmacs? 一说到&#34;论文写作神器&#34;一般大家首先想到的就是LaTeX, 确实LaTeX写出来的数学公式和文章的排版非常漂亮. 但是作为一个几年来用过LaTeX写过几次报告的小白用户, 说句实话我从来都没有喜欢上过LaTeX. 根本的原因大概是: LaTeX的语法是一种标记语言(markup language), 本质上是给机器看而不是给人看的—就像html源代码是为了给浏览器看而不是直接给人看的. 0.0 LaTeX强迫症自测 矩阵A的转置, 你用tex会怎么写? ⇒ 如果你不能容忍直接写成$A^T$, 而一定要写成类似$\textbf{A}^\intercal$的话... 请直接忽略本文 &amp; 继续用LaTeX, 好走不送...... (另: 强迫症可以去这里看到底怎么打转置: http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose) 如果你认为这样的细节不重要, 好好描述数学问题本身才最重要的话, 请继续阅读. 0.1 TeXmacs是什么 简言之, TeXmacs是一个所见即所得的编辑器 ..."/>
+        <meta property="article:published_time" content="2015-11-22" />
+            <meta property="article:section" content="soft" />
+            <meta property="article:tag" content="tex" />
+            <meta property="article:tag" content="TeXmacs" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/TeXmacs_intro.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">学术文章写作利器: TeXmacs介绍 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/soft/index.html" title="soft">soft</a></li>
+                <li class="active">学术文章写作利器: TeXmacs介绍</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        学术文章写作利器: TeXmacs介绍
+                        <a href="https://x-wei.github.io/soft/TeXmacs_intro.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 学术文章写作利器: TeXmacs介绍 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-11-22T00:00:00+01:00"><i class="fa fa-calendar"></i> Sun, 22 Nov 2015</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/soft/index.html">soft</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/tex.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> tex</a>
+	<a href="https://x-wei.github.io/tag/texmacs.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> TeXmacs</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#0-why-texmacs" title="0. Why TeXmacs?">0. Why TeXmacs?</a><ul><li><a class="toc-href" href="#00-latexqiang-po-zheng-zi-ce" title="0.0 LaTeX强迫症自测">0.0 LaTeX强迫症自测</a></li><li><a class="toc-href" href="#01-texmacsshi-shi-yao" title="0.1 TeXmacs是什么">0.1 TeXmacs是什么</a></li><li><a class="toc-href" href="#02-latextu-cao" title="0.2 LaTeX吐槽">0.2 LaTeX吐槽</a></li><li><a class="toc-href" href="#03-texmacsyou-dian-yi-lan" title="0.3 TeXmacs优点一览">0.3 TeXmacs优点一览</a></li><li><a class="toc-href" href="#04-texmacsgua-he-shi-yao-yang-de-ren-wu" title="0.4 TeXmacs适合什么样的任务?">0.4 TeXmacs适合什么样的任务?</a></li><li><a class="toc-href" href="#05-texmacsbu-gua-he-shi-yao-yang-de-ren-wu" title="0.5 TeXmacs不适合什么样的任务?">0.5 TeXmacs不适合什么样的任务?</a></li></ul></li><li><a class="toc-href" href="#1-ji-ben-cao-zuo_1" title="1. 基本操作">1. 基本操作</a><ul><li><a class="toc-href" href="#11-jie-mian" title="1.1 界面">1.1 界面</a></li><li><a class="toc-href" href="#12-cha-ru-biao-ti" title="1.2 插入标题">1.2 插入标题</a></li><li><a class="toc-href" href="#13-cha-ru-gai-shu" title="1.3 插入概述">1.3 插入概述</a></li><li><a class="toc-href" href="#14-cha-ru-zhang-jie" title="1.4 插入章节">1.4 插入章节</a></li><li><a class="toc-href" href="#15-xuan-ze-yang-shi" title="1.5 选择样式">1.5 选择样式</a></li><li><a class="toc-href" href="#16-cha-ru-lie-biao" title="1.6 插入列表">1.6 插入列表</a></li><li><a class="toc-href" href="#17-chang-jian-wen-zi-ge-shi-cu-ti-xie-ti-deng-kuan-xia-hua-xian-chao-lian-jie" title="1.7 常见文字格式: 粗体/斜体/等宽/下划线/超链接">1.7 常见文字格式: 粗体/斜体/等宽/下划线/超链接</a></li><li><a class="toc-href" href="#18-ding-li-suan-fa-deng" title="1.8 定理/算法等">1.8 定理/算法等</a></li><li><a class="toc-href" href="#19-da-kai-duo-ge-wen-jian-tui-chu-texmacs" title="1.9 打开多个文件/退出TeXmacs">1.9 打开多个文件/退出TeXmacs</a></li></ul></li><li><a class="toc-href" href="#2-shu-xue-gong-shi_1" title="2. 数学公式">2. 数学公式</a><ul><li><a class="toc-href" href="#21-gong-shi-huan-jing" title="2.1 公式环境">2.1 公式环境</a></li><li><a class="toc-href" href="#22-shu-ru-shu-xue-fu-hao" title="2.2 输入数学符号">2.2 输入数学符号</a></li><li><a class="toc-href" href="#23-qi-ta-shu-xue-fu-hao-shang-xia-biao-gen-hao-fen-shu-ji-fen-qiu-he" title="2.3 其他数学符号: 上下标/根号/分数/积分/求和/...">2.3 其他数学符号: 上下标/根号/分数/积分/求和/...</a></li><li><a class="toc-href" href="#24-gong-shi-bian-hao-yin-yong-gong-shi" title="2.4 公式编号/引用公式">2.4 公式编号/引用公式</a></li></ul></li><li><a class="toc-href" href="#3-biao-ge_1" title="3. 表格">3. 表格</a><ul><li><a class="toc-href" href="#31-biao-ge-huan-jing" title="3.1 表格环境">3.1 表格环境</a></li><li><a class="toc-href" href="#32-zeng-jia-shan-chu-xing-he-lie" title="3.2 增加/删除行和列">3.2 增加/删除行和列</a></li><li><a class="toc-href" href="#33-dui-qi-mo-shi" title="3.3 对齐模式">3.3 对齐模式</a></li><li><a class="toc-href" href="#34-ju-zhen" title="3.4 矩阵">3.4 矩阵</a></li></ul></li><li><a class="toc-href" href="#4-cha-tu_1" title="4. 插图">4. 插图</a><ul><li><a class="toc-href" href="#41-tu-pian-huan-jing" title="4.1 图片环境">4.1 图片环境</a></li><li><a class="toc-href" href="#42-cha-ru-jie-tu" title="4.2 插入截图">4.2 插入截图</a></li><li><a class="toc-href" href="#43-hua-tu" title="4.3 画图">4.3 画图</a></li></ul></li><li><a class="toc-href" href="#5-cha-ru-mu-lu-can-kao-wen-xian_1" title="5. 插入目录/参考文献">5. 插入目录/参考文献</a><ul><li><a class="toc-href" href="#51-cha-ru-mu-lu" title="5.1 插入目录">5.1 插入目录</a></li><li><a class="toc-href" href="#52-can-kao-wen-xian" title="5.2 参考文献">5.2 参考文献</a><ul><li><a class="toc-href" href="#bibtexwen-jian" title="bibtex文件">bibtex文件</a></li><li><a class="toc-href" href="#cha-ru-can-kao-wen-xian" title="插入参考文献">插入参考文献</a></li></ul></li></ul></li><li><a class="toc-href" href="#6-geng-duo_2" title="6. 更多">6. 更多</a></li></ul></div>
+                        </div>
+                    </div>
+                <p>今天介绍一个论文写作的神器: TeXmacs !   </p>
+<h1 id="0-why-texmacs">0. Why TeXmacs?</h1>
+<p>一说到"论文写作神器"一般大家首先想到的就是LaTeX, 确实LaTeX写出来的数学公式和文章的排版非常漂亮. 但是作为一个几年来用过LaTeX写过几次报告的小白用户, 说句实话我从来都没有喜欢上过LaTeX. 根本的原因大概是: LaTeX的语法是一种标记语言(markup language), 本质上是给机器看而不是给人看的—就像html源代码是为了给浏览器看而不是直接给人看的.   </p>
+<h2 id="00-latexqiang-po-zheng-zi-ce">0.0 LaTeX强迫症自测</h2>
+<blockquote>
+<p>矩阵A的转置, 你用tex会怎么写?  </p>
+</blockquote>
+<p>⇒ 如果你不能容忍直接写成<code>$A^T$</code>, 而一定要写成类似<code>$\textbf{A}^\intercal$</code>的话... 请直接忽略本文 &amp; 继续用LaTeX, 好走不送...... <br/>
+(另: 强迫症可以去这里看到底怎么打转置: <a href="http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose">http://tex.stackexchange.com/questions/30619/what-is-the-best-symbol-for-vector-matrix-transpose</a>)  </p>
+<p>如果你认为这样的细节不重要, 好好描述数学问题本身才最重要的话, 请继续阅读.  </p>
+<h2 id="01-texmacsshi-shi-yao">0.1 TeXmacs是什么</h2>
+<p>简言之, TeXmacs是一个所见即所得的编辑器. 你也许想到了LyX, TeXworks之类的工具, 但是TeXmacs和它们不一样—它并不依赖LaTeX. 他吸收了LaTeX的优点, 即文章的排版非常美观. 同时它又不同于LaTeX, 比如, 在TeXmacs里是<em>没有</em>"源文件"这个概念的. 另外它还有一些非常实用的特性(尤其是对于数学公式的支持), 可以极大的提高编辑效率.   </p>
+<blockquote>
+<ul>
+<li>作者: Joris van der Hoeven (<a href="http://www.TeXmacs.org/joris/main/joris.html">http://www.TeXmacs.org/joris/main/joris.html</a> , <strong>prof@X</strong>)   </li>
+<li>官网: <a href="http://TeXmacs.org/tmweb/home/welcome.en.html">http://TeXmacs.org/tmweb/home/welcome.en.html</a> </li>
+<li>在官网上有两个短视频, 介绍了TeXmacs的简单用法: <a href="http://TeXmacs.org/tmweb/home/videos.en.html">http://TeXmacs.org/tmweb/home/videos.en.html</a> </li>
+</ul>
+</blockquote>
+<p>我自己感觉写同样的内容, 比如写同样一页纸的数学推导, 用TeXmacs大概比LaTeX快10倍... 另外如果你发现这一页纸的推导中间有一步有错误要修改的话...那么TeXmacs大概要快100倍吧...   </p>
+<p>最早听到TeXmacs的名字是看到过王垠的一篇<a href="http://www.yinwang.org/blog-cn/2012/09/18/texmacs/">博客</a>, 后来我惊奇地发现TeXmacs的作者居然是X的一位老师!! 所以更要高举安利TeXmacs的大旗了. btw, 在X三年时间, 除了我自己和被我安利的Manu同学, 并没有见有别人用TeXmacs...唉.  </p>
+<h2 id="02-latextu-cao">0.2 LaTeX吐槽</h2>
+<p>正式安利TeXmacs之前, 先这里举一些我不认为LaTeX可以让人高效编辑文章的原因, 如果你认同大部分下面的吐槽, 欢迎继续阅读本文.   </p>
+<blockquote>
+<ul>
+<li>重申一遍, <em>markup的语法不是让人看的</em>: 要是忘记一个大括号或者少了个反斜杠就编译出错找半天  </li>
+<li>请问每个tex文件开头那十来行usepackage什么的谁能记住?... 我每次要么上网搜要么从以前的tex文件里抄过来...  </li>
+<li>公式是最痛苦的: 好几行的数学推导, 然后每行的内容又差不多的话, 编辑起来眼快瞎了  </li>
+<li>想要插入个截图还得先保存为图片文件(&amp;还得费时间起个文件名): 就不能像word那样直接粘贴进去么? 另外图片的大小和位置也要试好几次才知道怎么合适  </li>
+<li>一编译生成一些乱七八糟的东西: xx.aux什么的, 写篇小文章也得专门建立个文件夹放这些乱七八糟的东西  </li>
+<li>LaTeX号称可以让人专心文章内容不关心排版, 可实际情况却是我每写一小段就会重新编译生成pdf看看, 因为我生怕少写一个花括号导致又编译不成了  </li>
+<li>有时为了用一个包只好安装整个texlive-full, 电脑空间瞬间少了1G...   </li>
+<li>还有什么欢迎补充...  </li>
+</ul>
+</blockquote>
+<h2 id="03-texmacsyou-dian-yi-lan">0.3 TeXmacs优点一览</h2>
+<p>TeXmacs的优点大概是以下几点:   </p>
+<blockquote>
+<ul>
+<li>数学编辑功能非常强大, 用了再也不想用LaTeX源码写数学公式  </li>
+<li>所见即所得, 不必记忆LaTeX各种tag, 有了它完全可以不用学LaTeX  </li>
+<li>插入图片可以直接嵌入tm文件(其实是把图片序列化为一个很长的字符串), 不再需要为了插图专门建立文件夹  </li>
+<li>TeXmacs体积很小: 我用的版本解压后只有66MB  </li>
+<li>可以从tex文件导入或导出到tex文件  </li>
+</ul>
+</blockquote>
+<h2 id="04-texmacsgua-he-shi-yao-yang-de-ren-wu">0.4 TeXmacs适合什么样的任务?</h2>
+<p>目前为止我个人使用TeXmacs写过两篇比较正式的报告(其中一篇见<a href="https://github.com/X-Wei/INF580_HashCode2014/blob/master/documentation_Orsini%26Wei.pdf">这里</a>), 另外用它写过一些课程的简单报告和作业, 还用它进行过一些数学的推导或者记笔记. <br/>
+个人感觉以下任务都可以用TeXmacs高效完成:   </p>
+<blockquote>
+<ul>
+<li>各种正式的学术报告  </li>
+<li>常见的论文(TeXmacs里面内建了很多conf的文章style可以选择)  </li>
+<li>课堂记数学笔记(前提是打字速度快, 最好能盲打)  </li>
+<li>简单公式推导, 新建个tm文件就可以开始了, 不用兴师动众新建个文件夹...   </li>
+<li>好像也可以用来做ppt (beamer), 个人没有尝试过  </li>
+</ul>
+</blockquote>
+<h2 id="05-texmacsbu-gua-he-shi-yao-yang-de-ren-wu">0.5 TeXmacs不适合什么样的任务?</h2>
+<p>我觉得TeXmacs不适合的就是LaTeX强迫症用户的任务...   </p>
+<h1 id="1-ji-ben-cao-zuo_1">1. 基本操作</h1>
+<h2 id="11-jie-mian">1.1 界面</h2>
+<p>打开TeXmacs可以看到如下的用户界面: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image001.png"/><br/>
+正文上方有四行菜单栏:  </p>
+<ul>
+<li>第一行是常见的菜单, 提供了所有功能  </li>
+<li>第二行是一些常用操作: 打开/保存/复制粘贴/前进后退等  </li>
+<li>第三行是插入一些常见"<strong>环境</strong>"的快捷按钮, 后面会看到.  </li>
+<li>第四行非常有用, 它叫做"<strong>上下文菜单</strong>", 它的内容会随着光标所在"<strong>环境</strong>"而变化. 由于现在光标处在最开始位置, 此时上下文菜单是各种文章显示的选项, 可以选择一个style模板, 调整字体, 页面设置以及文章语言等.  </li>
+</ul>
+<p>在正文下面, 窗口最底下还有一行:  </p>
+<ul>
+<li>右下角指示当前光标所在处的"<strong>环境</strong>", 可以理解为当前光标处在什么tex的tag里面, 例如公式环境/表格环境/斜体字环境等, 在编辑的时候可以注意一下右下角的显示. 另外一般处在某种环境下面的话, 该环境会由矩形边框标出.   </li>
+</ul>
+<h2 id="12-cha-ru-biao-ti">1.2 插入标题</h2>
+<p>点击<em>上下文菜单</em>右边的"Title"按钮可以加入文章标题, 敲回车可以输入作者名: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image002.png"/><br/>
+注意此时光标处于"标题"环境下, 所以<em>上下文菜单</em>是关于标题的功能按钮, 点击"Title"右边的加号可以加入其他信息:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image003.png"/><br/>
+texmac也支持简单的tex标记, 比如要加入日期的话 除了用上面的菜单, 也可以输入<code>\date</code>然后敲两次回车即可:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image004.png"/> </p>
+<h2 id="13-cha-ru-gai-shu">1.3 插入概述</h2>
+<p>从"标题"环境出来 又回到了整个文章的环境,<em>上下文菜单</em>也改变了<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image006.png"/><br/>
+此时<em>上下文菜单</em>右边是一个abstract按钮, 因为TeXmacs猜测我们在输入标题以后会输入概述, 点击这个按钮即可进入概述环境(见右下角).<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image007.png"/> </p>
+<h2 id="14-cha-ru-zhang-jie">1.4 插入章节</h2>
+<p>从abstract环境出来, 插入一个章节(tex里的<code>\section</code>标记)有三种办法:  </p>
+<ul>
+<li>办法一: 使用第一行的菜单  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image008.png"/> </p>
+<ul>
+<li>办法二: 使用第二行的"插入章节"图标  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image009.png"/> </p>
+<ul>
+<li>办法三: 直接用tex标记, 输入<code>\section</code>然后回车即可  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image010.png"/> </p>
+<h2 id="15-xuan-ze-yang-shi">1.5 选择样式</h2>
+<p>在最外层环境下的上下文菜单里可以选择文章样式. <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image031.png"/> </p>
+<h2 id="16-cha-ru-lie-biao">1.6 插入列表</h2>
+<p>在第二行有个按钮可以直接插入列表, 或者也可以输入<code>\itemize</code>然后回车. <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image011.png"/><br/>
+光标在列表环境时可以看到上下文菜单的内容也变化了:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image012.png"/><br/>
+这里再介绍一个非常实用的快捷键: <code>ctrl-tab</code>, 作用是改变当前环境的显示样式, 比如在列表环境里按下<code>ctrl-tab</code>以后可以变成其他样式(圆点变为了横线). 这个快捷键在公式或者表格环境里也很常用. 按下多次<code>ctrl-tab</code>可以在各种样式中循环. <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image013.png"/> </p>
+<h2 id="17-chang-jian-wen-zi-ge-shi-cu-ti-xie-ti-deng-kuan-xia-hua-xian-chao-lian-jie">1.7 常见文字格式: 粗体/斜体/等宽/下划线/超链接</h2>
+<ul>
+<li>粗体和斜体可以像word一样使用<code>ctrl-b/ctrl-i</code>做到  </li>
+<li>等宽可以用第三行的工具栏按钮, 或者输入<code>\texttt</code>加回车.   </li>
+</ul>
+<p>下划线我没有找到按钮, 不过直接用<code>\underline</code>加回车即可搞定.<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image014.png"/> </p>
+<ul>
+<li>超链接使用第三行按钮即可  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image016.png"/><br/>
+在hyperlink环境下(注意上下文菜单又变化了)输入两个参数: 链接文本和链接地址, 然后回车即可<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image015.png"/> </p>
+<h2 id="18-ding-li-suan-fa-deng">1.8 定理/算法等</h2>
+<p>插入一个定理或者算法, 可以直接用第三行的按钮, 看图: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image017.png"/><br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image018.png"/> </p>
+<h2 id="19-da-kai-duo-ge-wen-jian-tui-chu-texmacs">1.9 打开多个文件/退出TeXmacs</h2>
+<p>如果打开了多个tm文件, 使用主菜单的Go按钮在文件之间切换: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image045.png"/><br/>
+当前改动没有保存的时候, 标题栏的文件名后面会有一个星号指示. 此时直接点击关闭的话, 会在最下方有个提示框: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image044.png"/> </p>
+<h1 id="2-shu-xue-gong-shi_1">2. 数学公式</h1>
+<p>这是TeXmacs最激动人心的功能, 用它编辑数学公式非常畅快~   </p>
+<h2 id="21-gong-shi-huan-jing">2.1 公式环境</h2>
+<p>首先为了进入数学公式环境, 可以直接输入<code>$</code>或者<code>alt-$</code>, <code>alt-&amp;</code>(对应行内公式/单行公式/多行公式). <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image019.png"/><br/>
+这里说一下, 个人感觉英文界面的一些词汇比如formula/equation, table/tabular, 傻傻分不清楚, formula和equation的区别在于, equation是多行公式... 把tm换成中文界面的话这些名字好理解多了: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image020.png"/><br/>
+另外, 切换行内/单行公式也可以用<code>ctrl-tab</code>快捷键.   </p>
+<p>在进入公式环境以后, 注意不止第四行的上下文菜单变成了公式的按钮, 第三行的插入菜单也变为了插入符号的按钮:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image021.png"/> </p>
+<h2 id="22-shu-ru-shu-xue-fu-hao">2.2 输入数学符号</h2>
+<p>这是我觉得TeXmacs最爽的地方: 公式环境下(注意是<em>在公式环境下</em>), <strong>形状相似的符号通过tab轮转</strong>. <br/>
+例子:   </p>
+<blockquote>
+<ul>
+<li>字母α和字母a形状很像, 输入字母<code>a</code>以后直接tab即可变为α.  </li>
+<li>⊗怎么输入呢? 它等于<code>@-x</code>, 同理⊕等于<code>@-+</code>, ∞等于<code>@@</code> </li>
+<li>∈像什么? 只要输入<code>&lt;</code>然后多tab几次就看到了  </li>
+<li>不等号≠怎么输入? 直接连续打<code>= /</code>即可  </li>
+</ul>
+</blockquote>
+<p>遇到别的不会打的字符, 可以用第三行的按钮, 鼠标悬停可以显示相应快捷键: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image022.png"/> </p>
+<h2 id="23-qi-ta-shu-xue-fu-hao-shang-xia-biao-gen-hao-fen-shu-ji-fen-qiu-he">2.3 其他数学符号: 上下标/根号/分数/积分/求和/...</h2>
+<blockquote>
+<ul>
+<li>输入上标直接打一个 <code>^</code>即可, 下标是 <code>_</code>, 和LaTeX里面一样 — 只不过不用看让人眼晕的源码.  </li>
+<li>符号上标下标(不是右上角而是正上正下): 用<code>alt-a/alt-b</code>(above/below)  </li>
+<li>输入根号快捷键是<code>alt-s</code> </li>
+<li>输入分数快捷键是<code>alt-f</code>(再<code>ctrl-tab</code>可以切换分数线的大小)  </li>
+<li>积分号可以用按钮插入, 或者直接<code>\int</code>回车  </li>
+<li>求和号同理, 可以直接输入<code>\sum</code>回车  </li>
+</ul>
+</blockquote>
+<p>...LaTeX和这比起来简直就是石器时代!  </p>
+<p>总结一下: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image026.png"/> </p>
+<h2 id="24-gong-shi-bian-hao-yin-yong-gong-shi">2.4 公式编号/引用公式</h2>
+<p>公式加入编号非常简单, 用上下文菜单里的一个"IV"按钮. <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image023.png"/><br/>
+如果对一个公式进行索引的话, 可以直接用tex里的<code>label/ref</code>标签完成.<br/>
+首先给这个公式加一个label, 只需要输入<code>\label</code>, 回车后输入参数(label名字)再回车即可. <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image024.png"/><br/>
+然后要引用这个公式时, 只需要输入<code>\ref</code>加刚才指定的label即可: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image025.png"/><br/>
+以后对于图片/表格的引用也是同样道理.   </p>
+<p>关于多行公式, 先要介绍表格的使用, 请看下节.   </p>
+<h1 id="3-biao-ge_1">3. 表格</h1>
+<p><img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image027.png"/><br/>
+像上面这个公式的输入方法, 就是在大括号右边使用一个两行一列的表格.   </p>
+<h2 id="31-biao-ge-huan-jing">3.1 表格环境</h2>
+<p>插入表格只需点击第三行的表格按钮:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image028.png"/><br/>
+那些词汇也傻傻分不清楚, 倒是中文界面说的很清楚: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image029.png"/><br/>
+不过这些表格样式也是可以通过<code>ctrl-tab</code>快捷键轮转切换的. <br/>
+点击以后进入表格环境, 注意上下文菜单的按钮又变了: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image030.png"/> </p>
+<h2 id="32-zeng-jia-shan-chu-xing-he-lie">3.2 增加/删除行和列</h2>
+<p>在表格环境的上下文菜单里, 那八个中间是加号或叉号的方向按钮就是向各个方向新建/删除一行/一列的. <br/>
+或者使用快捷键: <code>win-方向键</code>可以在当前格子的各个方向新建行/列, <code>win-backspace</code>则是删除.   </p>
+<h2 id="33-dui-qi-mo-shi">3.3 对齐模式</h2>
+<p>改变表格的对齐模式只要选中相应的格子然后用上下文菜单的按钮点选即可: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image032.png"/> </p>
+<h2 id="34-ju-zhen">3.4 矩阵</h2>
+<p>输入矩阵的话, 可以<em>在公式环境下<strong><em>嵌套</em></strong>一个表格环境</em>. <br/>
+首先输入<code>alt-$</code>进入公式环境, 此时再看表格按钮的时候出现了矩阵选项: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image033.png"/><br/>
+然后只需要像之前表格一样操作即可了, 关于如何输入各个方向的省略号, 只要多tab几次就可以了: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image034.png"/> </p>
+<p>以上我觉得基本够用了, 关于表格的其他的功能可以参考tm的文档...   </p>
+<h1 id="4-cha-tu_1">4. 插图</h1>
+<p>关于插图我使用最多的只是截图然后直接从剪切板里粘贴而已, 这里只介绍这种最简单最常用操作. <br/>
+TeXmacs实际上远比我这里介绍的强大, 见这里: <a href="http://www.TeXmacs.org/tmweb/documents/tutorials/TeXmacs-graphical-plugins.pdf">http://www.TeXmacs.org/tmweb/documents/tutorials/TeXmacs-graphical-plugins.pdf</a> </p>
+<h2 id="41-tu-pian-huan-jing">4.1 图片环境</h2>
+<p>点击按钮插入图片<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image035.png"/> </p>
+<h2 id="42-cha-ru-jie-tu">4.2 插入截图</h2>
+<p>截图在clipboard的时候, 只需要在TeXmacs里面粘贴就可以了: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image036.png"/> </p>
+<p>我想要强调的一点是, 用这种方法画图, 可以直接把图片嵌入tm文件里面, 而不用像LaTeX一样在文件夹里放一堆图片.   </p>
+<h2 id="43-hua-tu">4.3 画图</h2>
+<p>TeXmacs也提供了直接画图的功能, 不过我基本没试过, 下图是乱画的:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image037.png"/> </p>
+<p>另外, 关于如何引用图片/表格, 只要用<code>\label</code>和<code>\ref</code>标签即可, 前面公式环境里已经介绍过了.   </p>
+<h1 id="5-cha-ru-mu-lu-can-kao-wen-xian_1">5. 插入目录/参考文献</h1>
+<h2 id="51-cha-ru-mu-lu">5.1 插入目录</h2>
+<p>首先点击第三行的按钮插入目录: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image038.png"/><br/>
+但是这是的目录是空的, 还需要更新目录, 方法是第一行的菜单: <em>document → update → table of content</em><br/>
+然后就看到了目录: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image039.png"/> </p>
+<h2 id="52-can-kao-wen-xian">5.2 参考文献</h2>
+<h3 id="bibtexwen-jian">bibtex文件</h3>
+<p>首先, 为了引入参考文献, 需要建立一个<em>demo.bib</em>文件, 里面放的就是参考文献的bibtex代码, 比如:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">@ARTICLE{lda,  </span></span>
+<span class="code-line"><span class="err">    author = {David M. Blei and Andrew Y. Ng and Michael I. Jordan and John Lafferty},  </span></span>
+<span class="code-line"><span class="err">    title = {Latent Dirichlet Allocation},  </span></span>
+<span class="code-line"><span class="err">    journal = {The Journal of Machine Learning Research},  </span></span>
+<span class="code-line"><span class="err">    year = {2003}  </span></span>
+<span class="code-line"><span class="err">}  </span></span>
+<span class="code-line"><span class="err">@article{nmf,  </span></span>
+<span class="code-line"><span class="err">     author = "Yehuda Koren and Robert Bell and Chris Volinsky",   </span></span>
+<span class="code-line"><span class="err">     title = "Matrix Faoctorization Techniques for Recommender Systems",  </span></span>
+<span class="code-line"><span class="err">     journal = "IEEE Computer",    </span></span>
+<span class="code-line"><span class="err">     pages = "42--49",   </span></span>
+<span class="code-line"><span class="err">     year = "2009",  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">@book{pci,  </span></span>
+<span class="code-line"><span class="err">    title = "Programming Collective Intelligence: Building Smart Web 2.0 Applications",  </span></span>
+<span class="code-line"><span class="err">    author = "Toby Segaran",  </span></span>
+<span class="code-line"><span class="err">    year = "2007",  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>注意每一个entry的别名(<em>lda, nmfCF, pci</em>)是我自己取的.   </p>
+<h3 id="cha-ru-can-kao-wen-xian">插入参考文献</h3>
+<p>点击按钮插入参考文献:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image041.png"/><br/>
+然后在最下方的提示框输入样式名(一般就用默认tm-plain)以及bib文件名(和tm文件同一目录下): <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image042.png"/> </p>
+<p>在引用文献时可以用tex标签<code>\cite</code>引用文献:<br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image040.png"/><br/>
+TeXmacs不会在最后参考文献里显示没有被引用过的文献, 那些没有显式提到的文章可以用插入invisible citation的方式加入: <br/>
+<img alt="" class="img-responsive" src="../images/TeXmacs_intro/pasted_image043.png"/><br/>
+注意, 此时需要update<strong>两次</strong>才可以看到效果.  </p>
+<h1 id="6-geng-duo_2">6. 更多</h1>
+<p>这里只是介绍了最基础最简单的使用, 关于更多的高级TeXmacs使用方法, 这里有几个链接:   </p>
+<blockquote>
+<ul>
+<li>tm官方的tutorial: <a href="http://TeXmacs.org/tmweb/help/manual.en.html">http://TeXmacs.org/tmweb/help/manual.en.html</a> </li>
+<li>一些其他人做的文章: <a href="http://TeXmacs.org/tmweb/help/tutorial.en.html">http://TeXmacs.org/tmweb/help/tutorial.en.html</a> </li>
+<li>王垠大神做的思维导图: <a href="https://www.mindomo.com/mindmap/b207992c90c046bdbe4053cbdf88b5d5">https://www.mindomo.com/mindmap/b207992c90c046bdbe4053cbdf88b5d5</a> </li>
+<li>tm官网有个workshop的视频 里面展示了texmac一些亮瞎眼的功能: <a href="http://magix.lix.polytechnique.fr/magix/workshop/workshop-videos.en.html">http://magix.lix.polytechnique.fr/magix/workshop/workshop-videos.en.html</a> </li>
+</ul>
+</blockquote>
+<p>另外, 这篇文章所做的示例文件可以在这里下载: <a href="https://github.com/X-Wei/texmacs-demo">https://github.com/X-Wei/texmacs-demo</a></p>
+<p>欢迎抛弃LaTeX &amp; 拥抱TeXmacs!  </p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/algoII_week3_1.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Algorithms II] Week 3-1 Maximum Flow
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/algoII_week3_2.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Algorithms II] Week 3-2 Radix Sorts<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'TeXmacs_intro';
+                        var disqus_url = 'https://x-wei.github.io/soft/TeXmacs_intro.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#0-why-texmacs" title="0. Why TeXmacs?">0. Why TeXmacs?</a><ul><li><a class="toc-href" href="#00-latexqiang-po-zheng-zi-ce" title="0.0 LaTeX强迫症自测">0.0 LaTeX强迫症自测</a></li><li><a class="toc-href" href="#01-texmacsshi-shi-yao" title="0.1 TeXmacs是什么">0.1 TeXmacs是什么</a></li><li><a class="toc-href" href="#02-latextu-cao" title="0.2 LaTeX吐槽">0.2 LaTeX吐槽</a></li><li><a class="toc-href" href="#03-texmacsyou-dian-yi-lan" title="0.3 TeXmacs优点一览">0.3 TeXmacs优点一览</a></li><li><a class="toc-href" href="#04-texmacsgua-he-shi-yao-yang-de-ren-wu" title="0.4 TeXmacs适合什么样的任务?">0.4 TeXmacs适合什么样的任务?</a></li><li><a class="toc-href" href="#05-texmacsbu-gua-he-shi-yao-yang-de-ren-wu" title="0.5 TeXmacs不适合什么样的任务?">0.5 TeXmacs不适合什么样的任务?</a></li></ul></li><li><a class="toc-href" href="#1-ji-ben-cao-zuo_1" title="1. 基本操作">1. 基本操作</a><ul><li><a class="toc-href" href="#11-jie-mian" title="1.1 界面">1.1 界面</a></li><li><a class="toc-href" href="#12-cha-ru-biao-ti" title="1.2 插入标题">1.2 插入标题</a></li><li><a class="toc-href" href="#13-cha-ru-gai-shu" title="1.3 插入概述">1.3 插入概述</a></li><li><a class="toc-href" href="#14-cha-ru-zhang-jie" title="1.4 插入章节">1.4 插入章节</a></li><li><a class="toc-href" href="#15-xuan-ze-yang-shi" title="1.5 选择样式">1.5 选择样式</a></li><li><a class="toc-href" href="#16-cha-ru-lie-biao" title="1.6 插入列表">1.6 插入列表</a></li><li><a class="toc-href" href="#17-chang-jian-wen-zi-ge-shi-cu-ti-xie-ti-deng-kuan-xia-hua-xian-chao-lian-jie" title="1.7 常见文字格式: 粗体/斜体/等宽/下划线/超链接">1.7 常见文字格式: 粗体/斜体/等宽/下划线/超链接</a></li><li><a class="toc-href" href="#18-ding-li-suan-fa-deng" title="1.8 定理/算法等">1.8 定理/算法等</a></li><li><a class="toc-href" href="#19-da-kai-duo-ge-wen-jian-tui-chu-texmacs" title="1.9 打开多个文件/退出TeXmacs">1.9 打开多个文件/退出TeXmacs</a></li></ul></li><li><a class="toc-href" href="#2-shu-xue-gong-shi_1" title="2. 数学公式">2. 数学公式</a><ul><li><a class="toc-href" href="#21-gong-shi-huan-jing" title="2.1 公式环境">2.1 公式环境</a></li><li><a class="toc-href" href="#22-shu-ru-shu-xue-fu-hao" title="2.2 输入数学符号">2.2 输入数学符号</a></li><li><a class="toc-href" href="#23-qi-ta-shu-xue-fu-hao-shang-xia-biao-gen-hao-fen-shu-ji-fen-qiu-he" title="2.3 其他数学符号: 上下标/根号/分数/积分/求和/...">2.3 其他数学符号: 上下标/根号/分数/积分/求和/...</a></li><li><a class="toc-href" href="#24-gong-shi-bian-hao-yin-yong-gong-shi" title="2.4 公式编号/引用公式">2.4 公式编号/引用公式</a></li></ul></li><li><a class="toc-href" href="#3-biao-ge_1" title="3. 表格">3. 表格</a><ul><li><a class="toc-href" href="#31-biao-ge-huan-jing" title="3.1 表格环境">3.1 表格环境</a></li><li><a class="toc-href" href="#32-zeng-jia-shan-chu-xing-he-lie" title="3.2 增加/删除行和列">3.2 增加/删除行和列</a></li><li><a class="toc-href" href="#33-dui-qi-mo-shi" title="3.3 对齐模式">3.3 对齐模式</a></li><li><a class="toc-href" href="#34-ju-zhen" title="3.4 矩阵">3.4 矩阵</a></li></ul></li><li><a class="toc-href" href="#4-cha-tu_1" title="4. 插图">4. 插图</a><ul><li><a class="toc-href" href="#41-tu-pian-huan-jing" title="4.1 图片环境">4.1 图片环境</a></li><li><a class="toc-href" href="#42-cha-ru-jie-tu" title="4.2 插入截图">4.2 插入截图</a></li><li><a class="toc-href" href="#43-hua-tu" title="4.3 画图">4.3 画图</a></li></ul></li><li><a class="toc-href" href="#5-cha-ru-mu-lu-can-kao-wen-xian_1" title="5. 插入目录/参考文献">5. 插入目录/参考文献</a><ul><li><a class="toc-href" href="#51-cha-ru-mu-lu" title="5.1 插入目录">5.1 插入目录</a></li><li><a class="toc-href" href="#52-can-kao-wen-xian" title="5.2 参考文献">5.2 参考文献</a><ul><li><a class="toc-href" href="#bibtexwen-jian" title="bibtex文件">bibtex文件</a></li><li><a class="toc-href" href="#cha-ru-can-kao-wen-xian" title="插入参考文献">插入参考文献</a></li></ul></li></ul></li><li><a class="toc-href" href="#6-geng-duo_2" title="6. 更多">6. 更多</a></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

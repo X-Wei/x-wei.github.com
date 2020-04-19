@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Android Dev] 2.1 Lifecycles - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/andev_p2e1_lifecycle.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="android" />
+        <meta name="description" content="Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume note ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Android Dev] 2.1 Lifecycles"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/andev_p2e1_lifecycle.html"/>
+        <meta property="og:description" content="Android kills background apps !! → onCreate() → Created →onStart() → Visible(can be seen on screen) → onResume() → Active(get focus, can interact with) Active → onPause() → Paused(lose focus — same thing as Visible?) → onStop() → Stopped(disappeared) → onDestroy() → Destroyed(lifecycle ends) when rotate screen, the function calling is: onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume note ..."/>
+        <meta property="article:published_time" content="2017-02-11" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="android" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/andev_p2e1_lifecycle.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Android Dev] 2.1 Lifecycles - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[Android Dev] 2.1 Lifecycles</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Android Dev] 2.1 Lifecycles
+                        <a href="https://x-wei.github.io/notes/andev_p2e1_lifecycle.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Android Dev] 2.1 Lifecycles 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2017-02-11T00:00:00+01:00"><i class="fa fa-calendar"></i> Sat, 11 Feb 2017</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/android.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> android</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 5 of «Associate Android Developer Fast Track» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#onsavedinstancestate" title="onSavedInstanceState()">onSavedInstanceState()</a></li><li><a class="toc-href" href="#asynctasks-and-loader" title="AsyncTasks and Loader">AsyncTasks and Loader</a></li><li><a class="toc-href" href="#using-loaders" title="Using Loaders">Using Loaders</a><ul><li><a class="toc-href" href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask" title="implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask">implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask</a></li><li><a class="toc-href" href="#implement-onloadfinished-onpostexecute-for-asynctask" title="implement onLoadFinished &mdash; onPostExecute for AsyncTask">implement onLoadFinished &mdash; onPostExecute for AsyncTask</a></li><li><a class="toc-href" href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it" title="in makeGithubSearchQuery(): create bundle, create a loder, start it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li></ul></li><li><a class="toc-href" href="#caching-with-loaders_1" title="Caching with loaders">Caching with loaders</a></li></ul></div>
+                        </div>
+                    </div>
+                <p>Android kills background apps !! </p>
+<p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image001.png"/></p>
+<p>→ <code>onCreate()</code> → <strong>Created</strong> →<code>onStart()</code> →  <strong>Visible(</strong>can be seen on screen) → <code>onResume()</code> → <strong>Active</strong>(get focus, can interact with)</p>
+<p><strong>Active</strong> → <code>onPause()</code> → <strong>Paused</strong>(lose focus — same thing as Visible?) → <code>onStop()</code> → <strong>Stopped</strong>(disappeared) → <code>onDestroy()</code> → <strong>Destroyed</strong>(lifecycle ends)</p>
+<p>when rotate screen, the function calling is: </p>
+<p><code>onPause --&gt; onStop --&gt; onDestroy --&gt; onCreate --&gt; onStart --&gt; onResume</code></p>
+<p>note: activity will be <strong>destroyed</strong> when device configuration is changed ! </p>
+<h2 id="onsavedinstancestate">onSavedInstanceState()</h2>
+<p>so that the app states can be saved when device configuration changes (ex. rotate). </p>
+<p>parameter: a <code>Bundle</code> to keep state into key-value pairs. 
+to pass objects via Bundle: implement the <code>Parcelble</code> interface. </p>
+<p>Override this <code>onSavedInstanceState()</code> function → put useful objects into the bundle parameter. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">persist</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="n">across</span><span class="w"> </span><span class="n">Activity</span><span class="w"> </span><span class="n">recreation</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">steps</span><span class="w"> </span><span class="k">within</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">Make</span><span class="w"> </span><span class="n">sure</span><span class="w"> </span><span class="n">super</span><span class="p">.</span><span class="n">onSaveInstanceState</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">called</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">doing</span><span class="w"> </span><span class="n">anything</span><span class="w"> </span><span class="k">else</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">Put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">contents</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">TextView</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">variable</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">URL</span><span class="p">,</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">outState</span><span class="w"> </span><span class="n">Bundle</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="n">Put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">contents</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">TextView</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">our</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">variable</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">Using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">key</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="p">,</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">search</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">outState</span><span class="w"> </span><span class="n">Bundle</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onSaveInstanceState</span><span class="p">(</span><span class="n">Bundle</span><span class="w"> </span><span class="n">outState</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">onSaveInstanceState</span><span class="p">(</span><span class="n">outState</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">outState</span><span class="p">.</span><span class="n">putString</span><span class="p">(</span><span class="n">QUERYURL_KEY</span><span class="p">,</span><span class="w"> </span><span class="n">mUrlDisplayTextView</span><span class="p">.</span><span class="n">getText</span><span class="p">().</span><span class="n">toString</span><span class="p">());</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">outState</span><span class="p">.</span><span class="n">putString</span><span class="p">(</span><span class="n">RAW_JSON_KEY</span><span class="p">,</span><span class="w"> </span><span class="n">mSearchResultsTextView</span><span class="p">.</span><span class="n">getText</span><span class="p">().</span><span class="n">toString</span><span class="p">());</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>in <code>onCreate</code>: try to extract objects form bundle <code>savedInstanceState</code> (if it's not null). </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">@Override</span></span>
+<span class="code-line"><span class="err">protected void onCreate(Bundle savedInstanceState) {</span></span>
+<span class="code-line"><span class="err">    super.onCreate(savedInstanceState);</span></span>
+<span class="code-line"><span class="err">    setContentView(R.layout.activity_main);</span></span>
+<span class="code-line"><span class="err">    mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);</span></span>
+<span class="code-line"><span class="err">    mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);</span></span>
+<span class="code-line"><span class="err">    mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);</span></span>
+<span class="code-line"><span class="err">    mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);</span></span>
+<span class="code-line"><span class="err">    mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);</span></span>
+<span class="code-line"><span class="err">    // TODO (9) If the savedInstanceState bundle is not null, set the text of the URL and search results TextView respectively</span></span>
+<span class="code-line"><span class="err">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(QUERYURL_KEY))</span></span>
+<span class="code-line"><span class="err">        mUrlDisplayTextView.setText(savedInstanceState.getString(QUERYURL_KEY));</span></span>
+<span class="code-line"><span class="err">    if(savedInstanceState!=null &amp;&amp; savedInstanceState.containsKey(RAW_JSON_KEY))</span></span>
+<span class="code-line"><span class="err">        mSearchResultsTextView.setText(savedInstanceState.getString(RAW_JSON_KEY));</span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h2 id="asynctasks-and-loader">AsyncTasks and Loader</h2>
+<p>edgecase: rotate when async task is performing → asynctask runs on separate thread → the zombie activities will not be killed !!
+⇒ <code>Loader</code>
+Loader is identified by a loader ID, thus preventing several loaders running in the same time. 
+<img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image002.png"/>
+<code>AsyncTaskLoader</code> lifecycle: 
+it is bounded to an Activity instead of an async task ⇒ when device rotates, the loader will feed the results of tasks to the right activity. </p>
+<p><img alt="" class="img-responsive" src="../images/andev_p2e1_lifecycle/pasted_image003.png"/></p>
+<h2 id="using-loaders">Using Loaders</h2>
+<ol>
+<li>create loader id: <code>private static final GITHUB_SEARCH_LOADER = 22;</code></li>
+<li>implement <code>LoaderCallbacks</code> interface functions in <code>MainActivity</code></li>
+<li>init loader with a <code>LoaderManager</code>, and start the loader</li>
+</ol>
+<p>let <code>MainActivty</code> implement <code>LoaderManager.LoaderCallbacks&lt;String&gt;</code></p>
+<h3 id="implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask">implement onCreateLoader — onPreExecute and onDoInBackground for AsyncTask</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onCreateLoader</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onCreateLoader</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">Bundle</span><span class="w"> </span><span class="n">bundle</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="err">!</span><span class="n">make</span><span class="w"> </span><span class="n">bundle</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="n">so</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">below</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AsyncTaskLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">anonymous</span><span class="w"> </span><span class="k">inner</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">constructor</span><span class="s1">'s parameter</span></span>
+<span class="code-line"><span class="s1">    return new AsyncTaskLoader&lt;String&gt;(this) {</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        public String loadInBackground() {</span></span>
+<span class="code-line"><span class="s1">            return null;</span></span>
+<span class="code-line"><span class="s1">        }</span></span>
+<span class="code-line"><span class="s1">        // TODO (5) Override onStartLoading</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        protected void onStartLoading() {</span></span>
+<span class="code-line"><span class="s1">            super.onStartLoading();</span></span>
+<span class="code-line"><span class="s1">            // TODO (6) If bundle is null, return.</span></span>
+<span class="code-line"><span class="s1">            if (bundle==null) return;</span></span>
+<span class="code-line"><span class="s1">            // TODO (7) move the content of onPrecuter in the AsyncTask class</span></span>
+<span class="code-line"><span class="s1">            mLoadingIndicator.setVisibility(View.VISIBLE);</span></span>
+<span class="code-line"><span class="s1">            // TODO (8) Force a load</span></span>
+<span class="code-line"><span class="s1">            forceLoad();</span></span>
+<span class="code-line"><span class="s1">        }</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="s1">        // TODO (9) Override loadInBackground</span></span>
+<span class="code-line"><span class="s1">        @Override</span></span>
+<span class="code-line"><span class="s1">        protected String onLoadInBackground() {</span></span>
+<span class="code-line"><span class="s1">            // TODO (10) Get the String for our URL from the bundle passed to onCreateLoader</span></span>
+<span class="code-line"><span class="s1">            String searchUrlstr= bundle.getString(SEARCH_QUERY_URL_EXTRA);</span></span>
+<span class="code-line"><span class="s1">            // TODO (11) If the URL is null or empty, return null</span></span>
+<span class="code-line"><span class="s1">            if(searchUrlstr==null || TextUtils.isEmpty(searchUrlstr)) return null;</span></span>
+<span class="code-line"><span class="s1">            // TODO (12) Copy the try / catch block from the AsyncTask'</span><span class="n">s</span><span class="w"> </span><span class="n">doInBackground</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NetworkUtils</span><span class="p">.</span><span class="n">getResponseFromHttpUrl</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">URL</span><span class="p">(</span><span class="n">searchUrlstr</span><span class="p">));</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="n">printStackTrace</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h3 id="implement-onloadfinished-onpostexecute-for-asynctask">implement onLoadFinished — onPostExecute for AsyncTask</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">13</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onLoadFinished</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onLoadFinished</span><span class="p">(</span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loader</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">githubSearchResults</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="k">Use</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">logic</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">onPostExecute</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">show</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">message</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mLoadingIndicator</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="k">View</span><span class="p">.</span><span class="n">INVISIBLE</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">githubSearchResults</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">!</span><span class="n">githubSearchResults</span><span class="p">.</span><span class="k">equals</span><span class="p">(</span><span class="ss">""</span><span class="p">))</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">showJsonDataView</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">mSearchResultsTextView</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">githubSearchResults</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">showErrorMessage</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">onLoaderReset</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">implement</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">don</span><span class="err">'</span><span class="n">t</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">anything</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">method</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onLoaderReset</span><span class="p">(</span><span class="n">Loader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loader</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h3 id="in-makegithubsearchquery-create-bundle-create-a-loder-start-it">in makeGithubSearchQuery(): create bundle, create a loder, start it</h3>
+<p>instead of staring an <code>AsyncTask</code>, we get a Loader and re-run it via a loader manager. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">// TODO (19) Create a bundle called queryBundle</span></span>
+<span class="code-line"><span class="err">Bundle queryBundle = new Bundle();</span></span>
+<span class="code-line"><span class="err">// TODO (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value</span></span>
+<span class="code-line"><span class="err">queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString());</span></span>
+<span class="code-line"><span class="err">// TODO (21) Call getSupportLoaderManager and store it in a LoaderManager variable</span></span>
+<span class="code-line"><span class="err">LoaderManager loaderManager = getSupportLoaderManager();</span></span>
+<span class="code-line"><span class="err">// TODO (22) Get our Loader by calling getLoader and passing the ID we specified</span></span>
+<span class="code-line"><span class="err">Loader loader = loaderManager.getLoader(GITHUB_SEARCH_LOADER);</span></span>
+<span class="code-line"><span class="err">// TODO (23) If the Loader was null, initialize it. Else, restart it.</span></span>
+<span class="code-line"><span class="err">if(loader==null) loader = loaderManager.initLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span></span>
+<span class="code-line"><span class="err">else loaderManager.restartLoader(GITHUB_SEARCH_LOADER, queryBundle, this);</span></span>
+</pre></div>
+<h2 id="caching-with-loaders_1">Caching with loaders</h2>
+<p>Loaders will reload if activity is destroyed and re-created. This overhead can be avoided by caching the results in the <code>AsyncTaskLoader</code> (created in <code>onCreateLoader()</code>). </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">member</span><span class="w"> </span><span class="k">variable</span><span class="w"> </span><span class="k">called</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="n">JSON</span><span class="w"></span></span>
+<span class="code-line"><span class="n">String</span><span class="w"> </span><span class="n">mGithubJson</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">cached</span><span class="w"> </span><span class="n">results</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="n">protected</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">onStartLoading</span><span class="p">()</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="cm">/* If no arguments were passed, we don't have a query to perform. Simply return. */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">args</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">    </span><span class="cm">/*</span></span>
+<span class="code-line"><span class="cm">        * When we initially begin loading in the background, we want to display the</span></span>
+<span class="code-line"><span class="cm">        * loading indicator to the user</span></span>
+<span class="code-line"><span class="cm">        */</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mLoadingIndicator</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="k">View</span><span class="p">.</span><span class="n">VISIBLE</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">deliver</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">result</span><span class="p">.</span><span class="w"> </span><span class="n">Otherwise</span><span class="p">,</span><span class="w"> </span><span class="n">force</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">load</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">mGithubJson</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">deliverResult</span><span class="p">(</span><span class="n">mGithubJson</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="n">forceLoad</span><span class="p">();</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">Override</span><span class="w"> </span><span class="n">deliverResult</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">mGithubJson</span><span class="w"></span></span>
+<span class="code-line"><span class="nv">@Override</span><span class="w"></span></span>
+<span class="code-line"><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">deliverResult</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">data</span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">mGithubJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">data</span><span class="p">;</span><span class="w"></span></span>
+<span class="code-line"><span class="o">//</span><span class="w"> </span><span class="n">TODO</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="k">Call</span><span class="w"> </span><span class="n">super</span><span class="p">.</span><span class="n">deliverResult</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">storing</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">data</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">super</span><span class="p">.</span><span class="n">deliverResult</span><span class="p">(</span><span class="k">data</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/andev_p1e2_internet.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Android Dev] 1.2 Connect to the Internet
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/andev_p2e2_pref.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Android Dev] 2.2 Preference<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 5 of series «Associate Android Developer Fast Track»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/andev_p1e1_basics.html' style="text-align:left">[Android Dev] 1.1 Create Project Sunshine</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/andev_p1e2_internet.html' style="text-align:left">[Android Dev] 1.2 Connect to the Internet</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/andev_p1e3_recyclerview.html' style="text-align:left">[Android Dev] 1.3 RecyclerView</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/andev_p1e4_intents.html' style="text-align:left">[Android Dev] 1.4 Intents</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/andev_p2e1_lifecycle.html' style="text-align:left">[Android Dev] 2.1 Lifecycles</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/andev_p2e2_pref.html' style="text-align:left">[Android Dev] 2.2 Preference</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'andev_p2e1_lifecycle';
+                        var disqus_url = 'https://x-wei.github.io/notes/andev_p2e1_lifecycle.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/notes/andev_p1e4_intents.html">[Android Dev] 1.4 Intents</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/andev_p2e2_pref.html">[Android Dev] 2.2 Preference</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#onsavedinstancestate" title="onSavedInstanceState()">onSavedInstanceState()</a></li><li><a class="toc-href" href="#asynctasks-and-loader" title="AsyncTasks and Loader">AsyncTasks and Loader</a></li><li><a class="toc-href" href="#using-loaders" title="Using Loaders">Using Loaders</a><ul><li><a class="toc-href" href="#implement-oncreateloader-onpreexecute-and-ondoinbackground-for-asynctask" title="implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask">implement onCreateLoader &mdash; onPreExecute and onDoInBackground for AsyncTask</a></li><li><a class="toc-href" href="#implement-onloadfinished-onpostexecute-for-asynctask" title="implement onLoadFinished &mdash; onPostExecute for AsyncTask">implement onLoadFinished &mdash; onPostExecute for AsyncTask</a></li><li><a class="toc-href" href="#in-makegithubsearchquery-create-bundle-create-a-loder-start-it" title="in makeGithubSearchQuery(): create bundle, create a loder, start it">in makeGithubSearchQuery(): create bundle, create a loder, start it</a></li></ul></li><li><a class="toc-href" href="#caching-with-loaders_1" title="Caching with loaders">Caching with loaders</a></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

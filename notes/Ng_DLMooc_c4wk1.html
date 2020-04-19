@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/Ng_DLMooc_c4wk1.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="deep learning" />
+        <meta name="description" content="Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding box of objects neural style transfer input features could be very high dimension: e.g. 1000x1000 image → 3 million dim input ⇒ if 1st layer has 1000 hidden units → 3 billion params for ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/Ng_DLMooc_c4wk1.html"/>
+        <meta property="og:description" content="Computer Vision CV with DL: rapid progress in past two years. CV problems: image classification object detection: bounding box of objects neural style transfer input features could be very high dimension: e.g. 1000x1000 image → 3 million dim input ⇒ if 1st layer has 1000 hidden units → 3 billion params for ..."/>
+        <meta property="article:published_time" content="2017-11-19" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="deep learning" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/Ng_DLMooc_c4wk1.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks
+                        <a href="https://x-wei.github.io/notes/Ng_DLMooc_c4wk1.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2017-11-19T00:00:00+01:00"><i class="fa fa-calendar"></i> Sun, 19 Nov 2017</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 10 of «Andrew Ng Deep Learning MOOC» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#computer-vision" title="Computer Vision">Computer Vision</a></li><li><a class="toc-href" href="#edge-detection-example" title="Edge Detection Example">Edge Detection Example</a></li><li><a class="toc-href" href="#more-edge-detection" title="More Edge Detection">More Edge Detection</a></li><li><a class="toc-href" href="#padding" title="Padding">Padding</a></li><li><a class="toc-href" href="#strided-convolutions" title="Strided Convolutions">Strided Convolutions</a></li><li><a class="toc-href" href="#convolutions-over-volume" title="Convolutions Over Volume">Convolutions Over Volume</a></li><li><a '="" class="toc-href" href="#filters-n_c_1" title="filters = n_c">filters = n_c'</a><ul><li><a class="toc-href" href="#one-layer-of-a-convolutional-network" title="One Layer of a Convolutional Network">One Layer of a Convolutional Network</a></li><li><a class="toc-href" href="#simple-convolutional-network-example" title="Simple Convolutional Network Example">Simple Convolutional Network Example</a></li><li><a class="toc-href" href="#pooling-layers" title="Pooling Layers">Pooling Layers</a></li><li><a class="toc-href" href="#cnn-example" title="CNN Example">CNN Example</a></li><li><a class="toc-href" href="#why-convolutions" title="Why Convolutions?">Why Convolutions?</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <h3 id="computer-vision">Computer Vision</h3>
+<p>CV with DL: rapid progress in past two years.  </p>
+<p>CV problems:  </p>
+<ul>
+<li>image classification  </li>
+<li>object detection: bounding box of objects  </li>
+<li>neural style transfer  </li>
+</ul>
+<p>input features could be very high dimension: e.g. 1000x1000 image → 3 million dim input ⇒ if 1st layer has 1000 hidden units → <em>3 billion params for first layer...</em> </p>
+<p>foundamental operation: convolution.  </p>
+<h3 id="edge-detection-example">Edge Detection Example</h3>
+<p>Motivating example for convolution operation: detecting vertical edges.  </p>
+<p>Convolve image with a <strong>filter(kernel) </strong>matrix:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image001.png"/><br/>
+Each element in resulting matrix: sum(element-wise multiplication of filter and input image).  </p>
+<p>Why the filter can detect vertical edge?<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image003.png"/> </p>
+<h3 id="more-edge-detection">More Edge Detection</h3>
+<p><strong>Positive V.S. negative edges</strong>:<br/>
+dark to light V.S. light to dark<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image004.png"/> </p>
+<p>Instead of picking filter by hand, the actual parameters can be <em>learned</em> by ML.<br/>
+Next: discuss some building blocks of CNN, padding/striding/pooling...  </p>
+<h3 id="padding">Padding</h3>
+<p>Earlier: image <em>shrinks</em> after convolution.<br/>
+Input <code>n*n</code> image, convolve with <code>f*f</code> filter ⇒ output shape = <code>(n-f+1) * (n-f+1)</code><br/>
+downside:  </p>
+<ul>
+<li>image shrinks on every step (if 100 layer → shrinks to very small images)  </li>
+<li>pixels <em>at corner</em> are less used in the output  </li>
+</ul>
+<p>⇒ <em>pad the image</em> so that output shape is invariant.  </p>
+<p>if <code>p</code> = padding amount (width of padded border)<br/>
+→ output shape = <code>(n+2p-f+1) * (n+2p-f+1)</code> </p>
+<p>Terminology: <em>valid</em> and <em>same</em> convolutions:  </p>
+<ul>
+<li><strong>valid</strong> convolution: no padding, output shape = (n-f+1) * (n-f+1)  </li>
+<li><strong>same</strong> convolution: output size equals input size. i.e. filter width <code>p = (f-1) / 2</code> (only works <em>when f is odd — </em>this is also a convention in CV, partially because this way there'll be a central filter)  </li>
+</ul>
+<h3 id="strided-convolutions">Strided Convolutions</h3>
+<p>Example <code>stride = 2</code> in convolution:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image005.png"/><br/>
+(convention: stop moving if filter goes out of image border.)  </p>
+<p>if input image <code>n*n</code>, filter size <code>f*f</code>, padding = <code>f</code>, stride = <code>s</code><br/>
+⇒ output shape = <code>(floor((n+2p-f)/s) + 1) * (floor((n+2p-f)/s) + 1)</code> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image006.png"/> </p>
+<p><strong>Note on cross-correlation v.s. convolution</strong><br/>
+In math books, "convolution" involves <em>flip filter in both direction</em> before doing "convolution" operation.<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image007.png"/><br/>
+The operation discribed before is called "cross-correlation".  </p>
+<p>(Why doing the flipping in math: to ensure assosative law for convolution — (A<em>B)</em>C=A<em>(B</em>C).)  </p>
+<h3 id="convolutions-over-volume">Convolutions Over Volume</h3>
+<p>example: convolutions on RGB image<br/>
+image size = 6<em>6</em>3 = height * width * #channels<br/>
+filter size = 3<em>3</em>3, (convention: <em>filter's #channels matches the image</em>)<br/>
+output size = 4<em>4 (</em>1)  —  <strong>output is 2D for each filter</strong>.  </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image008.png"/> </p>
+<p><strong>Multiple filters:</strong> </p>
+<ul>
+<li>take &gt;1 filters  </li>
+<li>stack outputs together to form an <em>output volume</em>.  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image009.png"/> </p>
+<p><strong>Summary of dimensions</strong>:<br/>
+input shape = <code>n*n*n_c</code><br/>
+filter shape = <code>f*f*n_c</code> </p>
+<h1 id="filters-n_c_1">filters = <code>n_c</code>'</h1>
+<p>⇒ output shape = <code>(n-f+1) * (n-f+1) * n_c</code>'  </p>
+<h3 id="one-layer-of-a-convolutional-network">One Layer of a Convolutional Network</h3>
+<p>For each filter's output: <em>add bias b, then apply nonlinear activation function.</em> </p>
+<p>One layer of a CNN:<br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image011.png"/> </p>
+<p>with analogy to normall NN:  </p>
+<ul>
+<li>linear operation (matrix mul V.S. convolution)  </li>
+<li>bias  </li>
+<li>nonlinear activation  </li>
+<li>difference: Number of parameters <em>doesn't depend on input dimension</em>: even for very large images.  </li>
+</ul>
+<p><strong>Notation summary:</strong><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image014.png"/><br/>
+note: <em>ordering</em> of dimensions: example index, height, width, #channel.  </p>
+<h3 id="simple-convolutional-network-example">Simple Convolutional Network Example</h3>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image015.png"/> </p>
+<p>general trend: as going to later layers, <em>image size shrinks, #channels increases</em>.  </p>
+<h3 id="pooling-layers">Pooling Layers</h3>
+<p>Pooling layers makes CNN more robust.  </p>
+<p><strong>Max pooling</strong><br/>
+divide input into regions, take max of each region.  </p>
+<ul>
+<li>Hyperparams:  </li>
+</ul>
+<p>(common choice) <em>filter size f=2 or 3, strid size s=2, padding p=0.</em> </p>
+<ul>
+<li>note: <em>no params to learn</em> for max pooling layer, pooling layer not counted in #layers (conv-pool as a single layer)  </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image017.png"/><br/>
+Intuition: a large number indicats a detected feature in that region → preseved after pooling.  </p>
+<p>Formula of dimension <code>floor((n+2p-f+1)/s + 1)</code> holds for POOL layer as well.  </p>
+<p>Output of max pooling: the same #channels as input (i.e. do maxpooling on each channel).  </p>
+<p><strong>Average pooling</strong><br/>
+Less often used than max pooling.<br/>
+Typical usecase: collapse 7<em>7</em>1000 activation into 1<em>1</em>1000.  </p>
+<h3 id="cnn-example">CNN Example</h3>
+<p><em>LeNet-5</em><br/>
+<img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image018.png"/> </p>
+<p><img alt="" class="img-responsive" src="../images/Ng_DLMooc_c4wk1/pasted_image020.png"/> </p>
+<h3 id="why-convolutions">Why Convolutions?</h3>
+<p>2 main advantages of CONV over FC: <em>param sharing; sparsity of connections.</em> </p>
+<p><strong>Parameter sharing</strong>:<br/>
+A feature detector useful in one part of img is probably useful in another part as well.<br/>
+→ no need to learn separate feature detectors in different parts.  </p>
+<p><strong>Sparsity of connections</strong>:<br/>
+For each output value depends only on a small number of inputs (the pixels near that position)  </p>
+<ul>
+<li>Invarance to translation...  </li>
+</ul>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/Ng_DLMooc_c3wk2.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Structuring Machine Learning Projects] week2. ML Strategy (2)
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/Ng_DLMooc_c4wk2.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [Convolutional Neural Networks] week2. Deep convolutional models: case studies<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 10 of series «Andrew Ng Deep Learning MOOC»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c1wk1.html' style="text-align:left">[Neural Networks and Deep Learning] week1. Introduction to deep learning</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c1wk2.html' style="text-align:left">[Neural Networks and Deep Learning] week2. Neural Networks Basics</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c1wk3.html' style="text-align:left">[Neural Networks and Deep Learning] week3. Shallow Neural Network</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c1wk4.html' style="text-align:left">[Neural Networks and Deep Learning] week4. Deep Neural Network</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c2wk1.html' style="text-align:left">[Improving Deep Neural Networks] week1. Practical aspects of Deep Learning</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c2wk2.html' style="text-align:left">[Improving Deep Neural Networks] week2. Optimization algorithms</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c2wk3.html' style="text-align:left">[Improving Deep Neural Networks] week3. Hyperparameter tuning, Batch Normalization and Programming Frameworks</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c3wk1.html' style="text-align:left">[Structuring Machine Learning Projects] week1. ML Strategy (1)</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c3wk2.html' style="text-align:left">[Structuring Machine Learning Projects] week2. ML Strategy (2)</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/Ng_DLMooc_c4wk1.html' style="text-align:left">[Convolutional Neural Networks] week1. Foundations of Convolutional Neural Networks</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c4wk2.html' style="text-align:left">[Convolutional Neural Networks] week2. Deep convolutional models: case studies</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c4wk3.html' style="text-align:left">[Convolutional Neural Networks] week3. Object detection</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c4wk4.html' style="text-align:left">[Convolutional Neural Networks] week4. Special applications: Face recognition & Neural style transfer</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c5wk1.html' style="text-align:left">[Sequential Models] week1. Recurrent Neural Networks</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c5wk2.html' style="text-align:left">[Sequential Models] week2. Natural Language Processing & Word Embeddings</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/Ng_DLMooc_c5wk3.html' style="text-align:left">[Sequential Models] week3. Sequence models & Attention mechanism</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'Ng_DLMooc_c4wk1';
+                        var disqus_url = 'https://x-wei.github.io/notes/Ng_DLMooc_c4wk1.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/notes/Ng_DLMooc_c3wk2.html">[Structuring Machine Learning Projects] week2. ML Strategy (2)</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/Ng_DLMooc_c4wk2.html">[Convolutional Neural Networks] week2. Deep convolutional models: case studies</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#computer-vision" title="Computer Vision">Computer Vision</a></li><li><a class="toc-href" href="#edge-detection-example" title="Edge Detection Example">Edge Detection Example</a></li><li><a class="toc-href" href="#more-edge-detection" title="More Edge Detection">More Edge Detection</a></li><li><a class="toc-href" href="#padding" title="Padding">Padding</a></li><li><a class="toc-href" href="#strided-convolutions" title="Strided Convolutions">Strided Convolutions</a></li><li><a class="toc-href" href="#convolutions-over-volume" title="Convolutions Over Volume">Convolutions Over Volume</a></li><li><a '="" class="toc-href" href="#filters-n_c_1" title="filters = n_c">filters = n_c'</a><ul><li><a class="toc-href" href="#one-layer-of-a-convolutional-network" title="One Layer of a Convolutional Network">One Layer of a Convolutional Network</a></li><li><a class="toc-href" href="#simple-convolutional-network-example" title="Simple Convolutional Network Example">Simple Convolutional Network Example</a></li><li><a class="toc-href" href="#pooling-layers" title="Pooling Layers">Pooling Layers</a></li><li><a class="toc-href" href="#cnn-example" title="CNN Example">CNN Example</a></li><li><a class="toc-href" href="#why-convolutions" title="Why Convolutions?">Why Convolutions?</a></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

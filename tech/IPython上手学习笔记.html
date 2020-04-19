@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>IPython上手学习笔记 - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/tech/IPython上手学习笔记.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="python" />
+        <meta name="description" content="Learning IPython for Interactive Computing and Data Visualization这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. (在开始系统学IPython之前简单使用过IPython, 那时候我还是更喜欢bpython的代码提示功能...) ch1: 10 IPython essentials 在任何变量后面加问号?或者双问号??, 将会输出详细的信息(按q退出), ??的信息更加详细些 Tab Completion: 没啥好说的 没有bpython做的好 也凑合吧... _, __, ___保存最近三次的输出; _i, __i, ___i保存最近三次的输入(作为字符串保存) magic commands 在IPython里面可以使用一些标准unix命令, 比如cd, pwd,ls等 ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="IPython上手学习笔记"/>
+        <meta property="og:url" content="https://x-wei.github.io/tech/IPython上手学习笔记.html"/>
+        <meta property="og:description" content="Learning IPython for Interactive Computing and Data Visualization这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. (在开始系统学IPython之前简单使用过IPython, 那时候我还是更喜欢bpython的代码提示功能...) ch1: 10 IPython essentials 在任何变量后面加问号?或者双问号??, 将会输出详细的信息(按q退出), ??的信息更加详细些 Tab Completion: 没啥好说的 没有bpython做的好 也凑合吧... _, __, ___保存最近三次的输出; _i, __i, ___i保存最近三次的输入(作为字符串保存) magic commands 在IPython里面可以使用一些标准unix命令, 比如cd, pwd,ls等 ..."/>
+        <meta property="article:published_time" content="2014-07-22" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/IPython上手学习笔记.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">IPython上手学习笔记 - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/tech/index.html" title="tech">tech</a></li>
+                <li class="active">IPython上手学习笔记</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        IPython上手学习笔记
+                        <a href="https://x-wei.github.io/tech/IPython上手学习笔记.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 IPython上手学习笔记 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2014-07-22T00:00:00+02:00"><i class="fa fa-calendar"></i> Tue, 22 Jul 2014</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/tech/index.html">tech</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/python.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> python</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#ch1-10-ipython-essentials" title="ch1: 10 IPython essentials">ch1: 10 IPython essentials</a><ul><li><a class="toc-href" href="#magic-commands" title="magic commands">magic commands</a></li><li><a class="toc-href" href="#ipython-notebook" title="IPython Notebook">IPython Notebook</a></li><li><a class="toc-href" href="#customizing-ipython" title="customizing IPython">customizing IPython</a></li></ul></li><li><a class="toc-href" href="#ch2-interavtive-work-with-ipython_1" title="ch2: Interavtive Work with IPython">ch2: Interavtive Work with IPython</a><ul><li><a class="toc-href" href="#navigating-the-file-system" title="navigating the file system">navigating the file system</a></li><li><a class="toc-href" href="#accessing-system-shell-with-ipython" title="Accessing system shell with IPython">Accessing system shell with IPython</a></li><li><a class="toc-href" href="#the-extended-python-console" title="The Extended Python Console">The Extended Python Console</a><ul><li><a class="toc-href" href="#debug" title="debug">debug</a></li><li><a class="toc-href" href="#benchmarkingji-zhun-ce-shi" title='benchmarking("基准测试")'>benchmarking("基准测试")</a></li></ul></li><li><a class="toc-href" href="#using-the-ipython-notebook_1" title="Using the IPython notebook">Using the IPython notebook</a><ul><li><a class="toc-href" href="#notebookde-yi-xie-kuai-jie-jian" title="notebook的一些快捷键">notebook的一些快捷键</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <p><a href="http://www.packtpub.com/learning-ipython-for-interactive-computing-and-data-visualization/book">Learning IPython for Interactive Computing and Data Visualization</a>这本书的前两章的笔记, 这本书还被放在了IPython官网上, 虽然只有一百页多一点点, 但是讲的内容却很丰富, 介绍了IPython, numpy, pandas以及并行计算等方面. </p>
+<p>(在开始系统学IPython之前简单使用过IPython, 那时候我还是更喜欢bpython的代码提示功能...)</p>
+<h1 id="ch1-10-ipython-essentials">ch1: 10 IPython essentials</h1>
+<ul>
+<li>在任何变量后面加问号<code>?</code>或者双问号<code>??</code>, 将会输出详细的信息(按<code>q</code>退出), <code>??</code>的信息更加详细些</li>
+<li>Tab Completion: 没啥好说的 没有bpython做的好 也凑合吧...</li>
+<li><code>_, __, ___</code>保存最近三次的输出;  <code>_i, __i, ___i</code>保存最近三次的输入(作为字符串保存)</li>
+</ul>
+<h2 id="magic-commands">magic commands</h2>
+<ul>
+<li>在IPython里面可以使用一些标准unix命令, 比如<code>cd</code>, <code>pwd,ls</code>等... </li>
+</ul>
+<p>这个太好了 否则还要<code>import os</code>, 然后再什么<code>os.chdir('...')</code></p>
+<ul>
+<li>其实这些unix命令是IPython的<strong>magic commands</strong>, 这些magic commands一般用<code>%</code>作为前缀.</li>
+</ul>
+<p>但是由于默认IPython开启了<strong>automagic system</strong>, 上面那些命令可以不用加前缀了(或者使用Tab自动给加上前缀)</p>
+<ul>
+<li><code>%run</code> 命令, 运行一个.py脚本, 但是好处是, 与运行完了以后这个.py文件里的变量都可以在Ipython里继续访问</li>
+<li><code>%timeit</code> 命令, 可以用来做基准测试(<em>benchmarking</em>), 测试一个命令(或者一个函数)的运行时间</li>
+</ul>
+<p>ex. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">%timeit</span> <span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="n">in</span> <span class="n">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span></span>
+<span class="code-line"><span class="mi">10000</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="o">:</span> <span class="mf">56.5</span> <span class="err">µ</span><span class="n">s</span> <span class="n">per</span> <span class="n">loop</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="nf">%timeit</span> <span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="n">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span></span>
+<span class="code-line"><span class="mi">10000</span> <span class="n">loops</span><span class="p">,</span> <span class="n">best</span> <span class="n">of</span> <span class="mi">3</span><span class="o">:</span> <span class="mf">51.7</span> <span class="err">µ</span><span class="n">s</span> <span class="n">per</span> <span class="n">loop</span></span>
+</pre></div>
+<ul>
+<li><code>%debug</code> 命令: 当有exception的时候, 在console里输入<code>%debug</code>即可打开debugger. </li>
+</ul>
+<p>在debugger里, 输入<code>u,d</code>(up, down)查看stack, 输入<code>q</code>退出debugger</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">%debug</span></span>
+<span class="code-line"><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="mi">34</span><span class="o">-</span><span class="mi">17</span><span class="n">c374156862</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span><span class="p">()</span></span>
+<span class="code-line">      <span class="mi">1</span> <span class="k">if</span> <span class="mi">1</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">:</span></span>
+<span class="code-line"><span class="o">----&gt;</span> <span class="mi">2</span>     <span class="n">raise</span> <span class="n">Exception</span></span>
+<span class="code-line">      <span class="mi">3</span> </span>
+<span class="code-line"><span class="n">ipdb</span><span class="o">&gt;</span> <span class="n">u</span></span>
+<span class="code-line"><span class="o">***</span> <span class="n">Oldest</span> <span class="n">frame</span></span>
+<span class="code-line"><span class="n">ipdb</span><span class="o">&gt;</span> <span class="n">d</span></span>
+<span class="code-line"><span class="o">***</span> <span class="n">Newest</span> <span class="n">frame</span></span>
+<span class="code-line"><span class="n">ipdb</span><span class="o">&gt;</span> <span class="n">q</span></span>
+</pre></div>
+<p>使用%pdb开启自动pdb模式</p>
+<blockquote>
+<p>%pdb<br/>
+Automatic pdb calling has been turned ON</p>
+</blockquote>
+<ul>
+<li>
+<p><code>%pylab</code> 命令, 大杀器, 看一下都import了什么:</p>
+<p>%pylab makes the following imports::
+    import numpy
+    import matplotlib
+    from matplotlib import pylab, mlab, pyplot
+    np = numpy
+    plt = pyplot
+    from IPython.display import display
+    from IPython.core.pylabtools import figsize, getfigs
+    from pylab import *
+    from numpy import *</p>
+</li>
+</ul>
+<p>画图的时候可以不用非要加<code>plt.</code>前缀了, 直接<code>plot()</code>即可. 图像化出来的时候, 画图窗口并没有block, 可以动态(<em>interactively</em>)画图.</p>
+<p>另外, qtconsole和notebook一样, 指定了<code>inline</code>选项以后可以直接在窗口里画图:</p>
+<p><img alt="" class="img-responsive" src="../images/IPython上手学习笔记/pasted_image004.png"/></p>
+<p>后来发现inline的图片貌似不能放大看, 所以有时候还是单独一个窗口比较好, 换到非inline模式只需要再输入以下%pylab, 加上选项qt:
+<code>%pylab qt</code></p>
+<h2 id="ipython-notebook">IPython Notebook</h2>
+<p><strong>(重头戏)</strong></p>
+<p>这个可以在浏览器里(!!)使用IPython, 并且可以使用多行编辑后再一并执行. </p>
+<blockquote>
+<p><em>The Notebook brings the functionality of IPython into the browser for multiline textediting features, interactive session reproducibility, and so on.</em></p>
+</blockquote>
+<p>在shell/cmd窗口里启动ipython的时候加上notebook:</p>
+<p><code>$ipython notebook</code></p>
+<p>看到浏览器打开了, 很神奇: </p>
+<p><img alt="" class="img-responsive" src="../images/IPython上手学习笔记/pasted_image.png"/></p>
+<p>新建一个notebook, 用用看: </p>
+<p><img alt="" class="img-responsive" src="../images/IPython上手学习笔记/pasted_image001.png"/></p>
+<p>使用的过程中渐渐理解了为什么书里说可以用来做"<em>multiline textediting features, interactive session reproducibility</em>"... 因为这不只是个编程的东西, 还可以作为一个笔记本 — 而且是一个交互式的笔记本! </p>
+<p>(<em>注: 更多关于notebook的介绍在下面第二章的内容里.</em>)</p>
+<ul>
+<li>代码,或者段落, 按照cell(格子)进行组织, 一个cell里面的内容可以是code, 但是也同样可以是markdown的段落, 或者是一个标题(heading).</li>
+<li>在一个代码的cell里, 写入多行代码, 就像在编辑器里写python程序一样, 按回车只会换行, 不会运行程序.</li>
+</ul>
+<p>写了一段程序代码以后, 按<code>ctrl+Enter</code>运行程序, 运行结果也是一个作为cell. 
+(<strong>注</strong>: 在qtconsole里面相反, 如果要输入多行程序的话, 按<code>Ctrl+Enter</code>换行(按一一次ctrl+enter即可进入多行编辑模式), 写了几行代码以后要运行的话, 就按两次回车, 或者按<code>Shift+Enter</code>)</p>
+<ul>
+<li>...还有好多快捷键, 按Esc以后再按h就可以看到... 这个还分编辑模式和命令模式呢... 真不能小看了IPython了!</li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/IPython上手学习笔记/pasted_image002.png"/></p>
+<h2 id="customizing-ipython">customizing IPython</h2>
+<p>保存自己的IPython配置文件, 只需要在shell/cmd里输入ipython profile create<code>,</code> 配置文件存储在 <code>~.ipython</code> 或者 <code>~/.config/ipython</code>目录里.</p>
+<h1 id="ch2-interavtive-work-with-ipython_1">ch2: Interavtive Work with IPython</h1>
+<p>IPython可以实现<strong>shell(OS)和python的交互</strong>. 这样做一些unix shell的操作的时候可以不必退出console了.</p>
+<h2 id="navigating-the-file-system">navigating the file system</h2>
+<p>例子: 完成下载压缩包, 解压缩, 以及打开解压后的文件这些操作...</p>
+<p>在py变量前面加入$, 可以把这个变量共享给OS或者magic command:</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">folder</span><span class="o">=</span><span class="err">'</span><span class="n">data</span><span class="err">'</span></span>
+<span class="code-line"><span class="nf">%mkdir</span> <span class="n">$folder</span></span>
+</pre></div>
+<p>这样就在当前目录下建立一个'data'文件夹 — 这可比py的命令好记多了啊... <code>%mkdir</code>的原理其实是给了shell命令一个别名(<code>alias</code>).</p>
+<p>然后, <code>%bookmark</code>可以把当前的目录加入收藏夹 下次cd的时候方便直接跳到这里来:</p>
+<p>ex.
+<code>%bookmark bm</code>
+那么以后可以直接用 <code>cd bm</code> 跳到这个目录下. <code>%bookmark -l</code> 可以列出收藏夹的目录内容.</p>
+<p>然后发现原来IPython连文件名都是可以提示的啊!... </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">with open('0&lt;TAB&gt;</span></span>
+<span class="code-line"><span class="err">0.circles 0.edges</span></span>
+</pre></div>
+<h2 id="accessing-system-shell-with-ipython">Accessing system shell with IPython</h2>
+<p>在IPython里调用系统的命令, 不用再使用<code>sys.exec('...')</code>之类冗长的方式了, 只需要在系统的命令前面加上一个感叹号<code>!</code>即可...</p>
+<p>shell返回的结果可以作为一个string的列表保存在一个python variable里.</p>
+<p>ex. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">In [2]: files = !ls -1 -S | grep edges</span></span>
+<span class="code-line"><span class="err">In [3]: files</span></span>
+<span class="code-line"><span class="err">Out[3]: ['1912.edges',</span></span>
+<span class="code-line"><span class="err">    '107.edges',</span></span>
+<span class="code-line"><span class="err">    [...]</span></span>
+<span class="code-line"><span class="err">    '3980.edges']</span></span>
+</pre></div>
+<p>(当然 上面这一行只能在unix系统下运行, 因为Windows的cmd没有ls 和 grep命令)</p>
+<p>还可以把一条比较长的命令作为alias保存起来, 用<code>%alias</code>命令... (这个应该一般用不到)</p>
+<p><code>%alias largest ls -1sSh | grep %s</code></p>
+<h2 id="the-extended-python-console">The Extended Python Console</h2>
+<ul>
+<li><code>%history</code> 或者 <code>%hist</code> , 显示之前的记录, 有一些参数可用...</li>
+<li><code>%store</code> 把python变量的内容保存下来, 以后的session可以用</li>
+<li><code>%paste</code> 导入并执行剪贴板里面的内容</li>
+<li><code>%run</code> 之前讲过了, 运行py文件, 运行后py文件里的变量可以在console里访问</li>
+<li><code>%edit</code> 打开系统的文件编辑器, 并且在关闭这个编辑器时自动运行程序</li>
+<li>介绍了一个包 networkx, 可以用来分析复杂网络(graph)的....</li>
+</ul>
+<h3 id="debug">debug</h3>
+<ul>
+<li>debug加入断点: <code>%run -d -b29 script.py</code> 运行script.py 并且在29行的时候暂停, 当输入<code>c</code>的时候再继续运行.</li>
+<li>一些pdb(debugging环境)里常用的命令:<ul>
+<li><code>u/d</code> for going up/down into the call stack</li>
+<li><code>s</code> to step into the next statement</li>
+<li><code>n</code> to continue execution until the next line in the current function</li>
+<li><code>r</code> to continue execution until the current function returns</li>
+<li><code>c</code> to continue execution until the next breakpoint or exception</li>
+<li><code>p</code> to evaluate and print any expression</li>
+<li><code>a</code> to obtain the arguments of the current functions</li>
+<li>The <code>!</code> prefix to execute any Python command within the debugger</li>
+</ul>
+</li>
+</ul>
+<h3 id="benchmarkingji-zhun-ce-shi">benchmarking("基准测试")</h3>
+<ul>
+<li><code>%timeit fun()</code> 测试一个<strong>函数</strong>的执行速度</li>
+<li><code>%run -t</code>和<code>%timeit</code>效果类似, 作用是测试一个py脚本<strong>文件</strong>的执行速度</li>
+<li>更精细的运行时间测试, 可以用<strong>profile模块</strong></li>
+</ul>
+<blockquote>
+<p><em>The profiler outputs details about calls of every Python function used directly or indirectly in this script.</em></p>
+</blockquote>
+<p>@@...好高级!!! 这样的话就更容易发现程序运行的瓶颈在哪里了!
+方法是使用 <code>%run -p</code> 或者 <code>%prun</code></p>
+<h2 id="using-the-ipython-notebook_1">Using the IPython notebook</h2>
+<p>这个notebook的功能实在是很NB... 不仅可以加入代码/markdown段落, 还可以加入图片和视频... notebook的格式为.ipybn文件, 用JSON存储数据.</p>
+<ul>
+<li>
+<p>输入 <code>ipython notebook</code>(或者在ipython里输入<code>!ipython notebook</code>)以后, 会在8888端口建立一个web server, 访问 <a href="http://localhost:8888/">http://localhost:8888/</a> 就可以看到上面的那个截图, 或者称之为<strong>notebook dashboard.</strong></p>
+</li>
+<li>
+<p><strong>cell magics</strong>的作用域是整个cell(多行), 而magic command的作用域是一行, cell magics的前缀是两个百分号<code>%%</code>.</p>
+</li>
+<li>
+<p>从一个py文件直接建立一个notebook, 只需要把文件拖入dashboard即可, 然后notebook也可以保存为文件. </p>
+</li>
+<li>
+<p>编辑了Markdown以后, 还是<code>Ctrl+Enter/Shift+Enter</code> , 即可成为格式化的文本, 再双击就可以编辑!!</p>
+</li>
+<li>
+<p>让plot的图片直接嵌入在notebook里面: 使用<code>ipython notebook --pylab inline</code>, 或者在notebook里面输入<code>%pylab inline</code></p>
+</li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/IPython上手学习笔记/pasted_image003.png"/></p>
+<h3 id="notebookde-yi-xie-kuai-jie-jian">notebook的一些快捷键</h3>
+<ul>
+<li>Esc从编辑模式(edit mode)退出到命令模式(command mode)</li>
+<li>Enter从命令模式到编辑模式</li>
+</ul>
+<p><strong>(编辑模式下)</strong></p>
+<ul>
+<li>ctrl+Enter: 运行程序/markdown代码</li>
+<li>shift+Enter: 运行程序, 并自动跳到下一个cell</li>
+<li>alt+Enter: 运行程序, 并自动在后面新建一个cell在</li>
+</ul>
+<p><strong>(命令模式下)</strong></p>
+<ul>
+<li>c: 复制一个cell</li>
+<li>x: 剪切一个cell</li>
+<li>v: 粘贴cell</li>
+<li>a: 在当前cell上面(<strong>a</strong>bove)新建一个cell</li>
+<li>b: 在当前cell下面(<strong>b</strong>elow)新建一个cell</li>
+<li>m: 让当前cell变成一个markdown的cell</li>
+<li>y: 让当前cell变成code的cell</li>
+<li>1,2,3...: n级标题</li>
+<li>j,k: 上下移动选中的cell, vim风格..</li>
+<li>dd(d按两下): 删除一个cell(vim 风格...)</li>
+</ul>
+<p>......爽到爆!!</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/tech/pandas学习笔记.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        pandas学习笔记
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/soft/putty使用备忘.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        putty使用备忘<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'IPython上手学习笔记';
+                        var disqus_url = 'https://x-wei.github.io/tech/IPython上手学习笔记.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#ch1-10-ipython-essentials" title="ch1: 10 IPython essentials">ch1: 10 IPython essentials</a><ul><li><a class="toc-href" href="#magic-commands" title="magic commands">magic commands</a></li><li><a class="toc-href" href="#ipython-notebook" title="IPython Notebook">IPython Notebook</a></li><li><a class="toc-href" href="#customizing-ipython" title="customizing IPython">customizing IPython</a></li></ul></li><li><a class="toc-href" href="#ch2-interavtive-work-with-ipython_1" title="ch2: Interavtive Work with IPython">ch2: Interavtive Work with IPython</a><ul><li><a class="toc-href" href="#navigating-the-file-system" title="navigating the file system">navigating the file system</a></li><li><a class="toc-href" href="#accessing-system-shell-with-ipython" title="Accessing system shell with IPython">Accessing system shell with IPython</a></li><li><a class="toc-href" href="#the-extended-python-console" title="The Extended Python Console">The Extended Python Console</a><ul><li><a class="toc-href" href="#debug" title="debug">debug</a></li><li><a class="toc-href" href="#benchmarkingji-zhun-ce-shi" title='benchmarking("基准测试")'>benchmarking("基准测试")</a></li></ul></li><li><a class="toc-href" href="#using-the-ipython-notebook_1" title="Using the IPython notebook">Using the IPython notebook</a><ul><li><a class="toc-href" href="#notebookde-yi-xie-kuai-jie-jian" title="notebook的一些快捷键">notebook的一些快捷键</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

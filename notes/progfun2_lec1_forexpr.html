@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Scala MOOC II] Lec1: For Expressions and Monads - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/progfun2_lec1_forexpr.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="scala" />
+        <meta name="description" content="Recap: Functions and Pattern Matching case classes ex: json json objects can be seq, num, str, bool,... ⇒ represented as abstract class and case classes. pattern matching → question: what is the type of the {case(key, value)=&gt;&#34;...&#34;} clause? it is (JBinding =&gt; String) type, which is a shorthand for Function1[JBinding, String ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Scala MOOC II] Lec1: For Expressions and Monads"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/progfun2_lec1_forexpr.html"/>
+        <meta property="og:description" content="Recap: Functions and Pattern Matching case classes ex: json json objects can be seq, num, str, bool,... ⇒ represented as abstract class and case classes. pattern matching → question: what is the type of the {case(key, value)=&gt;&#34;...&#34;} clause? it is (JBinding =&gt; String) type, which is a shorthand for Function1[JBinding, String ..."/>
+        <meta property="article:published_time" content="2016-08-12" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="scala" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/progfun2_lec1_forexpr.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Scala MOOC II] Lec1: For Expressions and Monads - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[Scala MOOC II] Lec1: For Expressions and Monads</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Scala MOOC II] Lec1: For Expressions and Monads
+                        <a href="https://x-wei.github.io/notes/progfun2_lec1_forexpr.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Scala MOOC II] Lec1: For Expressions and Monads 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-08-12T00:00:00+02:00"><i class="fa fa-calendar"></i> Fri, 12 Aug 2016</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/scala.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> scala</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 1 of «Functional Program Design in Scala» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#recap-functions-and-pattern-matching" title="Recap: Functions and Pattern Matching">Recap: Functions and Pattern Matching</a><ul><li><a class="toc-href" href="#case-classes" title="case classes">case classes</a></li><li><a class="toc-href" href="#pattern-matching" title="pattern matching">pattern matching</a></li><li><a class="toc-href" href="#function1-trait" title="Function1 Trait">Function1 Trait</a></li><li><a class="toc-href" href="#subclass-a-function-type" title="subclass a function type">subclass a function type</a></li><li><a class="toc-href" href="#partial-match" title="Partial Match">Partial Match</a></li></ul></li><li><a class="toc-href" href="#recap-collections_1" title="Recap: Collections">Recap: Collections</a><ul><li><a class="toc-href" href="#for-expressions" title="For expressions">For expressions</a></li></ul></li><li><a class="toc-href" href="#11-queries-with-for_1" title="1.1 - Queries with For">1.1 - Queries with For</a></li><li><a class="toc-href" href="#12-translation-of-for" title="1.2 - Translation of For">1.2 - Translation of For</a><ul><li><a class="toc-href" href="#implemention-of-for-expr-3-rules" title="implemention of for-expr: 3 rules">implemention of for-expr: 3 rules</a></li></ul></li><li><a class="toc-href" href="#13-functional-random-generators_1" title="1.3 - Functional Random Generators">1.3 - Functional Random Generators</a><ul><li><a class="toc-href" href="#other-base-generators" title="other base Generators">other base Generators</a></li><li><a class="toc-href" href="#rand-list-generator" title="rand List Generator">rand List Generator</a></li><li><a class="toc-href" href="#rand-binary-tree-generator" title="rand (binary) Tree Generator">rand (binary) Tree Generator</a></li><li><a class="toc-href" href="#application-random-testing_1" title="Application: random testing">Application: random testing</a><ul><li><a class="toc-href" href="#scalacheck" title="ScalaCheck">ScalaCheck</a></li></ul></li></ul></li><li><a class="toc-href" href="#14-monads_2" title="1.4 - Monads">1.4 - Monads</a><ul><li><a class="toc-href" href="#monad-laws" title="Monad laws">Monad laws</a></li><li><a class="toc-href" href="#the-try-type_1" title="the Try type">the Try type</a><ul><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li></ul></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <h1 id="recap-functions-and-pattern-matching">Recap: Functions and Pattern Matching</h1>
+<h3 id="case-classes">case classes</h3>
+<p>ex: json
+json objects can be seq, num, str, bool,...</p>
+<p>⇒ represented as abstract class and case classes. </p>
+<h3 id="pattern-matching">pattern matching</h3>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image002.png"/></p>
+<p>→ question: what is the type of the <code>{case(key, value)=&gt;"..."}</code> clause? </p>
+<p>it is <code>(JBinding =&gt; String)</code> type, which is a shorthand for <code>Function1[JBinding, String]</code>. </p>
+<h3 id="function1-trait">Function1 Trait</h3>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image003.png"/></p>
+<h3 id="subclass-a-function-type">subclass a function type</h3>
+<p>function types can also be extended ! </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image005.png"/></p>
+<p>element accessing can be written as function calls because <code>Seq</code>s are functions!</p>
+<h3 id="partial-match">Partial Match</h3>
+<p>if there is no match → throw MatchError</p>
+<div class="highlight"><pre><span class="code-line"><span></span>val f: String=&gt;String  = {case "ping" =&gt; "pong"}</span>
+<span class="code-line">f("ping") // no pb</span>
+<span class="code-line">f("abc") // MatchError</span>
+</pre></div>
+<p>⇒ define f as partial function</p>
+<div class="highlight"><pre><span class="code-line"><span></span>val f: PartialFunction[String,String]  = {case "ping" =&gt; "pong"}</span>
+<span class="code-line">f.isDefinedAt("ping")</span>
+<span class="code-line">f.isDefinedAt("abc")</span>
+</pre></div>
+<p><code>isDefinedAt</code> is a method for the <code>PartialFunction</code> class. </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image006.png"/></p>
+<p>The f definition is translated to: </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image007.png"/></p>
+<p>But the <code>PartialFunction</code> will only apply for level 1: </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image008.png"/></p>
+<h1 id="recap-collections_1">Recap: Collections</h1>
+<p>scala collections hirarchy: </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image009.png"/></p>
+<p>collections <em>share</em> some general methods (<strong>core methods</strong>): </p>
+<ul>
+<li>map</li>
+<li>flatMap</li>
+<li>filter</li>
+<li>foldLeft/foldRight</li>
+</ul>
+<p>(idealized) implementation of <code>map</code> and <code>flatMap</code> on Lists: </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image011.png"/></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image013.png"/></p>
+<h3 id="for-expressions">For expressions</h3>
+<p>for-expr can <em>simplify combinations of core methods</em>. </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image014.png"/></p>
+<p><strong>the</strong> <strong>lhs of a generator can also be a pattern!</strong></p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image015.png"/></p>
+<p>pat &lt;- expr </p>
+<p>is translated to : </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="n">expr</span> <span class="n">withFilter</span> <span class="p">{</span><span class="n">case</span> <span class="n">pat</span> <span class="o">=&gt;</span> <span class="n">true</span><span class="p">;</span> <span class="n">case</span> <span class="n">_</span> <span class="o">=&gt;</span> <span class="n">false</span></span>
+<span class="code-line">                <span class="p">}</span> <span class="n">map</span> <span class="p">{</span><span class="n">case</span> <span class="n">pat</span> <span class="o">=&gt;</span> <span class="n">x</span><span class="p">}</span></span>
+</pre></div>
+<h1 id="11-queries-with-for_1">1.1 - Queries with For</h1>
+<p>for notation is equivalent to common ops on databases(ex. sql). </p>
+<p>ex. books in library</p>
+<p><code>case class Book(title: String, authors: List[String])</code></p>
+<p>query1: books with author name is "Bird"</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">for</span><span class="p">(</span> <span class="n">b</span><span class="o">&lt;-</span><span class="n">books</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;-</span> <span class="n">b.authors</span> <span class="n">if</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="s">"Bird,"</span><span class="p">)</span> </span>
+<span class="code-line"><span class="n">yield</span> <span class="n">b.title</span></span>
+</pre></div>
+<p>query2: books with "Program" in the title: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">for</span><span class="p">(</span> <span class="n">b</span><span class="o">&lt;-</span><span class="n">books</span> <span class="n">if</span> <span class="n">b.title</span> <span class="n">indexOf</span> <span class="s">"Program"</span> <span class="o">&gt;=</span><span class="m">0</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">yield</span> <span class="n">b.title</span></span>
+</pre></div>
+<p>query3: names of authors who wrote &gt;=2 books</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">b1</span> <span class="o">&lt;-</span> <span class="n">books</span></span>
+<span class="code-line">    <span class="n">b2</span> <span class="o">&lt;-</span> <span class="n">books</span> </span>
+<span class="code-line">    <span class="n">if</span> <span class="n">b1</span><span class="o">!=</span><span class="n">b2</span></span>
+<span class="code-line">    <span class="n">a1</span> <span class="o">&lt;-</span> <span class="n">b1.authors</span></span>
+<span class="code-line">    <span class="n">a2</span> <span class="o">&lt;-</span> <span class="n">b2.authors</span></span>
+<span class="code-line">    <span class="n">if</span> <span class="n">a1</span><span class="o">==</span><span class="n">a2</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">a1</span></span>
+</pre></div>
+<p>→ pb: the authors will be doubled → b1,b2 and b2,b1
+⇒ change line 3 to <code>b1.title &lt; b2.title</code></p>
+<p>→ still pb: print 3 times if authors write 3 books... 
+⇒ 
+sol1. use <code>distinct</code> function 
+sol2. decalre books as Set instead of List. </p>
+<h1 id="12-translation-of-for">1.2 - Translation of For</h1>
+<p>for expressions → higer order functions</p>
+<p>map, flatMap, filter can all be implemented with for expression:</p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image016.png"/></p>
+<p>In reality: scala translates for expr to map/flatMap/filter. </p>
+<h3 id="implemention-of-for-expr-3-rules">implemention of for-expr: 3 rules</h3>
+<ul>
+<li>rule 1: in for(..) only a simple generator </li>
+</ul>
+<p><code>for(x &lt;- l1) yield e2</code></p>
+<p>is translated to: <code>l1.map(x =&gt; e2)</code></p>
+<ul>
+<li>rule2: in for(..), followed by the generator there is a filter</li>
+</ul>
+<p><code>for(x &lt;- l1 if f; s) yield e2 //s is seq of other generators and filters</code></p>
+<p>is translated to: </p>
+<p><code>for( x &lt;- l1.withFilter(x=&gt;f) ) yield e2</code></p>
+<ul>
+<li>rule3: in for(..), starts with 2 generators → flatMap</li>
+</ul>
+<p><code>for( x&lt;-l1; y&lt;-l2; s) yield e3</code></p>
+<p>is translated to: </p>
+<p><code>l1.flatMap( x =&gt; for(y&lt;-l2; s) yield e3 )</code></p>
+<p>example: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">for</span><span class="p">{</span> </span>
+<span class="code-line"><span class="n">b</span> <span class="o">&lt;-</span> <span class="n">books</span></span>
+<span class="code-line"><span class="n">a</span> <span class="o">&lt;-</span> <span class="n">b.authors</span> <span class="n">if</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="s">"Bird"</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">b.title</span></span>
+</pre></div>
+<p>translated to: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">books</span> <span class="n">flatMap</span> <span class="p">(</span> </span>
+<span class="code-line">    <span class="n">b</span> <span class="o">=&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">authors</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span> <span class="n">a</span> <span class="o">=&gt;</span> <span class="n">a</span> <span class="n">startsWith</span> <span class="ss">"Bird"</span><span class="p">).</span><span class="k">map</span><span class="p">(</span><span class="n">y</span><span class="o">=&gt;</span><span class="n">y</span><span class="p">.</span><span class="n">title</span><span class="p">)</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="p">)</span></span>
+</pre></div>
+<p>NB: for expr is not restricted to collections, it supports any types with <code>map/flatMap/withFilter</code> method. ⇒ use for expr for your own types as well. </p>
+<h1 id="13-functional-random-generators_1">1.3 - Functional Random Generators</h1>
+<p>goal: use for expr on rand generators. </p>
+<p>for expr support any type with map/flatMap/filter ⇒ ex. rand value generator. </p>
+<p>generate rand value of type T: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">trait Generator[+T] { </span></span>
+<span class="code-line"><span class="err">def generate: T</span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>first implement Generator[Int], then use this to implement booleans, pairs, lists, sets, trees,......</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="nf">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Random</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rand</span><span class="p">.</span><span class="n">nextInt</span><span class="p">()</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Boolean{</span></span>
+<span class="code-line"><span class="n">    def generate = integers.generate &gt; 0</span></span>
+<span class="code-line"><span class="n">}</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">val pairs = new Generator[(Int, Int)</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">,</span><span class="w"> </span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>→ can we avoid the <code>new Generator[...]</code> ? </p>
+<p><em>ideally we want to write booleans as pairs as:</em> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">pairs</span><span class="o">[</span><span class="n">T,U</span><span class="o">]</span><span class="p">(</span><span class="nl">t</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">u</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="err">{</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">t</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">u</span><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span><span class="w"></span></span>
+</pre></div>
+<p>the for expr will be translated to map/flatMap/filter... </p>
+<p>⇒ define map and flatMap on the Generator trait so that it supports for expr!</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">trait</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">+T</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">self</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nl">syntax</span><span class="p">:</span><span class="w"> </span><span class="err">`</span><span class="n">self</span><span class="err">`</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="k">alias</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="err">`</span><span class="n">this</span><span class="err">`</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="nl">generate</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="k">map</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">S</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">can</span><span class="err">'</span><span class="n">t</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="err">`</span><span class="n">this</span><span class="err">`</span><span class="w"> </span><span class="nl">here</span><span class="p">:</span><span class="w"> </span><span class="n">inf</span><span class="w"> </span><span class="n">loop</span><span class="w"></span></span>
+<span class="code-line"><span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">Generator</span><span class="p">.</span><span class="n">this</span><span class="p">.</span><span class="n">generate</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">flatMap</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">S</span><span class="o">]</span><span class="err">{</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">            </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">generate</span><span class="p">).</span><span class="n">generate</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>ex. the booleans expression: </p>
+<p><code>val booleans = for (x&lt;-integers) yield x&gt;0</code></p>
+<p>is translated to: </p>
+<p><code>val booleans = integers map (x=&gt;x&gt;0)</code></p>
+<p>which is then expands to: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">val</span><span class="w"> </span><span class="n">booleans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span></span>
+<span class="code-line"><span class="k">new</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Boolean</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">integers</span><span class="p">.</span><span class="n">generate</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>after reduction, the expression is: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">val booleans = new Generator[Boolean{</span></span>
+<span class="code-line"><span class="err">    def generate = integers.generate &gt; 0</span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>which is the initial implementation... </p>
+<h3 id="other-base-generators">other base Generators</h3>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image017.png"/></p>
+<p>(The <code>T*</code> syntax is variable parameter)</p>
+<h3 id="rand-list-generator">rand List Generator</h3>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span> <span class="n">lists</span><span class="o">:</span> <span class="n">Generator[List[Int]]</span> <span class="o">=</span> <span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">isEmpty</span> <span class="o">&lt;-</span> <span class="n">booleans</span></span>
+<span class="code-line">    <span class="n">list</span> <span class="o">&lt;-</span> <span class="nf">if </span><span class="p">(</span><span class="n">isEmpty</span><span class="p">)</span> <span class="n">emptyLists</span> <span class="n">else</span> <span class="n">nonEmptyLists</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">list</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">def</span> <span class="n">emptyLists</span> <span class="o">=</span> <span class="nf">single</span><span class="p">(</span><span class="n">Nil</span><span class="p">)</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">def</span> <span class="n">nonEmptyLists</span> <span class="o">=</span> <span class="n">for</span><span class="p">{</span></span>
+<span class="code-line">    <span class="n">head</span> <span class="o">&lt;-</span> <span class="n">integers</span></span>
+<span class="code-line">    <span class="n">tail</span> <span class="o">&lt;-</span> <span class="n">lists</span> <span class="o">//</span> <span class="n">recursive</span> <span class="n">call</span> <span class="n">to</span> <span class="n">`lists`</span></span>
+<span class="code-line"><span class="p">}</span> <span class="n">yield</span> <span class="n">head</span><span class="o">::</span><span class="n">tail</span></span>
+</pre></div>
+<h3 id="rand-binary-tree-generator">rand (binary) Tree Generator</h3>
+<p>two types of tree nodes: leaf or inner node</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">def</span><span class="w"> </span><span class="nl">trees</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Tree</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">isLeaf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">booleans</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">tree</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">isLeaf</span><span class="p">)</span><span class="w"> </span><span class="n">leafs</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">inners</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">tree</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="nl">leafs</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Leaf</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">integers</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="n">Leaf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="nl">inners</span><span class="p">:</span><span class="w"> </span><span class="n">Generator</span><span class="o">[</span><span class="n">Inner</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">l</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">trees</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">trees</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"> </span><span class="n">yield</span><span class="w"> </span><span class="k">Inner</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span><span class="w"></span></span>
+</pre></div>
+<h2 id="application-random-testing_1">Application: random testing</h2>
+<p>test: check <em>postconditions</em> (expected results)</p>
+<p>→ generate random test inputs</p>
+<p>a generic wrapper:</p>
+<div class="highlight"><pre><span class="code-line"><span></span>def randTest[T](g: Generator[T], numTimes: Int=100)(testfcn: T=&gt;Boolean): Unit = {</span>
+<span class="code-line">    for( i <span class="nt">&lt;-</span> <span class="err">0</span> <span class="err">until</span> <span class="err">numTimes){</span></span>
+<span class="code-line">        <span class="err">val</span> <span class="na">value:T =</span> <span class="s">g.generate</span></span>
+<span class="code-line">        <span class="err">assert(testfcn(value),</span> <span class="err">"test</span> <span class="err">failed</span> <span class="err">for</span> <span class="err">"+value)</span></span>
+<span class="code-line">    <span class="err">}</span></span>
+<span class="code-line">    <span class="err">println("passed"</span> <span class="err">+</span> <span class="err">numTime</span> <span class="err">+</span> <span class="err">"tests")</span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h3 id="scalacheck">ScalaCheck</h3>
+<p><em>instead of writing tests, write properties that are assumed to hold.</em> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">forAll</span><span class="w"> </span><span class="err">{</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="p">(</span><span class="nl">l1</span><span class="p">:</span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="nl">l2</span><span class="p">:</span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"></span></span>
+<span class="code-line"><span class="w">        </span><span class="n">l1</span><span class="p">.</span><span class="k">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="k">size</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">l1</span><span class="o">++</span><span class="n">l2</span><span class="p">).</span><span class="k">size</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h1 id="14-monads_2">1.4 - Monads</h1>
+<p>from last section: not only collections, but also any type with map and flatmap can use for expr ⇒ monads. </p>
+<p><def>. Monads is a type M[T] with 2 operations: <code>flatMap</code> ("bind") and <code>unit</code>, and satisfy some laws.</def></p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">train</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">flatMap</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">(</span><span class="nl">f</span><span class="p">:</span><span class="w"> </span><span class="n">T</span><span class="o">=&gt;</span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">U</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">unit</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">T</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="n">M</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"></span></span>
+</pre></div>
+<p>examples: </p>
+<ul>
+<li><code>List</code> is a monad, <code>unit(x) = List(x)</code></li>
+<li><code>Set</code>, with <code>unit(x) = Set(x)</code></li>
+<li><code>Option</code>, with <code>unit(x) = Some(x)</code></li>
+<li><code>Generator</code>, with <code>unit(x) = single(x)</code></li>
+</ul>
+<p><code>map</code> can be defined as a combination of <code>flatMap</code> and <code>unit</code>: </p>
+<p><code>m map f == m flatMap (x =&gt; unit( f(x)) )</code></p>
+<h3 id="monad-laws">Monad laws</h3>
+<ul>
+<li>associativity</li>
+</ul>
+<p><code>(m flatMap f) flatMap g == m flatMap ( x =&gt; f(x) flatMap g )</code> </p>
+<p>↔ (x+y+z) = x+(y+z)</p>
+<ul>
+<li>left unit</li>
+</ul>
+<p><code>unit(x) flatMap f == f(x)</code></p>
+<ul>
+<li>right unit</li>
+</ul>
+<p><code>m flatMap unit == m</code></p>
+<h2 id="the-try-type_1">the Try type</h2>
+<p>We define a Try class, which is similar to Option class. </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">abstraxt</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">+T</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Success</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">x</span><span class="p">:</span><span class="n">T</span><span class="p">)</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="w"></span></span>
+<span class="code-line"><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Failure</span><span class="p">(</span><span class="nl">ex</span><span class="p">:</span><span class="w"> </span><span class="k">Exception</span><span class="p">)</span><span class="w"> </span><span class="n">extends</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">Nothing</span><span class="o">]</span><span class="w"></span></span>
+</pre></div>
+<p>we can write <code>Try(expr)</code> to give a computation a try, by implementing the <code>apply</code> method of object Try:</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">object</span><span class="w"> </span><span class="k">Try</span><span class="err">{</span><span class="w"></span></span>
+<span class="code-line"><span class="n">def</span><span class="w"> </span><span class="n">apply</span><span class="o">[</span><span class="n">T</span><span class="o">]</span><span class="p">(</span><span class="nl">expr</span><span class="p">:</span><span class="w"> </span><span class="o">=&gt;</span><span class="n">T</span><span class="p">)</span><span class="err">:</span><span class="w"> </span><span class="k">Try</span><span class="o">[</span><span class="n">T</span><span class="o">]=</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">NAME</span><span class="p">,</span><span class="w"> </span><span class="n">otherwise</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">cause</span><span class="w"> </span><span class="k">exception</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">eval</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="n">Success</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">java</span><span class="w"> </span><span class="n">syntax</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">try</span><span class="o">-</span><span class="k">catch</span><span class="w"></span></span>
+<span class="code-line"><span class="w">    </span><span class="k">catch</span><span class="err">{</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="n">NonFatal</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Failure</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>if Try is a Monad ⇒ can be written in for expr: </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image018.png"/></p>
+<p>⇒ define map and flatMap on <code>Try</code> type. </p>
+<p><img alt="" class="img-responsive" src="../images/progfun2_lec1_forexpr/pasted_image019.png"/></p>
+<p>question: is Try a monad with <code>unit(x)=Try(x)</code>?
+⇒ no, left-unit fails: <code>Try(expr) flatMap f != f(expr)</code>
+(lhs never nonfatal exception, but rhs will raise)</p>
+<p>Try is not a monad, but it can still use for expr...</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>for exprs are useful not only for collections: <code>Generator</code>, <code>Option</code>, <code>Try</code></p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/progfun1_lec6_collections.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Scala MOOC I] Lec6: Collections
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/ocamlMOOC_wk0_intro.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        [OCaml MOOC] week0: intro and overview<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 1 of series «Functional Program Design in Scala»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/progfun2_lec1_forexpr.html' style="text-align:left">[Scala MOOC II] Lec1: For Expressions and Monads</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html' style="text-align:left">[Scala MOOC II] Lec2: Lazy Evaluation</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec3_var.html' style="text-align:left">[Scala MOOC II] Lec 3: Functions and State</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/progfun2_lec4_var.html' style="text-align:left">[Scala MOOC II] Lec4 - Timely Effects</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'progfun2_lec1_forexpr';
+                        var disqus_url = 'https://x-wei.github.io/notes/progfun2_lec1_forexpr.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/progfun2_lec2_lazyeval.html">[Scala MOOC II] Lec2: Lazy Evaluation</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#recap-functions-and-pattern-matching" title="Recap: Functions and Pattern Matching">Recap: Functions and Pattern Matching</a><ul><li><a class="toc-href" href="#case-classes" title="case classes">case classes</a></li><li><a class="toc-href" href="#pattern-matching" title="pattern matching">pattern matching</a></li><li><a class="toc-href" href="#function1-trait" title="Function1 Trait">Function1 Trait</a></li><li><a class="toc-href" href="#subclass-a-function-type" title="subclass a function type">subclass a function type</a></li><li><a class="toc-href" href="#partial-match" title="Partial Match">Partial Match</a></li></ul></li><li><a class="toc-href" href="#recap-collections_1" title="Recap: Collections">Recap: Collections</a><ul><li><a class="toc-href" href="#for-expressions" title="For expressions">For expressions</a></li></ul></li><li><a class="toc-href" href="#11-queries-with-for_1" title="1.1 - Queries with For">1.1 - Queries with For</a></li><li><a class="toc-href" href="#12-translation-of-for" title="1.2 - Translation of For">1.2 - Translation of For</a><ul><li><a class="toc-href" href="#implemention-of-for-expr-3-rules" title="implemention of for-expr: 3 rules">implemention of for-expr: 3 rules</a></li></ul></li><li><a class="toc-href" href="#13-functional-random-generators_1" title="1.3 - Functional Random Generators">1.3 - Functional Random Generators</a><ul><li><a class="toc-href" href="#other-base-generators" title="other base Generators">other base Generators</a></li><li><a class="toc-href" href="#rand-list-generator" title="rand List Generator">rand List Generator</a></li><li><a class="toc-href" href="#rand-binary-tree-generator" title="rand (binary) Tree Generator">rand (binary) Tree Generator</a></li><li><a class="toc-href" href="#application-random-testing_1" title="Application: random testing">Application: random testing</a><ul><li><a class="toc-href" href="#scalacheck" title="ScalaCheck">ScalaCheck</a></li></ul></li></ul></li><li><a class="toc-href" href="#14-monads_2" title="1.4 - Monads">1.4 - Monads</a><ul><li><a class="toc-href" href="#monad-laws" title="Monad laws">Monad laws</a></li><li><a class="toc-href" href="#the-try-type_1" title="the Try type">the Try type</a><ul><li><a class="toc-href" href="#conclusion" title="Conclusion">Conclusion</a></li></ul></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>

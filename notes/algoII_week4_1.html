@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>[Algorithms II] Week 4-1 Tries - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/notes/algoII_week4_1.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="algorithm" />
+        <meta name="description" content="More efficient version of symbol-table where the keys are strings. 1. R-way Tries Two implementations of symbol tables that we&#39;ve seen: when keys are strings: (L=string length, N=number of strings, R=radix) for string keys ⇒ do better by avoiding examing the entire key. goal: faster than hashtable ..." />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="[Algorithms II] Week 4-1 Tries"/>
+        <meta property="og:url" content="https://x-wei.github.io/notes/algoII_week4_1.html"/>
+        <meta property="og:description" content="More efficient version of symbol-table where the keys are strings. 1. R-way Tries Two implementations of symbol tables that we&#39;ve seen: when keys are strings: (L=string length, N=number of strings, R=radix) for string keys ⇒ do better by avoiding examing the entire key. goal: faster than hashtable ..."/>
+        <meta property="article:published_time" content="2015-12-05" />
+            <meta property="article:section" content="notes" />
+            <meta property="article:tag" content="algorithm" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/algoII_week4_1.png"/>
+
+
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">[Algorithms II] Week 4-1 Tries - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/notes/index.html" title="notes">notes</a></li>
+                <li class="active">[Algorithms II] Week 4-1 Tries</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        [Algorithms II] Week 4-1 Tries
+                        <a href="https://x-wei.github.io/notes/algoII_week4_1.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 [Algorithms II] Week 4-1 Tries 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-12-05T00:00:00+01:00"><i class="fa fa-calendar"></i> Sat, 05 Dec 2015</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/notes/index.html">notes</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 7 of «Algorithms Princeton MOOC II» 
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#1-r-way-tries" title="1. R-way Tries">1. R-way Tries</a><ul><li><a class="toc-href" href="#string-symbol-table-api" title="String Symbol Table API">String Symbol Table API</a></li><li><a class="toc-href" href="#r-way-tries" title="R-way tries">R-way tries</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#2-ternary-search-tries_1" title="2. Ternary Search Tries">2. Ternary Search Tries</a><ul><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#hybrid-of-tst-and-rway-trie" title="Hybrid of TST and Rway trie">Hybrid of TST and Rway trie</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#hashing-vs-tst" title="Hashing vs. TST">Hashing vs. TST</a></li></ul></li><li><a class="toc-href" href="#3-character-based-operations_1" title="3. Character-Based Operations">3. Character-Based Operations</a><ul><li><a class="toc-href" href="#api" title="API">API</a></li><li><a class="toc-href" href="#keys-ordered-iteration" title="keys(): ordered iteration">keys(): ordered iteration</a></li><li><a class="toc-href" href="#prefix-match" title="prefix match">prefix match</a></li><li><a class="toc-href" href="#longest-prefix" title="longest prefix">longest prefix</a><ul><li><a class="toc-href" href="#application-t9-texting" title="application: T9 texting">application: T9 texting</a></li></ul></li><li><a class="toc-href" href="#other-variants_1" title="Other Variants">Other Variants</a><ul><li><a class="toc-href" href="#patricia-trie" title="Patricia trie">Patricia trie</a></li><li><a class="toc-href" href="#suffix-tree" title="suffix tree">suffix tree</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+                        </div>
+                    </div>
+                <p>More efficient version of symbol-table where the keys are strings.   </p>
+<h1 id="1-r-way-tries">1. R-way Tries</h1>
+<p>Two implementations of symbol tables that we've seen: <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image.png"/><br/>
+when keys are strings:<br/>
+(<code>L</code>=string length, <code>N</code>=number of strings, <code>R</code>=radix)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image001.png"/> </p>
+<p>for string keys ⇒ do better by avoiding examing the entire key.  </p>
+<p>goal: faster than hashtable, more flexible than BST !  </p>
+<h2 id="string-symbol-table-api">String Symbol Table API</h2>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class StringST&lt;V&gt;{// implements ST&lt;String, V&gt;  </span></span>
+<span class="code-line"><span class="err">    public void put(String key, V val);  </span></span>
+<span class="code-line"><span class="err">    public V get(String key);  </span></span>
+<span class="code-line"><span class="err">    public void delete(String key);  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h2 id="r-way-tries">R-way tries</h2>
+<p>A trie is a tree where:   </p>
+<ul>
+<li>except the root, each node store <em>characters</em> (instead of string keys) — in fact the chars are stored in <em>links</em> </li>
+<li>each node has R children  </li>
+<li>store <em>value</em> in node if the node corresponds to the<em> last char</em> in key.   </li>
+</ul>
+<p>example: (<em>a trie<integer>)</integer></em><br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image002.png"/> </p>
+<ul>
+<li><strong>search in a trie </strong><code>get()</code> </li>
+</ul>
+<p><em>hit</em> if when search ends the node has a non-null value<br/>
+<em>miss</em> if reach a null link or have null value when search ends.   </p>
+<ul>
+<li><strong>insertion in a trie</strong> <code>put()</code> </li>
+</ul>
+<p>follow the links as the chars indicate in the key<br/>
+→ if meet null links: create new node<br/>
+→ when reach last char in key: set the value of the node  </p>
+<h2 id="java-implementation">Java implementation</h2>
+<p>trie node class:<br/>
+in each node use an array of size R to store links...  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Node</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">arries</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="p">(</span><span class="k">array</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Node</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="err">[]</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="o">[</span><span class="n">R</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">implicitly</span><span class="w"> </span><span class="n">defined</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="k">index</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>另外关于为什么内部类Node声明为static, 参考这里: <br/>
+<a href="http://www.geeksforgeeks.org/static-class-in-java/">http://www.geeksforgeeks.org/static-class-in-java/</a> </p>
+<p>implementation: use private recursive methods, 和BST的实现类似, 定义一个递归的private函数, 返回插入后的Node, 很有用.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">TrieST</span><span class="o">&lt;</span><span class="k">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">pirvate</span><span class="w"> </span><span class="n">final</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">ASCII</span><span class="w"> </span><span class="n">chars</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Node</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">arries</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">generic</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="p">(</span><span class="k">array</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">Node</span><span class="p">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="err">[]</span><span class="w"> </span><span class="k">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="o">[</span><span class="n">R</span><span class="o">]</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">implicitly</span><span class="w"> </span><span class="n">defined</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">link</span><span class="w"> </span><span class="k">index</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="k">recursive</span><span class="w"> </span><span class="n">helper</span><span class="w"> </span><span class="k">method</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="err">`</span><span class="n">d</span><span class="err">`</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nc">char</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">put</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">inserted</span><span class="w"> </span><span class="n">node</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Node</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">key</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="o">==</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">            </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">key</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">            </span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">boolean</span><span class="w"> </span><span class="k">contains</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">)</span><span class="err">{</span><span class="k">return</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="k">key</span><span class="p">)</span><span class="o">!=</span><span class="k">null</span><span class="p">;</span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">Value</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">nd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">nd</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="k">Value</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nf">cast</span><span class="w"> </span><span class="n">back</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">contains</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">key</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">null</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="k">key</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">key</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w"></span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">get</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<p>delete node in trie:  </p>
+<ul>
+<li>find the node and set the val to null  </li>
+<li>if a node has 0 links(leaf)  and val==null: delete it and recursivly go up.   </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image003.png"/> </p>
+<h2 id="analysis">analysis</h2>
+<p><strong>time:</strong><br/>
+search hit —  L nodes examined. <br/>
+serach miss —  sublinear in L<br/>
+<strong>space:</strong> <br/>
+each node has R links (possibly null) — <em>too much memory for large R</em> !<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image004.png"/><br/>
+<strong>Application</strong><br/>
+interview question: data structure for spell checking.   </p>
+<h1 id="2-ternary-search-tries_1">2. Ternary Search Tries</h1>
+<p>Solution to the memory issue of R-way tries —  much fewer null links. ternery=tuple of 3...<br/>
+TST:  </p>
+<ul>
+<li>store chars (and vals) <em>explicitly</em> in nodes  </li>
+<li>each node has <strong>3</strong> children:   <ul>
+<li><em>smaller, larger: </em>TST that starts with char smaller/bigger than its char c.   </li>
+<li><em>equal: </em>the TST with keys that <strong>starts with</strong> this char c  </li>
+<li>(所以除了用smaller/larger连接的节点在Rway trie里属于同一层  </li>
+</ul>
+</li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image005.png"/><br/>
+类似于3-way radix sort(同一篇paper里提出的), 有有点RBTree的意思...   </p>
+<p><strong>searching</strong> in TST: quite similar to BST search, will go down ("equal" or "middle") when the current node matchs current char...  </p>
+<h2 id="implementation">Implementation</h2>
+<p>Node class:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">private class Node{  </span></span>
+<span class="code-line"><span class="err">    private Value val;  </span></span>
+<span class="code-line"><span class="err">    private char c;// store char explicitly  </span></span>
+<span class="code-line"><span class="err">    private Node left, mid, right;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>TST class (again use recursive helper functions)<br/>
+有一种写BST代码的感觉, 另外由于这次char是显式存在node里, 代码反而更好理解了...  </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class TST&lt;Value&gt;{  </span></span>
+<span class="code-line"><span class="err">    private class Node{...};  </span></span>
+<span class="code-line"><span class="err">    private Node root;  </span></span>
+<span class="code-line"><span class="err">    public void put(String key, Value val){  </span></span>
+<span class="code-line"><span class="err">        this.put(root, key, val, 0);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    private Node put(Node x, String key, Value val, int d){  </span></span>
+<span class="code-line"><span class="err">        char c = key.charAt(d);// char to process  </span></span>
+<span class="code-line"><span class="err">        if(x==null) x = new Node(c);  </span></span>
+<span class="code-line"><span class="err">        if(c==x.c) {  </span></span>
+<span class="code-line"><span class="err">            if(d==key.length()-1) x.val = val;  </span></span>
+<span class="code-line"><span class="err">            else x.mid = put(x.mid, key, val, d+1);// d+1 means we go down one level  </span></span>
+<span class="code-line"><span class="err">        }  </span></span>
+<span class="code-line"><span class="err">        else if (c&lt;x.c) x.left = put(x.left, key, val, d);// do not increment if the current char is not matchd  </span></span>
+<span class="code-line"><span class="err">        else x.right = put(x.right, key, val, d);  </span></span>
+<span class="code-line"><span class="err">        return x;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    public Value get(String key){  </span></span>
+<span class="code-line"><span class="err">        Node nd = this.get(root, key, 0);  </span></span>
+<span class="code-line"><span class="err">        if(nd==null) return null;  </span></span>
+<span class="code-line"><span class="err">        return nd.val;  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">    private Node get(Node x, String key, int d){  </span></span>
+<span class="code-line"><span class="err">        if(x==null) return null;  </span></span>
+<span class="code-line"><span class="err">        char c = key.charAt(d);  </span></span>
+<span class="code-line"><span class="err">        if(x.c==c) {  </span></span>
+<span class="code-line"><span class="err">            if(d==key.length()-1) return x;  </span></span>
+<span class="code-line"><span class="err">            else return get(x.mid, key, d+1);  </span></span>
+<span class="code-line"><span class="err">        }  </span></span>
+<span class="code-line"><span class="err">        else if(c&lt;x.c) return get(x.left, key, d);  </span></span>
+<span class="code-line"><span class="err">        else return get(x.right, d);  </span></span>
+<span class="code-line"><span class="err">    }  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h2 id="hybrid-of-tst-and-rway-trie">Hybrid of TST and Rway trie</h2>
+<ul>
+<li>at root: do <em>R^2 branching</em> </li>
+<li>other nodes are TSTs   </li>
+</ul>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image007.png"/> </p>
+<h2 id="analysis_1">analysis</h2>
+<p>space cost: linear in N.<br/>
+time: if keys arrive in rand order... (can use rotation to get worst-case guarantee..)<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image008.png"/> </p>
+<h2 id="hashing-vs-tst">Hashing vs. TST</h2>
+<p>Hashing:   </p>
+<ul>
+<li>need to check entire key no matter hit or miss  </li>
+<li>performance relies on hash functions  </li>
+<li>donot support ordered operations  </li>
+</ul>
+<p>TST:  </p>
+<ul>
+<li>examines just enough chars  </li>
+<li>support ordered operations  </li>
+</ul>
+<h1 id="3-character-based-operations_1">3. Character-Based Operations</h1>
+<p>some very useful char-based operations:   </p>
+<ul>
+<li><strong>prefix match</strong> </li>
+<li><strong>wildcard match</strong>: use a dot to represent any char  </li>
+<li><strong>longest prefix</strong>: find the key that is the longest prefix of a string  </li>
+</ul>
+<h2 id="api">API</h2>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class TrieST&lt;Value&gt;{  </span></span>
+<span class="code-line"><span class="err">    // functions decalred before..  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keys;  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keysWithPrefix(String s);  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; keysThatMatch(String s);  </span></span>
+<span class="code-line"><span class="err">    Iterable&lt;String&gt; longestPrefixOf(String s);</span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h2 id="keys-ordered-iteration">keys(): ordered iteration</h2>
+<p><code>keys()</code>: just an inorder-traversal of the <em>Rway trie</em> →dfs, + maintain the chars in the path (root to current node). <br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image009.png"/> </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">keys</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">collect</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="ss">""</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">helper</span><span class="w"> </span><span class="n">fcn</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">q</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">collect</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pathstr</span><span class="p">,</span><span class="w"> </span><span class="n">Queue</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">key</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="n">q</span><span class="p">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">pathstr</span><span class="p">);</span><span class="o">//</span><span class="w"> </span><span class="n">pathstr</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">x</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">c</span><span class="o">&lt;</span><span class="n">R</span><span class="p">;</span><span class="n">c</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">dfs</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">        </span><span class="k">collect</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">pathstr</span><span class="o">+</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h2 id="prefix-match">prefix match</h2>
+<p>very useful: ex. autocomplete, search bar, ...<br/>
+implementation⇒ just find the end of that prefix, then call <code>keys()</code> on the <em>subtrie</em>.<br/>
+之前写的俩helper function这里发挥作用了:   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public Iterable&lt;String&gt; keysWithPrefix(String prefix){  </span></span>
+<span class="code-line"><span class="err">    Node subtrieRoot = get(root, prefix, 0);  </span></span>
+<span class="code-line"><span class="err">    Queue&lt;String&gt; q = new Queue&lt;String&gt;();  </span></span>
+<span class="code-line"><span class="err">    collect(subtrieRoot, prefix, q);  </span></span>
+<span class="code-line"><span class="err">    return q;  </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<h2 id="longest-prefix">longest prefix</h2>
+<p>⇒ just do a search and keep track of the longest key that we encounterd.   </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">longestPrefixOf</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="nf">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="nf">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w">  </span></span>
+<span class="code-line"><span class="n">private</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="nf">len</span><span class="p">)</span><span class="err">{</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nf">len</span><span class="p">;</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">val</span><span class="o">!=</span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="nf">len</span><span class="o">=</span><span class="n">d</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="n">longest</span><span class="w"> </span><span class="k">prefix</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">length</span><span class="p">;</span><span class="w">   </span></span>
+<span class="code-line"><span class="w">    </span><span class="nc">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">charAt</span><span class="p">(</span><span class="n">d</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">search</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="k">next</span><span class="o">[</span><span class="n">c</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nf">len</span><span class="p">);</span><span class="w">  </span></span>
+<span class="code-line"><span class="err">}</span><span class="w"></span></span>
+</pre></div>
+<h3 id="application-t9-texting">application: T9 texting</h3>
+<p>classique... G面试以及X的TP里都有涉及过...   </p>
+<ul>
+<li>first: generate all string combinations  </li>
+<li>second: call get() on the trie of dictionaries.  </li>
+</ul>
+<h2 id="other-variants_1">Other Variants</h2>
+<h3 id="patricia-trie">Patricia trie</h3>
+<p>improvement: remove the one-eay branching (put &gt;1 chars in a node).<br/>
+<img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image010.png"/> </p>
+<h3 id="suffix-tree">suffix tree</h3>
+<ul>
+<li>patricia tree of the suffix  </li>
+<li>linear time construction  </li>
+<li>ongest repeated substring, longest common substring, longest palindromic substring, substring search, tandem repeats... 好有用!!...   </li>
+</ul>
+<h2 id="summery_1">Summery</h2>
+<p><img alt="" class="img-responsive" src="../images/algoII_week4_1/pasted_image011.png"/> </p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/notes/algoII_week3_2.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        [Algorithms II] Week 3-2 Radix Sorts
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/tech/quick-sort-and-more.html" class="btn btn-default btn-lg" style="float:right;clear:both;background-color:#fff;">
+                        <h4>
+                        quick sort and more: 快速排序算法总结<i class="fa fa-arrow-right"></i>
+                        </h4>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="series">
+                <div class="panel-heading">
+                  <h4>
+                  Part 7 of series «Algorithms Princeton MOOC II»：
+                  </h4>
+                </div>
+                <ul class="list-group">
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week1_1.html' style="text-align:left">[Algorithms II] Week 1-1 Undirected Graphs</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week1_2.html' style="text-align:left">[Algorithms II] Week 1-2 Directed Graphs</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week2_1.html' style="text-align:left">[Algorithms II] Week 2-1 Minimum Spanning Trees</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week2_2.html' style="text-align:left">[Algorithms II] Week 2-2 Shortest Paths</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week3_1.html' style="text-align:left">[Algorithms II] Week 3-1 Maximum Flow</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week3_2.html' style="text-align:left">[Algorithms II] Week 3-2 Radix Sorts</a></li>
+                        <li class="list-group-item"><a class="btn btn-primary" href='https://x-wei.github.io/notes/algoII_week4_1.html' style="text-align:left">[Algorithms II] Week 4-1 Tries</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week4_2.html' style="text-align:left">[Algorithms II] Week 4-2 Substring Search</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week5_1.html' style="text-align:left">[Algorithms II] Week 5-1 Regular Expressions</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week5_2.html' style="text-align:left">[Algorithms II] Week 5-2 Data Compression</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week6_1_reductions.html' style="text-align:left">[Algorithms II] Week 6-1 Reductions</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week6_2_LP.html' style="text-align:left">[Algorithms II] Week 6-2 Linear Programming</a></li>
+                        <li class="list-group-item"><a class="btn btn-default" href='https://x-wei.github.io/notes/algoII_week6_3_intractability.html' style="text-align:left">[Algorithms II] Week 6-3 Intractability</a></li>
+                </ul>
+            </div>
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'algoII_week4_1';
+                        var disqus_url = 'https://x-wei.github.io/notes/algoII_week4_1.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+                    <li class="list-group-item"><h4><i class="fa fa-tags fa-list-ul"></i><span class="icon-label">Series</span></h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5></i> Previous article</h5>
+                                <a href="https://x-wei.github.io/notes/algoII_week3_2.html">[Algorithms II] Week 3-2 Radix Sorts</a>
+                            </li>
+                            <li class="list-group-item">
+                                <h5>Next article</h5>
+                                <a href="https://x-wei.github.io/notes/algoII_week4_2.html">[Algorithms II] Week 4-2 Substring Search</a>
+                            </li>
+                        </ul>
+                    </li>
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#1-r-way-tries" title="1. R-way Tries">1. R-way Tries</a><ul><li><a class="toc-href" href="#string-symbol-table-api" title="String Symbol Table API">String Symbol Table API</a></li><li><a class="toc-href" href="#r-way-tries" title="R-way tries">R-way tries</a></li><li><a class="toc-href" href="#java-implementation" title="Java implementation">Java implementation</a></li><li><a class="toc-href" href="#analysis" title="analysis">analysis</a></li></ul></li><li><a class="toc-href" href="#2-ternary-search-tries_1" title="2. Ternary Search Tries">2. Ternary Search Tries</a><ul><li><a class="toc-href" href="#implementation" title="Implementation">Implementation</a></li><li><a class="toc-href" href="#hybrid-of-tst-and-rway-trie" title="Hybrid of TST and Rway trie">Hybrid of TST and Rway trie</a></li><li><a class="toc-href" href="#analysis_1" title="analysis">analysis</a></li><li><a class="toc-href" href="#hashing-vs-tst" title="Hashing vs. TST">Hashing vs. TST</a></li></ul></li><li><a class="toc-href" href="#3-character-based-operations_1" title="3. Character-Based Operations">3. Character-Based Operations</a><ul><li><a class="toc-href" href="#api" title="API">API</a></li><li><a class="toc-href" href="#keys-ordered-iteration" title="keys(): ordered iteration">keys(): ordered iteration</a></li><li><a class="toc-href" href="#prefix-match" title="prefix match">prefix match</a></li><li><a class="toc-href" href="#longest-prefix" title="longest prefix">longest prefix</a><ul><li><a class="toc-href" href="#application-t9-texting" title="application: T9 texting">application: T9 texting</a></li></ul></li><li><a class="toc-href" href="#other-variants_1" title="Other Variants">Other Variants</a><ul><li><a class="toc-href" href="#patricia-trie" title="Patricia trie">Patricia trie</a></li><li><a class="toc-href" href="#suffix-tree" title="suffix tree">suffix tree</a></li></ul></li><li><a class="toc-href" href="#summery_1" title="Summery">Summery</a></li></ul></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2020 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>
