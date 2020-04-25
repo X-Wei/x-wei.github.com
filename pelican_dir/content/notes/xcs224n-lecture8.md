@@ -127,8 +127,14 @@ Eval metrics for machine translation:
 **BLEU** (**B**i**l**ingual **E**valuation **U**nderstudy) — compute *similarity score* between machine translations and human translations.
 
 * based on **ngram precision** (n<=4): how many overlaps of 1/2/3/4-grams with human translations
+
+    ![](../images/xcs224n-lecture8/pasted_image041.png)
 * **brevity penalty**: penalty for too-short system translations
+
+    ![](../images/xcs224n-lecture8/pasted_image042.png)
 * BLEU is *useful* but *imperfect*
+
+    ![](../images/xcs224n-lecture8/pasted_image043.png)
 
 NMT outperformed tranditional SMT systems in 2016.
 
