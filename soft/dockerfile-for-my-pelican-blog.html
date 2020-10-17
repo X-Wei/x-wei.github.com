@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-Hans"
+<html lang="zh-Hant"
 >
 <head>
-    <title>查找 - mx's blog
-</title>
+    <title>用Dockerfile免配置生成pelican博客 - mx's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -15,15 +14,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
     <link rel="manifest" href="/manifest.json">
 
+<link rel="canonical" href="https://x-wei.github.io/soft/dockerfile-for-my-pelican-blog.html">
 
         <meta name="author" content="mx" />
+        <meta name="keywords" content="pelican" />
+        <meta name="description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件, 配置起来实在太繁琐, 每次换电脑都要折腾半天... 所以之前我做了一个Dockerfile和GithubAction, 自动从markdown/rst文件生成静态网站的html文件: https://github.com/X-Wei/pelican-gh-actions-xwei 这个repo可以作为github action上运行, 比如每当commit到markdown文件夹的时候, 让github actor生成html文件然后commit —— 可以参考我的blog的github workflow配置. 今天又修改了一下, 让它也能在本地用docker跑, 免去了换电脑重新折腾配置的痛苦(这也是我这几个月没更新博客的原因, 之一). 这篇文章主要记录一下如何用Dockerfile在本地机器上预览或者生成静态网站. build Docker image 首先需要使用Dockerfile来build一个docker image. 顺便给它加个tag叫&#34;my-pelican-blog:latest&#34; (-t my-pelican-blog:latest): $ docker build -t ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="mx's blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="mx's blog"/>
-        <meta property="og:url" content="https://x-wei.github.io"/>
-        <meta property="og:description" content="mx's blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="用Dockerfile免配置生成pelican博客"/>
+        <meta property="og:url" content="https://x-wei.github.io/soft/dockerfile-for-my-pelican-blog.html"/>
+        <meta property="og:description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件, 配置起来实在太繁琐, 每次换电脑都要折腾半天... 所以之前我做了一个Dockerfile和GithubAction, 自动从markdown/rst文件生成静态网站的html文件: https://github.com/X-Wei/pelican-gh-actions-xwei 这个repo可以作为github action上运行, 比如每当commit到markdown文件夹的时候, 让github actor生成html文件然后commit —— 可以参考我的blog的github workflow配置. 今天又修改了一下, 让它也能在本地用docker跑, 免去了换电脑重新折腾配置的痛苦(这也是我这几个月没更新博客的原因, 之一). 这篇文章主要记录一下如何用Dockerfile在本地机器上预览或者生成静态网站. build Docker image 首先需要使用Dockerfile来build一个docker image. 顺便给它加个tag叫&#34;my-pelican-blog:latest&#34; (-t my-pelican-blog:latest): $ docker build -t ..."/>
+        <meta property="article:published_time" content="2020-10-17" />
+            <meta property="article:section" content="soft" />
+            <meta property="article:tag" content="pelican" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/dockerfile-for-my-pelican-blog.png"/>
 
 
 
@@ -43,8 +50,7 @@
         <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
 </head>
 <body>
-<div style="display:none" id="title">查找 - mx's blog
-</div>
+<div style="display:none" id="title">用Dockerfile免配置生成pelican博客 - mx's blog</div>
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -89,7 +95,7 @@ mx's blog            </a>
                             <li >
                                 <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
                             </li>
-                            <li >
+                            <li class="active">
                                 <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
                             </li>
                             <li >
@@ -109,7 +115,7 @@ mx's blog            </a>
                         <li >
                             <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
                         </li>
                         <li >
@@ -155,9 +161,159 @@ mx's blog            </a>
     <div class="row" style="padding-bottom:80px;padding-top:80px;">
         <div class="col-xl-21 col-lg-20 col-md-18">
             <div id="loading-block">
-<section id="content" class="well">
-<div id="tipue_search_content"></div>
-</section>
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/soft/index.html" title="soft">soft</a></li>
+                <li class="active">用Dockerfile免配置生成pelican博客</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        用Dockerfile免配置生成pelican博客
+                        <a href="https://x-wei.github.io/soft/dockerfile-for-my-pelican-blog.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 用Dockerfile免配置生成pelican博客 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2020-10-17T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 17 Oct 2020</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/soft/index.html">soft</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/pelican.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> pelican</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#yun-xing-rong-qi-sheng-cheng-htmlyu-lan" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#sshdao-rong-qi-zhong-yun-xing-ming-ling" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
+                        </div>
+                    </div>
+                <p>我的这个pelican博客已经有八年多了, 从<a href="https://x-wei.github.io/pelican_github_blog.html">最开始</a>使用pelican2.x+bootstrap2主题到现在<a href="https://x-wei.github.io/soft/pelican3_blog_and_theme.html">使用pelican3</a>, 断断续续经过了各种折腾.</p>
+<p>现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件, 配置起来实在太繁琐, 每次换电脑都要折腾半天...</p>
+<p>所以之前我做了一个Dockerfile和GithubAction, 自动从markdown/rst文件生成静态网站的html文件: <a href="https://github.com/X-Wei/pelican-gh-actions-xwei">https://github.com/X-Wei/pelican-gh-actions-xwei</a></p>
+<p>这个repo可以作为github action上运行, 比如每当commit到markdown文件夹的时候, 让github actor生成html文件然后commit —— 可以参考我的blog的<a href="https://github.com/X-Wei/x-wei.github.com/blob/master/.github/workflows/main.yml">github workflow配置</a>.</p>
+<p>今天又修改了一下, 让它也能在本地用docker跑, 免去了换电脑重新折腾配置的痛苦(这也是我这几个月没更新博客的原因, 之一). <strong>这篇文章主要记录一下如何用Dockerfile在本地机器上预览或者生成静态网站.</strong></p>
+<h2 id="build-docker-image">build Docker image</h2>
+<p>首先需要使用Dockerfile来build一个docker image.<br/>
+顺便给它加个tag叫"my-pelican-blog:latest" (<code>-t my-pelican-blog:latest</code>):</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ docker build -t my-pelican-blog:latest <span class="se">\</span></span>
+<span class="code-line">    github.com/x-wei/pelican-gh-actions-xwei</span>
+</pre></div>
+<p>(我准备以后把这个docker image<a href="https://github.com/X-Wei/pelican-gh-actions-xwei/issues/2">发布到Github Container Registry上</a> 这样就不用自己的机器build image了)</p>
+<p>如果想自己修改什么内容, 可以在本地的repo里修改Dockerfile/entrypoint.sh, 然后重新build image:</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ docker build -t my-pelican-blog:latest .</span>
+</pre></div>
+<h2 id="yun-xing-rong-qi-sheng-cheng-htmlyu-lan">运行容器生成html预览</h2>
+<p>本地直接run这个image的话, 是生成html文件到<code>output/</code>文件夹以供预览(也就是makefile里的"<a href="https://github.com/X-Wei/x-wei.github.com/blob/6bb137a68149665e8da713e75b75d986ee73814c/pelican_dir/Makefile#L17">make html</a>"命令).</p>
+<p>注意需要把实际的本地blog repo位置(我是"<em>~/Documents/x-wei.github.com</em>")映射到container里的"/<em>home/blog</em>"文件夹(<code>-v ~/Documents/x-wei.github.com:/home/blog</code>)</p>
+<p>另外最好加上<code>--rm</code>, 这样container运行完以后立刻就被删掉了, 不留垃圾(只是删掉container, 上一步build的image还在).</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ docker run --rm <span class="se">\</span></span>
+<span class="code-line">    -v ~/Documents/x-wei.github.com:/home/blog <span class="se">\</span></span>
+<span class="code-line">    my-pelican-blog:latest</span>
+</pre></div>
+<h2 id="sshdao-rong-qi-zhong-yun-xing-ming-ling">SSH到容器中运行命令</h2>
+<p>像上面直接run的话只能跑<code>make html</code>, 跑完后就退出容器了. 而其实在容器中还可以运行<code>make serve</code>和<code>make publish</code>命令(cf. 我之前介绍pelican3的<a href="https://x-wei.github.io/soft/pelican3_blog_and_theme.html#4-ben-di-yu-lan">文章</a>), 这样本地预览起来会更方便一些.</p>
+<p>要SSH进在容器中运行各种命令, 只需要用"bash"代替默认的entrypoint.sh(<code>-it --entrypoint bash</code>), 同时为了本地预览需要开启port forwarding(<code>-p 8000:8000</code>):</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ docker run --rm --name pelican <span class="se">\</span></span>
+<span class="code-line">  -v ~/Documents/x-wei.github.com:/home/blog <span class="se">\</span></span>
+<span class="code-line">  -p <span class="m">8000</span>:8000 <span class="se">\</span></span>
+<span class="code-line">  -it --entrypoint bash <span class="se">\</span></span>
+<span class="code-line">  my-pelican-blog:latest</span>
+<span class="code-line"></span>
+<span class="code-line">root@fea99c54aea1:/# <span class="nb">cd</span> /home/blog/pelican_dir/</span>
+<span class="code-line">root@fea99c54aea1:/home/blog/pelican_dir# make html <span class="o">&amp;&amp;</span> make serve <span class="c1"># or `make publish`</span></span>
+<span class="code-line"><span class="c1"># (Preview the website at http://localhost:8000/)</span></span>
+</pre></div>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/tech/flutter-use-fvm.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        用fvm管理多个Flutter SDK
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'dockerfile-for-my-pelican-blog';
+                        var disqus_url = 'https://x-wei.github.io/soft/dockerfile-for-my-pelican-blog.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
             </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -493,6 +649,14 @@ mx's blog            </a>
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#yun-xing-rong-qi-sheng-cheng-htmlyu-lan" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#sshdao-rong-qi-zhong-yun-xing-ming-ling" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>
@@ -590,19 +754,6 @@ mx's blog            </a>
     </script>
     <!-- End Google Analytics Code -->
 
-    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
-    <script type="text/javascript" src="https://x-wei.github.io/theme/tipuesearch/tipuesearch_set.js"></script>
-    <script type="text/javascript" src="https://x-wei.github.io/theme/tipuesearch/tipuesearch.js"></script>
-    <script>
-    $(document).ready(function() {
-      $('#tipue_search_input').tipuesearch({
-        'mode' : 'json',
-        'show': 10,
-        'newWindow': false,
-        'contentLocation': 'tipuesearch_content.json'
-      });
-    });
-    </script>
 <script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
 <script src="https://x-wei.github.io/theme/js/material.min.js"></script>
 <script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
