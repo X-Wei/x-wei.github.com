@@ -32,19 +32,21 @@ use fvm
 -------
 
 在flutter文件夹里运行``fvm use xxx``即可
+
 	$ cd my_flutter_proj
 	$ fvm use dev
 	$ fvm list
 	Versions path:  /home/xwei/fvm/versions
 	beta
 	dev ✔
-	
+
 这个会在当前目录下添加一个``.fvm``的文件夹, 里面包含了到指定SDK的软链接 以及一个json config:
 
 	$ ls .fvm
 	flutter_sdk@  fvm_config.json
 
 接下来就可以愉快的用flutter dev开发linux app了:
+
 	$ fvm flutter config --enable-linux-desktop
 	$ fvm flutter devices
 	2 connected devices:
@@ -77,10 +79,11 @@ cf. <https://github.com/leoafarias/fvm#change-fvm-cache-directory>
 每次都写`fvm flutter`有点麻烦 可以在bashrc/config.fish里加上一行 ``alias ff=fvm flutter``
 
 综上, 只需要在.bashrc里加上:
+
 	alias ff='fvm flutter'
 	export FVM_HOME="$HOME/.local/fvm"
 
 我一般用fish, 是在``config.fish``里加上:
+
 	alias ff='fvm flutter'
 	set FVM_HOME "$HOME/.local/fvm"
-
