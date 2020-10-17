@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="https://x-wei.github.io/" rel="alternate"></link><link href="https://x-wei.github.io/feeds/tag-flutter.atom.xml" rel="self"></link><id>https://x-wei.github.io/</id><updated>2020-10-16T00:00:00+02:00</updated><entry><title>用fvm管理多个Flutter SDK</title><link href="https://x-wei.github.io/tech/flutter-use-fvm.html" rel="alternate"></link><published>2020-10-16T00:00:00+02:00</published><updated>2020-10-16T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2020-10-16:tech/flutter-use-fvm.html</id><summary type="html">&lt;h2 id="background"&gt;background&lt;/h2&gt;
+&lt;p&gt;flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持.&lt;/p&gt;
+&lt;p&gt;我日常用的是beta channel, 但是想写Linux程序时每次&lt;code&gt;flutter channel dev&lt;/code&gt;的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载).&lt;/p&gt;
+&lt;p&gt;今天看到Flutter Explained的视频: &lt;a href="https://youtu.be/R6vKde1vIGQ"&gt;https://youtu.be/R6vKde1vIGQ&lt;/a&gt; 这正是解决这个问题的! 它可以cache不同版本的flutterSDK 然后每个repo可以设置不同的版本号, 而且VSCode也只需要简单配置.&lt;/p&gt;
+&lt;h2 id="enable-fvm"&gt;enable fvm&lt;/h2&gt;
+&lt;p&gt;一行命令即可开启fvm:
+&lt;code&gt;$ pub global activate fvm&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;常用法:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fvm flutter&lt;/code&gt;: Proxies flutter commands 用于选择合适的flutter版本&lt;ul&gt;
+&lt;li&gt;也就是说用&lt;code&gt;fvm flutter&lt;/code&gt;来代替flutter命令 — 会自动pick当前repo所用的SDK&lt;/li&gt;
+&lt;li&gt;比如: &lt;code&gt;fvm flutter doctor&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;fvm list&lt;/code&gt;: 查看目前安装的flutter 版本&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;fvm use&lt;/code&gt;: 选择使用一个SDK版本&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;fvm install dev/beta/stable/...&lt;/code&gt;: 安装SDK &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="use-fvm"&gt;use fvm&lt;/h2&gt;
+&lt;p&gt;在flutter文件夹里运行&lt;code&gt;fvm use xxx&lt;/code&gt;即可
+    $ cd my_flutter_proj
+    $ fvm use dev
+    $ fvm list
+    Versions path:  /home/xwei/fvm/versions
+    beta
+    dev ✔&lt;/p&gt;
+&lt;p&gt;这个会在当前目录下添加一个&lt;code&gt;.fvm&lt;/code&gt;的文件夹, 里面包含了到指定SDK的软链接 以及一个json config:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;$ ls .fvm&lt;/span&gt;
+&lt;span class="code-line"&gt;flutter_sdk@  fvm_config.json&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接下来就可以愉快的用flutter dev开发linux app了:
+    $ fvm flutter config --enable-linux-desktop
+    $ fvm flutter devices
+    2 connected devices:
+    Android SDK built for x86 (mobile) • emulator-5554 • android-x86 • Android 10 (API 29) (emulator)
+    Linux (desktop)                    • linux         • linux-x64   • Linux
+    $ fvm flutter create .
+    $ fvm flutter run -d linux&lt;/p&gt;
+&lt;h2 id="vscode-config"&gt;VScode config&lt;/h2&gt;
+&lt;p&gt;cf. &lt;a href="https://github.com/leoafarias/fvm#vscode"&gt;https://github.com/leoafarias/fvm#vscode&lt;/a&gt;
+让vscode使用fvm flutter (而不是默认flutter), 只要修改settings.json把那个flutter_sdk的软链接即可:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;$ cat .vscode/settings.json &lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;{&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;  &lt;span class="s2"&gt;"dart.flutterSdkPaths"&lt;/span&gt;: &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;".fvm/flutter_sdk"&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="o"&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后在VSCode的command palette里输入&lt;code&gt;Flutter: Change SDK&lt;/code&gt;, 就可以选择flutter SDK了&lt;/p&gt;
+&lt;h2 id="other-config"&gt;other config&lt;/h2&gt;
+&lt;h3 id="change-cache-path"&gt;change cache path&lt;/h3&gt;
+&lt;p&gt;fvm默认cache在&lt;code&gt;~/fvm&lt;/code&gt;文件夹下, 可以修改&lt;code&gt;FVM_HOME&lt;/code&gt;环境变量改到别的位置.
+cf. &lt;a href="https://github.com/leoafarias/fvm#change-fvm-cache-directory"&gt;https://github.com/leoafarias/fvm#change-fvm-cache-directory&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="bashfish-alias"&gt;bash/fish alias&lt;/h3&gt;
+&lt;p&gt;每次都写&lt;code&gt;fvm flutter&lt;/code&gt;有点麻烦 可以在bashrc/config.fish里加上一行 &lt;code&gt;alias ff=fvm flutter&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;综上, 只需要在.bashrc里加上:
+    alias ff='fvm flutter'
+    export FVM_HOME="$HOME/.local/fvm"&lt;/p&gt;
+&lt;p&gt;我一般用fish, 是在&lt;code&gt;config.fish&lt;/code&gt;里加上:
+    alias ff='fvm flutter'
+    set FVM_HOME "$HOME/.local/fvm"&lt;/p&gt;</summary><category term="Flutter"></category></entry></feed>
