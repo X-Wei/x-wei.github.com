@@ -1,6 +1,6 @@
 # my pelican blog
 
-[![Build Status](https://travis-ci.org/X-Wei/x-wei.github.com.svg?branch=master)](https://travis-ci.org/X-Wei/x-wei.github.com)
+[![Build Status](https://github.com/X-Wei/x-wei.github.com/workflows/.github/workflows/main.yml/badge.svg)](https://github.com/X-Wei/x-wei.github.com/actions?query=workflow%3A.github%2Fworkflows%2Fmain.yml)
 
 a fork from farseerfc: http://farseerfc.me/
 
