@@ -166,6 +166,65 @@ mx's blog            </a>
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="https://x-wei.github.io/tech/dfs-summary.html" class="btn btn-primary btn-lg"><h2>深度优先搜索(DFS)小结
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2015-10-18T00:00:00+02:00"><i class="fa fa-calendar"></i> Sun, 18 Oct 2015</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/tech/index.html">tech</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
+</span>
+    
+            <span class="label label-default">Series</span>
+            Part 3 of «算法笔记» 
+    
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>今天总结一下也许是搜索问题里最重要的算法: DFS !    </p>
+<p>由于树可以看成是一个graph, 这里还是只写对于graph的DFS算法. Graph类的定义还是用每一个节点保存邻居信息:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public class GraphNode{      </span></span>
+<span class="code-line"><span class="err">    int val;      </span></span>
+<span class="code-line"><span class="err">    List&lt;GraphNode&gt; neighbors;      </span></span>
+<span class="code-line"><span class="err">}</span></span>
+</pre></div>
+<p>为了防止重复, 仍然用一个HaseSet记录走过的节点:    </p>
+<p><code>HasheSet&lt;GraphNode&gt; visited = new HasheSet&lt;GraphNode&gt;();</code> </p>
+<h2 id="recursive-dfs">Recursive DFS</h2>
+<p>首先写递归版本的DFS, DFS就是一条路走到底, 不撞南墙不回头, 所以递归写起来很自然: 每到一个节点, 标记其已经访问过了, 然后对于邻居里面没有访问的节点继续递归进行DFS.    </p>
+<p>递归的DFS代码非常简洁:    </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void DFS(GraphNode nd){      </span></span>
+<span class="code-line"><span class="err">    System.out.println(nd.val);    </span></span>
+<span class="code-line"><span class="err">    visited.add(nd);   </span></span>
+<span class="code-line"><span class="err">    for(GraphNode next: nd.neighbors){   </span></span>
+<span class="code-line"><span class="err">        if ...</span></span></pre></div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
                             <a href="https://x-wei.github.io/tech/bfs-summary.html" class="btn btn-primary btn-lg"><h2>广度优先搜索(BFS)小结
                             </h2></a>
                         </div>
@@ -622,56 +681,6 @@ mx's blog            </a>
                 </div>
             </article>
         </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="https://x-wei.github.io/tech/python pickle 的一个小问题.html" class="btn btn-primary btn-lg"><h2>python pickle 的一个小问题
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2014-07-15T00:00:00+02:00"><i class="fa fa-calendar"></i> Tue, 15 Jul 2014</time>
-    </span>
-
-
-        <span class="label label-default">Category</span>
-        <a href="https://x-wei.github.io/tech/index.html">tech</a>
-
-
-
-<span class="btn-group">
-	<a href="https://x-wei.github.io/tag/python.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> python</a>
-</span>
-    
-    
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><p>python的pickle/unpickle机制可以非常方便的保存一些计算的中间结果, 这一点java虽然也可以做到, 但是java里面的包的名字实在是长的让人记不住...</p>
-<p>不过今天在使用pickle的时候遇到了一个很奇怪的问题. </p>
-<p>是这样的, 原本写了一个程序<code>main.py</code>, 这个程序里进行了一些计算并且pickle下了这些内容, 后来我觉得一个程序main.py写这么多实在太长了, 于是就把那些辅助函数以及class的定义通通放进了一个<code>util.py</code>文件里. 并且在main.py的第一行写上: </p>
-<p><code>from util import *</code></p>
-<p>按理说这应该没有问题, 和一个main文件时运行的效果相同的, 但是当我运行的时候却显示util.py里面这行unpickle的语句有错误:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>    <span class="n">airport_info</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">(</span><span class="s1">'airport_info.dict'</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">))</span> </span>
-<span class="code-line">    <span class="o">&gt;&gt;</span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">'module'</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">'Airport'</span></span>
-</pre></div>
-<p>其中<code>Airport</code>是我定义的一个类, 本来在main.py里面, 后来被我移动到了util.py里面...</p>
-<p>感觉很奇怪, 于是去<a href="https://bbs.sjtu.edu.cn/frame2.html">水源</a>求助 ...</p>
-                    </div>
-                </div>
-            </article>
-        </div>
     </div>
 
         <ul class="pagination">
@@ -942,9 +951,9 @@ mx's blog            </a>
                     spark <sup> 6</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-4">
+            <li class="list-group-item tag-3">
                 <a href="https://x-wei.github.io/tag/flutter.html">
-                    Flutter <sup> 1</sup>
+                    Flutter <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-1">
