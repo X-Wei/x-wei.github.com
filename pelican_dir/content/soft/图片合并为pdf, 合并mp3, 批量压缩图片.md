@@ -13,6 +13,17 @@ Slug: 图片合并为pdf, 合并mp3, 批量压缩图片
 
 但是这么做的问题是, 运行起来超级慢, 电脑直接卡死!!!
 
+**[2020-update]**
+
+pdfjoin已经没有了, 现在发现用`img2pdf`非常方便:
+
+```bash
+$ sudo apt install img2pdf
+$ img2pdf $(ls . | sort -n) -o out.pdf
+```
+
+**[以下为原始内容]**
+
 后来看了[这里](http://pityonline.info/2009/12/%E7%BB%88%E4%BA%8E%E6%90%9E%E5%AE%9A%E4%BA%86%E5%A4%9A%E5%BC%A0%E5%9B%BE%E7%89%87%E5%90%88%E6%88%90%E4%B8%80%E4%BB%BDpdf%E6%96%87%E6%A1%A3%EF%BC%81/), 知道了可以用pdfjam来做. 先要安装pdfjam, 然后:
 
 先将所有jpg文件重命名为pdf：
