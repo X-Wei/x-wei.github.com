@@ -6,9 +6,9 @@ Date: 2021-03-21
 看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过).
 
 本文主要参考自:
-- [pub package](https://pub.dev/packages/flutter_hooks)
-- [Video by Robert Brunhage](https://www.youtube.com/watch?v=A1DUBgIsCv8)
-- [Tutorial by Resocoder](https://resocoder.com/2020/01/21/flutter-hooks-hide-fab-animation-100-widget-code-reuse/)
+- [pub package](https://pub.dev/packages/flutter_hooks)  
+- [Video by Robert Brunhage](https://www.youtube.com/watch?v=A1DUBgIsCv8)  
+- [Tutorial by Resocoder](https://resocoder.com/2020/01/21/ flutter-hooks-hide-fab-animation-100-widget-code-reuse/)  
 
 ## The problem
 
@@ -110,7 +110,7 @@ cf. Robert Brunhage的[视频](https://www.youtube.com/watch?v=A1DUBgIsCv8)
 对于**不追求逻辑复用**, 只想去掉`initState()`/`dispose()`的场景, 可以考虑直接把一个`StatefulWidget`变成`HookWiget`. Flutter hooks提供了`useState`和`useEffect`, 让我们可以直接在`HookWiget.build()`函数里面创建/修改状态.
 
 **创建状态**: 用[`useState(R initialVal)`](https://pub.dev/documentation/flutter_hooks/latest/flutter_hooks/useState.html).\
-注意返回值的是一个`ValueNotifier<R>` (cf. [[202102212026 ChangeNotifier, ValueNotifier and StateNotifier|各种notifier]]), 获得包含的值需要`.value`.
+注意返回值的是一个`ValueNotifier<R>`, 获得包含的值需要`.value`.
 
 **修改状态**: [`useEffect()`](https://pub.dev/documentation/flutter_hooks/latest/flutter_hooks/useEffect.html), 有两个参数:
 
