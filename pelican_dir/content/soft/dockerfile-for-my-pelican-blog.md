@@ -49,11 +49,11 @@ SSH到容器中运行命令
 要SSH进在容器中运行各种命令, 只需要用"bash"代替默认的entrypoint.sh(``-it --entrypoint bash``), 同时为了本地预览需要开启port forwarding(``-p 8000:8000``):
 
 	$ docker run --rm --name pelican \
+	  -w  /home/blog/pelican_dir/ \
 	  -v ~/Documents/x-wei.github.com:/home/blog \
 	  -p 8000:8000 \
 	  -it --entrypoint bash \
 	  my-pelican-blog:latest
 	
-	root@fea99c54aea1:/# cd /home/blog/pelican_dir/
 	root@fea99c54aea1:/home/blog/pelican_dir# make html && make serve # or `make publish`
 	# (Preview the website at http://localhost:8000/)
