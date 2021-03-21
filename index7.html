@@ -163,6 +163,62 @@ mx's blog            </a>
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="https://x-wei.github.io/soft/double-hop-ssh.html" class="btn btn-primary btn-lg"><h2>两层ssh连接(2-hop ssh connection)代理配置
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2016-07-26T00:00:00+02:00"><i class="fa fa-calendar"></i> Tue, 26 Jul 2016</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/soft/index.html">soft</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/ssh.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> ssh</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>问题: 
+现在本地ssh连接eth的daint服务器, 连接需要进行两次ssh: 第一次本地连接到ela服务器, 第二次从ela再次ssh到daint. 现在配置本地的ssh代理使之可以一次完成. </p>
+<h1 id="di-yi-bu-sheng-cheng-sshkey">第一步: 生成sshkey</h1>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">ssh-keygen</span></span>
+<span class="code-line"><span class="err">cat ~/.ssh/id_rsa.pub | ssh your_username@ela.cscs.ch 'cat &gt;&gt; ~/.ssh/authorized_keys'</span></span>
+<span class="code-line"><span class="err">ssh your_username@ela.cscs.ch</span></span>
+</pre></div>
+<h1 id="di-er-bu-xiu-gai-sshconfigwen-jian-nei-rong">第二步: 修改.ssh/config文件内容</h1>
+<p>用文本编辑器打开<code>.ssh/config</code>文件, 添加如下内容: </p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">Host daint</span></span>
+<span class="code-line"><span class="err">    Hostname daint101</span></span>
+<span class="code-line"><span class="err">    User your_username</span></span>
+<span class="code-line"><span class="err">    ForwardAgent yes</span></span>
+<span class="code-line"><span class="err">    ForwardX11 yes</span></span>
+<span class="code-line"><span class="err">    Port 22</span></span>
+<span class="code-line"><span class="err">    IdentityFile ~/.ssh/id_rsa ...</span></span></pre></div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
                             <a href="https://x-wei.github.io/notes/progfun1_lec4_pattern_matching.html" class="btn btn-primary btn-lg"><h2>[Scala MOOC I] Lec4: Types and Pattern Matching
                             </h2></a>
                         </div>
@@ -619,60 +675,6 @@ cannot cocatenate linear units → equivalent to one big matrix...  </p>
                 </div>
             </article>
         </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="https://x-wei.github.io/tech/codejam-python-tools.html" class="btn btn-primary btn-lg"><h2>codejam常用(python)解题工具
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2016-05-27T18:00:00+02:00"><i class="fa fa-calendar"></i> Fri, 27 May 2016</time>
-    </span>
-
-
-        <span class="label label-default">Category</span>
-        <a href="https://x-wei.github.io/tech/index.html">tech</a>
-
-
-
-<span class="btn-group">
-	<a href="https://x-wei.github.io/tag/algorithm.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> algorithm</a>
-	<a href="https://x-wei.github.io/tag/codejam.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> codejam</a>
-	<a href="https://x-wei.github.io/tag/python.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> python</a>
-</span>
-    
-    
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
-<h1 id="collections">collections</h1>
-<p>py自带的一些好用的数据结构...<br/>
-<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </p>
-<p><code>from collections import Counter, deque, defaultdict</code> </p>
-<h1 id="itertools">itertools</h1>
-<p>主要是用来穷举的时候它里面一些函数很好用... </p>
-<p><a href="https://docs.python.org/2/library/itertools.html">https://docs.python.org/2/library/itertools.html</a> </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">combinations</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">'ABCD'</span><span class="p">;</span> <span class="n">b</span><span class="o">=</span><span class="s1">'EFG'</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    </span>
-<span class="code-line"><span class="k">print ...</span></span></pre></div>
-                    </div>
-                </div>
-            </article>
-        </div>
     </div>
 
         <ul class="pagination">
@@ -975,7 +977,7 @@ cannot cocatenate linear units → equivalent to one big matrix...  </p>
             </li>
             <li class="list-group-item tag-3">
                 <a href="https://x-wei.github.io/tag/flutter.html">
-                    Flutter <sup> 2</sup>
+                    Flutter <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-1">
@@ -1075,7 +1077,7 @@ cannot cocatenate linear units → equivalent to one big matrix...  </p>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2020 mx
+            &copy; 2021 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->
