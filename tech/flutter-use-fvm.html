@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="Flutter" />
-        <meta name="description" content="background flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持. 我日常用的是beta channel, 但是想写Linux程序时每次flutter channel dev的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载). 今天看到Flutter Explained的视频: https://youtu.be/R6vKde1vIGQ 这正是解决这个问题的! 它可以cache不同版本的flutterSDK 然后每个repo可以设置不同的版本号, 而且VSCode也只需要简单配置. enable fvm 一行命令即可开启fvm: $ pub global activate fvm 常用法: fvm flutter: Proxies flutter commands 用于选择合适的flutter版本 也就是说用fvm flutter来代替flutter命令 — 会自动pick当前repo所用的SDK 比如 ..." />
+        <meta name="description" content="本文总结了Flutter Explained关于fvm的视频: https://youtu.be/R6vKde1vIGQ background flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持. 我日常用的是beta channel, 但是想写Linux程序时每次flutter channel dev的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载). 而fvm这正是解决这个问题的! 它可以cache不同版本的flutterSDK, 每个repo可以设置使用不同的版本号, 而且VSCode也只需要简单配置就能上手. enable fvm 一行命令即可开启fvm: $ pub global activate fvm 常用法: fvm flutter: Proxies flutter commands 用于选择合适的flutter版本 也就是说用fvm flutter来代替flutter命令 ..." />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="用fvm管理多个Flutter SDK"/>
         <meta property="og:url" content="https://x-wei.github.io/tech/flutter-use-fvm.html"/>
-        <meta property="og:description" content="background flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持. 我日常用的是beta channel, 但是想写Linux程序时每次flutter channel dev的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载). 今天看到Flutter Explained的视频: https://youtu.be/R6vKde1vIGQ 这正是解决这个问题的! 它可以cache不同版本的flutterSDK 然后每个repo可以设置不同的版本号, 而且VSCode也只需要简单配置. enable fvm 一行命令即可开启fvm: $ pub global activate fvm 常用法: fvm flutter: Proxies flutter commands 用于选择合适的flutter版本 也就是说用fvm flutter来代替flutter命令 — 会自动pick当前repo所用的SDK 比如 ..."/>
+        <meta property="og:description" content="本文总结了Flutter Explained关于fvm的视频: https://youtu.be/R6vKde1vIGQ background flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持. 我日常用的是beta channel, 但是想写Linux程序时每次flutter channel dev的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载). 而fvm这正是解决这个问题的! 它可以cache不同版本的flutterSDK, 每个repo可以设置使用不同的版本号, 而且VSCode也只需要简单配置就能上手. enable fvm 一行命令即可开启fvm: $ pub global activate fvm 常用法: fvm flutter: Proxies flutter commands 用于选择合适的flutter版本 也就是说用fvm flutter来代替flutter命令 ..."/>
         <meta property="article:published_time" content="2020-10-16" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="Flutter" />
@@ -210,23 +210,22 @@ mx's blog            </a>
                         <div id="toc"><ul><li><a class="toc-href" href="#background" title="background">background</a></li><li><a class="toc-href" href="#enable-fvm" title="enable fvm">enable fvm</a></li><li><a class="toc-href" href="#use-fvm" title="use fvm">use fvm</a></li><li><a class="toc-href" href="#vscode-config" title="VScode config">VScode config</a></li><li><a class="toc-href" href="#other-config" title="other config">other config</a><ul><li><a class="toc-href" href="#change-cache-path" title="change cache path">change cache path</a></li><li><a class="toc-href" href="#bashfish-alias" title="bash/fish alias">bash/fish alias</a></li></ul></li></ul></div>
                         </div>
                     </div>
-                <h2 id="background">background</h2>
+                <p>本文总结了Flutter Explained关于fvm的视频: <a href="https://youtu.be/R6vKde1vIGQ">https://youtu.be/R6vKde1vIGQ</a></p>
+<h2 id="background">background</h2>
 <p>flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持.</p>
 <p>我日常用的是beta channel, 但是想写Linux程序时每次<code>flutter channel dev</code>的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载).</p>
-<p>今天看到Flutter Explained的视频: <a href="https://youtu.be/R6vKde1vIGQ">https://youtu.be/R6vKde1vIGQ</a> 这正是解决这个问题的! 它可以cache不同版本的flutterSDK 然后每个repo可以设置不同的版本号, 而且VSCode也只需要简单配置.</p>
+<p>而<code>fvm</code>这正是解决这个问题的! 它可以cache不同版本的flutterSDK, 每个repo可以设置使用不同的版本号, 而且VSCode也只需要简单配置就能上手.</p>
 <h2 id="enable-fvm">enable fvm</h2>
 <p>一行命令即可开启fvm:
 <code>$ pub global activate fvm</code></p>
 <p>常用法:</p>
 <ul>
-<li><code>fvm flutter</code>: Proxies flutter commands 用于选择合适的flutter版本<ul>
+<li><code>fvm flutter</code>: Proxies flutter commands 用于选择合适的flutter版本</li>
 <li>也就是说用<code>fvm flutter</code>来代替flutter命令 — 会自动pick当前repo所用的SDK</li>
 <li>比如: <code>fvm flutter doctor</code></li>
-</ul>
-</li>
 <li><code>fvm list</code>: 查看目前安装的flutter 版本</li>
 <li><code>fvm use</code>: 选择使用一个SDK版本</li>
-<li><code>fvm install dev/beta/stable/...</code>: 安装SDK </li>
+<li><code>fvm install dev/beta/stable/...</code>: 安装SDK</li>
 </ul>
 <h2 id="use-fvm">use fvm</h2>
 <p>在flutter文件夹里运行<code>fvm use xxx</code>即可</p>
@@ -241,7 +240,7 @@ mx's blog            </a>
 <div class="highlight"><pre><span class="code-line"><span></span>$ ls .fvm</span>
 <span class="code-line">flutter_sdk@  fvm_config.json</span>
 </pre></div>
-<p>接下来就可以愉快的用flutter dev开发linux app了:</p>
+<p>接下来就可以愉快的用flutter dev开发linux app了<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>.</p>
 <div class="highlight"><pre><span class="code-line"><span></span>$ fvm flutter config --enable-linux-desktop</span>
 <span class="code-line">$ fvm flutter devices</span>
 <span class="code-line"><span class="m">2</span> connected devices:</span>
@@ -273,6 +272,14 @@ cf. <a href="https://github.com/leoafarias/fvm#change-fvm-cache-directory">https
 <div class="highlight"><pre><span class="code-line"><span></span><span class="err">alias ff='fvm flutter'</span></span>
 <span class="code-line"><span class="err">set FVM_HOME "$HOME/.local/fvm"</span></span>
 </pre></div>
+<div class="footnote">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Flutter 2.0以后stable channel也可以开发linux, 不过切换channel的需求还是一直在的, 所以还是建议每个flutter项目都使用fvm. <a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+</ol>
+</div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
