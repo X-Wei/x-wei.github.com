@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-Hans"
+<html lang="zh-Hant"
 >
 <head>
-    <title>Toefl - mx's blog</title>
+    <title>Flutter状态管理 - 三种Notifier的比较 - mx's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -14,16 +14,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
     <link rel="manifest" href="/manifest.json">
 
+<link rel="canonical" href="https://x-wei.github.io/tech/flutter-notifiers-compare.html">
 
-    <meta name="author" content="mx" />
-    <meta name="keywords" content="Toefl" />
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="Flutter" />
+        <meta name="description" content="Flutter(或者更宽泛的app开发)可以一句话总结为: UI = f(state) 即app的当前界面(UI)反映了当前程序状态(state). Flutter的状态管理就是app根据当前app的state的显示和更新UI. 我们假设state是一个类型为T的object, 在下文的购物车例子中, state是当前购物车的内容(类型T=List&lt;Item&gt;). 关于如何在widget tree里获取state, 可以有provider/riverpod等选项, e.g.Provider&lt;T&gt;. 但是如果直接用T作为状态会有问题: 就是当state的值被修改以后, 对应的UI并不会自动rebuild(除非其他逻辑如setState触发了rebuild). 如果希望在state修改以后, UI自动触发监听它的UI更新, 则需要用各种Notifier来包裹state. 例如我们不用T作为state, 而是用ValueNotifier&lt;T&gt;. 这里主要介绍和比较三种常用的Notifier: ChangeNotifier ..." />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="mx's blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="mx's blog"/>
-        <meta property="og:url" content="https://x-wei.github.io"/>
-        <meta property="og:description" content="mx's blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Flutter状态管理 - 三种Notifier的比较"/>
+        <meta property="og:url" content="https://x-wei.github.io/tech/flutter-notifiers-compare.html"/>
+        <meta property="og:description" content="Flutter(或者更宽泛的app开发)可以一句话总结为: UI = f(state) 即app的当前界面(UI)反映了当前程序状态(state). Flutter的状态管理就是app根据当前app的state的显示和更新UI. 我们假设state是一个类型为T的object, 在下文的购物车例子中, state是当前购物车的内容(类型T=List&lt;Item&gt;). 关于如何在widget tree里获取state, 可以有provider/riverpod等选项, e.g.Provider&lt;T&gt;. 但是如果直接用T作为状态会有问题: 就是当state的值被修改以后, 对应的UI并不会自动rebuild(除非其他逻辑如setState触发了rebuild). 如果希望在state修改以后, UI自动触发监听它的UI更新, 则需要用各种Notifier来包裹state. 例如我们不用T作为state, 而是用ValueNotifier&lt;T&gt;. 这里主要介绍和比较三种常用的Notifier: ChangeNotifier ..."/>
+        <meta property="article:published_time" content="2021-04-03" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="Flutter" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/flutter-notifiers-compare.png"/>
 
 
 
@@ -43,7 +50,7 @@
         <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
 </head>
 <body>
-<div style="display:none" id="title">Toefl - mx's blog</div>
+<div style="display:none" id="title">Flutter状态管理 - 三种Notifier的比较 - mx's blog</div>
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -91,7 +98,7 @@ mx's blog            </a>
                             <li >
                                 <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
                             </li>
-                            <li >
+                            <li class="active">
                                 <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
                             </li>
                         </ul>
@@ -111,7 +118,7 @@ mx's blog            </a>
                         <li >
                             <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
                         </li>
-                        <li >
+                        <li class="active">
                             <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
                         </li>
                     </ul>
@@ -154,66 +161,256 @@ mx's blog            </a>
     <div class="row" style="padding-bottom:80px;padding-top:80px;">
         <div class="col-xl-21 col-lg-20 col-md-18">
             <div id="loading-block">
-    <ol class="breadcrumb">
-        <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
-        <li><a href="https://x-wei.github.io/tags.html" title="Tags">标签云</a></li>
-        <li class="active">Toefl</li>
-        <li><a href="https://x-wei.github.io/feeds/tag-Toefl.atom.xml" title="订阅标签 Toefl"><i class="fa fa-rss fa-lg"></i></a></li>
-    </ol>
-    <div class="articles-container">
-        <div class="article-item">
-            <article class="panel panel-primary">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/tech/index.html" title="tech">tech</a></li>
+                <li class="active">Flutter状态管理 - 三种Notifier的比较</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
                 <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="https://x-wei.github.io/misc/GT-summery.html" class="btn btn-primary btn-lg"><h2>用尽量少的时间考一个够用的分数--一点Toefl/GRE备考经验
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
+                    <h1>
+                        Flutter状态管理 - 三种Notifier的比较
+                        <a href="https://x-wei.github.io/tech/flutter-notifiers-compare.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 Flutter状态管理 - 三种Notifier的比较 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
 <div class="post-info">
     <span class="published">
-        <time datetime="2012-09-09T11:21:00+02:00"><i class="fa fa-calendar"></i> Sun, 09 Sep 2012</time>
+        <time datetime="2021-04-03T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 03 Apr 2021</time>
     </span>
 
 
         <span class="label label-default">Category</span>
-        <a href="https://x-wei.github.io/misc/index.html">misc</a>
+        <a href="https://x-wei.github.io/tech/index.html">tech</a>
 
 
 
 <span class="btn-group">
-	<a href="https://x-wei.github.io/tag/chu-guo.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> 出国</a>
-	<a href="https://x-wei.github.io/tag/toefl.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> Toefl</a>
-	<a href="https://x-wei.github.io/tag/gre.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> GRE</a>
+	<a href="https://x-wei.github.io/tag/flutter.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> Flutter</a>
 </span>
     
     
 
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><p>这个暑假马上结束, 再不写这篇文章就再也没心情写了...... </p>
-<p>2011年3月到6月, 三个多月的时间我完成了托福和GRE的考试, 并且取得了让我比较满意的分数(toefl 105+, AW 3.5, GRE 13500+). 在此分享一些经验, 希望能够帮助大家在尽量不影响GPA的前提下, 用尽量短的时间, 考到一个足够的GT分数...</p>
-<h2 id="yi-wei-shi-yao-yao-yong-jin-liang-shao-de-shi-jian-kao-yi-ge-gou-yong-de-fen-shu">一. 为什么要"用尽量少的时间考一个够用的分数"</h2>
-<h3 id="jin-shao-de-shi-jian">"尽少的时间"</h3>
-<p>GT这两样几乎是申请出国必须的敲门砖(请原谅我这么功利...). 但是这些考试难度较大, 即使英语基础比较好的也需要相当大的精力准备. 现在人们喜欢拖延, 所以经常又把GT的备考战线拉得很长, 为了考一个好成绩, 提前好几个月甚至半年开始准备, 耗费了很多时间和精力同时效果却不一定好.</p>
-<h3 id="zu-gou-de-fen-shu">"足够的分数"</h3>
-<p>申请下来我的感觉是, 对于申请的学校, GT的分数要求仅仅是一个<strong>门槛</strong>. 虽然一个优异的GT分数会给你的申请加分, 但大多数学校只关心你是否qualify, <strong>你的GT成绩再好也不会比一个美国本土的本科生流利</strong>, 所以GT的分数在考虑录取是不会是占有很高权重的一项. </p>
-<p>而学校更看重的是"干货": GPA和Research, 这两样才会在申请中起到决定作用. 如果在GT上耗费太多的时间和精力, 势必会对GPA和科研造成影响, 得不偿失. </p>
-<h3 id="its-possible">It's possible!</h3>
-<p>GRE和托福虽然考试难度大, 但是它们的题型固定 ...</p>
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#changenotifier" title="ChangeNotifier">ChangeNotifier</a></li><li><a class="toc-href" href="#valuenotifier" title="ValueNotifier">ValueNotifier</a></li><li><a class="toc-href" href="#statenotifier" title="StateNotifier">StateNotifier</a></li><li><a class="toc-href" href="#zong-jie" title="总结">总结</a></li></ul></div>
+                        </div>
                     </div>
+                <p>Flutter(或者更宽泛的app开发)可以一句话总结为:</p>
+<blockquote>
+<p><strong><code>UI = f(state)</code></strong></p>
+</blockquote>
+<p>即app的当前界面(UI)反映了当前程序状态(state). Flutter的状态管理就是app根据<strong>当前app的state</strong>的显示和更新UI.</p>
+<p>我们假设state是一个类型为<code>T</code>的object, 在下文的购物车例子中, state是当前购物车的内容(类型<code>T</code>=<code>List&lt;Item&gt;</code>).</p>
+<p>关于如何在widget tree里获取state, 可以有provider/riverpod等选项, e.g.<code>Provider&lt;T&gt;</code>. 但是如果直接用<code>T</code>作为状态会有问题: 就是当state的值被修改以后, <strong>对应的UI并不会自动rebuild</strong>(除非其他逻辑如<code>setState</code>触发了rebuild).</p>
+<p>如果希望在state修改以后, UI自动触发监听它的UI更新, 则需要<strong>用各种Notifier来包裹state</strong>. 例如我们不用<code>T</code>作为state, 而是用<code>ValueNotifier&lt;T&gt;</code>.</p>
+<p>这里主要介绍和比较三种常用的Notifier: <code>ChangeNotifier</code>, <code>ValueNotifier</code> 和 <code>StateNotifier</code>. 
+本文参考了<a href="https://resocoder.com/2020/12/11/flutter-statenotifier-riverpod-tutorial-immutable-state-management/">Resocoder</a>, <a href="https://codewithandrea.com/videos/flutter-state-management-setstate-freezed-state-notifier-provider/">Andrea Bizzotto</a>以及<a href="https://blog.funwith.app/posts/provider-with-statenotifier">FunWithFlutter</a>的tutorial.</p>
+<h2 id="changenotifier">ChangeNotifier</h2>
+<p><code>ChangeNotifier</code>是Flutter SDK自带的class: 一个<code>ChangeNotifier</code>可以被widgets监听(listen), state改变后, 如果要<strong>让所有监听它的widget重新build</strong>, 需要手动调用<code>notifyListeners()</code>函数.</p>
+<p>cf. <a href="https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple#changenotifier">Flutter官方的state management文档</a>.</p>
+<p>比如文档里的例子, 我们的state是当前购物车的内容, 于是我们定义<code>CartModel</code>类(继承<code>ChangeNotifier</code>)作为state:</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">class</span> <span class="nc">CartModel</span> <span class="kd">extends</span> <span class="n">ChangeNotifier</span> <span class="p">{</span></span>
+<span class="code-line">  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="n">_items</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// 购物车内容, 设为private</span></span>
+<span class="code-line">  <span class="c1">// 只读的购物车内容(getter)</span></span>
+<span class="code-line">  <span class="n">UnmodifiableListView</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span> <span class="kd">get</span> <span class="n">items</span> <span class="o">=&gt;</span> <span class="n">UnmodifiableListView</span><span class="p">(</span><span class="n">_items</span><span class="p">);</span></span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="kt">int</span> <span class="kd">get</span> <span class="n">totalPrice</span> <span class="o">=&gt;</span> <span class="n">_items</span><span class="p">.</span><span class="n">length</span> <span class="o">*</span> <span class="m">42</span><span class="p">;</span> <span class="c1">// 当前购物车总价的getter(假设每件都是42块)</span></span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="c1">/// 加入物品到购物车</span></span>
+<span class="code-line">  <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="n">Item</span> <span class="n">item</span><span class="p">)</span> <span class="p">{</span></span>
+<span class="code-line">    <span class="n">_items</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">);</span></span>
+<span class="code-line">    <span class="n">notifyListeners</span><span class="p">();</span> <span class="c1">// &lt;==***This call tells the widgets that are listening to this model to rebuild.</span></span>
+<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="c1">/// 清空购物车</span></span>
+<span class="code-line">  <span class="kt">void</span> <span class="n">removeAll</span><span class="p">()</span> <span class="p">{</span></span>
+<span class="code-line">    <span class="n">_items</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span></span>
+<span class="code-line">    <span class="n">notifyListeners</span><span class="p">();</span> <span class="c1">// &lt;==***This call tells the widgets that are listening to this model to rebuild.</span></span>
+<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"><span class="p">}</span></span>
+</pre></div>
+<p>ChangeNotifier结合Provider<a href="https://pub.dev/documentation/provider/latest/provider/ChangeNotifierProvider-class.html">(<code>ChangeNotifierProvider</code></a>), 就是一个比较基础的state management解决方案.</p>
+<h2 id="valuenotifier">ValueNotifier</h2>
+<p><code>ChangeNotifier</code>有个问题是每次都要手动调用<code>notifyListeners()</code>才能让监听的widget更新.</p>
+<p>如果想每当数据发生变化的时候, 都自动通知监听的widget -- 这就可以用<code>ValueNotifier&lt;T&gt;</code>.</p>
+<p><code>ValueNotifier</code>是<code>ChangeNotifier</code>的子类. 它把数据保存到<code>T value</code>里, <strong>每当<code>value</code>发生变化的时候, 监听的widget都重新build</strong>, 省去了<code>notifyListeners()</code>这一步.</p>
+<p>还是上面的例子, 改为用ValueNotifier就是:</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="gd">-class CartModel extends ChangeNotifier {</span></span>
+<span class="code-line"><span class="gi">+class CartModel extends ValueNotifier&lt;List&lt;Item&gt;&gt; {</span></span>
+<span class="code-line"><span class="gd">- final List&lt;Item&gt; _items = []; // 不用声明_items以及items getter了 -- ValueNotifier自动把数据保存在`value`</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="gi">+ CartModel(): super(&lt;Item&gt;[]); // 构造函数要提供value的初始值</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="gd">- int get totalPrice =&gt; _items.length * 42;</span></span>
+<span class="code-line"><span class="gi">+ int get totalPrice =&gt; value.length * 42;</span></span>
+<span class="code-line"></span>
+<span class="code-line">  void add(Item item) {</span>
+<span class="code-line"><span class="gi">+   value.add(item);</span></span>
+<span class="code-line"><span class="gd">-   _items.add(item);</span></span>
+<span class="code-line"><span class="gd">-   notifyListeners(); // 不必call notifyListeners()</span></span>
+<span class="code-line">  }</span>
+<span class="code-line"></span>
+<span class="code-line">  void removeAll() {</span>
+<span class="code-line"><span class="gi">+   value.clear(item);</span></span>
+<span class="code-line"><span class="gd">-   _items.clear();</span></span>
+<span class="code-line"><span class="gd">-   notifyListeners();</span></span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+</pre></div>
+<p>对于provider, ValueNotifier也有对应的<a href="https://pub.dev/documentation/provider/latest/provider/ValueListenableProvider-class.html">ValueListenableProvider</a>供使用.
+如果不用provider/riverpod, Flutter SDK里也有<a href="https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html">ValueListenableBuilder</a>可以在<code>value</code>更改时自动rebuild -- 类似provider的<code>Consumer</code>.</p>
+<h2 id="statenotifier">StateNotifier</h2>
+<p><code>StateNotifier</code>不是Flutter SDK自带, 需要使用<a href="https://pub.dev/packages/state_notifier"><code>state_notifier</code></a>或者<a href="https://pub.dev/packages/flutter_riverpod"><code>flutter_riverpod</code></a>包. 也有对应的<code>StateNotifierProvider</code>(来自flutter_state_notifier包), 用法和<code>ValueListenableProvider</code>类似.</p>
+<p>Flutter的<code>ValueNotifier</code>主要有以下问题:</p>
+<ol>
+<li><code>ValueNotifier</code>属于Flutter而不是纯dart, 不能用于写非flutter的库;</li>
+<li><code>value</code>是public成员 -- 也就是说<strong>任何人都可以在外部修改<code>ValueNotifier.value</code></strong>, 听上去很不安全</li>
+</ol>
+<p><code>StateNotifier</code>就解决了这两个问题:</p>
+<ol>
+<li>它不依赖flutter, 可用于纯dart的开发;</li>
+<li>在<code>StateNotifier</code>类之外修改<code>state</code>的时候, 会<strong>有linting提示</strong>.</li>
+</ol>
+<p><code>StateNotifier</code>用法和<code>ValueNotifier</code>几乎一样, 只不过<code>value</code>变成了<code>state</code>, 迁移起来应该很容易:</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="gd">-class CartModel extends ValueNotifier&lt;List&lt;Item&gt;&gt; {</span></span>
+<span class="code-line"><span class="gi">+class CartModel extends StateNotifier&lt;List&lt;Item&gt;&gt; {</span></span>
+<span class="code-line">  CartModel(): super(&lt;Item&gt;[]); // 构造函数要提供state的初始值</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="gd">- int get totalPrice =&gt; value.length * 42;</span></span>
+<span class="code-line"><span class="gi">+ int get totalPrice =&gt; state.length * 42;</span></span>
+<span class="code-line"></span>
+<span class="code-line">  void add(Item item) {</span>
+<span class="code-line"><span class="gi">+   state.add(item);</span></span>
+<span class="code-line"><span class="gd">-   value.add(item);</span></span>
+<span class="code-line">  }</span>
+<span class="code-line"></span>
+<span class="code-line">  void removeAll() {</span>
+<span class="code-line"><span class="gi">+   state.clear();</span></span>
+<span class="code-line"><span class="gd">-   value.clear();</span></span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+</pre></div>
+<h2 id="zong-jie">总结</h2>
+<p><strong>TLDR: <code>StateNotifier</code>是坠好的.</strong></p>
+<table class=" table-striped table table-hover">
+<thead>
+<tr>
+<th></th>
+<th><code>ChangeNotifier</code></th>
+<th><code>ValueNotifier&lt;T&gt;</code></th>
+<th><code>StateNotifier&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>Flutter SDK</td>
+<td>Flutter SDK</td>
+<td>state_notifier package</td>
+</tr>
+<tr>
+<td>获取state</td>
+<td>手写getter</td>
+<td><code>.value</code></td>
+<td><code>.state</code></td>
+</tr>
+<tr>
+<td>修改state</td>
+<td>手写setter或者其他function</td>
+<td><code>value</code>是public, 任何人都可修改</td>
+<td>在外部修改<code>state</code>会有lint提示</td>
+</tr>
+<tr>
+<td>状态变化时触发监听UI更新</td>
+<td>手动<code>notifyListeners()</code></td>
+<td>自动</td>
+<td>自动</td>
+</tr>
+</tbody>
+</table>
+<p>另外<code>StateNotifier</code>推荐结合<a href="https://pub.dev/packages/freezed">freezed package</a>使用, 以后有时间再总结一下freezed的用法以及它好在哪里.</p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/misc/passport-update-in-zurich-consulate.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        在苏黎世领事馆更新护照小记
+                        </h4>
+                    </a>
                 </div>
-            </article>
+                <div class="col-xs-12">
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
         </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'flutter-notifiers-compare';
+                        var disqus_url = 'https://x-wei.github.io/tech/flutter-notifiers-compare.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+</section>        </article>
+    </section>
+
 
             </div>
 <!-- Modal -->
@@ -555,6 +752,14 @@ mx's blog            </a>
 
     </div>
 </section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#changenotifier" title="ChangeNotifier">ChangeNotifier</a></li><li><a class="toc-href" href="#valuenotifier" title="ValueNotifier">ValueNotifier</a></li><li><a class="toc-href" href="#statenotifier" title="StateNotifier">StateNotifier</a></li><li><a class="toc-href" href="#zong-jie" title="总结">总结</a></li></ul></div>
+            </div>
+        </div>
             </aside>
         </div>
     </div>
@@ -578,7 +783,7 @@ mx's blog            </a>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2012 mx
+            &copy; 2021 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->
