@@ -163,6 +163,59 @@ mx's blog            </a>
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
+                            <a href="https://x-wei.github.io/soft/ffmpeg-convert-h265.html" class="btn btn-primary btn-lg"><h2>用ffmpeg压缩视频(H265)
+                            </h2></a>
+                        </div>
+                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
+                            
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <span>
+<div class="post-info">
+    <span class="published">
+        <time datetime="2021-07-15T00:00:00+02:00"><i class="fa fa-calendar"></i> Thu, 15 Jul 2021</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/soft/index.html">soft</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/linux.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> linux</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                        </span>
+                </div>
+                <div class="panel-body">
+                    <div class="summary"><p>DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多.</p>
+<p>转换的命令是: (ref. <a href="https://stackoverflow.com/questions/58742765/convert-videos-from-264-to-265-hevc-with-ffmpeg">stackoverflow</a>)</p>
+<div class="highlight"><pre><span class="code-line"><span></span><span class="err">ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4</span></span>
+</pre></div>
+<p>加上<code>-qscale 0</code>可以保持quality (不过好像对h265不管用? ref. <a href="https://stackoverflow.com/questions/25569180/ffmpeg-convert-without-loss-quality">stackoverflow</a>)</p>
+<h2 id="bao-liu-metadata">保留metadata</h2>
+<p>视频的metadata里有拍摄时间之类的内容, 可以用<code>-movflags use_metadata_tags</code> 或者<code>-map_metadata 0</code>将其保存下来 (ref: <a href="https://video.stackexchange.com/questions/23741/how-to-prevent-ffmpeg-from-dropping-metadata">stackexchange</a>)</p>
+<p>要查看一个视频文件的metadata的话:</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ sudo apt-get install mediainfo</span>
+<span class="code-line">$ mediainfo foo.mp4 &gt; info.txt</span>
+</pre></div>
+<p><strong>例子</strong>:</p>
+<div class="highlight"><pre><span class="code-line"><span></span>$ <span class="nb">time</span> ffmpeg -i input ...</span></pre></div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="article-item">
+            <article class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
                             <a href="https://x-wei.github.io/tech/flutter-notifiers-compare.html" class="btn btn-primary btn-lg"><h2>Flutter状态管理 - 三种Notifier的比较
                             </h2></a>
                         </div>
@@ -660,59 +713,6 @@ mx's blog            </a>
                 </div>
             </article>
         </div>
-        <div class="article-item">
-            <article class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xl-19 col-lg-19 col-md-20 col-sm-19 col-xs-24">
-                            <a href="https://x-wei.github.io/notes/xcs224n-lecture7.html" class="btn btn-primary btn-lg"><h2>[XCS224N] Lecture 7 – Vanishing Gradients and Fancy RNNs
-                            </h2></a>
-                        </div>
-                        <div class="col-xl-5 col-lg-5 col-md-4 col-sm-5 hidden-xs">
-                            
-                            <div>
-                            </div>
-                        </div>
-                    </div>
-
-                        <span>
-<div class="post-info">
-    <span class="published">
-        <time datetime="2020-04-04T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 04 Apr 2020</time>
-    </span>
-
-
-        <span class="label label-default">Category</span>
-        <a href="https://x-wei.github.io/notes/index.html">notes</a>
-
-
-
-<span class="btn-group">
-	<a href="https://x-wei.github.io/tag/deep-learning.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> deep learning</a>
-</span>
-    
-            <span class="label label-default">Series</span>
-            Part 7 of «XCS224N: NLP with deep learning» 
-    
-
-</div><!-- /.post-info -->                        </span>
-                </div>
-                <div class="panel-body">
-                    <div class="summary"><h2 id="vanishing-gradient-intuition-and-proof">Vanishing Gradient Intuition and Proof</h2>
-<p>ex: grad of loss at position 4 w.r.t.hidden state at postion 1</p>
-<p><img alt="" class="img-responsive" src="../images/xcs224n-lecture7/pasted_image.png"/></p>
-<p>with chain rule, the grad is smaller as it backprops</p>
-<p><img alt="" class="img-responsive" src="../images/xcs224n-lecture7/pasted_image001.png"/></p>
-<p><img alt="" class="img-responsive" src="../images/xcs224n-lecture7/pasted_image002.png"/>
- ⇒ 
-<img alt="" class="img-responsive" src="../images/xcs224n-lecture7/pasted_image003.png"/></p>
-<p><img alt="" class="img-responsive" src="../images/xcs224n-lecture7/pasted_image004.png"/></p>
-<p>If  the <em>largest eigenvalue</em> of <code>Wh</code> is less than 1, the gradient J_i/h_j will exponentially shrink.</p>
-<h2 id="why-vanishing-gradient-is-a-problem">Why Vanishing Gradient ...</h2>
-                    </div>
-                </div>
-            </article>
-        </div>
     </div>
 
         <ul class="pagination">
@@ -884,9 +884,9 @@ mx's blog            </a>
                     markdown <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
+            <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 3</sup>
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
