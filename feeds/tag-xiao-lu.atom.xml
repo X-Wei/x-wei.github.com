@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="https://x-wei.github.io/" rel="alternate"></link><link href="https://x-wei.github.io/feeds/tag-xiao-lu.atom.xml" rel="self"></link><id>https://x-wei.github.io/</id><updated>2022-03-27T00:00:00+01:00</updated><entry><title>效率反思 - 博客和微信公众号发布过程的阻力</title><link href="https://x-wei.github.io/misc/blog-pub-frictions.html" rel="alternate"></link><published>2022-03-27T00:00:00+01:00</published><updated>2022-03-27T00:00:00+01:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2022-03-27:misc/blog-pub-frictions.html</id><summary type="html">&lt;p&gt;又是很久没更新博客和公众号, 昨天想更新一篇关于瑞士驾照的内容, 写作本身其实挺流畅, 但是在发布到博客和微信公众号的过程中费了不少时间和功夫... &lt;/p&gt;
+&lt;p&gt;其实我过去一年多在私人笔记(zim/obsidian/foam)里写了不少内容, 但是都没有发布. 一部分原因也是这些发布过程中的阻力(friction)造成的, 尤其是很长时间不碰又会忘记, 需要重新摸索着发布.&lt;/p&gt;
+&lt;p&gt;这里记录一下我目前文章的写作和发布流程(包括每一步的预估耗时), 反思一下哪些环节可以优化(甚至自动化).&lt;/p&gt;
+&lt;h2 id="i-wen-zhang-xie-zuo"&gt;I-文章写作&lt;/h2&gt;
+&lt;p&gt;博客写作主要在zimwiki编辑器里进行. 十年过去了, 现在虽然也开始用obsidian和foam, 我感觉zim依然是专注编辑内容的最佳工具, 编辑体验非常流畅. &lt;/p&gt;
+&lt;p&gt;(关于这些笔记软件以后有机会再聊).&lt;/p&gt;
+&lt;h2 id="ii-fa-bu-dao-ge-ren-githubbo-ke"&gt;II-发布到&lt;a href="https://x-wei.github.io/"&gt;个人github博客&lt;/a&gt;&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;把zim里的文章导出为markdown &lt;/strong&gt;: &lt;strong&gt;&lt;strong&gt;5~10min&lt;/strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;zimwiki导出markdown文章源码 — zim里右键菜单&lt;/li&gt;
+&lt;li&gt;VSCode打开博客目录, 新建一个markdown文件并粘贴内容 &lt;ul&gt;
+&lt;li&gt;我用pelican生成静态博客, 需要在markdown开头加上一些metadata(标题/标签/日期等)&lt;/li&gt;
+&lt;li&gt;用VSCode的markdown预览查看和修复排版问题(因为zim的导出不是100%完美)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;纯文字的内容还好, 如果附带了图片, 还需要手动在&lt;code&gt;images/&amp;lt;slug&amp;gt;/&lt;/code&gt;新建文件夹, 把zim里的图片放进去&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;pelican本地生成静态html并预览&lt;/strong&gt; : &lt;strong&gt;&lt;strong&gt;~5min&lt;/strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;其实这一步并非必要 — 我现在有一个&lt;a href="https://github.com/X-Wei/pelican-gh-actions-xwei"&gt;GithubAction&lt;/a&gt; 可以在提交新markdown的时候自动生成html, 不过很多时候为了检查我还是要自己看一看.&lt;/li&gt;
+&lt;li&gt;我本地安装了我博客的&lt;a href="https://github.com/X-Wei/pelican-gh-actions-xwei/blob/master/Dockerfile"&gt;专属Docker镜像&lt;/a&gt;, 需要运行一个容器并且ssh进去:
+     &lt;code&gt;sh
+     # 看看本地有哪些docker镜像
+     $ docker images 
+     REPOSITORY              TAG        IMAGE ID       CREATED         SIZE
+     ...
+     my-pelican-blog         latest     cf58777756fa   12 months ago   1.3GB 👈
+     # 运行并进入docker容器
+     $ docker run --rm -it -p 8000:8000 --name pelican \
+       -v ~/path/to/my/blog:/home/blog -w /home/blog/pelican_dir/ \
+       --entrypoint bash \
+       my-pelican-blog:latest
+     # 进入容器以后, 生成html并预览
+     root@4c3059d9dc4a:/home/blog/pelican_dir$ make html &amp;amp;&amp;amp; make serve
+     # ==&amp;gt; 然后就可以在本地 http://localhost:8000 预览博客内容了&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果预览过程发现一些排版的问题, 可能还会重复几次... 另外现在的pelican主题确实有点老旧了, 不咋好看...&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;新文章发布到github&lt;/strong&gt;: &lt;strong&gt;&lt;strong&gt;~5min&lt;/strong&gt;&lt;/strong&gt;&lt;br/&gt;
+  其实git push很快, 但是GithubAction处理新文章需要一些时间, 所以要反复刷新浏览器, 等新文章出现在博客上才算OK...&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="iii-fa-bu-dao-wei-xin-gong-zhong-hao"&gt;III-发布到微信公众号&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;markdown源码导出为微信公众号内容&lt;/strong&gt;: &lt;strong&gt;&lt;strong&gt;10~15min&lt;/strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;微信公众号不支持markdown渲染的, 所以要用第三方工具导出&lt;/li&gt;
+&lt;li&gt;用&lt;a href="https://mdnice.com/"&gt;https://mdnice.com/&lt;/a&gt; 可以把markdown源码转为微信或者知乎文章的内容&lt;/li&gt;
+&lt;li&gt;需要重新上传一次图片到mdnice的图床("右键-&amp;gt;图片")&lt;/li&gt;
+&lt;li&gt;另外微信公众号还&lt;em&gt;不支持外部链接&lt;/em&gt;, 在mdnice里可以"右键-&amp;gt;微信外链转脚注", 把所有参考链接放到文章末尾&lt;/li&gt;
+&lt;li&gt;mdnice还支持各种主题, &lt;em&gt;不过微调主题的过程很可能一不小心就又浪费十几分钟&lt;/em&gt;...&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;新建公众号图文消息&lt;/strong&gt;: &lt;strong&gt;&lt;strong&gt;~10min&lt;/strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;在mdnice的文章页面, 点击右上角的绿色图标("复制到公众号")&lt;/li&gt;
+&lt;li&gt;扫码登录微信公众号页面, 新建"图文消息", 然后粘贴内容进去&lt;/li&gt;
+&lt;li&gt;添加封面图片和摘要&lt;/li&gt;
+&lt;li&gt;添加原创声明 — 我一般先发布到博客, 再发公众号, 这样&lt;/li&gt;
+&lt;li&gt;再次检查一下排版, 修改错别字&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;预览公众号文章&lt;/strong&gt;: &lt;strong&gt;&lt;strong&gt;10~30min&lt;/strong&gt;&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;在正式发布以前, 还可以发送给部分用户(主要是自己),做一个"teamfood". 在手机上看看文章效果.&lt;/li&gt;
+&lt;li&gt;微信公众号发布后只能修改一次, 而且最多不能超过十个字, 所以造成文章草稿写好以后要反复看几次还不敢发&lt;/li&gt;
+&lt;li&gt;另外吐槽一下, 公众号的网页界面有时候速度很慢, 点了等半天才刷新... =_=&lt;/li&gt;
+&lt;li&gt;确定没问题以后, 点击"发布"或者"群发", 就会向所有关注的用户推送消息了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="iv-zong-jie-fan-si"&gt;IV-总结/反思&lt;/h2&gt;
+&lt;p&gt;这么写一下总结下来, 实际进行格式转换("zimwiki =&amp;gt; markdown =&amp;gt; html/公众号内容")的时间并不是大头. 相反有很大部分时间是在校验排版和微调主题上.&lt;/p&gt;
+&lt;p&gt;🤔有没有一种可能... 你的文章并没有很多读者🤡&lt;/p&gt;
+&lt;p&gt;突然想到一句话: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;"差生文具多" &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(在我纠结IDE的主题/样式/插件的时候, 大佬们已经用vim,nano甚至notepad写下一行行牛逼的代码了...)&lt;/p&gt;
+&lt;p&gt;🤔🤔没有必要追求完美主义, 相比于内容本身, 文章样式和错别字啥的并不重要...&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;⇒ 所以还是专注内容本身, 保持不断输出就完事了!&lt;/strong&gt;&lt;/p&gt;</summary><category term="效率"></category><category term="写作"></category></entry></feed>
