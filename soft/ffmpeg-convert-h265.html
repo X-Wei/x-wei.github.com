@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="linux" />
-        <meta name="description" content="DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多. 转换的命令是: (ref. stackoverflow) ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4 加上-qscale 0可以保持quality (不过好像对h265不管用? ref. stackoverflow) 保留metadata 视频的metadata里有拍摄时间之类的内容, 可以用-movflags use_metadata_tags 或者-map_metadata 0将其保存下来 (ref: stackexchange) 要查看一个视频文件的metadata的话: $ sudo apt-get install mediainfo $ mediainfo foo.mp4 &gt; info.txt 例子: $ time ffmpeg -i input ..." />
+        <meta name="description" content="DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多. 转换的命令是: (ref. stackoverflow) ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4 加上-qscale 0可以保持quality (不过好像对h265不管用? ref. stackoverflow) 保 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="用ffmpeg压缩视频(H265)"/>
         <meta property="og:url" content="https://x-wei.github.io/soft/ffmpeg-convert-h265.html"/>
-        <meta property="og:description" content="DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多. 转换的命令是: (ref. stackoverflow) ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4 加上-qscale 0可以保持quality (不过好像对h265不管用? ref. stackoverflow) 保留metadata 视频的metadata里有拍摄时间之类的内容, 可以用-movflags use_metadata_tags 或者-map_metadata 0将其保存下来 (ref: stackexchange) 要查看一个视频文件的metadata的话: $ sudo apt-get install mediainfo $ mediainfo foo.mp4 &gt; info.txt 例子: $ time ffmpeg -i input ..."/>
+        <meta property="og:description" content="DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多. 转换的命令是: (ref. stackoverflow) ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4 加上-qscale 0可以保持quality (不过好像对h265不管用? ref. stackoverflow) 保 …"/>
         <meta property="article:published_time" content="2021-07-15" />
             <meta property="article:section" content="soft" />
             <meta property="article:tag" content="linux" />
@@ -211,42 +211,42 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#bao-liu-metadata" title="保留metadata">保留metadata</a></li><li><a class="toc-href" href="#pi-liang-chu-li-fishjiao-ben" title="批量处理fish脚本">批量处理fish脚本</a></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#metadata" title="保留metadata">保留metadata</a></li><li><a class="toc-href" href="#fish" title="批量处理fish脚本">批量处理fish脚本</a></li></ul></div>
                         </div>
                     </div>
                 <p>DJI运动相机拍摄的视频体积都比较大, 查了一下因为encoding是H264, 如果改成H265的话压缩率会高很多.</p>
 <p>转换的命令是: (ref. <a href="https://stackoverflow.com/questions/58742765/convert-videos-from-264-to-265-hevc-with-ffmpeg">stackoverflow</a>)</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>ffmpeg -i input.mp4 -c:v libx265 -vtag hvc1 output.mp4</code></span>
+<span class="code-line"></span></pre></div>
 <p>加上<code>-qscale 0</code>可以保持quality (不过好像对h265不管用? ref. <a href="https://stackoverflow.com/questions/25569180/ffmpeg-convert-without-loss-quality">stackoverflow</a>)</p>
-<h2 id="bao-liu-metadata">保留metadata</h2>
+<h2 id="metadata">保留metadata</h2>
 <p>视频的metadata里有拍摄时间之类的内容, 可以用<code>-movflags use_metadata_tags</code> 或者<code>-map_metadata 0</code>将其保存下来 (ref: <a href="https://video.stackexchange.com/questions/23741/how-to-prevent-ffmpeg-from-dropping-metadata">stackexchange</a>)</p>
 <p>要查看一个视频文件的metadata的话:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ sudo apt-get install mediainfo</span>
-<span class="code-line">$ mediainfo foo.mp4 &gt; info.txt</span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>mediainfo</code></span>
+<span class="code-line">$<span class="w"> </span>mediainfo<span class="w"> </span>foo.mp4<span class="w"> </span>&gt;<span class="w"> </span>info.txt</span>
+<span class="code-line"></span></pre></div>
 <p><strong>例子</strong>:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ <span class="nb">time</span> ffmpeg -i input.MP4 -c:v libx265 <span class="se">\</span></span>
-<span class="code-line">  -movflags use_metadata_tags -map_metadata <span class="m">0</span> <span class="se">\</span></span>
-<span class="code-line">  -vtag hvc1 output.MP4</span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ffmpeg<span class="w"> </span>-i<span class="w"> </span>input.MP4<span class="w"> </span>-c:v<span class="w"> </span>libx265<span class="w"> </span><span class="se">\</span></code></span>
+<span class="code-line"><span class="w">  </span>-movflags<span class="w"> </span>use_metadata_tags<span class="w"> </span>-map_metadata<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">  </span>-vtag<span class="w"> </span>hvc1<span class="w"> </span>output.MP4</span>
+<span class="code-line"></span></pre></div>
 <p>==&gt; 用时370秒, 把一个416MB的文件压缩到了33MB</p>
-<h2 id="pi-liang-chu-li-fishjiao-ben">批量处理fish脚本</h2>
+<h2 id="fish">批量处理fish脚本</h2>
 <p>给converted文件加一个h256前缀:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">for</span> fn in <span class="o">(</span>ls *.MP4<span class="o">)</span></span>
-<span class="code-line">  <span class="k">if</span> string match -rq -- <span class="s2">"h265"</span> <span class="nv">$fn</span><span class="p">;</span></span>
-<span class="code-line">    <span class="nb">echo</span> skipping <span class="nv">$fn</span><span class="p">;</span> <span class="c1"># skip files with "h265" in the name</span></span>
-<span class="code-line">  <span class="k">else</span><span class="p">;</span></span>
-<span class="code-line">    ffmpeg -i <span class="nv">$fn</span> -c:v libx265 -movflags use_metadata_tags -map_metadata <span class="m">0</span> -vtag hvc1 h265_<span class="nv">$fn</span><span class="p">;</span></span>
-<span class="code-line">  end</span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">for</span><span class="w"> </span>fn<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">(</span>ls<span class="w"> </span>*.MP4<span class="o">)</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="k">if</span><span class="w"> </span>string<span class="w"> </span>match<span class="w"> </span>-rq<span class="w"> </span>--<span class="w"> </span><span class="s2">"h265"</span><span class="w"> </span><span class="nv">$fn</span><span class="p">;</span></span>
+<span class="code-line"><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>skipping<span class="w"> </span><span class="nv">$fn</span><span class="p">;</span><span class="w"> </span><span class="c1"># skip files with "h265" in the name</span></span>
+<span class="code-line"><span class="w">  </span><span class="k">else</span><span class="p">;</span></span>
+<span class="code-line"><span class="w">    </span>ffmpeg<span class="w"> </span>-i<span class="w"> </span><span class="nv">$fn</span><span class="w"> </span>-c:v<span class="w"> </span>libx265<span class="w"> </span>-movflags<span class="w"> </span>use_metadata_tags<span class="w"> </span>-map_metadata<span class="w"> </span><span class="m">0</span><span class="w"> </span>-vtag<span class="w"> </span>hvc1<span class="w"> </span>h265_<span class="nv">$fn</span><span class="p">;</span></span>
+<span class="code-line"><span class="w">  </span>end</span>
 <span class="code-line">end</span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>或者把converted的文件放进子文件夹"h265"里头:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>mkdir h265</span>
-<span class="code-line"><span class="nb">time</span> <span class="k">for</span> fn in <span class="o">(</span>ls *.MP4<span class="o">)</span></span>
-<span class="code-line">  ffmpeg -i <span class="nv">$fn</span> -c:v libx265 -movflags use_metadata_tags -map_metadata <span class="m">0</span> -vtag hvc1 h265/<span class="nv">$fn</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code>mkdir<span class="w"> </span>h265</code></span>
+<span class="code-line"><span class="nb">time</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>fn<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">(</span>ls<span class="w"> </span>*.MP4<span class="o">)</span></span>
+<span class="code-line"><span class="w">  </span>ffmpeg<span class="w"> </span>-i<span class="w"> </span><span class="nv">$fn</span><span class="w"> </span>-c:v<span class="w"> </span>libx265<span class="w"> </span>-movflags<span class="w"> </span>use_metadata_tags<span class="w"> </span>-map_metadata<span class="w"> </span><span class="m">0</span><span class="w"> </span>-vtag<span class="w"> </span>hvc1<span class="w"> </span>h265/<span class="nv">$fn</span></span>
 <span class="code-line">end</span>
-</pre></div>
+<span class="code-line"></span></pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -411,14 +411,14 @@ mx's blog            </a>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -426,159 +426,9 @@ mx's blog            </a>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -586,19 +436,99 @@ mx's blog            </a>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -607,23 +537,33 @@ mx's blog            </a>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -631,19 +571,44 @@ mx's blog            </a>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -651,14 +616,54 @@ mx's blog            </a>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -690,7 +695,7 @@ mx's blog            </a>
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#bao-liu-metadata" title="保留metadata">保留metadata</a></li><li><a class="toc-href" href="#pi-liang-chu-li-fishjiao-ben" title="批量处理fish脚本">批量处理fish脚本</a></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#metadata" title="保留metadata">保留metadata</a></li><li><a class="toc-href" href="#fish" title="批量处理fish脚本">批量处理fish脚本</a></li></ul></div>
             </div>
         </div>
             </aside>
@@ -716,7 +721,7 @@ mx's blog            </a>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

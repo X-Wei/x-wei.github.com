@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="R" />
-        <meta name="description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median :15 ..." />
+        <meta name="description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="R语言从入门到放弃 (4). 统计回归"/>
         <meta property="og:url" content="https://x-wei.github.io/notes/Rnotes-4-regression.html"/>
-        <meta property="og:description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形式是: 目标是估计函数m(). 例子使用R自带的cars数据集, 它包含两列: 汽车速度speed和刹车距离dist. &gt; data(cars) &gt; summary(cars) speed dist Min. : 4.0 Min. : 2.00 1st Qu.:12.0 1st Qu.: 26.00 Median :15 ..."/>
+        <meta property="og:description" content="R里面的统计函数有很多, 这里只用线性模型lm以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(NW, ksmooth), Local Polynomial(LP, loess), Smoothing Spline(SS, smooth.spline). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. 数据的形 …"/>
         <meta property="article:published_time" content="2016-07-29" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="R" />
@@ -213,25 +213,25 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#theory" title="Theory">Theory</a><ul><li><a class="toc-href" href="#linear-model" title="linear model">linear model</a></li><li><a class="toc-href" href="#nadaraya-watson-kernel-smoother" title="Nadaraya-Watson kernel smoother">Nadaraya-Watson kernel smoother</a></li><li><a class="toc-href" href="#local-polynomial-smoother" title="Local Polynomial smoother">Local Polynomial smoother</a></li><li><a class="toc-href" href="#smoothing-spline" title="Smoothing Spline">Smoothing Spline</a></li></ul></li><li><a class="toc-href" href="#fit-model_1" title="fit model">fit model</a><ul><li><a class="toc-href" href="#formula" title="formula">formula</a></li><li><a class="toc-href" href="#fit-models" title="fit models">fit models</a></li></ul></li><li><a class="toc-href" href="#predict-fittedresiduals_1" title="predict, fitted/residuals">predict, fitted/residuals</a></li><li><a class="toc-href" href="#bandwidthdf-hat-matrix" title="bandwidth&amp;df: Hat Matrix">bandwidth&amp;df;: Hat Matrix</a></li><li><a class="toc-href" href="#cv-and-hat-matrix" title="CV and Hat Matrix">CV and Hat Matrix</a></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#theory" title="Theory">Theory</a><ul><li><a class="toc-href" href="#linear-model" title="linear model">linear model</a></li><li><a class="toc-href" href="#nadaraya-watson-kernel-smoother" title="Nadaraya-Watson kernel smoother">Nadaraya-Watson kernel smoother</a></li><li><a class="toc-href" href="#local-polynomial-smoother" title="Local Polynomial smoother">Local Polynomial smoother</a></li><li><a class="toc-href" href="#smoothing-spline" title="Smoothing Spline">Smoothing Spline</a></li></ul></li><li><a class="toc-href" href="#fit-model_1" title="fit model">fit model</a><ul><li><a class="toc-href" href="#formula" title="formula">formula</a></li><li><a class="toc-href" href="#fit-models" title="fit models">fit models</a></li></ul></li><li><a class="toc-href" href="#predict-fittedresiduals_1" title="predict, fitted/residuals">predict, fitted/residuals</a></li><li><a class="toc-href" href="#bandwidthdf-hat-matrix" title="bandwidth&amp;df: Hat Matrix">bandwidth&amp;df: Hat Matrix</a></li><li><a class="toc-href" href="#cv-and-hat-matrix" title="CV and Hat Matrix">CV and Hat Matrix</a></li></ul></div>
                         </div>
                     </div>
                 <p>R里面的统计函数有很多, 这里只用线性模型<code>lm</code>以及(一维)非参估计最常用的三个smoother: Nadaraya-Watson kernel(<strong>NW, </strong><code>ksmooth</code>), Local Polynomial(<strong>LP, </strong><code>loess</code>), Smoothing Spline(<strong>SS, </strong><code>smooth.spline</code>). 用这三个smoother作为例子, 介绍R里面统计回归的一些用法. </p>
 <p>数据的形式是:　</p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image002.png"/></p>
 <p>目标是估计函数m(). 例子使用R自带的<code>cars</code>数据集, 它包含两列: 汽车速度speed和刹车距离dist. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">&gt; data(cars)</span></span>
-<span class="code-line"><span class="err">&gt; summary(cars)</span></span>
-<span class="code-line"><span class="err">     speed           dist       </span></span>
-<span class="code-line"><span class="err"> Min.   : 4.0   Min.   :  2.00  </span></span>
-<span class="code-line"><span class="err"> 1st Qu.:12.0   1st Qu.: 26.00  </span></span>
-<span class="code-line"><span class="err"> Median :15.0   Median : 36.00  </span></span>
-<span class="code-line"><span class="err"> Mean   :15.4   Mean   : 42.98  </span></span>
-<span class="code-line"><span class="err"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span></span>
-<span class="code-line"><span class="err"> Max.   :25.0   Max.   :120.00  </span></span>
-<span class="code-line"><span class="err">&gt; ?cars</span></span>
-<span class="code-line"><span class="err">&gt; plot(cars$speed, cars$dist)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>&gt; data(cars)</code></span>
+<span class="code-line">&gt; summary(cars)</span>
+<span class="code-line">     speed           dist       </span>
+<span class="code-line"> Min.   : 4.0   Min.   :  2.00  </span>
+<span class="code-line"> 1st Qu.:12.0   1st Qu.: 26.00  </span>
+<span class="code-line"> Median :15.0   Median : 36.00  </span>
+<span class="code-line"> Mean   :15.4   Mean   : 42.98  </span>
+<span class="code-line"> 3rd Qu.:19.0   3rd Qu.: 56.00  </span>
+<span class="code-line"> Max.   :25.0   Max.   :120.00  </span>
+<span class="code-line">&gt; ?cars</span>
+<span class="code-line">&gt; plot(cars$speed, cars$dist)</span>
+<span class="code-line"></span></pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image003.png"/></p>
 <h1 id="theory">Theory</h1>
 <p>首先简单介绍一下这4个smoother的原理: </p>
@@ -263,39 +263,39 @@ mx's blog            </a>
 </ul>
 <h3 id="fit-models">fit models</h3>
 <p>这几个函数的fit写法各不相同, 有的要提供formula, 有的要提供x和y值, 需要看文档: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">fit.lm</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">fit.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">fit.lp</span> <span class="o">&lt;-</span> <span class="nf">loess</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">fit.ss</span> <span class="o">&lt;-</span> <span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">fit.lm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="n">fit.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fit.lp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">loess</span><span class="p">(</span><span class="n">dist</span><span class="o">~</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="o">=</span><span class="n">cars</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fit.ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span></span>
+<span class="code-line"></span></pre></div>
 <h1 id="predict-fittedresiduals_1">predict, fitted/residuals</h1>
 <p>predict的写法也是各不相同, 一般都是用<code>predict</code>函数, 然而这个函数在作用到不同smoother上面, 参数和返回值也都不一样......orz 关于<code>xx</code>smoother的predict函数用法参考?<code>predict.xx</code>. 最奇葩的是NW, 它不能用<code>predict</code>函数, 而要fit的时候在<code>skmooth</code>函数里传入<code>x.points</code>参数... </p>
 <p>看predict例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">newspeed</span> <span class="o">&lt;-</span> <span class="m">1</span><span class="o">:</span><span class="m">26</span></span>
-<span class="code-line"><span class="n">pred.lm</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">,</span> <span class="n">newdata</span> <span class="o">=</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">speed</span> <span class="o">=</span> <span class="n">newspeed</span><span class="p">),</span> <span class="n">interval</span> <span class="o">=</span> <span class="s">"prediction"</span><span class="p">)</span><span class="n">[</span><span class="p">,</span><span class="s">"fit"</span><span class="n">]</span></span>
-<span class="code-line"><span class="n">pred.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
-<span class="code-line"><span class="n">pred.lp</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">,</span> <span class="n">newdata</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">pred.ss</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">newspeed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">26</span></code></span>
+<span class="code-line"><span class="n">pred.lm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">,</span><span class="w"> </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newspeed</span><span class="p">),</span><span class="w"> </span><span class="n">interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"prediction"</span><span class="p">)[,</span><span class="s">"fit"</span><span class="p">]</span></span>
+<span class="code-line"><span class="n">pred.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span><span class="w"> </span><span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">x.points</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="n">pred.lp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">,</span><span class="w"> </span><span class="n">newdata</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">pred.ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="n">newspeed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"></span></pre></div>
 <p>另外, 如果想看smoother在design points(Xi)处的预测值, 可以用<code>fitted</code>函数(NW还是不能用), 例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">fitted.lm</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">fitted.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
-<span class="code-line"><span class="n">fitted.lp</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">fitted.ss</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">fitted.lm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="n">fitted.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span><span class="w"> </span><span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="n">fitted.lp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">fitted.ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
+<span class="code-line"></span></pre></div>
 <p>要看每个点的residual ri=yi-yhat_i, 用<code>residuals</code>函数(NW不行):</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">resd.lm</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">resd.nw</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span><span class="o">$</span><span class="n">y</span> <span class="o">-</span> <span class="n">cars</span><span class="o">$</span><span class="n">dist</span> </span>
-<span class="code-line"><span class="n">resd.lp</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">resd.ss</span> <span class="o">&lt;-</span> <span class="nf">residuals</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">resd.lm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lm</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="n">resd.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span><span class="w"> </span><span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">x.points</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">)</span><span class="o">$</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="w"> </span></span>
+<span class="code-line"><span class="n">resd.lp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">residuals</span><span class="p">(</span><span class="n">fit.lp</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">resd.ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">residuals</span><span class="p">(</span><span class="n">fit.ss</span><span class="p">)</span></span>
+<span class="code-line"></span></pre></div>
 <p>可以画出这几个方法的fit: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">abline(fit.lm, lty=1, col=1) # linear model is just a straigh line</span></span>
-<span class="code-line"><span class="err">lines(newspeed, pred.nw, lty=2, col=2)</span></span>
-<span class="code-line"><span class="err">lines(newspeed, pred.lp, lty=3, col=3)</span></span>
-<span class="code-line"><span class="err">lines(newspeed, pred.ss, lty=4, col=4)</span></span>
-<span class="code-line"><span class="err">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>abline(fit.lm, lty=1, col=1) # linear model is just a straigh line</code></span>
+<span class="code-line">lines(newspeed, pred.nw, lty=2, col=2)</span>
+<span class="code-line">lines(newspeed, pred.lp, lty=3, col=3)</span>
+<span class="code-line">lines(newspeed, pred.ss, lty=4, col=4)</span>
+<span class="code-line">legend("topleft", c("lm", "nw", "lp", "ss"), lty=1:4, col=1:4)</span>
+<span class="code-line"></span></pre></div>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image009.png"/></p>
 <h1 id="bandwidthdf-hat-matrix">bandwidth&amp;df: Hat Matrix</h1>
 <p>三个非参估计的smoother都有"带宽"(bandwidth)或者"自由度"(df)的概念, 带宽即NW或LP表达式里的h. </p>
@@ -306,96 +306,96 @@ mx's blog            </a>
 <p>根据script(P28), S的第j列可以用这个smoother fit一个unit vector来得到: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image012.png"/></p>
 <p>所以计算S可以用下面的代码: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">n</span> <span class="o">&lt;-</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">Snw</span> <span class="o">&lt;-</span> <span class="n">Slp</span> <span class="o">&lt;-</span> <span class="n">Sss</span> <span class="o">&lt;-</span> <span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">In</span> <span class="o">&lt;-</span> <span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># identity matrix</span></span>
-<span class="code-line"><span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
-<span class="code-line">  <span class="n">y</span> <span class="o">&lt;-</span> <span class="n">In[</span><span class="p">,</span><span class="n">j]</span> <span class="c1"># unit vector ej</span></span>
-<span class="code-line">  <span class="n">Snw[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
-<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">))</span></span>
-<span class="code-line">  <span class="n">Sss[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">nrow</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="n">Snw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Slp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Sss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">In</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="c1"># identity matrix</span></span>
+<span class="code-line"><span class="kr">for</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">In</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="c1"># unit vector ej</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Snw</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span><span class="w"> </span><span class="n">bandwidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Slp</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">))</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Sss</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">))</span></span>
 <span class="code-line"><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="n">df.nw</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span></span>
-<span class="code-line"><span class="n">df.lp</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span></span>
-<span class="code-line"><span class="n">df.ss</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Sss</span><span class="p">))</span></span>
-</pre></div>
+<span class="code-line"><span class="n">df.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span></span>
+<span class="code-line"><span class="n">df.lp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span></span>
+<span class="code-line"><span class="n">df.ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Sss</span><span class="p">))</span></span>
+<span class="code-line"></span></pre></div>
 <p>发现三个非参smoother的自由度不同, 所以上面画图的比较并没有意义, 为了让三者的自由度相同, 可以设定ksmooth/loess/smooth.spline的参数.</p>
 <p>控制带宽, Lp的参数为<code>span</code>, SS的参数为<code>spar</code>; 而指定想要的自由度则分别是<code>enp.target</code>和<code>df</code>. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="nf">cat</span><span class="p">(</span><span class="s">"let all 3 np smoother use the same df="</span><span class="p">,</span> <span class="n">df.nw</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">Slp</span> <span class="o">&lt;-</span> <span class="n">Sss</span> <span class="o">&lt;-</span> <span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
-<span class="code-line"><span class="n">In</span> <span class="o">&lt;-</span> <span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c1"># identity matrix</span></span>
-<span class="code-line"><span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
-<span class="code-line">  <span class="n">y</span> <span class="o">&lt;-</span> <span class="n">In[</span><span class="p">,</span><span class="n">j]</span></span>
-<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">enp.target</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
-<span class="code-line">  <span class="n">Sss[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="nf">cat</span><span class="p">(</span><span class="s">"let all 3 np smoother use the same df="</span><span class="p">,</span><span class="w"> </span><span class="n">df.nw</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="n">Slp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Sss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">nrow</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="o">=</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line"><span class="n">In</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">diag</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="c1"># identity matrix</span></span>
+<span class="code-line"><span class="kr">for</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">){</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">In</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Slp</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="nf">loess</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">enp.target</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Sss</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">fitted</span><span class="p">(</span><span class="nf">smooth.spline</span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">df</span><span class="o">=</span><span class="n">df.nw</span><span class="p">))</span></span>
 <span class="code-line"><span class="p">}</span></span>
 <span class="code-line"><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span></span>
 <span class="code-line"><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Sss</span><span class="p">))</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>发现SS的df参数使用以后控制的非常接近NW的df了, 不过lp的df还是不够接近, 用span来控制应该更准确一些, 为了找到合适的span, 用以下代码来寻找使得df=df.nw的span取值: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">dflp</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">val</span><span class="p">){</span></span>
-<span class="code-line">  <span class="nf">for</span><span class="p">(</span><span class="n">j</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">)</span></span>
-<span class="code-line">  <span class="n">Slp[</span><span class="p">,</span><span class="n">j]</span> <span class="o">&lt;-</span> <span class="nf">loess</span><span class="p">(</span><span class="n">In[</span><span class="p">,</span><span class="n">j]</span> <span class="o">~</span> <span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">span</span> <span class="o">=</span> <span class="n">span</span><span class="p">)</span><span class="o">$</span><span class="n">fitted</span></span>
-<span class="code-line">  <span class="nf">return</span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span> <span class="o">-</span> <span class="n">val</span><span class="p">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">dflp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">span</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">){</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="kr">for</span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">)</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Slp</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">loess</span><span class="p">(</span><span class="n">In</span><span class="p">[,</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">span</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">span</span><span class="p">)</span><span class="o">$</span><span class="n">fitted</span></span>
+<span class="code-line"><span class="w">  </span><span class="kr">return</span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="nf">diag</span><span class="p">(</span><span class="n">Slp</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">val</span><span class="p">)</span></span>
 <span class="code-line"><span class="p">}</span></span>
-<span class="code-line"><span class="n">chosen_span</span> <span class="o">&lt;-</span> <span class="nf">uniroot</span><span class="p">(</span><span class="n">dflp</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="m">0.5</span><span class="p">),</span> <span class="n">val</span> <span class="o">=</span> <span class="n">df.nw</span><span class="p">)</span><span class="o">$</span><span class="n">root</span></span>
-</pre></div>
+<span class="code-line"><span class="n">chosen_span</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">uniroot</span><span class="p">(</span><span class="n">dflp</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">),</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df.nw</span><span class="p">)</span><span class="o">$</span><span class="n">root</span></span>
+<span class="code-line"></span></pre></div>
 <p>如果不用这个循环计算的话, 可以用<code>sfsmisc</code>包里的<code>hatMat</code>函数: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image013.png"/> </p>
 <p>参数<code>trace</code>取TRUE的话, 直接返回hat matrix的迹, 否则返回整个hat matrix. 
 需要把要计算的smoother包装成一个pred.sm函数传入, 这个函数接受x和y, 返回fitted数值. 例子: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">hatMat(cars$speed, T, </span></span>
-<span class="code-line"><span class="err">       pred.sm = function(x,y) </span></span>
-<span class="code-line"><span class="err">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)$y )</span></span>
-<span class="code-line"><span class="err">hatMat(cars$speed, T, </span></span>
-<span class="code-line"><span class="err">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span></span>
-<span class="code-line"><span class="err">hatMat(cars$speed, T, </span></span>
-<span class="code-line"><span class="err">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>hatMat(cars$speed, T, </code></span>
+<span class="code-line">       pred.sm = function(x,y) </span>
+<span class="code-line">         ksmooth(x, y, kernel="normal", bandwidth=2, x.points=x)$y )</span>
+<span class="code-line">hatMat(cars$speed, T, </span>
+<span class="code-line">       pred.sm = function(x,y) fitted(loess(y~x, span=chosen_span)) )</span>
+<span class="code-line">hatMat(cars$speed, T, </span>
+<span class="code-line">       pred.sm = function(x,y) fitted(smooth.spline(x, y, df=df.nw)) )</span>
+<span class="code-line"></span></pre></div>
 <h1 id="cv-and-hat-matrix">CV and Hat Matrix</h1>
 <p>为了预测smoother的performance, 用loo CV来估计MSE(mean sq err)的值. </p>
 <p>loo CV可以用下面这个通用函数得到(注意看对于参数的要求): </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">##</span><span class="s1">' Calculates the LOO CV score for given data and regression prediction function</span></span>
-<span class="code-line"><span class="s1">##'</span><span class="w"></span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="err">##</span><span class="s1">' Calculates the LOO CV score for given data and regression prediction function</span></code></span>
+<span class="code-line"><span class="s1">##'</span></span>
 <span class="code-line"><span class="err">##</span><span class="s1">' @param reg.data: regression data; data.frame with columns '</span><span class="n">x</span><span class="s1">', '</span><span class="n">y</span><span class="s1">'</span></span>
-<span class="code-line"><span class="s1">##'</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="nl">fcn</span><span class="p">:</span><span class="w">  </span><span class="n">regr</span><span class="p">.</span><span class="n">prediction</span><span class="w"> </span><span class="k">function</span><span class="p">;</span><span class="w"> </span><span class="nl">arguments</span><span class="p">:</span><span class="w"></span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w"> </span><span class="nv">@param</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="nl">fcn</span><span class="p">:</span><span class="w">  </span><span class="n">regr</span><span class="p">.</span><span class="n">prediction</span><span class="w"> </span><span class="k">function</span><span class="p">;</span><span class="w"> </span><span class="nl">arguments</span><span class="p">:</span></span>
 <span class="code-line"><span class="err">##</span><span class="s1">'                    reg.x: regression x-values</span></span>
-<span class="code-line"><span class="s1">##'</span><span class="w">                    </span><span class="n">reg</span><span class="p">.</span><span class="nl">y</span><span class="p">:</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="n">y</span><span class="o">-</span><span class="k">values</span><span class="w"></span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w">                    </span><span class="n">reg</span><span class="p">.</span><span class="nl">y</span><span class="p">:</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="n">y</span><span class="o">-</span><span class="k">values</span></span>
 <span class="code-line"><span class="err">##</span><span class="s1">'                    x:     x-value(s) of evaluation point(s)</span></span>
-<span class="code-line"><span class="s1">##'</span><span class="w">                  </span><span class="k">value</span><span class="err">:</span><span class="w"> </span><span class="n">prediction</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">point</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w"></span></span>
-<span class="code-line"><span class="err">##'</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">LOOCV</span><span class="w"> </span><span class="n">score</span><span class="w"></span></span>
-<span class="code-line"><span class="n">loocv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="err">{</span><span class="w"></span></span>
-<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">leave</span><span class="o">-</span><span class="n">one</span><span class="o">-</span><span class="k">out</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span><span class="w"></span></span>
-<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="w"></span></span>
-<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span><span class="w"></span></span>
+<span class="code-line"><span class="s1">##'</span><span class="w">                  </span><span class="k">value</span><span class="err">:</span><span class="w"> </span><span class="n">prediction</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">point</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="n">x</span></span>
+<span class="code-line"><span class="err">##'</span><span class="w"> </span><span class="nv">@return</span><span class="w"> </span><span class="n">LOOCV</span><span class="w"> </span><span class="n">score</span></span>
+<span class="code-line"><span class="n">loocv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="err">{</span></span>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">calculate</span><span class="w"> </span><span class="n">leave</span><span class="o">-</span><span class="n">one</span><span class="o">-</span><span class="k">out</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="o">[</span><span class="n">-i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">x</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="n">LOO</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">above</span><span class="w"></span></span>
-<span class="code-line"><span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">)</span><span class="w"></span></span>
-<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sapply</span><span class="p">(</span><span class="mi">1</span><span class="err">:</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span><span class="w"></span></span>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="n">LOO</span><span class="w"> </span><span class="n">regression</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">above</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">)</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sapply</span><span class="p">(</span><span class="mi">1</span><span class="err">:</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">loo</span><span class="p">.</span><span class="n">reg</span><span class="p">.</span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">fcn</span><span class="p">)</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">MSE</span><span class="w"></span></span>
-<span class="code-line"><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="o">-</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"></span></span>
-<span class="code-line"><span class="err">}</span><span class="w"></span></span>
-</pre></div>
+<span class="code-line"><span class="w">  </span><span class="err">##</span><span class="w"> </span><span class="n">Calculate</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">MSE</span></span>
+<span class="code-line"><span class="w">  </span><span class="k">return</span><span class="p">(</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">loo</span><span class="p">.</span><span class="k">values</span><span class="o">-</span><span class="n">reg</span><span class="p">.</span><span class="k">data</span><span class="err">$</span><span class="n">y</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">)</span></span>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"></span></pre></div>
 <p>比如, 为了计算NW的CV数值, 需要这样: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">regfcn.nw</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span> <span class="n">regy</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></span>
-<span class="code-line">  <span class="nf">ksmooth</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span> <span class="n">regy</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
-<span class="code-line"><span class="nf">loocv</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">),</span> <span class="n">regfcn.nw</span><span class="p">)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">regfcn.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kr">function</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span><span class="w"> </span><span class="n">regy</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="nf">ksmooth</span><span class="p">(</span><span class="n">regx</span><span class="p">,</span><span class="w"> </span><span class="n">regy</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="s">"normal"</span><span class="p">,</span><span class="w"> </span><span class="n">bandwidth</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">x.points</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">$</span><span class="n">y</span></span>
+<span class="code-line"><span class="nf">loocv</span><span class="p">(</span><span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">speed</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">cars</span><span class="o">$</span><span class="n">dist</span><span class="p">),</span><span class="w"> </span><span class="n">regfcn.nw</span><span class="p">)</span></span>
+<span class="code-line"></span></pre></div>
 <p>不过, 如果得到了hat Matrix S, 根据公式4.5, loo CV可以这样一次计算出来: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image014.png"/></p>
 <p>试一下: </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># compute CV using shortcut euqation</span></span>
-<span class="code-line"><span class="n">yhat.nw</span> <span class="o">&lt;-</span> <span class="n">Snw</span> <span class="o">%*%</span> <span class="n">cars</span><span class="o">$</span><span class="n">y</span> <span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span></span>
-<span class="code-line"><span class="nf">mean</span><span class="p">(</span>  <span class="p">(</span> <span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">y</span><span class="o">-</span><span class="n">yhat.nw</span><span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span> <span class="p">)</span><span class="n">^2</span> <span class="p">)</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="c1"># compute CV using shortcut euqation</span></code></span>
+<span class="code-line"><span class="n">yhat.nw</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">Snw</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="n">cars</span><span class="o">$</span><span class="n">y</span><span class="w"> </span><span class="c1"># or use regfcn.nw(cars$speed, cars$dist, cars$speed)</span></span>
+<span class="code-line"><span class="nf">mean</span><span class="p">(</span><span class="w">  </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">cars</span><span class="o">$</span><span class="n">y</span><span class="o">-</span><span class="n">yhat.nw</span><span class="p">)</span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="nf">diag</span><span class="p">(</span><span class="n">Snw</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="p">)</span></span>
+<span class="code-line"></span></pre></div>
 <p>得到的结果和之前用loocv一样, 都是253.9128 !~ </p>
 <p>或者只用df, 计算generalized CV, 公式为: </p>
 <p><img alt="" class="img-responsive" src="../images/Rnotes-4-regression/pasted_image015.png"/></p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">#compute GCV</span></span>
-<span class="code-line"><span class="err">mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>#compute GCV</code></span>
+<span class="code-line">mean( (cars$dist-yhat.nw)^2 ) / ( 1 - df.nw/n )^2</span>
+<span class="code-line"></span></pre></div>
 <p>得到gcv=269.3911, 和looCV也比较接近. </p>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
@@ -574,14 +574,14 @@ mx's blog            </a>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -589,159 +589,9 @@ mx's blog            </a>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -749,19 +599,99 @@ mx's blog            </a>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -770,23 +700,33 @@ mx's blog            </a>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -794,19 +734,44 @@ mx's blog            </a>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -814,14 +779,54 @@ mx's blog            </a>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -863,7 +868,7 @@ mx's blog            </a>
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#theory" title="Theory">Theory</a><ul><li><a class="toc-href" href="#linear-model" title="linear model">linear model</a></li><li><a class="toc-href" href="#nadaraya-watson-kernel-smoother" title="Nadaraya-Watson kernel smoother">Nadaraya-Watson kernel smoother</a></li><li><a class="toc-href" href="#local-polynomial-smoother" title="Local Polynomial smoother">Local Polynomial smoother</a></li><li><a class="toc-href" href="#smoothing-spline" title="Smoothing Spline">Smoothing Spline</a></li></ul></li><li><a class="toc-href" href="#fit-model_1" title="fit model">fit model</a><ul><li><a class="toc-href" href="#formula" title="formula">formula</a></li><li><a class="toc-href" href="#fit-models" title="fit models">fit models</a></li></ul></li><li><a class="toc-href" href="#predict-fittedresiduals_1" title="predict, fitted/residuals">predict, fitted/residuals</a></li><li><a class="toc-href" href="#bandwidthdf-hat-matrix" title="bandwidth&amp;df: Hat Matrix">bandwidth&amp;df;: Hat Matrix</a></li><li><a class="toc-href" href="#cv-and-hat-matrix" title="CV and Hat Matrix">CV and Hat Matrix</a></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#theory" title="Theory">Theory</a><ul><li><a class="toc-href" href="#linear-model" title="linear model">linear model</a></li><li><a class="toc-href" href="#nadaraya-watson-kernel-smoother" title="Nadaraya-Watson kernel smoother">Nadaraya-Watson kernel smoother</a></li><li><a class="toc-href" href="#local-polynomial-smoother" title="Local Polynomial smoother">Local Polynomial smoother</a></li><li><a class="toc-href" href="#smoothing-spline" title="Smoothing Spline">Smoothing Spline</a></li></ul></li><li><a class="toc-href" href="#fit-model_1" title="fit model">fit model</a><ul><li><a class="toc-href" href="#formula" title="formula">formula</a></li><li><a class="toc-href" href="#fit-models" title="fit models">fit models</a></li></ul></li><li><a class="toc-href" href="#predict-fittedresiduals_1" title="predict, fitted/residuals">predict, fitted/residuals</a></li><li><a class="toc-href" href="#bandwidthdf-hat-matrix" title="bandwidth&amp;df: Hat Matrix">bandwidth&amp;df: Hat Matrix</a></li><li><a class="toc-href" href="#cv-and-hat-matrix" title="CV and Hat Matrix">CV and Hat Matrix</a></li></ul></div>
             </div>
         </div>
             </aside>
@@ -889,7 +894,7 @@ mx's blog            </a>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

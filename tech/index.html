@@ -206,10 +206,7 @@ mx's blog            </a>
 <p><strong><code>UI = f(state)</code></strong></p>
 </blockquote>
 <p>即app的当前界面(UI)反映了当前程序状态(state). Flutter的状态管理就是app根据<strong>当前app的state</strong>的显示和更新UI.</p>
-<p>我们假设state是一个类型为<code>T</code>的object, 在下文的购物车例子中, state是当前购物车的内容(类型<code>T</code>=<code>List&lt;Item&gt;</code>).</p>
-<p>关于如何在widget tree里获取state, 可以有provider/riverpod等选项, e.g.<code>Provider&lt;T&gt;</code>. 但是如果直接用<code>T</code>作为状态会有问题: 就是当state的值被修改以后, <strong>对应的UI并不会自动rebuild</strong>(除非其他逻辑如<code>setState</code>触发了rebuild).</p>
-<p>如果希望在state修改以后, UI自动触发监听它的UI更新, 则需要<strong>用各种Notifier来包裹state</strong>. 例如我们不用<code>T</code>作为state, 而是用<code>ValueNotifier&lt;T&gt;</code>.</p>
-<p>这里主要介绍和比较三种常用的Notifier: <code>ChangeNotifier ...</code></p>
+<p>我们假设state是一个类型为<code>T</code>的 …</p>
                     </div>
                 </div>
             </article>
@@ -255,30 +252,7 @@ mx's blog            </a>
 </blockquote>
 <p>==&gt; 所以我俩月前注册了个微信公众号🐱:</p>
 <p><img alt="" class="img-responsive" src="../images/weixin-gongzhonghao-tiyan/Pasted%20image%2020210321193829.png"/></p>
-<p>而拖延两个月以后, 这周末体验了撰写和发布公众号的流程, 感觉还是和通过github发布blog有点区别的, 这里记录一下.</p>
-<h3 id="jiang-markdownzhuan-huan-wei-gong-zhong-hao-wen-zhang">将markdown转换为公众号文章</h3>
-<p>微信公众号的编辑界面类似word, 我从markdown导过去的话需要借用第三方工具. 其实这种工具还挺多的, 我找到了三个:</p>
-<ul>
-<li><a href="https://md.qikqiak.com/">https://md.qikqiak.com/</a></li>
-<li><a href="https://md.openwrite.cn/">https://md.openwrite.cn/</a></li>
-<li><a href="https://www.mdnice.com/">https://www.mdnice.com/</a></li>
-</ul>
-<p>我最推荐的是最后一个网站"mdnice", 和另外两个相比有不少优点:</p>
-<ol>
-<li>支持各种<a href="https://product.mdnice.com/themes/">排版主题</a></li>
-<li>登录帐号以后可以保存多个最近编辑的文件 -- 虽说理论上只要直接复制粘贴markdown就好, 但是说不定就要针对公众号进行调整, 所以能保存一个针对公众号的</li>
-<li>支持把外链转换为脚注(见下文)</li>
-<li>支持不少代码块主题</li>
-<li>代码块太长时可以横向滚动</li>
-<li>还支持Mac风格的代码块, 看上去很高级:<br/>
-<img alt="" class="img-responsive" src="../images/weixin-gongzhonghao-tiyan/Pasted%20image%2020210321191737.png"/></li>
-</ol>
-<h3 id="qian-ru-shi-pin">嵌入视频</h3>
-<p>普通markdown里可以添加youtube或者B站的iframe html代码嵌入视频. 但是微信公众号不支持这个功能.</p>
-<p>似乎只支持嵌入腾讯视频上的内容, 或者把视频手动上传到素材中然后嵌入.</p>
-<h3 id="bu-zhi-chi-wai-lian">不支持外链</h3>
-<blockquote>
-<p>微信公众号仅支持公众号文章链接，即域名为<code>https://mp ...</code></p></blockquote>
+<p>而拖延两个月以后, 这周末体验了撰写和 …</p>
                     </div>
                 </div>
             </article>
@@ -325,22 +299,7 @@ mx's blog            </a>
 - <a href="https://www.youtube.com/watch?v=A1DUBgIsCv8">Video by Robert Brunhage</a><br/>
 - <a href="https://resocoder.com/2020/01/21/ flutter-hooks-hide-fab-animation-100-widget-code-reuse/">Tutorial by Resocoder</a> </p>
 <h2 id="the-problem">The problem</h2>
-<p>Flutter hooks想解决的问题是<code>StatefulWidget</code>的一些常见pattern太复杂, 减少了代码的可读性("readability").</p>
-<p>一个典型例子就是animation controller:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">class</span> <span class="nc">MyPage</span> <span class="kd">extends</span> <span class="n">StatefulWidget</span><span class="p">{</span></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="n">_MyPageState</span> <span class="n">createState</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="n">_MyPageState</span><span class="p">();</span></span>
-<span class="code-line"><span class="p">}</span></span>
-<span class="code-line"></span>
-<span class="code-line"><span class="kd">class</span> <span class="nc">_MyPageState</span> <span class="kd">extends</span> <span class="n">State</span><span class="o">&lt;</span><span class="n">MyPage</span><span class="o">&gt;</span></span>
-<span class="code-line">    <span class="kd">with</span> <span class="n">SingleTickerProviderStateMixin</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="n">AnimationController</span> <span class="n">_animController</span><span class="p">;</span></span>
-<span class="code-line"></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="kt">void</span> <span class="n">initState</span><span class="p">()</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="k">super</span><span class="p">.</span><span class="n">initState</span><span class="p">();</span></span>
-<span class="code-line">    <span class="n">_animController</span> <span class="o">=</span> <span class="n">AnimationController</span><span class="p">(</span></span>
-<span class="code-line">      <span class="nl">vsync:</span> <span class="k">this ...</span></span></pre></div>
+<p>Flutter hooks想解决的问题是<code>StatefulWidget</code>的一些常见pattern太复杂 …</p>
                     </div>
                 </div>
             </article>
@@ -385,22 +344,7 @@ mx's blog            </a>
 <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" class="embed-responsive-item" frameborder="0" height="315" src="https://www.youtube.com/embed/MIepaf7ks40" title="YouTube video player" width="560"></iframe>
 <p>(这个talk的名字的中文翻译挺牛的: "小事一桩：成为开发和设计俱佳的神级人物")</p>
 <p>talk里代码地址在: <a href="https://github.com/filiph/little_things">https://github.com/filiph/little_things</a></p>
-<p>这个talk还是挺有意思的, 介绍了如何提升App的设计细节从而获得更高的 <strong>"Perceived value"</strong>: 
-有时候app本身的功能性和技术性是一方面, 但是呈现给用户的感觉却有可能因为一点点细节而完全不同. 这一点我之前不太重视, 细想一下确实有道理.</p>
-<h2 id="1-white-space">1. White space</h2>
-<p>多使用padding添加空隙和留白, 体现一种高级感~
-结合Flutter的hot reload可以快的实验 找到合适的padding.</p>
-<h2 id="2-typography">2. Typography</h2>
-<p>换个好看的字体也可以让应用看起来非常高级.</p>
-<p>GoogleFont配合hot reload来选择好的字体</p>
-<h2 id="3-color">3. Color</h2>
-<p>给app添加特别的配色.</p>
-<p>可以从网上找一些配色方案(color palette), 比如:</p>
-<ul>
-<li>https://coolors.co/palettes/trending</li>
-<li>https://undesign.learn.uno/colors/</li>
-</ul>
-<p>把选好的ColorPalette放在<code>MaterialApp ...</code></p>
+<p>这个talk还是挺有意思的, 介绍了如何提升App的设计细节从而获得更高的 <strong>"Perceived value …</strong></p>
                     </div>
                 </div>
             </article>
@@ -443,21 +387,7 @@ mx's blog            </a>
                 <div class="panel-body">
                     <div class="summary"><p>Dart默认的linter配置有点弱, 有很多有问题代码也不报错或警告.
 添加一个analyzer可以应用dart的最佳代码实践, 对一些不好的代码风格提出警告或者直接报错, 从而提高代码质量.</p>
-<p>Cf. resocoder的介绍<a href="https://resocoder.com/2020/01/17/dart-linting-tutorial-healthy-flutter-codebase-with-analysis_options-yaml/">文章</a> (和视频)</p>
-<h2 id="use-an-analyzer">Use an analyzer</h2>
-<p>Resocoder推荐<a href="https://pub.dev/packages/lint">lint</a>, 里面提供了一些最佳的dart和flutter代码风格. 类似的选择还有pandentic和effective_dart.</p>
-<p>使用方式就是, 先在pubsepc.yaml里添加依赖:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># pubspec.yaml</span></span>
-<span class="code-line"><span class="nt">dependency_overrides</span><span class="p">:</span></span>
-<span class="code-line">  <span class="nt">lint</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">^1.3.0</span></span>
-</pre></div>
-<p>然后在根目录新建一个analysis_options.yaml文件:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="c1"># analysis_options.yaml</span></span>
-<span class="code-line"><span class="nt">include</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">package:lint/analysis_options.yaml</span></span>
-</pre></div>
-<h3 id="exclude-folders-disable-rules">Exclude folders / disable rules</h3>
-<p>analyzer默认会扫描文件夹下所有的dart代码, 有时候一些自动生成的代码或者在<code>build/</code>文件夹下的代码并不需要被分析, 可以用<code>exclude</code>把它们排除在外.</p>
-<p>另外有些默认的规则可能不适用于自己的代码, 比如我就比较喜欢加<code>this</code>, 认为这样更容易区分成员变量和普通变量 ...</p>
+<p>Cf …</p>
                     </div>
                 </div>
             </article>
@@ -501,15 +431,7 @@ mx's blog            </a>
                     <div class="summary"><p>本文总结了Flutter Explained关于fvm的视频: <a href="https://youtu.be/R6vKde1vIGQ">https://youtu.be/R6vKde1vIGQ</a></p>
 <h2 id="background">background</h2>
 <p>flutter有很多channel: stable/beta/dev/master, 而目前有些功能只在某个channel上可用, 比如Linux support目前只在dev channel支持.</p>
-<p>我日常用的是beta channel, 但是想写Linux程序时每次<code>flutter channel dev</code>的话 需要花费很多时间--因为要下载新channel的内容, switch回去的时候又要等半天(因为要从新下载).</p>
-<p>而<code>fvm</code>这正是解决这个问题的! 它可以cache不同版本的flutterSDK, 每个repo可以设置使用不同的版本号, 而且VSCode也只需要简单配置就能上手.</p>
-<h2 id="enable-fvm">enable fvm</h2>
-<p>一行命令即可开启fvm:
-<code>$ pub global activate fvm</code></p>
-<p>常用法:</p>
-<ul>
-<li><code>fvm flutter</code>: Proxies flutter commands 用于选择合适的flutter版本</li>
-<li>也就是说用<code>fvm flutter</code>来代替flutter命令 ...</li></ul>
+<p>我日常用的是beta channel, 但是想写Linux程序时每次<code>flutter channel dev …</code></p>
                     </div>
                 </div>
             </article>
@@ -552,14 +474,7 @@ mx's blog            </a>
                 </div>
                 <div class="panel-body">
                     <div class="summary"><p>2016年的最后几小时, 随便写写关于Scala和OCaml的一些入门体验好了.   </p>
-<p>今年对FP语言特别感兴趣, 上了两门Scala的公开课(<a href="https://www.coursera.org/learn/progfun1/home/welcome">here</a> and <a href="https://www.coursera.org/learn/progfun2/home/welcome">here</a>)和一门OCaml的公开课(<a href="https://www.fun-mooc.fr/courses/parisdiderot/56002S02/session02/info">here</a>), 在博客中写了一系列的笔记, 课后作业也都认真做完了. 斗胆说这两门语言都算入门了吧... 这里就随便写一下使用这两门语言的感受, 想到哪里写到哪里...   </p>
-<p>FP语言和之前接触的语言确实不大一样, 比如之前我都有种错觉, 学什么语言只要知道循环/条件/基本类型运算怎么写, 就差不多可以上手了...... 然后遇到了FP, 发现循环语句其实是不必要的... 记得看到过一篇文章, 类比学FP就好像开了很多种车的老司机突然开始学开宇宙飞船, 肯定各种WTF不适应了~   </p>
-<p>以前谈到FP我只能联想到一些Python里的FP特性: lambda表达式, 高阶函数之类的, 顶多还想到个闭包... 不过Python里面的FP特性和Scala/OCaml里的比起来还是差了不少: i.e. 现在非常希望Python里可以支持pattern matching...   </p>
-<h1 id="scala">Scala</h1>
-<p>Scala算是比较亲民的FP语言了(和Java有点像...), 也是我最早接触的FP语言. EPFL的那两门公开课质量很棒, 毕竟是Scala的作者亲自来上的...   </p>
-<ul>
-<li><em>immutable types</em>: 习惯了就好, 就像java里所有东西都是final的, 要修改什么东西的时候改成新建一个, immutable数据的优点就是并行方便啊...   </li>
-<li><em>一切皆为表达式</em>, specifically, <code>if ...</code></li></ul>
+<p>今年对FP语言特别感兴趣, 上了两门Scala的公开课(<a href="https://www.coursera.org/learn/progfun1/home/welcome">here</a> and <a href="https://www.coursera.org/learn/progfun2/home/welcome">here</a>)和一门OCaml的公开课(<a href="https://www.fun-mooc.fr/courses/parisdiderot/56002S02/session02/info">here</a>), 在博客中写了一系列的笔记, 课后作业也都认真做完了. 斗胆 …</p>
                     </div>
                 </div>
             </article>
@@ -600,19 +515,7 @@ mx's blog            </a>
 </div><!-- /.post-info -->                        </span>
                 </div>
                 <div class="panel-body">
-                    <div class="summary"><p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写过一篇介绍性的<a href="http://x-wei.github.io/Scrapy%20%E4%B8%8A%E6%89%8B%E7%AC%94%E8%AE%B0.html">文章</a>, 这里就不重复了. 而且感觉一般简单的爬虫项目, 一个Python文件就基本可以搞定, 没必要用scrapy建立一个工程文件夹搞那么正式...   </p>
-<p>安装需要的库(python2):   </p>
-<p><code>pip install requests, lxml</code> </p>
-<p>然后在Python程序最开始导入:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kn">import</span> <span class="nn">requests</span>  </span>
-<span class="code-line"><span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span></span>
-</pre></div>
-<h1 id="requestsji-chu-yong-fa">requests基础用法</h1>
-<h3 id="zhua-qu-htmlnei-rong">抓取html内容</h3>
-<p>用requests获取目标网址的html代码非常简单, 只需要用<code>requests.get</code>方法, 传入网址URL即可.   </p>
-<p>举个例子, 想要抓取<a href="https://zh.wikiquote.org/wiki/Wikiquote:%E9%A6%96%E9%A1%B5">维基语录</a>的HTML内容, 代码很简单:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">url = 'https://zh.wikiquote.org/zh-cn/阿爾伯特·愛因斯坦'  </span></span>
-<span class="code-line"><span class="err">r ...</span></span></pre></div>
+                    <div class="summary"><p>前一段时间写了不少Python的爬虫程序, 为此还看了极客学院上的一些<a href="http://ke.jikexueyuan.com/xilie/116">教程</a>, 现在来简单总结一下. 主要介绍用<code>requests</code> + <code>lxml</code>的方式, <code>scrapy</code>的话之前写 …</p>
                     </div>
                 </div>
             </article>
@@ -658,15 +561,7 @@ mx's blog            </a>
                     <div class="summary"><p>总结一下用python撸codejam时常用的一些库, 并且给一些简单的例子. 发现用python撸codejam非常合适: codejam的时间要求不严格(4/8分钟), 而且程序只要本地运行. 正好可以使用python简洁的语法和丰富的函数库.    </p>
 <h1 id="collections">collections</h1>
 <p>py自带的一些好用的数据结构...<br/>
-<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html</a> </p>
-<p><code>from collections import Counter, deque, defaultdict</code> </p>
-<h1 id="itertools">itertools</h1>
-<p>主要是用来穷举的时候它里面一些函数很好用... </p>
-<p><a href="https://docs.python.org/2/library/itertools.html">https://docs.python.org/2/library/itertools.html</a> </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">combinations</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="s1">'ABCD'</span><span class="p">;</span> <span class="n">b</span><span class="o">=</span><span class="s1">'EFG'</span>   </span>
-<span class="code-line"><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>    </span>
-<span class="code-line"><span class="k">print ...</span></span></pre></div>
+<a href="https://docs.python.org/2/library/collections.html">https://docs.python.org/2/library/collections.html …</a></p>
                     </div>
                 </div>
             </article>
@@ -712,7 +607,7 @@ mx's blog            </a>
 <p>题目链接在这里:  <br/>
 <a href="https://code.google.com/codejam/contest/8234486/dashboard#s=p2">https://code.google.com/codejam/contest/8234486/dashboard#s=p2</a> </p>
 <blockquote>
-<p>Elliot's parents speak French and English to him at home. He has heard a lot of words, but it isn't always clear to him which word comes from which language! Elliot knows one sentence ...</p></blockquote>
+<p>Elliot's parents speak French and English …</p></blockquote>
                     </div>
                 </div>
             </article>
@@ -823,14 +718,14 @@ mx's blog            </a>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -838,159 +733,9 @@ mx's blog            </a>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -998,19 +743,99 @@ mx's blog            </a>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -1019,23 +844,33 @@ mx's blog            </a>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -1043,19 +878,44 @@ mx's blog            </a>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -1063,14 +923,54 @@ mx's blog            </a>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>

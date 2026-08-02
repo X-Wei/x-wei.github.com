@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="pelican" />
-        <meta name="description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件, 配置起来实在太繁琐, 每次换电脑都要折腾半天... 所以之前我做了一个Dockerfile和GithubAction, 自动从markdown/rst文件生成静态网站的html文件: https://github.com/X-Wei/pelican-gh-actions-xwei 这个repo可以作为github action上运行, 比如每当commit到markdown文件夹的时候, 让github actor生成html文件然后commit —— 可以参考我的blog的github workflow配置. 今天又修改了一下, 让它也能在本地用docker跑, 免去了换电脑重新折腾配置的痛苦(这也是我这几个月没更新博客的原因, 之一). 这篇文章主要记录一下如何用Dockerfile在本地机器上预览或者生成静态网站. build Docker image 首先需要使用Dockerfile来build一个docker image. 顺便给它加个tag叫&#34;my-pelican-blog:latest&#34; (-t my-pelican-blog:latest): $ docker build -t ..." />
+        <meta name="description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="用Dockerfile免配置生成pelican博客"/>
         <meta property="og:url" content="https://x-wei.github.io/soft/dockerfile-for-my-pelican-blog.html"/>
-        <meta property="og:description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件, 配置起来实在太繁琐, 每次换电脑都要折腾半天... 所以之前我做了一个Dockerfile和GithubAction, 自动从markdown/rst文件生成静态网站的html文件: https://github.com/X-Wei/pelican-gh-actions-xwei 这个repo可以作为github action上运行, 比如每当commit到markdown文件夹的时候, 让github actor生成html文件然后commit —— 可以参考我的blog的github workflow配置. 今天又修改了一下, 让它也能在本地用docker跑, 免去了换电脑重新折腾配置的痛苦(这也是我这几个月没更新博客的原因, 之一). 这篇文章主要记录一下如何用Dockerfile在本地机器上预览或者生成静态网站. build Docker image 首先需要使用Dockerfile来build一个docker image. 顺便给它加个tag叫&#34;my-pelican-blog:latest&#34; (-t my-pelican-blog:latest): $ docker build -t ..."/>
+        <meta property="og:description" content="我的这个pelican博客已经有八年多了, 从最开始使用pelican2.x+bootstrap2主题到现在使用pelican3, 断断续续经过了各种折腾. 现在的blog虽然文件内容还很乱, 但是网页样式我基本满意. 问题就是pelican3加上我自定义的主题/插件 …"/>
         <meta property="article:published_time" content="2020-10-17" />
             <meta property="article:section" content="soft" />
             <meta property="article:tag" content="pelican" />
@@ -211,7 +211,7 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#yun-xing-rong-qi-sheng-cheng-htmlyu-lan" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#sshdao-rong-qi-zhong-yun-xing-ming-ling" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#html" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#ssh" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
                         </div>
                     </div>
                 <p>我的这个pelican博客已经有八年多了, 从<a href="https://x-wei.github.io/pelican_github_blog.html">最开始</a>使用pelican2.x+bootstrap2主题到现在<a href="https://x-wei.github.io/soft/pelican3_blog_and_theme.html">使用pelican3</a>, 断断续续经过了各种折腾.</p>
@@ -222,34 +222,34 @@ mx's blog            </a>
 <h2 id="build-docker-image">build Docker image</h2>
 <p>首先需要使用Dockerfile来build一个docker image.<br/>
 顺便给它加个tag叫"my-pelican-blog:latest" (<code>-t my-pelican-blog:latest</code>):</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ docker build -t my-pelican-blog:latest <span class="se">\</span></span>
-<span class="code-line">    github.com/x-wei/pelican-gh-actions-xwei</span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>my-pelican-blog:latest<span class="w"> </span><span class="se">\</span></code></span>
+<span class="code-line"><span class="w">    </span>github.com/x-wei/pelican-gh-actions-xwei</span>
+<span class="code-line"></span></pre></div>
 <p>(我准备以后把这个docker image<a href="https://github.com/X-Wei/pelican-gh-actions-xwei/issues/2">发布到Github Container Registry上</a> 这样就不用自己的机器build image了)</p>
 <p>如果想自己修改什么内容, 可以在本地的repo里修改Dockerfile/entrypoint.sh, 然后重新build image:</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ docker build -t my-pelican-blog:latest .</span>
-</pre></div>
-<h2 id="yun-xing-rong-qi-sheng-cheng-htmlyu-lan">运行容器生成html预览</h2>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>my-pelican-blog:latest<span class="w"> </span>.</code></span>
+<span class="code-line"></span></pre></div>
+<h2 id="html">运行容器生成html预览</h2>
 <p>本地直接run这个image的话, 是生成html文件到<code>output/</code>文件夹以供预览(也就是makefile里的"<a href="https://github.com/X-Wei/x-wei.github.com/blob/6bb137a68149665e8da713e75b75d986ee73814c/pelican_dir/Makefile#L17">make html</a>"命令).</p>
 <p>注意需要把实际的本地blog repo位置(我是"<em>~/Documents/x-wei.github.com</em>")映射到container里的"/<em>home/blog</em>"文件夹(<code>-v ~/Documents/x-wei.github.com:/home/blog</code>)</p>
 <p>另外最好加上<code>--rm</code>, 这样container运行完以后立刻就被删掉了, 不留垃圾(只是删掉container, 上一步build的image还在).</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ docker run --rm <span class="se">\</span></span>
-<span class="code-line">    -v ~/Documents/x-wei.github.com:/home/blog <span class="se">\</span></span>
-<span class="code-line">    my-pelican-blog:latest</span>
-</pre></div>
-<h2 id="sshdao-rong-qi-zhong-yun-xing-ming-ling">SSH到容器中运行命令</h2>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span></code></span>
+<span class="code-line"><span class="w">    </span>-v<span class="w"> </span>~/Documents/x-wei.github.com:/home/blog<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">    </span>my-pelican-blog:latest</span>
+<span class="code-line"></span></pre></div>
+<h2 id="ssh">SSH到容器中运行命令</h2>
 <p>像上面直接run的话只能跑<code>make html</code>, 跑完后就退出容器了. 而其实在容器中还可以运行<code>make serve</code>和<code>make publish</code>命令(cf. 我之前介绍pelican3的<a href="https://x-wei.github.io/soft/pelican3_blog_and_theme.html#4-ben-di-yu-lan">文章</a>), 这样本地预览起来会更方便一些.</p>
 <p>要SSH进在容器中运行各种命令, 只需要用"bash"代替默认的entrypoint.sh(<code>-it --entrypoint bash</code>), 同时为了本地预览需要开启port forwarding(<code>-p 8000:8000</code>):</p>
-<div class="highlight"><pre><span class="code-line"><span></span>$ docker run --rm --name pelican <span class="se">\</span></span>
-<span class="code-line">  -w  /home/blog/pelican_dir/ <span class="se">\</span></span>
-<span class="code-line">  -v ~/Documents/x-wei.github.com:/home/blog <span class="se">\</span></span>
-<span class="code-line">  -p <span class="m">8000</span>:8000 <span class="se">\</span></span>
-<span class="code-line">  -it --entrypoint bash <span class="se">\</span></span>
-<span class="code-line">  my-pelican-blog:latest</span>
+<div class="highlight"><pre><span class="code-line"><span></span><code>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--name<span class="w"> </span>pelican<span class="w"> </span><span class="se">\</span></code></span>
+<span class="code-line"><span class="w">  </span>-w<span class="w">  </span>/home/blog/pelican_dir/<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">  </span>-v<span class="w"> </span>~/Documents/x-wei.github.com:/home/blog<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">  </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">  </span>-it<span class="w"> </span>--entrypoint<span class="w"> </span>bash<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line"><span class="w">  </span>my-pelican-blog:latest</span>
 <span class="code-line"></span>
-<span class="code-line">root@fea99c54aea1:/home/blog/pelican_dir# make html <span class="o">&amp;&amp;</span> make serve <span class="c1"># or `make publish`</span></span>
+<span class="code-line">root@fea99c54aea1:/home/blog/pelican_dir#<span class="w"> </span>make<span class="w"> </span>html<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>serve<span class="w"> </span><span class="c1"># or `make publish`</span></span>
 <span class="code-line"><span class="c1"># (Preview the website at http://localhost:8000/)</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -414,14 +414,14 @@ mx's blog            </a>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -429,159 +429,9 @@ mx's blog            </a>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -589,19 +439,99 @@ mx's blog            </a>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -610,23 +540,33 @@ mx's blog            </a>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -634,19 +574,44 @@ mx's blog            </a>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -654,14 +619,54 @@ mx's blog            </a>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -693,7 +698,7 @@ mx's blog            </a>
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#yun-xing-rong-qi-sheng-cheng-htmlyu-lan" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#sshdao-rong-qi-zhong-yun-xing-ming-ling" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#build-docker-image" title="build Docker image">build Docker image</a></li><li><a class="toc-href" href="#html" title="运行容器生成html预览">运行容器生成html预览</a></li><li><a class="toc-href" href="#ssh" title="SSH到容器中运行命令">SSH到容器中运行命令</a></li></ul></div>
             </div>
         </div>
             </aside>
@@ -719,7 +724,7 @@ mx's blog            </a>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

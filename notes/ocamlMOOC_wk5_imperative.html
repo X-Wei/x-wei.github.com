@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="OCaml" />
-        <meta name="description" content="1. IMPERATIVE FEATURES IN OCAML functional language: immutable data structure identifiers instead of variables pure functions but imperative features are useful: exceptions to alter control flow ops to consume input and output mutable data structures for and while loop for iterations 2. GETTING AND HANDLING YOUR EXCEPTIONS exceptions in ocaml ..." />
+        <meta name="description" content="1. IMPERATIVE FEATURES IN OCAML functional language: immutable data structure identifiers instead of variables pure functions but imperative features are useful: exceptions to alter control flow ops to consume input and output mutable data structures for and while loop for iterations 2. GETTING AND HANDLING YOUR EXCEPTIONS exceptions in ocaml …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[OCaml MOOC] week5: EXCEPTIONS, INPUT OUTPUT AND IMPERATIVE CONSTRUCTS"/>
         <meta property="og:url" content="https://x-wei.github.io/notes/ocamlMOOC_wk5_imperative.html"/>
-        <meta property="og:description" content="1. IMPERATIVE FEATURES IN OCAML functional language: immutable data structure identifiers instead of variables pure functions but imperative features are useful: exceptions to alter control flow ops to consume input and output mutable data structures for and while loop for iterations 2. GETTING AND HANDLING YOUR EXCEPTIONS exceptions in ocaml ..."/>
+        <meta property="og:description" content="1. IMPERATIVE FEATURES IN OCAML functional language: immutable data structure identifiers instead of variables pure functions but imperative features are useful: exceptions to alter control flow ops to consume input and output mutable data structures for and while loop for iterations 2. GETTING AND HANDLING YOUR EXCEPTIONS exceptions in ocaml …"/>
         <meta property="article:published_time" content="2016-11-23" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="OCaml" />
@@ -243,21 +243,21 @@ mx's blog            </a>
 to raise exceptions: <code>raise E;;</code><br/>
 when an exception is raise, <em>any computation is immediately stopped</em>: <code>let _ = raise E in [1;2;];;</code> </p>
 <p>example:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">exception</span> <span class="nc">EmptyList</span><span class="o">;;</span> <span class="c">(*define an exn value*)</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">exception</span> <span class="nc">EmptyList</span><span class="o">;;</span> <span class="c">(*define an exn value*)</span>  </code></span>
 <span class="code-line"><span class="k">let</span> <span class="n">head</span> <span class="o">=</span> <span class="k">function</span>   </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">a</span><span class="o">::</span><span class="n">r</span> <span class="o">-&gt;</span> <span class="n">a</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="nc">EmptyList</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="n">head</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">];;</span>  </span>
 <span class="code-line"><span class="n">head</span> <span class="bp">[]</span><span class="o">;;</span>  </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h3 id="handling-exceptions">handling exceptions</h3>
 <p>using <code>try-with</code> to capture exceptions  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">try</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">try</span>   </code></span>
 <span class="code-line">  <span class="n">expr</span>  </span>
 <span class="code-line"><span class="k">with</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">p1</span> <span class="o">-&gt;</span> <span class="n">e1</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">p2</span> <span class="o">-&gt;</span> <span class="n">e2</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <ul>
 <li><code>expr</code> is evaluated,  </li>
 <li>if during evaluation of <code>expr</code>, any <code>E</code> is raised, then it's matched with patterns in the <code>with</code> clause  </li>
@@ -265,7 +265,7 @@ when an exception is raise, <em>any computation is immediately stopped</em>: <co
 <li>note: all the <code>ei</code>s must have the same type as <code>expr</code> </li>
 </ul>
 <p>example: mul elements of a list, once encountered a 0, stop the computation.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">multl</span> <span class="o">=</span> <span class="k">function</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="k">rec</span> <span class="n">multl</span> <span class="o">=</span> <span class="k">function</span>   </code></span>
 <span class="code-line">  <span class="o">|</span> <span class="bp">[]</span> <span class="o">-&gt;</span> <span class="mi">1</span>  </span>
 <span class="code-line">  <span class="o">|</span> <span class="n">a</span><span class="o">::</span><span class="n">rest</span> <span class="o">-&gt;</span> <span class="k">if</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span> <span class="k">then</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">a</span><span class="o">*(</span><span class="n">multl</span> <span class="n">rest</span><span class="o">);;</span>  </span>
 <span class="code-line"><span class="c">(*the above implementation is not efficient: if 0 is at the end, then have to   </span></span>
@@ -282,7 +282,7 @@ when an exception is raise, <em>any computation is immediately stopped</em>: <co
 <span class="code-line">  <span class="k">try</span>   </span>
 <span class="code-line">    <span class="n">aux</span> <span class="n">l</span>   </span>
 <span class="code-line">  <span class="k">with</span> <span class="nc">Zero</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="o">;;</span>    </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h3 id="runtime-errors">runtime errors</h3>
 <p>runtime errors can be:  </p>
 <ul>
@@ -303,7 +303,7 @@ when an exception is raise, <em>any computation is immediately stopped</em>: <co
 <li><code>read_line</code>: read one line of string  </li>
 <li>other similar funs...   </li>
 </ul>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="n">print_int</span><span class="o">;;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="o">#</span> <span class="n">print_int</span><span class="o">;;</span>  </code></span>
 <span class="code-line"><span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">unit</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>  </span>
 <span class="code-line"><span class="o">#</span> <span class="n">print_int</span> <span class="mi">123</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="mi">123</span><span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>  </span>
@@ -312,19 +312,19 @@ when an exception is raise, <em>any computation is immediately stopped</em>: <co
 <span class="code-line"><span class="o">#</span> <span class="n">read_line</span> <span class="bp">()</span><span class="o">;;</span>  <span class="c">(* give the func a parameter *)</span>       </span>
 <span class="code-line"><span class="n">hello</span>  </span>
 <span class="code-line"><span class="o">-</span> <span class="o">:</span> <span class="kt">string</span> <span class="o">=</span> <span class="s2">"hello"</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h1 id="4-sequences-and-iterations_1">4. SEQUENCES AND ITERATIONS</h1>
 <h3 id="sequences-of-expressions">sequences of expressions</h3>
 <p>ex. print several values.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_int</span> <span class="mi">1</span> <span class="k">in</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_int</span> <span class="mi">1</span> <span class="k">in</span>  </code></span>
 <span class="code-line"><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_int</span> <span class="mi">2</span> <span class="k">in</span>   </span>
 <span class="code-line"><span class="k">let</span> <span class="o">_</span> <span class="o">=</span> <span class="n">print_int</span> <span class="mi">3</span><span class="o">;;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>cleaner way: separate such expressions just by single semi-colon:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">print_int</span> <span class="mi">1</span><span class="o">;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">print_int</span> <span class="mi">1</span><span class="o">;</span>  </code></span>
 <span class="code-line"><span class="n">print_int</span> <span class="mi">2</span><span class="o">;</span>  </span>
 <span class="code-line"><span class="n">print_int</span> <span class="mi">3</span><span class="o">;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <ul>
 <li>expression sequence: <code>e1; e2; ...; en</code> </li>
 <li>eval ei in turn  </li>
@@ -339,20 +339,20 @@ or: <code>begin e1; e2;... en end</code> </p>
 <h3 id="iterations">iterations</h3>
 <p>ex. print all integers from 1 to 10   </p>
 <p>can define a recursive <code>foreach</code> function:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">foreach</span> <span class="n">starti</span> <span class="n">endi</span> <span class="n">f</span> <span class="o">=</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="o">#</span> <span class="k">let</span> <span class="n">foreach</span> <span class="n">starti</span> <span class="n">endi</span> <span class="n">f</span> <span class="o">=</span>   </code></span>
 <span class="code-line">  <span class="k">let</span> <span class="k">rec</span> <span class="n">aux</span> <span class="n">n</span> <span class="o">=</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">endi</span> <span class="k">then</span> <span class="o">(</span><span class="n">f</span> <span class="n">n</span><span class="o">;</span> <span class="n">aux</span> <span class="o">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span> <span class="k">else</span> <span class="bp">()</span>   </span>
 <span class="code-line">  <span class="k">in</span> <span class="n">aux</span> <span class="n">starti</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">val</span> <span class="n">foreach</span> <span class="o">:</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">int</span> <span class="o">-&gt;</span> <span class="k">'</span><span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">unit</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">fun</span><span class="o">&gt;</span>  </span>
 <span class="code-line"><span class="o">#</span> <span class="n">foreach</span> <span class="mi">1</span> <span class="mi">10</span> <span class="n">print_int</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="mi">12345678910</span><span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p><strong>for loop</strong> </p>
 <p>an easier way: <code>for</code> loop  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">10</span> <span class="k">do</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="o">#</span> <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">10</span> <span class="k">do</span>  </code></span>
 <span class="code-line">  <span class="n">print_int</span> <span class="n">i</span>  </span>
 <span class="code-line"><span class="k">done</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="mi">12345678910</span><span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <ul>
 <li><code>for id = e1 to e2 do e3 done</code> </li>
 <li>the <code>id</code> cannot be altered  </li>
@@ -361,10 +361,10 @@ or: <code>begin e1; e2;... en end</code> </p>
 <li>loop body e3 is expected to be <code>unit</code> (warning otherwise)  </li>
 </ul>
 <p>alternative: backward for-loop  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">10</span> <span class="k">downto</span> <span class="mi">1</span> <span class="k">do</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">10</span> <span class="k">downto</span> <span class="mi">1</span> <span class="k">do</span>  </code></span>
 <span class="code-line"><span class="n">print_int</span> <span class="n">i</span>   </span>
 <span class="code-line"><span class="k">done</span><span class="o">;;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p><strong>while loop</strong> </p>
 <ul>
 <li><code>while e1 do e2 done</code> </li>
@@ -381,7 +381,7 @@ or: <code>begin e1; e2;... en end</code> </p>
 <li>well-adapted to loop constructs   </li>
 </ul>
 <p>example: find cubes which are also squares:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">cubes</span> <span class="n">n</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">init</span> <span class="n">n</span> <span class="o">(</span><span class="k">fun</span> <span class="n">i</span> <span class="o">-&gt;</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">);;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="n">cubes</span> <span class="n">n</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">init</span> <span class="n">n</span> <span class="o">(</span><span class="k">fun</span> <span class="n">i</span> <span class="o">-&gt;</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">);;</span>  </code></span>
 <span class="code-line"><span class="k">let</span> <span class="n">sqrti</span> <span class="n">n</span> <span class="o">=</span> <span class="n">truncate</span> <span class="o">(</span><span class="n">sqrt</span> <span class="o">(</span><span class="kt">float</span> <span class="n">n</span><span class="o">))</span> <span class="c">(*get sqrt of an integer*)</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">issquare</span> <span class="n">n</span> <span class="o">=</span> <span class="k">let</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sqrti</span> <span class="n">n</span> <span class="k">in</span> <span class="n">s</span><span class="o">*</span><span class="n">s</span> <span class="o">=</span> <span class="n">n</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">squaresubes</span> <span class="n">n</span> <span class="o">=</span>   </span>
@@ -390,46 +390,46 @@ or: <code>begin e1; e2;... en end</code> </p>
 <span class="code-line">    <span class="k">if</span> <span class="n">issquare</span> <span class="n">c</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="k">then</span>   </span>
 <span class="code-line">    <span class="o">(</span><span class="n">print_int</span> <span class="n">c</span><span class="o">.(</span><span class="n">i</span><span class="o">);</span> <span class="n">print_string</span> <span class="s2">" "</span><span class="o">)</span>  </span>
 <span class="code-line">  <span class="k">done</span><span class="o">;;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>ocaml arrays are <em>real</em> arrays: each cell can be modified in place using <code>&lt;-</code> operator  </p>
 <ul>
 <li>in-place modification: <code>e1 &lt;- e2</code> </li>
 <li><code>e1</code> denotes a mutable value  </li>
 <li>type of the opeartion is <code>unit</code> </li>
 </ul>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="o">[|</span><span class="mi">0</span><span class="o">;</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">|];;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="n">a</span> <span class="o">=</span> <span class="o">[|</span><span class="mi">0</span><span class="o">;</span><span class="mi">1</span><span class="o">;</span><span class="mi">2</span><span class="o">;</span><span class="mi">3</span><span class="o">;</span><span class="mi">4</span><span class="o">|];;</span>  </code></span>
 <span class="code-line"><span class="n">a</span><span class="o">.(</span><span class="mi">0</span><span class="o">);;</span>  </span>
 <span class="code-line"><span class="n">a</span><span class="o">.(</span><span class="mi">0</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="mi">100</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="n">a</span><span class="o">.(</span><span class="mi">0</span><span class="o">);;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>example: rotate array   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">rotate</span> <span class="n">a</span> <span class="o">=</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="n">rotate</span> <span class="n">a</span> <span class="o">=</span>   </code></span>
 <span class="code-line">  <span class="k">let</span> <span class="n">n</span> <span class="o">=</span> <span class="nn">Array</span><span class="p">.</span><span class="n">length</span> <span class="n">a</span> <span class="k">in</span>  </span>
 <span class="code-line">  <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="n">a</span><span class="o">.(</span><span class="mi">0</span><span class="o">)</span> <span class="k">in</span>   </span>
 <span class="code-line">  <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">to</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span> <span class="k">do</span>   </span>
 <span class="code-line">    <span class="n">a</span><span class="o">.(</span><span class="n">i</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">a</span><span class="o">.(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span>  </span>
 <span class="code-line">  <span class="k">done</span><span class="o">;</span>  </span>
 <span class="code-line">  <span class="n">a</span><span class="o">.(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">&lt;-</span> <span class="n">v</span><span class="o">;;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h1 id="6-mutable-record-fields">6. MUTABLE RECORD FIELDS</h1>
 <p>records: tuples with distinct name components.   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">some_type_identifier</span> <span class="o">=</span> <span class="o">{</span><span class="n">field_name_1</span><span class="o">:</span> <span class="n">some_type1</span><span class="o">;</span> <span class="o">...;</span> <span class="n">filed_name_n</span><span class="o">:</span> <span class="n">some_typen</span><span class="o">}</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">some_type_identifier</span> <span class="o">=</span> <span class="o">{</span><span class="n">field_name_1</span><span class="o">:</span> <span class="n">some_type1</span><span class="o">;</span> <span class="o">...;</span> <span class="n">filed_name_n</span><span class="o">:</span> <span class="n">some_typen</span><span class="o">}</span>  </code></span>
 <span class="code-line"><span class="k">let</span> <span class="n">r</span> <span class="o">=</span> <span class="o">{</span><span class="n">field_name_1</span> <span class="o">=</span> <span class="n">e1</span><span class="o">;</span> <span class="o">...;</span> <span class="n">field_name_n</span> <span class="o">=</span> <span class="n">en</span><span class="o">}</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>example:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">type</span> <span class="n">point2D</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">;</span> <span class="n">y</span><span class="o">:</span><span class="kt">int</span><span class="o">};;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">type</span> <span class="n">point2D</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">;</span> <span class="n">y</span><span class="o">:</span><span class="kt">int</span><span class="o">};;</span>  </code></span>
 <span class="code-line"><span class="k">let</span> <span class="n">origin</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="o">};;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">offset_h</span> <span class="n">p</span> <span class="n">dx</span> <span class="o">=</span> <span class="o">{</span><span class="n">p</span> <span class="k">with</span> <span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="o">};;</span> <span class="c">(*create a new point*)</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">offset_v</span> <span class="n">p</span> <span class="n">dy</span> <span class="o">=</span> <span class="o">{</span><span class="n">p</span> <span class="k">with</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">dy</span><span class="o">};;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>we can define some fields of a record to be mutable: <br/>
 <code>type some_type_identifier = {...; mutable field_name_i: some_type_i;...}</code><br/>
 these mutable fields can be modified in place using <code>&lt;-</code> </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">type</span> <span class="n">point2D</span> <span class="o">=</span> <span class="o">{</span><span class="k">mutable</span> <span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">;</span> <span class="k">mutable</span> <span class="n">y</span><span class="o">:</span><span class="kt">int</span><span class="o">};</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">type</span> <span class="n">point2D</span> <span class="o">=</span> <span class="o">{</span><span class="k">mutable</span> <span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">;</span> <span class="k">mutable</span> <span class="n">y</span><span class="o">:</span><span class="kt">int</span><span class="o">};</span>   </code></span>
 <span class="code-line"><span class="k">let</span> <span class="n">origin</span> <span class="o">=</span> <span class="o">{</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="o">};;</span>  </span>
 <span class="code-line"><span class="k">let</span> <span class="n">move</span> <span class="n">p</span> <span class="n">dx</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;-</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="o">;</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;-</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">dy</span><span class="o">;;</span> <span class="c">(* modify p in place*)</span>  </span>
 <span class="code-line"><span class="n">move</span> <span class="n">origin</span> <span class="mi">2</span> <span class="mi">2</span><span class="o">;;</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h1 id="7-variables-aka-references">7. VARIABLES, AKA REFERENCES</h1>
 <p><img alt="" class="img-responsive" src="../images/ocamlMOOC_wk5_imperative/pasted_image.png"/> </p>
 <p>more consise way:   </p>
@@ -439,7 +439,7 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
 <li><code>!r</code>: prefix operator to read the contents of the reference <code>r</code> </li>
 <li><code>r:=v</code>: update the content of the reference  </li>
 </ul>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">i</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span><span class="o">;;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="o">#</span> <span class="k">let</span> <span class="n">i</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span><span class="o">;;</span>  </code></span>
 <span class="code-line"><span class="k">val</span> <span class="n">i</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span><span class="n">contents</span> <span class="o">=</span> <span class="mi">0</span><span class="o">}</span>  </span>
 <span class="code-line"><span class="o">#</span> <span class="n">i</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span><span class="n">contents</span> <span class="o">=</span> <span class="mi">0</span><span class="o">}</span>  </span>
@@ -447,19 +447,19 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
 <span class="code-line"><span class="o">-</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">=</span> <span class="bp">()</span>  </span>
 <span class="code-line"><span class="o">#</span> <span class="n">i</span><span class="o">;;</span>  </span>
 <span class="code-line"><span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="n">ref</span> <span class="o">=</span> <span class="o">{</span><span class="n">contents</span> <span class="o">=</span> <span class="mi">1</span><span class="o">}</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>example: log2 of an integer  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">let</span> <span class="n">log2int</span> <span class="n">n</span> <span class="o">=</span>   </span>
-<span class="code-line">  <span class="k">let</span> <span class="n">count</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">n</span> <span class="k">in</span>   </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">let</span> <span class="n">log2int</span> <span class="n">n</span> <span class="o">=</span>   </code></span>
+<span class="code-line">  <span class="k">let</span> <span class="n">count</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="k">and</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ref</span> <span class="n">n</span> <span class="k">in</span>   </span>
 <span class="code-line">  <span class="k">while</span> <span class="o">!</span><span class="n">v</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">do</span>  </span>
 <span class="code-line">    <span class="n">count</span> <span class="o">:=</span> <span class="o">!</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>  </span>
 <span class="code-line">    <span class="n">v</span> <span class="o">:=</span> <span class="o">!</span><span class="n">v</span> <span class="o">/</span> <span class="mi">2</span>  </span>
 <span class="code-line">  <span class="k">done</span><span class="o">;</span>  </span>
 <span class="code-line">  <span class="o">!</span><span class="n">count</span><span class="o">;;</span>   </span>
 <span class="code-line"><span class="n">log2int</span> <span class="mi">16</span><span class="o">;;</span>  </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>example 2: read int list from stdin  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">read_int</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">in_of_string</span> <span class="o">(</span><span class="n">read_line</span><span class="bp">()</span><span class="o">);;</span>  </span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="o">#</span> <span class="k">let</span> <span class="n">read_int</span> <span class="bp">()</span> <span class="o">=</span> <span class="n">in_of_string</span> <span class="o">(</span><span class="n">read_line</span><span class="bp">()</span><span class="o">);;</span>  </code></span>
 <span class="code-line"></span>
 <span class="code-line"><span class="o">#</span> <span class="k">let</span> <span class="n">read_intlist</span> <span class="bp">()</span> <span class="o">=</span>   </span>
 <span class="code-line">  <span class="k">let</span> <span class="n">l</span> <span class="o">=</span> <span class="n">ref</span> <span class="bp">[]</span> <span class="k">in</span>  </span>
@@ -475,7 +475,7 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
 <span class="code-line"><span class="mi">5</span>  </span>
 <span class="code-line"><span class="mi">6</span>  </span>
 <span class="code-line"><span class="o">^</span><span class="nc">C</span><span class="o">-</span> <span class="o">:</span> <span class="kt">int</span> <span class="kt">list</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="o">;</span> <span class="mi">2</span><span class="o">;</span> <span class="mi">3</span><span class="o">;</span> <span class="mi">4</span><span class="o">;</span> <span class="mi">5</span><span class="o">;</span> <span class="mi">6</span><span class="o">]</span>   </span>
-</pre></div>
+<span class="code-line"></span></pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -656,14 +656,14 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -671,159 +671,9 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -831,19 +681,99 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -852,23 +782,33 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -876,19 +816,44 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -896,14 +861,54 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -973,7 +978,7 @@ these mutable fields can be modified in place using <code>&lt;-</code> </p>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

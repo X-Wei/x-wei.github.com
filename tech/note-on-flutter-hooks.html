@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="Flutter" />
-        <meta name="description" content="看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过). 本文主要参考自: - pub package - Video by Robert Brunhage - Tutorial by Resocoder The problem Flutter hooks想解决的问题是StatefulWidget的一些常见pattern太复杂, 减少了代码的可读性(&#34;readability&#34;). 一个典型例子就是animation controller: class MyPage extends StatefulWidget{ @override _MyPageState createState() =&gt; _MyPageState(); } class _MyPageState extends State&lt;MyPage&gt; with SingleTickerProviderStateMixin { AnimationController _animController; @override void initState() { super.initState(); _animController = AnimationController( vsync: this ..." />
+        <meta name="description" content="看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过). 本文主要参考自: - pub package - Video by Robert Brunhage - Tutorial by Resocoder The problem Flutter hooks想解决的问题是StatefulWidget的一些常见pattern太复杂 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="通过Flutter hooks简化代码"/>
         <meta property="og:url" content="https://x-wei.github.io/tech/note-on-flutter-hooks.html"/>
-        <meta property="og:description" content="看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过). 本文主要参考自: - pub package - Video by Robert Brunhage - Tutorial by Resocoder The problem Flutter hooks想解决的问题是StatefulWidget的一些常见pattern太复杂, 减少了代码的可读性(&#34;readability&#34;). 一个典型例子就是animation controller: class MyPage extends StatefulWidget{ @override _MyPageState createState() =&gt; _MyPageState(); } class _MyPageState extends State&lt;MyPage&gt; with SingleTickerProviderStateMixin { AnimationController _animController; @override void initState() { super.initState(); _animController = AnimationController( vsync: this ..."/>
+        <meta property="og:description" content="看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过). 本文主要参考自: - pub package - Video by Robert Brunhage - Tutorial by Resocoder The problem Flutter hooks想解决的问题是StatefulWidget的一些常见pattern太复杂 …"/>
         <meta property="article:published_time" content="2021-03-21" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="Flutter" />
@@ -211,7 +211,7 @@ mx's blog            </a>
                         目录
                         </div>
                         <div class="panel-boy">
-                        <div id="toc"><ul><li><a class="toc-href" href="#the-problem" title="The problem">The problem</a></li><li><a class="toc-href" href="#shi-yong-xian-cheng-de-hooks" title="使用现成的Hooks">使用现成的Hooks</a></li><li><a class="toc-href" href="#zi-ding-yi-hook" title="自定义Hook">自定义Hook</a></li><li><a class="toc-href" href="#usestateuseeffect" title="useState/useEffect">useState/useEffect</a></li><li><a class="toc-href" href="#zui-jia-shi-jian" title="最佳实践">最佳实践</a></li></ul></div>
+                        <div id="toc"><ul><li><a class="toc-href" href="#the-problem" title="The problem">The problem</a></li><li><a class="toc-href" href="#hooks" title="使用现成的Hooks">使用现成的Hooks</a></li><li><a class="toc-href" href="#hook" title="自定义Hook">自定义Hook</a></li><li><a class="toc-href" href="#usestateuseeffect" title="useState/useEffect">useState/useEffect</a></li><li><a class="toc-href" href="#_1" title="最佳实践">最佳实践</a></li></ul></div>
                         </div>
                     </div>
                 <p>看了Resocoder和Robert Brunhage的两个视频, 这篇总结一下其中的内容(我其实还没实践过).</p>
@@ -222,59 +222,59 @@ mx's blog            </a>
 <h2 id="the-problem">The problem</h2>
 <p>Flutter hooks想解决的问题是<code>StatefulWidget</code>的一些常见pattern太复杂, 减少了代码的可读性("readability").</p>
 <p>一个典型例子就是animation controller:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">class</span> <span class="nc">MyPage</span> <span class="kd">extends</span> <span class="n">StatefulWidget</span><span class="p">{</span></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="n">_MyPageState</span> <span class="n">createState</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="n">_MyPageState</span><span class="p">();</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyPage</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="p">{</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">_MyPageState</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_MyPageState</span><span class="p">();</span></span>
 <span class="code-line"><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="kd">class</span> <span class="nc">_MyPageState</span> <span class="kd">extends</span> <span class="n">State</span><span class="o">&lt;</span><span class="n">MyPage</span><span class="o">&gt;</span></span>
-<span class="code-line">    <span class="kd">with</span> <span class="n">SingleTickerProviderStateMixin</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="n">AnimationController</span> <span class="n">_animController</span><span class="p">;</span></span>
+<span class="code-line"><span class="kd">class</span><span class="w"> </span><span class="nc">_MyPageState</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MyPage</span><span class="o">&gt;</span></span>
+<span class="code-line"><span class="w">    </span><span class="kd">with</span><span class="w"> </span><span class="n">SingleTickerProviderStateMixin</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">AnimationController</span><span class="w"> </span><span class="n">_animController</span><span class="p">;</span></span>
 <span class="code-line"></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="kt">void</span> <span class="n">initState</span><span class="p">()</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="k">super</span><span class="p">.</span><span class="n">initState</span><span class="p">();</span></span>
-<span class="code-line">    <span class="n">_animController</span> <span class="o">=</span> <span class="n">AnimationController</span><span class="p">(</span></span>
-<span class="code-line">      <span class="nl">vsync:</span> <span class="k">this</span><span class="p">,</span></span>
-<span class="code-line">      <span class="nl">duration:</span> <span class="n">kThemeAnimationDuration</span><span class="p">,</span></span>
-<span class="code-line">      <span class="nl">value:</span> <span class="m">1</span><span class="p">,</span> <span class="c1">// initially visible</span></span>
-<span class="code-line">    <span class="p">);</span></span>
-<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">initState</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">initState</span><span class="p">();</span></span>
+<span class="code-line"><span class="w">    </span><span class="n">_animController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AnimationController</span><span class="p">(</span></span>
+<span class="code-line"><span class="w">      </span><span class="nl">vsync:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span></span>
+<span class="code-line"><span class="w">      </span><span class="nl">duration:</span><span class="w"> </span><span class="n">kThemeAnimationDuration</span><span class="p">,</span></span>
+<span class="code-line"><span class="w">      </span><span class="nl">value:</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="c1">// initially visible</span></span>
+<span class="code-line"><span class="w">    </span><span class="p">);</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="c1">// use _animController here</span></span>
-<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">    </span><span class="c1">// use _animController here</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="kt">void</span> <span class="n">dispose</span><span class="p">()</span> <span class="p">{</span> </span>
-<span class="code-line">    <span class="n">_animController</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span></span>
-<span class="code-line">    <span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span></span>
-<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">    </span><span class="n">_animController</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span></span>
+<span class="code-line"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>这种pattern在vanilla flutter里经常被使用, 但是对同一个controller在好几个地方操作(<code>initiState()</code>/<code>setState()</code>/<code>dispose()</code>), 真的不好读.</p>
 <p>Flutter hooks就可以把这种重复的pattern抽离出来, 把<code>StatefulWidget</code>变成类似<code>StatelessWidget</code>的<code>HookWidget</code>, 简化代码, 大大提高可读性.</p>
 <p>(btw 这个包的作者是Rémi Rousselet大神, 质量有保障👌)</p>
-<h2 id="shi-yong-xian-cheng-de-hooks">使用现成的Hooks</h2>
+<h2 id="hooks">使用现成的Hooks</h2>
 <p>对于常用的pattern有现成的hooks可以直接套用. 比如上面的animation controller例子, 用flutter hooks可以写成这样:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">class</span> <span class="nc">MyPage</span> <span class="kd">extends</span> <span class="n">HookWidget</span> <span class="p">{</span>  <span class="c1">//! StatelessWidget =&gt; HookWidget</span></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="kd">final</span> <span class="n">animController</span> <span class="o">=</span> <span class="n">useAnimationController</span><span class="p">(</span></span>
-<span class="code-line">        <span class="nl">duration:</span> <span class="n">kThemeAnimationDuration</span><span class="p">,</span> </span>
-<span class="code-line">        <span class="nl">initialValue:</span> <span class="m">1</span><span class="p">,</span></span>
-<span class="code-line">    <span class="p">);</span></span>
-<span class="code-line">    <span class="c1">// use _animController here</span></span>
-<span class="code-line">  <span class="p">}</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyPage</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">HookWidget</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">//! StatelessWidget =&gt; HookWidget</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">animController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">useAnimationController</span><span class="p">(</span></span>
+<span class="code-line"><span class="w">        </span><span class="nl">duration:</span><span class="w"> </span><span class="n">kThemeAnimationDuration</span><span class="p">,</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">        </span><span class="nl">initialValue:</span><span class="w"> </span><span class="m">1</span><span class="p">,</span></span>
+<span class="code-line"><span class="w">    </span><span class="p">);</span></span>
+<span class="code-line"><span class="w">    </span><span class="c1">// use _animController here</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>⚡️Flutter hooks自带了不少<a href="https://pub.dev/packages/flutter_hooks#existing-hooks">现成的hooks</a>, 有的面向Animation, 有的面向Stream等等, 有时间可以好好看一看...</p>
-<h2 id="zi-ding-yi-hook">自定义Hook</h2>
+<h2 id="hook">自定义Hook</h2>
 <p>cf. Resocoder的<a href="https://resocoder.com/2020/01/21/flutter-hooks-hide-fab-animation-100-widget-code-reuse/#t-1616317538465">教程</a></p>
 <p>如果现成的hook不满足条件, 其实自己实现起来也非常容易, 基本就是把原来<code>StatefulWidget/State&lt;Foo&gt;</code>的内容变成<code>Hook&lt;R&gt;/HookState&lt;R,Foo&gt;</code>. 其中<code>Foo</code>是我们自定义的类名, <code>R</code>则是state的类型. 比如对于之前的例子: <code>Foo</code>=<code>MyPage</code>, <code>R</code>=<code>AnimationController</code>.</p>
 <p>这里列一下二者的区别, 基本是一一对应的, 所以迁移起来不难:</p>
-<table class=" table-striped table table-hover">
+<table class=" table-striped table-hover table">
 <thead>
 <tr>
 <th><code>StatefulWidget</code></th>
@@ -292,7 +292,7 @@ mx's blog            </a>
 </tr>
 </tbody>
 </table>
-<table class=" table-striped table table-hover">
+<table class=" table-striped table-hover table">
 <thead>
 <tr>
 <th><code>State&lt;Foo&gt;</code></th>
@@ -323,10 +323,10 @@ mx's blog            </a>
 </tbody>
 </table>
 <p>当自定义的<code>Hook/HookState</code>写好以后, 根据Flutter hooks的惯例, 需要写一个<code>useXxHooks</code>的函数, 返回类型是<code>R</code>:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">R</span> <span class="n">useMyHooks</span><span class="p">(...)</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="k">return</span> <span class="n">Hook</span><span class="p">.</span><span class="n">use</span><span class="p">(</span><span class="n">_FooHook</span><span class="p">());</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">R</span><span class="w"> </span><span class="n">useMyHooks</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">Hook</span><span class="p">.</span><span class="n">use</span><span class="p">(</span><span class="n">_FooHook</span><span class="p">());</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <h2 id="usestateuseeffect">useState/useEffect</h2>
 <p>cf. Robert Brunhage的<a href="https://www.youtube.com/watch?v=A1DUBgIsCv8">视频</a></p>
 <p>对于<strong>不追求逻辑复用</strong>, 只想去掉<code>initState()</code>/<code>dispose()</code>的场景, 可以考虑直接把一个<code>StatefulWidget</code>变成<code>HookWiget</code>. Flutter hooks提供了<code>useState</code>和<code>useEffect</code>, 让我们可以直接在<code>HookWiget.build()</code>函数里面创建/修改状态.</p>
@@ -347,32 +347,32 @@ mx's blog            </a>
 </li>
 </ul>
 <p>这种方法可以把一个<code>StatefulWidget</code>简化为类似<code>StatelessWidget</code>的<code>HookWidget</code>, 简化代码. 例如用useState/useEffect写一个简单计时器, 代码相比vanilla flutter要简洁许多:</p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="kd">class</span> <span class="nc">MyTimerPage</span> <span class="kd">extends</span> <span class="n">HookWidget</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="nd">@override</span></span>
-<span class="code-line">  <span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="kd">final</span> <span class="n">_numberNotifier</span> <span class="o">=</span> <span class="n">useState</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>  <span class="c1">//! Create state</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyTimerPage</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">HookWidget</span><span class="w"> </span><span class="p">{</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="nd">@override</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">_numberNotifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">useState</span><span class="p">(</span><span class="m">0</span><span class="p">);</span><span class="w">  </span><span class="c1">//! Create state</span></span>
 <span class="code-line"></span>
-<span class="code-line">    <span class="n">useEffect</span><span class="p">(</span>  <span class="c1">//! Change state</span></span>
-<span class="code-line">      <span class="cm">/*effect=*/</span><span class="p">()</span> <span class="p">{</span></span>
-<span class="code-line">        <span class="c1">//! ~= initState()</span></span>
-<span class="code-line">        <span class="kd">final</span> <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">.</span><span class="n">periodic</span><span class="p">(</span></span>
-<span class="code-line">          <span class="n">Duration</span><span class="p">(</span><span class="nl">seconds:</span> <span class="m">1</span><span class="p">),</span> </span>
-<span class="code-line">          <span class="c1">//! ~= setState()</span></span>
-<span class="code-line">          <span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">_numberNotifier</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">tick</span><span class="p">,</span></span>
-<span class="code-line">        <span class="p">);</span></span>
-<span class="code-line">        <span class="k">return</span> <span class="n">timer</span><span class="p">.</span><span class="n">cancel</span><span class="p">;</span>  <span class="c1">//! ~= dispose()</span></span>
-<span class="code-line">      <span class="p">},</span> </span>
-<span class="code-line">      <span class="cm">/*keys=*/</span><span class="kd">const</span> <span class="p">[],</span>  <span class="c1">//! =&gt; effect() is called only once</span></span>
-<span class="code-line">    <span class="p">);</span></span>
+<span class="code-line"><span class="w">    </span><span class="n">useEffect</span><span class="p">(</span><span class="w">  </span><span class="c1">//! Change state</span></span>
+<span class="code-line"><span class="w">      </span><span class="cm">/*effect=*/</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">        </span><span class="c1">//! ~= initState()</span></span>
+<span class="code-line"><span class="w">        </span><span class="kd">final</span><span class="w"> </span><span class="n">timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Timer</span><span class="p">.</span><span class="n">periodic</span><span class="p">(</span></span>
+<span class="code-line"><span class="w">          </span><span class="n">Duration</span><span class="p">(</span><span class="nl">seconds:</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">          </span><span class="c1">//! ~= setState()</span></span>
+<span class="code-line"><span class="w">          </span><span class="p">(</span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_numberNotifier</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">.</span><span class="n">tick</span><span class="p">,</span></span>
+<span class="code-line"><span class="w">        </span><span class="p">);</span></span>
+<span class="code-line"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">timer</span><span class="p">.</span><span class="n">cancel</span><span class="p">;</span><span class="w">  </span><span class="c1">//! ~= dispose()</span></span>
+<span class="code-line"><span class="w">      </span><span class="p">},</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">      </span><span class="cm">/*keys=*/</span><span class="k">const</span><span class="w"> </span><span class="p">[],</span><span class="w">  </span><span class="c1">//! =&gt; effect() is called only once</span></span>
+<span class="code-line"><span class="w">    </span><span class="p">);</span></span>
 <span class="code-line"></span>
-<span class="code-line">    <span class="k">return</span> <span class="n">Scaffold</span><span class="p">(</span></span>
-<span class="code-line">      <span class="nl">body:</span> <span class="n">Center</span><span class="p">(</span></span>
-<span class="code-line">        <span class="nl">child:</span> <span class="n">Text</span><span class="p">(</span><span class="n">_numberNotifier</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">toString</span><span class="p">()),</span></span>
-<span class="code-line">      <span class="p">),</span></span>
-<span class="code-line">    <span class="p">);</span></span>
-<span class="code-line">  <span class="p">}</span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Scaffold</span><span class="p">(</span></span>
+<span class="code-line"><span class="w">      </span><span class="nl">body:</span><span class="w"> </span><span class="n">Center</span><span class="p">(</span></span>
+<span class="code-line"><span class="w">        </span><span class="nl">child:</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">_numberNotifier</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">toString</span><span class="p">()),</span></span>
+<span class="code-line"><span class="w">      </span><span class="p">),</span></span>
+<span class="code-line"><span class="w">    </span><span class="p">);</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p>当然这样写的缺点就是逻辑无法复用, 要复用逻辑的话可以参考上一节"自定义Hook":</p>
 <ol>
 <li>
@@ -397,30 +397,30 @@ class MyTimerPage extends HookWidget {
 }</code></p>
 </li>
 </ol>
-<h2 id="zui-jia-shi-jian">最佳实践</h2>
+<h2 id="_1">最佳实践</h2>
 <p>pub上列出了几条<a href="https://pub.dev/packages/flutter_hooks#rules">最佳实践</a>:</p>
 <p><strong>所有hook的函数都以'use'开头:</strong></p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="c1">// starts with `use`, good name</span></span>
-<span class="code-line">  <span class="n">useMyHook</span><span class="p">();</span></span>
-<span class="code-line">  <span class="c1">// doesn't start with `use`, could confuse people into thinking that this isn't a hook</span></span>
-<span class="code-line">  <span class="n">myHook</span><span class="p">();</span></span>
-<span class="code-line">  <span class="c1">// ....</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="c1">// starts with `use`, good name</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">useMyHook</span><span class="p">();</span></span>
+<span class="code-line"><span class="w">  </span><span class="c1">// doesn't start with `use`, could confuse people into thinking that this isn't a hook</span></span>
+<span class="code-line"><span class="w">  </span><span class="n">myHook</span><span class="p">();</span></span>
+<span class="code-line"><span class="w">  </span><span class="c1">// ....</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
 <p><strong>不要在分支条件里使用hook:</strong></p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="n">useMyHook</span><span class="p">();</span>  <span class="c1">//! Good: DO call hooks unconditionally</span></span>
-<span class="code-line">  <span class="c1">// ....</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></code></span>
+<span class="code-line"><span class="w">  </span><span class="n">useMyHook</span><span class="p">();</span><span class="w">  </span><span class="c1">//! Good: DO call hooks unconditionally</span></span>
+<span class="code-line"><span class="w">  </span><span class="c1">// ....</span></span>
 <span class="code-line"><span class="p">}</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="n">Widget</span> <span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">  <span class="k">if</span> <span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="p">{</span></span>
-<span class="code-line">    <span class="n">useMyHook</span><span class="p">();</span>  <span class="c1">//! BAD: DON'T wrap use into a condition</span></span>
-<span class="code-line">  <span class="p">}</span></span>
-<span class="code-line">  <span class="c1">// ....</span></span>
+<span class="code-line"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">condition</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line"><span class="w">    </span><span class="n">useMyHook</span><span class="p">();</span><span class="w">  </span><span class="c1">//! BAD: DON'T wrap use into a condition</span></span>
+<span class="code-line"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line"><span class="w">  </span><span class="c1">// ....</span></span>
 <span class="code-line"><span class="p">}</span></span>
-</pre></div>
+<span class="code-line"></span></pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -585,14 +585,14 @@ class MyTimerPage extends HookWidget {
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -600,159 +600,9 @@ class MyTimerPage extends HookWidget {
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -760,19 +610,99 @@ class MyTimerPage extends HookWidget {
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -781,23 +711,33 @@ class MyTimerPage extends HookWidget {
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -805,19 +745,44 @@ class MyTimerPage extends HookWidget {
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -825,14 +790,54 @@ class MyTimerPage extends HookWidget {
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -864,7 +869,7 @@ class MyTimerPage extends HookWidget {
             目录</h4>
             </div>
             <div class="panel-boy">
-            <div id="toc"><ul><li><a class="toc-href" href="#the-problem" title="The problem">The problem</a></li><li><a class="toc-href" href="#shi-yong-xian-cheng-de-hooks" title="使用现成的Hooks">使用现成的Hooks</a></li><li><a class="toc-href" href="#zi-ding-yi-hook" title="自定义Hook">自定义Hook</a></li><li><a class="toc-href" href="#usestateuseeffect" title="useState/useEffect">useState/useEffect</a></li><li><a class="toc-href" href="#zui-jia-shi-jian" title="最佳实践">最佳实践</a></li></ul></div>
+            <div id="toc"><ul><li><a class="toc-href" href="#the-problem" title="The problem">The problem</a></li><li><a class="toc-href" href="#hooks" title="使用现成的Hooks">使用现成的Hooks</a></li><li><a class="toc-href" href="#hook" title="自定义Hook">自定义Hook</a></li><li><a class="toc-href" href="#usestateuseeffect" title="useState/useEffect">useState/useEffect</a></li><li><a class="toc-href" href="#_1" title="最佳实践">最佳实践</a></li></ul></div>
             </div>
         </div>
             </aside>
@@ -890,7 +895,7 @@ class MyTimerPage extends HookWidget {
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

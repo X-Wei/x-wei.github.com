@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="torch" />
-        <meta name="description" content="doc: https://github.com/torch/nn/blob/master/doc/containers.md ref: http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/ Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. Container contains modules (layers). Container class important methods: add(module) get(index): get module ..." />
+        <meta name="description" content="doc: https://github.com/torch/nn/blob/master/doc/containers.md ref: http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/ Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. Container contains modules (layers). Container class important methods: add(module) get(index): get module …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="[learning torch] 3. Container (models)"/>
         <meta property="og:url" content="https://x-wei.github.io/notes/learn-torch-3-container.html"/>
-        <meta property="og:description" content="doc: https://github.com/torch/nn/blob/master/doc/containers.md ref: http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/ Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. Container contains modules (layers). Container class important methods: add(module) get(index): get module ..."/>
+        <meta property="og:description" content="doc: https://github.com/torch/nn/blob/master/doc/containers.md ref: http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2_nn_containers/ Container, similarly to Module, is the abstract class defining the base methods inherited from concrete containers. Container contains modules (layers). Container class important methods: add(module) get(index): get module …"/>
         <meta property="article:published_time" content="2016-10-07" />
             <meta property="article:section" content="notes" />
             <meta property="article:tag" content="torch" />
@@ -234,18 +234,18 @@ ref: <a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2
 </ul>
 <h2 id="sequential">Sequential</h2>
 <p><code>Sequential</code><strong> is just a stack of layers</strong>, add layer by <code>model:add()</code>. Here is a simple 2-layer MLP example:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">th&gt;  mlp = nn.Sequential() </span></span>
-<span class="code-line"><span class="err">                                                                      [0.0000s]  </span></span>
-<span class="code-line"><span class="err">th&gt; mlp:add( nn.Linear(10, 25) ) -- 10 input, 25 hidden units </span></span>
-<span class="code-line"><span class="err">                                                                      [0.0001s]  </span></span>
-<span class="code-line"><span class="err">th&gt; mlp:add( nn.Tanh() ) -- some hyperbolic tangent transfer function </span></span>
-<span class="code-line"><span class="err">                                                                      [0.0001s]  </span></span>
-<span class="code-line"><span class="err">th&gt; mlp:add( nn.Linear(25, 1) ) -- 1 output </span></span>
-<span class="code-line"><span class="err">                                                                      [0.0001s]  </span></span>
-<span class="code-line"><span class="err">th&gt; mlp:forward(torch.range(1,10)) </span></span>
-<span class="code-line"><span class="err"> 1.2697 </span></span>
-<span class="code-line"><span class="err">[torch.DoubleTensor of size 1]</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>th&gt;  mlp = nn.Sequential() </code></span>
+<span class="code-line">                                                                      [0.0000s]  </span>
+<span class="code-line">th&gt; mlp:add( nn.Linear(10, 25) ) -- 10 input, 25 hidden units </span>
+<span class="code-line">                                                                      [0.0001s]  </span>
+<span class="code-line">th&gt; mlp:add( nn.Tanh() ) -- some hyperbolic tangent transfer function </span>
+<span class="code-line">                                                                      [0.0001s]  </span>
+<span class="code-line">th&gt; mlp:add( nn.Linear(25, 1) ) -- 1 output </span>
+<span class="code-line">                                                                      [0.0001s]  </span>
+<span class="code-line">th&gt; mlp:forward(torch.range(1,10)) </span>
+<span class="code-line"> 1.2697 </span>
+<span class="code-line">[torch.DoubleTensor of size 1]</span>
+<span class="code-line"></span></pre></div>
 <h2 id="parallel">Parallel</h2>
 <p><code>module = Parallel(inputDimension,outputDimension)</code> </p>
 <blockquote>
@@ -253,55 +253,55 @@ ref: <a href="http://rnduja.github.io/2015/10/04/deep_learning_with_torch_step_2
 </blockquote>
 <p>So if the input for parallel model is <code>x</code>,  the input for its ith child module should be: <code>x.select(inputDimension, i)</code>,<br/>
 and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</code> (concat along this dimension).  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">th</span><span class="o">&gt;</span> <span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Parallel</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1">-- select(split) on dim2 for input, concat along dim1 for output </span></span>
-<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0000</span><span class="n">s</span><span class="p">]</span>  </span>
-<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">mlp</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="c1">-- input=1st slice of x (x:select()), output1: size=3 </span></span>
-<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0001</span><span class="n">s</span><span class="p">]</span>  </span>
-<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">mlp</span><span class="p">:</span><span class="k">add</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="c1">-- output2: size=2 </span></span>
-<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0001</span><span class="n">s</span><span class="p">]</span>  </span>
-<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>  </span>
-<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0001</span><span class="n">s</span><span class="p">]</span>  </span>
-<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">x</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">3242</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">3911</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">7433</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">2725</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">3947</span>  <span class="mi">0</span><span class="p">.</span><span class="mi">3332</span> </span>
-<span class="code-line"> <span class="mi">1</span><span class="p">.</span><span class="mi">1618</span>  <span class="mi">0</span><span class="p">.</span><span class="mi">6743</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">6655</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">0901</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">0419</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">7845</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">8508</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">4670</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">3842</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">4107</span> </span>
-<span class="code-line"> <span class="mi">0</span><span class="p">.</span><span class="mi">5238</span>  <span class="mi">2</span><span class="p">.</span><span class="mi">3616</span> </span>
-<span class="code-line"> <span class="mi">1</span><span class="p">.</span><span class="mi">4136</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">1327</span> </span>
-<span class="code-line"><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">DoubleTensor</span> <span class="k">of</span> <span class="k">size</span> <span class="mi">10</span><span class="n">x2</span><span class="p">]</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">mlp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">nn</span>.<span class="nv">Parallel</span><span class="ss">(</span><span class="mi">2</span>,<span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nv">select</span><span class="ss">(</span><span class="nv">split</span><span class="ss">)</span><span class="w"> </span><span class="nv">on</span><span class="w"> </span><span class="nv">dim2</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">input</span>,<span class="w"> </span><span class="nv">concat</span><span class="w"> </span><span class="nv">along</span><span class="w"> </span><span class="nv">dim1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">output</span><span class="w"> </span></code></span>
+<span class="code-line"><span class="w">                                                                      </span>[<span class="mi">0</span>.<span class="mi">0000</span><span class="nv">s</span>]<span class="w">  </span></span>
+<span class="code-line"><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">mlp</span>:<span class="nv">add</span><span class="ss">(</span><span class="nv">nn</span>.<span class="nv">Linear</span><span class="ss">(</span><span class="mi">10</span>,<span class="mi">3</span><span class="ss">))</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nv">input</span><span class="o">=</span><span class="mi">1</span><span class="nv">st</span><span class="w"> </span><span class="nv">slice</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="ss">(</span><span class="nv">x</span>:<span class="nv">select</span><span class="ss">())</span>,<span class="w"> </span><span class="nv">output1</span>:<span class="w"> </span><span class="nv">size</span><span class="o">=</span><span class="mi">3</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">                                                                      </span>[<span class="mi">0</span>.<span class="mi">0001</span><span class="nv">s</span>]<span class="w">  </span></span>
+<span class="code-line"><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">mlp</span>:<span class="nv">add</span><span class="ss">(</span><span class="nv">nn</span>.<span class="nv">Linear</span><span class="ss">(</span><span class="mi">10</span>,<span class="mi">2</span><span class="ss">))</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nv">output2</span>:<span class="w"> </span><span class="nv">size</span><span class="o">=</span><span class="mi">2</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">                                                                      </span>[<span class="mi">0</span>.<span class="mi">0001</span><span class="nv">s</span>]<span class="w">  </span></span>
+<span class="code-line"><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">torch</span>.<span class="nv">randn</span><span class="ss">(</span><span class="mi">10</span>,<span class="mi">2</span><span class="ss">)</span><span class="w">  </span></span>
+<span class="code-line"><span class="w">                                                                      </span>[<span class="mi">0</span>.<span class="mi">0001</span><span class="nv">s</span>]<span class="w">  </span></span>
+<span class="code-line"><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">3242</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>.<span class="mi">3911</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">7433</span><span class="w"> </span><span class="o">-</span><span class="mi">0</span>.<span class="mi">2725</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">3947</span><span class="w">  </span><span class="mi">0</span>.<span class="mi">3332</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">1</span>.<span class="mi">1618</span><span class="w">  </span><span class="mi">0</span>.<span class="mi">6743</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">6655</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>.<span class="mi">0901</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">0419</span><span class="w"> </span><span class="o">-</span><span class="mi">0</span>.<span class="mi">7845</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">8508</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>.<span class="mi">4670</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">3842</span><span class="w"> </span><span class="o">-</span><span class="mi">0</span>.<span class="mi">4107</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">0</span>.<span class="mi">5238</span><span class="w">  </span><span class="mi">2</span>.<span class="mi">3616</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="mi">1</span>.<span class="mi">4136</span><span class="w"> </span><span class="o">-</span><span class="mi">0</span>.<span class="mi">1327</span><span class="w"> </span></span>
+<span class="code-line">[<span class="nv">torch</span>.<span class="nv">DoubleTensor</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">size</span><span class="w"> </span><span class="mi">10</span><span class="nv">x2</span>]</span>
 <span class="code-line"></span>
-<span class="code-line">                                                                      <span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="mi">0002</span><span class="n">s</span><span class="p">]</span>  </span>
-<span class="code-line"><span class="n">th</span><span class="o">&gt;</span> <span class="n">mlp</span><span class="p">:</span><span class="k">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">0456</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">5682</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">3488</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">3786</span> </span>
-<span class="code-line"><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">6320</span> </span>
-<span class="code-line"><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">DoubleTensor</span> <span class="k">of</span> <span class="k">size</span> <span class="mi">5</span><span class="p">]</span></span>
-</pre></div>
+<span class="code-line"><span class="w">                                                                      </span>[<span class="mi">0</span>.<span class="mi">0002</span><span class="nv">s</span>]<span class="w">  </span></span>
+<span class="code-line"><span class="nv">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">mlp</span>:<span class="nv">forward</span><span class="ss">(</span><span class="nv">x</span><span class="ss">)</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">0456</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">5682</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">3488</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">1</span>.<span class="mi">3786</span><span class="w"> </span></span>
+<span class="code-line"><span class="o">-</span><span class="mi">0</span>.<span class="mi">6320</span><span class="w"> </span></span>
+<span class="code-line">[<span class="nv">torch</span>.<span class="nv">DoubleTensor</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">size</span><span class="w"> </span><span class="mi">5</span>]</span>
+<span class="code-line"></span></pre></div>
 <h2 id="concat">Concat</h2>
 <p><code>module = nn.Concat(dim)</code> </p>
 <p>Concat concatenates the output of its "parallel" children modules along <code>dim</code>: these child modules <em>take the same inputs</em>, and their output is concatenated. </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">mlp</span> <span class="o">=</span> <span class="nt">nn</span><span class="p">.</span><span class="nc">Concat</span><span class="o">(</span><span class="nt">1</span><span class="o">)</span> <span class="nt">--</span> <span class="nt">ouput</span> <span class="nt">concat</span> <span class="nt">along</span> <span class="nt">dim</span> <span class="nt">1</span> </span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">mlp</span><span class="p">:</span><span class="nd">add</span><span class="o">(</span> <span class="nt">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="o">(</span><span class="nt">10</span><span class="o">,</span><span class="nt">2</span><span class="o">)</span> <span class="o">);</span> </span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span>  </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">mlp</span><span class="p">:</span><span class="nd">add</span><span class="o">(</span> <span class="nt">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="o">(</span><span class="nt">10</span><span class="o">,</span><span class="nt">3</span><span class="o">)</span> <span class="o">);</span> </span>
-<span class="code-line">                                                                      <span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span>  </span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">x</span> <span class="o">=</span> <span class="nt">torch</span><span class="p">.</span><span class="nc">randn</span><span class="o">(</span><span class="nt">1</span><span class="o">,</span><span class="nt">5</span><span class="o">)</span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="nt">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">mlp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">nn</span><span class="p">.</span><span class="nc">Concat</span><span class="o">(</span><span class="nt">1</span><span class="o">)</span><span class="w"> </span><span class="nt">--</span><span class="w"> </span><span class="nt">ouput</span><span class="w"> </span><span class="nt">concat</span><span class="w"> </span><span class="nt">along</span><span class="w"> </span><span class="nt">dim</span><span class="w"> </span><span class="nt">1</span><span class="w"> </span></code></span>
+<span class="code-line"><span class="w">                                                                      </span><span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span><span class="w">  </span></span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">mlp</span><span class="p">:</span><span class="nd">add</span><span class="o">(</span><span class="w"> </span><span class="nt">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="o">(</span><span class="nt">10</span><span class="o">,</span><span class="nt">2</span><span class="o">)</span><span class="w"> </span><span class="o">);</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">                                                                      </span><span class="cp">[</span><span class="mf">0.0001</span><span class="nx">s</span><span class="cp">]</span><span class="w">  </span></span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">mlp</span><span class="p">:</span><span class="nd">add</span><span class="o">(</span><span class="w"> </span><span class="nt">nn</span><span class="p">.</span><span class="nc">Linear</span><span class="o">(</span><span class="nt">10</span><span class="o">,</span><span class="nt">3</span><span class="o">)</span><span class="w"> </span><span class="o">);</span><span class="w"> </span></span>
+<span class="code-line"><span class="w">                                                                      </span><span class="cp">[</span><span class="mf">0.0000</span><span class="nx">s</span><span class="cp">]</span><span class="w">  </span></span>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">torch</span><span class="p">.</span><span class="nc">randn</span><span class="o">(</span><span class="nt">1</span><span class="o">,</span><span class="nt">5</span><span class="o">)</span></span>
 <span class="code-line"></span>
-<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span> <span class="nt">mlp</span><span class="p">:</span><span class="nd">forward</span><span class="o">(</span><span class="nt">x</span><span class="o">)</span> </span>
-<span class="code-line"> <span class="nt">0</span><span class="p">.</span><span class="nc">7497</span> </span>
-<span class="code-line"><span class="nt">-0</span><span class="p">.</span><span class="nc">1909</span> </span>
-<span class="code-line"> <span class="nt">0</span><span class="p">.</span><span class="nc">3280</span> </span>
-<span class="code-line"><span class="nt">-0</span><span class="p">.</span><span class="nc">3981</span> </span>
-<span class="code-line"> <span class="nt">0</span><span class="p">.</span><span class="nc">0207</span> </span>
-<span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span> <span class="nx">of</span> <span class="nx">size</span> <span class="mi">5</span><span class="cp">]</span></span>
-</pre></div>
+<span class="code-line"><span class="nt">th</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">mlp</span><span class="p">:</span><span class="nd">forward</span><span class="o">(</span><span class="nt">x</span><span class="o">)</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="nt">0</span><span class="p">.</span><span class="nc">7497</span><span class="w"> </span></span>
+<span class="code-line"><span class="nt">-0</span><span class="p">.</span><span class="nc">1909</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="nt">0</span><span class="p">.</span><span class="nc">3280</span><span class="w"> </span></span>
+<span class="code-line"><span class="nt">-0</span><span class="p">.</span><span class="nc">3981</span><span class="w"> </span></span>
+<span class="code-line"><span class="w"> </span><span class="nt">0</span><span class="p">.</span><span class="nc">0207</span><span class="w"> </span></span>
+<span class="code-line"><span class="cp">[</span><span class="nx">torch.DoubleTensor</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="mi">5</span><span class="cp">]</span></span>
+<span class="code-line"></span></pre></div>
             </div>
             <div class="entry-content jumbotron" id="source-content" style="display: none">
                 <!-- <pre><code id="source-code">
@@ -481,14 +481,14 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -496,159 +496,9 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -656,19 +506,99 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -677,23 +607,33 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -701,19 +641,44 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -721,14 +686,54 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -798,7 +803,7 @@ and the parallel model should be: <code>torch.cat( out1, out2, ouputDimension)</
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog</title><link href="https://x-wei.github.io/" rel="alternate"></link><link href="https://x-wei.github.io/feeds/tag-spark.atom.xml" rel="self"></link><id>https://x-wei.github.io/</id><updated>2015-06-30T00:00:00+02:00</updated><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="https://x-wei.github.io/notes/sparkmooc_notelab4.html" rel="alternate"></link><published>2015-06-30T00:00:00+02:00</published><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-30:notes/sparkmooc_notelab4.html</id><summary type="html">&lt;h1 id="part-0-preliminaries"&gt;Part 0: Preliminaries&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>mx's blog - spark</title><link href="https://x-wei.github.io/" rel="alternate"/><link href="https://x-wei.github.io/feeds/tag-spark.atom.xml" rel="self"/><id>https://x-wei.github.io/</id><updated>2015-06-30T00:00:00+02:00</updated><entry><title>[Spark MOOC note] lab4. Predicting Movie Ratings</title><link href="https://x-wei.github.io/notes/sparkmooc_notelab4.html" rel="alternate"/><published>2015-06-30T00:00:00+02:00</published><updated>2015-06-30T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-30:/notes/sparkmooc_notelab4.html</id><summary type="html">&lt;h1 id="part-0-preliminaries"&gt;Part 0: Preliminaries&lt;/h1&gt;
+&lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as: &lt;br/&gt;
+&lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;br/&gt;
+Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as: &lt;br/&gt;
+&lt;code&gt;MovieID::Title::Genres&lt;/code&gt; ⇒ tuples of &lt;code&gt;(MovieID, Title)&lt;/code&gt; in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;/p&gt;
+&lt;p&gt;487650 ratings and 3883 …&lt;/p&gt;</summary><content type="html">&lt;h1 id="part-0-preliminaries"&gt;Part 0: Preliminaries&lt;/h1&gt;
 &lt;p&gt;Each line in the ratings dataset (&lt;em&gt;ratings.dat.gz&lt;/em&gt;) is formatted as: &lt;br/&gt;
 &lt;code&gt;UserID::MovieID::Rating::Timestamp&lt;/code&gt; ⇒ tuples of &lt;code&gt;(UserID, MovieID, Rating)&lt;/code&gt;in &lt;em&gt;ratingsRDD&lt;/em&gt; &lt;br/&gt;
 Each line in the movies (&lt;em&gt;movies.dat&lt;/em&gt;) dataset is formatted as: &lt;br/&gt;
@@ -45,10 +50,10 @@ Both RDDs consist of tuples of the form (UserID, MovieID, Rating)&lt;/p&gt;
 ALS takes a training dataset (RDD) and several parameters that control the model creation process.&lt;/p&gt;
 &lt;p&gt;The most important parameter to ALS.train() is the &lt;em&gt;rank&lt;/em&gt;, which is the number of rows in the Users matrix (green in the diagram above) or the number of columns in the Movies matrix (blue in the diagram above). (In general, a lower rank will mean higher error on the training dataset, but a high rank may lead to overfitting.)&lt;/p&gt;
 &lt;p&gt;貌似ALS接受一个(userid, itemid, rating)的RDD作为输入, 预测时接受一个(userid, itemid)的RDD作为输入, 返回一个(userid, itemid, rating)的RDD.  (也就是说, 前面的notation在这里继续被使用了).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;model = ALS.train(trainingRDD, rank, seed=seed, iterations=iterations,&lt;/span&gt;&lt;/span&gt;
-&lt;span class="code-line"&gt;&lt;span class="err"&gt;                      lambda_=regularizationParameter)&lt;/span&gt;&lt;/span&gt;
-&lt;span class="code-line"&gt;&lt;span class="err"&gt;predictedRatingsRDD = model.predictAll(validationForPredictRDD)&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;ALS&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;train&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;trainingRDD&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;rank&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;seed&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;iterations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;/code&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="w"&gt;                      &lt;/span&gt;&lt;span class="n"&gt;lambda_&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;regularizationParameter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;span class="n"&gt;predictedRatingsRDD&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predictAll&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;validationForPredictRDD&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;可以在这里查看job详情: &lt;a href="http://localhost:4040/jobs/"&gt;http://localhost:4040/jobs/&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="compare-model"&gt;compare model&lt;/h3&gt;
 &lt;p&gt;Looking at the RMSE for the results predicted by the model versus the values in the test set is one way to evalute the quality of our model. &lt;em&gt;Another way to evaluate the model is to evaluate the error from a test set where every rating is the average rating for the training set.&lt;/em&gt;
@@ -58,7 +63,19 @@ ALS takes a training dataset (RDD) and several parameters that control the model
 &lt;li&gt;求一个tuple rdd最后一列的和的时候, 需要先map成最后一列再reduce: &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;trainingRDD.map(lambda x:x[-1]).reduce(lambda x,y:x+y)&lt;/code&gt;&lt;br/&gt;
-直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec8.html" rel="alternate"></link><published>2015-06-23T00:00:00+02:00</published><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-23:notes/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2 id="statistics-business-questions-and-learning-techniques"&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+直接写&lt;code&gt;reduce(lambda x,y:x[-1]+y[-1])&lt;/code&gt;貌似是不行的&lt;/p&gt;</content><category term="notes"/><category term="spark"/></entry><entry><title>[Spark MOOC note] Lec8. Exploratory Data Analysis and Machine Learning</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec8.html" rel="alternate"/><published>2015-06-23T00:00:00+02:00</published><updated>2015-06-23T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-23:/notes/sparkmooc_note_lec8.html</id><summary type="html">&lt;h2 id="statistics-business-questions-and-learning-techniques"&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
+&lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;descriptive statistics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex. median — describes data, &lt;em&gt;but cannot generalize beyong that&lt;/em&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;inferential statistics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ex. &lt;em&gt;t-testing — inferences beyond the data&lt;/em&gt;
+techniques leveraged for machine learning and prediction&lt;/p&gt;
+&lt;p&gt;supervised learning (clf, reg), unsupervised learning (clustering, dim-reduction)
+ → UL often used in a …&lt;/p&gt;</summary><content type="html">&lt;h2 id="statistics-business-questions-and-learning-techniques"&gt;STATISTICS, BUSINESS QUESTIONS, AND LEARNING TECHNIQUES&lt;/h2&gt;
 &lt;p&gt;2 different kinds of statistics: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;descriptive statistics&lt;/li&gt;
@@ -110,8 +127,8 @@ lab: &lt;em&gt;collaborative filtering — &lt;/em&gt;matrix factorisation&lt;br
 → quite different in fact: &lt;br/&gt;
 &lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec8/pasted_image003.png"/&gt;&lt;br/&gt;
 &lt;strong&gt;Takeaways&lt;/strong&gt;:&lt;br/&gt;
-&lt;em&gt;•  Important to look at data graphically before analyzing it   &lt;/em&gt;
-&lt;em&gt;•  Basic statistics properties often fail to capture real-world complexities&lt;/em&gt; &lt;/p&gt;
+&lt;em&gt;•  Important to look at data graphically before analyzing it   *
+&lt;/em&gt;•  Basic statistics properties often fail to capture real-world complexities*  &lt;/p&gt;
 &lt;h2 id="lab3-text-analysis-and-entity-resolution"&gt;Lab3. Text Analysis and Entity Resolution&lt;/h2&gt;
 &lt;p&gt;Entity Resolution (ER) refers to the task of finding records in a data set that refer to the same entity across different data sources (e.g., data files, books, websites, databases). ER is necessary when joining data sets based on entities that may or may not share a common identifier (e.g., database key, URI, National identification number), as may be the case due to differences in record shape, storage location, and/or curator style or preference. A data set that has undergone ER may be referred to as being cross-linked.&lt;/p&gt;
 &lt;p&gt;The file format of an Amazon line is:
@@ -161,7 +178,16 @@ The file format of a Google line is:
 &lt;li&gt;.&lt;code&gt;collectAsMap()&lt;/code&gt;: 把pair rdd变为map&lt;/li&gt;
 &lt;li&gt;groupByKey(): 这个也用上了&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;lab4前后做了四个小时 不过很有意思... 第五部分出现out of memory error就没办法了...&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec7. Data Quality</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec7.html" rel="alternate"></link><published>2015-06-22T00:00:00+02:00</published><updated>2015-06-22T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-22:notes/sparkmooc_note_lec7.html</id><summary type="html">&lt;h2 id="data-cleaning"&gt;DATA CLEANING&lt;/h2&gt;
+&lt;p&gt;lab4前后做了四个小时 不过很有意思... 第五部分出现out of memory error就没办法了...&lt;/p&gt;</content><category term="notes"/><category term="spark"/></entry><entry><title>[Spark MOOC note] Lec7. Data Quality</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec7.html" rel="alternate"/><published>2015-06-22T00:00:00+02:00</published><updated>2015-06-22T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-22:/notes/sparkmooc_note_lec7.html</id><summary type="html">&lt;h2 id="data-cleaning"&gt;DATA CLEANING&lt;/h2&gt;
+&lt;p&gt;ex. 
+deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
+&lt;p&gt;deal with non-ideal samples ⇒ tradeoff between simplicity and accuracy. &lt;/p&gt;
+&lt;h2 id="data-quality-problems"&gt;DATA QUALITY PROBLEMS&lt;/h2&gt;
+&lt;p&gt;data quality problems: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Conversions in complex pipelines can mess up data &lt;/li&gt;
+&lt;li&gt;Combining multiple datasets can result in errrors&lt;/li&gt;
+&lt;li&gt;Data degrades in accuracy or loses value over time …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;h2 id="data-cleaning"&gt;DATA CLEANING&lt;/h2&gt;
 &lt;p&gt;ex. 
 deal with missing data, entity resolution, unit mismatch, ... &lt;/p&gt;
 &lt;p&gt;deal with non-ideal samples ⇒ tradeoff between simplicity and accuracy. &lt;/p&gt;
@@ -216,7 +242,25 @@ ex. in lab2, examine log lines that are not correctly parsed.&lt;/p&gt;
 &lt;p&gt;ex. entity resolution in lab3&lt;/p&gt;
 &lt;h2 id="example-dedupcleaning"&gt;EXAMPLE: DEDUP/CLEANING&lt;/h2&gt;
 &lt;p&gt;bing shopping被黑了
-convert to &lt;em&gt;canonical form &lt;/em&gt;(ex. mailing address)&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec6. Structured Data</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec6.html" rel="alternate"></link><published>2015-06-18T00:00:00+02:00</published><updated>2015-06-18T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-18:notes/sparkmooc_note_lec6.html</id><summary type="html">&lt;h2 id="relational-database"&gt;RELATIONAL DATABASE&lt;/h2&gt;
+convert to &lt;em&gt;canonical form &lt;/em&gt;(ex. mailing address)&lt;/p&gt;</content><category term="notes"/><category term="spark"/></entry><entry><title>[Spark MOOC note] Lec6. Structured Data</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec6.html" rel="alternate"/><published>2015-06-18T00:00:00+02:00</published><updated>2015-06-18T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-18:/notes/sparkmooc_note_lec6.html</id><summary type="html">&lt;h2 id="relational-database"&gt;RELATIONAL DATABASE&lt;/h2&gt;
+&lt;p&gt;review: key data management concepts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;data model &lt;/li&gt;
+&lt;li&gt;schema&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;relational data model&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;structured data: have a specific schema to start with&lt;/p&gt;
+&lt;p&gt;relationl database: a set of relations.
+2 parts to a Relation: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;schema: name of relation, name and type of columns&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec6//pasted_image.png"/&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;instance: &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;any data at given time 
+(&lt;em&gt;cardinality&lt;/em&gt;:=nb …&lt;/p&gt;</summary><content type="html">&lt;h2 id="relational-database"&gt;RELATIONAL DATABASE&lt;/h2&gt;
 &lt;p&gt;review: key data management concepts:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;data model &lt;/li&gt;
@@ -297,7 +341,14 @@ content_size  = size
 &lt;/ul&gt;
 &lt;p&gt;一个pair RDD按照key来distinct不知道有没有distinctByKey之类的东西, 只好写成这样, 不知是不是对的: 
 &lt;code&gt;dayHostCount = dayGroupedHosts.map(lambda group : (group[0], len(set(group[1])) ) )&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;...总体来说很有意思的一个lab...&lt;/p&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec5. Semi-structured Data</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec5.html" rel="alternate"></link><published>2015-06-17T00:00:00+02:00</published><updated>2015-06-17T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-17:notes/sparkmooc_note_lec5.html</id><summary type="html">&lt;h2 id="key-data-management-concepts"&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
+&lt;p&gt;...总体来说很有意思的一个lab...&lt;/p&gt;</content><category term="notes"/><category term="spark"/></entry><entry><title>[Spark MOOC note] Lec5. Semi-structured Data</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec5.html" rel="alternate"/><published>2015-06-17T00:00:00+02:00</published><updated>2015-06-17T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-17:/notes/sparkmooc_note_lec5.html</id><summary type="html">&lt;h2 id="key-data-management-concepts"&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
+&lt;p&gt;data model: collection of concepts for describing data
+schema: a description of a particular collection of data using a given data model&lt;/p&gt;
+&lt;p&gt;structure spectrum: &lt;br/&gt;
+&lt;img alt="" class="img-responsive" src="../images/sparkmooc_note_lec5/pasted_image.png"/&gt;
+semi-structured data: apply schema &lt;strong&gt;after&lt;/strong&gt; creating data. &lt;/p&gt;
+&lt;h2 id="files"&gt;FILES&lt;/h2&gt;
+&lt;p&gt;files: named collection of bytes, in hierarchical namespace (but: In a Content-Addressable Storage system …&lt;/p&gt;</summary><content type="html">&lt;h2 id="key-data-management-concepts"&gt;KEY DATA MANAGEMENT CONCEPTS&lt;/h2&gt;
 &lt;p&gt;data model: collection of concepts for describing data
 schema: a description of a particular collection of data using a given data model&lt;/p&gt;
 &lt;p&gt;structure spectrum: &lt;br/&gt;
@@ -350,7 +401,17 @@ types of columns are inferred from values. &lt;/p&gt;
 &lt;li&gt;small range of compressed file size&lt;/li&gt;
 &lt;li&gt;binary still much faster than text &lt;/li&gt;
 &lt;li&gt;LZ4 compression ~= raw IO speed&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="spark"></category></entry><entry><title>[Spark MOOC note] Lec4. Spark Essentials</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec4.html" rel="alternate"></link><published>2015-06-16T00:00:00+02:00</published><updated>2015-06-16T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-16:notes/sparkmooc_note_lec4.html</id><summary type="html">&lt;h2 id="python-spark-pyspark"&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
+&lt;/ul&gt;</content><category term="notes"/><category term="spark"/></entry><entry><title>[Spark MOOC note] Lec4. Spark Essentials</title><link href="https://x-wei.github.io/notes/sparkmooc_note_lec4.html" rel="alternate"/><published>2015-06-16T00:00:00+02:00</published><updated>2015-06-16T00:00:00+02:00</updated><author><name>mx</name></author><id>tag:x-wei.github.io,2015-06-16:/notes/sparkmooc_note_lec4.html</id><summary type="html">&lt;h2 id="python-spark-pyspark"&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;a spark prog has 2 programs:&lt;/strong&gt; &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;dirver program: runs on driver machine&lt;/li&gt;
+&lt;li&gt;worker program: runs on local threads or cluster nodes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;a spark prog first creates a &lt;strong&gt;SparkContext object:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;tells how and where to access a cluster&lt;/li&gt;
+&lt;li&gt;shell will automatically create &lt;strong&gt;the sc varible&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;in iPython: use …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;h2 id="python-spark-pyspark"&gt;PYTHON SPARK (PYSPARK)&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;a spark prog has 2 programs:&lt;/strong&gt; &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;dirver program: runs on driver machine&lt;/li&gt;
@@ -393,10 +454,10 @@ The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines wh
 &lt;li&gt;apply actions on RDD (collect, count)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;ex code:  &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;data = [1,2,3,4]&lt;/span&gt;&lt;/span&gt;
-&lt;span class="code-line"&gt;&lt;span class="err"&gt;rDD = sc.paralize(data, 4)&lt;/span&gt;&lt;/span&gt;
-&lt;span class="code-line"&gt;&lt;span class="err"&gt;distFile = sc.textFile("readme.txt", 4) // elements are lines in the file&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;data = [1,2,3,4]&lt;/code&gt;&lt;/span&gt;
+&lt;span class="code-line"&gt;rDD = sc.paralize(data, 4)&lt;/span&gt;
+&lt;span class="code-line"&gt;distFile = sc.textFile("readme.txt", 4) // elements are lines in the file&lt;/span&gt;
+&lt;span class="code-line"&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id="spark-transformations"&gt;SPARK TRANSFORMATIONS&lt;/h2&gt;
 &lt;p&gt;to create new dataset from existing one (lazy)&lt;/p&gt;
 &lt;p&gt;examples of transformations: &lt;br/&gt;
@@ -458,4 +519,4 @@ The &lt;code&gt;master&lt;/code&gt; parameter (for a SparkContext) determines wh
 &lt;img alt="" class="img-responsive" src="../images/./sparkmooc_note_lec4/pasted_image013.png"/&gt;&lt;/p&gt;
 &lt;h2 id="lab1"&gt;Lab1&lt;/h2&gt;
 &lt;p&gt;VB更新以后虚拟机打不开了, 解决办法在: &lt;br/&gt;
-&lt;a href="http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001"&gt;http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001&lt;/a&gt;&lt;/p&gt;</summary><category term="spark"></category></entry></feed>
+&lt;a href="http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001"&gt;http://bbs.deepin.org/forum.php?mod=viewthread&amp;amp;tid=26001&lt;/a&gt;&lt;/p&gt;</content><category term="notes"/><category term="spark"/></entry></feed>

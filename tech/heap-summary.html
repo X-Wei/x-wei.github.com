@@ -18,13 +18,13 @@
 
         <meta name="author" content="mx" />
         <meta name="keywords" content="algorithm" />
-        <meta name="description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..." />
+        <meta name="description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的 …" />
 
         <meta property="og:site_name" content="mx's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Priority Queue/Heap (优先队列/堆)小结"/>
         <meta property="og:url" content="https://x-wei.github.io/tech/heap-summary.html"/>
-        <meta property="og:description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的用途: pq是一种队列, 不过不是先进先出(FIFO), 而是每次出队的元素永远是优先级最高的. logical structure of PQ 个人感觉&#34;堆&#34;这个名字大概源于PQ的(逻辑上的)形状吧: PQ是一种树(tree), 准确的说, 是一种二叉树(binary tree), 说得再准确一点, 它是一种完全二叉树(complete binary tree): 没错, PQ是一种满足某些条件的完全二叉树. 所谓的&#34;完全二叉树&#34;, 要满足: 除了最后一层, 所有层都排满(没有非空节点) 最后一层的所有非空节点都排在左边 一张图可以直观说明, 完全二叉树其实就是长得像这样: 一个完全二叉树能被成为PQ的话, 要满足的条件就是: 对于任何一个节点, 它的优先级都大于左右子节点的优先级. 比如下图 ..."/>
+        <meta property="og:description" content="今天简单介绍一下优先队列(priority queue, 以下简称PQ)这个数据结构的实现. PQ又叫&#34;堆&#34;(heap), 但是可能优先队列这个名字更容易记忆它的 …"/>
         <meta property="article:published_time" content="2015-12-09" />
             <meta property="article:section" content="tech" />
             <meta property="article:tag" content="algorithm" />
@@ -257,7 +257,7 @@ mx's blog            </a>
 </blockquote>
 <h1 id="pq-implementation">PQ implementation</h1>
 <p>先写一下代码框架:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">PQ</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">maxPQ</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span><span class="w">  </span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">PQ</span><span class="err">{</span><span class="o">//</span><span class="w"> </span><span class="n">maxPQ</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">integers</span><span class="w">  </span></code></span>
 <span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">pq</span><span class="err">[]</span><span class="p">;</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="o">=</span><span class="mi">1000</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">ArrayList</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="n">MAX_CAPACITY</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="p">(</span><span class="n">rightmost</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="p">)</span><span class="w">   </span></span>
@@ -274,22 +274,22 @@ mx's blog            </a>
 <span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">add</span><span class="p">(</span><span class="nc">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">insert</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">PQ</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
 <span class="code-line"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nc">int</span><span class="w"> </span><span class="n">poll</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">remove</span><span class="w"> </span><span class="k">top</span><span class="w"> </span><span class="k">element</span><span class="w"> </span><span class="c1">--&gt; stay tuned  </span></span>
-<span class="code-line"><span class="err">}</span><span class="w"></span></span>
-</pre></div>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"></span></pre></div>
 <p>最关键的两个函数是<code>add</code>和<code>poll</code>, 实现这两个操作的关键在于两个基本操作: <code>siftup()</code>和<code>siftdown()</code>. 在PQ的性质被扰乱的时候, 使用这两个操作可以使PQ恢复性质(所谓的"调整").   </p>
 <h3 id="siftup">siftup</h3>
 <p>如果一个新元素到来, 首先将其放在最后(最底层最右边的节点), 如果新来节点的优先级比较高, 可以用siftup将其提升到一个合适的层次. 用公司结构来类比就是新入职的员工由于能力强被提高到了高层, 而提升的办法就是: 和上司交换岗位(也就是和父节点交换位置).   </p>
 <p>所以这个操作只要不断把该元素与父节点交换, 直到遇到一个优先级大于该节点的父节点或者已经到了最高处停止. 代码很短:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftup</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftup</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></code></span>
 <span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">size</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">newly</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="k">element</span><span class="w">     </span></span>
 <span class="code-line"><span class="w">    </span><span class="k">for</span><span class="p">(;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pq</span><span class="o">[</span><span class="n">i/2</span><span class="o">]&lt;</span><span class="n">pq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">/=</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w">  </span></span>
-<span class="code-line"><span class="err">}</span><span class="w"></span></span>
-</pre></div>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"></span></pre></div>
 <h3 id="siftdown">siftdown</h3>
 <p>siftdown的功能和siftup相反: 如果在最高处是一个优先级很低的元素, 需要将其"下放". 方法就是把它和子节点里面优先级较高的进行交换.   </p>
 <p>代码也不长, 不过第一次写可能不太简洁:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftdown</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></span>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">siftdown</span><span class="p">()</span><span class="err">{</span><span class="w">  </span></code></span>
 <span class="code-line"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">nothing</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sift</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">empty</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="nc">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="n">siftdown</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="n">node</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">&lt;=</span><span class="k">size</span><span class="p">)</span><span class="err">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">level</span><span class="w">  </span></span>
@@ -302,28 +302,28 @@ mx's blog            </a>
 <span class="code-line"><span class="w">        </span><span class="n">swap</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="p">;</span><span class="w">  </span></span>
 <span class="code-line"><span class="w">    </span><span class="err">}</span><span class="w">  </span></span>
-<span class="code-line"><span class="err">}</span><span class="w"></span></span>
-</pre></div>
+<span class="code-line"><span class="err">}</span></span>
+<span class="code-line"></span></pre></div>
 <h2 id="implementation-of-add-and-poll_1">implementation of add and poll</h2>
 <p>有了这两个sift的基本操作, add和poll的操作就简单了. <br/>
 <strong>add</strong><br/>
 加入新元素的时候, 只要先把它放在最后面, 然后调用siftup()函数调整一下pq即可:  </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public void add(int n){ // insert element to PQ  </span></span>
-<span class="code-line"><span class="err">    assert size+1&lt;MAX_CAPACITY;  </span></span>
-<span class="code-line"><span class="err">    pq[++size] = n;  </span></span>
-<span class="code-line"><span class="err">    siftup();  </span></span>
-<span class="code-line"><span class="err">}</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code>public void add(int n){ // insert element to PQ  </code></span>
+<span class="code-line">    assert size+1&lt;MAX_CAPACITY;  </span>
+<span class="code-line">    pq[++size] = n;  </span>
+<span class="code-line">    siftup();  </span>
+<span class="code-line">}</span>
+<span class="code-line"></span></pre></div>
 <p><strong>poll</strong><br/>
 堆顶元素被拿走以后, 我们可以先把最后一个元素放在顶部, 然后调用siftdown进行调整:   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public int poll(){ // get and remove top element  </span></span>
-<span class="code-line"><span class="err">    assert !isEmpty();  </span></span>
-<span class="code-line"><span class="err">    int top = pq[1];  </span></span>
-<span class="code-line"><span class="err">    pq[1] = pq[size--];// put last element on the top  </span></span>
-<span class="code-line"><span class="err">    siftdown();  </span></span>
-<span class="code-line"><span class="err">    return top;  </span></span>
-<span class="code-line"><span class="err">}</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="nv">public</span><span class="w"> </span><span class="nv">int</span><span class="w"> </span><span class="nv">poll</span><span class="ss">()</span>{<span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="nv">get</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">remove</span><span class="w"> </span><span class="nv">top</span><span class="w"> </span><span class="nv">element</span><span class="w">  </span></code></span>
+<span class="code-line"><span class="w">    </span><span class="nv">assert</span><span class="w"> </span><span class="o">!</span><span class="nv">isEmpty</span><span class="ss">()</span><span class="c1">;  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">int</span><span class="w"> </span><span class="nv">top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">pq</span>[<span class="mi">1</span>]<span class="c1">;  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">pq</span>[<span class="mi">1</span>]<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">pq</span>[<span class="nv">size</span><span class="o">--</span>]<span class="c1">;// put last element on the top  </span></span>
+<span class="code-line"><span class="w">    </span><span class="nv">siftdown</span><span class="ss">()</span><span class="c1">;  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">top</span><span class="c1">;  </span></span>
+<span class="code-line">}</span>
+<span class="code-line"></span></pre></div>
 <h1 id="pq-application_1">PQ application</h1>
 <p>接下来讲一下PQ的应用.   </p>
 <h3 id="heapsort">heapsort</h3>
@@ -333,13 +333,13 @@ mx's blog            </a>
 <p>首先前面的siftdown函数很明显可以修改一下加上一个参数变为<code>siftdown(int i)</code>(i代表要向下调整的元素的下标).   </p>
 <p>在heapsort里第一步是要建立一个PQ. 最naive的建堆操作就是新建一个空的heap然后不断向里面加入数组<code>a</code>里的元素(空间复杂度N, 时间复杂度NlgN). 其实这个操作可以做的更好: 我们<em>先直接把数组a当作pq[]数组</em>, 现在显然它不满足PQ性质, 只需要<em>多次使用siftdown</em>进行调整即可.   </p>
 <p>假设一共有h(=lgN)层, 由于最后一层的节点不必调用siftdown, 我们只要从倒数第二层开始调用siftdown即可, 结合前面提到的pq的性质(N/2以后的节点都在最后一层), 写法很简单(简单起见认为a也是把第0个元素空出来好了):   </p>
-<div class="highlight"><pre><span class="code-line"><span></span><span class="err">public static void heapify(int[] a){  </span></span>
-<span class="code-line"><span class="err">    int N = a.length;  </span></span>
-<span class="code-line"><span class="err">    for(int i=N/2;i&lt;=1;i--){  </span></span>
-<span class="code-line"><span class="err">        siftdown(a, i);  </span></span>
-<span class="code-line"><span class="err">    }  </span></span>
-<span class="code-line"><span class="err">}</span></span>
-</pre></div>
+<div class="highlight"><pre><span class="code-line"><span></span><code><span class="nv">public</span><span class="w"> </span><span class="nv">static</span><span class="w"> </span><span class="nv">void</span><span class="w"> </span><span class="nv">heapify</span><span class="ss">(</span><span class="nv">int</span>[]<span class="w"> </span><span class="nv">a</span><span class="ss">)</span>{<span class="w">  </span></code></span>
+<span class="code-line"><span class="w">    </span><span class="nv">int</span><span class="w"> </span><span class="nv">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">a</span>.<span class="nv">length</span><span class="c1">;  </span></span>
+<span class="code-line"><span class="w">    </span><span class="k">for</span><span class="ss">(</span><span class="nv">int</span><span class="w"> </span><span class="nv">i</span><span class="o">=</span><span class="nv">N</span><span class="o">/</span><span class="mi">2</span><span class="c1">;i&lt;=1;i--){  </span></span>
+<span class="code-line"><span class="w">        </span><span class="nv">siftdown</span><span class="ss">(</span><span class="nv">a</span>,<span class="w"> </span><span class="nv">i</span><span class="ss">)</span><span class="c1">;  </span></span>
+<span class="code-line"><span class="w">    </span>}<span class="w">  </span></span>
+<span class="code-line">}</span>
+<span class="code-line"></span></pre></div>
 <p>这个操作的时间复杂度是O(N)的 ! 为什么呢?<br/>
 → 第k层节点有2^k个节点, 这一层的节点向下调整最多会进行h-k步, 所以计算量是一个求和表达式: <br/>
 <code>Sigma( 2^k * (h-k) ) for k=0,...,h-1</code><br/>
@@ -358,7 +358,7 @@ mx's blog            </a>
 </ul>
 <h3 id="median-of-a-stream">median of a stream</h3>
 <p>问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?<br/>
-这个的解法是使用<em>两个PQ</em>, 一个最大堆<code>maxpq</code>一个最小堆<code>minpq</code>, 然后<em>maxpq里存放较<strong><em>小</em></strong>的一半数字, minpq里存放较<strong><em>大</em></strong>的一半数字: </em><code>maxpq.top()&lt;=minpq.top()</code>. <br/>
+这个的解法是使用<em>两个PQ</em>, 一个最大堆<code>maxpq</code>一个最小堆<code>minpq</code>, 然后<em>maxpq里存放较</em><strong>小</strong><em>的一半数字, minpq里存放较</em><strong>大</strong><em>的一半数字: </em><code>maxpq.top()&lt;=minpq.top()</code>. <br/>
 并且我们要求: <code>minpq.size &lt;= maxpq.size &lt;= minpq.size+1</code><br/>
 ⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  </p>
 <p>初始时两个pq都是空的, 每次数字n到来时:<br/>
@@ -550,14 +550,14 @@ mx's blog            </a>
     </div>
 <div class="panel-body">
     <ul class="list-group list-inline tagcloud" id="tags">
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/pelican.html">
-                    pelican <sup> 7</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/google.html">
-                    google <sup> 6</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -565,159 +565,9 @@ mx's blog            </a>
                     german <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/torch.html">
-                    torch <sup> 6</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
-                    微信公众号 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/deep-learning.html">
-                    deep learning <sup> 28</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
-                    巴黎高科 <sup> 1</sup>
-                </a>
-            </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/markdown.html">
-                    markdown <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/linux.html">
-                    linux <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/inf422.html">
-                    inf422 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/toefl.html">
-                    Toefl <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/regex.html">
-                    regex <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/git.html">
-                    git <sup> 5</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/weka.html">
-                    weka <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/scala.html">
-                    scala <sup> 12</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/xie-zuo.html">
-                    写作 <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/opencv.html">
-                    opencv <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/scrapy.html">
-                    scrapy <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/gre.html">
-                    GRE <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/lp.html">
-                    LP <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/android.html">
-                    android <sup> 9</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/pandas.html">
-                    pandas <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/codejam.html">
-                    codejam <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/fr.html">
-                    fr <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/shell.html">
-                    shell <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/python.html">
-                    python <sup> 13</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
-                    Simon&Garfunkel <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/french.html">
-                    french <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/wai-guan.html">
-                    外观 <sup> 4</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
-                    中文乱码 <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/host.html">
-                    host <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/tips.html">
-                    tips <sup> 3</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/ssh.html">
-                    ssh <sup> 2</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/ubuntu.html">
-                    ubuntu <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
@@ -725,19 +575,99 @@ mx's blog            </a>
                     效率 <sup> 1</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/java.html">
-                    java <sup> 4</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/spark.html">
-                    spark <sup> 6</sup>
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 4</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
                 <a href="https://x-wei.github.io/tag/flutter.html">
                     Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -746,23 +676,33 @@ mx's blog            </a>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/c.html">
-                    C++ <sup> 1</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-1">
-                <a href="https://x-wei.github.io/tag/algorithm.html">
-                    algorithm <sup> 35</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-4">
                 <a href="https://x-wei.github.io/tag/texmacs.html">
                     TeXmacs <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ml.html">
-                    ml <sup> 4</sup>
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
                 </a>
             </li>
             <li class="list-group-item tag-2">
@@ -770,19 +710,44 @@ mx's blog            </a>
                     eclipse <sup> 4</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/ocaml.html">
-                    OCaml <sup> 8</sup>
-                </a>
-            </li>
-            <li class="list-group-item tag-2">
-                <a href="https://x-wei.github.io/tag/r.html">
-                    R <sup> 4</sup>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-4">
-                <a href="https://x-wei.github.io/tag/mermaid.html">
-                    mermaid <sup> 1</sup>
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
@@ -790,14 +755,54 @@ mx's blog            </a>
                     出国 <sup> 2</sup>
                 </a>
             </li>
-            <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/swiss.html">
-                    swiss <sup> 3</sup>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
                 </a>
             </li>
             <li class="list-group-item tag-3">
-                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
-                    快捷键 <sup> 3</sup>
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
                 </a>
             </li>
     </ul>
@@ -865,7 +870,7 @@ mx's blog            </a>
          
          <div class="col-md-14">
          <p><small>
-            &copy; 2023 mx
+            &copy; 2026 mx
             &middot; 通过
             <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
     <!-- Content -->
