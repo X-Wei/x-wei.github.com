@@ -7,18 +7,41 @@ on:
       - master
     paths:
       - 'pelican_dir/content/**'
+      - '.github/workflows/main.yml'
 
 jobs:
   build_pelican_blog:
     runs-on: ubuntu-latest
     name: Publish html
+    permissions:
+      contents: write
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-      -
-        name: Generate pelican html files and commit
-        uses: X-Wei/pelican-gh-actions-xwei@v0.0.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GH_TOKEN }}
-          GH_PAGES_BRANCH: master
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_GH_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pelican
+        run: pip install "pelican[markdown]==4.12.0" beautifulsoup4 pytz
+
+      - name: Generate html
+        working-directory: pelican_dir
+        run: pelican content -s publishconf.py
+
+      - name: Commit and push generated html
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            timestamp=$(date +%s%3N)
+            git commit -m "[ci skip] Automated deployment to GitHub Pages on $timestamp"
+            git push
+          fi

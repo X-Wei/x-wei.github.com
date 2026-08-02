@@ -101,7 +101,7 @@ DIRECT_TEMPLATES = (('search', 'index', 'categories', 'authors', 'archives',
                      'tags'))
 AVATAR = 'images/mx.jpg'
 ABOUT_PAGE = "about.html"
-ABOUT_ME = ur"""
+ABOUT_ME = r"""
 <h3 style="text-align:center">
 <a href="https://github.com/x-wei" target="_blank">
 <i class="fa fa-github" style="text-align:center"></i></a>
@@ -196,4 +196,3 @@ RELATIVE_URLS = True
 CHECK_MODIFIED_METHOD = "md5"
 LOAD_CONTENT_CACHE = True
 CACHE_CONTENT = True
-
