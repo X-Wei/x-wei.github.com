@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"
+>
+<head>
+    <title>赶在苹果开发者账号过期前: 打包两个自用的macOS App - mx's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="theme-color" content="#6b5594">
+    <meta name="msapplication-navbutton-color" content="#6b5594">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6b5594">
+    <link rel="manifest" href="/manifest.json">
+
+<link rel="canonical" href="https://x-wei.github.io/tech/my-macos-apps-before-apple-dev-expires.html">
+
+        <meta name="author" content="mx" />
+        <meta name="keywords" content="macos,linux,fcitx,rectangle" />
+        <meta name="description" content="前两天收到苹果邮件, 提醒我的Apple Developer账号这周末就要自动扣费续期了. 这两年其实基本没怎么正经用过, 每年白给苹果送钱(瑞士帐号不是99刀, 而是109CHF!). 跟Gemini聊了一下后果断关了自动续费 -- 等 …" />
+
+        <meta property="og:site_name" content="mx's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="赶在苹果开发者账号过期前: 打包两个自用的macOS App"/>
+        <meta property="og:url" content="https://x-wei.github.io/tech/my-macos-apps-before-apple-dev-expires.html"/>
+        <meta property="og:description" content="前两天收到苹果邮件, 提醒我的Apple Developer账号这周末就要自动扣费续期了. 这两年其实基本没怎么正经用过, 每年白给苹果送钱(瑞士帐号不是99刀, 而是109CHF!). 跟Gemini聊了一下后果断关了自动续费 -- 等 …"/>
+        <meta property="article:published_time" content="2026-08-22" />
+            <meta property="article:section" content="tech" />
+            <meta property="article:tag" content="macos" />
+            <meta property="article:tag" content="linux" />
+            <meta property="article:tag" content="fcitx" />
+            <meta property="article:tag" content="rectangle" />
+            <meta property="article:author" content="mx" />
+        <meta property="og:image"
+                  content="https://x-wei.github.io/my-macos-apps-before-apple-dev-expires.png"/>
+
+
+
+    <!-- Ad sense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7906158617398863"
+         crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+        <link href="https://x-wei.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://x-wei.github.io/theme/css/pygments/manni.css" rel="stylesheet">
+    <link href="https://x-wei.github.io/theme/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://x-wei.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://x-wei.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+              title="mx's blog ATOM Feed"/>
+
+        <link href="https://x-wei.github.io/theme/css/material.min.css" rel="stylesheet">
+        <link href="https://x-wei.github.io/theme/css/ripples.css" rel="stylesheet">
+</head>
+<body>
+<div style="display:none" id="title">赶在苹果开发者账号过期前: 打包两个自用的macOS App - mx's blog</div>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://x-wei.github.io/" class="navbar-brand">
+mx's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+
+
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-user"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </li>
+
+                  <ul class="nav navbar-nav hidden-xs hidden-sm">
+                  </ul>
+            </ul>
+
+                <ul class="nav navbar-nav hidden-md hidden-lg hidden-xl">
+                    <li class="dropdown hidden-md hidden-lg hidden-xl">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                            <i class="fa fa-folder-o"></i><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li >
+                                <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                            </li>
+                            <li >
+                                <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                            </li>
+                            <li class="active">
+                                <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                    <ul class="nav navbar-nav hidden-xs hidden-sm">
+                        <li >
+                            <a href="https://x-wei.github.io/misc/index.html"><i class="fa fa-folder-o"></i> Misc</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/music/index.html"><i class="fa fa-folder-o"></i> Music</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/notes/index.html"><i class="fa fa-folder-o"></i> Notes</a>
+                        </li>
+                        <li >
+                            <a href="https://x-wei.github.io/soft/index.html"><i class="fa fa-folder-o"></i> Soft</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://x-wei.github.io/tech/index.html"><i class="fa fa-folder-o"></i> Tech</a>
+                        </li>
+                    </ul>
+
+
+
+            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg hidden-xl">
+                <li class="dropdown hidden-md hidden-lg hidden-xl">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                        <i class="fa fa-search"></i><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><span>
+                        <form class="navbar-search" action="/search.html">
+                          <input type="text" class="search-query form-control col-lg-16" placeholder="Search" name="q" id="tipue_search_input" required>
+                        </form></span>
+                      </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-right navbar-form hidden-xs">
+              <li><span>
+                <form class="navbar-search" action="/search.html">
+                  <input type="text" class="search-query form-control col-lg-16" placeholder="查找" name="q" id="tipue_search_input" required>
+                </form></span>
+              </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right hidden-xs">
+              <li><a href="https://x-wei.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archive</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container" style="min-height: 100%;height: auto !important;height: 100%;">
+    <div class="row" style="padding-bottom:80px;padding-top:80px;">
+        <div class="col-xl-21 col-lg-20 col-md-18">
+            <div id="loading-block">
+            <ol class="breadcrumb">
+                <li><a href="https://x-wei.github.io/" title="mx's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://x-wei.github.io/tech/index.html" title="tech">tech</a></li>
+                <li class="active">赶在苹果开发者账号过期前: 打包两个自用的macOS App</li>
+            </ol>
+    <section id="content" class="article-content">
+        <article>
+            <header class="page-header jumbotron jumbotron-primary panel-primary" id="article-header">
+                <div class="panel-heading">
+                    <h1>
+                        赶在苹果开发者账号过期前: 打包两个自用的macOS App
+                        <a href="https://x-wei.github.io/tech/my-macos-apps-before-apple-dev-expires.html"
+                           rel="bookmark"
+                           class="btn btn-primary btn-lg"
+                           title="到 赶在苹果开发者账号过期前: 打包两个自用的macOS App 的永久链接">
+                           <i class="mdi-action-launch"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="panel-body">
+<div class="post-info">
+    <span class="published">
+        <time datetime="2026-08-22T00:00:00+02:00"><i class="fa fa-calendar"></i> Sat, 22 Aug 2026</time>
+    </span>
+
+
+        <span class="label label-default">Category</span>
+        <a href="https://x-wei.github.io/tech/index.html">tech</a>
+
+
+
+<span class="btn-group">
+	<a href="https://x-wei.github.io/tag/macos.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> macos</a>
+	<a href="https://x-wei.github.io/tag/linux.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> linux</a>
+	<a href="https://x-wei.github.io/tag/fcitx.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> fcitx</a>
+	<a href="https://x-wei.github.io/tag/rectangle.html" class="btn btn-primary btn-xs"><i class="fa fa-tag"></i> rectangle</a>
+</span>
+    
+    
+
+</div><!-- /.post-info -->                </div>
+            </header>
+
+            <div class="entry-content jumbotron" id="article-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                        目录
+                        </div>
+                        <div class="panel-boy">
+                        <div id="toc"><ul><li><a class="toc-href" href="#1-fcitx5-macos" title="1. fcitx5-macos 签名版">1. fcitx5-macos 签名版</a></li><li><a class="toc-href" href="#2-rectangle" title="2. 修改 &amp; 打包 Rectangle (修复分屏记忆问题)">2. 修改 &amp; 打包 Rectangle (修复分屏记忆问题)</a></li><li><a class="toc-href" href="#3-whichspace" title="3. WhichSpace: 差点又要魔改打包">3. WhichSpace: 差点又要魔改打包</a></li><li><a class="toc-href" href="#_1" title='后记: 我也成了"能工智人" 😹'>后记: 我也成了"能工智人" 😹</a></li></ul></div>
+                        </div>
+                    </div>
+                <p>前两天收到苹果邮件, 提醒我的Apple Developer账号这周末就要自动扣费续期了. </p>
+<p>这两年其实基本没怎么正经用过, 每年白给苹果送钱(瑞士帐号不是99刀, 而是<strong>109CHF</strong>!). 跟Gemini聊了一下后果断关了自动续费 -- 等以后真有发布需求再说. </p>
+<p>与此同时, 自从今年买了Mac mini之后我也在渐渐适应macOS. 但用惯了Linux上的Cinnamon桌面, 转过来还是觉得各种不顺手. </p>
+<p>既然开发者证书这周末才到期, 本着<strong>不薅白不薅</strong>的原则, 我决定趁这两天把macOS上用着最别扭的两个开源软件签名打包成dmg. </p>
+<hr/>
+<h2 id="1-fcitx5-macos">1. fcitx5-macos 签名版</h2>
+<p>在Linux上用惯了Fcitx(很久以前还用它做了个<a href="https://github.com/x-wei/fcitx-table-french">法语输入法</a>), 最近转到了fcitx5. 在Mac上miss它, 主要是它的<strong>剪贴板管理</strong>和<strong>快速短语</strong>功能实在太方便了, 而且拼音选词也比macOS自带的智障拼音强太多.</p>
+<ul>
+<li><strong>痛点</strong>: 但<a href="https://github.com/fcitx-contrib/fcitx5-macos-installer/blob/master/README.zh-CN.md#:~:text=%E8%AF%B7%E6%82%A8%E7%90%86%E8%A7%A3%EF%BC%8C%E8%AE%A4%E8%AF%81%E9%9C%80%E8%A6%81%E5%BC%80%E5%8F%91%E8%80%85%E4%BB%98%E5%87%BA%E5%85%8D%E8%B4%B9%E8%BD%AF%E4%BB%B6%E6%97%A0%E6%B3%95%E6%8E%A5%E5%8F%97%E7%9A%84%20%E8%AE%A2%E9%98%85%20%E6%88%90%E6%9C%AC%E3%80%82%E8%AF%B7%E6%82%A8%E6%8C%89%E4%B8%8B%E8%BF%B0%E6%AD%A5%E9%AA%A4%E6%89%8B%E5%8A%A8%E8%A7%A3%E9%94%81%EF%BC%8C%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E3%80%82">官方README</a>里写了: 因为认证需要开发者付出免费软件无法接受的订阅成本, 未签名的安装包需要手动绕过一堆限制解锁. </li>
+<li><strong>折腾</strong>: 趁证书还在, 拉下来打包、签名并公证(Notarization), 做了一个拿来就能直接开箱双击安装的dmg. </li>
+<li><strong>产出</strong>: </li>
+<li>Repo &amp; Release: <a href="https://github.com/maxing-labs/fcitx5-macos-signed/releases/tag/0.3.5">fcitx5-macos-signed (v0.3.5)</a></li>
+<li>顺便去官方仓库发了个帖子分享给社区: <a href="https://github.com/fcitx/fcitx5-macos/discussions/413">fcitx5-macos Discussion #413</a></li>
+</ul>
+<hr/>
+<h2 id="2-rectangle">2. 修改 &amp; 打包 Rectangle (修复分屏记忆问题)</h2>
+<ul>
+<li><strong>痛点</strong>: 在macOS上主要用Rectangle做窗口分屏. 但跟Cinnamon的分屏逻辑相比, 它有个很别扭的地方: <strong>没法通过连续按"左半 + 上半"两次快捷键把窗口放到左上角占据1/4屏幕</strong>. 因为在左半的状态下按下"上半"快捷键, Rectangle会直接把窗口重置成顶部的上半屏(把原本的宽度覆盖回100%了). 在和AImode反复确认这个功能缺失以后, 决定改源码. </li>
+<li><strong>折腾</strong>: 给Rectangle加了这么一个选项(分屏切换主轴时保留另一个轴的尺寸<code>halvesPreserveOtherAxis</code>), 打包成dmg自用. </li>
+<li><strong>产出</strong>: </li>
+<li>自用 Release: <a href="https://github.com/maxing-labs/Rectangle/releases/tag/v0.99-halvesPreserveOtherAxis">Rectangle v0.99-halvesPreserveOtherAxis</a></li>
+<li>顺便给 upstream 提了 PR: <a href="https://github.com/rxhanson/Rectangle/pull/1824">Rectangle PR #1824</a></li>
+</ul>
+<hr/>
+<h2 id="3-whichspace">3. WhichSpace: 差点又要魔改打包</h2>
+<ul>
+<li><strong>痛点</strong>: 安装了<a href="https://github.com/geovens/WhichSpace">WhichSpace</a>用来在菜单栏显示当前在第几个桌面. 在Linux下切换虚拟桌面习惯了<strong>wrap around</strong>(在第一个和最后一个桌面之间循环切换), 但在Mac上切到头就卡住了. </li>
+<li><strong>插曲</strong>: 本来我也摩拳擦掌准备把WhichSpace源码拉下来改代码 + 签名打包, 结果跟Claude一聊, 它翻了下文档提醒我: <strong>其实作者早就支持wrap around这个隐藏开关了!</strong> 接着Claude陪我一起排查了半天为什么打开配置后没生效, 终于只要修改设置就能用 -- 一行代码没改也不用打包了😎👌. </li>
+</ul>
+<hr/>
+<h2 id="_1">后记: 我也成了"能工智人" 😹</h2>
+<p>昨晚全部装上实测了一圈, 用得极爽, 操作手感终于非常接近我在Linux上的Cinnamon桌面了. </p>
+<p>之前几周有点倦怠, 这周又重燃了兴趣 下班回家有空就抓着agent vibe聊两句 (主要再不快点苹果那个就过期了). </p>
+<p>整个过程中, 其实在Apple开发者后台手动登录、点击、生成、导出并下载certificate反而是最耗费时间的机械操作; 另外在编译完成之后怎么测试安装时也来回问了Claude好几次. </p>
+<p>修改源码实现的时候, 进行了几轮的<code>grill-me</code> session把我想要的效果跟agent说清了, 然后一把梭的代码直接就可用. </p>
+<p>至于具体的Swift代码修改? <strong>我是一行也没看</strong>. </p>
+<p>最后在GitHub上发布Release和提交PR, 也是Claude给出意见我就直接"同意/下一步"闭眼执行 -- 我自己完全不懂macOS原生开发, 全是Claude一股脑手把手一把做完的. </p>
+<p>看着PR和Release库库的出来, 而我基本不懂感觉像出卖了灵魂; 再仔细看看 PR内容写得巨专业的样子, 有一种冒名顶替感... </p>
+<p><img alt="" class="img-responsive" src="../images/my-macos-apps-before-apple-dev-expires/2026-08-22-17-19-16.png"/></p>
+            </div>
+            <div class="entry-content jumbotron" id="source-content" style="display: none">
+                <!-- <pre><code id="source-code">
+                </code></pre> -->
+                <div id="source-code"></div>
+            </div>
+            <!-- /.entry-content -->
+
+            <div class="row" id="prevnext">
+                <div class="col-xs-12">
+                    <a href="https://x-wei.github.io/misc/maxing-weekly-ep3-2026w33.html" class="btn btn-default btn-lg" style="float:left;clear:both;background-color:#fff;">
+                        <h4><i class="fa fa-arrow-left"></i>
+                        Maxing周刊 EP3 2026w33
+                        </h4>
+                    </a>
+                </div>
+                <div class="col-xs-12">
+                </div>
+            </div>
+
+
+<section class="comments" id="comments">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="disqus-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#disqus-comments" aria-expanded="true" aria-controls="disqus-comments">
+              <i class="fa fa-comments-o"></i> Disqus 留言
+            </a>
+          </h4>
+        </div>
+        <div id="disqus-comments" class="panel-collapse collapse.show" role="tabpanel" aria-labelledby="disqus-heading">
+          <div class="panel-body">
+            <div class="tab-pane fade active in" id="disqus-comments">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+                            var disqus_identifier = 'my-macos-apps-before-apple-dev-expires';
+                        var disqus_url = 'https://x-wei.github.io/tech/my-macos-apps-before-apple-dev-expires.html';
+
+                    var disqus_config = function () {
+
+                        this.language = "zh";
+                    };
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function () {
+                        var dsq = document.createElement('script');
+                        dsq.type = 'text/javascript';
+                        dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+                    Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>        </article>
+    </section>
+
+
+            </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <a data-dismiss="modal" href="javascript:void(0);">
+            <img id="mimg" src="" style="width:100%;height:auto">
+          </a>
+        </div>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6" id="sidebar">
+            <aside>
+
+<section>
+    <div class="sidebar-container">
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-user fa-lg"></i>
+<a href="https://x-wei.github.io/about.html">
+关于  mx
+</a>
+        </h4>
+    </div>
+<div class="panel-body" id="aboutme">
+        <a href="https://x-wei.github.io/about.html"><img width="100%" src="https://x-wei.github.io/../images/mx.jpg"/></a>
+    
+<h3 style="text-align:center">
+<a href="https://github.com/x-wei" target="_blank">
+<i class="fa fa-github" style="text-align:center"></i></a>
+<a href="https://weibo.com/u/1817154611" target="_blank">
+<i class="fa fa-weibo" style="text-align:center"></i></a>
+<a href="mailto:xwei.mx@gmail.com" target="_blank">
+<i class="mdi-communication-email" style="text-align:center"></i></a>
+</h3>
+
+<h4 class="widget-title">推荐文章</h4>
+<div class="textwidget">
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/TeXmacs_intro.html">学术文章写作利器: TeXmacs介绍</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/hashcode2014-solved-by-LP.html">运筹的力量: 用线性规划解决Google 2014 HashCode问题</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B.html">正则表达式入门简介</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/%E6%88%91%E7%9A%84ubuntu10.04%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93.html">我的ubuntu10.04配置总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/PT-summery.html">2011巴黎高科(ParisTech)申请总结</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/GT-summery.html">用尽量少的时间考一个够用的分数--一点Tofel/GRE备考经验</a><br></li>
+<li class="widget-container widget_text">
+<a href="https://x-wei.github.io/pelican_github_blog.html">用pelican在github上创建自己的博客!</a><br></li>
+</div>
+
+<br><a href="https://www.polytechnique.edu/" target="_blank">
+<img src="https://x-wei.github.io/images/x-logo.png" alt="X" width="180" border="0" />
+</a><br/>
+
+<br><a href="https://www.sjtu.edu.cn/">
+<img src="https://x-wei.github.io/images/ssss.jpg" width="180" border="0" alt="上海西南某高校">
+</a><br/>
+
+<br>
+<h4 class="widget-title">Visitors</h4>
+<script type="text/javascript" src="//rf.revolvermaps.com/0/0/1.js?i=59olkba9w7e&amp;s=220&amp;m=3&amp;v=true&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/how-to/how-to-what-is-free-blog-counter.php" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=5954927&style=0036&nbdigits=5&type=ip&initCount=0" title="web counter" Alt="web counter"   border="0" ></a>
+<br/>
+
+</div>
+</div>
+</div>        
+
+
+
+            
+
+<div class="sidebar-item ">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<a href="https://x-wei.github.io/tags.html"><i class="fa fa-tags fa-lg"></i><span class="icon-label">标签云</span></a>
+        </h4>
+    </div>
+<div class="panel-body">
+    <ul class="list-group list-inline tagcloud" id="tags">
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/macos.html">
+                    macos <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/linux.html">
+                    linux <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/fcitx.html">
+                    fcitx <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/rectangle.html">
+                    rectangle <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/weekly.html">
+                    weekly <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/mermaid.html">
+                    mermaid <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/german.html">
+                    german <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/swiss.html">
+                    swiss <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xiao-lu.html">
+                    效率 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/xie-zuo.html">
+                    写作 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/flutter.html">
+                    Flutter <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/wei-xin-gong-zhong-hao.html">
+                    微信公众号 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/pelican.html">
+                    pelican <sup> 7</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/deep-learning.html">
+                    deep learning <sup> 28</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/android.html">
+                    android <sup> 9</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/scala.html">
+                    scala <sup> 12</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ocaml.html">
+                    OCaml <sup> 8</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/python.html">
+                    python <sup> 13</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/torch.html">
+                    torch <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/r.html">
+                    R <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/ssh.html">
+                    ssh <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-1">
+                <a href="https://x-wei.github.io/tag/algorithm.html">
+                    algorithm <sup> 35</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/codejam.html">
+                    codejam <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/ml.html">
+                    ml <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/weka.html">
+                    weka <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/java.html">
+                    java <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/c.html">
+                    C++ <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/tex.html">
+                    tex <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/texmacs.html">
+                    TeXmacs <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/spark.html">
+                    spark <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/scrapy.html">
+                    scrapy <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/lp.html">
+                    LP <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/regex.html">
+                    regex <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/pandas.html">
+                    pandas <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/eclipse.html">
+                    eclipse <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/fr.html">
+                    fr <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/opencv.html">
+                    opencv <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/inf422.html">
+                    inf422 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ubuntu.html">
+                    ubuntu <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/wai-guan.html">
+                    外观 <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/kuai-jie-jian.html">
+                    快捷键 <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/shell.html">
+                    shell <sup> 4</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/french.html">
+                    french <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/chu-guo.html">
+                    出国 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/ba-li-gao-ke.html">
+                    巴黎高科 <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/git.html">
+                    git <sup> 5</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/toefl.html">
+                    Toefl <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/gre.html">
+                    GRE <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-2">
+                <a href="https://x-wei.github.io/tag/google.html">
+                    google <sup> 6</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/host.html">
+                    host <sup> 3</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/markdown.html">
+                    markdown <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-4">
+                <a href="https://x-wei.github.io/tag/simongarfunkel.html">
+                    Simon&Garfunkel <sup> 1</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/zhong-wen-luan-ma.html">
+                    中文乱码 <sup> 2</sup>
+                </a>
+            </li>
+            <li class="list-group-item tag-3">
+                <a href="https://x-wei.github.io/tag/tips.html">
+                    tips <sup> 3</sup>
+                </a>
+            </li>
+    </ul>
+</div>
+</div>
+</div>        
+        
+
+<div class="sidebar-item hidden-xs">
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h4>
+<i class="fa fa-github fa-lg"></i><span class="icon-label">GitHub仓库</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <div id="gh_repos">
+            <p class="list-group-item">Status updating...</p>
+        </div>
+            <a href="https://github.com/x-wei">@x-wei</a> on GitHub
+    </div>
+</div>
+</div>
+
+    </div>
+</section>
+        <div class="panel panel-default hidden-xs hidden-sm" id="affix-toc">
+            <div class="panel-heading"><h4>
+            目录</h4>
+            </div>
+            <div class="panel-boy">
+            <div id="toc"><ul><li><a class="toc-href" href="#1-fcitx5-macos" title="1. fcitx5-macos 签名版">1. fcitx5-macos 签名版</a></li><li><a class="toc-href" href="#2-rectangle" title="2. 修改 &amp; 打包 Rectangle (修复分屏记忆问题)">2. 修改 &amp; 打包 Rectangle (修复分屏记忆问题)</a></li><li><a class="toc-href" href="#3-whichspace" title="3. WhichSpace: 差点又要魔改打包">3. WhichSpace: 差点又要魔改打包</a></li><li><a class="toc-href" href="#_1" title='后记: 我也成了"能工智人" 😹'>后记: 我也成了"能工智人" 😹</a></li></ul></div>
+            </div>
+        </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+
+<footer id="fcfooter">
+   <hr/>
+   
+   <div class="container">
+         links : 
+                <a href="https://farseerfc.github.com/">farseerfc</a>
+                <a href="https://hyhx2008.github.com/">H.Y.</a>
+                <a href="https://reginald1787.github.io/">reginald1787</a>
+                <a href="https://log.dofine.me/">dofine</a>
+
+   
+      <div class="row">
+      
+         
+         
+         <div class="col-md-14">
+         <p><small>
+            &copy; 2026 mx
+            &middot; 通过
+            <a href="https://docs.getpelican.com/" target="_blank">Pelican</a> 生成                <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+    <!-- Content -->
+  <!-- licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution 4.0 International License</a>, except where indicated otherwise. -->
+
+         </small></p>
+         </div>
+      </div>
+   </div>
+   <a href="#" class="btn btn-primary btn-fab btn-raised mdi-editor-vertical-align-top withripple" style="position:fixed;bottom:30px;right:30px;z-index:1000"></a>
+</footer>
+<script src="https://x-wei.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://x-wei.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://x-wei.github.io/theme/js/respond.min.js"></script>
+
+    <!-- GitHub JS -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.jXHR) {
+                var jxhr = document.createElement('script');
+                jxhr.type = 'text/javascript';
+                jxhr.src = 'https://x-wei.github.io/theme/js/jXHR.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(jxhr, s);
+            }
+
+            github.showRepos({
+                user: 'x-wei',
+                count: 5,
+                skip_forks: false,
+                target: '#gh_repos'
+            });
+        });
+    </script>
+    <script src="https://x-wei.github.io/theme/js/github.js" type="text/javascript"></script>
+    <!-- End GitHub JS Code -->
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'xweisblog'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30756331-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+
+<script src="https://x-wei.github.io/theme/js/ripples.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/material.min.js"></script>
+<script src="https://x-wei.github.io/theme/js/jquery.bootstrap-autohidingnavbar.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.material.init();
+        $("div.navbar").autoHidingNavbar();
+        $(".img-responsive").css("cursor","pointer").on('click',function(){
+            var sr=$(this).attr('src');
+            $('#mimg').attr('src',sr);
+            $('#myModal').modal('show');
+        });
+        $('#affix-toc').affix({
+          offset: {
+            top: function(){
+                if($('#affix-toc').hasClass("affix"))
+                    return $('#sidebar').height();
+                return $('#sidebar').height() - $('#affix-toc').height();
+            },
+            bottom: function (){
+                return $("#fcfooter").offset().top -
+                    $("#article-content").offset().top -
+                    $("#article-content").height() + 20;
+            }
+          }
+        });
+        $('#affix-toc').width($('#sidebar').width());
+    });
+    $(window).resize(function () {
+       $('#affix-toc').width($('#sidebar').width());
+    });
+</script>
+
+</body>
+</html>
