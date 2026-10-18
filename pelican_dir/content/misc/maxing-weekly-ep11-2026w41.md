@@ -1,4 +1,4 @@
-Title: Maxing周刊 EP11 2026w41: 投资&去魅
+Title: Maxing周刊 EP11 2026w41: 投资&祛魅
 Date: 2026-10-11
 Category: misc
 Tags: weekly
@@ -12,7 +12,7 @@ Slug: maxing-weekly-ep11-2026w41
 ![](../images/maxing-weekly-ep11-2026w41/2026-10-11-21-57-19.png)
 
 - [Claude Haiku5.5发布](https://mp.weixin.qq.com/s/bF9veA0qzJ7L2WbrWWDdcg)
-  - 之前haiku版本停在4.5已经好久了 以为Anthropic已经放弃这条先了呢
+  - 之前haiku版本停在4.5已经好久了 以为Anthropic已经放弃这条线了呢
   - 这次斩杀了上次斩杀一众国产模型的GPT6-Luna?
   - 最近感觉: 模型并不是一个好生意? 用户基本上没有什么忠诚度可言, 今天梁圣明天梁子, 所有prompts/artifacts/skills都在本地, 完全就是谁家效果好/性价比高就换谁... **AI is becoming a commodity.**
 - 尊界V800连测三台车 刹车踏板断裂
