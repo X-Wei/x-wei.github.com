@@ -1650,12 +1650,12 @@ set/map也支持iterator操作(&lt;code&gt;begin()&lt;/code&gt;, &lt;code&gt;end
 &lt;/ul&gt;
 &lt;h3 id="median-of-a-stream"&gt;median of a stream&lt;/h3&gt;
 &lt;p&gt;问题描述: 一系列数字一个一个到达, 求他们的中位数(median)?&lt;br/&gt;
-这个的解法是使用&lt;em&gt;两个PQ&lt;/em&gt;, 一个最大堆&lt;code&gt;maxpq&lt;/code&gt;一个最小堆&lt;code&gt;minpq&lt;/code&gt;, 然后&lt;em&gt;maxpq里存放较&lt;/em&gt;&lt;strong&gt;小&lt;/strong&gt;&lt;em&gt;的一半数字, minpq里存放较&lt;/em&gt;&lt;strong&gt;大&lt;/strong&gt;&lt;em&gt;的一半数字: &lt;/em&gt;&lt;code&gt;maxpq.top()&amp;lt;=minpq.top()&lt;/code&gt;. &lt;br/&gt;
+这个的解法是使用&lt;em&gt;两个PQ&lt;/em&gt;, 一个最大堆&lt;code&gt;maxpq&lt;/code&gt;一个最小堆&lt;code&gt;minpq&lt;/code&gt;, 然后&lt;em&gt;maxpq里存放较&lt;/em&gt;&lt;strong&gt;小&lt;/strong&gt;&lt;em&gt;的一半数字, minpq里存放较&lt;/em&gt;&lt;strong&gt;大&lt;/strong&gt;*的一半数字: *&lt;code&gt;maxpq.top()&amp;lt;=minpq.top()&lt;/code&gt;. &lt;br/&gt;
 并且我们要求: &lt;code&gt;minpq.size &amp;lt;= maxpq.size &amp;lt;= minpq.size+1&lt;/code&gt;&lt;br/&gt;
 ⇒ 这样中位数或者是maxpq.top(), 或者是两个top的平均值了~  &lt;/p&gt;
 &lt;p&gt;初始时两个pq都是空的, 每次数字n到来时:&lt;br/&gt;
-&lt;em&gt; 先把n放进maxpq里&lt;br/&gt;
-&lt;/em&gt; 如果&lt;code&gt;maxpq.size&amp;gt;minpq.size+1&lt;/code&gt;的话: &lt;code&gt;minpq.add(maxpq.poll())&lt;/code&gt; &lt;/p&gt;
+* 先把n放进maxpq里&lt;br/&gt;
+* 如果&lt;code&gt;maxpq.size&amp;gt;minpq.size+1&lt;/code&gt;的话: &lt;code&gt;minpq.add(maxpq.poll())&lt;/code&gt; &lt;/p&gt;
 &lt;h1 id="more-about-heap_1"&gt;more about heap&lt;/h1&gt;
 &lt;h3 id="k-way-heap"&gt;k-way heap&lt;/h3&gt;
 &lt;p&gt;这里介绍的PQ其实是binary heap, 即这棵树是一个完全&lt;strong&gt;二&lt;/strong&gt;叉树, 但是我们完全可以做成完全&lt;strong&gt;K&lt;/strong&gt;叉树, 就是所谓的K-way heap了.  &lt;/p&gt;
@@ -2247,7 +2247,7 @@ set/map也支持iterator操作(&lt;code&gt;begin()&lt;/code&gt;, &lt;code&gt;end
 &lt;p&gt;后来问老师, 老师说glpk并不是非常高效的求解器, 然后推荐给了我们一个非常给力的网站: &lt;a href="http://neos-server.org/neos/"&gt;NEOS&lt;/a&gt; ! 这个网站可以让人上传AMPL程序, 然后用它们的服务器跑, 而且使用的求解器也是商用的, 比开源求解器快的不是一个数量级(我们发现最快的求解器是&lt;em&gt;Gurobi&lt;/em&gt;, 十分给力). &lt;/p&gt;
 &lt;p&gt;这样一来计算的问题就解决了, 但是我们很快发现一个更严重的问题, 是我们的建模里的一个严重缺陷...&lt;/p&gt;
 &lt;h2 id="subtour"&gt;subtour问题&lt;/h2&gt;
-&lt;p&gt;我们兴冲冲的拿NEOS的结果跑Orsini算法的时候, 发现总是报错: 也就是在第二步, 程序无法找到一个和&lt;code&gt;p0&lt;/code&gt;有交叉点的边: &lt;em&gt;也就意味着我们的模型得到的路径并不是只有一个connected component!!! &lt;/em&gt;也就是说, 我们得到的解其实是一条从起点到某个终点的路径, 外加很多和这个路径没有交点的圈圈(subtour)!&lt;/p&gt;
+&lt;p&gt;我们兴冲冲的拿NEOS的结果跑Orsini算法的时候, 发现总是报错: 也就是在第二步, 程序无法找到一个和&lt;code&gt;p0&lt;/code&gt;有交叉点的边: *也就意味着我们的模型得到的路径并不是只有一个connected component!!! *也就是说, 我们得到的解其实是一条从起点到某个终点的路径, 外加很多和这个路径没有交点的圈圈(subtour)!&lt;/p&gt;
 &lt;p&gt;是啊, 这个问题很类似旅行商问题(TSP), 而TSP的困难之一 就是要解决subtour的话需要加入2^n个新的约束.... 2^10000个约束? impossible...&lt;/p&gt;
 &lt;h1 id="iii-subtour_1"&gt;III. subtour问题的"解决"&lt;/h1&gt;
 &lt;h2 id="_4"&gt;各种纠结&lt;/h2&gt;
@@ -2333,7 +2333,7 @@ set/map也支持iterator操作(&lt;code&gt;begin()&lt;/code&gt;, &lt;code&gt;end
 &lt;p&gt;"以字母或数字或下划线开头, 之后跟着一个@符号, @符号以后一些用点分隔的字母或数字, 最后应该以.com/.org/.edu等结束"&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;可以想象实际应用中会有描述起来更加罗嗦的模式, 而&lt;strong&gt;正则表达式就是用来描述这种"模式"的语法&lt;/strong&gt;, 使用正则表达式, 可以用很简短的代码表达很复杂的模式. 有人给正则表达式起了个别名叫"&lt;em&gt;字符串模板&lt;/em&gt;", 其实更贴切... &lt;/p&gt;
-&lt;p&gt;还有, 后面总是会提到"某个正则表达式&lt;em&gt;exp&lt;/em&gt;匹配(match)了某个字符串&lt;em&gt;str&lt;/em&gt;", 这里说&lt;strong&gt;"匹配"&lt;/strong&gt;的意思其实是&lt;em&gt;"字符串str满足了正则表达式exp描述的那种模式"&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;还有, 后面总是会提到"某个正则表达式&lt;em&gt;exp&lt;/em&gt;匹配(match)了某个字符串&lt;em&gt;str&lt;/em&gt;", 这里说**"匹配"&lt;em&gt;&lt;em&gt;的意思其实是&lt;/em&gt;"字符串str满足了正则表达式exp描述的那种模式"&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;关于正则表达式, &lt;a href="http://deerchao.net/tutorials/regex/regex.htm"&gt;这篇博客&lt;/a&gt;可以说是经典之作, 搜索"正则表达式"这篇文章几乎都是第一个被找到的. 每次我有问题都要再翻出来看一下这篇, 讲的非常好. &lt;/p&gt;
 &lt;p&gt;另外强烈推荐一个非常赞的在线测试正则表达式的网站: &lt;a href="http://regex101.com/"&gt;http://regex101.com/&lt;/a&gt; 做得超级棒(具体怎么棒见后文).&lt;/p&gt;
 &lt;h2 id="_2"&gt;匹配单个字符&lt;/h2&gt;
@@ -2410,7 +2410,7 @@ ex. 匹配网址开头的"www.": &lt;code&gt;\bwww\.&lt;/code&gt; &lt;a href="ht
 &lt;h2 id="_5"&gt;重复次数&lt;/h2&gt;
 &lt;p&gt;这个和前面介绍的匹配字符配合起来(指定要匹配的字符, 再指定字符重复的次数), 就可以完成大部分的工作了.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;字符重复&lt;em&gt;(exactly)n次&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;字符重复*(exactly)n次*&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;只需要把数字n放进&lt;strong&gt;大括号&lt;/strong&gt;里就可以了. 
 ex. 找一个六位的数字, 那么就是0-9的数字重复6次: &lt;code&gt;[0-9]{6}&lt;/code&gt;&lt;/p&gt;
@@ -2426,7 +2426,7 @@ ex. 找一个6到8位的数字: &lt;code&gt;[0-9]{6,8}&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;(重复小于等于n次等价于0到m次)
 大括号里面n后面加一个逗号:
 ex. 找6位以上的数字: [0-9]{6,}&lt;/p&gt;
-&lt;p&gt;平时用到的比较多的是要求&lt;em&gt;"重复大于等于1次"&lt;/em&gt;或者&lt;em&gt;"重复大于等于0次"&lt;/em&gt;, 由于上面这样的写法有的时候比较罗嗦, 所以有了下面的简写:&lt;/p&gt;
+&lt;p&gt;平时用到的比较多的是要求*"重复大于等于1次"&lt;em&gt;或者&lt;/em&gt;"重复大于等于0次"*, 由于上面这样的写法有的时候比较罗嗦, 所以有了下面的简写:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;重复&lt;em&gt;大于等于1次&lt;/em&gt;: &lt;code&gt;+&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -3083,7 +3083,7 @@ Python is &lt;strong&gt;strongly object-oriented&lt;/strong&gt; in the sense tha
 &lt;p&gt;while&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Remember that you can have &lt;em&gt;an &lt;/em&gt;&lt;strong&gt;else&lt;/strong&gt;&lt;em&gt; clause for the while loop&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Remember that you can have &lt;em&gt;an &lt;strong&gt;&lt;em&gt;else&lt;/em&gt;&lt;/strong&gt; clause for the while loop&lt;/em&gt;.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;for&lt;/li&gt;
 &lt;/ul&gt;
@@ -3096,7 +3096,7 @@ through each item in a sequence, a &lt;em&gt;sequence&lt;/em&gt; is just an orde
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;to break out of a loop statement i.e. stop the execution of a looping statement, even if the loop condition has not become False or the sequence of items has been completely iterated over.
--An important note is that if you break out of a for or while loop, &lt;em&gt;any corresponding loop else block is &lt;/em&gt;&lt;strong&gt;not&lt;/strong&gt;&lt;em&gt; executed.&lt;/em&gt;&lt;/p&gt;
+-An important note is that if you break out of a for or while loop, &lt;em&gt;any corresponding loop else block is &lt;strong&gt;&lt;em&gt;not&lt;/em&gt;&lt;/strong&gt; executed.&lt;/em&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;continue&lt;/p&gt;
@@ -3164,7 +3164,7 @@ through each item in a sequence, a &lt;em&gt;sequence&lt;/em&gt; is just an orde
 &lt;/ul&gt;
 &lt;h1 id="ch8-modules_1"&gt;ch8. Modules&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;A module is basically &lt;strong&gt;a file&lt;/strong&gt;&lt;em&gt; containing all your functions and variables that you have defined&lt;/em&gt;. &lt;/li&gt;
+&lt;li&gt;A module is basically &lt;strong&gt;a file&lt;/strong&gt;* containing all your functions and variables that you have defined*. &lt;/li&gt;
 &lt;li&gt;To reuse the module in other programs, the filename of the module must have a .py extension.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="ex-sys-module"&gt;ex. sys module&lt;/h2&gt;
@@ -3220,7 +3220,7 @@ not recommended...&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;methods:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;em&gt;indexing &lt;/em&gt;operator: &lt;code&gt;a_list[1]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;*indexing *operator: &lt;code&gt;a_list[1]&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;len(a_list)&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;a_list.append()&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;for..in&lt;/code&gt; loop to iterate through the items of the list&lt;/li&gt;
@@ -3367,7 +3367,7 @@ or even the &lt;code&gt;has_key&lt;/code&gt; method of the dict class: &lt;code&
 &lt;li&gt;The &lt;code&gt;__init__()&lt;/code&gt; method is run as soon as an object of a class is instantiated. The method is useful to do any initialization you want to do with your object. &lt;/li&gt;
 &lt;li&gt;analogous to a constructor in C++, C# or Java.&lt;/li&gt;
 &lt;li&gt;the same, __&lt;code&gt;del__()&lt;/code&gt; method: run when the object is no longer in use and there is no guarantee when that method will be run. If you want to explicitly do this, you just have to use the del statement.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;All class members (including the data members) are &lt;/em&gt;&lt;strong&gt;public&lt;/strong&gt;&lt;em&gt; and all the methods are &lt;/em&gt;&lt;strong&gt;virtual&lt;/strong&gt;&lt;em&gt; in Python.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;All class members (including the data members) are &lt;strong&gt;&lt;em&gt;public&lt;/em&gt;&lt;/strong&gt; and all the methods are &lt;strong&gt;&lt;em&gt;virtual&lt;/em&gt;&lt;/strong&gt; in Python.&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;One exception: If you use data members with names using the double underscore prefix such as &lt;code&gt;__privatevar&lt;/code&gt;, Python uses name-mangling to effectively make it a private variable.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="inheritance"&gt;Inheritance&lt;/h2&gt;
@@ -3405,7 +3405,7 @@ or even the &lt;code&gt;has_key&lt;/code&gt; method of the dict class: &lt;code&
 &lt;/ul&gt;
 &lt;h2 id="pickle"&gt;Pickle&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Python provides a standard module called &lt;/em&gt;&lt;code&gt;pickle&lt;/code&gt;&lt;em&gt; using which you can store any Python object in a file and then get it back later intact. This is called storing the object persistently.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Python provides a standard module called &lt;em&gt;&lt;code&gt;pickle&lt;/code&gt;&lt;/em&gt; using which you can store any Python object in a file and then get it back later intact. This is called storing the object persistently.&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;There is another module called &lt;code&gt;cPickle&lt;/code&gt; which functions exactly same as the &lt;code&gt;pickle&lt;/code&gt; module except that it is written in the C language and is (upto 1000 times) faster. &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;pickling &amp;amp; unpickling:&lt;/p&gt;
@@ -3667,7 +3667,7 @@ or even the &lt;code&gt;has_key&lt;/code&gt; method of the dict class: &lt;code&
 &lt;span class="code-line"&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;或者用下面种&lt;strong&gt;内联(inline)&lt;/strong&gt;的写法, 不用给这个类起名字了(不过还要给这个实例取名字): &lt;/p&gt;
+&lt;p&gt;或者用下面种**内联(inline)**的写法, 不用给这个类起名字了(不过还要给这个实例取名字): &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="code-line"&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;private Thread [实例名] = new Thread () {&lt;/code&gt;&lt;/span&gt;
 &lt;span class="code-line"&gt;    public void run() {&lt;/span&gt;
 &lt;span class="code-line"&gt;    // ...&lt;/span&gt;
