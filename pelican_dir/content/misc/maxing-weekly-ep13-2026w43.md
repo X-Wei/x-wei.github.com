@@ -1,4 +1,4 @@
-Title: Maxing周刊 EP13 2026w43: openclaw之后, 人人都是openclaw
+Title: Maxing周刊 EP13 2026w43: 龙虾之后, 人人都是龙虾
 Date: 2026-10-25
 Category: misc
 Tags: weekly
