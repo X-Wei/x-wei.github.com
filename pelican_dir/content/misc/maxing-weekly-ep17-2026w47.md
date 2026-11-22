@@ -1,4 +1,4 @@
-Title: Maxing周刊 EP17 2026w47: 
+Title: Maxing周刊 EP17 2026w47: Hello Zug
 Date: 2026-11-22
 Category: misc
 Tags: weekly
